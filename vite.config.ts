@@ -3,23 +3,28 @@ import react from "@vitejs/plugin-react-swc"
 import path from "path"
 import { nodePolyfills } from "vite-plugin-node-polyfills"
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin"
+import { comlink } from "vite-plugin-comlink"
+import i18nextLoader from "vite-plugin-i18next-loader"
 
 export default defineConfig({
 	plugins: [
 		react(),
 		nodePolyfills({
 			overrides: {
-				// Since `fs` is not supported in browsers, we can use the `memfs` package to polyfill it.
 				fs: "memfs"
 			},
-			// Whether to polyfill `node:` protocol imports.
 			protocolImports: true
 		}),
-		TanStackRouterVite()
+		TanStackRouterVite(),
+		comlink(),
+		i18nextLoader({ paths: ["./locales"] })
 	],
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src")
 		}
+	},
+	worker: {
+		plugins: () => [comlink()]
 	}
 })

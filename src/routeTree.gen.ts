@@ -18,6 +18,7 @@ import { Route as rootRoute } from './routes/__root'
 
 const LoginLazyImport = createFileRoute('/login')()
 const IndexLazyImport = createFileRoute('/')()
+const SettingsGeneralLazyImport = createFileRoute('/settings/general')()
 const DriveSplatLazyImport = createFileRoute('/drive/$')()
 
 // Create/Update Routes
@@ -31,6 +32,13 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const SettingsGeneralLazyRoute = SettingsGeneralLazyImport.update({
+  path: '/settings/general',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/settings.general.lazy').then((d) => d.Route),
+)
 
 const DriveSplatLazyRoute = DriveSplatLazyImport.update({
   path: '/drive/$',
@@ -53,6 +61,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DriveSplatLazyImport
       parentRoute: typeof rootRoute
     }
+    '/settings/general': {
+      preLoaderRoute: typeof SettingsGeneralLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -62,6 +74,7 @@ export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   LoginLazyRoute,
   DriveSplatLazyRoute,
+  SettingsGeneralLazyRoute,
 ])
 
 /* prettier-ignore-end */

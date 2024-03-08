@@ -1,21 +1,39 @@
 import { memo } from "react"
-import { IS_DESKTOP } from "@/constants"
+import { Link } from "@tanstack/react-router"
+import { useTranslation } from "react-i18next"
 
 export const AuthContainer = memo(({ children }: { children: React.ReactNode }) => {
+	const { t } = useTranslation()
+
 	return (
-		<div className={"flex flex-col w-screen h-screen p-0 " + (!IS_DESKTOP ? "lg:p-32" : "")}>
-			<div className="flex flex-row w-full h-full lg:rounded-lg border shadow-xl">
-				<div className="bg-zinc-900 h-full w-1/2 hidden border-r rounded-l-lg lg:flex p-10 flex-col">
-					<div className="flex flex-row items-center text-2xl font-bold gap-2">
-						<img
-							src="https://drive.filen.io/static/media/light_logo.9f8ed143e54adb31009008c527f52c95.svg"
-							className="w-8 h-8"
-						/>
-						Filen
-					</div>
+		<div className="h-screen w-screen">
+			<div className="flex h-full w-full flex-col overflow-auto">
+				<Link
+					to="/login"
+					className="flex shrink-0 flex-row justify-center py-10 sm:justify-start sm:pl-20 items-center gap-2"
+				>
+					<img
+						src="https://drive.filen.io/static/media/light_logo.9f8ed143e54adb31009008c527f52c95.svg"
+						className="w-7 h-7"
+					/>
+					<p className="font-medium text-2xl">Filen</p>
+				</Link>
+				<div className="flex h-full flex-col items-center justify-center">
+					<div className="flex flex-col p-8 w-80 sm:w-[420px]">{children}</div>
 				</div>
-				<div className="w-full lg:w-1/2 h-full flex-col justify-center items-center flex p-5 overflow-y-auto">
-					<div className="text-center flex flex-col gap-6 h-[320px]">{children}</div>
+				<div className="flex shrink-0 flex-row justify-center items-center py-10 gap-5">
+					<Link
+						to="/login"
+						className="underline text-muted-foreground text-sm"
+					>
+						{t("auth.footer.tos")}
+					</Link>
+					<Link
+						to="/login"
+						className="underline text-muted-foreground text-sm"
+					>
+						{t("auth.footer.privacy")}
+					</Link>
 				</div>
 			</div>
 		</div>

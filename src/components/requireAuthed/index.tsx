@@ -3,18 +3,20 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import { useNavigate } from "@tanstack/react-router"
 
 export const RequireAuth = memo(({ children }: { children: React.ReactNode }) => {
-	const [isAuthed] = useLocalStorage<boolean>("isAuthed", false)
+	const [authed] = useLocalStorage<boolean>("authed", false)
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		if (!isAuthed) {
+		if (!authed) {
 			navigate({
-				to: "/login"
+				to: "/login",
+				replace: true,
+				resetScroll: true
 			})
 		}
-	}, [navigate, isAuthed])
+	}, [navigate, authed])
 
-	if (!isAuthed) {
+	if (!authed) {
 		return null
 	}
 

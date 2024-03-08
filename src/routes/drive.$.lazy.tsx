@@ -1,17 +1,21 @@
 import { createLazyFileRoute } from "@tanstack/react-router"
+import MainContainer from "@/components/mainContainer"
+import RequireAuth from "@/components/requireAuthed"
+import useGlobalState from "@/hooks/useGlobalState"
 
 export const Route = createLazyFileRoute("/drive/$")({
 	component: Drive
 })
 
 function Drive() {
-	const route = Route.useParams()
+	//const route = Route.useParams()
+	const [search] = useGlobalState<string>("search", "")
 
-	console.log(route)
+	console.log(search)
 
 	return (
-		<div className="p-2">
-			<h1>Welcome Home!</h1>
-		</div>
+		<RequireAuth>
+			<MainContainer>{search}</MainContainer>
+		</RequireAuth>
 	)
 }

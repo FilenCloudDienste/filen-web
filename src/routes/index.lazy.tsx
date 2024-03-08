@@ -1,14 +1,20 @@
-import { createLazyFileRoute } from "@tanstack/react-router"
-import AppContainer from "@/components/appContainer"
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router"
+import { useEffect } from "react"
 
 export const Route = createLazyFileRoute("/")({
 	component: Index
 })
 
-function Index() {
-	return (
-		<AppContainer>
-			<h3>Welcome Home!</h3>
-		</AppContainer>
-	)
+export function Index() {
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		navigate({
+			to: "/login",
+			replace: true,
+			resetScroll: true
+		})
+	}, [navigate])
+
+	return null
 }
