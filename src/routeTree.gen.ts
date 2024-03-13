@@ -17,9 +17,12 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const LoginLazyImport = createFileRoute('/login')()
+const ContactsLazyImport = createFileRoute('/contacts')()
 const IndexLazyImport = createFileRoute('/')()
 const SettingsGeneralLazyImport = createFileRoute('/settings/general')()
+const NotesUuidLazyImport = createFileRoute('/notes/$uuid')()
 const DriveSplatLazyImport = createFileRoute('/drive/$')()
+const ChatsUuidLazyImport = createFileRoute('/chats/$uuid')()
 
 // Create/Update Routes
 
@@ -27,6 +30,11 @@ const LoginLazyRoute = LoginLazyImport.update({
   path: '/login',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+
+const ContactsLazyRoute = ContactsLazyImport.update({
+  path: '/contacts',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/contacts.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -40,10 +48,20 @@ const SettingsGeneralLazyRoute = SettingsGeneralLazyImport.update({
   import('./routes/settings.general.lazy').then((d) => d.Route),
 )
 
+const NotesUuidLazyRoute = NotesUuidLazyImport.update({
+  path: '/notes/$uuid',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/notes.$uuid.lazy').then((d) => d.Route))
+
 const DriveSplatLazyRoute = DriveSplatLazyImport.update({
   path: '/drive/$',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/drive.$.lazy').then((d) => d.Route))
+
+const ChatsUuidLazyRoute = ChatsUuidLazyImport.update({
+  path: '/chats/$uuid',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/chats.$uuid.lazy').then((d) => d.Route))
 
 // Populate the FileRoutesByPath interface
 
@@ -53,12 +71,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/contacts': {
+      preLoaderRoute: typeof ContactsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
+    '/chats/$uuid': {
+      preLoaderRoute: typeof ChatsUuidLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/drive/$': {
       preLoaderRoute: typeof DriveSplatLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/notes/$uuid': {
+      preLoaderRoute: typeof NotesUuidLazyImport
       parentRoute: typeof rootRoute
     }
     '/settings/general': {
@@ -72,8 +102,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
+  ContactsLazyRoute,
   LoginLazyRoute,
+  ChatsUuidLazyRoute,
   DriveSplatLazyRoute,
+  NotesUuidLazyRoute,
   SettingsGeneralLazyRoute,
 ])
 

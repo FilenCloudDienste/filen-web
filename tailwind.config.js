@@ -1,5 +1,7 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('tailwindcss').Config} */
-// eslint-disable-next-line no-undef
+
 module.exports = {
 	darkMode: ["class"],
 	content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
@@ -13,6 +15,9 @@ module.exports = {
 			}
 		},
 		extend: {
+			fontFamily: {
+				geist: ["Geist", "Regular"]
+			},
 			colors: {
 				border: "hsl(var(--border))",
 				input: "hsl(var(--input))",
@@ -61,11 +66,16 @@ module.exports = {
 				"accordion-up": {
 					from: { height: "var(--radix-accordion-content-height)" },
 					to: { height: "0" }
+				},
+				"caret-blink": {
+					"0%,70%,100%": { opacity: "1" },
+					"20%,50%": { opacity: "0" }
 				}
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
-				"accordion-up": "accordion-up 0.2s ease-out"
+				"accordion-up": "accordion-up 0.2s ease-out",
+				"caret-blink": "caret-blink 1.25s ease-out infinite"
 			}
 		}
 	},

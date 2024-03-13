@@ -6,9 +6,5 @@ export type UseSDKConfig = Required<FilenSDKConfig>
 export default function useSDKConfig(): UseSDKConfig {
 	const [sdkConfig] = useLocalStorage<Required<FilenSDKConfig>>("sdkConfig")
 
-	if (!sdkConfig) {
-		throw new Error("SDK Config undefined")
-	}
-
 	return sdkConfig
 }

@@ -1,0 +1,81 @@
+{
+	"login": {
+		"header": "Anmelden",
+		"description": "Geben Sie unten Ihre E-Mail und Ihr Passwort ein, um sich bei Ihrem Konto anzumelden",
+		"buttons": {
+			"login": "Anmelden",
+			"createAccount": "Ein Konto erstellen",
+			"forgotPassword": "Passwort vergessen?"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "E-Mail-Adresse",
+				"password": "Passwort",
+				"2faCode": "2FA-Code"
+			},
+			"example": {
+				"email": "ich@beispiel.com",
+				"password": "****************",
+				"2faCode": "381740"
+			}
+		},
+		"alerts": {
+			"emailOrPasswordWrong": "E-Mail oder Passwort falsch",
+			"enter2FA": "Bitte geben Sie Ihren Zwei-Faktor-Authentifizierungscode ein"
+		}
+	},
+	"auth": {
+		"footer": {
+			"tos": "Nutzungsbedingungen",
+			"privacy": "Datenschutz"
+		}
+	},
+	"api": {
+		"errors": {
+			"invalid_params": "Ungültige Parameter",
+			"internal_error": "Interner Fehler",
+			"rate_limited": "Begrenzungsrate überschritten"
+		}
+	},
+	"topbar": {
+		"placeholders": {
+			"normal": {
+				"search": "In diesem Ordner suchen..."
+			},
+			"example": {
+				"search": "In diesem Ordner suchen..."
+			}
+		}
+	},
+	"dropZone": {
+		"cta": "Hier hochladen"
+	},
+	"topBar": {
+		"breadcrumb": {
+			"cloudDrive": "Cloud-Speicher"
+		},
+		"searchInThisFolder": "In diesem Ordner suchen..."
+	},
+	"innerSideBar": {
+		"recents": "Zuletzt verwendet",
+		"cloudDrive": "Cloud-Speicher",
+		"links": "Links",
+		"sharedWithMe": "Mit mir geteilt",
+		"sharedWithOthers": "Mit anderen geteilt",
+		"favorites": "Favoriten",
+		"trash": "Papierkorb"
+	},
+	"sideBar": {
+		"cloudDrive": "Cloud-Speicher",
+		"transfers": "Übertragungen",
+		"notes": "Notizen",
+		"chats": "Chats",
+		"contacts": "Kontakte",
+		"settings": "Einstellungen"
+	},
+	"dialogs": {
+		"confirm": {
+			"cancel": "Abbrechen"
+		}
+	}
+}

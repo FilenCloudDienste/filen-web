@@ -5,6 +5,4 @@ export const sdk = new FilenSDK({
 	connectToSocket: true
 })
 
-console.log(sdk)
-
 export default sdk

@@ -24,13 +24,13 @@ export const AuthContainer = memo(({ children }: { children: React.ReactNode }) 
 				<div className="flex shrink-0 flex-row justify-center items-center py-10 gap-5">
 					<Link
 						to="/login"
-						className="underline text-muted-foreground text-sm"
+						className="underline text-muted-foreground text-sm select-none"
 					>
 						{t("auth.footer.tos")}
 					</Link>
 					<Link
 						to="/login"
-						className="underline text-muted-foreground text-sm"
+						className="underline text-muted-foreground text-sm select-none"
 					>
 						{t("auth.footer.privacy")}
 					</Link>

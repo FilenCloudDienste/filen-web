@@ -2,6 +2,7 @@
 	"login": {
 		"header": "Login",
 		"description": "Enter you email and password below to login to your account",
+		"useTwoFactorRecoveryKey": "Use recovery key instead",
 		"buttons": {
 			"login": "Login",
 			"createAccount": "Create an account",
@@ -11,17 +12,20 @@
 			"normal": {
 				"email": "Email address",
 				"password": "Password",
-				"2faCode": "2FA code"
+				"2faCode": "2FA code",
+				"2faRecoveryKey": "Recovery key"
 			},
 			"example": {
 				"email": "me@example.com",
 				"password": "****************",
-				"2faCode": "381740"
+				"2faCode": "381740",
+				"2faRecoveryKey": "Recovery key"
 			}
 		},
 		"alerts": {
 			"emailOrPasswordWrong": "Email or password wrong",
-			"enter2FA": "Please enter your Two Factor Authentication code"
+			"enter2FA": "Please enter your Two Factor Authentication code",
+			"enter2FARecoveryKey": "Please enter your Two Factor Authentication recovery key"
 		}
 	},
 	"auth": {
@@ -45,6 +49,47 @@
 			"example": {
 				"search": "Search in this folder..."
 			}
+		}
+	},
+	"dropZone": {
+		"cta": "Upload here"
+	},
+	"topBar": {
+		"breadcrumb": {
+			"cloudDrive": "Cloud Drive"
+		},
+		"searchInThisFolder": "Search in this folder...",
+		"breadcrumbs": {
+			"recents": "Recents",
+			"cloudDrive": "Cloud Drive",
+			"links": "Links",
+			"sharedWithMe": "Shared with me",
+			"sharedWithOthers": "Shared with others",
+			"favorites": "Favorites",
+			"trash": "Trash",
+			"directory": "Directory"
+		}
+	},
+	"innerSideBar": {
+		"recents": "Recents",
+		"cloudDrive": "Cloud Drive",
+		"links": "Links",
+		"sharedWithMe": "Shared with me",
+		"sharedWithOthers": "Shared with others",
+		"favorites": "Favorites",
+		"trash": "Trash"
+	},
+	"sideBar": {
+		"cloudDrive": "Cloud Drive",
+		"transfers": "Transfers",
+		"notes": "Notes",
+		"chats": "Chats",
+		"contacts": "Contacts",
+		"settings": "Settings"
+	},
+	"dialogs": {
+		"confirm": {
+			"cancel": "Cancel"
 		}
 	}
 }

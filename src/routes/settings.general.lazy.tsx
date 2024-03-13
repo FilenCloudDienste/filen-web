@@ -7,10 +7,6 @@ export const Route = createLazyFileRoute("/settings/general")({
 })
 
 function SettingsGeneral() {
-	const route = Route.useParams()
-
-	console.log(route)
-
 	return (
 		<RequireAuth>
 			<MainContainer>yes</MainContainer>

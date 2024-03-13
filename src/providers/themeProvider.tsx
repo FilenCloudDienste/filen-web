@@ -10,11 +10,13 @@ export type ThemeProviderProps = {
 
 export type ThemeProviderState = {
 	theme: Theme
+	systemTheme: Theme
 	setTheme: (theme: Theme) => void
 }
 
 export const initialState: ThemeProviderState = {
 	theme: "system",
+	systemTheme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
 	setTheme: () => null
 }
 
@@ -39,8 +41,9 @@ export function ThemeProvider({ children, defaultTheme = "system", storageKey = 
 		root.classList.add(theme)
 	}, [theme])
 
-	const value = {
+	const value: ThemeProviderState = {
 		theme,
+		systemTheme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
 		setTheme: (theme: Theme) => {
 			localStorage.setItem(storageKey, theme)
 
