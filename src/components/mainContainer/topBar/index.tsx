@@ -2,16 +2,14 @@ import { memo } from "react"
 import { Input } from "@/components/ui/input"
 import { SearchIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import Breadcrumb from "./breadcrumb"
+import Breadcrumbs from "./breadcrumbs"
 
 export const TopBar = memo(() => {
 	const { t } = useTranslation()
 
 	return (
 		<div className="w-full h-12 flex flex-row shadow-sm justify-between border-b select-none">
-			<div className="flex flex-row items-center z-0 px-3">
-				<Breadcrumb />
-			</div>
+			<Breadcrumbs />
 			<div className="flex flex-row justify-end items-center z-10 bg-white dark:bg-neutral-950 px-3">
 				<div className="flex flex-row w-[250px] h-full items-center">
 					<div className="absolute h-full pl-2">

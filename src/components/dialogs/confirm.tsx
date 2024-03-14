@@ -42,7 +42,7 @@ export const ConfirmDialog = memo(() => {
 					<AlertDialogDescription>{props.description}</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel>{t("dialogs.confirm.cancel")}</AlertDialogCancel>
+					<AlertDialogCancel>{t("dialogs.cancel")}</AlertDialogCancel>
 					<AlertDialogAction>{props.continue}</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>

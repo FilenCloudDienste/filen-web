@@ -14,6 +14,7 @@ import DragSelect from "@/components/dragSelect"
 import DropZone from "@/components/dropZone"
 import { IS_DESKTOP } from "@/constants"
 import ConfirmDialog from "@/components/dialogs/confirm"
+import SelectDriveDestinationDialog from "@/components/dialogs/selectDriveDestination"
 
 if (!IS_DESKTOP) {
 	registerServiceWorker("/sw.js", {
@@ -81,6 +82,7 @@ export const Root = memo(() => {
 					</DropZone>
 					<Toaster />
 					<ConfirmDialog />
+					<SelectDriveDestinationDialog />
 				</PersistQueryClientProvider>
 			</ThemeProvider>
 		</main>

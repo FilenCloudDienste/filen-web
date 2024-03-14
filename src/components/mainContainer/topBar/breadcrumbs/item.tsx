@@ -4,14 +4,12 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import { validate as validateUUID } from "uuid"
 import { get } from "idb-keyval"
 import { useNavigate } from "@tanstack/react-router"
-import useRouteParent from "@/hooks/useRouteParent"
 import { useTranslation } from "react-i18next"
 import { directoryUUIDToNameCache } from "@/cache"
 
 export const Item = memo(({ path, index, pathname }: { path: string; index: number; pathname: string }) => {
 	const sdkConfig = useSDKConfig()
 	const navigate = useNavigate()
-	const routeParent = useRouteParent()
 	const { t } = useTranslation()
 	const [name, setName] = useState<string>(directoryUUIDToNameCache.has(path) ? (directoryUUIDToNameCache.get(path) as string) : "")
 
@@ -105,9 +103,9 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 	}
 
 	return (
-		<div className="flex flex-row gap-1 text-muted-foreground items-center">
+		<div className="flex flex-row gap-1 items-center select-none">
 			<p
-				className={"hover:text-primary cursor-pointer " + (routeParent === path ? "text-primary" : "")}
+				className="text-primary cursor-pointer select-none"
 				onClick={() => navigateToPath()}
 			>
 				{path === sdkConfig.baseFolderUUID ? t("topBar.breadcrumb.cloudDrive") : name}

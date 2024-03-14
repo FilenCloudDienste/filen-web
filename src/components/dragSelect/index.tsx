@@ -2,10 +2,7 @@ import { useState, useCallback, useMemo, memo, useRef } from "react"
 import { useDriveItemsStore } from "@/stores/drive.store"
 import throttle from "lodash/throttle"
 
-export type DragSelectPosition = {
-	x: number
-	y: number
-}
+export type DragSelectPosition = { x: number; y: number }
 
 const DragSelect = memo(({ children }: { children: React.ReactNode }) => {
 	const [isDragging, setIsDragging] = useState<boolean>(false)
@@ -32,9 +29,10 @@ const DragSelect = memo(({ children }: { children: React.ReactNode }) => {
 			(): void => {
 				checkCollision()
 			},
-			250,
+			1,
 			{
-				trailing: true
+				trailing: true,
+				leading: false
 			}
 		)
 	).current
@@ -50,14 +48,18 @@ const DragSelect = memo(({ children }: { children: React.ReactNode }) => {
 		const targetsArray = Array.from(targets)
 
 		for (const target of targetsArray) {
-			const targetRect = (target as HTMLDivElement).getBoundingClientRect()
+			try {
+				const targetRect = (target as HTMLDivElement).getBoundingClientRect()
 
-			if (rectOverlap(selectionRect, targetRect)) {
-				const targetUUID = target.getAttribute("data-uuid")
+				if (rectOverlap(selectionRect, targetRect)) {
+					const targetUUID = target.getAttribute("data-uuid")
 
-				if (targetUUID) {
-					overlapped.push(targetUUID)
+					if (targetUUID) {
+						overlapped.push(targetUUID)
+					}
 				}
+			} catch (e) {
+				console.error(e)
 			}
 		}
 
@@ -66,36 +68,44 @@ const DragSelect = memo(({ children }: { children: React.ReactNode }) => {
 		)
 	}, [getSelectionRect, rectOverlap, setItems])
 
-	const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>): void => {
-		const { clientX, clientY } = e
-		const target = e.target as HTMLDivElement
-
-		if (
-			target &&
-			target.className &&
-			typeof target.className.includes === "function" &&
-			(!target.className.includes("dragselect-start-allowed") || target.className.includes("dragselect-start-disallowed"))
-		) {
-			return
-		}
-
-		setStartPos({ x: clientX, y: clientY })
-		setIsDragging(true)
-	}, [])
-
-	const handleMouseMove = useCallback(
+	const handleMouseDown = useCallback(
 		(e: React.MouseEvent<HTMLDivElement>): void => {
-			if (!isDragging) {
+			if (e.button !== 0) {
 				return
 			}
 
 			const { clientX, clientY } = e
+			const target = e.target as HTMLDivElement
+
+			if (
+				target &&
+				target.className &&
+				typeof target.className.includes === "function" &&
+				(!target.className.includes("dragselect-start-allowed") || target.className.includes("dragselect-start-disallowed"))
+			) {
+				return
+			}
+
+			setItems(prev => prev.map(prevItem => ({ ...prevItem, selected: false })))
+			setStartPos({ x: clientX, y: clientY })
+			setIsDragging(true)
+		},
+		[setItems]
+	)
+
+	const handleMouseMove = useCallback(
+		(e: React.MouseEvent<HTMLDivElement>): void => {
+			const { clientX, clientY } = e
+
+			if (!isDragging || startPos.x === clientX || startPos.y === clientY) {
+				return
+			}
 
 			setEndPos({ x: clientX, y: clientY })
 
 			checkCollisionThrottled()
 		},
-		[isDragging, checkCollisionThrottled]
+		[isDragging, checkCollisionThrottled, startPos]
 	)
 
 	const handleMouseUp = useCallback((): void => {

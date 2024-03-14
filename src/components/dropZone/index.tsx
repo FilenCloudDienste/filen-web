@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from "react"
 import worker from "@/lib/worker"
 import useRouteParent from "@/hooks/useRouteParent"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogPortal, DialogOverlay, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogPortal, DialogOverlay } from "@/components/ui/dialog"
 import { useTranslation } from "react-i18next"
 
 export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
@@ -83,33 +83,27 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 							onDragLeave={onDragLeave}
 							onDragEnter={onDragEnter}
 							className="w-[300px] h-[300px] no-close-button"
+							autoFocus={false}
+							onOpenAutoFocus={e => e.preventDefault()}
 						>
-							<DialogDescription
-								onDragOver={onDragOver}
-								onDragLeave={onDragLeave}
-								onDragEnter={onDragEnter}
-								className="p-4"
-							>
+							<DialogDescription asChild={true}>
 								<div
 									onDragOver={onDragOver}
 									onDragLeave={onDragLeave}
 									onDragEnter={onDragEnter}
-									className="border border-dashed w-full h-full rounded-lg flex flex-col items-center justify-center"
+									className="w-full h-full flex flex-col items-center justify-center p-4"
 								>
-									{t("dropZone.cta")}
+									<div
+										onDragOver={onDragOver}
+										onDragLeave={onDragLeave}
+										onDragEnter={onDragEnter}
+										className="border border-dashed w-full h-full rounded-lg flex flex-col items-center justify-center"
+									>
+										{t("dropZone.cta")}
+									</div>
 								</div>
 							</DialogDescription>
 						</DialogContent>
-						<DialogHeader
-							onDragOver={onDragOver}
-							onDragLeave={onDragLeave}
-							onDragEnter={onDragEnter}
-						></DialogHeader>
-						<DialogFooter
-							onDragOver={onDragOver}
-							onDragLeave={onDragLeave}
-							onDragEnter={onDragEnter}
-						/>
 					</DialogOverlay>
 				</DialogPortal>
 			</Dialog>

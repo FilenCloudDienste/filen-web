@@ -7,7 +7,7 @@ export const SideBar = memo(() => {
 	const sdkConfig = useSDKConfig()
 
 	return (
-		<div className="w-full flex flex-col h-full gap-2 py-3 bg-secondary border-r select-none items-center overflow-x-hidden overflow-y-auto">
+		<div className="w-full flex flex-col h-full gap-2 py-3 bg-secondary border-r select-none items-center overflow-x-hidden overflow-y-auto dragselect-start-allowed">
 			{IS_DESKTOP && <Button id="syncs" />}
 			<Button id={sdkConfig.baseFolderUUID} />
 			<Button id="transfers" />

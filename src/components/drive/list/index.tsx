@@ -62,7 +62,7 @@ export const List = memo(() => {
 				style={{
 					height: IS_DESKTOP ? windowSize.height - 48 - 40 - 24 : windowSize.height - 48 - 40,
 					overflowX: "hidden",
-					overflowY: "scroll"
+					overflowY: "auto"
 				}}
 				className="dragselect-start-allowed"
 			>

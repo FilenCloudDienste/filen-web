@@ -45,10 +45,10 @@ export async function decryptMetadata({ metadata, key }: { metadata: string; key
 	return await SDK.crypto().decrypt().metadata({ metadata, key })
 }
 
-export async function listDirectory({ uuid }: { uuid: string }): Promise<DriveCloudItem[]> {
+export async function listDirectory({ uuid, onlyDirectories }: { uuid: string; onlyDirectories?: boolean }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const items = await SDK.cloud().listDirectory({ uuid })
+	const items = await SDK.cloud().listDirectory({ uuid, onlyDirectories })
 	const driveItems: DriveCloudItem[] = []
 
 	for (const item of items) {

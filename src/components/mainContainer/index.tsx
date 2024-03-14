@@ -87,7 +87,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 				>
 					<InnerSideBar />
 				</ResizablePanel>
-				<ResizableHandle className="bg-transparent w-0" />
+				<ResizableHandle className="bg-transparent w-0 dragselect-start-disallowed" />
 				<ResizablePanel
 					defaultSize={100 - sidebarSize}
 					order={2}

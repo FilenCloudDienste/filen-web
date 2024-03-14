@@ -5,6 +5,7 @@ import { nodePolyfills } from "vite-plugin-node-polyfills"
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin"
 import { comlink } from "vite-plugin-comlink"
 import i18nextLoader from "vite-plugin-i18next-loader"
+import svgr from "vite-plugin-svgr"
 
 export default defineConfig({
 	plugins: [
@@ -17,7 +18,8 @@ export default defineConfig({
 		}),
 		TanStackRouterVite(),
 		comlink(),
-		i18nextLoader({ paths: ["./locales"] })
+		i18nextLoader({ paths: ["./locales"] }),
+		svgr()
 	],
 	resolve: {
 		alias: {
