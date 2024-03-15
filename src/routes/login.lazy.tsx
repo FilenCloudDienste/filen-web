@@ -10,7 +10,7 @@ import worker from "@/lib/worker"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
-import { EyeIcon } from "lucide-react"
+import { EyeIcon, LoaderIcon } from "lucide-react"
 
 export const Route = createLazyFileRoute("/login")({
 	component: Login
@@ -26,8 +26,11 @@ export function Login() {
 	const { toast } = useToast()
 	const { t } = useTranslation()
 	const navigate = useNavigate()
+	const [loading, setLoading] = useState<boolean>(false)
 
 	const login = useCallback(async () => {
+		setLoading(true)
+
 		try {
 			await sdk.login({
 				email,
@@ -67,6 +70,8 @@ export function Login() {
 				variant: "destructive",
 				description: (e as Error).message
 			})
+		} finally {
+			setLoading(false)
 		}
 	}, [email, password, twoFactorCode, toast, navigate])
 
@@ -107,8 +112,9 @@ export function Login() {
 											className="w-full mt-4"
 											type="submit"
 											onClick={login}
+											disabled={loading}
 										>
-											{t("login.buttons.login")}
+											{loading ? <LoaderIcon className="animate-spin-medium" /> : t("login.buttons.login")}
 										</Button>
 									</>
 								) : (
@@ -155,8 +161,9 @@ export function Login() {
 											className="w-full mt-4"
 											type="submit"
 											onClick={login}
+											disabled={loading}
 										>
-											{t("login.buttons.login")}
+											{loading ? <LoaderIcon className="animate-spin-medium" /> : t("login.buttons.login")}
 										</Button>
 									</>
 								)}
@@ -201,19 +208,22 @@ export function Login() {
 									</div>
 								</div>
 								<Button
-									className="w-full select-none"
+									className="w-full select-none mt-2"
 									type="submit"
 									onClick={login}
+									disabled={loading}
 								>
-									{t("login.buttons.login")}
+									{loading ? <LoaderIcon className="animate-spin-medium" /> : t("login.buttons.login")}
 								</Button>
 								<Link
 									className="inline-block w-full text-center text-sm underline text-muted-foreground"
 									to="/login"
+									disabled={loading}
 								>
 									<Button
 										className="w-full select-none"
 										variant="outline"
+										disabled={loading}
 									>
 										{t("login.buttons.createAccount")}
 									</Button>
@@ -221,6 +231,7 @@ export function Login() {
 								<Link
 									className="inline-block w-full text-center text-sm underline text-muted-foreground select-none"
 									to="/login"
+									disabled={loading}
 								>
 									{t("login.buttons.forgotPassword")}
 								</Link>

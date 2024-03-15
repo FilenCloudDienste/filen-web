@@ -7,6 +7,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useTheme } from "@/providers/themeProvider"
 import { useTranslation } from "react-i18next"
 import { TOOLTIP_POPUP_DELAY, IS_DESKTOP } from "@/constants"
+import eventEmitter from "@/lib/eventEmitter"
+import { Flat as FlatCircularProgress } from "@alptugidin/react-circular-progress-bar"
 
 const iconSize = 18
 
@@ -54,12 +56,7 @@ export const Button = memo(({ id }: { id: string }) => {
 		}
 
 		if (id === "transfers") {
-			navigate({
-				to: "/chats/$uuid",
-				params: {
-					uuid: id
-				}
-			})
+			eventEmitter.emit("openTransfers")
 
 			return
 		}
@@ -106,6 +103,25 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === "contacts" && <ContactIcon size={iconSize} />}
 							{id === "settings" && <SettingsIcon size={iconSize} />}
 							{id === "transfers" && <ArrowDownUpIcon size={iconSize} />}
+							{id === "transfers" && (
+								<div className="absolute w-[50px] h-[50px]">
+									<FlatCircularProgress
+										progress={30}
+										showValue={false}
+										sx={{
+											strokeColor: "green",
+											barWidth: 8,
+											bgStrokeColor: "transparent",
+											bgColor: { value: "#000000", transparency: "10" },
+											shape: "full",
+											strokeLinecap: "square",
+											loadingTime: 1000,
+											miniCircleSize: 0,
+											intersectionEnabled: true
+										}}
+									/>
+								</div>
+							)}
 						</div>
 					</TooltipTrigger>
 					<TooltipContent side="right">

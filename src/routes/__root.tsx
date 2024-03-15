@@ -15,6 +15,7 @@ import DropZone from "@/components/dropZone"
 import { IS_DESKTOP } from "@/constants"
 import ConfirmDialog from "@/components/dialogs/confirm"
 import SelectDriveDestinationDialog from "@/components/dialogs/selectDriveDestination"
+import Transfers from "@/components/transfers"
 
 if (!IS_DESKTOP) {
 	registerServiceWorker("/sw.js", {
@@ -30,7 +31,7 @@ if (!IS_DESKTOP) {
 	})
 }
 
-export const queryClient = new QueryClient({
+export const persistantQueryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			refetchOnMount: "always",
@@ -38,6 +39,16 @@ export const queryClient = new QueryClient({
 			refetchOnWindowFocus: "always",
 			staleTime: Infinity,
 			gcTime: Infinity
+		}
+	}
+})
+
+export const sessionQueryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnMount: "always",
+			refetchOnReconnect: "always",
+			refetchOnWindowFocus: "always"
 		}
 	}
 })
@@ -72,17 +83,26 @@ export const Root = memo(() => {
 		<main className="font-geist overflow-hidden font-light">
 			<ThemeProvider>
 				<PersistQueryClientProvider
-					client={queryClient}
+					client={persistantQueryClient}
 					persistOptions={{ persister: queryClientPersister, maxAge: Infinity }}
 				>
-					<DropZone>
-						<DragSelect>
+					{authed ? (
+						<>
+							<DropZone>
+								<DragSelect>
+									<Outlet />
+								</DragSelect>
+							</DropZone>
+							<Transfers />
+							<SelectDriveDestinationDialog />
+						</>
+					) : (
+						<>
 							<Outlet />
-						</DragSelect>
-					</DropZone>
-					<Toaster />
+						</>
+					)}
 					<ConfirmDialog />
-					<SelectDriveDestinationDialog />
+					<Toaster />
 				</PersistQueryClientProvider>
 			</ThemeProvider>
 		</main>

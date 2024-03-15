@@ -109,7 +109,10 @@ export const SelectDriveDestinationDialog = memo(() => {
 				cancel()
 			}}
 		>
-			<AlertDialogContent onEscapeKeyDown={cancel}>
+			<AlertDialogContent
+				onEscapeKeyDown={cancel}
+				onOpenAutoFocus={e => e.preventDefault()}
+			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{t("dialogs.selectDriveDestination.title")}</AlertDialogTitle>
 					<AlertDialogDescription asChild={true}>
@@ -131,18 +134,8 @@ export const SelectDriveDestinationDialog = memo(() => {
 					<p className="text-muted-foreground underline cursor-pointer mr-1 text-sm">
 						{t("dialogs.selectDriveDestination.newFolder")}
 					</p>
-					<AlertDialogCancel
-						autoFocus={false}
-						onClick={cancel}
-					>
-						{t("dialogs.cancel")}
-					</AlertDialogCancel>
-					<AlertDialogAction
-						autoFocus={false}
-						onClick={submit}
-					>
-						{t("dialogs.selectDriveDestination.submit")}
-					</AlertDialogAction>
+					<AlertDialogCancel onClick={cancel}>{t("dialogs.cancel")}</AlertDialogCancel>
+					<AlertDialogAction onClick={submit}>{t("dialogs.selectDriveDestination.submit")}</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

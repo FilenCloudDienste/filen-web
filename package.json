@@ -10,6 +10,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@alptugidin/react-circular-progress-bar": "^1.1.2",
 		"@filen/sdk": "^0.1.32",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
 		"@radix-ui/react-context-menu": "^2.1.5",

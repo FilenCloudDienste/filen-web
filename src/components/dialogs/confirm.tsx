@@ -36,7 +36,7 @@ export const ConfirmDialog = memo(() => {
 
 	return (
 		<AlertDialog open={open}>
-			<AlertDialogContent>
+			<AlertDialogContent onOpenAutoFocus={e => e.preventDefault()}>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{props.title}</AlertDialogTitle>
 					<AlertDialogDescription>{props.description}</AlertDialogDescription>
