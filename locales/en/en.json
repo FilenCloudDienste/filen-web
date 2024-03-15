@@ -121,5 +121,8 @@
 			"newTextFile": "New text file",
 			"newFolder": "New folder"
 		}
+	},
+	"transfers": {
+		"title": "Transfers"
 	}
 }

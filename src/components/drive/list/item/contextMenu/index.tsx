@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from "react"
+import { memo, useMemo, useCallback, useEffect } from "react"
 import {
 	ContextMenu as CM,
 	ContextMenuContent,
@@ -11,13 +11,14 @@ import {
 	ContextMenuSubContent
 } from "@/components/ui/context-menu"
 import { type DriveCloudItem } from "../../.."
-import { downloadFile } from "@/lib/worker/proxy"
 import { useDriveItemsStore } from "@/stores/drive.store"
 import { useRouterState } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import MoveTree from "./moveTree"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { selectDriveDestination } from "@/components/dialogs/selectDriveDestination"
+import * as workerProxy from "@/lib/worker/proxy"
+import { CTRL_KEY_TEXT } from "@/constants"
 
 export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; children: React.ReactNode }) => {
 	const { items } = useDriveItemsStore()
@@ -55,13 +56,49 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 		}
 	}, [selectedItems])
 
+	const download = useCallback(async () => {
+		if (selectedItems.length === 0) {
+			return
+		}
+
+		try {
+			if (selectedItems.length === 1) {
+				if (selectedItems[0].type === "directory") {
+					await workerProxy.downloadDirectory({ uuid: selectedItems[0].uuid, name: selectedItems[0].name })
+				} else {
+					await workerProxy.downloadFile({ item: selectedItems[0] })
+				}
+			} else {
+				await workerProxy.downloadMultipleFilesAndDirectoriesAsZip({ items: selectedItems })
+			}
+		} catch (e) {
+			console.error(e)
+		}
+	}, [selectedItems])
+
+	useEffect(() => {
+		const downloadKeyListener = (e: KeyboardEvent) => {
+			if (e.key === "s" && (e.metaKey || e.ctrlKey)) {
+				e.preventDefault()
+
+				download()
+			}
+		}
+
+		window.addEventListener("keydown", downloadKeyListener)
+
+		return () => {
+			window.removeEventListener("keydown", downloadKeyListener)
+		}
+	}, [download])
+
 	return (
 		<CM>
 			<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
 			<ContextMenuContent className="min-w-52">
 				{!urlState.sharedIn && !urlState.trash && selectedItems.length === 1 && item.type === "file" && (
 					<ContextMenuItem
-						onClick={() => downloadFile({ item })}
+						onClick={download}
 						className="cursor-pointer"
 					>
 						{t("contextMenus.item.edit")}
@@ -69,23 +106,23 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				)}
 				{selectedItems.length === 1 && item.type === "file" && (
 					<ContextMenuItem
-						onClick={() => downloadFile({ item })}
+						onClick={download}
 						className="cursor-pointer"
 					>
 						{t("contextMenus.item.preview")}
 					</ContextMenuItem>
 				)}
 				<ContextMenuItem
-					onClick={() => downloadFile({ item })}
+					onClick={download}
 					className="cursor-pointer"
 				>
 					{t("contextMenus.item.download")}
-					<ContextMenuShortcut>⌘ [</ContextMenuShortcut>
+					<ContextMenuShortcut>{CTRL_KEY_TEXT} S</ContextMenuShortcut>
 				</ContextMenuItem>
 				<ContextMenuSeparator />
 				{selectedItems.length === 1 && !urlState.sharedIn && !urlState.trash && (
 					<ContextMenuItem
-						onClick={() => downloadFile({ item })}
+						onClick={download}
 						className="cursor-pointer"
 					>
 						{t("contextMenus.item.publicLink")}
@@ -94,7 +131,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				{!urlState.sharedIn && !urlState.trash && (
 					<>
 						<ContextMenuItem
-							onClick={() => downloadFile({ item })}
+							onClick={download}
 							className="cursor-pointer"
 						>
 							{t("contextMenus.item.share")}
@@ -105,7 +142,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				{item.type === "file" && selectedItems.length === 1 && !urlState.sharedIn && !urlState.trash && (
 					<>
 						<ContextMenuItem
-							onClick={() => downloadFile({ item })}
+							onClick={download}
 							className="cursor-pointer"
 						>
 							{t("contextMenus.item.versions")}
@@ -116,7 +153,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				{!urlState.sharedIn && !urlState.trash && (
 					<>
 						<ContextMenuItem
-							onClick={() => downloadFile({ item })}
+							onClick={download}
 							className="cursor-pointer"
 						>
 							{t("contextMenus.item.favorite")}
@@ -126,7 +163,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				)}
 				{selectedItems.length === 0 && !urlState.sharedIn && !urlState.trash && (
 					<ContextMenuItem
-						onClick={() => downloadFile({ item })}
+						onClick={download}
 						className="cursor-pointer"
 					>
 						{t("contextMenus.item.rename")}
@@ -161,7 +198,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				{urlState.trash && (
 					<>
 						<ContextMenuItem
-							onClick={() => downloadFile({ item })}
+							onClick={download}
 							className="cursor-pointer"
 						>
 							{t("contextMenus.item.restore")}
@@ -171,7 +208,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				)}
 				{!urlState.sharedIn && (
 					<ContextMenuItem
-						onClick={() => downloadFile({ item })}
+						onClick={download}
 						className="cursor-pointer text-red-500"
 					>
 						{t("contextMenus.item.trash")}
@@ -179,7 +216,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				)}
 				{urlState.sharedIn && (
 					<ContextMenuItem
-						onClick={() => downloadFile({ item })}
+						onClick={download}
 						className="cursor-pointer text-red-500"
 					>
 						{t("contextMenus.item.remove")}

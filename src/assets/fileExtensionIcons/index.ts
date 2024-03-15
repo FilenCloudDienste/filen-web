@@ -95,6 +95,7 @@ export function fileNameToSVGIcon(name: string) {
 		case ".tsx":
 		case ".cjs":
 		case ".mjs":
+		case ".json":
 		case ".js": {
 			return code
 		}

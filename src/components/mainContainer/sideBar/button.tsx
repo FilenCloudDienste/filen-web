@@ -106,7 +106,7 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === "transfers" && (
 								<div className="absolute w-[50px] h-[50px]">
 									<FlatCircularProgress
-										progress={30}
+										progress={10}
 										showValue={false}
 										sx={{
 											strokeColor: "green",
