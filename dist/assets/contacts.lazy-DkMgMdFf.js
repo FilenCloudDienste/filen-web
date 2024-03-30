@@ -1,1 +1,0 @@
-import{f as n,j as t}from"./index-WHS-zVl3.js";import{R as r,M as s}from"./index-nGTadF9k.js";import"./useNavigate-BF6CjfOd.js";import"./link-CjGj8ghz.js";const a=n("/contacts")({component:o});function o(){return t.jsx(r,{children:t.jsx(s,{children:"Contacts"})})}export{o as Contacts,a as Route};
