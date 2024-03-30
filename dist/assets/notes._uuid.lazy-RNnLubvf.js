@@ -1,0 +1,1 @@
+import{f as r,j as o}from"./index-WHS-zVl3.js";import{R as s,M as e}from"./index-nGTadF9k.js";import"./useNavigate-BF6CjfOd.js";import"./link-CjGj8ghz.js";const i=r("/notes/$uuid")({component:t});function t(){return o.jsx(s,{children:o.jsx(e,{children:"ok"})})}export{t as Notes,i as Route};

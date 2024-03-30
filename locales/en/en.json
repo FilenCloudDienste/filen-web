@@ -1,0 +1,146 @@
+{
+	"cloudDrive": "Cloud Drive",
+	"login": {
+		"header": "Login",
+		"description": "Enter you email and password below to login to your account",
+		"useTwoFactorRecoveryKey": "Use recovery key instead",
+		"buttons": {
+			"login": "Login",
+			"createAccount": "Create an account",
+			"forgotPassword": "Forgot your password?"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "Email address",
+				"password": "Password",
+				"2faCode": "2FA code",
+				"2faRecoveryKey": "Recovery key"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"2faCode": "381740",
+				"2faRecoveryKey": "Recovery key"
+			}
+		},
+		"alerts": {
+			"emailOrPasswordWrong": "Email or password wrong",
+			"enter2FA": "Please enter your Two Factor Authentication code",
+			"enter2FARecoveryKey": "Please enter your Two Factor Authentication recovery key"
+		}
+	},
+	"auth": {
+		"footer": {
+			"tos": "Terms of Service",
+			"privacy": "Privacy"
+		}
+	},
+	"api": {
+		"errors": {
+			"invalid_params": "Invalid parameters",
+			"internal_error": "Internal error",
+			"rate_limited": "Rate limited"
+		}
+	},
+	"topbar": {
+		"placeholders": {
+			"normal": {
+				"search": "Search in this folder..."
+			},
+			"example": {
+				"search": "Search in this folder..."
+			}
+		}
+	},
+	"dropZone": {
+		"cta": "Upload here"
+	},
+	"topBar": {
+		"breadcrumb": {
+			"cloudDrive": "Cloud Drive"
+		},
+		"searchInThisFolder": "Search in this folder...",
+		"breadcrumbs": {
+			"recents": "Recents",
+			"cloudDrive": "Cloud Drive",
+			"links": "Links",
+			"sharedWithMe": "Shared with me",
+			"sharedWithOthers": "Shared with others",
+			"favorites": "Favorites",
+			"trash": "Trash",
+			"directory": "Directory"
+		}
+	},
+	"innerSideBar": {
+		"recents": "Recents",
+		"cloudDrive": "Cloud Drive",
+		"links": "Links",
+		"sharedWithMe": "Shared with me",
+		"sharedWithOthers": "Shared with others",
+		"favorites": "Favorites",
+		"trash": "Trash",
+		"settings": {
+			"general": "General"
+		}
+	},
+	"sideBar": {
+		"cloudDrive": "Cloud Drive",
+		"transfers": "Transfers",
+		"notes": "Notes",
+		"chats": "Chats",
+		"contacts": "Contacts",
+		"settings": "Settings",
+		"syncs": "Syncs"
+	},
+	"dialogs": {
+		"cancel": "Cancel",
+		"selectDriveDestination": {
+			"title": "Select destination",
+			"submit": "Select",
+			"newFolder": "New folder"
+		}
+	},
+	"contextMenus": {
+		"item": {
+			"download": "Download",
+			"publicLink": "Public link",
+			"share": "Share",
+			"versions": "Versions",
+			"favorite": "Favorite",
+			"unfavorite": "Unfavorite",
+			"rename": "Rename",
+			"move": "Move",
+			"trash": "Trash",
+			"restore": "Restore",
+			"preview": "Preview",
+			"edit": "Edit",
+			"remove": "Remove",
+			"stopSharing": "Stop sharing",
+			"selectDestination": "Select destination",
+			"cloudDrive": "Cloud Drive",
+			"open": "Open"
+		},
+		"drive": {
+			"uploadFiles": "Upload files",
+			"uploadFolders": "Upload folders",
+			"newTextFile": "New text file",
+			"newFolder": "New folder"
+		}
+	},
+	"transfers": {
+		"title": "Transfers",
+		"remaining": "About {{time}} remaining",
+		"noActiveTransfers": "No active transfers",
+		"state": {
+			"finished": "Finished",
+			"queued": "Queued",
+			"started": "Started",
+			"error": "Error",
+			"stopped": "Stopped",
+			"paused": "Paused"
+		},
+		"pause": "Pause",
+		"resume": "Resume",
+		"stop": "Stop"
+	}
+}

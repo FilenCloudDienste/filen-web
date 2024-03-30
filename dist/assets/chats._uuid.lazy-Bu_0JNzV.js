@@ -1,0 +1,1 @@
+import{f as r,j as t}from"./index-WHS-zVl3.js";import{R as s,M as a}from"./index-nGTadF9k.js";import"./useNavigate-BF6CjfOd.js";import"./link-CjGj8ghz.js";const i=r("/chats/$uuid")({component:o});function o(){return t.jsx(s,{children:t.jsx(a,{children:"chats"})})}export{o as Chats,i as Route};

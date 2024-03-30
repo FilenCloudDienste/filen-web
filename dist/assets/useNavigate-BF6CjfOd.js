@@ -1,0 +1,1 @@
+import{am as n,an as m,r as c}from"./index-WHS-zVl3.js";function t(i){const{navigate:r}=n(),s=m({strict:!1,select:o=>o.pathname}),e=({from:o,...a})=>r({from:a!=null&&a.to?s:void 0,...a});return c.useCallback(e,[])}export{t as u};

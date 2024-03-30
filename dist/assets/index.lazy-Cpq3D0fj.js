@@ -1,0 +1,1 @@
+import{f as n,k as r}from"./index-WHS-zVl3.js";import{u as e}from"./useNavigate-BF6CjfOd.js";const s=n("/")({component:o});function o(){const t=e();return r(()=>{t({to:"/login",replace:!0,resetScroll:!0})}),null}export{o as Index,s as Route};
