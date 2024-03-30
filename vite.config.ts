@@ -9,6 +9,7 @@ import svgr from "vite-plugin-svgr"
 import topLevelAwait from "vite-plugin-top-level-await"
 
 export default defineConfig({
+	base: "/",
 	plugins: [
 		react(),
 		nodePolyfills({
