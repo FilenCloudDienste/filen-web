@@ -12,6 +12,8 @@ import { transfer } from "comlink"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
 import { THUMBNAIL_VERSION, THUMBNAIL_QUALITY, THUMBNAIL_MAX_SIZE } from "@/constants"
 import pdfjsLib from "../pdfJS"
+import { type Note, type NoteType, type NoteTag } from "@filen/sdk/dist/types/api/v3/notes"
+import { simpleDate } from "@/utils"
 
 let isInitialized = false
 // We setup an eventEmitter first here in case we are running in the main thread.
@@ -1469,4 +1471,72 @@ export async function shareItemsToUser({
 			postMessageToMain({ type: "shareProgress", done, total: items.length, requestUUID })
 		}
 	})
+}
+
+export async function listNotes(): Promise<Note[]> {
+	return await SDK.notes().all()
+}
+
+export async function fetchNoteContent({ uuid }: { uuid: string }): Promise<{
+	content: string
+	type: NoteType
+	editedTimestamp: number
+	editorId: number
+	preview: string
+}> {
+	return await SDK.notes().content({ uuid })
+}
+
+export async function editNoteTitle({ uuid, title }: { uuid: string; title: string }): Promise<void> {
+	return await SDK.notes().editTitle({ uuid, title })
+}
+
+export async function editNoteContent({ uuid, content, type }: { uuid: string; content: string; type: NoteType }): Promise<void> {
+	return await SDK.notes().edit({ uuid, content, type })
+}
+
+export async function createNote(): Promise<{ uuid: string; title: string }> {
+	const title = simpleDate(Date.now())
+	const uuid = await SDK.notes().create({ title })
+
+	return {
+		title,
+		uuid
+	}
+}
+
+export async function trashNote({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.notes().trash({ uuid })
+}
+
+export async function deleteNote({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.notes().delete({ uuid })
+}
+
+export async function pinNote({ uuid, pin }: { uuid: string; pin: boolean }): Promise<void> {
+	return await SDK.notes().pin({ uuid, pin })
+}
+
+export async function favoriteNote({ uuid, favorite }: { uuid: string; favorite: boolean }): Promise<void> {
+	return await SDK.notes().favorite({ uuid, favorite })
+}
+
+export async function duplicateNote({ uuid }: { uuid: string }): Promise<string> {
+	return await SDK.notes().duplicate({ uuid })
+}
+
+export async function listNotesTags(): Promise<NoteTag[]> {
+	return await SDK.notes().tags()
+}
+
+export async function createNotesTag({ name }: { name: string }): Promise<string> {
+	return await SDK.notes().createTag({ name })
+}
+
+export async function restoreNote({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.notes().restore({ uuid })
+}
+
+export async function archiveNote({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.notes().archive({ uuid })
 }

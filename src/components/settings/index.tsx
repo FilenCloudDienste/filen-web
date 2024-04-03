@@ -1,11 +1,11 @@
 import { memo } from "react"
-import { useRouterState } from "@tanstack/react-router"
+import useLocation from "@/hooks/useLocation"
 import General from "./general"
 
 export const Settings = memo(() => {
-	const routerState = useRouterState()
+	const location = useLocation()
 
-	if (routerState.location.pathname.includes("general")) {
+	if (location.includes("general")) {
 		return <General />
 	}
 

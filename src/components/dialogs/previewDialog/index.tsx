@@ -58,10 +58,6 @@ export const PreviewDialog = memo(() => {
 		[cleanup]
 	)
 
-	const onOpenAutoFocus = useCallback((e: Event) => {
-		e.preventDefault()
-	}, [])
-
 	const loadFile = useCallback(
 		async ({ itm }: { itm: DriveCloudItem }) => {
 			if (itm.type !== "file") {
@@ -112,11 +108,7 @@ export const PreviewDialog = memo(() => {
 			open={open}
 			onOpenChange={onOpenChange}
 		>
-			<DialogContent
-				onOpenAutoFocus={onOpenAutoFocus}
-				className="fullscreen-dialog no-close-button"
-				onCloseAutoFocus={e => e.preventDefault()}
-			>
+			<DialogContent className="fullscreen-dialog no-close-button outline-none focus:outline-none active:outline-none hover:outline-none">
 				{item && (
 					<div className="absolute w-screen h-screen flex flex-col">
 						<div className="flex flex-row border-b h-12 shadow-md bg-secondary w-full items-center justify-between px-4 -mt-[1px]">

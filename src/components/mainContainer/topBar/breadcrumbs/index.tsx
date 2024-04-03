@@ -1,13 +1,13 @@
 import { memo, useMemo } from "react"
-import { useRouterState } from "@tanstack/react-router"
+import useLocation from "@/hooks/useLocation"
 import Item from "./item"
 
 export const Breadcrumbs = memo(() => {
-	const routerState = useRouterState()
+	const location = useLocation()
 
 	const components = useMemo(() => {
-		return routerState.location.pathname.split("/")
-	}, [routerState.location.pathname])
+		return location.split("/")
+	}, [location])
 
 	return (
 		<div className="flex flex-row items-center px-3 h-full overflow-hidden dragselect-start-allowed">
@@ -17,7 +17,7 @@ export const Breadcrumbs = memo(() => {
 						key={index}
 						path={path}
 						index={index}
-						pathname={routerState.location.pathname}
+						pathname={location}
 					/>
 				))}
 			</div>

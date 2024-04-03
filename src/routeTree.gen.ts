@@ -16,8 +16,11 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const SyncsLazyImport = createFileRoute('/syncs')()
+const NotesLazyImport = createFileRoute('/notes')()
 const LoginLazyImport = createFileRoute('/login')()
 const ContactsLazyImport = createFileRoute('/contacts')()
+const ChatsLazyImport = createFileRoute('/chats')()
 const IndexLazyImport = createFileRoute('/')()
 const SettingsTypeLazyImport = createFileRoute('/settings/$type')()
 const NotesUuidLazyImport = createFileRoute('/notes/$uuid')()
@@ -25,6 +28,16 @@ const DriveSplatLazyImport = createFileRoute('/drive/$')()
 const ChatsUuidLazyImport = createFileRoute('/chats/$uuid')()
 
 // Create/Update Routes
+
+const SyncsLazyRoute = SyncsLazyImport.update({
+  path: '/syncs',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/syncs.lazy').then((d) => d.Route))
+
+const NotesLazyRoute = NotesLazyImport.update({
+  path: '/notes',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/notes.lazy').then((d) => d.Route))
 
 const LoginLazyRoute = LoginLazyImport.update({
   path: '/login',
@@ -35,6 +48,11 @@ const ContactsLazyRoute = ContactsLazyImport.update({
   path: '/contacts',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/contacts.lazy').then((d) => d.Route))
+
+const ChatsLazyRoute = ChatsLazyImport.update({
+  path: '/chats',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/chats.lazy').then((d) => d.Route))
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -49,8 +67,8 @@ const SettingsTypeLazyRoute = SettingsTypeLazyImport.update({
 )
 
 const NotesUuidLazyRoute = NotesUuidLazyImport.update({
-  path: '/notes/$uuid',
-  getParentRoute: () => rootRoute,
+  path: '/$uuid',
+  getParentRoute: () => NotesLazyRoute,
 } as any).lazy(() => import('./routes/notes.$uuid.lazy').then((d) => d.Route))
 
 const DriveSplatLazyRoute = DriveSplatLazyImport.update({
@@ -59,8 +77,8 @@ const DriveSplatLazyRoute = DriveSplatLazyImport.update({
 } as any).lazy(() => import('./routes/drive.$.lazy').then((d) => d.Route))
 
 const ChatsUuidLazyRoute = ChatsUuidLazyImport.update({
-  path: '/chats/$uuid',
-  getParentRoute: () => rootRoute,
+  path: '/$uuid',
+  getParentRoute: () => ChatsLazyRoute,
 } as any).lazy(() => import('./routes/chats.$uuid.lazy').then((d) => d.Route))
 
 // Populate the FileRoutesByPath interface
@@ -71,6 +89,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/chats': {
+      preLoaderRoute: typeof ChatsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/contacts': {
       preLoaderRoute: typeof ContactsLazyImport
       parentRoute: typeof rootRoute
@@ -79,9 +101,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
+    '/notes': {
+      preLoaderRoute: typeof NotesLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/syncs': {
+      preLoaderRoute: typeof SyncsLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/chats/$uuid': {
       preLoaderRoute: typeof ChatsUuidLazyImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ChatsLazyImport
     }
     '/drive/$': {
       preLoaderRoute: typeof DriveSplatLazyImport
@@ -89,7 +119,7 @@ declare module '@tanstack/react-router' {
     }
     '/notes/$uuid': {
       preLoaderRoute: typeof NotesUuidLazyImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof NotesLazyImport
     }
     '/settings/$type': {
       preLoaderRoute: typeof SettingsTypeLazyImport
@@ -102,11 +132,12 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
+  ChatsLazyRoute.addChildren([ChatsUuidLazyRoute]),
   ContactsLazyRoute,
   LoginLazyRoute,
-  ChatsUuidLazyRoute,
+  NotesLazyRoute.addChildren([NotesUuidLazyRoute]),
+  SyncsLazyRoute,
   DriveSplatLazyRoute,
-  NotesUuidLazyRoute,
   SettingsTypeLazyRoute,
 ])
 

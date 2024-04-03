@@ -6,8 +6,9 @@ import { IS_DESKTOP } from "@/constants"
 import useWindowSize from "@/hooks/useWindowSize"
 import ListItem from "./item"
 import ContextMenu from "./contextMenu"
-import { useNavigate, useRouterState } from "@tanstack/react-router"
+import { useNavigate } from "@tanstack/react-router"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
+import useLocation from "@/hooks/useLocation"
 
 export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: UseQueryResult<DriveCloudItem[], Error> }) => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -23,7 +24,7 @@ export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 		setCurrentSharerEmail
 	} = useDriveSharedStore()
 	const navigate = useNavigate()
-	const routerState = useRouterState()
+	const location = useLocation()
 
 	const grid = useGrid({
 		scrollRef: virtualizerParentRef,
@@ -93,7 +94,7 @@ export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 												currentReceiverId={currentReceiverId}
 												currentSharerId={currentSharerId}
 												navigate={navigate}
-												pathname={routerState.location.pathname}
+												pathname={location}
 											/>
 										</div>
 									)

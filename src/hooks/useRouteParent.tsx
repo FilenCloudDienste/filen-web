@@ -1,18 +1,18 @@
-import { useRouterState } from "@tanstack/react-router"
+import useLocation from "./useLocation"
 import { useMemo } from "react"
 
 export default function useRouteParent() {
-	const routerState = useRouterState()
+	const location = useLocation()
 
 	const routeParent = useMemo(() => {
-		if (routerState.location.pathname.includes("/")) {
-			const ex = routerState.location.pathname.split("/")
+		if (location.includes("/")) {
+			const ex = location.split("/")
 
 			return ex[ex.length - 1]
 		}
 
-		return routerState.location.pathname
-	}, [routerState.location.pathname])
+		return location
+	}, [location])
 
 	return routeParent
 }

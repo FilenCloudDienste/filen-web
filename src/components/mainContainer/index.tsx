@@ -88,6 +88,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 							minSize={sidebarSizeRange.min}
 							maxSize={sidebarSizeRange.max}
 							order={1}
+							id="left-resizable-panel"
 						>
 							<InnerSideBar />
 						</ResizablePanel>
@@ -98,6 +99,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 				<ResizablePanel
 					defaultSize={100 - sidebarSize}
 					order={2}
+					id="right-resizable-panel"
 				>
 					<TopBar />
 					<div className="flex grow">{children}</div>

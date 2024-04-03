@@ -1,23 +1,24 @@
 import { useMemo } from "react"
-import { useRouterState } from "@tanstack/react-router"
+import useLocation from "./useLocation"
 import useRouteParent from "./useRouteParent"
+import { validate as validateUUID } from "uuid"
 
 export default function useDriveURLState() {
-	const routerState = useRouterState()
+	const location = useLocation()
 	const parent = useRouteParent()
 
 	const urlState = useMemo(() => {
 		return {
-			drive: routerState.location.pathname.includes("drive"),
-			trash: routerState.location.pathname.includes("trash"),
-			recents: routerState.location.pathname.includes("recents"),
-			favorites: routerState.location.pathname.includes("favorites"),
-			sharedIn: routerState.location.pathname.includes("shared-in"),
-			sharedOut: routerState.location.pathname.includes("shared-out"),
-			links: routerState.location.pathname.includes("links"),
-			insideParent: parent.length === 36
+			drive: location.includes("drive"),
+			trash: location.includes("trash"),
+			recents: location.includes("recents"),
+			favorites: location.includes("favorites"),
+			sharedIn: location.includes("shared-in"),
+			sharedOut: location.includes("shared-out"),
+			links: location.includes("links"),
+			insideParent: parent.length === 36 && validateUUID(parent)
 		}
-	}, [routerState.location.pathname, parent])
+	}, [location, parent])
 
 	return urlState
 }

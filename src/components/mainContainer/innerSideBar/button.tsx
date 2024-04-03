@@ -1,5 +1,5 @@
 import { memo } from "react"
-import { Link, useRouterState } from "@tanstack/react-router"
+import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
 import Tree from "./tree"
@@ -9,6 +9,7 @@ import { folderIcon } from "@/assets/fileExtensionIcons"
 import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import Icon from "@/components/icon"
+import useLocation from "@/hooks/useLocation"
 
 const iconSize = 20
 
@@ -17,7 +18,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 	const routeParent = useRouteParent()
 	const [sideBarTreeOpen, setSideBarTreeOpen] = useLocalStorage<Record<string, boolean>>("sideBarTreeOpen", {})
 	const { t } = useTranslation()
-	const routerState = useRouterState()
+	const location = useLocation()
 
 	return (
 		<div className="flex flex-col mb-1 px-3">
@@ -29,7 +30,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				draggable={false}
 				className={cn(
 					"flex flex-row gap-3 w-full px-3 py-2 rounded-lg transition-all items-center hover:bg-accent text-primary cursor-pointer",
-					routeParent === uuid || routerState.location.pathname === `/${uuid}` ? "bg-accent" : "bg-transparent"
+					routeParent === uuid || location === `/${uuid}` ? "bg-accent" : "bg-transparent"
 				)}
 			>
 				{uuid === sdkConfig.baseFolderUUID && (

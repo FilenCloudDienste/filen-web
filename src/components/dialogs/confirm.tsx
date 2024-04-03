@@ -115,9 +115,8 @@ export const ConfirmDialog = memo(() => {
 	return (
 		<AlertDialog open={open}>
 			<AlertDialogContent
-				onOpenAutoFocus={e => e.preventDefault()}
 				onEscapeKeyDown={cancel}
-				onCloseAutoFocus={e => e.preventDefault()}
+				className="outline-none focus:outline-none active:outline-none hover:outline-none"
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{props.title}</AlertDialogTitle>

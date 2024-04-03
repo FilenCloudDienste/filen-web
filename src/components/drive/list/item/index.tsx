@@ -322,14 +322,16 @@ export const ListItem = memo(
 											className="dragselect-start-disallowed shrink-0"
 										/>
 									)}
-									<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{item.name}</p>
+									<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
 								</div>
 							</div>
 							<div className="flex flex-row dragselect-start-disallowed line-clamp-1 text-ellipsis w-[125px]">
-								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{formatBytes(size)}</p>
+								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{formatBytes(size)}</p>
 							</div>
 							<div className="flex flex-row dragselect-start-disallowed line-clamp-1 text-ellipsis w-[250px]">
-								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{simpleDate(item.lastModified)}</p>
+								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">
+									{simpleDate(item.lastModified)}
+								</p>
 							</div>
 						</div>
 					) : (
@@ -344,7 +346,7 @@ export const ListItem = memo(
 										thumbnailURL ? (item.selected || hovering ? "bg-secondary" : "bg-primary-foreground") : ""
 									)}
 								>
-									<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{item.name}</p>
+									<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
 								</div>
 							</div>
 							<div

@@ -238,14 +238,9 @@ export const Transfers = memo(() => {
 			onOpenChange={setOpen}
 		>
 			<SheetContent
-				onOpenAutoFocus={e => e.preventDefault()}
-				onCloseAutoFocus={e => e.preventDefault()}
 				forceMount={true}
-				className="ring-0 focus:ring-0 active:ring-0 hover:ring-0"
-				autoFocus={false}
-				onFocus={e => e.preventDefault()}
+				className="outline-none focus:outline-none active:outline-none hover:outline-none no-outline"
 				onDragOver={onDragOver}
-				onFocusCapture={e => e.preventDefault()}
 			>
 				<SheetHeader>
 					<SheetTitle>{transfersSorted.length > 0 && t("transfers.title")}</SheetTitle>

@@ -160,8 +160,7 @@ export const SelectDriveDestinationDialog = memo(() => {
 		>
 			<AlertDialogContent
 				onEscapeKeyDown={cancel}
-				onOpenAutoFocus={e => e.preventDefault()}
-				onCloseAutoFocus={e => e.preventDefault()}
+				className="outline-none focus:outline-none active:outline-none hover:outline-none"
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{t("dialogs.selectDriveDestination.title")}</AlertDialogTitle>

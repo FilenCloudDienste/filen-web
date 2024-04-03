@@ -21,7 +21,8 @@ import { selectDriveDestination } from "@/components/dialogs/selectDriveDestinat
 import eventEmitter from "@/lib/eventEmitter"
 import { fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
 import useDriveURLState from "@/hooks/useDriveURLState"
-import { useNavigate, useRouterState } from "@tanstack/react-router"
+import { useNavigate } from "@tanstack/react-router"
+import useLocation from "@/hooks/useLocation"
 
 export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; children: React.ReactNode }) => {
 	const { items, setItems } = useDriveItemsStore()
@@ -32,7 +33,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 	const navigate = useNavigate()
 	const { setCurrentReceiverEmail, setCurrentReceiverId, setCurrentReceivers, setCurrentSharerEmail, setCurrentSharerId } =
 		useDriveSharedStore()
-	const routerState = useRouterState()
+	const location = useLocation()
 
 	const selectedItems = useMemo(() => {
 		return items.filter(item => item.selected)
@@ -47,7 +48,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 	}, [item])
 
 	const openDirectory = useCallback(() => {
-		if (item.type === "directory" && !routerState.location.pathname.includes("trash")) {
+		if (item.type === "directory" && !location.includes("trash")) {
 			setCurrentReceiverId(item.receiverId)
 			setCurrentReceiverEmail(item.receiverEmail)
 			setCurrentSharerId(item.sharerId)
@@ -57,7 +58,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			navigate({
 				to: "/drive/$",
 				params: {
-					_splat: `${routerState.location.pathname.split("/drive/").join("")}/${item.uuid}`
+					_splat: `${location.split("/drive/").join("")}/${item.uuid}`
 				}
 			})
 
@@ -65,7 +66,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 		}
 	}, [
 		navigate,
-		routerState,
+		location,
 		item,
 		setCurrentReceiverId,
 		setCurrentReceiverEmail,

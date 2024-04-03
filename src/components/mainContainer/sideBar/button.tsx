@@ -1,6 +1,6 @@
 import { memo, useState, useCallback, useMemo } from "react"
 import Icon from "@/components/icon"
-import { useRouterState, Link } from "@tanstack/react-router"
+import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -9,6 +9,9 @@ import { useTranslation } from "react-i18next"
 import { TOOLTIP_POPUP_DELAY, IS_DESKTOP } from "@/constants"
 import eventEmitter from "@/lib/eventEmitter"
 import TransfersProgress from "./transfersProgress"
+import { useLocalStorage } from "@uidotdev/usehooks"
+import { cn } from "@/lib/utils"
+import useLocation from "@/hooks/useLocation"
 
 const iconSize = 20
 
@@ -16,9 +19,10 @@ export const Button = memo(({ id }: { id: string }) => {
 	const sdkConfig = useSDKConfig()
 	const routeParent = useRouteParent()
 	const theme = useTheme()
-	const routerState = useRouterState()
+	const location = useLocation()
 	const [hovering, setHovering] = useState<boolean>(false)
 	const { t } = useTranslation()
+	const [lastSelectedNote] = useLocalStorage("lastSelectedNote", "")
 
 	const onClick = useCallback(
 		(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -39,9 +43,11 @@ export const Button = memo(({ id }: { id: string }) => {
 					: id === "syncs"
 						? "/drive/$"
 						: id === "notes"
-							? "/notes/$uuid"
+							? lastSelectedNote.length > 0
+								? "/notes/$uuid"
+								: "/notes"
 							: id === "chats"
-								? "/chats/$uuid"
+								? "/chats"
 								: id === "settings"
 									? "/settings/$type"
 									: id === "contacts"
@@ -52,27 +58,31 @@ export const Button = memo(({ id }: { id: string }) => {
 					? {
 							_splat: sdkConfig.baseFolderUUID
 						}
-					: id === "notes"
+					: id === "settings"
 						? {
-								uuid: "x"
+								type: "general"
 							}
-						: id === "chats"
-							? {
-									uuid: "x"
-								}
-							: id === "settings"
-								? {
-										type: "general"
-									}
-								: undefined
+						: id === "notes" && lastSelectedNote.length > 0
+							? { uuid: lastSelectedNote }
+							: undefined
 		}
-	}, [id, sdkConfig.baseFolderUUID])
+	}, [id, sdkConfig.baseFolderUUID, lastSelectedNote])
+
+	const showIndicator = useMemo(() => {
+		return (
+			routeParent === id ||
+			(id === sdkConfig.baseFolderUUID && location.includes("drive")) ||
+			(id === "settings" && location.includes("settings")) ||
+			(id === "notes" && location.includes("notes")) ||
+			(id === "chats" && location.includes("chats")) ||
+			(id === "contacts" && location.includes("contacts")) ||
+			(id === "syncs" && location.includes("syncs"))
+		)
+	}, [id, routeParent, location, sdkConfig.baseFolderUUID])
 
 	return (
-		<div className={`flex flex-row justify-center items-center w-full ${IS_DESKTOP ? "pl-[1px]" : ""}`}>
-			{(routeParent === id ||
-				(id === sdkConfig.baseFolderUUID && routerState.location.pathname.includes("/drive/")) ||
-				(id === "settings" && routerState.location.pathname.includes("settings"))) && (
+		<div className={cn("flex flex-row justify-center items-center w-full", IS_DESKTOP ? "pl-[1px]" : "")}>
+			{showIndicator && (
 				<div className="w-[3px] h-10 bg-black dark:bg-white absolute left-[0px] rounded-tr-xl rounded-br-xl transition-all" />
 			)}
 			{hovering && (

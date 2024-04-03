@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, memo, useRef, useTransition } from "react"
 import { useDriveItemsStore } from "@/stores/drive.store"
+import useLocation from "@/hooks/useLocation"
 
 export type DragSelectPosition = { x: number; y: number }
 
@@ -11,8 +12,13 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 	const containerRef = useRef<HTMLDivElement>(null)
 	const { setItems, items } = useDriveItemsStore()
 	const [, startTransition] = useTransition()
+	const location = useLocation()
 
 	const targetRects = useMemo((): Record<string, { element: HTMLDivElement; rect: DOMRect }> => {
+		if (!location.includes("drive")) {
+			return {}
+		}
+
 		const rects: Record<string, { element: HTMLDivElement; rect: DOMRect }> = {}
 
 		if (containerRef.current && items.length > 0) {
@@ -35,21 +41,32 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 		}
 
 		return rects
-	}, [items])
+	}, [items, location])
 
 	const getSelectionRect = useCallback((): DOMRect => {
-		if (!dragAreaRef.current) {
+		if (!dragAreaRef.current || !location.includes("drive")) {
 			return new DOMRect(0, 0, 0, 0)
 		}
 
 		return dragAreaRef.current.getBoundingClientRect()
-	}, [])
+	}, [location])
 
-	const rectOverlap = useCallback((rect1: DOMRect, rect2: DOMRect): boolean => {
-		return !(rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom)
-	}, [])
+	const rectOverlap = useCallback(
+		(rect1: DOMRect, rect2: DOMRect): boolean => {
+			if (!location.includes("drive")) {
+				return false
+			}
+
+			return !(rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom)
+		},
+		[location]
+	)
 
 	const checkCollision = useCallback((): void => {
+		if (!location.includes("drive")) {
+			return
+		}
+
 		const selectionRect = getSelectionRect()
 		const overlapped: string[] = []
 
@@ -62,11 +79,11 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 		setItems(prev =>
 			prev.map(prevItem => (overlapped.includes(prevItem.uuid) ? { ...prevItem, selected: true } : { ...prevItem, selected: false }))
 		)
-	}, [getSelectionRect, rectOverlap, setItems, targetRects])
+	}, [getSelectionRect, rectOverlap, setItems, targetRects, location])
 
 	const handleMouseDown = useCallback(
 		(e: React.MouseEvent<HTMLDivElement>): void => {
-			if (e.button !== 0) {
+			if (e.button !== 0 || !location.includes("drive")) {
 				return
 			}
 
@@ -89,11 +106,15 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 				setItems(prev => prev.map(prevItem => ({ ...prevItem, selected: false })))
 			})
 		},
-		[setItems]
+		[setItems, location]
 	)
 
 	const handleMouseMove = useCallback(
 		(e: React.MouseEvent<HTMLDivElement>): void => {
+			if (!location.includes("drive")) {
+				return
+			}
+
 			const { clientX, clientY } = e
 
 			if (!isDragging || startPos.x === clientX || startPos.y === clientY) {
@@ -104,18 +125,22 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 
 			checkCollision()
 		},
-		[isDragging, checkCollision, startPos]
+		[isDragging, checkCollision, startPos, location]
 	)
 
 	const handleMouseUp = useCallback((): void => {
+		if (!location.includes("drive")) {
+			return
+		}
+
 		setIsDragging(false)
 		setStartPos({ x: 0, y: 0 })
 		setEndPos({ x: 0, y: 0 })
-	}, [])
+	}, [location])
 
 	const show = useMemo((): boolean => {
-		return isDragging && startPos.x !== 0 && startPos.y !== 0 && endPos.x !== 0 && endPos.y !== 0
-	}, [isDragging, startPos, endPos])
+		return location.includes("drive") && isDragging && startPos.x !== 0 && startPos.y !== 0 && endPos.x !== 0 && endPos.y !== 0
+	}, [isDragging, startPos, endPos, location])
 
 	const selectionBoxStyle = useMemo((): React.CSSProperties => {
 		return {

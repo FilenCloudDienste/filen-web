@@ -7,7 +7,8 @@ import { type DriveCloudItem } from ".."
 import { type UseQueryResult } from "@tanstack/react-query"
 import ContextMenu from "./contextMenu"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
-import { useNavigate, useRouterState } from "@tanstack/react-router"
+import { useNavigate } from "@tanstack/react-router"
+import useLocation from "@/hooks/useLocation"
 
 export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: UseQueryResult<DriveCloudItem[], Error> }) => {
 	const windowSize = useWindowSize()
@@ -23,7 +24,7 @@ export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 		setCurrentSharerEmail
 	} = useDriveSharedStore()
 	const navigate = useNavigate()
-	const routerState = useRouterState()
+	const location = useLocation()
 
 	const rowVirtualizer = useVirtualizer({
 		count: items.length,
@@ -75,7 +76,7 @@ export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 									currentReceiverId={currentReceiverId}
 									currentSharerId={currentSharerId}
 									navigate={navigate}
-									pathname={routerState.location.pathname}
+									pathname={location}
 								/>
 							)
 						})}

@@ -72,6 +72,23 @@
 		}
 	},
 	"innerSideBar": {
+		"top": {
+			"settings": "Settings",
+			"notes": "Notes",
+			"chats": "Chats",
+			"contacts": "Contacts",
+			"syncs": "Syncs"
+		},
+		"notes": {
+			"search": "Search...",
+			"tags": {
+				"all": "All",
+				"favorites": "Favorites",
+				"pinned": "Pinned"
+			},
+			"createNote": "Create note",
+			"createTag": "Create tag"
+		},
 		"recents": "Recents",
 		"cloudDrive": "Cloud Drive",
 		"links": "Links",
@@ -125,6 +142,21 @@
 			"uploadFolders": "Upload folders",
 			"newTextFile": "New text file",
 			"newFolder": "New folder"
+		},
+		"notes": {
+			"history": "History",
+			"participants": "Participants",
+			"type": "Type",
+			"pin": "Pin",
+			"unpin": "Unpin",
+			"favorite": "Favorite",
+			"unfavorite": "Unfavorite",
+			"duplicate": "Duplicate",
+			"export": "Export",
+			"archive": "Archive",
+			"restore": "Restore",
+			"trash": "Trash",
+			"delete": "Delete"
 		}
 	},
 	"transfers": {

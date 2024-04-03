@@ -7,7 +7,7 @@ import {
 	ContextMenuSeparator
 } from "@/components/ui/context-menu"
 import { useDriveItemsStore } from "@/stores/drive.store"
-import { useRouterState } from "@tanstack/react-router"
+import useLocation from "@/hooks/useLocation"
 import { useTranslation } from "react-i18next"
 import { showInputDialog } from "@/components/dialogs/input"
 import worker from "@/lib/worker"
@@ -17,7 +17,7 @@ import { directoryUUIDToNameCache } from "@/cache"
 
 export const ContextMenu = memo(({ children }: { children: React.ReactNode }) => {
 	const { setItems } = useDriveItemsStore()
-	const routerState = useRouterState()
+	const location = useLocation()
 	const { t } = useTranslation()
 	const [, startTransition] = useTransition()
 	const parent = useRouteParent()
@@ -59,7 +59,7 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 		}
 	}, [createFolder])
 
-	if (!routerState.location.pathname.includes("drive")) {
+	if (!location.includes("drive")) {
 		return children
 	}
 

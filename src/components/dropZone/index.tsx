@@ -7,6 +7,7 @@ import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { readLocalDroppedDirectory } from "./utils"
 import { promiseAllChunked } from "@/lib/utils"
 import useDriveURLState from "@/hooks/useDriveURLState"
+import useLocation from "@/hooks/useLocation"
 
 export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const parent = useRouteParent()
@@ -16,22 +17,30 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const { currentReceiverId, currentSharerId, currentReceiverEmail, currentReceivers, currentSharerEmail } = useDriveSharedStore()
 	const [, startTransition] = useTransition()
 	const driveURLState = useDriveURLState()
+	const location = useLocation()
 
-	const handleShow = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-		let hasFile = false
+	const handleShow = useCallback(
+		(e: React.DragEvent<HTMLDivElement>) => {
+			if (!location.includes("drive")) {
+				return
+			}
 
-		if (e && e.dataTransfer && e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-			for (const item of e.dataTransfer.items) {
-				if (item.kind === "file") {
-					hasFile = true
+			let hasFile = false
 
-					break
+			if (e && e.dataTransfer && e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+				for (const item of e.dataTransfer.items) {
+					if (item.kind === "file") {
+						hasFile = true
+
+						break
+					}
 				}
 			}
-		}
 
-		setShowModal(hasFile)
-	}, [])
+			setShowModal(hasFile)
+		},
+		[location]
+	)
 
 	const onDragOver = useCallback(
 		(e: React.DragEvent<HTMLDivElement>) => {
@@ -69,14 +78,15 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 				driveURLState.recents ||
 				driveURLState.sharedIn ||
 				driveURLState.sharedOut ||
-				driveURLState.trash
+				driveURLState.trash ||
+				!location.includes("drive")
 			) {
 				return
 			}
 
 			handleShow(e)
 		},
-		[handleShow, driveURLState]
+		[handleShow, driveURLState, location]
 	)
 
 	const onDrop = useCallback(
@@ -89,7 +99,8 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 				driveURLState.recents ||
 				driveURLState.sharedIn ||
 				driveURLState.sharedOut ||
-				driveURLState.trash
+				driveURLState.trash ||
+				!location.includes("drive")
 			) {
 				return
 			}
@@ -195,7 +206,17 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 				await promiseAllChunked(promises)
 			}
 		},
-		[parent, setItems, currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId, driveURLState]
+		[
+			parent,
+			setItems,
+			currentReceiverEmail,
+			currentReceiverId,
+			currentReceivers,
+			currentSharerEmail,
+			currentSharerId,
+			driveURLState,
+			location
+		]
 	)
 
 	return (
@@ -218,11 +239,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 							onDragOver={onDragOver}
 							onDragLeave={onDragLeave}
 							onDragEnter={onDragEnter}
-							className="w-[300px] h-[300px] no-close-button ring-0 focus:ring-0 active:ring-0 hover:ring-0"
-							autoFocus={false}
-							onOpenAutoFocus={e => e.preventDefault()}
-							onCloseAutoFocus={e => e.preventDefault()}
-							onFocusCapture={e => e.preventDefault()}
+							className="w-[300px] h-[300px] no-close-button outline-none focus:outline-none active:outline-none hover:outline-none"
 						>
 							<DialogDescription asChild={true}>
 								<div

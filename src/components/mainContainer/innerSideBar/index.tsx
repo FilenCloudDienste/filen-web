@@ -4,49 +4,31 @@ import Button from "./button"
 import { IS_DESKTOP } from "@/constants"
 import { useWindowSize } from "@uidotdev/usehooks"
 import Divider from "./divider"
-import { useNavigate, useRouterState } from "@tanstack/react-router"
+import Notes from "./notes"
+import { cn } from "@/lib/utils"
+import useLocation from "@/hooks/useLocation"
+import Top from "./top"
 
 export const InnerSideBar = memo(() => {
 	const sdkConfig = useSDKConfig()
 	const windowSize = useWindowSize()
-	const navigate = useNavigate()
-	const routerState = useRouterState()
+	const location = useLocation()
 
 	return (
 		<div className="w-full border-r flex flex-col h-full select-none">
+			<Top />
 			<div
-				className="h-12 w-full flex flex-row items-center px-4 border-b shadow-sm cursor-pointer"
-				onClick={() => {
-					if (routerState.location.pathname.includes("settings")) {
-						navigate({
-							to: "/settings/$type",
-							params: {
-								type: "general"
-							}
-						})
-
-						return
-					}
-
-					navigate({
-						to: "/drive/$",
-						params: {
-							_splat: sdkConfig.baseFolderUUID
-						}
-					})
-				}}
-			>
-				{routerState.location.pathname.includes("settings") ? "Settings" : "Filen"}
-			</div>
-			<div
-				className="flex flex-col overflow-y-auto py-3 overflow-x-hidden dragselect-start-allowed"
+				className={cn(
+					"flex flex-col overflow-y-auto overflow-x-hidden dragselect-start-allowed",
+					!location.includes("notes") ? "py-3" : ""
+				)}
 				style={{
 					height: IS_DESKTOP
 						? (windowSize.height ?? window.innerHeight) - 48 - 48 - 24
 						: (windowSize.height ?? window.innerHeight) - 48 - 48
 				}}
 			>
-				{routerState.location.pathname.includes("drive") && (
+				{location.includes("drive") && (
 					<>
 						<Button uuid={sdkConfig.baseFolderUUID} />
 						<Divider />
@@ -58,11 +40,12 @@ export const InnerSideBar = memo(() => {
 						<Button uuid="links" />
 					</>
 				)}
-				{routerState.location.pathname.includes("settings") && (
+				{location.includes("settings") && (
 					<>
 						<Button uuid="settings/general" />
 					</>
 				)}
+				{location.includes("notes") && <Notes />}
 			</div>
 			<div className="py-3 px-3 border-t flex flex-col h-12 flex-1">
 				<p className="text-muted-foreground text-sm">{sdkConfig.email}</p>
