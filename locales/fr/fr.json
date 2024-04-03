@@ -1,0 +1,146 @@
+{
+	"cloudDrive": "Cloud Drive",
+	"login": {
+		"header": "Connexion",
+		"description": "Saisir ci-dessous votre e-mail et mot de passe pour vous connecter à votre compte",
+		"useTwoFactorRecoveryKey": "Utilisez plutôt la clé de récupération",
+		"buttons": {
+			"login": "Connexion",
+			"createAccount": "Créer un compte",
+			"forgotPassword": "Mot de passe oublié ?"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "Adresse e-mail",
+				"password": "Mot de passe",
+				"2faCode": "Code 2FA",
+				"2faRecoveryKey": "Clé de récupération"
+			},
+			"example": {
+				"email": "moi@example.fr",
+				"password": "****************",
+				"2faCode": "381740",
+				"2faRecoveryKey": "Clé de récupération"
+			}
+		},
+		"alerts": {
+			"emailOrPasswordWrong": "E-mail ou mot de passe incorrect",
+			"enter2FA": "Veuillez saisir votre code d'authentification à deux facteurs",
+			"enter2FARecoveryKey": "Veuillez saisir votre clé de récupération à deux facteurs"
+		}
+	},
+	"auth": {
+		"footer": {
+			"tos": "Conditions d'utilisation",
+			"privacy": "Confidentialité"
+		}
+	},
+	"api": {
+		"errors": {
+			"invalid_params": "Paramètres incorrects",
+			"internal_error": "Erreur interne",
+			"rate_limited": "Vitesse limitée"
+		}
+	},
+	"topbar": {
+		"placeholders": {
+			"normal": {
+				"search": "Rechercher dans ce dossier..."
+			},
+			"example": {
+				"search": "Rechercher dans ce dossier..."
+			}
+		}
+	},
+	"dropZone": {
+		"cta": "Charger ici"
+	},
+	"topBar": {
+		"breadcrumb": {
+			"cloudDrive": "Cloud Drive"
+		},
+		"searchInThisFolder": "Rechercher dans ce dossier...",
+		"breadcrumbs": {
+			"recents": "Récents",
+			"cloudDrive": "Cloud Drive",
+			"links": "Liens",
+			"sharedWithMe": "Partagé avec moi",
+			"sharedWithOthers": "Partagé avec d'autres",
+			"favorites": "Favoris",
+			"trash": "Corbeille",
+			"directory": "Dossier"
+		}
+	},
+	"innerSideBar": {
+		"recents": "Récents",
+		"cloudDrive": "Cloud Drive",
+		"links": "Liens",
+		"sharedWithMe": "Partagé avec moi",
+		"sharedWithOthers": "Partagé avec d'autres",
+		"favorites": "Favoris",
+		"trash": "Corbeille",
+		"settings": {
+			"general": "Général"
+		}
+	},
+	"sideBar": {
+		"cloudDrive": "Cloud Drive",
+		"transfers": "Transferts",
+		"notes": "Notes",
+		"chats": "Conversations",
+		"contacts": "Contacts",
+		"settings": "Réglages",
+		"syncs": "Synchros"
+	},
+	"dialogs": {
+		"cancel": "Annuler",
+		"selectDriveDestination": {
+			"title": "Sélectionner la destination",
+			"submit": "Sélectionner",
+			"newFolder": "Nouveau dossier"
+		}
+	},
+	"contextMenus": {
+		"item": {
+			"download": "Télécharger",
+			"publicLink": "Lien public",
+			"share": "PArtager",
+			"versions": "Versions",
+			"favorite": "Favoris",
+			"unfavorite": "Non favoris",
+			"rename": "Renommer",
+			"move": "Déplacer",
+			"trash": "Corbeille",
+			"restore": "Restaurer",
+			"preview": "Prévisualiser",
+			"edit": "Editer",
+			"remove": "Supprimer",
+			"stopSharing": "Stopper le partage",
+			"selectDestination": "Sélectionner la destination",
+			"cloudDrive": "Cloud Drive",
+			"open": "Ouvrir"
+		},
+		"drive": {
+			"uploadFiles": "Charger des fichiers",
+			"uploadFolders": "Charger des dossiers",
+			"newTextFile": "Nouveau fichier texte",
+			"newFolder": "Nouveau dossier"
+		}
+	},
+	"transfers": {
+		"title": "Transferts",
+		"remaining": "Environ {{time}} restantes",
+		"noActiveTransfers": "Aucun transfert actif",
+		"state": {
+			"finished": "Terminé",
+			"queued": "En attente",
+			"started": "Démarré",
+			"error": "Erreur",
+			"stopped": "Arreté",
+			"paused": "En pause"
+		},
+		"pause": "Pause",
+		"resume": "Reprendre",
+		"stop": "Arreter"
+	}
+}
