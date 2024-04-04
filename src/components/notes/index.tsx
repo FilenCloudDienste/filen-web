@@ -8,7 +8,14 @@ export const Notes = memo(() => {
 
 	return (
 		<div className={cn("w-full h-[calc(100vh-48px)] flex flex-col border-t", !selectedNote && "items-center justify-center")}>
-			{selectedNote ? <Content note={selectedNote} /> : "create notes"}
+			{selectedNote ? (
+				<Content
+					key={`${selectedNote.uuid}-${selectedNote.type}`}
+					note={selectedNote}
+				/>
+			) : (
+				"create notes"
+			)}
 		</div>
 	)
 })

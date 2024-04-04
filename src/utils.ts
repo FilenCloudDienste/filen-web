@@ -47,3 +47,26 @@ export function preventDefault(e: Event | FocusEvent | unknown | never): void {
 		event.preventDefault()
 	}
 }
+
+/**
+ * Download text to a file.
+ * @date 4/4/2024 - 1:02:34 AM
+ *
+ * @export
+ * @param {{name: string, content: string}} param0
+ * @param {string} param0.name
+ * @param {string} param0.content
+ */
+export function downloadTextFile({ name, content }: { name: string; content: string }): void {
+	const element = document.createElement("a")
+
+	element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(content))
+	element.setAttribute("download", name)
+	element.style.display = "none"
+
+	document.body.appendChild(element)
+
+	element.click()
+
+	document.body.removeChild(element)
+}

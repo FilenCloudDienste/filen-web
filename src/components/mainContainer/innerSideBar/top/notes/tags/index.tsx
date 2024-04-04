@@ -8,9 +8,10 @@ import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { showInputDialog } from "@/components/dialogs/input"
 import { useNotesStore } from "@/stores/notes.store"
 import { cn } from "@/lib/utils"
+import ContextMenu from "./contextMenu"
 
-const tagClassName =
-	"flex flex-row items-center justify-center px-2 py-1 rounded-lg bg-primary-foreground hover:bg-secondary cursor-pointer h-7 text-sm"
+export const tagClassName =
+	"flex flex-row gap-1 items-center justify-center px-2 py-1 rounded-lg bg-primary-foreground hover:bg-secondary cursor-pointer h-7 text-sm"
 
 export const Tags = memo(() => {
 	const { t } = useTranslation()
@@ -68,13 +69,24 @@ export const Tags = memo(() => {
 			</div>
 			{query.data.map(tag => {
 				return (
-					<div
+					<ContextMenu
+						tag={tag}
 						key={tag.uuid}
-						className={cn(tagClassName, activeTag === tag.name ? "bg-secondary" : "")}
-						onClick={() => setActiveTag(tag.name)}
+						refetch={query.refetch}
 					>
-						{tag.name}
-					</div>
+						<div
+							className={cn(tagClassName, activeTag === tag.name ? "bg-secondary" : "")}
+							onClick={() => setActiveTag(tag.uuid)}
+						>
+							{tag.favorite && (
+								<Icon
+									name="heart"
+									size={14}
+								/>
+							)}
+							<p>{tag.name}</p>
+						</div>
+					</ContextMenu>
 				)
 			})}
 			<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>

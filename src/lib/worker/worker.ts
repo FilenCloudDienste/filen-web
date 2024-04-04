@@ -1533,10 +1533,34 @@ export async function createNotesTag({ name }: { name: string }): Promise<string
 	return await SDK.notes().createTag({ name })
 }
 
+export async function changeNoteType({ uuid, type }: { uuid: string; type: NoteType }): Promise<void> {
+	return await SDK.notes().changeType({ uuid, newType: type })
+}
+
 export async function restoreNote({ uuid }: { uuid: string }): Promise<void> {
 	return await SDK.notes().restore({ uuid })
 }
 
 export async function archiveNote({ uuid }: { uuid: string }): Promise<void> {
 	return await SDK.notes().archive({ uuid })
+}
+
+export async function favoriteNotesTag({ uuid, favorite }: { uuid: string; favorite: boolean }): Promise<void> {
+	return await SDK.notes().tagFavorite({ uuid, favorite })
+}
+
+export async function deleteNotesTag({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.notes().deleteTag({ uuid })
+}
+
+export async function renameNotesTag({ uuid, name }: { uuid: string; name: string }): Promise<void> {
+	return await SDK.notes().renameTag({ uuid, name })
+}
+
+export async function tagNote({ uuid, tag }: { uuid: string; tag: string }): Promise<void> {
+	return await SDK.notes().tag({ uuid, tag })
+}
+
+export async function untagNote({ uuid, tag }: { uuid: string; tag: string }): Promise<void> {
+	return await SDK.notes().untag({ uuid, tag })
 }

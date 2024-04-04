@@ -156,7 +156,16 @@
 			"archive": "Archive",
 			"restore": "Restore",
 			"trash": "Trash",
-			"delete": "Delete"
+			"delete": "Delete",
+			"rename": "Rename",
+			"tags": "Tags",
+			"types": {
+				"md": "Markdown",
+				"rich": "Richtext",
+				"text": "Text",
+				"checklist": "Checklist",
+				"code": "Code"
+			}
 		}
 	},
 	"transfers": {

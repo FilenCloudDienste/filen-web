@@ -4,19 +4,31 @@ import {
 	ContextMenuContent,
 	ContextMenuItem,
 	ContextMenuTrigger,
-	ContextMenuSeparator
+	ContextMenuSeparator,
+	ContextMenuSub,
+	ContextMenuSubContent,
+	ContextMenuSubTrigger
 } from "@/components/ui/context-menu"
 import { useTranslation } from "react-i18next"
-import { type Note } from "@filen/sdk/dist/types/api/v3/notes"
+import { type Note, type NoteType, type NoteTag } from "@filen/sdk/dist/types/api/v3/notes"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import worker from "@/lib/worker"
 import { useNotesStore } from "@/stores/notes.store"
 import { useNavigate } from "@tanstack/react-router"
+import { cn } from "@/lib/utils"
+import { useQuery } from "@tanstack/react-query"
+import { showSaveFilePicker } from "native-file-system-adapter"
+import striptags from "striptags"
 
 export const ContextMenu = memo(({ note, children }: { note: Note; children: React.ReactNode }) => {
 	const { t } = useTranslation()
-	const { setNotes, setSelectedNote } = useNotesStore()
+	const { setNotes, setSelectedNote, selectedNote, notes } = useNotesStore()
 	const navigate = useNavigate()
+
+	const tagsQuery = useQuery({
+		queryKey: ["listNotesTags"],
+		queryFn: () => worker.listNotesTags()
+	})
 
 	const trash = useCallback(async () => {
 		try {
@@ -45,11 +57,27 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			await worker.deleteNote({ uuid: note.uuid })
 
 			setNotes(prev => prev.filter(prevNote => prevNote.uuid !== note.uuid))
-			setSelectedNote(null)
+
+			if (selectedNote?.uuid === note.uuid) {
+				const newSelectedNote = notes.filter(n => n.uuid !== note.uuid)
+
+				if (newSelectedNote.length >= 1) {
+					setSelectedNote(newSelectedNote[0])
+
+					navigate({
+						to: "/notes/$uuid",
+						params: {
+							uuid: newSelectedNote[0].uuid
+						}
+					})
+				} else {
+					setSelectedNote(null)
+				}
+			}
 		} catch (e) {
 			console.error(e)
 		}
-	}, [note.uuid, setNotes, setSelectedNote])
+	}, [note.uuid, setNotes, setSelectedNote, notes, navigate, selectedNote?.uuid])
 
 	const favorite = useCallback(async () => {
 		try {
@@ -136,6 +164,106 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 		}
 	}, [note.uuid, setNotes, setSelectedNote])
 
+	const changeType = useCallback(
+		async (type: NoteType) => {
+			if (note.type === type) {
+				return
+			}
+
+			try {
+				await worker.changeNoteType({ uuid: note.uuid, type })
+
+				setNotes(prev => prev.map(prevNote => (prevNote.uuid === note.uuid ? { ...prevNote, type } : prevNote)))
+				setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, type } : prev))
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[note.uuid, setNotes, setSelectedNote, note.type]
+	)
+
+	const tagNote = useCallback(
+		async (tag: NoteTag) => {
+			try {
+				await worker.tagNote({ uuid: note.uuid, tag: tag.uuid })
+
+				setNotes(prev =>
+					prev.map(prevNote => (prevNote.uuid === note.uuid ? { ...prevNote, tags: [...prevNote.tags, tag] } : prevNote))
+				)
+				setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, tags: [...prev.tags, tag] } : prev))
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[note.uuid, setNotes, setSelectedNote]
+	)
+
+	const untagNote = useCallback(
+		async (tag: NoteTag) => {
+			try {
+				await worker.tagNote({ uuid: note.uuid, tag: tag.uuid })
+
+				setNotes(prev =>
+					prev.map(prevNote =>
+						prevNote.uuid === note.uuid ? { ...prevNote, tags: prevNote.tags.filter(t => t.uuid !== tag.uuid) } : prevNote
+					)
+				)
+				setSelectedNote(prev =>
+					prev && prev.uuid === note.uuid ? { ...prev, tags: prev.tags.filter(t => t.uuid !== tag.uuid) } : prev
+				)
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[note.uuid, setNotes, setSelectedNote]
+	)
+
+	const exportNote = useCallback(async () => {
+		try {
+			let { content } = await worker.fetchNoteContent({ uuid: note.uuid })
+
+			if (note.type === "rich") {
+				content = striptags(content.split("<p><br></p>").join("\n"))
+			}
+
+			if (note.type === "checklist") {
+				const list: string[] = []
+				const ex = content
+					// eslint-disable-next-line quotes
+					.split('<ul data-checked="false">')
+					.join("")
+					// eslint-disable-next-line quotes
+					.split('<ul data-checked="true">')
+					.join("")
+					.split("\n")
+					.join("")
+					.split("<li>")
+
+				for (const listPoint of ex) {
+					const listPointEx = listPoint.split("</li>")
+
+					if (listPointEx[0].trim().length > 0) {
+						list.push(listPointEx[0].trim())
+					}
+				}
+
+				content = list.join("\n")
+			}
+
+			const fileHandle = await showSaveFilePicker({
+				suggestedName: `${note.title}.txt`
+			})
+
+			const writer = await fileHandle.createWritable()
+
+			await writer.write(content)
+
+			writer.close()
+		} catch (e) {
+			console.error(e)
+		}
+	}, [note.uuid, note.title, note.type])
+
 	return (
 		<CM>
 			<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
@@ -154,12 +282,46 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 					{t("contextMenus.notes.participants")}
 				</ContextMenuItem>
 				<ContextMenuSeparator />
-				<ContextMenuItem
-					onClick={() => {}}
-					className="cursor-pointer"
-				>
-					{t("contextMenus.notes.type")}
-				</ContextMenuItem>
+				<ContextMenuSub>
+					<ContextMenuSubTrigger
+						className="cursor-pointer"
+						onClick={e => e.stopPropagation()}
+					>
+						{t("contextMenus.notes.type")}
+					</ContextMenuSubTrigger>
+					<ContextMenuSubContent>
+						<ContextMenuItem
+							onClick={() => changeType("text")}
+							className={cn("cursor-pointer", note.type === "text" ? "text-blue-500" : "")}
+						>
+							{t("contextMenus.notes.types.text")}
+						</ContextMenuItem>
+						<ContextMenuItem
+							onClick={() => changeType("rich")}
+							className={cn("cursor-pointer", note.type === "rich" ? "text-blue-500" : "")}
+						>
+							{t("contextMenus.notes.types.rich")}
+						</ContextMenuItem>
+						<ContextMenuItem
+							onClick={() => changeType("checklist")}
+							className={cn("cursor-pointer", note.type === "checklist" ? "text-blue-500" : "")}
+						>
+							{t("contextMenus.notes.types.checklist")}
+						</ContextMenuItem>
+						<ContextMenuItem
+							onClick={() => changeType("md")}
+							className={cn("cursor-pointer", note.type === "md" ? "text-blue-500" : "")}
+						>
+							{t("contextMenus.notes.types.md")}
+						</ContextMenuItem>
+						<ContextMenuItem
+							onClick={() => changeType("code")}
+							className={cn("cursor-pointer", note.type === "code" ? "text-blue-500" : "")}
+						>
+							{t("contextMenus.notes.types.code")}
+						</ContextMenuItem>
+					</ContextMenuSubContent>
+				</ContextMenuSub>
 				<ContextMenuSeparator />
 				{note.pinned ? (
 					<ContextMenuItem
@@ -191,6 +353,33 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 						{t("contextMenus.notes.favorite")}
 					</ContextMenuItem>
 				)}
+				{tagsQuery.isSuccess && (
+					<>
+						<ContextMenuSub>
+							<ContextMenuSubTrigger
+								className="cursor-pointer"
+								onClick={e => e.stopPropagation()}
+							>
+								{t("contextMenus.notes.tags")}
+							</ContextMenuSubTrigger>
+							<ContextMenuSubContent>
+								{tagsQuery.data.map(tag => {
+									const includesTag = note.tags.map(t => t.uuid).includes(tag.uuid)
+
+									return (
+										<ContextMenuItem
+											key={tag.uuid}
+											onClick={() => (includesTag ? untagNote(tag) : tagNote(tag))}
+											className={cn("cursor-pointer", includesTag ? "text-blue-500" : "")}
+										>
+											{tag.name}
+										</ContextMenuItem>
+									)
+								})}
+							</ContextMenuSubContent>
+						</ContextMenuSub>
+					</>
+				)}
 				<ContextMenuSeparator />
 				<ContextMenuItem
 					onClick={duplicate}
@@ -199,7 +388,7 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 					{t("contextMenus.notes.duplicate")}
 				</ContextMenuItem>
 				<ContextMenuItem
-					onClick={() => {}}
+					onClick={exportNote}
 					className="cursor-pointer"
 				>
 					{t("contextMenus.notes.export")}

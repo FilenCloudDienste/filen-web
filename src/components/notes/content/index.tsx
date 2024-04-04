@@ -106,7 +106,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 	if (note.type === "checklist" || note.type === "rich") {
 		return (
 			<RichTextEditor
-				key={note.uuid}
+				key={`${note.uuid}-${note.type}`}
 				value={value}
 				setValue={setValue}
 				onValueChange={onValueChange}
@@ -120,7 +120,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 
 	return (
 		<TextEditor
-			key={note.uuid}
+			key={`${note.uuid}-${note.type}`}
 			fileName={note.type === "md" || editorType === "md" ? "note.md" : note.title}
 			value={value}
 			setValue={setValue}

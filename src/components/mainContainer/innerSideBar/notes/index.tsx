@@ -10,6 +10,7 @@ import Note from "./note"
 import { validate as validateUUID } from "uuid"
 import { useNavigate } from "@tanstack/react-router"
 import useRouteParent from "@/hooks/useRouteParent"
+import useSDKConfig from "@/hooks/useSDKConfig"
 
 export const Notes = memo(() => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -19,6 +20,7 @@ export const Notes = memo(() => {
 	const navigate = useNavigate()
 	const routeParent = useRouteParent()
 	const queryUpdatedAtRef = useRef<number>(-1)
+	const sdkConfig = useSDKConfig()
 
 	const query = useQuery({
 		queryKey: ["listNotes"],
@@ -101,6 +103,7 @@ export const Notes = memo(() => {
 								note={note}
 								setLastSelectedNote={setLastSelectedNote}
 								setSelectedNote={setSelectedNote}
+								userId={sdkConfig.userId}
 							/>
 						</div>
 					)
