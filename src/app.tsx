@@ -1,6 +1,6 @@
 import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
-import { RouterProvider, createRouter } from "@tanstack/react-router"
+import { RouterProvider, createRouter, createHashHistory } from "@tanstack/react-router"
 import { routeTree } from "@/routeTree.gen"
 import { Helmet, HelmetProvider } from "react-helmet-async"
 import { helmetCSS } from "./lib/helmet"
@@ -8,7 +8,7 @@ import "./index.css"
 import "react-quill/dist/quill.snow.css"
 import "./lib/i18n"
 
-const router = createRouter({ routeTree })
+const router = createRouter({ routeTree, history: createHashHistory() })
 
 declare module "@tanstack/react-router" {
 	interface Register {

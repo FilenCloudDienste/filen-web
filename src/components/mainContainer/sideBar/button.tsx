@@ -23,6 +23,7 @@ export const Button = memo(({ id }: { id: string }) => {
 	const [hovering, setHovering] = useState<boolean>(false)
 	const { t } = useTranslation()
 	const [lastSelectedNote] = useLocalStorage("lastSelectedNote", "")
+	const [lastSelectedChatsConversation] = useLocalStorage("lastSelectedChatsConversation", "")
 
 	const onClick = useCallback(
 		(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -47,7 +48,9 @@ export const Button = memo(({ id }: { id: string }) => {
 								? "/notes/$uuid"
 								: "/notes"
 							: id === "chats"
-								? "/chats"
+								? lastSelectedChatsConversation.length > 0
+									? "/chats/$uuid"
+									: "/chats"
 								: id === "settings"
 									? "/settings/$type"
 									: id === "contacts"
@@ -64,9 +67,11 @@ export const Button = memo(({ id }: { id: string }) => {
 							}
 						: id === "notes" && lastSelectedNote.length > 0
 							? { uuid: lastSelectedNote }
-							: undefined
+							: id === "chats" && lastSelectedChatsConversation.length > 0
+								? { uuid: lastSelectedChatsConversation }
+								: undefined
 		}
-	}, [id, sdkConfig.baseFolderUUID, lastSelectedNote])
+	}, [id, sdkConfig.baseFolderUUID, lastSelectedNote, lastSelectedChatsConversation])
 
 	const showIndicator = useMemo(() => {
 		return (

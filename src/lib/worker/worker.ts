@@ -14,6 +14,8 @@ import { THUMBNAIL_VERSION, THUMBNAIL_QUALITY, THUMBNAIL_MAX_SIZE } from "@/cons
 import pdfjsLib from "../pdfJS"
 import { type Note, type NoteType, type NoteTag } from "@filen/sdk/dist/types/api/v3/notes"
 import { simpleDate } from "@/utils"
+import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
+import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
 
 let isInitialized = false
 // We setup an eventEmitter first here in case we are running in the main thread.
@@ -1563,4 +1565,12 @@ export async function tagNote({ uuid, tag }: { uuid: string; tag: string }): Pro
 
 export async function untagNote({ uuid, tag }: { uuid: string; tag: string }): Promise<void> {
 	return await SDK.notes().untag({ uuid, tag })
+}
+
+export async function listChatsConversations(): Promise<ChatConversation[]> {
+	return await SDK.chats().conversations()
+}
+
+export async function fetchChatsConversationsMessages({ uuid, timestamp }: { uuid: string; timestamp?: number }): Promise<ChatMessage[]> {
+	return await SDK.chats().messages({ conversation: uuid, timestamp: timestamp ? timestamp : Date.now() + 3600000 })
 }

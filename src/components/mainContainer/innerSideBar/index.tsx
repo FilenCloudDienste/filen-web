@@ -8,6 +8,7 @@ import Notes from "./notes"
 import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import Top from "./top"
+import Chats from "./chats"
 
 export const InnerSideBar = memo(() => {
 	const sdkConfig = useSDKConfig()
@@ -20,7 +21,7 @@ export const InnerSideBar = memo(() => {
 			<div
 				className={cn(
 					"flex flex-col overflow-y-auto overflow-x-hidden dragselect-start-allowed",
-					!location.includes("notes") ? "py-3" : ""
+					!location.includes("notes") && !location.includes("chats") ? "py-3" : ""
 				)}
 				style={{
 					height: IS_DESKTOP
@@ -46,6 +47,7 @@ export const InnerSideBar = memo(() => {
 					</>
 				)}
 				{location.includes("notes") && <Notes />}
+				{location.includes("chats") && <Chats />}
 			</div>
 			<div className="py-3 px-3 border-t flex flex-col h-12 flex-1">
 				<p className="text-muted-foreground text-sm">{sdkConfig.email}</p>

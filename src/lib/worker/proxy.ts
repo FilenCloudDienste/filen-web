@@ -12,7 +12,7 @@ import { Semaphore, ISemaphore } from "../semaphore"
 import { getItem } from "@/lib/localForage"
 
 export const generateThumbnailMutexes: Record<string, ISemaphore> = {}
-export const generateThumbnailSemaphore = new Semaphore(10)
+export const generateThumbnailSemaphore = new Semaphore(3)
 
 // Setup message handler. The worker sends messages to the main thread.
 worker.setMessageHandler(proxy(event => eventEmitter.emit("workerMessage", event)))
