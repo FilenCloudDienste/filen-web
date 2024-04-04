@@ -8,6 +8,8 @@ import i18nextLoader from "vite-plugin-i18next-loader"
 import svgr from "vite-plugin-svgr"
 import topLevelAwait from "vite-plugin-top-level-await"
 
+const now = Date.now()
+
 export default defineConfig({
 	base: "/",
 	plugins: [
@@ -35,5 +37,15 @@ export default defineConfig({
 	worker: {
 		format: "es",
 		plugins: () => [comlink()]
+	},
+	build: {
+		sourcemap: true,
+		rollupOptions: {
+			output: {
+				chunkFileNames() {
+					return `[name].[hash].${now}.js`
+				}
+			}
+		}
 	}
 })

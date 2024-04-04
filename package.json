@@ -5,10 +5,11 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc && vite build",
+		"build": "npm run build:clean && tsc && vite build",
+		"build:clean": "rimraf ./dist",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "vite preview",
-		"serve": "serve dist/"
+		"serve": "serve -s dist/"
 	},
 	"dependencies": {
 		"@alptugidin/react-circular-progress-bar": "^1.1.2",
@@ -88,10 +89,11 @@
 		"geist": "^1.2.2",
 		"memfs": "^4.7.7",
 		"postcss": "^8.4.35",
+		"rimraf": "^5.0.5",
 		"serve": "^14.2.1",
 		"tailwindcss": "^3.4.1",
 		"typescript": "^5.2.2",
-		"vite": "^5.1.4",
+		"vite": "^5.2.8",
 		"vite-plugin-comlink": "^4.0.2",
 		"vite-plugin-i18next-loader": "^2.0.12",
 		"vite-plugin-node-polyfills": "^0.21.0",
