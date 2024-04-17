@@ -43,19 +43,21 @@ export const Button = memo(({ id }: { id: string }) => {
 					? "/drive/$"
 					: id === "syncs"
 						? "/drive/$"
-						: id === "notes"
-							? lastSelectedNote.length > 0
-								? "/notes/$uuid"
-								: "/notes"
-							: id === "chats"
-								? lastSelectedChatsConversation.length > 0
-									? "/chats/$uuid"
-									: "/chats"
-								: id === "settings"
-									? "/settings/$type"
-									: id === "contacts"
-										? "/contacts"
-										: "/",
+						: id === "mounts"
+							? "/drive/$"
+							: id === "notes"
+								? lastSelectedNote.length > 0
+									? "/notes/$uuid"
+									: "/notes"
+								: id === "chats"
+									? lastSelectedChatsConversation.length > 0
+										? "/chats/$uuid"
+										: "/chats"
+									: id === "settings"
+										? "/settings/$type"
+										: id === "contacts"
+											? "/contacts"
+											: "/",
 			params:
 				id === sdkConfig.baseFolderUUID
 					? {
@@ -81,7 +83,8 @@ export const Button = memo(({ id }: { id: string }) => {
 			(id === "notes" && location.includes("notes")) ||
 			(id === "chats" && location.includes("chats")) ||
 			(id === "contacts" && location.includes("contacts")) ||
-			(id === "syncs" && location.includes("syncs"))
+			(id === "syncs" && location.includes("syncs")) ||
+			(id === "mounts" && location.includes("mounts"))
 		)
 	}, [id, routeParent, location, sdkConfig.baseFolderUUID])
 
@@ -107,6 +110,12 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === "syncs" && (
 								<Icon
 									name="refresh-ccw"
+									size={iconSize}
+								/>
+							)}
+							{id === "mounts" && (
+								<Icon
+									name="hard-drive"
 									size={iconSize}
 								/>
 							)}
@@ -158,6 +167,7 @@ export const Button = memo(({ id }: { id: string }) => {
 						<p>
 							{id === sdkConfig.baseFolderUUID && t("sideBar.cloudDrive")}
 							{id === "syncs" && t("sideBar.syncs")}
+							{id === "mounts" && t("sideBar.mounts")}
 							{id === "notes" && t("sideBar.notes")}
 							{id === "chats" && t("sideBar.chats")}
 							{id === "contacts" && t("sideBar.contacts")}

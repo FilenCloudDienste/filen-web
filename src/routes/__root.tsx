@@ -18,6 +18,7 @@ import PreviewDialog from "@/components/dialogs/previewDialog"
 import { register as registerServiceWorker } from "register-service-worker"
 import { setItem } from "@/lib/localForage"
 import InputDialog from "@/components/dialogs/input"
+import { connect as socketConnect } from "@/lib/socket"
 
 export const persistantQueryClient = new QueryClient({
 	defaultOptions: {
@@ -55,6 +56,8 @@ export const Root = memo(() => {
 				initRef.current = true
 
 				sdk.init(sdkConfig)
+
+				socketConnect({ apiKey: sdkConfig.apiKey })
 
 				setItem("sdkConfig", sdkConfig)
 					.then(() => {

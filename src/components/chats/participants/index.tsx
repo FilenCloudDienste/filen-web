@@ -6,7 +6,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useTranslation } from "react-i18next"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import useWindowSize from "@/hooks/useWindowSize"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Avatar from "@/components/avatar"
+import ContextMenu from "./contextMenu"
 
 export const Participants = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const { t } = useTranslation()
@@ -67,22 +68,27 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 									key={virtualItem.key}
 									data-index={virtualItem.index}
 									ref={rowVirtualizer.measureElement}
-									className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-primary-foreground"
 								>
-									<Avatar className="w-7 h-7">
-										<AvatarImage src={participant.avatar!} />
-										<AvatarFallback>{participant.email}</AvatarFallback>
-									</Avatar>
-									<div className="flex flex-row items-center gap-3">
-										<p className="line-clamp-1 text-ellipsis break-all">{participant.email}</p>
-										{participant.userId === conversation.ownerId && (
-											<Icon
-												name="crown"
-												size={16}
-												className="text-yellow-500"
+									<ContextMenu participant={participant}>
+										<div className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-primary-foreground">
+											<Avatar
+												className="w-7 h-7"
+												src={participant.avatar!}
+												fallback={participant.email}
+												status="online"
 											/>
-										)}
-									</div>
+											<div className="flex flex-row items-center gap-3">
+												<p className="line-clamp-1 text-ellipsis break-all">{participant.email}</p>
+												{participant.userId === conversation.ownerId && (
+													<Icon
+														name="crown"
+														size={16}
+														className="text-yellow-500 shrink-0"
+													/>
+												)}
+											</div>
+										</div>
+									</ContextMenu>
 								</div>
 							)
 						})}

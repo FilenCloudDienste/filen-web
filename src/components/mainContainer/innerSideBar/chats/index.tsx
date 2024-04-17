@@ -10,6 +10,7 @@ import { useNavigate } from "@tanstack/react-router"
 import useRouteParent from "@/hooks/useRouteParent"
 import Chat from "./chat"
 import useSDKConfig from "@/hooks/useSDKConfig"
+import { IS_DESKTOP } from "@/constants"
 
 export const Chats = memo(() => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -77,7 +78,7 @@ export const Chats = memo(() => {
 		<div
 			ref={virtualizerParentRef}
 			style={{
-				height: windowSize.height - 48 * 2,
+				height: windowSize.height - 48 - 105 - (IS_DESKTOP ? 24 : 0),
 				overflowX: "hidden",
 				overflowY: "auto"
 			}}

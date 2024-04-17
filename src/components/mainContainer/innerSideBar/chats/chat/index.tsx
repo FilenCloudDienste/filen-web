@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"
 import { Link } from "@tanstack/react-router"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import ContextMenu from "./contextMenu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Avatar from "@/components/avatar"
 
 export const Chat = memo(
 	({
@@ -32,7 +32,7 @@ export const Chat = memo(
 			<ContextMenu conversation={conversation}>
 				<Link
 					className={cn(
-						"flex flex-row gap-4 p-3 border-l-[3px] hover:bg-primary-foreground h-full items-center",
+						"flex flex-row gap-3 p-3 border-l-[3px] hover:bg-primary-foreground h-full items-center",
 						routeParent === conversation.uuid ? "border-l-blue-500 bg-primary-foreground" : "border-transparent"
 					)}
 					to="/chats/$uuid"
@@ -42,10 +42,11 @@ export const Chat = memo(
 					onClick={select}
 				>
 					<div className="flex flex-row h-full">
-						<Avatar className="w-10 h-10">
-							<AvatarImage src={participantsWithoutUser[0].avatar!} />
-							<AvatarFallback>{participantsWithoutUser[0].email}</AvatarFallback>
-						</Avatar>
+						<Avatar
+							className="w-10 h-10"
+							src={participantsWithoutUser[0].avatar!}
+							fallback={participantsWithoutUser[0].email}
+						/>
 					</div>
 					<div className="flex flex-col grow h-full">
 						<p className="line-clamp-1 text-ellipsis break-all">
@@ -56,7 +57,7 @@ export const Chat = memo(
 									: participantsWithoutUser[0].email}
 						</p>
 						{conversation.lastMessage && conversation.lastMessage.length > 0 && (
-							<p className="text-muted-foreground line-clamp-1 text-ellipsis break-all">{conversation.lastMessage}</p>
+							<p className="text-muted-foreground line-clamp-1 text-ellipsis break-all text-sm">{conversation.lastMessage}</p>
 						)}
 					</div>
 				</Link>

@@ -1,7 +1,7 @@
 import { memo, useMemo, useCallback } from "react"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import useSDKConfig from "@/hooks/useSDKConfig"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Avatar from "@/components/avatar"
 import Icon from "@/components/icon"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -12,7 +12,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 	const sdkConfig = useSDKConfig()
 	const { t } = useTranslation()
 	const [conversationParticipantsContainerOpen, setConversationParticipantsContainerOpen] = useLocalStorage<boolean>(
-		"conversationParticipantsContainerOpen",
+		`conversationParticipantsContainerOpen:${conversation.uuid}`,
 		true
 	)
 
@@ -25,12 +25,13 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 	}, [setConversationParticipantsContainerOpen])
 
 	return (
-		<div className="w-full h-12 flex flex-row px-4 border-b shadow-sm items-center gap-2 justify-between">
+		<div className="w-full h-12 flex flex-row px-4 border-b shadow-sm items-center gap-2 justify-between shrink-0">
 			<div className="flex flex-row gap-2 items-center">
-				<Avatar className="w-6 h-6">
-					<AvatarImage src={participantsWithoutUser[0].avatar!} />
-					<AvatarFallback>{participantsWithoutUser[0].email}</AvatarFallback>
-				</Avatar>
+				<Avatar
+					className="w-6 h-6"
+					src={participantsWithoutUser[0].avatar!}
+					fallback={participantsWithoutUser[0].email}
+				/>
 				<p className="line-clamp-1 text-ellipsis break-all">
 					{conversation.name && conversation.name.length > 0
 						? conversation.name

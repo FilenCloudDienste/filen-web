@@ -16,6 +16,8 @@ import { type Note, type NoteType, type NoteTag } from "@filen/sdk/dist/types/ap
 import { simpleDate } from "@/utils"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
+import { type ChatTypingType } from "@filen/sdk/dist/types/api/v3/chat/typing"
+import { type ChatLastFocusValues } from "@filen/sdk/dist/types/api/v3/chat/lastFocusUpdate"
 
 let isInitialized = false
 // We setup an eventEmitter first here in case we are running in the main thread.
@@ -1573,4 +1575,58 @@ export async function listChatsConversations(): Promise<ChatConversation[]> {
 
 export async function fetchChatsConversationsMessages({ uuid, timestamp }: { uuid: string; timestamp?: number }): Promise<ChatMessage[]> {
 	return await SDK.chats().messages({ conversation: uuid, timestamp: timestamp ? timestamp : Date.now() + 3600000 })
+}
+
+export async function sendChatMessage({
+	conversation,
+	message,
+	replyTo,
+	uuid
+}: {
+	conversation: string
+	message: string
+	replyTo: string
+	uuid?: string
+}): Promise<string> {
+	return await SDK.chats().sendMessage({ conversation, message, replyTo, uuid })
+}
+
+export async function sendChatTyping({ conversation, type }: { conversation: string; type: ChatTypingType }): Promise<void> {
+	return await SDK.chats().sendTyping({ conversation, type })
+}
+
+export async function chatKey({ conversation }: { conversation: string }): Promise<string> {
+	return await SDK.chats().chatKey({ conversation })
+}
+
+export async function noteKey({ uuid }: { uuid: string }): Promise<string> {
+	return await SDK.notes().noteKey({ uuid })
+}
+
+export async function decryptChatMessage({ message, key }: { message: string; key: string }): Promise<string> {
+	return await SDK.crypto().decrypt().chatMessage({ message, key })
+}
+
+export async function chatLastFocus(): Promise<ChatLastFocusValues[]> {
+	return await SDK.chats().lastFocus()
+}
+
+export async function chatUpdateLastFocus({ values }: { values: ChatLastFocusValues[] }): Promise<void> {
+	return await SDK.chats().updateLastFocus({ values })
+}
+
+export async function chatDeleteMessage({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.chats().deleteMessage({ uuid })
+}
+
+export async function chatEditMessage({
+	uuid,
+	conversation,
+	message
+}: {
+	uuid: string
+	conversation: string
+	message: string
+}): Promise<void> {
+	return await SDK.chats().editMessage({ uuid, conversation, message })
 }

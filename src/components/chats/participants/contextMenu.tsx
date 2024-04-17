@@ -1,9 +1,9 @@
 import { memo } from "react"
 import { ContextMenu as CM, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu"
 import { useTranslation } from "react-i18next"
-import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
+import { type ChatConversationParticipant } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 
-export const ContextMenu = memo(({ conversation, children }: { conversation: ChatConversation; children: React.ReactNode }) => {
+export const ContextMenu = memo(({ participant, children }: { participant: ChatConversationParticipant; children: React.ReactNode }) => {
 	const { t } = useTranslation()
 
 	return (
@@ -14,7 +14,7 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 					onClick={() => {}}
 					className="cursor-pointer"
 				>
-					{conversation.lastMessage}
+					{participant.email}
 				</ContextMenuItem>
 			</ContextMenuContent>
 		</CM>
