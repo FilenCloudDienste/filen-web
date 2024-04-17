@@ -6,6 +6,8 @@ import { hyperLink } from "@uiw/codemirror-extensions-hyper-link"
 import { color } from "@uiw/codemirror-extensions-color"
 import Icon from "../icon"
 import { type Root, type Element, type RootContent } from "hast"
+import { ResizablePanelGroup, ResizableHandle, ResizablePanel } from "../ui/resizable"
+import { useLocalStorage } from "@uidotdev/usehooks"
 
 const CodeMirror = lazy(() => import("@uiw/react-codemirror"))
 const MarkdownPreview = lazy(() => import("@uiw/react-markdown-preview"))
@@ -43,6 +45,7 @@ export const TextEditor = memo(
 		onBlur?: () => void
 	}) => {
 		const theme = useTheme()
+		const [resizablePanelSizes, setResizablePanelSizes] = useLocalStorage<number[]>("textEditorResizablePanelSizes", [50, 50])
 
 		const onChange = useCallback(
 			(val: string) => {
@@ -109,66 +112,91 @@ export const TextEditor = memo(
 					</div>
 				}
 			>
-				<div className="flex flex-row">
-					<CodeMirror
-						value={value}
-						onChange={onChange}
-						height={height + "px"}
-						maxHeight={height + "px"}
-						minHeight={height + "px"}
-						width={(showMarkdownPreview ? Math.floor(width / 2) : width) + "px"}
-						maxWidth={(showMarkdownPreview ? Math.floor(width / 2) : width) + "px"}
-						minWidth={(showMarkdownPreview ? Math.floor(width / 2) : width) + "px"}
-						theme={editorTheme}
-						extensions={type === "code" ? [...langExtension, hyperLink, color] : undefined}
-						indentWithTab={indentWithTab}
-						editable={editable}
-						autoFocus={autoFocus}
-						readOnly={readOnly}
-						placeholder={placeholder}
-						onBlur={onBlur}
-						basicSetup={{
-							lineNumbers: type === "code",
-							searchKeymap: type === "code",
-							tabSize: 4,
-							highlightActiveLine: type === "code",
-							highlightActiveLineGutter: type === "code",
-							foldGutter: type === "code",
-							foldKeymap: type === "code"
-						}}
-						style={{
-							height,
-							minHeight: height,
-							maxHeight: height,
-							width: showMarkdownPreview ? Math.floor(width / 2) : width,
-							minWidth: showMarkdownPreview ? Math.floor(width / 2) : width,
-							maxWidth: showMarkdownPreview ? Math.floor(width / 2) : width
-						}}
-					/>
-					{showMarkdownPreview && (
-						<MarkdownPreview
-							source={value}
-							className="border-l"
-							style={{
-								width: Math.floor(width / 2) + "px",
-								height: height + "px",
-								paddingLeft: "15px",
-								paddingRight: "15px",
-								paddingTop: "10px",
-								paddingBottom: "15px",
-								color: theme.dark ? "white" : "black",
-								userSelect: "text",
-								backgroundColor: "transparent",
-								overflowY: "auto",
-								overflowX: "auto"
-							}}
-							rehypeRewrite={rehypeRewrite}
-							skipHtml={true}
-							wrapperElement={{
-								"data-color-mode": theme.dark ? "dark" : "light"
-							}}
-						/>
-					)}
+				<div className="flex flex-row w-full h-full">
+					<ResizablePanelGroup
+						direction="horizontal"
+						onLayout={setResizablePanelSizes}
+					>
+						<ResizablePanel
+							defaultSize={resizablePanelSizes[0]}
+							minSize={20}
+							maxSize={80}
+							order={1}
+						>
+							<CodeMirror
+								value={value}
+								onChange={onChange}
+								height={height + "px"}
+								maxHeight={height + "px"}
+								minHeight={height + "px"}
+								width="100%"
+								maxWidth="100%"
+								minWidth="100%"
+								theme={editorTheme}
+								extensions={type === "code" ? [...langExtension, hyperLink, color] : undefined}
+								indentWithTab={indentWithTab}
+								editable={editable}
+								autoFocus={autoFocus}
+								readOnly={readOnly}
+								placeholder={placeholder}
+								onBlur={onBlur}
+								basicSetup={{
+									lineNumbers: type === "code",
+									searchKeymap: type === "code",
+									tabSize: 4,
+									highlightActiveLine: type === "code",
+									highlightActiveLineGutter: type === "code",
+									foldGutter: type === "code",
+									foldKeymap: type === "code"
+								}}
+								style={{
+									height,
+									minHeight: height,
+									maxHeight: height,
+									width: "100%",
+									minWidth: "100%",
+									maxWidth: "100%"
+								}}
+							/>
+						</ResizablePanel>
+						{showMarkdownPreview && (
+							<>
+								<ResizableHandle
+									className="bg-transparent w-0"
+									withHandle={true}
+								/>
+								<ResizablePanel
+									defaultSize={resizablePanelSizes[1]}
+									minSize={20}
+									maxSize={80}
+									order={2}
+									className="border-l"
+								>
+									<MarkdownPreview
+										source={value}
+										style={{
+											width: "100%",
+											height: height + "px",
+											paddingLeft: "15px",
+											paddingRight: "15px",
+											paddingTop: "10px",
+											paddingBottom: "15px",
+											color: theme.dark ? "white" : "black",
+											userSelect: "text",
+											backgroundColor: "transparent",
+											overflowY: "auto",
+											overflowX: "auto"
+										}}
+										rehypeRewrite={rehypeRewrite}
+										skipHtml={true}
+										wrapperElement={{
+											"data-color-mode": theme.dark ? "dark" : "light"
+										}}
+									/>
+								</ResizablePanel>
+							</>
+						)}
+					</ResizablePanelGroup>
 				</div>
 			</Suspense>
 		)

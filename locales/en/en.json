@@ -107,7 +107,8 @@
 		"chats": "Chats",
 		"contacts": "Contacts",
 		"settings": "Settings",
-		"syncs": "Syncs"
+		"syncs": "Syncs",
+		"mounts": "Mounts"
 	},
 	"dialogs": {
 		"cancel": "Cancel",
@@ -183,5 +184,35 @@
 		"pause": "Pause",
 		"resume": "Resume",
 		"stop": "Stop"
+	},
+	"chats": {
+		"newMessagesSince": "{{count}} new messages since {{since}}",
+		"markAsRead": "Mark as read",
+		"newMessageSince": "{{count}} new message since {{since}}",
+		"message": {
+			"time": {
+				"now": "Now",
+				"secondAgo": "{{seconds}} second ago",
+				"secondsAgo": "{{seconds}} seconds ago",
+				"minuteAgo": "{{minutes}} minute ago",
+				"minutesAgo": "{{minutes}} minutes ago",
+				"hourAgo": "{{hours}} hour ago",
+				"hoursAgo": "{{hours}} hours ago",
+				"todayAt": "Today at {{date}}",
+				"yesterdayAt": "Yesterday at {{date}}"
+			},
+			"edited": "Edited",
+			"reply": "Reply",
+			"delete": "Delete",
+			"edit": "Edit",
+			"copyId": "Copy ID",
+			"copyText": "Copy text"
+		},
+		"input": {
+			"placeholder": "Send a message...",
+			"typing": "is typing...",
+			"typingMultiple": "are typing...",
+			"replyingTo": "Replying to"
+		}
 	}
 }

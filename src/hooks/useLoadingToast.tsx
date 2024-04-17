@@ -11,6 +11,7 @@ export default function useLoadingToast() {
 				<Icon
 					name="loader"
 					className="animate-spin-medium"
+					size={18}
 				/>
 			),
 			variant: "default"

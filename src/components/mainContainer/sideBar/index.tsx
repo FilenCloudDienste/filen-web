@@ -9,6 +9,7 @@ export const SideBar = memo(() => {
 	return (
 		<div className="w-full flex flex-col h-full gap-2 py-3 bg-secondary border-r select-none items-center overflow-hidden dragselect-start-allowed">
 			{IS_DESKTOP && <Button id="syncs" />}
+			{IS_DESKTOP && <Button id="mounts" />}
 			<Button id={sdkConfig.baseFolderUUID} />
 			<Button id="transfers" />
 			<Button id="notes" />

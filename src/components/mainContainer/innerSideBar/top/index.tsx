@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import useLocation from "@/hooks/useLocation"
 import Notes from "./notes"
+import Chats from "./chats"
 
 export const Top = memo(() => {
 	const sdkConfig = useSDKConfig()
@@ -12,7 +13,9 @@ export const Top = memo(() => {
 
 	return (
 		<>
-			{location.includes("notes") ? (
+			{location.includes("chats") ? (
+				<Chats />
+			) : location.includes("notes") ? (
 				<Notes />
 			) : (
 				<Link

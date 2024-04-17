@@ -6,7 +6,7 @@ import Icon from "@/components/icon"
 import { type Note as NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import ContextMenu from "./contextMenu"
 import { simpleDate } from "@/utils"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Avatar from "@/components/avatar"
 
 export const Note = memo(
 	({
@@ -132,10 +132,9 @@ export const Note = memo(
 									<Avatar
 										key={p.userId}
 										className="w-7 h-7"
-									>
-										<AvatarImage src={p.avatar!} />
-										<AvatarFallback>{p.email}</AvatarFallback>
-									</Avatar>
+										src={p.avatar!}
+										fallback={p.email}
+									/>
 								)
 							})}
 						</div>
