@@ -166,7 +166,7 @@ export const ReplaceMessageWithComponents = memo(
 									width: size,
 									height: size
 								}}
-								className="flex flex-row mr-[5px] mb-[3px] mt-[1px]"
+								className="flex flex-row mr-[5px] mb-[2px] mt-[1px]"
 							>
 								<img
 									src={customEmojisListRecord[customEmoji]}
@@ -197,7 +197,7 @@ export const ReplaceMessageWithComponents = memo(
 		}, [content, participants])
 
 		return (
-			<div className={cn("flex flex-row flex-wrap", failed && "text-red-500")}>
+			<div className={cn("flex flex-row flex-wrap gap-1", failed && "text-red-500")}>
 				{replaced.map((r, index) => {
 					if (typeof r === "string") {
 						if (r.length <= 0) {
@@ -224,7 +224,7 @@ export const ReplaceMessageWithComponents = memo(
 					)
 				})}
 				{edited && (
-					<p className="text-muted-foreground px-[5px] text-sm items-center flex flex-row">
+					<p className="text-muted-foreground px-[2px] text-sm items-center flex flex-row">
 						({t("chats.message.edited").toLowerCase()})
 					</p>
 				)}

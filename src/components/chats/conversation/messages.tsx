@@ -98,16 +98,9 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		}
 	}, [messagesSorted, setMessages, errorToast, conversation.uuid])
 
-	const atTopStateChange = useCallback(
-		(atTop: boolean) => {
-			if (!atTop) {
-				return
-			}
-
-			fetchPreviousMessages()
-		},
-		[fetchPreviousMessages]
-	)
+	const startReached = useCallback(() => {
+		fetchPreviousMessages()
+	}, [fetchPreviousMessages])
 
 	const getItemKey = useCallback((_: number, message: ChatMessage) => `${JSON.stringify(message)}`, [])
 
@@ -260,7 +253,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 				itemContent={itemContent}
 				atTopThreshold={500}
 				followOutput={true}
-				atTopStateChange={atTopStateChange}
+				startReached={startReached}
 				style={{
 					overflowX: "hidden",
 					overflowY: "auto",
