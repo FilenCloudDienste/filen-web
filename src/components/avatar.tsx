@@ -23,7 +23,7 @@ export const Avatar = memo(
 		return (
 			<div
 				ref={ref}
-				className={cn("flex flex-row", className ? className : "w-8 h-8")}
+				className={cn("flex flex-row shrink-0", className ? className : "w-8 h-8")}
 			>
 				{useFallback ? (
 					<p>{fallback.slice(0, 1).toUpperCase()}</p>
