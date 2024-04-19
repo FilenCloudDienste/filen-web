@@ -9,7 +9,7 @@ export const Avatar = memo(
 		status
 	}: {
 		src: string
-		fallback: string
+		fallback?: string
 		className?: string
 		status?: "online" | "away" | "busy" | "offline"
 	}) => {
@@ -25,15 +25,11 @@ export const Avatar = memo(
 				ref={ref}
 				className={cn("flex flex-row shrink-0", className ? className : "w-8 h-8")}
 			>
-				{useFallback ? (
-					<p>{fallback.slice(0, 1).toUpperCase()}</p>
-				) : (
-					<img
-						src={src}
-						className="w-full h-full object-contain rounded-full"
-						onError={onError}
-					/>
-				)}
+				<img
+					src={useFallback ? (fallback ? fallback : "/img/fallbackAvatar.webp") : src}
+					className="w-full h-full object-contain rounded-full"
+					onError={onError}
+				/>
 				{status && (
 					<div
 						className={cn(
