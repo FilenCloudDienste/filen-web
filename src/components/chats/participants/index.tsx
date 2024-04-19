@@ -73,7 +73,7 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 										<div className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-primary-foreground">
 											<Avatar
 												className="w-7 h-7"
-												src={participant.avatar!}
+												src={participant.avatar}
 												fallback={participant.email}
 												status="online"
 											/>

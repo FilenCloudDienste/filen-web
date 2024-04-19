@@ -29,7 +29,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 			<div className="flex flex-row gap-2 items-center">
 				<Avatar
 					className="w-6 h-6"
-					src={participantsWithoutUser[0].avatar!}
+					src={participantsWithoutUser[0].avatar}
 					fallback={participantsWithoutUser[0].email}
 				/>
 				<p className="line-clamp-1 text-ellipsis break-all">

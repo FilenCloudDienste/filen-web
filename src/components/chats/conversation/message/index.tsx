@@ -96,6 +96,8 @@ export const Message = memo(
 		editUUID: string
 		replyUUID: string
 	}) => {
+		const [hovering, setHovering] = useState<boolean>(false)
+
 		const groupWithPrevMessage = useMemo((): boolean => {
 			if (!prevMessage) {
 				return false
@@ -164,10 +166,14 @@ export const Message = memo(
 					message.senderId !== userId &&
 					!(prevMessage && prevMessage.sentTimestamp > lastFocus) && <NewDivider />}
 				{(!prevMessageSameDay || !prevMessage) && <DateDivider timestamp={message.sentTimestamp} />}
-				<ContextMenu message={message}>
+				<ContextMenu
+					message={message}
+					setHovering={setHovering}
+				>
 					<div
 						className={cn(
 							"flex flex-row border-l-2",
+							hovering && "bg-primary-foreground",
 							!groupWithPrevMessage ? "p-1 px-5 gap-4" : "p-1 px-5 pl-[73px]",
 							isNewMessage
 								? "border-red-500 bg-primary-foreground"
@@ -185,7 +191,7 @@ export const Message = memo(
 							<div className="flex flex-col">
 								<Avatar
 									className="w-9 h-9"
-									src={message.senderAvatar!}
+									src={message.senderAvatar}
 									fallback={message.senderEmail}
 								/>
 							</div>

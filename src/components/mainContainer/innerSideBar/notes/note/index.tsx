@@ -91,7 +91,7 @@ export const Note = memo(
 									<Avatar
 										key={p.userId}
 										className="w-7 h-7"
-										src={p.avatar!}
+										src={p.avatar}
 										fallback={p.email}
 									/>
 								)

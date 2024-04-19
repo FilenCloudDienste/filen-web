@@ -2,7 +2,7 @@ import { memo, useCallback, useState, useMemo } from "react"
 import { type DriveCloudItem } from "../.."
 import { UseNavigateResult } from "@tanstack/react-router"
 import { type VirtualItem } from "@tanstack/react-virtual"
-import { fileNameToSVGIcon, folderIcon } from "@/assets/fileExtensionIcons"
+import { fileNameToSVGIcon, ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { simpleDate, formatBytes } from "@/utils"
 import ContextMenu from "./contextMenu"
 import worker from "@/lib/worker"
@@ -16,6 +16,7 @@ import { Heart } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
 import { THUMBNAIL_MAX_FETCH_SIZE } from "@/constants"
+import { type DirColors } from "@filen/sdk/dist/types/api/v3/dir/color"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -302,17 +303,19 @@ export const ListItem = memo(
 						>
 							<div className="flex flex-row grow items-center dragselect-start-disallowed line-clamp-1 text-ellipsis gap-2 min-w-[200px]">
 								<div className="flex flex-row dragselect-start-disallowed shrink-0">
-									<img
-										src={
-											thumbnailURL
-												? thumbnailURL
-												: item.type === "directory"
-													? folderIcon
-													: fileNameToSVGIcon(item.name)
-										}
-										className={cn("w-7 h-7 dragselect-start-disallowed shrink-0", thumbnailURL ? "rounded-sm" : "")}
-										draggable={false}
-									/>
+									{item.type === "directory" ? (
+										<ColoredFolderSVGIcon
+											width="1.75rem"
+											height="1.75rem"
+											color={item.color as unknown as DirColors}
+										/>
+									) : (
+										<img
+											src={thumbnailURL ? thumbnailURL : fileNameToSVGIcon(item.name)}
+											className={cn("w-7 h-7 dragselect-start-disallowed shrink-0", thumbnailURL ? "rounded-sm" : "")}
+											draggable={false}
+										/>
+									)}
 								</div>
 								<div className="flex flex-row dragselect-start-disallowed items-center gap-2">
 									{item.favorited && (
@@ -354,16 +357,22 @@ export const ListItem = memo(
 									item.selected || hovering ? "bg-secondary border-primary" : ""
 								)}
 							>
-								<img
-									src={
-										thumbnailURL ? thumbnailURL : item.type === "directory" ? folderIcon : fileNameToSVGIcon(item.name)
-									}
-									className={cn(
-										"dragselect-start-disallowed shrink-0 rounded-lg",
-										thumbnailURL ? "w-full h-full" : "w-16 h-16"
-									)}
-									draggable={false}
-								/>
+								{item.type === "directory" ? (
+									<ColoredFolderSVGIcon
+										width="4rem"
+										height="4rem"
+										color={item.color as unknown as DirColors}
+									/>
+								) : (
+									<img
+										src={thumbnailURL ? thumbnailURL : fileNameToSVGIcon(item.name)}
+										className={cn(
+											"dragselect-start-disallowed shrink-0 rounded-lg",
+											thumbnailURL ? "w-full h-full" : "w-16 h-16"
+										)}
+										draggable={false}
+									/>
+								)}
 							</div>
 						</div>
 					)}
