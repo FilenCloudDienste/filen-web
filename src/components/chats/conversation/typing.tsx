@@ -3,7 +3,7 @@ import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/convers
 import { useTranslation } from "react-i18next"
 import { type SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
-import Icon from "@/components/icon"
+import { MoreHorizontal } from "lucide-react"
 
 export type TypingUser = {
 	id: number
@@ -20,10 +20,7 @@ export const Typing = memo(({ conversation }: { conversation: ChatConversation }
 	const typing = useMemo((): React.ReactNode => {
 		return (
 			<>
-				<Icon
-					name="more-horizontal"
-					className="animate-pulse"
-				/>
+				<MoreHorizontal className="animate-pulse" />
 				<p>{`${typingUsers.map(user => (user.nickName.length > 0 ? user.nickName : user.email)).join(",")} `}</p>
 				<p className="text-muted-foreground">{`${t(typingUsers.length <= 1 ? "chats.input.typing" : "chats.input.typingMultiple")}`}</p>
 			</>

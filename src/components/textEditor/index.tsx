@@ -4,10 +4,11 @@ import { useTheme } from "@/providers/themeProvider"
 import { loadLanguage } from "./langs"
 import { hyperLink } from "@uiw/codemirror-extensions-hyper-link"
 import { color } from "@uiw/codemirror-extensions-color"
-import Icon from "../icon"
+import { Loader } from "lucide-react"
 import { type Root, type Element, type RootContent } from "hast"
 import { ResizablePanelGroup, ResizableHandle, ResizablePanel } from "../ui/resizable"
 import { useLocalStorage } from "@uidotdev/usehooks"
+import { ErrorBoundary } from "react-error-boundary"
 
 const CodeMirror = lazy(() => import("@uiw/react-codemirror"))
 const MarkdownPreview = lazy(() => import("@uiw/react-markdown-preview"))
@@ -96,7 +97,7 @@ export const TextEditor = memo(
 		}, [])
 
 		return (
-			<Suspense
+			<ErrorBoundary
 				fallback={
 					<div
 						style={{
@@ -105,100 +106,111 @@ export const TextEditor = memo(
 						}}
 						className="flex flex-col items-center justify-center"
 					>
-						<Icon
-							name="loader"
-							className="animate-spin"
-						/>
+						<Loader className="animate-spin" />
 					</div>
 				}
 			>
-				<div className="flex flex-row w-full h-full">
-					<ResizablePanelGroup
-						direction="horizontal"
-						onLayout={setResizablePanelSizes}
-					>
-						<ResizablePanel
-							defaultSize={resizablePanelSizes[0]}
-							minSize={20}
-							maxSize={80}
-							order={1}
+				<Suspense
+					fallback={
+						<div
+							style={{
+								width,
+								height
+							}}
+							className="flex flex-col items-center justify-center"
 						>
-							<CodeMirror
-								value={value}
-								onChange={onChange}
-								height={height + "px"}
-								maxHeight={height + "px"}
-								minHeight={height + "px"}
-								width="100%"
-								maxWidth="100%"
-								minWidth="100%"
-								theme={editorTheme}
-								extensions={type === "code" ? [...langExtension, hyperLink, color] : undefined}
-								indentWithTab={indentWithTab}
-								editable={editable}
-								autoFocus={autoFocus}
-								readOnly={readOnly}
-								placeholder={placeholder}
-								onBlur={onBlur}
-								basicSetup={{
-									lineNumbers: type === "code",
-									searchKeymap: type === "code",
-									tabSize: 4,
-									highlightActiveLine: type === "code",
-									highlightActiveLineGutter: type === "code",
-									foldGutter: type === "code",
-									foldKeymap: type === "code"
-								}}
-								style={{
-									height,
-									minHeight: height,
-									maxHeight: height,
-									width: "100%",
-									minWidth: "100%",
-									maxWidth: "100%"
-								}}
-							/>
-						</ResizablePanel>
-						{showMarkdownPreview && (
-							<>
-								<ResizableHandle
-									className="bg-transparent w-0"
-									withHandle={true}
+							<Loader className="animate-spin" />
+						</div>
+					}
+				>
+					<div className="flex flex-row w-full h-full">
+						<ResizablePanelGroup
+							direction="horizontal"
+							onLayout={setResizablePanelSizes}
+						>
+							<ResizablePanel
+								defaultSize={resizablePanelSizes[0]}
+								minSize={20}
+								maxSize={80}
+								order={1}
+							>
+								<CodeMirror
+									value={value}
+									onChange={onChange}
+									height={height + "px"}
+									maxHeight={height + "px"}
+									minHeight={height + "px"}
+									width="100%"
+									maxWidth="100%"
+									minWidth="100%"
+									theme={editorTheme}
+									extensions={type === "code" ? [...langExtension, hyperLink, color] : undefined}
+									indentWithTab={indentWithTab}
+									editable={editable}
+									autoFocus={autoFocus}
+									readOnly={readOnly}
+									placeholder={placeholder}
+									onBlur={onBlur}
+									basicSetup={{
+										lineNumbers: type === "code",
+										searchKeymap: type === "code",
+										tabSize: 4,
+										highlightActiveLine: type === "code",
+										highlightActiveLineGutter: type === "code",
+										foldGutter: type === "code",
+										foldKeymap: type === "code"
+									}}
+									style={{
+										height,
+										minHeight: height,
+										maxHeight: height,
+										width: "100%",
+										minWidth: "100%",
+										maxWidth: "100%"
+									}}
 								/>
-								<ResizablePanel
-									defaultSize={resizablePanelSizes[1]}
-									minSize={20}
-									maxSize={80}
-									order={2}
-									className="border-l"
-								>
-									<MarkdownPreview
-										source={value}
-										style={{
-											width: "100%",
-											height: height + "px",
-											paddingLeft: "15px",
-											paddingRight: "15px",
-											paddingTop: "10px",
-											paddingBottom: "15px",
-											color: theme.dark ? "white" : "black",
-											userSelect: "text",
-											backgroundColor: "transparent",
-											overflowY: "auto",
-											overflowX: "auto"
-										}}
-										rehypeRewrite={rehypeRewrite}
-										skipHtml={true}
-										wrapperElement={{
-											"data-color-mode": theme.dark ? "dark" : "light"
-										}}
+							</ResizablePanel>
+							{showMarkdownPreview && (
+								<>
+									<ResizableHandle
+										className="bg-transparent w-0"
+										withHandle={true}
 									/>
-								</ResizablePanel>
-							</>
-						)}
-					</ResizablePanelGroup>
-				</div>
-			</Suspense>
+									<ResizablePanel
+										defaultSize={resizablePanelSizes[1]}
+										minSize={20}
+										maxSize={80}
+										order={2}
+										className="border-l"
+									>
+										<MarkdownPreview
+											source={value}
+											style={{
+												width: "100%",
+												height: height + "px",
+												paddingLeft: "15px",
+												paddingRight: "15px",
+												paddingTop: "10px",
+												paddingBottom: "15px",
+												color: theme.dark ? "white" : "black",
+												userSelect: "text",
+												backgroundColor: "transparent",
+												overflowY: "auto",
+												overflowX: "auto"
+											}}
+											rehypeRewrite={rehypeRewrite}
+											skipHtml={true}
+											wrapperElement={{
+												"data-color-mode": theme.dark ? "dark" : "light"
+											}}
+										/>
+									</ResizablePanel>
+								</>
+							)}
+						</ResizablePanelGroup>
+					</div>
+				</Suspense>
+			</ErrorBoundary>
 		)
 	}
 )

@@ -1,6 +1,6 @@
 import { memo, useRef } from "react"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
-import Icon from "@/components/icon"
+import { Plus, Crown } from "lucide-react"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useTranslation } from "react-i18next"
@@ -35,7 +35,7 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 								className="hover:bg-secondary rounded-lg p-1 cursor-pointer"
 								onClick={() => {}}
 							>
-								<Icon name="plus" />
+								<Plus />
 							</div>
 						</TooltipTrigger>
 						<TooltipContent side="left">
@@ -80,8 +80,7 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 											<div className="flex flex-row items-center gap-3">
 												<p className="line-clamp-1 text-ellipsis break-all">{participant.email}</p>
 												{participant.userId === conversation.ownerId && (
-													<Icon
-														name="crown"
+													<Crown
 														size={16}
 														className="text-yellow-500 shrink-0"
 													/>

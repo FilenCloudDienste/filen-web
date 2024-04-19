@@ -1,7 +1,7 @@
 import { memo, useCallback } from "react"
 import { useNavigate } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
-import Icon from "@/components/icon"
+import { Plus } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import worker from "@/lib/worker"
@@ -52,7 +52,7 @@ export const Notes = memo(() => {
 								className="hover:bg-secondary rounded-lg p-1 cursor-pointer"
 								onClick={createNote}
 							>
-								<Icon name="plus" />
+								<Plus />
 							</div>
 						</TooltipTrigger>
 						<TooltipContent side="left">

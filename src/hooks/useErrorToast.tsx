@@ -1,5 +1,5 @@
 import { useToast } from "@/components/ui/use-toast"
-import Icon from "@/components/icon"
+import { Ban } from "lucide-react"
 import { useCallback } from "react"
 
 export default function useErrorToast() {
@@ -10,10 +10,7 @@ export default function useErrorToast() {
 			return toast({
 				description: (
 					<div className="flex flex-row items-center gap-2">
-						<Icon
-							name="ban"
-							size={18}
-						/>
+						<Ban size={18} />
 						<p className="line-clamp-1 text-ellipsis break-all">{reason}</p>
 					</div>
 				),

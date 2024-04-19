@@ -1,7 +1,7 @@
 import { memo, useCallback } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
-import Icon from "@/components/icon"
+import { Heart, Plus } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
@@ -78,12 +78,7 @@ export const Tags = memo(() => {
 							className={cn(tagClassName, activeTag === tag.name ? "bg-secondary" : "")}
 							onClick={() => setActiveTag(tag.uuid)}
 						>
-							{tag.favorite && (
-								<Icon
-									name="heart"
-									size={14}
-								/>
-							)}
+							{tag.favorite && <Heart size={14} />}
 							<p>{tag.name}</p>
 						</div>
 					</ContextMenu>
@@ -96,10 +91,7 @@ export const Tags = memo(() => {
 							className={tagClassName}
 							onClick={createTag}
 						>
-							<Icon
-								name="plus"
-								size={18}
-							/>
+							<Plus size={18} />
 						</div>
 					</TooltipTrigger>
 					<TooltipContent side="left">

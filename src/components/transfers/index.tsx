@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress"
 import { calcSpeed, calcTimeLeft, getTimeRemaining, bpsToReadable } from "./utils"
 import { cn } from "@/lib/utils"
 import throttle from "lodash/throttle"
-import Icon from "../icon"
+import { ArrowDownUp } from "lucide-react"
 
 const transferStateSortingPriority: Record<TransferState, number> = {
 	started: 1,
@@ -268,10 +268,7 @@ export const Transfers = memo(() => {
 								className="w-full flex flex-col items-center justify-center text-muted-foreground gap-2"
 								style={{ height: windowSize.height - 85 }}
 							>
-								<Icon
-									name="arrow-down-up"
-									size={60}
-								/>
+								<ArrowDownUp size={60} />
 								<p>{t("transfers.noActiveTransfers")}</p>
 							</div>
 						) : (

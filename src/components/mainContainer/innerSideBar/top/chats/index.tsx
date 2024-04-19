@@ -1,6 +1,6 @@
 import { memo, useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import Icon from "@/components/icon"
+import { Plus } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { useChatsStore } from "@/stores/chats.store"
@@ -28,7 +28,7 @@ export const Chats = memo(() => {
 								className="hover:bg-secondary rounded-lg p-1 cursor-pointer"
 								onClick={() => {}}
 							>
-								<Icon name="plus" />
+								<Plus />
 							</div>
 						</TooltipTrigger>
 						<TooltipContent side="left">

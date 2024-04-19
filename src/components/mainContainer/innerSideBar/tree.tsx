@@ -2,7 +2,7 @@ import { memo, useMemo } from "react"
 import worker from "@/lib/worker"
 import { useQuery } from "@tanstack/react-query"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import Icon from "@/components/icon"
+import { ChevronRight, ChevronDown } from "lucide-react"
 import useRouteParent from "@/hooks/useRouteParent"
 import { Link } from "@tanstack/react-router"
 import { folderIcon } from "@/assets/fileExtensionIcons"
@@ -46,8 +46,7 @@ export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: 
 				>
 					{!sideBarTreeOpen[item.uuid] ? (
 						<>
-							<Icon
-								name="chevron-right"
+							<ChevronRight
 								className="cursor-pointer flex-shrink-0 text-primary"
 								onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [item.uuid]: true }))}
 								size={16}
@@ -60,8 +59,7 @@ export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: 
 						</>
 					) : (
 						<>
-							<Icon
-								name="chevron-down"
+							<ChevronDown
 								className="cursor-pointer flex-shrink-0 text-primary"
 								onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [item.uuid]: false }))}
 								size={16}

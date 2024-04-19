@@ -10,7 +10,7 @@ import worker from "@/lib/worker"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
-import Icon from "@/components/icon"
+import { Loader, Eye } from "lucide-react"
 
 export const Route = createLazyFileRoute("/login")({
 	component: Login
@@ -114,14 +114,7 @@ export function Login() {
 											onClick={login}
 											disabled={loading}
 										>
-											{loading ? (
-												<Icon
-													name="loader"
-													className="animate-spin-medium"
-												/>
-											) : (
-												t("login.buttons.login")
-											)}
+											{loading ? <Loader className="animate-spin-medium" /> : t("login.buttons.login")}
 										</Button>
 									</>
 								) : (
@@ -170,14 +163,7 @@ export function Login() {
 											onClick={login}
 											disabled={loading}
 										>
-											{loading ? (
-												<Icon
-													name="loader"
-													className="animate-spin-medium"
-												/>
-											) : (
-												t("login.buttons.login")
-											)}
+											{loading ? <Loader className="animate-spin-medium" /> : t("login.buttons.login")}
 										</Button>
 									</>
 								)}
@@ -213,8 +199,7 @@ export function Login() {
 									/>
 									<div className="flex flex-row absolute w-80 sm:w-[420px] h-10 ml-80 sm:ml-[420px]">
 										<div className="flex flex-row items-center h-full w-full ml-[-95px]">
-											<Icon
-												name="eye"
+											<Eye
 												size={20}
 												className="cursor-pointer"
 												onClick={() => setShowPassword(prev => !prev)}
@@ -228,14 +213,7 @@ export function Login() {
 									onClick={login}
 									disabled={loading}
 								>
-									{loading ? (
-										<Icon
-											name="loader"
-											className="animate-spin-medium"
-										/>
-									) : (
-										t("login.buttons.login")
-									)}
+									{loading ? <Loader className="animate-spin-medium" /> : t("login.buttons.login")}
 								</Button>
 								<Link
 									className="inline-block w-full text-center text-sm underline text-muted-foreground"

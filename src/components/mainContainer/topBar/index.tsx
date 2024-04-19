@@ -1,6 +1,6 @@
 import { memo, useCallback, useTransition } from "react"
 import { Input } from "@/components/ui/input"
-import Icon from "@/components/icon"
+import { Search, List, Grid3X3 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import Breadcrumbs from "./breadcrumbs"
 import { useDriveItemsStore } from "@/stores/drive.store"
@@ -56,8 +56,7 @@ export const TopBar = memo(() => {
 						<div className="flex flex-row w-[250px] h-full items-center">
 							<div className="absolute h-full pl-2">
 								<div className="h-full flex flex-row items-center">
-									<Icon
-										name="search"
+									<Search
 										className="text-muted-foreground"
 										size={16}
 									/>
@@ -98,14 +97,12 @@ export const TopBar = memo(() => {
 							</DropdownMenuContent>
 						</DropdownMenu>
 						{listType[parent] === "grid" ? (
-							<Icon
-								name="list"
+							<List
 								className="text-muted-foreground hover:text-primary cursor-pointer"
 								onClick={changeListType}
 							/>
 						) : (
-							<Icon
-								name="grid-3x3"
+							<Grid3X3
 								className="text-muted-foreground hover:text-primary cursor-pointer"
 								onClick={changeListType}
 							/>

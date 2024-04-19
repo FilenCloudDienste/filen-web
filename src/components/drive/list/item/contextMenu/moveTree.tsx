@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo } from "react"
 import { ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent, ContextMenuItem } from "@/components/ui/context-menu"
 import worker from "@/lib/worker"
 import { useQuery } from "@tanstack/react-query"
-import Icon from "@/components/icon"
+import { Loader } from "lucide-react"
 import { useDriveItemsStore } from "@/stores/drive.store"
 import { move as moveAction } from "./actions"
 import { orderItemsByType } from "@/components/drive/utils"
@@ -80,8 +80,7 @@ export const MoveTree = memo(({ parent, name }: { parent: string; name: string }
 					}}
 					className="cursor-pointer"
 				>
-					<Icon
-						name="loader"
+					<Loader
 						size={18}
 						className="animate-spin-medium"
 					/>

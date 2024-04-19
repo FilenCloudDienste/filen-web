@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
-import Icon from "../icon"
+import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -51,10 +51,7 @@ const DialogContent = React.forwardRef<
 					className?.includes("no-close-button") && "hidden"
 				)}
 			>
-				<Icon
-					name="x"
-					className="h-4 w-4"
-				/>
+				<X className="h-4 w-4" />
 				<span className="sr-only">Close</span>
 			</DialogPrimitive.Close>
 		</DialogPrimitive.Content>

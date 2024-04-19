@@ -8,7 +8,7 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import { folderIcon } from "@/assets/fileExtensionIcons"
 import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
-import Icon from "@/components/icon"
+import { ChevronRight, ChevronDown, Timer, Heart, Link as LinkIcon, Trash, Notebook, MessageCircle, Settings } from "lucide-react"
 import useLocation from "@/hooks/useLocation"
 
 const iconSize = 20
@@ -37,14 +37,12 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 					<>
 						<div className="flex flex-row gap-2">
 							{!sideBarTreeOpen[uuid] ? (
-								<Icon
-									name="chevron-right"
+								<ChevronRight
 									size={iconSize - 2}
 									onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: true }))}
 								/>
 							) : (
-								<Icon
-									name="chevron-down"
+								<ChevronDown
 									size={iconSize - 2}
 									onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: false }))}
 								/>
@@ -60,64 +58,43 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				)}
 				{uuid === "recents" && (
 					<>
-						<Icon
-							name="timer"
-							size={iconSize}
-						/>
+						<Timer size={iconSize} />
 						<p>{t("innerSideBar.recents")}</p>
 					</>
 				)}
 				{uuid === "favorites" && (
 					<>
-						<Icon
-							name="heart"
-							size={iconSize}
-						/>
+						<Heart size={iconSize} />
 						<p>{t("innerSideBar.favorites")}</p>
 					</>
 				)}
 				{uuid === "trash" && (
 					<>
-						<Icon
-							name="trash"
-							size={iconSize}
-						/>
+						<Trash size={iconSize} />
 						<p>{t("innerSideBar.trash")}</p>
 					</>
 				)}
 				{uuid === "shared-in" && (
 					<>
-						<Icon
-							name="notebook"
-							size={iconSize}
-						/>
+						<Notebook size={iconSize} />
 						<p>{t("innerSideBar.sharedWithMe")}</p>
 					</>
 				)}
 				{uuid === "shared-out" && (
 					<>
-						<Icon
-							name="message-circle"
-							size={iconSize}
-						/>
+						<MessageCircle size={iconSize} />
 						<p>{t("innerSideBar.sharedWithOthers")}</p>
 					</>
 				)}
 				{uuid === "links" && (
 					<>
-						<Icon
-							name="link"
-							size={iconSize}
-						/>
+						<LinkIcon size={iconSize} />
 						<p>{t("innerSideBar.links")}</p>
 					</>
 				)}
 				{uuid === "settings/general" && (
 					<>
-						<Icon
-							name="settings"
-							size={iconSize}
-						/>
+						<Settings size={iconSize} />
 						<p>{t("innerSideBar.settings.general")}</p>
 					</>
 				)}

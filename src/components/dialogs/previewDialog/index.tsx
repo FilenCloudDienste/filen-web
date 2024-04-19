@@ -9,15 +9,12 @@ import PDF from "./pdf"
 import Image from "./image"
 import Video from "./video"
 import DocX from "./docx"
-import Icon from "@/components/icon"
+import { Loader as LoaderIcon, X } from "lucide-react"
 
 export const Loader = memo(() => {
 	return (
 		<div className="flex flex-col items-center justify-center w-full h-full">
-			<Icon
-				name="loader"
-				className="animate-spin-medium"
-			/>
+			<LoaderIcon className="animate-spin-medium" />
 		</div>
 	)
 })
@@ -113,8 +110,7 @@ export const PreviewDialog = memo(() => {
 					<div className="absolute w-screen h-screen flex flex-col">
 						<div className="flex flex-row border-b h-12 shadow-md bg-secondary w-full items-center justify-between px-4 -mt-[1px]">
 							{item.name}
-							<Icon
-								name="x"
+							<X
 								className="h-4 w-4 opacity-70 hover:opacity-100 cursor-pointer"
 								onClick={() => setOpen(false)}
 							/>

@@ -2,7 +2,7 @@ import { memo, useState, useCallback } from "react"
 import { type DriveCloudItem } from "@/components/drive"
 import { type VirtualItem } from "@tanstack/react-virtual"
 import FolderIcon from "@/assets/fileExtensionIcons/svg/folder.svg?react"
-import Icon from "@/components/icon"
+import { ChevronRight } from "lucide-react"
 import { formatBytes } from "@/utils"
 import { directorySizeCache } from "@/cache"
 import worker from "@/lib/worker"
@@ -72,10 +72,7 @@ export const ListItem = memo(
 				</div>
 				<div className="flex flex-row items-center gap-2 text-primary shrink-0 select-none">
 					<p>{formatBytes(size)}</p>
-					<Icon
-						name="chevron-right"
-						size={18}
-					/>
+					<ChevronRight size={18} />
 				</div>
 			</div>
 		)

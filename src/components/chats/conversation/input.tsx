@@ -2,7 +2,7 @@ import { memo, useState, useCallback, useMemo, useRef, useEffect } from "react"
 import { withReact, ReactEditor, Slate, Editable } from "slate-react"
 import { withHistory, type HistoryEditor } from "slate-history"
 import { createEditor, Editor, type BaseEditor, Transforms } from "slate"
-import Icon from "@/components/icon"
+import { PlusCircle, XCircle } from "lucide-react"
 import worker from "@/lib/worker"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { useChatsStore } from "@/stores/chats.store"
@@ -360,8 +360,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			id="chat-input-container"
 		>
 			<div className="absolute z-50">
-				<Icon
-					name="plus-circle"
+				<PlusCircle
 					size={24}
 					className="cursor-pointer mt-[12px] ml-[10px] text-muted-foreground hover:text-foreground"
 				/>
@@ -380,8 +379,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 								{replyMessage.senderNickName.length > 0 ? replyMessage.senderNickName : replyMessage.senderEmail}
 							</p>
 						</div>
-						<Icon
-							name="x-circle"
+						<XCircle
 							size={16}
 							className="cursor-pointer"
 							onClick={() => setReplyMessage(null)}

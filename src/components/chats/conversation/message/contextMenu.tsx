@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/context-menu"
 import { useTranslation } from "react-i18next"
 import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
-import Icon from "@/components/icon"
+import { Reply, Copy, Text, Delete } from "lucide-react"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import worker from "@/lib/worker"
 import useLoadingToast from "@/hooks/useLoadingToast"
@@ -131,20 +131,14 @@ export const ContextMenu = memo(({ message, children }: { message: ChatMessage; 
 					onClick={reply}
 					className="cursor-pointer gap-3"
 				>
-					<Icon
-						name="reply"
-						size={iconSize}
-					/>
+					<Reply size={iconSize} />
 					{t("chats.message.reply")}
 				</ContextMenuItem>
 				<ContextMenuItem
 					onClick={copyText}
 					className="cursor-pointer gap-3"
 				>
-					<Icon
-						name="copy"
-						size={iconSize}
-					/>
+					<Copy size={iconSize} />
 					{t("chats.message.copyText")}
 				</ContextMenuItem>
 				{userId === message.senderId && (
@@ -154,20 +148,14 @@ export const ContextMenu = memo(({ message, children }: { message: ChatMessage; 
 							onClick={edit}
 							className="cursor-pointer gap-3"
 						>
-							<Icon
-								name="text"
-								size={iconSize}
-							/>
+							<Text size={iconSize} />
 							{t("chats.message.edit")}
 						</ContextMenuItem>
 						<ContextMenuItem
 							onClick={deleteMessage}
 							className="cursor-pointer gap-3 text-red-500"
 						>
-							<Icon
-								name="delete"
-								size={iconSize}
-							/>
+							<Delete size={iconSize} />
 							{t("chats.message.delete")}
 						</ContextMenuItem>
 					</>
@@ -177,10 +165,7 @@ export const ContextMenu = memo(({ message, children }: { message: ChatMessage; 
 					onClick={copyId}
 					className="cursor-pointer gap-3"
 				>
-					<Icon
-						name="copy"
-						size={iconSize}
-					/>
+					<Copy size={iconSize} />
 					{t("chats.message.copyId")}
 				</ContextMenuItem>
 			</ContextMenuContent>

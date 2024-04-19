@@ -12,7 +12,7 @@ import eventEmitter from "@/lib/eventEmitter"
 import { generateThumbnail } from "@/lib/worker/proxy"
 import { fileNameToThumbnailType, fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
 import { cn } from "@/lib/utils"
-import Icon from "@/components/icon"
+import { Heart } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
 import { THUMBNAIL_MAX_FETCH_SIZE } from "@/constants"
@@ -316,8 +316,7 @@ export const ListItem = memo(
 								</div>
 								<div className="flex flex-row dragselect-start-disallowed items-center gap-2">
 									{item.favorited && (
-										<Icon
-											name="heart"
+										<Heart
 											size={18}
 											className="dragselect-start-disallowed shrink-0"
 										/>

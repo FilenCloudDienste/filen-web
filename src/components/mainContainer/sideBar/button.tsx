@@ -1,5 +1,5 @@
 import { memo, useState, useCallback, useMemo } from "react"
-import Icon from "@/components/icon"
+import { RefreshCcw, HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
@@ -107,18 +107,8 @@ export const Button = memo(({ id }: { id: string }) => {
 							to={link.to}
 							params={link.params}
 						>
-							{id === "syncs" && (
-								<Icon
-									name="refresh-ccw"
-									size={iconSize}
-								/>
-							)}
-							{id === "mounts" && (
-								<Icon
-									name="hard-drive"
-									size={iconSize}
-								/>
-							)}
+							{id === "syncs" && <RefreshCcw size={iconSize} />}
+							{id === "mounts" && <HardDrive size={iconSize} />}
 							{id === sdkConfig.baseFolderUUID && (
 								<img
 									src={
@@ -130,36 +120,11 @@ export const Button = memo(({ id }: { id: string }) => {
 									draggable={false}
 								/>
 							)}
-							{id === "notes" && (
-								<Icon
-									name="notebook"
-									size={iconSize}
-								/>
-							)}
-							{id === "chats" && (
-								<Icon
-									name="message-circle"
-									size={iconSize}
-								/>
-							)}
-							{id === "contacts" && (
-								<Icon
-									name="contact"
-									size={iconSize}
-								/>
-							)}
-							{id === "settings" && (
-								<Icon
-									name="settings"
-									size={iconSize}
-								/>
-							)}
-							{id === "transfers" && (
-								<Icon
-									name="arrow-down-up"
-									size={iconSize}
-								/>
-							)}
+							{id === "notes" && <Notebook size={iconSize} />}
+							{id === "chats" && <MessageCircle size={iconSize} />}
+							{id === "contacts" && <Contact size={iconSize} />}
+							{id === "settings" && <Settings size={iconSize} />}
+							{id === "transfers" && <ArrowDownUp size={iconSize} />}
 							{id === "transfers" && <TransfersProgress />}
 						</Link>
 					</TooltipTrigger>

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { OTPInput, SlotProps } from "input-otp"
-import Icon from "../icon"
+import { Dot } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -54,7 +54,7 @@ const InputOTPSeparator = React.forwardRef<React.ElementRef<"div">, React.Compon
 		role="separator"
 		{...props}
 	>
-		<Icon name="dot" />
+		<Dot />
 	</div>
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"

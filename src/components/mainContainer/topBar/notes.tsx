@@ -1,6 +1,6 @@
 import { memo, useCallback } from "react"
 import { useNotesStore } from "@/stores/notes.store"
-import Icon from "@/components/icon"
+import { CheckCircle2, Loader, MoreVertical } from "lucide-react"
 import { showInputDialog } from "@/components/dialogs/input"
 import worker from "@/lib/worker"
 import ContextMenu from "../innerSideBar/notes/note/contextMenu"
@@ -61,17 +61,7 @@ export const Notes = memo(() => {
 	return (
 		<div className="flex flex-row px-4 items-center gap-3 w-full h-12 z-50 bg-background shadow-sm">
 			<div className="flex flex-row">
-				{synced ? (
-					<Icon
-						name="check-circle-2"
-						className="text-green-500"
-					/>
-				) : (
-					<Icon
-						name="loader"
-						className="animate-spin-medium"
-					/>
-				)}
+				{synced ? <CheckCircle2 className="text-green-500" /> : <Loader className="animate-spin-medium" />}
 			</div>
 			<div className="flex flex-row grow">
 				<p
@@ -87,8 +77,7 @@ export const Notes = memo(() => {
 						className="flex flex-row p-1 rounded-lg hover:bg-secondary cursor-pointer"
 						onClick={triggerMoreIconContextMenu}
 					>
-						<Icon
-							name="more-vertical"
+						<MoreVertical
 							onClick={triggerMoreIconContextMenu}
 							className="cursor-pointer"
 						/>

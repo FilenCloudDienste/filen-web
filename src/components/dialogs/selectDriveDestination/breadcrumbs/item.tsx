@@ -1,5 +1,5 @@
 import { memo, useCallback, useState, useMemo } from "react"
-import Icon from "@/components/icon"
+import { ChevronRight } from "lucide-react"
 import { directoryUUIDToNameCache } from "@/cache"
 import { getItem } from "@/lib/localForage"
 import { useTranslation } from "react-i18next"
@@ -91,8 +91,7 @@ export const Item = memo(
 					{name}
 				</p>
 				{index < components.length - 1 && (
-					<Icon
-						name="chevron-right"
+					<ChevronRight
 						size={16}
 						className="select-none mx-[1px]"
 					/>

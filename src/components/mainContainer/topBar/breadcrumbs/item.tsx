@@ -1,5 +1,5 @@
 import { memo, useCallback, useState, useEffect } from "react"
-import Icon from "@/components/icon"
+import { ChevronRight } from "lucide-react"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { validate as validateUUID } from "uuid"
 import { getItem } from "@/lib/localForage"
@@ -107,12 +107,7 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 			>
 				{path === sdkConfig.baseFolderUUID ? t("topBar.breadcrumb.cloudDrive") : name}
 			</p>
-			{index < pathname.split("/").length - 1 && (
-				<Icon
-					name="chevron-right"
-					size={18}
-				/>
-			)}
+			{index < pathname.split("/").length - 1 && <ChevronRight size={18} />}
 		</div>
 	)
 })

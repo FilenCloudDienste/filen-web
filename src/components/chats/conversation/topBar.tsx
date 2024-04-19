@@ -2,7 +2,7 @@ import { memo, useMemo, useCallback } from "react"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import Avatar from "@/components/avatar"
-import Icon from "@/components/icon"
+import { ChevronRight, ChevronLeft } from "lucide-react"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useTranslation } from "react-i18next"
@@ -47,7 +47,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 							className="hover:bg-secondary rounded-lg p-1 cursor-pointer"
 							onClick={toggleParticipantsContainer}
 						>
-							<Icon name={conversationParticipantsContainerOpen ? "chevron-right" : "chevron-left"} />
+							{conversationParticipantsContainerOpen ? <ChevronRight /> : <ChevronLeft />}
 						</div>
 					</TooltipTrigger>
 					<TooltipContent side="left">

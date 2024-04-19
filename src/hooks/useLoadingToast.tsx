@@ -1,5 +1,5 @@
 import { useToast } from "@/components/ui/use-toast"
-import Icon from "@/components/icon"
+import { Loader } from "lucide-react"
 import { useCallback } from "react"
 
 export default function useLoadingToast() {
@@ -8,8 +8,7 @@ export default function useLoadingToast() {
 	const show = useCallback(() => {
 		return toast({
 			description: (
-				<Icon
-					name="loader"
+				<Loader
 					className="animate-spin-medium"
 					size={18}
 				/>

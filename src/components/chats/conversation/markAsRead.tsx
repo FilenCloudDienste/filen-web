@@ -3,7 +3,7 @@ import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/convers
 import { type UseQueryResult } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import useElementDimensions from "@/hooks/useElementDimensions"
-import Icon from "@/components/icon"
+import { Loader, Check } from "lucide-react"
 import { type ChatLastFocusValues } from "@filen/sdk/dist/types/api/v3/chat/lastFocusUpdate"
 import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
 import useSDKConfig from "@/hooks/useSDKConfig"
@@ -109,18 +109,14 @@ export const MarkAsRead = memo(
 				</p>
 				<p className="line-clamp-1 text-ellipsis break-all flex flex-row items-center gap-2 shrink-0">
 					{markingAsRead ? (
-						<Icon
-							name="loader"
+						<Loader
 							className="animate-spin-medium"
 							size={18}
 						/>
 					) : (
 						<>
 							{t("chats.markAsRead")}
-							<Icon
-								name="check"
-								size={18}
-							/>
+							<Check size={18} />
 						</>
 					)}
 				</p>
