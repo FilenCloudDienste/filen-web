@@ -125,7 +125,6 @@ export const Content = memo(({ note }: { note: Note }) => {
 			value={value}
 			setValue={setValue}
 			onValueChange={onValueChange}
-			width={resizablePanelSizes.right.width}
 			height={windowSize.height - 48}
 			type={editorType === "code" || editorType === "md" || note.type === "md" || note.type === "code" ? "code" : "text"}
 			placeholder="Note content..."

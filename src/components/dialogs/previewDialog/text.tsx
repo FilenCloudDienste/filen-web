@@ -20,7 +20,6 @@ export const Text = memo(({ buffer, item }: { buffer: Buffer; item: DriveCloudIt
 				fileName={item.name}
 				value={value}
 				setValue={setValue}
-				width={previewType === "md" ? Math.floor(windowSize.width / 2) : windowSize.width}
 				height={windowSize.height - 48}
 				type={previewType === "code" ? "code" : "text"}
 			/>
