@@ -180,7 +180,7 @@ export function shadeColor(color: string, decimal: number): string {
 }
 
 export const ColoredFolderSVGIcon = memo(
-	({ color, width, height }: { color: DirColors | null; width?: string | number; height?: string | number }) => {
+	({ color, width, height }: { color?: DirColors | null; width?: string | number; height?: string | number }) => {
 		const colors = useMemo(() => {
 			if (!color || color === "default") {
 				return {
