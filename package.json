@@ -4,12 +4,12 @@
 	"version": "0.1.1",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
-		"build": "npm run build:clean && tsc && vite build",
+		"dev": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && vite",
+		"build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && npm run build:clean && tsc && vite build",
 		"build:clean": "rimraf ./dist",
-		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-		"preview": "vite preview",
-		"serve": "serve -s dist/"
+		"lint": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+		"preview": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && vite preview",
+		"serve": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && serve -s dist/"
 	},
 	"dependencies": {
 		"@alptugidin/react-circular-progress-bar": "^1.1.2",
@@ -95,6 +95,7 @@
 		"@typescript-eslint/parser": "^7.0.2",
 		"@vitejs/plugin-react-swc": "^3.5.0",
 		"autoprefixer": "^10.4.18",
+		"cross-env": "^7.0.3",
 		"electron": "^29.1.0",
 		"eslint": "^8.56.0",
 		"eslint-plugin-react-hooks": "^4.6.0",
