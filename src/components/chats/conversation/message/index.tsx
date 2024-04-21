@@ -172,8 +172,8 @@ export const Message = memo(
 				>
 					<div
 						className={cn(
-							"flex flex-row border-l-2",
-							hovering && "bg-primary-foreground",
+							"flex flex-row border-l-2 animate-in animate-out transition-all",
+							hovering ? (mentioningMe ? "bg-yellow-600 bg-opacity-10" : "bg-primary-foreground") : "",
 							!groupWithPrevMessage ? "p-1 px-5 gap-4" : "p-1 px-5 pl-[73px]",
 							isNewMessage
 								? "border-red-500 bg-primary-foreground"

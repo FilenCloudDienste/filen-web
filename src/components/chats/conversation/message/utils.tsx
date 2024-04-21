@@ -1,10 +1,11 @@
 import regexifyString from "regexify-string"
 import { type ChatConversationParticipant } from "@filen/sdk/dist/types/api/v3/chat/conversations"
-import { useMemo, memo } from "react"
+import { useMemo, memo, useRef, useEffect, createElement } from "react"
 import EMOJI_REGEX from "emojibase-regex"
 import { type TFunction } from "i18next"
-import { customEmojis } from "./customEmojis"
+import { customEmojis } from "../../customEmojis"
 import { cn } from "@/lib/utils"
+import { Emoji } from "emoji-mart"
 
 export const MENTION_REGEX = /(@[\w.-]+@[\w.-]+\.\w+|@everyone)/g
 export const customEmojisList = customEmojis.map(emoji => emoji.id)
@@ -20,6 +21,32 @@ export const mentions = /(@[\w.-]+@[\w.-]+\.\w+|@everyone)/
 export const emojiRegex = new RegExp(`${EMOJI_REGEX.source}|${emojiRegexWithSkinTones.source}`)
 export const messageContentRegex = new RegExp(
 	`${EMOJI_REGEX.source}|${emojiRegexWithSkinTones.source}|${codeRegex.source}|${lineBreakRegex.source}|${linkRegex.source}|${mentions.source}`
+)
+
+// Dirty because emoji-mart's Emoji component does not support react yet
+export const EmojiElement = memo(
+	(props: { shortcodes?: string; native?: string; fallback?: string; size: string; style?: React.CSSProperties }) => {
+		const ref = useRef<HTMLSpanElement>(null)
+		const instance = useRef<Emoji | null>(null)
+
+		if (instance.current) {
+			// @ts-expect-error emoji-mart types are bad
+			instance.current.update(props)
+		}
+
+		useEffect(() => {
+			instance.current = new Emoji({ ...props, ref })
+
+			return () => {
+				instance.current = null
+			}
+		}, [props])
+
+		return createElement("div", {
+			ref,
+			style: props.style
+		})
+	}
 )
 
 export const ReplaceMessageWithComponents = memo(
@@ -162,15 +189,15 @@ export const ReplaceMessageWithComponents = memo(
 						return (
 							<div
 								key={index}
-								style={{
-									width: size,
-									height: size
-								}}
-								className="flex flex-row mr-[5px] mb-[2px] mt-[1px]"
+								className="flex flex-row"
 							>
-								<img
-									src={customEmojisListRecord[customEmoji]}
-									className="flex w-full h-full"
+								<EmojiElement
+									fallback={match}
+									shortcodes={match.includes(":") ? match : undefined}
+									size={size ? size + "px" : "34px"}
+									style={{
+										lineHeight: 1.05
+									}}
 								/>
 							</div>
 						)
@@ -179,16 +206,17 @@ export const ReplaceMessageWithComponents = memo(
 					return (
 						<div
 							key={index}
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								justifyContent: "center",
-								marginTop: 2,
-								padding: 0,
-								flexShrink: 0
-							}}
+							className="flex flex-row"
 						>
-							{match}
+							<EmojiElement
+								fallback={match}
+								shortcodes={match.includes(":") ? match : undefined}
+								native={!match.includes(":") ? match : undefined}
+								size={size ? size + "px" : "34px"}
+								style={{
+									lineHeight: 1.05
+								}}
+							/>
 						</div>
 					)
 				},

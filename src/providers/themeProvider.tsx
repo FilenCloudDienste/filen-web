@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useLayoutEffect, useState } from "react"
+import Cookies from "js-cookie"
 
 export type Theme = "dark" | "light" | "system"
 
@@ -25,9 +26,9 @@ export const initialState: ThemeProviderState = {
 export const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({ children, defaultTheme = "system", storageKey = "theme", ...props }: ThemeProviderProps) {
-	const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem(storageKey) as Theme) || defaultTheme)
+	const [theme, setTheme] = useState<Theme>(() => (Cookies.get(storageKey) as Theme) || defaultTheme)
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const root = window.document.documentElement
 
 		root.classList.remove("light", "dark")
@@ -48,7 +49,7 @@ export function ThemeProvider({ children, defaultTheme = "system", storageKey = 
 		systemTheme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
 		dark: theme === "system" ? window.matchMedia("(prefers-color-scheme: dark)").matches : theme === "dark",
 		setTheme: (theme: Theme) => {
-			localStorage.setItem(storageKey, theme)
+			Cookies.set(storageKey, theme)
 
 			setTheme(theme)
 		}

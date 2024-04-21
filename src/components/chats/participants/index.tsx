@@ -69,7 +69,10 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 									data-index={virtualItem.index}
 									ref={rowVirtualizer.measureElement}
 								>
-									<ContextMenu participant={participant}>
+									<ContextMenu
+										participant={participant}
+										conversation={conversation}
+									>
 										<div className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-primary-foreground">
 											<Avatar
 												className="w-7 h-7"

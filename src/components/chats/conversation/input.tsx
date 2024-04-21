@@ -2,7 +2,7 @@ import { memo, useState, useCallback, useMemo, useRef, useEffect } from "react"
 import { withReact, ReactEditor, Slate, Editable } from "slate-react"
 import { withHistory, type HistoryEditor } from "slate-history"
 import { createEditor, Editor, type BaseEditor, Transforms } from "slate"
-import { PlusCircle, XCircle } from "lucide-react"
+import { PlusCircle, XCircle, Smile } from "lucide-react"
 import worker from "@/lib/worker"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { useChatsStore } from "@/stores/chats.store"
@@ -12,7 +12,17 @@ import { useTranslation } from "react-i18next"
 import Typing from "./typing"
 import eventEmitter from "@/lib/eventEmitter"
 import useErrorToast from "@/hooks/useErrorToast"
+import { findClosestIndex, cn } from "@/lib/utils"
 import useElementDimensions from "@/hooks/useElementDimensions"
+import Avatar from "@/components/avatar"
+import { SearchIndex } from "emoji-mart"
+import { EmojiElement } from "./message/utils"
+import { custom as customEmojis } from "../customEmojis"
+import emojiData from "@emoji-mart/data"
+import EmojiPicker from "@emoji-mart/react"
+import memoize from "lodash/memoize"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { useTheme } from "@/providers/themeProvider"
 
 export type CustomElement = { type: "paragraph"; children: CustomText[] }
 export type CustomText = { text: string }
@@ -25,6 +35,10 @@ declare module "slate" {
 	}
 }
 
+export const searchEmojiIndex = memoize((query: string): Promise<{ skins?: { src: string; shortcodes: string }[] }[]> => {
+	return SearchIndex.search(query)
+})
+
 export const Input = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const [editor] = useState<BaseEditor & ReactEditor & HistoryEditor>(() => withReact(withHistory(createEditor())))
 	const { setMessages, setFailedMessages, setEditUUID, setReplyMessage, replyMessage, editUUID, messages } = useChatsStore()
@@ -34,10 +48,24 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 	const typingEventEmitTimeout = useRef<number>(0)
 	const errorToast = useErrorToast()
 	const inputContainerDimensions = useElementDimensions("chat-input-container")
+	const [showMentionSuggestions, setShowMentionSuggestions] = useState<boolean>(false)
+	const [showEmojiSuggestions, setShowEmojiSuggestions] = useState<boolean>(false)
+	const [mentionsSuggestionsText, setMentionsSuggestionsText] = useState<string>("")
+	const [mentionsSuggestionsIndex, setMentionsSuggestionsIndex] = useState<number>(0)
+	const [emojisSuggestionsText, setEmojisSuggestionsText] = useState<string>("")
+	const [emojisSuggestionsIndex, setEmojisSuggestionsIndex] = useState<number>(0)
+	const [emojisSuggestionsShortCodes, setEmojisSuggestionsShortCodes] = useState<string[]>([])
+	const theme = useTheme()
 
 	const me = useMemo(() => {
 		return conversation.participants.filter(participant => participant.userId === userId)[0]
 	}, [conversation.participants, userId])
+
+	const filteredMentions = useMemo(() => {
+		return conversation.participants
+			.filter(p => p.nickName.includes(mentionsSuggestionsText) || p.email.includes(mentionsSuggestionsText))
+			.slice(0, 10)
+	}, [mentionsSuggestionsText, conversation.participants])
 
 	const getEditorText = useCallback((): string => {
 		if (!editor) {
@@ -96,6 +124,24 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		[editor, focusEditor]
 	)
 
+	const insertEmoji = useCallback(
+		(shortCode: string): void => {
+			if (!editor || shortCode.length === 0) {
+				return
+			}
+
+			const text = getEditorText()
+
+			focusEditor()
+
+			Transforms.insertText(editor, text.length === 0 ? shortCode + " " : (text.endsWith(" ") ? "" : " ") + shortCode + " ")
+			Transforms.select(editor, Editor.end(editor, []))
+
+			focusEditor()
+		},
+		[editor, focusEditor, getEditorText]
+	)
+
 	const emitTypingEvent = useCallback((): void => {
 		const now = Date.now()
 		let didEmit = false
@@ -121,6 +167,23 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			worker.sendChatTyping({ conversation: conversation.uuid, type: "up" }).catch(console.error)
 		}, 5000)
 	}, [conversation.uuid])
+
+	const hideEmojiSuggestions = useCallback(() => {
+		setShowEmojiSuggestions(false)
+		setEmojisSuggestionsText("")
+		setEmojisSuggestionsIndex(0)
+	}, [])
+
+	const hideMentionsSuggestions = useCallback(() => {
+		setShowMentionSuggestions(false)
+		setMentionsSuggestionsText("")
+		setMentionsSuggestionsIndex(0)
+	}, [])
+
+	const hideSuggestions = useCallback(() => {
+		hideEmojiSuggestions()
+		hideMentionsSuggestions()
+	}, [hideEmojiSuggestions, hideMentionsSuggestions])
 
 	const findLastMessageToEdit = useCallback((): void => {
 		const lastMessagesFromUser = messages.filter(m => m.senderId === userId).sort((a, b) => b.sentTimestamp - a.sentTimestamp)
@@ -213,6 +276,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			setReplyMessage(null)
 			clearEditor()
 			focusEditor()
+			hideSuggestions()
 		}
 	}, [
 		setEditUUID,
@@ -225,7 +289,8 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		me,
 		getEditorText,
 		replyMessage,
-		errorToast
+		errorToast,
+		hideSuggestions
 	])
 
 	const editMessage = useCallback(async (): Promise<void> => {
@@ -272,6 +337,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			setReplyMessage(null)
 			clearEditor()
 			focusEditor()
+			hideSuggestions()
 		}
 	}, [
 		setEditUUID,
@@ -283,15 +349,239 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		conversation.uuid,
 		getEditorText,
 		editUUID,
-		errorToast
+		errorToast,
+		hideSuggestions
 	])
+
+	const toggleMentionsAndEmojis = useCallback((): void => {
+		if (!editor) {
+			hideSuggestions()
+
+			return
+		}
+
+		const selection = editor.selection
+
+		if (!selection || !selection.anchor || selection.anchor.offset <= 0) {
+			hideSuggestions()
+
+			return
+		}
+
+		const selected = editor.children[selection.anchor.path[0]] as CustomElement
+
+		if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
+			hideSuggestions()
+
+			return
+		}
+
+		const text = selected.children[0].text
+
+		if (text.length === 0 || !(text.includes("@") || text.includes(":"))) {
+			hideSuggestions()
+
+			return
+		}
+
+		const mentionsClosestIndex = findClosestIndex(text, "@", selection.anchor.offset)
+		const mentionsSliced = text.slice(
+			mentionsClosestIndex === -1 ? text.lastIndexOf("@") : mentionsClosestIndex,
+			selection.anchor.offset
+		)
+		const mentionsOpen = mentionsSliced.startsWith("@") && mentionsSliced.length >= 1 && !mentionsSliced.includes(" ")
+
+		const emojisClosestIndex = findClosestIndex(text, ":", selection.anchor.offset)
+		const emojisSliced = text.slice(emojisClosestIndex === -1 ? text.lastIndexOf(":") : emojisClosestIndex, selection.anchor.offset)
+		const emojisOpen =
+			emojisSliced.startsWith(":") &&
+			emojisSliced.length >= 2 &&
+			emojisSliced.indexOf(" ") === -1 &&
+			!emojisSliced.endsWith(":") &&
+			!emojisSliced.endsWith(" ")
+
+		setShowEmojiSuggestions(emojisOpen)
+		setShowMentionSuggestions(mentionsOpen)
+		setMentionsSuggestionsText(mentionsSliced)
+		setEmojisSuggestionsText(emojisSliced)
+
+		if (!emojisOpen) {
+			hideEmojiSuggestions()
+
+			SearchIndex.reset()
+		} else {
+			searchEmojiIndex(emojisSliced.split(":").join(""))
+				.then(result => {
+					const filtered = result.filter(
+						emoji => emoji && emoji.skins && Array.isArray(emoji.skins) && emoji.skins.length > 0 && emoji.skins[0].shortcodes
+					)
+
+					if (filtered.length === 0) {
+						setEmojisSuggestionsShortCodes([])
+
+						return
+					}
+
+					const shortCodes = filtered.map(emoji => (emoji.skins ? emoji.skins[0].shortcodes : ""))
+
+					if (shortCodes.length === 0) {
+						setEmojisSuggestionsShortCodes([])
+
+						return
+					}
+
+					setEmojisSuggestionsShortCodes(shortCodes.slice(0, 10))
+				})
+				.catch(err => {
+					console.error(err)
+
+					setEmojisSuggestionsShortCodes([])
+				})
+		}
+
+		if (!mentionsOpen) {
+			hideMentionsSuggestions()
+		}
+	}, [editor, hideSuggestions, hideMentionsSuggestions, hideEmojiSuggestions])
+
+	const addTextAfterTextComponent = useCallback(
+		(component: string, text: string): void => {
+			if (!editor) {
+				return
+			}
+
+			const selection = editor.selection
+
+			if (!selection || !selection.anchor) {
+				return
+			}
+
+			const selectedChildrenIndex = selection.anchor.path[0]
+			const selected = editor.children[selectedChildrenIndex] as CustomElement
+
+			if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
+				return
+			}
+
+			const message = selected.children[0].text
+			const closestIndex = findClosestIndex(message, component, selection.anchor.offset)
+
+			if (closestIndex === -1) {
+				return
+			}
+
+			const replacedMessage = message.slice(0, closestIndex) + text + " "
+
+			if (replacedMessage.trim().length === 0) {
+				return
+			}
+
+			const currentChildren = editor.children as CustomElement[]
+
+			editor.children = currentChildren.map((child, index) =>
+				index === selectedChildrenIndex ? { ...child, children: [{ ...child.children, text: replacedMessage }] } : child
+			)
+
+			Transforms.select(editor, Editor.end(editor, []))
+
+			focusEditor()
+			hideSuggestions()
+		},
+		[editor, focusEditor, hideSuggestions]
+	)
+
+	const addMentionToInput = useCallback(
+		(id: number) => {
+			if (!editor) {
+				return
+			}
+
+			const foundParticipant = conversation.participants.filter(p => p.userId === id)
+			const selection = editor.selection
+
+			if (!selection || !selection.anchor || foundParticipant.length === 0) {
+				hideSuggestions()
+				focusEditor()
+
+				return
+			}
+
+			const selectedChildrenIndex = selection.anchor.path[0]
+			const selected = editor.children[selectedChildrenIndex] as CustomElement
+
+			if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
+				hideSuggestions()
+				focusEditor()
+
+				return
+			}
+
+			const message = selected.children[0].text
+			const closestIndex = findClosestIndex(message, "@", selection.anchor.offset)
+
+			if (closestIndex === -1) {
+				hideSuggestions()
+				focusEditor()
+
+				return
+			}
+
+			const replacedMessage = message.slice(0, closestIndex) + "@" + foundParticipant[0].email + " "
+
+			if (replacedMessage.trim().length === 0) {
+				hideSuggestions()
+				focusEditor()
+
+				return
+			}
+
+			const currentChildren = editor.children as CustomElement[]
+
+			editor.children = currentChildren.map((child, index) =>
+				index === selectedChildrenIndex
+					? {
+							...child,
+							children: [
+								{
+									...child.children,
+									text: replacedMessage
+								}
+							]
+						}
+					: child
+			)
+
+			Transforms.select(editor, Editor.end(editor, []))
+
+			focusEditor()
+			hideSuggestions()
+		},
+		[editor, conversation.participants, focusEditor, hideSuggestions]
+	)
 
 	const onKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLDivElement>): void => {
 			emitTypingEvent()
+			toggleMentionsAndEmojis()
 
 			if (e.key === "Enter" && !e.shiftKey && !e.altKey && !e.metaKey && !e.ctrlKey) {
 				e.preventDefault()
+
+				if (showMentionSuggestions && filteredMentions.length !== 0 && filteredMentions[mentionsSuggestionsIndex]) {
+					addMentionToInput(filteredMentions[mentionsSuggestionsIndex].userId)
+
+					return
+				}
+
+				if (
+					showEmojiSuggestions &&
+					emojisSuggestionsShortCodes.length !== 0 &&
+					emojisSuggestionsShortCodes[emojisSuggestionsIndex]
+				) {
+					addTextAfterTextComponent(":", emojisSuggestionsShortCodes[emojisSuggestionsIndex])
+
+					return
+				}
 
 				if (editUUID.length === 0) {
 					sendMessage()
@@ -302,28 +592,116 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				return
 			}
 
-			if (e.key === "ArrowUp" && getEditorText().length === 0) {
+			const text = getEditorText()
+
+			if (e.key === "ArrowUp" && text.length === 0) {
 				e.preventDefault()
 
 				findLastMessageToEdit()
 
 				return
 			}
+
+			if (e.key === "ArrowUp" && showMentionSuggestions && filteredMentions.length !== 0) {
+				e.preventDefault()
+
+				setMentionsSuggestionsIndex(prev => (prev - 1 < 0 ? filteredMentions.length - 1 : prev - 1))
+
+				return
+			}
+
+			if (e.key === "ArrowDown" && showMentionSuggestions && filteredMentions.length !== 0) {
+				e.preventDefault()
+
+				setMentionsSuggestionsIndex(prev => (prev + 1 > filteredMentions.length - 1 ? 0 : prev + 1))
+
+				return
+			}
+
+			if (e.key === "ArrowUp" && showEmojiSuggestions && emojisSuggestionsShortCodes.length !== 0) {
+				e.preventDefault()
+
+				setEmojisSuggestionsIndex(prev => (prev - 1 < 0 ? emojisSuggestionsShortCodes.length - 1 : prev - 1))
+
+				return
+			}
+
+			if (e.key === "ArrowDown" && showEmojiSuggestions && emojisSuggestionsShortCodes.length !== 0) {
+				e.preventDefault()
+
+				setEmojisSuggestionsIndex(prev => (prev + 1 > emojisSuggestionsShortCodes.length - 1 ? 0 : prev + 1))
+
+				return
+			}
 		},
-		[emitTypingEvent, sendMessage, findLastMessageToEdit, getEditorText, editUUID, editMessage]
+		[
+			emitTypingEvent,
+			sendMessage,
+			findLastMessageToEdit,
+			getEditorText,
+			editUUID,
+			editMessage,
+			toggleMentionsAndEmojis,
+			filteredMentions,
+			mentionsSuggestionsIndex,
+			showMentionSuggestions,
+			addMentionToInput,
+			showEmojiSuggestions,
+			emojisSuggestionsShortCodes,
+			emojisSuggestionsIndex,
+			addTextAfterTextComponent
+		]
 	)
 
 	const onKeyUp = useCallback(
 		(e: React.KeyboardEvent<HTMLDivElement>): void => {
+			toggleMentionsAndEmojis()
+
 			if (replyMessage && e.key === "Escape") {
+				e.preventDefault()
+
 				setReplyMessage(null)
+
+				return
 			}
 
 			if (editUUID.length > 0 && e.key === "Escape") {
+				e.preventDefault()
+
 				setEditUUID("")
+				clearEditor()
+				focusEditor()
+
+				return
+			}
+
+			if (e.key === "Escape" && (showEmojiSuggestions || showMentionSuggestions)) {
+				e.preventDefault()
+
+				hideSuggestions()
+
+				return
+			}
+
+			const text = getEditorText()
+
+			if (text.length === 0) {
+				hideSuggestions()
 			}
 		},
-		[setEditUUID, setReplyMessage, replyMessage, editUUID]
+		[
+			setEditUUID,
+			setReplyMessage,
+			replyMessage,
+			editUUID,
+			clearEditor,
+			focusEditor,
+			hideSuggestions,
+			getEditorText,
+			showEmojiSuggestions,
+			showMentionSuggestions,
+			toggleMentionsAndEmojis
+		]
 	)
 
 	useEffect(() => {
@@ -365,6 +743,33 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 					className="cursor-pointer mt-[12px] ml-[10px] text-muted-foreground hover:text-foreground"
 				/>
 			</div>
+			<div className="absolute z-50 w-[1px]">
+				<Popover>
+					<PopoverTrigger asChild={true}>
+						<Smile
+							size={24}
+							className={"cursor-pointer mt-[12px] text-muted-foreground hover:text-foreground"}
+							style={{
+								marginLeft: inputContainerDimensions.width - 70
+							}}
+						/>
+					</PopoverTrigger>
+					<PopoverContent
+						className="bg-transparent border-none w-auto h-auto"
+						align="end"
+					>
+						<EmojiPicker
+							onEmojiSelect={(e: { shortcodes: string }) => insertEmoji(e.shortcodes)}
+							autoFocus={true}
+							icons="outline"
+							locale="en"
+							theme={theme.theme}
+							data={emojiData}
+							custom={customEmojis}
+						/>
+					</PopoverContent>
+				</Popover>
+			</div>
 			{replyMessage && (
 				<div
 					className="absolute mt-[-30px]"
@@ -381,9 +786,105 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 						</div>
 						<XCircle
 							size={16}
-							className="cursor-pointer"
+							className="cursor-pointer text-muted-foreground hover:text-primary"
 							onClick={() => setReplyMessage(null)}
 						/>
+					</div>
+				</div>
+			)}
+			{showMentionSuggestions && filteredMentions.length > 0 && (
+				<div
+					className="absolute bottom-[70px]"
+					style={{
+						width: inputContainerDimensions.width - 32
+					}}
+				>
+					<div className="flex flex-col bg-secondary p-1 px-2 pb-5 rounded-t-lg gap-2">
+						<div className="flex flex-row gap-1 items-center justify-between">
+							<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("chats.input.replyingTo")}</p>
+							<XCircle
+								size={16}
+								className="cursor-pointer text-muted-foreground hover:text-primary"
+								onClick={hideSuggestions}
+							/>
+						</div>
+						<div className="flex flex-col overflow-x-hidden overflow-y-auto max-h-[40vh]">
+							{filteredMentions.map((participant, index) => {
+								return (
+									<div
+										className={cn(
+											"flex flex-row items-center justify-between py-2 px-2 rounded-lg hover:bg-primary-foreground cursor-pointer",
+											index === mentionsSuggestionsIndex ? "bg-primary-foreground" : "bg-transparent"
+										)}
+										key={participant.userId}
+										onClick={() => {
+											addMentionToInput(participant.userId)
+											hideSuggestions()
+											focusEditor()
+										}}
+									>
+										<div className="flex flex-row gap-2">
+											<Avatar
+												src={participant.avatar}
+												className="w-6 h-6"
+											/>
+											<p className="line-clamp-1 text-ellipsis break-all">
+												{participant.nickName.length > 0 ? participant.nickName : participant.email}
+											</p>
+										</div>
+										<p className="text-muted-foreground line-clamp-1 text-ellipsis break-all">{participant.email}</p>
+									</div>
+								)
+							})}
+						</div>
+					</div>
+				</div>
+			)}
+			{showEmojiSuggestions && emojisSuggestionsShortCodes.length > 0 && (
+				<div
+					className="absolute bottom-[70px]"
+					style={{
+						width: inputContainerDimensions.width - 32
+					}}
+				>
+					<div className="flex flex-col bg-secondary p-1 px-2 pb-5 rounded-t-lg gap-2">
+						<div className="flex flex-row gap-1 items-center justify-between">
+							<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">
+								emojis matching {emojisSuggestionsText}
+							</p>
+							<XCircle
+								size={16}
+								className="cursor-pointer text-muted-foreground hover:text-primary"
+								onClick={hideSuggestions}
+							/>
+						</div>
+						<div className="flex flex-col overflow-x-hidden overflow-y-auto max-h-[40vh]">
+							{emojisSuggestionsShortCodes.map((shortCode, index) => {
+								return (
+									<div
+										className={cn(
+											"flex flex-row items-center justify-between py-2 px-2 rounded-lg hover:bg-primary-foreground cursor-pointer",
+											index === emojisSuggestionsIndex ? "bg-primary-foreground" : "bg-transparent"
+										)}
+										key={shortCode + ":" + index}
+										onClick={() => {
+											addTextAfterTextComponent(":", shortCode)
+											hideSuggestions()
+											focusEditor()
+										}}
+									>
+										<div className="flex flex-row gap-2">
+											<EmojiElement
+												shortcodes={shortCode}
+												fallback={shortCode}
+												size="18px"
+											/>
+											<p className="line-clamp-1 text-ellipsis break-all">{shortCode}</p>
+										</div>
+									</div>
+								)
+							})}
+						</div>
 					</div>
 				</div>
 			)}
@@ -410,7 +911,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 					autoFocus={false}
 					autoComplete="none"
 					spellCheck={false}
-					maxLength={2000}
+					maxLength={1024}
 				/>
 			</Slate>
 			<Typing conversation={conversation} />

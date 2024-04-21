@@ -1630,3 +1630,15 @@ export async function chatEditMessage({
 }): Promise<void> {
 	return await SDK.chats().editMessage({ uuid, conversation, message })
 }
+
+export async function chatEditConversationName({ conversation, name }: { conversation: string; name: string }): Promise<void> {
+	return await SDK.chats().editConversationName({ conversation, name })
+}
+
+export async function deleteChatConversation({ conversation }: { conversation: string }): Promise<void> {
+	return await SDK.chats().delete({ conversation })
+}
+
+export async function chatRemoveParticipant({ conversation, userId }: { conversation: string; userId: number }): Promise<void> {
+	return await SDK.chats().removeParticipant({ conversation, userId })
+}
