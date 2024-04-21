@@ -1,9 +1,9 @@
-import { createLazyFileRoute } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import MainContainer from "@/components/mainContainer"
 import RequireAuth from "@/components/requireAuthed"
 import SettingsComponent from "@/components/settings"
 
-export const Route = createLazyFileRoute("/settings/$type")({
+export const Route = createFileRoute("/settings/$type")({
 	component: Settings
 })
 
