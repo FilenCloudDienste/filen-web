@@ -9,11 +9,14 @@ import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import Top from "./top"
 import Chats from "./chats"
+import useElementDimensions from "@/hooks/useElementDimensions"
 
 export const InnerSideBar = memo(() => {
 	const sdkConfig = useSDKConfig()
 	const windowSize = useWindowSize()
 	const location = useLocation()
+	const chatsTopDimensions = useElementDimensions("inner-sidebar-top-chats")
+	const notesTopDimensions = useElementDimensions("inner-sidebar-top-notes")
 
 	return (
 		<div className="w-full border-r flex flex-col h-full select-none">
@@ -24,9 +27,15 @@ export const InnerSideBar = memo(() => {
 					!location.includes("notes") && !location.includes("chats") ? "py-3" : ""
 				)}
 				style={{
-					height: IS_DESKTOP
-						? (windowSize.height ?? window.innerHeight) - 48 - 48 - 24
-						: (windowSize.height ?? window.innerHeight) - 48 - 48
+					height:
+						(windowSize.height ?? window.innerHeight) -
+						48 -
+						(location.includes("chats")
+							? chatsTopDimensions.height
+							: location.includes("notes")
+								? notesTopDimensions.height
+								: 48) -
+						(IS_DESKTOP ? 24 : 0)
 				}}
 			>
 				{location.includes("drive") && (

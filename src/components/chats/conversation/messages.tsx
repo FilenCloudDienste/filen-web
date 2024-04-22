@@ -147,28 +147,30 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 							? await worker.decryptChatMessage({ message: event.data.replyTo.message, key })
 							: ""
 
-					if (message.length > 0) {
-						setMessages(prev => [
-							...prev.filter(m => m.uuid !== event.data.uuid),
-							{
-								conversation: event.data.conversation,
-								uuid: event.data.uuid,
-								senderId: event.data.senderId,
-								senderEmail: event.data.senderEmail,
-								senderAvatar: event.data.senderAvatar,
-								senderNickName: event.data.senderNickName,
-								message,
-								replyTo: {
-									...event.data.replyTo,
-									message: replyToMessageDecrypted
-								},
-								embedDisabled: event.data.embedDisabled,
-								edited: false,
-								editedTimestamp: 0,
-								sentTimestamp: event.data.sentTimestamp
-							}
-						])
+					if (message.length === 0) {
+						return
 					}
+
+					setMessages(prev => [
+						...prev.filter(m => m.uuid !== event.data.uuid),
+						{
+							conversation: event.data.conversation,
+							uuid: event.data.uuid,
+							senderId: event.data.senderId,
+							senderEmail: event.data.senderEmail,
+							senderAvatar: event.data.senderAvatar,
+							senderNickName: event.data.senderNickName,
+							message,
+							replyTo: {
+								...event.data.replyTo,
+								message: replyToMessageDecrypted
+							},
+							embedDisabled: event.data.embedDisabled,
+							edited: false,
+							editedTimestamp: 0,
+							sentTimestamp: event.data.sentTimestamp
+						}
+					])
 				} else if (event.type === "chatMessageDelete") {
 					setMessages(prev => prev.filter(message => message.uuid !== event.data.uuid))
 				} else if (event.type === "chatMessageEdited") {
@@ -178,6 +180,10 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 
 					const key = await worker.chatKey({ conversation: conversation.uuid })
 					const messageDecrypted = await worker.decryptChatMessage({ message: event.data.message, key })
+
+					if (messageDecrypted.length === 0) {
+						return
+					}
 
 					setMessages(prev =>
 						prev.map(message =>

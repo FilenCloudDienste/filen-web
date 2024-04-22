@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from "react"
+import { memo, useMemo, useCallback, useEffect } from "react"
 import {
 	ContextMenu as CM,
 	ContextMenuContent,
@@ -19,6 +19,7 @@ import useSuccessToast from "@/hooks/useSuccessToast"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { useNavigate } from "@tanstack/react-router"
 import useRouteParent from "@/hooks/useRouteParent"
+import eventEmitter from "@/lib/eventEmitter"
 
 const iconSize = 16
 
@@ -133,6 +134,20 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 			toast.dismiss()
 		}
 	}, [conversation.uuid, errorToast, loadingToast, setConversations, setSelectedConversation, hasWritePermissions, routeParent, navigate])
+
+	useEffect(() => {
+		const editConversationNameListener = eventEmitter.on("editConversationName", conversationUUID => {
+			if (conversationUUID !== conversation.uuid) {
+				return
+			}
+
+			editName()
+		})
+
+		return () => {
+			editConversationNameListener.remove()
+		}
+	}, [conversation.uuid, editName])
 
 	return (
 		<CM>

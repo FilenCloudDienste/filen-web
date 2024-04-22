@@ -1,4 +1,4 @@
-import { memo, useRef, useEffect, useMemo } from "react"
+import { memo, useRef, useEffect, useMemo, useCallback } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import { useVirtualizer } from "@tanstack/react-virtual"
@@ -11,6 +11,9 @@ import useRouteParent from "@/hooks/useRouteParent"
 import Chat from "./chat"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { IS_DESKTOP } from "@/constants"
+import useElementDimensions from "@/hooks/useElementDimensions"
+import { type SocketEvent } from "@filen/sdk"
+import socket from "@/lib/socket"
 
 export const Chats = memo(() => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -21,6 +24,7 @@ export const Chats = memo(() => {
 	const routeParent = useRouteParent()
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const sdkConfig = useSDKConfig()
+	const topDimensions = useElementDimensions("inner-sidebar-top-chats")
 
 	const query = useQuery({
 		queryKey: ["listChatsConversations"],
@@ -40,6 +44,74 @@ export const Chats = memo(() => {
 		},
 		overscan: 5
 	})
+
+	const socketEventListener = useCallback(
+		async (event: SocketEvent) => {
+			try {
+				if (event.type === "chatMessageNew") {
+					const filteredConversations = conversations.filter(c => c.uuid === event.data.conversation)
+
+					if (filteredConversations.length === 0) {
+						return
+					}
+
+					const conversation = filteredConversations[0]
+					const key = await worker.chatKey({ conversation: conversation.uuid })
+					const message = await worker.decryptChatMessage({ message: event.data.message, key })
+
+					if (message.length === 0) {
+						return
+					}
+
+					setConversations(prev =>
+						prev.map(c =>
+							c.uuid === conversation.uuid
+								? {
+										...c,
+										lastMessage: message,
+										lastMessageSender: event.data.senderId,
+										lastMessageTimestamp: event.data.sentTimestamp,
+										lastMessageUUID: event.data.uuid
+									}
+								: c
+						)
+					)
+
+					setSelectedConversation(prev =>
+						prev
+							? prev.uuid === conversation.uuid
+								? {
+										...prev,
+										lastMessage: message,
+										lastMessageSender: event.data.senderId,
+										lastMessageTimestamp: event.data.sentTimestamp,
+										lastMessageUUID: event.data.uuid
+									}
+								: prev
+							: prev
+					)
+				} else if (
+					event.type === "chatMessageDelete" ||
+					event.type === "chatMessageEdited" ||
+					event.type === "chatConversationNameEdited" ||
+					event.type === "chatConversationParticipantLeft"
+				) {
+					await query.refetch()
+				} else if (event.type === "chatConversationDeleted") {
+					if (routeParent === event.data.uuid) {
+						navigate({
+							to: "/chats"
+						})
+					}
+
+					await query.refetch()
+				}
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[conversations, setConversations, query, setSelectedConversation, routeParent, navigate]
+	)
 
 	useEffect(() => {
 		if (conversationsSorted.length > 0) {
@@ -74,11 +146,19 @@ export const Chats = memo(() => {
 		}
 	}, [query.isSuccess, query.data, query.dataUpdatedAt, setConversations])
 
+	useEffect(() => {
+		socket.addListener("socketEvent", socketEventListener)
+
+		return () => {
+			socket.removeListener("socketEvent", socketEventListener)
+		}
+	}, [socketEventListener])
+
 	return (
 		<div
 			ref={virtualizerParentRef}
 			style={{
-				height: windowSize.height - 48 - 105 - (IS_DESKTOP ? 24 : 0),
+				height: windowSize.height - topDimensions.height - 48 - (IS_DESKTOP ? 24 : 0),
 				overflowX: "hidden",
 				overflowY: "auto"
 			}}

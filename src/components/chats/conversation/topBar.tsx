@@ -7,9 +7,11 @@ import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useTranslation } from "react-i18next"
 import { useLocalStorage } from "@uidotdev/usehooks"
+import { cn } from "@/lib/utils"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const TopBar = memo(({ conversation }: { conversation: ChatConversation }) => {
-	const sdkConfig = useSDKConfig()
+	const { userId } = useSDKConfig()
 	const { t } = useTranslation()
 	const [conversationParticipantsContainerOpen, setConversationParticipantsContainerOpen] = useLocalStorage<boolean>(
 		`conversationParticipantsContainerOpen:${conversation.uuid}`,
@@ -17,8 +19,20 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 	)
 
 	const participantsWithoutUser = useMemo(() => {
-		return conversation.participants.filter(p => p.userId !== sdkConfig.userId)
-	}, [conversation.participants, sdkConfig.userId])
+		return conversation.participants.filter(p => p.userId !== userId)
+	}, [conversation.participants, userId])
+
+	const hasWritePermissions = useMemo(() => {
+		return userId === conversation.ownerId
+	}, [userId, conversation.ownerId])
+
+	const editConversationName = useCallback(() => {
+		if (!hasWritePermissions) {
+			return
+		}
+
+		eventEmitter.emit("editConversationName", conversation.uuid)
+	}, [conversation.uuid, hasWritePermissions])
 
 	const toggleParticipantsContainer = useCallback(() => {
 		setConversationParticipantsContainerOpen(prev => !prev)
@@ -26,7 +40,10 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 
 	return (
 		<div className="w-full h-12 flex flex-row px-4 border-b shadow-sm items-center gap-2 justify-between shrink-0">
-			<div className="flex flex-row gap-2 items-center">
+			<div
+				className={cn("flex flex-row gap-2 items-center", hasWritePermissions ? "cursor-pointer" : "cursor-default")}
+				onClick={editConversationName}
+			>
 				<Avatar
 					className="w-6 h-6"
 					src={participantsWithoutUser[0].avatar}

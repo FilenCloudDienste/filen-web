@@ -18,7 +18,10 @@ export const Chats = memo(() => {
 	)
 
 	return (
-		<div className="h-auto w-full flex flex-col border-b shadow-sm">
+		<div
+			className="h-auto w-full flex flex-col border-b shadow-sm"
+			id="inner-sidebar-top-chats"
+		>
 			<div className="h-12 w-full flex flex-row items-center px-4 justify-between">
 				<p>{t("innerSideBar.top.chats")}</p>
 				<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>

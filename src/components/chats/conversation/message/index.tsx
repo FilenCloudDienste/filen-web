@@ -1,6 +1,13 @@
 import { memo, useMemo, useCallback, useState, useEffect } from "react"
 import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
-import { ReplaceMessageWithComponents, isTimestampSameDay, isTimestampSameMinute, MENTION_REGEX, formatMessageDate } from "./utils"
+import {
+	ReplaceMessageWithComponents,
+	isTimestampSameDay,
+	isTimestampSameMinute,
+	MENTION_REGEX,
+	formatMessageDate,
+	ReplaceMessageWithComponentsInline
+} from "./utils"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import Avatar from "@/components/avatar"
 import ContextMenu from "./contextMenu"
@@ -8,6 +15,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils"
 import eventEmitter from "@/lib/eventEmitter"
 import { type TFunction } from "i18next"
+import { Reply } from "lucide-react"
 
 export const DateDivider = memo(({ timestamp }: { timestamp: number }) => {
 	return (
@@ -115,6 +123,10 @@ export const Message = memo(
 		}, [prevMessage, message])
 
 		const mentioningMe = useMemo((): boolean => {
+			if (message.replyTo && message.replyTo.senderId === userId) {
+				return true
+			}
+
 			const matches = message.message.match(MENTION_REGEX)
 
 			if (!matches || matches.length === 0) {
@@ -197,6 +209,28 @@ export const Message = memo(
 							</div>
 						)}
 						<div className={cn("flex flex-col", !groupWithPrevMessage ? "gap-[1px]" : "")}>
+							{message.replyTo && message.replyTo.uuid && (
+								<div className="flex flex-row gap-2 text-muted-foreground text-sm items-center">
+									<Reply
+										size={16}
+										className="scale-x-[-1]"
+									/>
+									<Avatar
+										src={message.replyTo.senderAvatar}
+										className="w-4 h-4"
+									/>
+									<p className="shrink-0">
+										{message.replyTo.senderNickName.length > 0
+											? message.replyTo.senderNickName
+											: message.replyTo.senderEmail}
+										:
+									</p>
+									<ReplaceMessageWithComponentsInline
+										content={message.replyTo.message}
+										participants={conversation.participants}
+									/>
+								</div>
+							)}
 							{!groupWithPrevMessage && (
 								<div className="flex flex-row gap-2 items-center">
 									<p className="cursor-pointer hover:underline">{message.senderNickName}</p>

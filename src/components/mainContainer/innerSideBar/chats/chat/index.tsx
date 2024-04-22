@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import ContextMenu from "./contextMenu"
 import Avatar from "@/components/avatar"
+import { ReplaceMessageWithComponentsInline } from "@/components/chats/conversation/message/utils"
 
 export const Chat = memo(
 	({
@@ -22,6 +23,16 @@ export const Chat = memo(
 		const participantsWithoutUser = useMemo(() => {
 			return conversation.participants.filter(p => p.userId !== userId)
 		}, [conversation.participants, userId])
+
+		const lastMessageSenderName = useMemo(() => {
+			const foundSender = conversation.participants.filter(p => p.userId === conversation.lastMessageSender)
+
+			if (!foundSender) {
+				return "UnknownUser"
+			}
+
+			return foundSender[0].nickName.length > 0 ? foundSender[0].nickName : foundSender[0].email
+		}, [conversation.participants, conversation.lastMessageSender])
 
 		const select = useCallback(() => {
 			setLastSelectedChatsConversation(conversation.uuid)
@@ -57,7 +68,13 @@ export const Chat = memo(
 									: participantsWithoutUser[0].email}
 						</p>
 						{conversation.lastMessage && conversation.lastMessage.length > 0 && (
-							<p className="text-muted-foreground line-clamp-1 text-ellipsis break-all text-sm">{conversation.lastMessage}</p>
+							<div className="text-muted-foreground line-clamp-1 text-ellipsis break-all text-sm flex flex-row overflow-hidden gap-1">
+								<p className="shrink-0">{lastMessageSenderName}:</p>
+								<ReplaceMessageWithComponentsInline
+									content={conversation.lastMessage}
+									participants={conversation.participants}
+								/>
+							</div>
 						)}
 					</div>
 				</Link>

@@ -261,6 +261,168 @@ export const ReplaceMessageWithComponents = memo(
 	}
 )
 
+export const ReplaceMessageWithComponentsInline = memo(
+	({ content, participants }: { content: string; participants: ChatConversationParticipant[] }) => {
+		const replaced = useMemo(() => {
+			return regexifyString({
+				pattern: messageContentRegex,
+				decorator: (match, index) => {
+					if (match.startsWith("@") && (match.split("@").length === 3 || match.startsWith("@everyone"))) {
+						const email = match.slice(1).trim()
+
+						if (email === "everyone") {
+							return (
+								<p
+									key={index}
+									className="line-clamp-1 text-ellipsis break-all"
+								>
+									@everyone
+								</p>
+							)
+						}
+
+						if (!email.includes("@")) {
+							return (
+								<p
+									key={index}
+									className="line-clamp-1 text-ellipsis break-all"
+								>
+									@UnknownUser
+								</p>
+							)
+						}
+
+						const foundParticipant = participants.filter(p => p.email === email)
+
+						if (foundParticipant.length === 0) {
+							return (
+								<p
+									key={index}
+									className="line-clamp-1 text-ellipsis break-all"
+								>
+									@UnknownUser
+								</p>
+							)
+						}
+
+						return (
+							<p
+								key={index}
+								className="line-clamp-1 text-ellipsis break-all"
+							>
+								@{foundParticipant[0].nickName.length > 0 ? foundParticipant[0].nickName : foundParticipant[0].email}
+							</p>
+						)
+					}
+
+					if (match.split("```").length >= 3) {
+						const code = match.split("```").join("").split("\n").join("")
+
+						return (
+							<p
+								key={index}
+								className="line-clamp-1 text-ellipsis break-all"
+							>
+								{code}
+							</p>
+						)
+					}
+
+					if (linkRegex.test(match) && (match.startsWith("https://") || match.startsWith("http://"))) {
+						return (
+							<p
+								key={index}
+								className="line-clamp-1 text-ellipsis break-all"
+							>
+								{match}
+							</p>
+						)
+					}
+
+					if (match.includes("\n")) {
+						return (
+							<p
+								key={index}
+								className="line-clamp-1 text-ellipsis break-all"
+							>
+								&nbsp;
+							</p>
+						)
+					}
+
+					const customEmoji = match.split(":").join("").trim()
+
+					if (customEmojisList.includes(customEmoji) && customEmojisListRecord[customEmoji]) {
+						return (
+							<div
+								key={index}
+								className="flex flex-row line-clamp-1 text-ellipsis break-all"
+							>
+								<EmojiElement
+									fallback={match}
+									shortcodes={match.includes(":") ? match : undefined}
+									size="18px"
+									style={{
+										lineHeight: 1.05
+									}}
+								/>
+							</div>
+						)
+					}
+
+					return (
+						<div
+							key={index}
+							className="flex flex-row line-clamp-1 text-ellipsis break-all"
+						>
+							<EmojiElement
+								fallback={match}
+								shortcodes={match.includes(":") ? match : undefined}
+								native={!match.includes(":") ? match : undefined}
+								size="18px"
+								style={{
+									lineHeight: 1.05
+								}}
+							/>
+						</div>
+					)
+				},
+				input: content
+			})
+		}, [content, participants])
+
+		return (
+			<div className="flex flex-row gap-1 line-clamp-1 text-ellipsis break-all">
+				{replaced.map((r, index) => {
+					if (typeof r === "string") {
+						if (r.length <= 0) {
+							return null
+						}
+
+						return (
+							<div
+								key={index}
+								className="flex flex-row items-center line-clamp-1 text-ellipsis break-all"
+							>
+								{r.trim()}
+							</div>
+						)
+					}
+
+					return (
+						<div
+							key={index}
+							className="flex flex-row items-center line-clamp-1 text-ellipsis break-all"
+						>
+							{r}
+						</div>
+					)
+				})}
+			</div>
+		)
+	}
+)
+
 export function isTimestampSameDay(timestamp1: number, timestamp2: number): boolean {
 	const date1 = new Date(timestamp1)
 	const date2 = new Date(timestamp2)
