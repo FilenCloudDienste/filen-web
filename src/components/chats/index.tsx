@@ -14,7 +14,7 @@ let didInitializeEmojisPreviously = false
 
 export const Chats = memo(() => {
 	const isMobile = useIsMobile()
-	const { selectedConversation } = useChatsStore()
+	const { selectedConversation, setReplyMessage, setEditUUID } = useChatsStore()
 	const [conversationParticipantsContainerOpen] = useLocalStorage<boolean>(
 		`conversationParticipantsContainerOpen:${selectedConversation?.uuid}`,
 		true
@@ -22,6 +22,9 @@ export const Chats = memo(() => {
 	const [emojisInitialized, setEmojisInitialized] = useState<boolean>(didInitializeEmojisPreviously)
 
 	useMountedEffect(() => {
+		setReplyMessage(null)
+		setEditUUID("")
+
 		initEmojiMart({
 			data: EmojiMartData,
 			custom: [

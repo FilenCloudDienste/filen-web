@@ -14,6 +14,8 @@ import worker from "@/lib/worker"
 import useRouteParent from "@/hooks/useRouteParent"
 import eventEmitter from "@/lib/eventEmitter"
 import { directoryUUIDToNameCache } from "@/cache"
+import useLoadingToast from "@/hooks/useLoadingToast"
+import useErrorToast from "@/hooks/useErrorToast"
 
 export const ContextMenu = memo(({ children }: { children: React.ReactNode }) => {
 	const { setItems } = useDriveItemsStore()
@@ -21,21 +23,25 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 	const { t } = useTranslation()
 	const [, startTransition] = useTransition()
 	const parent = useRouteParent()
+	const loadingToast = useLoadingToast()
+	const errorToast = useErrorToast()
 
 	const createFolder = useCallback(async () => {
+		const inputResponse = await showInputDialog({
+			title: "newfolder",
+			continueButtonText: "create",
+			value: "",
+			autoFocusInput: true,
+			placeholder: "New folder"
+		})
+
+		if (inputResponse.cancelled) {
+			return
+		}
+
+		const toast = loadingToast()
+
 		try {
-			const inputResponse = await showInputDialog({
-				title: "newfolder",
-				continueButtonText: "create",
-				value: "",
-				autoFocusInput: true,
-				placeholder: "New folder"
-			})
-
-			if (inputResponse.cancelled) {
-				return
-			}
-
 			const item = await worker.createDirectory({ name: inputResponse.value, parent })
 
 			directoryUUIDToNameCache.set(item.uuid, inputResponse.value)
@@ -48,8 +54,17 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 			})
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [setItems, parent])
+	}, [setItems, parent, loadingToast, errorToast])
 
 	useEffect(() => {
 		const createFolderTriggerListener = eventEmitter.on("createFolderTrigger", createFolder)

@@ -13,6 +13,7 @@ import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { showInputDialog } from "@/components/dialogs/input"
 import { type RefetchOptions, type QueryObserverResult } from "@tanstack/react-query"
 import useLoadingToast from "@/hooks/useLoadingToast"
+import useErrorToast from "@/hooks/useErrorToast"
 
 export const ContextMenu = memo(
 	({
@@ -26,6 +27,7 @@ export const ContextMenu = memo(
 	}) => {
 		const { t } = useTranslation()
 		const loadingToast = useLoadingToast()
+		const errorToast = useErrorToast()
 
 		const deleteTag = useCallback(async () => {
 			if (
@@ -46,10 +48,17 @@ export const ContextMenu = memo(
 				await refetch()
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
 			} finally {
 				toast.dismiss()
 			}
-		}, [tag.uuid, refetch, loadingToast])
+		}, [tag.uuid, refetch, loadingToast, errorToast])
 
 		const favorite = useCallback(async () => {
 			const toast = loadingToast()
@@ -62,10 +71,17 @@ export const ContextMenu = memo(
 				await refetch()
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
 			} finally {
 				toast.dismiss()
 			}
-		}, [tag.uuid, refetch, loadingToast])
+		}, [tag.uuid, refetch, loadingToast, errorToast])
 
 		const unfavorite = useCallback(async () => {
 			const toast = loadingToast()
@@ -75,13 +91,21 @@ export const ContextMenu = memo(
 					uuid: tag.uuid,
 					favorite: false
 				})
+
 				await refetch()
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
 			} finally {
 				toast.dismiss()
 			}
-		}, [tag.uuid, refetch, loadingToast])
+		}, [tag.uuid, refetch, loadingToast, errorToast])
 
 		const rename = useCallback(async () => {
 			const inputResponse = await showInputDialog({
@@ -103,13 +127,21 @@ export const ContextMenu = memo(
 					uuid: tag.uuid,
 					name: inputResponse.value.trim()
 				})
+
 				await refetch()
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
 			} finally {
 				toast.dismiss()
 			}
-		}, [tag.uuid, refetch, loadingToast])
+		}, [tag.uuid, refetch, loadingToast, errorToast])
 
 		return (
 			<CM>

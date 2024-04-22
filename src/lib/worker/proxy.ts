@@ -14,6 +14,8 @@ import { getItem } from "@/lib/localForage"
 export const generateThumbnailMutexes: Record<string, ISemaphore> = {}
 export const generateThumbnailSemaphore = new Semaphore(3)
 
+const useNative = ["Blink"].includes(UAParserResult?.engine?.name ?? "Gecko")
+
 // Setup message handler. The worker sends messages to the main thread.
 worker.setMessageHandler(proxy(event => eventEmitter.emit("workerMessage", event)))
 
@@ -32,8 +34,6 @@ export async function downloadFile({ item }: { item: DriveCloudItem }): Promise<
 	if (item.type !== "file") {
 		return
 	}
-
-	const useNative = ["Blink", "WebKit"].includes(UAParserResult.engine.name ?? "Gecko")
 
 	const fileHandle = await showSaveFilePicker({
 		suggestedName: item.name,
@@ -64,8 +64,6 @@ export async function downloadDirectory({
 	linkPassword?: string
 	linkSalt?: string
 }): Promise<void> {
-	const useNative = ["Blink", "WebKit"].includes(UAParserResult.engine.name ?? "Gecko")
-
 	const fileHandle = await showSaveFilePicker({
 		suggestedName: `${name}.zip`,
 		_preferPolyfill: !useNative
@@ -90,8 +88,6 @@ export async function downloadDirectory({
  * @returns {Promise<void>}
  */
 export async function downloadMultipleFilesAndDirectoriesAsZip({ items }: { items: DriveCloudItem[] }): Promise<void> {
-	const useNative = ["Blink", "WebKit"].includes(UAParserResult.engine.name ?? "Gecko")
-
 	const fileHandle = await showSaveFilePicker({
 		suggestedName: `Download_${Date.now()}.zip`,
 		_preferPolyfill: !useNative
@@ -148,12 +144,14 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 			// Needs to run in the main thread
 			if (thumbnailType === "pdf") {
 				const fromDb = await getItem<Blob>(dbKey)
+
 				let blob: Blob
 
 				if (fromDb) {
 					blob = fromDb
 				} else {
 					const buffer = await worker.readFile({ item, emitEvents: false })
+
 					blob = await workerLib.generatePDFThumbnail({ item, buffer })
 				}
 
@@ -173,12 +171,14 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 					blob = fromDb
 				} else {
 					const chunkedEnd = 1024 * 1024 * 8 - 1
+
 					const buffer = await worker.readFile({
 						item,
 						emitEvents: false,
 						start: 0,
 						end: chunkedEnd >= item.size - 1 ? item.size - 1 : chunkedEnd
 					})
+
 					blob = await workerLib.generateVideoThumbnail({ item, buffer })
 				}
 

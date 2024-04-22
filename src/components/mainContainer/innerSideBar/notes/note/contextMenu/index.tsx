@@ -19,11 +19,15 @@ import { cn } from "@/lib/utils"
 import { useQuery } from "@tanstack/react-query"
 import { showSaveFilePicker } from "native-file-system-adapter"
 import striptags from "striptags"
+import useLoadingToast from "@/hooks/useLoadingToast"
+import useErrorToast from "@/hooks/useErrorToast"
 
 export const ContextMenu = memo(({ note, children }: { note: Note; children: React.ReactNode }) => {
 	const { t } = useTranslation()
 	const { setNotes, setSelectedNote, selectedNote, notes } = useNotesStore()
 	const navigate = useNavigate()
+	const errorToast = useErrorToast()
+	const loadingToast = useLoadingToast()
 
 	const tagsQuery = useQuery({
 		queryKey: ["listNotesTags"],
@@ -31,6 +35,8 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 	})
 
 	const trash = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			await worker.trashNote({ uuid: note.uuid })
 
@@ -38,22 +44,33 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, trash: true } : prev))
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, setNotes, setSelectedNote])
+	}, [note.uuid, setNotes, setSelectedNote, loadingToast, errorToast])
 
 	const deleteNote = useCallback(async () => {
-		try {
-			if (
-				!(await showConfirmDialog({
-					title: "delete",
-					continueButtonText: "delete",
-					continueButtonVariant: "destructive",
-					description: "delele"
-				}))
-			) {
-				return
-			}
+		if (
+			!(await showConfirmDialog({
+				title: "delete",
+				continueButtonText: "delete",
+				continueButtonVariant: "destructive",
+				description: "delele"
+			}))
+		) {
+			return
+		}
 
+		const toast = loadingToast()
+
+		try {
 			await worker.deleteNote({ uuid: note.uuid })
 
 			setNotes(prev => prev.filter(prevNote => prevNote.uuid !== note.uuid))
@@ -76,10 +93,21 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			}
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, setNotes, setSelectedNote, notes, navigate, selectedNote?.uuid])
+	}, [note.uuid, setNotes, setSelectedNote, notes, navigate, selectedNote?.uuid, errorToast, loadingToast])
 
 	const favorite = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			await worker.favoriteNote({ uuid: note.uuid, favorite: true })
 
@@ -87,10 +115,21 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, favorite: true } : prev))
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, setNotes, setSelectedNote])
+	}, [note.uuid, setNotes, setSelectedNote, loadingToast, errorToast])
 
 	const unfavorite = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			await worker.favoriteNote({ uuid: note.uuid, favorite: false })
 
@@ -98,10 +137,21 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, favorite: false } : prev))
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, setNotes, setSelectedNote])
+	}, [note.uuid, setNotes, setSelectedNote, loadingToast, errorToast])
 
 	const pin = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			await worker.pinNote({ uuid: note.uuid, pin: true })
 
@@ -109,10 +159,21 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, pinned: true } : prev))
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, setNotes, setSelectedNote])
+	}, [note.uuid, setNotes, setSelectedNote, loadingToast, errorToast])
 
 	const unpin = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			await worker.pinNote({ uuid: note.uuid, pin: false })
 
@@ -120,10 +181,21 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, pinned: false } : prev))
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, setNotes, setSelectedNote])
+	}, [note.uuid, setNotes, setSelectedNote, loadingToast, errorToast])
 
 	const duplicate = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			const uuid = await worker.duplicateNote({ uuid: note.uuid })
 			const notes = await worker.listNotes()
@@ -139,10 +211,21 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			})
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, setNotes, navigate, setSelectedNote])
+	}, [note.uuid, setNotes, navigate, setSelectedNote, loadingToast, errorToast])
 
 	const restore = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			await worker.restoreNote({ uuid: note.uuid })
 
@@ -150,10 +233,21 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, trash: false, archive: false } : prev))
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, setNotes, setSelectedNote])
+	}, [note.uuid, setNotes, setSelectedNote, loadingToast, errorToast])
 
 	const archive = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			await worker.archiveNote({ uuid: note.uuid })
 
@@ -161,14 +255,25 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, archive: true } : prev))
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, setNotes, setSelectedNote])
+	}, [note.uuid, setNotes, setSelectedNote, loadingToast, errorToast])
 
 	const changeType = useCallback(
 		async (type: NoteType) => {
 			if (note.type === type) {
 				return
 			}
+
+			const toast = loadingToast()
 
 			try {
 				await worker.changeNoteType({ uuid: note.uuid, type })
@@ -177,13 +282,24 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 				setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, type } : prev))
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
 			}
 		},
-		[note.uuid, setNotes, setSelectedNote, note.type]
+		[note.uuid, setNotes, setSelectedNote, note.type, loadingToast, errorToast]
 	)
 
 	const tagNote = useCallback(
 		async (tag: NoteTag) => {
+			const toast = loadingToast()
+
 			try {
 				await worker.tagNote({ uuid: note.uuid, tag: tag.uuid })
 
@@ -193,13 +309,24 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 				setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, tags: [...prev.tags, tag] } : prev))
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
 			}
 		},
-		[note.uuid, setNotes, setSelectedNote]
+		[note.uuid, setNotes, setSelectedNote, loadingToast, errorToast]
 	)
 
 	const untagNote = useCallback(
 		async (tag: NoteTag) => {
+			const toast = loadingToast()
+
 			try {
 				await worker.tagNote({ uuid: note.uuid, tag: tag.uuid })
 
@@ -213,12 +340,23 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 				)
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
 			}
 		},
-		[note.uuid, setNotes, setSelectedNote]
+		[note.uuid, setNotes, setSelectedNote, loadingToast, errorToast]
 	)
 
 	const exportNote = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			let { content } = await worker.fetchNoteContent({ uuid: note.uuid })
 
@@ -261,8 +399,17 @@ export const ContextMenu = memo(({ note, children }: { note: Note; children: Rea
 			writer.close()
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [note.uuid, note.title, note.type])
+	}, [note.uuid, note.title, note.type, loadingToast, errorToast])
 
 	return (
 		<CM>

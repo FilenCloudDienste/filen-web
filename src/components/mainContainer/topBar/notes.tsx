@@ -4,9 +4,13 @@ import { CheckCircle2, Loader, MoreVertical } from "lucide-react"
 import { showInputDialog } from "@/components/dialogs/input"
 import worker from "@/lib/worker"
 import ContextMenu from "../innerSideBar/notes/note/contextMenu"
+import useLoadingToast from "@/hooks/useLoadingToast"
+import useErrorToast from "@/hooks/useErrorToast"
 
 export const Notes = memo(() => {
 	const { selectedNote, setSelectedNote, setNotes, synced } = useNotesStore()
+	const loadingToast = useLoadingToast()
+	const errorToast = useErrorToast()
 
 	const triggerMoreIconContextMenu = useCallback(
 		(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -30,19 +34,21 @@ export const Notes = memo(() => {
 			return
 		}
 
+		const inputResponse = await showInputDialog({
+			title: "title",
+			continueButtonText: "edit",
+			value: selectedNote.title,
+			autoFocusInput: true,
+			placeholder: "Title"
+		})
+
+		if (inputResponse.cancelled) {
+			return
+		}
+
+		const toast = loadingToast()
+
 		try {
-			const inputResponse = await showInputDialog({
-				title: "title",
-				continueButtonText: "edit",
-				value: selectedNote.title,
-				autoFocusInput: true,
-				placeholder: "Title"
-			})
-
-			if (inputResponse.cancelled) {
-				return
-			}
-
 			await worker.editNoteTitle({ uuid: selectedNote.uuid, title: inputResponse.value })
 
 			setSelectedNote(prev => (prev ? { ...prev, title: inputResponse.value } : prev))
@@ -51,8 +57,17 @@ export const Notes = memo(() => {
 			)
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [selectedNote, setSelectedNote, setNotes])
+	}, [selectedNote, setSelectedNote, setNotes, loadingToast, errorToast])
 
 	if (!selectedNote) {
 		return null

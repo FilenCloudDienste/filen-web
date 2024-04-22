@@ -6,9 +6,13 @@ import { Loader } from "lucide-react"
 import { useDriveItemsStore } from "@/stores/drive.store"
 import { move as moveAction } from "./actions"
 import { orderItemsByType } from "@/components/drive/utils"
+import useErrorToast from "@/hooks/useErrorToast"
+import useLoadingToast from "@/hooks/useLoadingToast"
 
 export const MoveTree = memo(({ parent, name }: { parent: string; name: string }) => {
 	const { items, setItems } = useDriveItemsStore()
+	const errorToast = useErrorToast()
+	const loadingToast = useLoadingToast()
 
 	const query = useQuery({
 		queryKey: ["listDirectoryOnlyDirectories", parent],
@@ -44,6 +48,8 @@ export const MoveTree = memo(({ parent, name }: { parent: string; name: string }
 				return
 			}
 
+			const toast = loadingToast()
+
 			try {
 				const itemsToMove = selectedItems.filter(item => item.parent !== parent)
 
@@ -54,9 +60,18 @@ export const MoveTree = memo(({ parent, name }: { parent: string; name: string }
 				setItems(prev => prev.filter(prevItem => !movedUUIDs.includes(prevItem.uuid)))
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
 			}
 		},
-		[selectedItems, parent, setItems, canMove]
+		[selectedItems, parent, setItems, canMove, loadingToast, errorToast]
 	)
 
 	if (!canMove) {

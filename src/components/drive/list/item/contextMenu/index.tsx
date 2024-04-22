@@ -26,6 +26,8 @@ import useLocation from "@/hooks/useLocation"
 import { HexColorPicker } from "react-colorful"
 import { useDebouncedCallback } from "use-debounce"
 import { directoryColorToHex } from "@/assets/fileExtensionIcons"
+import useLoadingToast from "@/hooks/useLoadingToast"
+import useErrorToast from "@/hooks/useErrorToast"
 
 export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; children: React.ReactNode }) => {
 	const { items, setItems } = useDriveItemsStore()
@@ -38,6 +40,8 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 		useDriveSharedStore()
 	const location = useLocation()
 	const [directoryColor, setDirectoryColor] = useState<string>(directoryColorToHex(item.type === "directory" ? item.color : null))
+	const loadingToast = useLoadingToast()
+	const errorToast = useErrorToast()
 
 	const selectedItems = useMemo(() => {
 		return items.filter(item => item.selected)
@@ -84,6 +88,8 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			return
 		}
 
+		const toast = loadingToast()
+
 		try {
 			const parent = await selectDriveDestination()
 
@@ -101,8 +107,17 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			})
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [selectedItems, setItems])
+	}, [selectedItems, setItems, errorToast, loadingToast])
 
 	const download = useCallback(async () => {
 		if (selectedItems.length === 0) {
@@ -121,6 +136,8 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			return
 		}
 
+		const toast = loadingToast()
+
 		try {
 			const trashedUUIDs = selectedItems.map(item => item.uuid)
 
@@ -133,13 +150,24 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			})
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [selectedItems, setItems])
+	}, [selectedItems, setItems, loadingToast, errorToast])
 
 	const deletePermanently = useCallback(async () => {
 		if (selectedItems.length === 0) {
 			return
 		}
+
+		const toast = loadingToast()
 
 		try {
 			const deletedUUIDs = selectedItems.map(item => item.uuid)
@@ -153,13 +181,24 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			})
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [selectedItems, setItems])
+	}, [selectedItems, setItems, loadingToast, errorToast])
 
 	const restore = useCallback(async () => {
 		if (selectedItems.length === 0) {
 			return
 		}
+
+		const toast = loadingToast()
 
 		try {
 			const restoredUUIDs = selectedItems.map(item => item.uuid)
@@ -171,8 +210,17 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			})
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [selectedItems, setItems])
+	}, [selectedItems, setItems, loadingToast, errorToast])
 
 	const preview = useCallback(() => {
 		if (selectedItems.length !== 1 && previewType !== "other") {
@@ -187,6 +235,8 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			return
 		}
 
+		const toast = loadingToast()
+
 		try {
 			const item = selectedItems[0]
 			const newName = await actions.rename({ item })
@@ -196,14 +246,25 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			})
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [selectedItems, setItems])
+	}, [selectedItems, setItems, loadingToast, errorToast])
 
 	const toggleFavorite = useCallback(
 		async (favorite: boolean) => {
 			if (selectedItems.length === 0) {
 				return
 			}
+
+			const toast = loadingToast()
 
 			try {
 				const uuids = selectedItems.map(item => item.uuid)
@@ -217,9 +278,18 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				})
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
 			}
 		},
-		[selectedItems, setItems]
+		[selectedItems, setItems, errorToast, loadingToast]
 	)
 
 	const share = useCallback(async () => {
@@ -227,17 +297,30 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			return
 		}
 
+		const toast = loadingToast()
+
 		try {
 			await actions.share({ selectedItems })
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
-	}, [selectedItems])
+	}, [selectedItems, loadingToast, errorToast])
 
 	const changeColor = useDebouncedCallback(async (color: string) => {
 		if (selectedItems.length !== 1) {
 			return
 		}
+
+		const toast = loadingToast()
 
 		try {
 			await actions.changeColor({ uuid: selectedItems[0].uuid, color })
@@ -247,6 +330,15 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			})
 		} catch (e) {
 			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
 		}
 	}, 1000)
 

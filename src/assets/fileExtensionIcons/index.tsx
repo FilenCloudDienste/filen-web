@@ -195,7 +195,9 @@ export function directoryColorToHex(color: DirColors | null): string {
 						? "#AF52DE"
 						: color === "red"
 							? "#FF3B30"
-							: color
+							: color.includes("#")
+								? color
+								: "#85BCFF"
 	).toLowerCase()
 }
 
