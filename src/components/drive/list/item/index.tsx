@@ -16,7 +16,6 @@ import { Heart } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
 import { THUMBNAIL_MAX_FETCH_SIZE } from "@/constants"
-import { type DirColors } from "@filen/sdk/dist/types/api/v3/dir/color"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -307,7 +306,7 @@ export const ListItem = memo(
 										<ColoredFolderSVGIcon
 											width="1.75rem"
 											height="1.75rem"
-											color={item.color as unknown as DirColors}
+											color={item.color}
 										/>
 									) : (
 										<img
@@ -361,7 +360,7 @@ export const ListItem = memo(
 									<ColoredFolderSVGIcon
 										width="4rem"
 										height="4rem"
-										color={item.color as unknown as DirColors}
+										color={item.color}
 									/>
 								) : (
 									<img

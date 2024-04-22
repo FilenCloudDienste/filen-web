@@ -1642,3 +1642,11 @@ export async function deleteChatConversation({ conversation }: { conversation: s
 export async function chatRemoveParticipant({ conversation, userId }: { conversation: string; userId: number }): Promise<void> {
 	return await SDK.chats().removeParticipant({ conversation, userId })
 }
+
+export async function decryptFileMetadata({ metadata }: { metadata: string }): Promise<FileMetadata> {
+	return await SDK.crypto().decrypt().fileMetadata({ metadata })
+}
+
+export async function decryptFolderMetadata({ metadata }: { metadata: string }): Promise<FolderMetadata> {
+	return await SDK.crypto().decrypt().folderMetadata({ metadata })
+}
