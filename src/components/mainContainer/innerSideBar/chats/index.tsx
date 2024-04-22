@@ -104,12 +104,10 @@ export const Chats = memo(() => {
 							: prev
 					)
 
-					if (routeParent !== event.data.conversation) {
-						setConversationsUnread(prev => ({
-							...prev,
-							[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation] + 1 : 1
-						}))
-					}
+					setConversationsUnread(prev => ({
+						...prev,
+						[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation] + 1 : 1
+					}))
 				} else if (
 					event.type === "chatMessageDelete" ||
 					event.type === "chatMessageEdited" ||

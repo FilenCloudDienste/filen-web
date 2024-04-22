@@ -90,6 +90,8 @@ export const MarkAsRead = memo(
 
 					return newRecord
 				})
+
+				eventEmitter.emit("updateChatsUnreadCount")
 			} catch (e) {
 				console.error(e)
 			} finally {

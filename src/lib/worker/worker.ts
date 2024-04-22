@@ -1672,3 +1672,7 @@ export async function chatConversationUnreadCount({ conversation }: { conversati
 export async function chatMarkConversationAsRead({ conversation }: { conversation: string }): Promise<void> {
 	return await SDK.chats().markConversationAsRead({ conversation })
 }
+
+export async function chatsUnreadCount(): Promise<number> {
+	return await SDK.chats().unread()
+}

@@ -66,8 +66,8 @@ export const Chat = memo(
 							fallback={participantsWithoutUser[0].email}
 						/>
 						{unreadCount > 0 && (
-							<div className="absolute z-10 w-[18px] h-[18px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-sm mt-[25px] ml-[25px]">
-								{unreadCount}
+							<div className="absolute z-10 w-[16px] h-[16px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs mt-[26px] ml-[26px]">
+								{unreadCount >= 9 ? "9+" : unreadCount}
 							</div>
 						)}
 					</div>

@@ -1,5 +1,5 @@
-import { memo, useState, useCallback, useMemo } from "react"
-import { RefreshCcw, HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings } from "lucide-react"
+import { memo, useState, useCallback, useMemo, useEffect } from "react"
+import { RefreshCcw, HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings, MessageCircleMore } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
@@ -12,6 +12,11 @@ import TransfersProgress from "./transfersProgress"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
+import worker from "@/lib/worker"
+import { useQuery } from "@tanstack/react-query"
+import { useChatsStore } from "@/stores/chats.store"
+import { SocketEvent } from "@filen/sdk"
+import socket from "@/lib/socket"
 
 const iconSize = 20
 
@@ -24,6 +29,12 @@ export const Button = memo(({ id }: { id: string }) => {
 	const { t } = useTranslation()
 	const [lastSelectedNote] = useLocalStorage("lastSelectedNote", "")
 	const [lastSelectedChatsConversation] = useLocalStorage("lastSelectedChatsConversation", "")
+	const { unread, setUnread } = useChatsStore()
+
+	const chatsUnreadCountQuery = useQuery({
+		queryKey: ["chatsUnreadCount", id],
+		queryFn: () => (id === "chats" ? worker.chatsUnreadCount() : Promise.resolve<number>(0))
+	})
 
 	const onClick = useCallback(
 		(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -88,6 +99,49 @@ export const Button = memo(({ id }: { id: string }) => {
 		)
 	}, [id, routeParent, location, sdkConfig.baseFolderUUID])
 
+	const socketEventListener = useCallback(
+		async (event: SocketEvent) => {
+			if (id !== "chats") {
+				return
+			}
+
+			try {
+				if (event.type === "chatMessageNew") {
+					setUnread(prev => prev + 1)
+				} else if (event.type === "chatConversationDeleted") {
+					await chatsUnreadCountQuery.refetch()
+				}
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[setUnread, chatsUnreadCountQuery, id]
+	)
+
+	useEffect(() => {
+		const updateChatsUnreadCountListener = eventEmitter.on("updateChatsUnreadCount", () => {
+			chatsUnreadCountQuery.refetch().catch(console.error)
+		})
+
+		return () => {
+			updateChatsUnreadCountListener.remove()
+		}
+	}, [chatsUnreadCountQuery])
+
+	useEffect(() => {
+		if (chatsUnreadCountQuery.isSuccess && id === "chats") {
+			setUnread(chatsUnreadCountQuery.data)
+		}
+	}, [chatsUnreadCountQuery.isSuccess, chatsUnreadCountQuery.data, setUnread, id])
+
+	useEffect(() => {
+		socket.addListener("socketEvent", socketEventListener)
+
+		return () => {
+			socket.removeListener("socketEvent", socketEventListener)
+		}
+	}, [socketEventListener])
+
 	return (
 		<div className={cn("flex flex-row justify-center items-center w-full", IS_DESKTOP ? "pl-[1px]" : "")}>
 			{showIndicator && (
@@ -121,7 +175,23 @@ export const Button = memo(({ id }: { id: string }) => {
 								/>
 							)}
 							{id === "notes" && <Notebook size={iconSize} />}
-							{id === "chats" && <MessageCircle size={iconSize} />}
+							{id === "chats" && (
+								<>
+									{unread > 0 ? (
+										<>
+											<MessageCircleMore
+												size={iconSize}
+												className="text-red-500"
+											/>
+											<div className="absolute z-10 w-[14px] h-[14px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs mt-[20px] ml-[20px]">
+												{unread}
+											</div>
+										</>
+									) : (
+										<MessageCircle size={iconSize} />
+									)}
+								</>
+							)}
 							{id === "contacts" && <Contact size={iconSize} />}
 							{id === "settings" && <Settings size={iconSize} />}
 							{id === "transfers" && <ArrowDownUp size={iconSize} />}
