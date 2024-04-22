@@ -1,18 +1,27 @@
-import { memo, useRef } from "react"
+import { memo, useRef, useCallback } from "react"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
-import { Plus, Crown } from "lucide-react"
+import { Plus } from "lucide-react"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useTranslation } from "react-i18next"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import useWindowSize from "@/hooks/useWindowSize"
-import Avatar from "@/components/avatar"
-import ContextMenu from "./contextMenu"
+import { useQuery } from "@tanstack/react-query"
+import worker from "@/lib/worker"
+import Participant from "./participant"
+import { selectContacts } from "@/components/dialogs/selectContacts"
 
 export const Participants = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const { t } = useTranslation()
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const windowSize = useWindowSize()
+
+	const onlineQuery = useQuery({
+		queryKey: ["chatConversationOnline", conversation.uuid],
+		queryFn: () => worker.chatConversationOnline({ conversation: conversation.uuid }),
+		refetchInterval: 15000,
+		refetchIntervalInBackground: true
+	})
 
 	const rowVirtualizer = useVirtualizer({
 		count: conversation.participants.length,
@@ -24,6 +33,20 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 		overscan: 5
 	})
 
+	const addParticipant = useCallback(async () => {
+		const selectedContacts = await selectContacts()
+
+		if (selectedContacts.cancelled) {
+			return
+		}
+
+		console.log(selectedContacts)
+	}, [])
+
+	if (!onlineQuery.isSuccess) {
+		return null
+	}
+
 	return (
 		<div className="w-full h-full flex flex-col">
 			<div className="w-full h-12 flex flex-row items-center justify-between px-4">
@@ -32,8 +55,8 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 					<Tooltip>
 						<TooltipTrigger asChild={true}>
 							<div
-								className="hover:bg-secondary rounded-lg p-1 cursor-pointer"
-								onClick={() => {}}
+								className="hover:bg-secondary rounded-md p-1 cursor-pointer"
+								onClick={addParticipant}
 							>
 								<Plus />
 							</div>
@@ -69,28 +92,11 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 									data-index={virtualItem.index}
 									ref={rowVirtualizer.measureElement}
 								>
-									<ContextMenu
-										participant={participant}
+									<Participant
 										conversation={conversation}
-									>
-										<div className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-primary-foreground">
-											<Avatar
-												className="w-7 h-7"
-												src={participant.avatar}
-												fallback={participant.email}
-												status="online"
-											/>
-											<div className="flex flex-row items-center gap-3">
-												<p className="line-clamp-1 text-ellipsis break-all">{participant.email}</p>
-												{participant.userId === conversation.ownerId && (
-													<Crown
-														size={16}
-														className="text-yellow-500 shrink-0"
-													/>
-												)}
-											</div>
-										</div>
-									</ContextMenu>
+										onlineUsers={onlineQuery.data}
+										participant={participant}
+									/>
 								</div>
 							)
 						})}

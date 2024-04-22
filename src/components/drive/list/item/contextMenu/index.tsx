@@ -88,15 +88,15 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			return
 		}
 
+		const parent = await selectDriveDestination()
+
+		if (parent.cancelled) {
+			return
+		}
+
 		const toast = loadingToast()
 
 		try {
-			const parent = await selectDriveDestination()
-
-			if (parent.cancelled) {
-				return
-			}
-
 			const itemsToMove = selectedItems.filter(item => item.parent !== parent.uuid)
 			const movedUUIDs = itemsToMove.map(item => item.uuid)
 

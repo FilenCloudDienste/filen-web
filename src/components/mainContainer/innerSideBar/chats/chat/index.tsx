@@ -5,6 +5,7 @@ import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/convers
 import ContextMenu from "./contextMenu"
 import Avatar from "@/components/avatar"
 import { ReplaceMessageWithComponentsInline } from "@/components/chats/conversation/message/utils"
+import { useChatsStore } from "@/stores/chats.store"
 
 export const Chat = memo(
 	({
@@ -20,6 +21,12 @@ export const Chat = memo(
 		userId: number
 		routeParent: string
 	}) => {
+		const { conversationsUnread } = useChatsStore()
+
+		const unreadCount = useMemo(() => {
+			return conversationsUnread[conversation.uuid] ? conversationsUnread[conversation.uuid] : 0
+		}, [conversationsUnread, conversation.uuid])
+
 		const participantsWithoutUser = useMemo(() => {
 			return conversation.participants.filter(p => p.userId !== userId)
 		}, [conversation.participants, userId])
@@ -58,6 +65,11 @@ export const Chat = memo(
 							src={participantsWithoutUser[0].avatar}
 							fallback={participantsWithoutUser[0].email}
 						/>
+						{unreadCount > 0 && (
+							<div className="absolute z-10 w-[18px] h-[18px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-sm mt-[25px] ml-[25px]">
+								{unreadCount}
+							</div>
+						)}
 					</div>
 					<div className="flex flex-col grow h-full">
 						<p className="line-clamp-1 text-ellipsis break-all">

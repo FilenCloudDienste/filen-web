@@ -29,7 +29,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				}}
 				draggable={false}
 				className={cn(
-					"flex flex-row gap-3 w-full px-3 py-2 rounded-lg transition-all items-center hover:bg-accent text-primary cursor-pointer",
+					"flex flex-row gap-3 w-full px-3 py-2 rounded-md transition-all items-center hover:bg-accent text-primary cursor-pointer",
 					routeParent === uuid || location === `/${uuid}` ? "bg-accent" : "bg-transparent"
 				)}
 			>

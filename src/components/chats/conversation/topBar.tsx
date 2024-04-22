@@ -61,7 +61,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 				<Tooltip>
 					<TooltipTrigger asChild={true}>
 						<div
-							className="hover:bg-secondary rounded-lg p-1 cursor-pointer"
+							className="hover:bg-secondary rounded-md p-1 cursor-pointer"
 							onClick={toggleParticipantsContainer}
 						>
 							{conversationParticipantsContainerOpen ? <ChevronRight /> : <ChevronLeft />}

@@ -19,6 +19,7 @@ import { register as registerServiceWorker } from "register-service-worker"
 import { setItem } from "@/lib/localForage"
 import InputDialog from "@/components/dialogs/input"
 import { connect as socketConnect } from "@/lib/socket"
+import SelectContactsDialog from "@/components/dialogs/selectContacts"
 
 export const persistantQueryClient = new QueryClient({
 	defaultOptions: {
@@ -131,6 +132,7 @@ export const Root = memo(() => {
 							<PreviewDialog />
 							<InputDialog />
 							<ConfirmDialog />
+							<SelectContactsDialog />
 						</>
 					) : (
 						<Outlet />

@@ -41,7 +41,17 @@ export const searchEmojiIndex = memoize((query: string): Promise<{ skins?: { src
 
 export const Input = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const [editor] = useState<BaseEditor & ReactEditor & HistoryEditor>(() => withReact(withHistory(createEditor())))
-	const { setMessages, setFailedMessages, setEditUUID, setReplyMessage, replyMessage, editUUID, messages } = useChatsStore()
+	const {
+		setMessages,
+		setFailedMessages,
+		setEditUUID,
+		setReplyMessage,
+		replyMessage,
+		editUUID,
+		messages,
+		setSelectedConversation,
+		setConversations
+	} = useChatsStore()
 	const { userId } = useSDKConfig()
 	const { t } = useTranslation()
 	const typingEventTimeout = useRef<ReturnType<typeof setTimeout>>()
@@ -243,6 +253,34 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				}
 			])
 
+			setConversations(prev =>
+				prev.map(c =>
+					c.uuid === conversation.uuid
+						? {
+								...c,
+								lastMessage: content,
+								lastMessageSender: me.userId,
+								lastMessageTimestamp: Date.now(),
+								lastMessageUUID: uuid
+							}
+						: c
+				)
+			)
+
+			setSelectedConversation(prev =>
+				prev
+					? prev.uuid === conversation.uuid
+						? {
+								...prev,
+								lastMessage: content,
+								lastMessageSender: me.userId,
+								lastMessageTimestamp: Date.now(),
+								lastMessageUUID: uuid
+							}
+						: prev
+					: prev
+			)
+
 			eventEmitter.emit("chatMarkAsRead")
 
 			clearTimeout(typingEventTimeout.current)
@@ -290,7 +328,9 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		getEditorText,
 		replyMessage,
 		errorToast,
-		hideSuggestions
+		hideSuggestions,
+		setSelectedConversation,
+		setConversations
 	])
 
 	const editMessage = useCallback(async (): Promise<void> => {
@@ -813,7 +853,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 								return (
 									<div
 										className={cn(
-											"flex flex-row items-center justify-between py-2 px-2 rounded-lg hover:bg-primary-foreground cursor-pointer",
+											"flex flex-row items-center justify-between py-2 px-2 rounded-md hover:bg-primary-foreground cursor-pointer",
 											index === mentionsSuggestionsIndex ? "bg-primary-foreground" : "bg-transparent"
 										)}
 										key={participant.userId}
@@ -863,7 +903,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 								return (
 									<div
 										className={cn(
-											"flex flex-row items-center justify-between py-2 px-2 rounded-lg hover:bg-primary-foreground cursor-pointer",
+											"flex flex-row items-center justify-between py-2 px-2 rounded-md hover:bg-primary-foreground cursor-pointer",
 											index === emojisSuggestionsIndex ? "bg-primary-foreground" : "bg-transparent"
 										)}
 										key={shortCode + ":" + index}
@@ -905,7 +945,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 					onKeyDown={onKeyDown}
 					onKeyUp={onKeyUp}
 					placeholder={t("chats.input.placeholder")}
-					className="slate-editor z-10 border rounded-lg shadow-sm bg-background w-full min-h-10 max-h-[40vh] overflow-y-auto overflow-x-hidden pl-11 pr-11 py-3 break-all outline-none focus:outline-none active:outline-none hover:outline-none"
+					className="slate-editor z-10 border rounded-md shadow-sm bg-background w-full min-h-10 max-h-[40vh] overflow-y-auto overflow-x-hidden pl-11 pr-11 py-3 break-all outline-none focus:outline-none active:outline-none hover:outline-none"
 					autoCorrect="none"
 					autoCapitalize="none"
 					autoFocus={false}

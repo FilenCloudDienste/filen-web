@@ -1,7 +1,6 @@
-import { memo, useState, useEffect, useRef, useMemo } from "react"
+import { memo, useEffect, useRef, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useVirtualizer } from "@tanstack/react-virtual"
-import { type DriveCloudItem } from "@/components/drive"
 import worker from "@/lib/worker"
 import ListItem from "./listItem"
 import { useTranslation } from "react-i18next"
@@ -9,7 +8,6 @@ import eventEmitter from "@/lib/eventEmitter"
 import { orderItemsByType } from "@/components/drive/utils"
 
 export const List = memo(({ pathname, setPathname }: { pathname: string; setPathname: React.Dispatch<React.SetStateAction<string>> }) => {
-	const [items, setItems] = useState<DriveCloudItem[]>([])
 	const lastPathname = useRef<string>("")
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const { t } = useTranslation()
@@ -26,8 +24,12 @@ export const List = memo(({ pathname, setPathname }: { pathname: string; setPath
 	})
 
 	const itemsOrdered = useMemo(() => {
-		return orderItemsByType({ items, type: "nameAsc" })
-	}, [items])
+		if (!query.isSuccess) {
+			return []
+		}
+
+		return orderItemsByType({ items: query.data, type: "nameAsc" })
+	}, [query.isSuccess, query.data])
 
 	const rowVirtualizer = useVirtualizer({
 		count: itemsOrdered.length,
@@ -38,12 +40,6 @@ export const List = memo(({ pathname, setPathname }: { pathname: string; setPath
 		},
 		overscan: 5
 	})
-
-	useEffect(() => {
-		if (query.isSuccess) {
-			setItems(query.data)
-		}
-	}, [query.isSuccess, query.data, setItems])
 
 	useEffect(() => {
 		// We have to manually refetch the query because the component does not remount, only the location pathname changes.
@@ -77,7 +73,7 @@ export const List = memo(({ pathname, setPathname }: { pathname: string; setPath
 				overflowY: "auto"
 			}}
 		>
-			{query.isSuccess && query.data.length === 0 ? (
+			{query.isSuccess && itemsOrdered.length === 0 ? (
 				<div className="w-full h-full flex flex-col items-center justify-center">
 					<p className="select-none">{t("dialogs.selectDriveDestination.listEmpty")}</p>
 				</div>
@@ -89,19 +85,18 @@ export const List = memo(({ pathname, setPathname }: { pathname: string; setPath
 						position: "relative"
 					}}
 				>
-					{query.isSuccess &&
-						rowVirtualizer.getVirtualItems().map(virtualItem => {
-							const item = itemsOrdered[virtualItem.index]
+					{rowVirtualizer.getVirtualItems().map(virtualItem => {
+						const item = itemsOrdered[virtualItem.index]
 
-							return (
-								<ListItem
-									key={virtualItem.key}
-									item={item}
-									virtualItem={virtualItem}
-									setPathname={setPathname}
-								/>
-							)
-						})}
+						return (
+							<ListItem
+								key={virtualItem.key}
+								item={item}
+								virtualItem={virtualItem}
+								setPathname={setPathname}
+							/>
+						)
+					})}
 				</div>
 			)}
 		</div>

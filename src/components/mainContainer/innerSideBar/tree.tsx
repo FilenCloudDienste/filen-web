@@ -37,7 +37,7 @@ export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: 
 			>
 				<div
 					className={
-						"flex flex-row gap-2 items-center cursor-pointer px-2 py-1 hover:bg-secondary rounded-lg mt-1 " +
+						"flex flex-row gap-2 items-center cursor-pointer px-2 py-1 hover:bg-secondary rounded-md mt-1 " +
 						(routeParent === item.uuid ? "bg-secondary" : "")
 					}
 					style={{

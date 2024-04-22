@@ -252,7 +252,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 										onDragOver={onDragOver}
 										onDragLeave={onDragLeave}
 										onDragEnter={onDragEnter}
-										className="border border-dashed w-full h-full rounded-lg flex flex-col items-center justify-center"
+										className="border border-dashed w-full h-full rounded-md flex flex-col items-center justify-center"
 									>
 										{t("dropZone.cta")}
 									</div>

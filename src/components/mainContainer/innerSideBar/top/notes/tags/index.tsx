@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 import ContextMenu from "./contextMenu"
 
 export const tagClassName =
-	"flex flex-row gap-1 items-center justify-center px-2 py-1 rounded-lg bg-primary-foreground hover:bg-secondary cursor-pointer h-7 text-sm"
+	"flex flex-row gap-1 items-center justify-center px-2 py-1 rounded-md bg-primary-foreground hover:bg-secondary cursor-pointer h-7 text-sm"
 
 export const Tags = memo(() => {
 	const { t } = useTranslation()

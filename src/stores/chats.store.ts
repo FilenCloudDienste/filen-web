@@ -10,6 +10,8 @@ export type ChatsStore = {
 	failedMessages: string[]
 	editUUID: string
 	replyMessage: ChatMessage | null
+	conversationsUnread: Record<string, number>
+	unread: number
 	setConversations: (fn: ChatConversation[] | ((prev: ChatConversation[]) => ChatConversation[])) => void
 	setSelectedConversation: (fn: ChatConversation | null | ((prev: ChatConversation | null) => ChatConversation | null)) => void
 	setSearch: (fn: string | ((prev: string) => string)) => void
@@ -17,6 +19,8 @@ export type ChatsStore = {
 	setFailedMessages: (fn: string[] | ((prev: string[]) => string[])) => void
 	setEditUUID: (fn: string | ((prev: string) => string)) => void
 	setReplyMessage: (fn: ChatMessage | null | ((prev: ChatMessage | null) => ChatMessage | null)) => void
+	setConversationsUnread: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
+	setUnread: (fn: number | ((prev: number) => number)) => void
 }
 
 export const useChatsStore = create<ChatsStore>(set => ({
@@ -27,6 +31,8 @@ export const useChatsStore = create<ChatsStore>(set => ({
 	failedMessages: [],
 	editUUID: "",
 	replyMessage: null,
+	conversationsUnread: {},
+	unread: 0,
 	setConversations(fn) {
 		set(state => ({ conversations: typeof fn === "function" ? fn(state.conversations) : fn }))
 	},
@@ -47,5 +53,11 @@ export const useChatsStore = create<ChatsStore>(set => ({
 	},
 	setReplyMessage(fn) {
 		set(state => ({ replyMessage: typeof fn === "function" ? fn(state.replyMessage) : fn }))
+	},
+	setConversationsUnread(fn) {
+		set(state => ({ conversationsUnread: typeof fn === "function" ? fn(state.conversationsUnread) : fn }))
+	},
+	setUnread(fn) {
+		set(state => ({ unread: typeof fn === "function" ? fn(state.unread) : fn }))
 	}
 }))

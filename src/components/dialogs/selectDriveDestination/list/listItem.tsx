@@ -57,7 +57,7 @@ export const ListItem = memo(
 					height: `${virtualItem.size}px`,
 					transform: `translateY(${virtualItem.start}px)`
 				}}
-				className="flex flex-row justify-between items-center hover:bg-secondary cursor-pointer px-3 rounded-lg gap-5 select-none"
+				className="flex flex-row justify-between items-center hover:bg-secondary cursor-pointer px-3 rounded-md gap-5 select-none"
 				onClick={() => setPathname(prev => `${prev}/${item.uuid}`)}
 			>
 				<div className="flex flex-row items-center gap-3 text-primary line-clamp-1 text-ellipsis select-none">

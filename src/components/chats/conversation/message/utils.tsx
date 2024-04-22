@@ -141,7 +141,7 @@ export const ReplaceMessageWithComponents = memo(
 						return (
 							<div
 								key={index}
-								className="flex-col max-w-full p-2 py-1 bg-secondary border rounded-lg shadow-sm basis-full"
+								className="flex-col max-w-full p-2 py-1 bg-secondary border rounded-md shadow-sm basis-full"
 							>
 								{code}
 							</div>

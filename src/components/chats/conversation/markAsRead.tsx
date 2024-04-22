@@ -10,6 +10,7 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import { useTranslation } from "react-i18next"
 import { simpleDate } from "@/utils"
 import eventEmitter from "@/lib/eventEmitter"
+import { useChatsStore } from "@/stores/chats.store"
 
 export const MarkAsRead = memo(
 	({
@@ -27,6 +28,7 @@ export const MarkAsRead = memo(
 		const [markingAsRead, setMarkingAsRead] = useState<boolean>(false)
 		const sdkConfig = useSDKConfig()
 		const { t } = useTranslation()
+		const { setConversationsUnread } = useChatsStore()
 
 		const { show, count, since } = useMemo(() => {
 			if (messagesSorted.length === 0) {
@@ -72,17 +74,28 @@ export const MarkAsRead = memo(
 			setMarkingAsRead(true)
 
 			try {
-				await worker.chatUpdateLastFocus({
-					values: lastFocusQuery.data.map(lf => (lf.uuid === conversation.uuid ? { ...lf, lastFocus: Date.now() } : lf))
-				})
+				await Promise.all([
+					worker.chatUpdateLastFocus({
+						values: lastFocusQuery.data.map(lf => (lf.uuid === conversation.uuid ? { ...lf, lastFocus: Date.now() } : lf))
+					}),
+					worker.chatMarkConversationAsRead({ conversation: conversation.uuid })
+				])
 
 				await lastFocusQuery.refetch()
+
+				setConversationsUnread(prev => {
+					const newRecord = { ...prev }
+
+					delete newRecord[conversation.uuid]
+
+					return newRecord
+				})
 			} catch (e) {
 				console.error(e)
 			} finally {
 				setMarkingAsRead(false)
 			}
-		}, [lastFocusQuery, conversation.uuid, count])
+		}, [lastFocusQuery, conversation.uuid, count, setConversationsUnread])
 
 		useEffect(() => {
 			const chatMarkAsReadListener = eventEmitter.on("chatMarkAsRead", markAsRead)
@@ -105,7 +118,7 @@ export const MarkAsRead = memo(
 				onClick={markAsRead}
 			>
 				<p className="line-clamp-1 text-ellipsis break-all flex flex-row items-center">
-					{t(count <= 1 ? "chats.newMessageSince" : "chats.newMessagesSince", { count, since })}
+					{t(count <= 1 ? "chats.newMessageSince" : "chats.newMessagesSince", { count: count >= 99 ? 99 : count, since })}
 				</p>
 				<p className="line-clamp-1 text-ellipsis break-all flex flex-row items-center gap-2 shrink-0">
 					{markingAsRead ? (

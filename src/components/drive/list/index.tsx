@@ -36,7 +36,7 @@ export const List = memo(() => {
 
 	const itemsOrdered = useMemo(() => {
 		if (location.includes("recents")) {
-			return orderItemsByType({ items, type: "dateDesc" })
+			return orderItemsByType({ items, type: "uploadDateDesc" })
 		}
 
 		return orderItemsByType({ items, type: "nameAsc" })

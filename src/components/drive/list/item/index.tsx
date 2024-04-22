@@ -352,7 +352,7 @@ export const ListItem = memo(
 							</div>
 							<div
 								className={cn(
-									"flex flex-col dragselect-start-disallowed w-full rounded-lg border h-full hover:bg-secondary cursor-pointer items-center justify-center",
+									"flex flex-col dragselect-start-disallowed w-full rounded-md border h-full hover:bg-secondary cursor-pointer items-center justify-center",
 									item.selected || hovering ? "bg-secondary border-primary" : ""
 								)}
 							>
@@ -366,7 +366,7 @@ export const ListItem = memo(
 									<img
 										src={thumbnailURL ? thumbnailURL : fileNameToSVGIcon(item.name)}
 										className={cn(
-											"dragselect-start-disallowed shrink-0 rounded-lg",
+											"dragselect-start-disallowed shrink-0 rounded-md",
 											thumbnailURL ? "w-full h-full" : "w-16 h-16"
 										)}
 										draggable={false}

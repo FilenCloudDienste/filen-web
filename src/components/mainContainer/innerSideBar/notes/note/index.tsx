@@ -76,7 +76,7 @@ export const Note = memo(
 								return (
 									<div
 										key={tag.uuid}
-										className="flex flex-row items-center justify-center px-2 py-1 rounded-lg h-7 text-sm border shadow-sm"
+										className="flex flex-row items-center justify-center px-2 py-1 rounded-md h-7 text-sm border shadow-sm"
 									>
 										{tag.name}
 									</div>

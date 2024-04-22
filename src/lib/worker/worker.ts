@@ -18,6 +18,8 @@ import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/convers
 import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
 import { type ChatTypingType } from "@filen/sdk/dist/types/api/v3/chat/typing"
 import { type ChatLastFocusValues } from "@filen/sdk/dist/types/api/v3/chat/lastFocusUpdate"
+import { type ChatConversationsOnlineUser } from "@filen/sdk/dist/types/api/v3/chat/conversations/online"
+import { type Contact } from "@filen/sdk/dist/types/api/v3/contacts"
 
 let isInitialized = false
 // We setup an eventEmitter first here in case we are running in the main thread.
@@ -1653,4 +1655,20 @@ export async function decryptFolderMetadata({ metadata }: { metadata: string }):
 
 export async function changeDirectoryColor({ color, uuid }: { color: string; uuid: string }): Promise<void> {
 	return await SDK.cloud().changeDirectoryColor({ uuid, color })
+}
+
+export async function chatConversationOnline({ conversation }: { conversation: string }): Promise<ChatConversationsOnlineUser[]> {
+	return await SDK.chats().conversationOnline({ conversation })
+}
+
+export async function listContacts(): Promise<Contact[]> {
+	return await SDK.contacts().all()
+}
+
+export async function chatConversationUnreadCount({ conversation }: { conversation: string }): Promise<number> {
+	return await SDK.chats().conversationUnreadCount({ conversation })
+}
+
+export async function chatMarkConversationAsRead({ conversation }: { conversation: string }): Promise<void> {
+	return await SDK.chats().markConversationAsRead({ conversation })
 }

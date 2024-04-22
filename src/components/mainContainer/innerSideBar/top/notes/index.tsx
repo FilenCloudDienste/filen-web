@@ -52,7 +52,7 @@ export const Notes = memo(() => {
 					<Tooltip>
 						<TooltipTrigger asChild={true}>
 							<div
-								className="hover:bg-secondary rounded-lg p-1 cursor-pointer"
+								className="hover:bg-secondary rounded-md p-1 cursor-pointer"
 								onClick={createNote}
 							>
 								<Plus />

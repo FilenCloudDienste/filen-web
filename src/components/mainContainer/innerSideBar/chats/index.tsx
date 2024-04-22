@@ -18,7 +18,7 @@ import socket from "@/lib/socket"
 export const Chats = memo(() => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const windowSize = useWindowSize()
-	const { conversations, setConversations, selectedConversation, setSelectedConversation } = useChatsStore()
+	const { conversations, setConversations, selectedConversation, setSelectedConversation, setConversationsUnread } = useChatsStore()
 	const [, setLastSelectedChatsConversation] = useLocalStorage("lastSelectedChatsConversation", "")
 	const navigate = useNavigate()
 	const routeParent = useRouteParent()
@@ -44,6 +44,19 @@ export const Chats = memo(() => {
 		},
 		overscan: 5
 	})
+
+	const fetchConversationUnreadCount = useCallback(
+		async (uuid: string) => {
+			try {
+				const count = await worker.chatConversationUnreadCount({ conversation: uuid })
+
+				setConversationsUnread(prev => ({ ...prev, [uuid]: count }))
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[setConversationsUnread]
+	)
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
@@ -90,6 +103,13 @@ export const Chats = memo(() => {
 								: prev
 							: prev
 					)
+
+					if (routeParent !== event.data.conversation) {
+						setConversationsUnread(prev => ({
+							...prev,
+							[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation] + 1 : 1
+						}))
+					}
 				} else if (
 					event.type === "chatMessageDelete" ||
 					event.type === "chatMessageEdited" ||
@@ -110,7 +130,7 @@ export const Chats = memo(() => {
 				console.error(e)
 			}
 		},
-		[conversations, setConversations, query, setSelectedConversation, routeParent, navigate]
+		[conversations, setConversations, query, setSelectedConversation, routeParent, navigate, setConversationsUnread]
 	)
 
 	useEffect(() => {
@@ -143,8 +163,12 @@ export const Chats = memo(() => {
 			queryUpdatedAtRef.current = query.dataUpdatedAt
 
 			setConversations(query.data)
+
+			for (const convo of query.data) {
+				fetchConversationUnreadCount(convo.uuid)
+			}
 		}
-	}, [query.isSuccess, query.data, query.dataUpdatedAt, setConversations])
+	}, [query.isSuccess, query.data, query.dataUpdatedAt, setConversations, fetchConversationUnreadCount])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)
