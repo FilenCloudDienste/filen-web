@@ -1,4 +1,4 @@
-import { memo, useRef, useEffect, useMemo } from "react"
+import { memo, useRef, useEffect, useMemo, useCallback } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import { useVirtualizer } from "@tanstack/react-virtual"
@@ -11,6 +11,8 @@ import { validate as validateUUID } from "uuid"
 import { useNavigate } from "@tanstack/react-router"
 import useRouteParent from "@/hooks/useRouteParent"
 import useSDKConfig from "@/hooks/useSDKConfig"
+import { type SocketEvent } from "@filen/sdk"
+import socket from "@/lib/socket"
 
 export const Notes = memo(() => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -40,6 +42,36 @@ export const Notes = memo(() => {
 		},
 		overscan: 5
 	})
+
+	const socketEventListener = useCallback(
+		async (event: SocketEvent) => {
+			try {
+				if (
+					event.type === "noteNew" ||
+					event.type === "noteArchived" ||
+					event.type === "noteParticipantNew" ||
+					event.type === "noteParticipantPermissions" ||
+					event.type === "noteParticipantRemoved" ||
+					event.type === "noteTitleEdited" ||
+					event.type === "noteRestored" ||
+					event.type === "noteContentEdited"
+				) {
+					await query.refetch()
+				} else if (event.type === "noteDeleted") {
+					if (routeParent === event.data.note) {
+						navigate({
+							to: "/notes"
+						})
+					}
+
+					await query.refetch()
+				}
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[query, routeParent, navigate]
+	)
 
 	useEffect(() => {
 		if (notesSorted.length > 0) {
@@ -73,6 +105,14 @@ export const Notes = memo(() => {
 			setNotes(query.data)
 		}
 	}, [query.isSuccess, query.data, query.dataUpdatedAt, setNotes])
+
+	useEffect(() => {
+		socket.addListener("socketEvent", socketEventListener)
+
+		return () => {
+			socket.removeListener("socketEvent", socketEventListener)
+		}
+	}, [socketEventListener])
 
 	return (
 		<div

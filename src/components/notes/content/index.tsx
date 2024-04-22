@@ -10,6 +10,10 @@ import { fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
 import RichTextEditor from "@/components/textEditor/rich"
 import useRouteParent from "@/hooks/useRouteParent"
 import { normalizeChecklistValue } from "../utils"
+import { type SocketEvent } from "@filen/sdk"
+import socket from "@/lib/socket"
+import { useNavigate } from "@tanstack/react-router"
+import useSDKConfig from "@/hooks/useSDKConfig"
 
 export const Content = memo(({ note }: { note: Note }) => {
 	const { setSelectedNote, setNotes, setSynced } = useNotesStore()
@@ -21,6 +25,8 @@ export const Content = memo(({ note }: { note: Note }) => {
 	const lastNoteUUIDRef = useRef<string>("")
 	const initialValueRef = useRef<string>("")
 	const queryUpdatedAtRef = useRef<number>(-1)
+	const navigate = useNavigate()
+	const { userId } = useSDKConfig()
 
 	const query = useQuery({
 		queryKey: ["fetchNoteContent", note.uuid],
@@ -41,6 +47,8 @@ export const Content = memo(({ note }: { note: Note }) => {
 
 			try {
 				await worker.editNoteContent({ uuid: note.uuid, type: note.type, content: val })
+
+				initialValueRef.current = val
 
 				setSynced(true)
 				setSelectedNote(prev => (prev ? { ...prev, editedTimestamp: Date.now() } : prev))
@@ -73,6 +81,29 @@ export const Content = memo(({ note }: { note: Note }) => {
 		[editContentDebounce, note.uuid, parent, setSynced]
 	)
 
+	const socketEventListener = useCallback(
+		async (event: SocketEvent) => {
+			try {
+				if (event.type === "noteContentEdited") {
+					if (event.data.note !== note.uuid || event.data.editorId === userId) {
+						return
+					}
+
+					await query.refetch()
+				} else if (event.type === "noteDeleted") {
+					if (parent === event.data.note) {
+						navigate({
+							to: "/notes"
+						})
+					}
+				}
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[query, parent, navigate, userId, note.uuid]
+	)
+
 	useEffect(() => {
 		if (query.isSuccess && queryUpdatedAtRef.current !== query.dataUpdatedAt) {
 			queryUpdatedAtRef.current = query.dataUpdatedAt
@@ -98,6 +129,14 @@ export const Content = memo(({ note }: { note: Note }) => {
 			query.refetch().catch(console.error)
 		}
 	}, [note.uuid, query])
+
+	useEffect(() => {
+		socket.addListener("socketEvent", socketEventListener)
+
+		return () => {
+			socket.removeListener("socketEvent", socketEventListener)
+		}
+	}, [socketEventListener])
 
 	if (!query.isSuccess) {
 		return null
