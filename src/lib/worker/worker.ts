@@ -1650,3 +1650,7 @@ export async function decryptFileMetadata({ metadata }: { metadata: string }): P
 export async function decryptFolderMetadata({ metadata }: { metadata: string }): Promise<FolderMetadata> {
 	return await SDK.crypto().decrypt().folderMetadata({ metadata })
 }
+
+export async function changeDirectoryColor({ color, uuid }: { color: string; uuid: string }): Promise<void> {
+	return await SDK.cloud().changeDirectoryColor({ uuid, color })
+}

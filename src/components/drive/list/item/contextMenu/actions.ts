@@ -102,3 +102,7 @@ export async function share({ selectedItems, requestUUID }: { selectedItems: Dri
 
 	await worker.shareItemsToUser({ items: selectedItems, receiverEmail: inputResponse.value, requestUUID })
 }
+
+export async function changeColor({ uuid, color }: { uuid: string; color: string }): Promise<void> {
+	await worker.changeDirectoryColor({ uuid, color })
+}

@@ -136,7 +136,8 @@
 			"stopSharing": "Stop sharing",
 			"selectDestination": "Select destination",
 			"cloudDrive": "Cloud Drive",
-			"open": "Open"
+			"open": "Open",
+			"color": "Color"
 		},
 		"drive": {
 			"uploadFiles": "Upload files",

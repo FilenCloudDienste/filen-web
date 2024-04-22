@@ -84,7 +84,7 @@ export const List = memo(() => {
 
 					startTransition(() => {
 						setItems(prev => [
-							...prev.filter(i => i.uuid !== event.data.uuid),
+							...prev.filter(i => i.name.toLowerCase() !== metadata.name.toLowerCase() && i.uuid !== event.data.uuid),
 							{
 								type: "file",
 								uuid: event.data.uuid,
@@ -121,7 +121,7 @@ export const List = memo(() => {
 
 					startTransition(() => {
 						setItems(prev => [
-							...prev.filter(i => i.uuid !== event.data.uuid),
+							...prev.filter(i => i.name.toLowerCase() !== metadata.name.toLowerCase() && i.uuid !== event.data.uuid),
 							{
 								type: "directory",
 								uuid: event.data.uuid,
@@ -168,7 +168,7 @@ export const List = memo(() => {
 
 					startTransition(() => {
 						setItems(prev => [
-							...prev.filter(i => i.uuid !== event.data.uuid),
+							...prev.filter(i => i.name.toLowerCase() !== metadata.name.toLowerCase() && i.uuid !== event.data.uuid),
 							{
 								type: "file",
 								uuid: event.data.uuid,
@@ -211,7 +211,7 @@ export const List = memo(() => {
 
 					startTransition(() => {
 						setItems(prev => [
-							...prev.filter(i => i.uuid !== event.data.uuid),
+							...prev.filter(i => i.name.toLowerCase() !== metadata.name.toLowerCase() && i.uuid !== event.data.uuid),
 							{
 								type: "directory",
 								uuid: event.data.uuid,

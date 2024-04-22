@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback, useTransition } from "react"
+import { memo, useMemo, useCallback, useTransition, useState } from "react"
 import {
 	ContextMenu as CM,
 	ContextMenuContent,
@@ -23,6 +23,9 @@ import { fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
 import useDriveURLState from "@/hooks/useDriveURLState"
 import { useNavigate } from "@tanstack/react-router"
 import useLocation from "@/hooks/useLocation"
+import { HexColorPicker } from "react-colorful"
+import { useDebouncedCallback } from "use-debounce"
+import { directoryColorToHex } from "@/assets/fileExtensionIcons"
 
 export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; children: React.ReactNode }) => {
 	const { items, setItems } = useDriveItemsStore()
@@ -34,6 +37,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 	const { setCurrentReceiverEmail, setCurrentReceiverId, setCurrentReceivers, setCurrentSharerEmail, setCurrentSharerId } =
 		useDriveSharedStore()
 	const location = useLocation()
+	const [directoryColor, setDirectoryColor] = useState<string>(directoryColorToHex(item.type === "directory" ? item.color : null))
 
 	const selectedItems = useMemo(() => {
 		return items.filter(item => item.selected)
@@ -230,6 +234,30 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 		}
 	}, [selectedItems])
 
+	const changeColor = useDebouncedCallback(async (color: string) => {
+		if (selectedItems.length !== 1) {
+			return
+		}
+
+		try {
+			await actions.changeColor({ uuid: selectedItems[0].uuid, color })
+
+			startTransition(() => {
+				setItems(prev => prev.map(prevItem => (prevItem.uuid === selectedItems[0].uuid ? { ...prevItem, color } : prevItem)))
+			})
+		} catch (e) {
+			console.error(e)
+		}
+	}, 1000)
+
+	const onColorPickerChange = useCallback(
+		(newColor: string) => {
+			setDirectoryColor(newColor)
+			changeColor(newColor)
+		},
+		[changeColor]
+	)
+
 	return (
 		<CM>
 			<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
@@ -299,6 +327,23 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 						>
 							{item.favorited ? t("contextMenus.item.unfavorite") : t("contextMenus.item.favorite")}
 						</ContextMenuItem>
+						{item.type === "directory" && (
+							<ContextMenuSub>
+								<ContextMenuSubTrigger
+									className="cursor-pointer"
+									onClick={e => e.stopPropagation()}
+								>
+									{t("contextMenus.item.color")}
+								</ContextMenuSubTrigger>
+								<ContextMenuSubContent onClick={e => e.stopPropagation()}>
+									<HexColorPicker
+										color={directoryColor}
+										onChange={onColorPickerChange}
+										onClick={e => e.stopPropagation()}
+									/>
+								</ContextMenuSubContent>
+							</ContextMenuSub>
+						)}
 						<ContextMenuSeparator />
 					</>
 				)}

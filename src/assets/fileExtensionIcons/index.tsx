@@ -179,6 +179,26 @@ export function shadeColor(color: string, decimal: number): string {
 	return `#${rr}${gg}${bb}`
 }
 
+export function directoryColorToHex(color: DirColors | null): string {
+	if (!color) {
+		return "#85BCFF"
+	}
+
+	return (
+		color === "blue"
+			? "#037AFF"
+			: color === "gray"
+				? "#8F8E93"
+				: color === "green"
+					? "#33C759"
+					: color === "purple"
+						? "#AF52DE"
+						: color === "red"
+							? "#FF3B30"
+							: color
+	).toLowerCase()
+}
+
 export const ColoredFolderSVGIcon = memo(
 	({ color, width, height }: { color?: DirColors | null; width?: string | number; height?: string | number }) => {
 		const colors = useMemo(() => {
@@ -189,19 +209,7 @@ export const ColoredFolderSVGIcon = memo(
 				}
 			}
 
-			const stringToColor = (
-				color === "blue"
-					? "#037AFF"
-					: color === "gray"
-						? "#8F8E93"
-						: color === "green"
-							? "#33C759"
-							: color === "purple"
-								? "#AF52DE"
-								: color === "red"
-									? "#FF3B30"
-									: color
-			).toLowerCase()
+			const stringToColor = directoryColorToHex(color)
 
 			return {
 				path1: shadeColor(stringToColor, 1.3),
