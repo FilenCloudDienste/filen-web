@@ -104,10 +104,12 @@ export const Chats = memo(() => {
 							: prev
 					)
 
-					setConversationsUnread(prev => ({
-						...prev,
-						[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation] + 1 : 1
-					}))
+					if (event.data.senderId !== sdkConfig.userId) {
+						setConversationsUnread(prev => ({
+							...prev,
+							[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation] + 1 : 1
+						}))
+					}
 				} else if (
 					event.type === "chatMessageDelete" ||
 					event.type === "chatMessageEdited" ||
@@ -128,7 +130,7 @@ export const Chats = memo(() => {
 				console.error(e)
 			}
 		},
-		[conversations, setConversations, query, setSelectedConversation, routeParent, navigate, setConversationsUnread]
+		[conversations, setConversations, query, setSelectedConversation, routeParent, navigate, setConversationsUnread, sdkConfig.userId]
 	)
 
 	useEffect(() => {

@@ -98,6 +98,12 @@
 		"trash": "Trash",
 		"settings": {
 			"general": "General"
+		},
+		"contacts": {
+			"online": "Online",
+			"offline": "Offline",
+			"all": "All",
+			"blocked": "Blocked"
 		}
 	},
 	"sideBar": {
@@ -168,6 +174,11 @@
 				"checklist": "Checklist",
 				"code": "Code"
 			}
+		},
+		"contacts": {
+			"profile": "Profile",
+			"remove": "Remove",
+			"block": "Block"
 		}
 	},
 	"transfers": {
@@ -215,5 +226,9 @@
 			"typingMultiple": "are typing...",
 			"replyingTo": "Replying to"
 		}
+	},
+	"contacts": {
+		"addContact": "Add contact",
+		"search": "Search..."
 	}
 }

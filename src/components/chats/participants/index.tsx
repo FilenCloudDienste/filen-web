@@ -34,14 +34,14 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 	})
 
 	const addParticipant = useCallback(async () => {
-		const selectedContacts = await selectContacts()
+		const selectedContacts = await selectContacts({ excludeUserIds: conversation.participants.map(p => p.userId) })
 
 		if (selectedContacts.cancelled) {
 			return
 		}
 
 		console.log(selectedContacts)
-	}, [])
+	}, [conversation.participants])
 
 	if (!onlineQuery.isSuccess) {
 		return null

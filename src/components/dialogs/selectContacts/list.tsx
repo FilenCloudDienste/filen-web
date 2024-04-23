@@ -9,10 +9,12 @@ import Contact from "./contact"
 export const List = memo(
 	({
 		responseContacts,
-		setResponseContacts
+		setResponseContacts,
+		exclude
 	}: {
 		responseContacts: ContactType[]
 		setResponseContacts: React.Dispatch<React.SetStateAction<ContactType[]>>
+		exclude: number[]
 	}) => {
 		const { t } = useTranslation()
 		const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -74,6 +76,7 @@ export const List = memo(
 										contact={contact}
 										responseContacts={responseContacts}
 										setResponseContacts={setResponseContacts}
+										exclude={exclude}
 									/>
 								</div>
 							)

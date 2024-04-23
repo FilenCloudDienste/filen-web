@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useMemo, useEffect } from "react"
+import { memo, useState, useCallback, useMemo, useEffect, useRef } from "react"
 import { RefreshCcw, HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings, MessageCircleMore } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
@@ -18,7 +18,7 @@ import { useChatsStore } from "@/stores/chats.store"
 import { SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
 
-const iconSize = 20
+const iconSize = 21
 
 export const Button = memo(({ id }: { id: string }) => {
 	const sdkConfig = useSDKConfig()
@@ -30,6 +30,7 @@ export const Button = memo(({ id }: { id: string }) => {
 	const [lastSelectedNote] = useLocalStorage("lastSelectedNote", "")
 	const [lastSelectedChatsConversation] = useLocalStorage("lastSelectedChatsConversation", "")
 	const { unread, setUnread } = useChatsStore()
+	const unreadQueryLastUpdateRef = useRef<number>(0)
 
 	const chatsUnreadCountQuery = useQuery({
 		queryKey: ["chatsUnreadCount", id],
@@ -67,7 +68,7 @@ export const Button = memo(({ id }: { id: string }) => {
 									: id === "settings"
 										? "/settings/$type"
 										: id === "contacts"
-											? "/contacts"
+											? "/contacts/online"
 											: "/",
 			params:
 				id === sdkConfig.baseFolderUUID
@@ -78,11 +79,15 @@ export const Button = memo(({ id }: { id: string }) => {
 						? {
 								type: "general"
 							}
-						: id === "notes" && lastSelectedNote.length > 0
-							? { uuid: lastSelectedNote }
-							: id === "chats" && lastSelectedChatsConversation.length > 0
-								? { uuid: lastSelectedChatsConversation }
-								: undefined
+						: id === "contacts"
+							? {
+									type: "online"
+								}
+							: id === "notes" && lastSelectedNote.length > 0
+								? { uuid: lastSelectedNote }
+								: id === "chats" && lastSelectedChatsConversation.length > 0
+									? { uuid: lastSelectedChatsConversation }
+									: undefined
 		}
 	}, [id, sdkConfig.baseFolderUUID, lastSelectedNote, lastSelectedChatsConversation])
 
@@ -107,7 +112,9 @@ export const Button = memo(({ id }: { id: string }) => {
 
 			try {
 				if (event.type === "chatMessageNew") {
-					setUnread(prev => prev + 1)
+					if (sdkConfig.userId !== event.data.senderId) {
+						setUnread(prev => prev + 1)
+					}
 				} else if (event.type === "chatConversationDeleted") {
 					await chatsUnreadCountQuery.refetch()
 				}
@@ -115,7 +122,7 @@ export const Button = memo(({ id }: { id: string }) => {
 				console.error(e)
 			}
 		},
-		[setUnread, chatsUnreadCountQuery, id]
+		[setUnread, chatsUnreadCountQuery, id, sdkConfig.userId]
 	)
 
 	useEffect(() => {
@@ -129,10 +136,12 @@ export const Button = memo(({ id }: { id: string }) => {
 	}, [chatsUnreadCountQuery])
 
 	useEffect(() => {
-		if (chatsUnreadCountQuery.isSuccess && id === "chats") {
+		if (chatsUnreadCountQuery.isSuccess && id === "chats" && unreadQueryLastUpdateRef.current !== chatsUnreadCountQuery.dataUpdatedAt) {
+			unreadQueryLastUpdateRef.current = chatsUnreadCountQuery.dataUpdatedAt
+
 			setUnread(chatsUnreadCountQuery.data)
 		}
-	}, [chatsUnreadCountQuery.isSuccess, chatsUnreadCountQuery.data, setUnread, id])
+	}, [chatsUnreadCountQuery.isSuccess, chatsUnreadCountQuery.data, setUnread, id, chatsUnreadCountQuery.dataUpdatedAt])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)
@@ -160,6 +169,7 @@ export const Button = memo(({ id }: { id: string }) => {
 							onMouseLeave={() => setHovering(false)}
 							to={link.to}
 							params={link.params}
+							draggable={false}
 						>
 							{id === "syncs" && <RefreshCcw size={iconSize} />}
 							{id === "mounts" && <HardDrive size={iconSize} />}
@@ -175,23 +185,15 @@ export const Button = memo(({ id }: { id: string }) => {
 								/>
 							)}
 							{id === "notes" && <Notebook size={iconSize} />}
-							{id === "chats" && (
-								<>
-									{unread > 0 ? (
-										<>
-											<MessageCircleMore
-												size={iconSize}
-												className="text-red-500"
-											/>
-											<div className="absolute z-10 w-[14px] h-[14px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs mt-[20px] ml-[20px]">
-												{unread}
-											</div>
-										</>
-									) : (
-										<MessageCircle size={iconSize} />
-									)}
-								</>
-							)}
+							{id === "chats" &&
+								(unread > 0 ? (
+									<MessageCircleMore
+										size={iconSize}
+										className="text-red-500"
+									/>
+								) : (
+									<MessageCircle size={iconSize} />
+								))}
 							{id === "contacts" && <Contact size={iconSize} />}
 							{id === "settings" && <Settings size={iconSize} />}
 							{id === "transfers" && <ArrowDownUp size={iconSize} />}

@@ -15,7 +15,7 @@ import List from "./list"
 
 export type SelectContactsResponse = { cancelled: true } | { cancelled: false; contacts: Contact[] }
 
-export async function selectContacts(): Promise<SelectContactsResponse> {
+export async function selectContacts(params?: { excludeUserIds?: number[] }): Promise<SelectContactsResponse> {
 	return await new Promise<SelectContactsResponse>(resolve => {
 		const id = Math.random().toString(16).slice(2)
 
@@ -35,7 +35,10 @@ export async function selectContacts(): Promise<SelectContactsResponse> {
 			resolve({ cancelled: false, contacts })
 		})
 
-		eventEmitter.emit("openSelectContactsDialog", { id })
+		eventEmitter.emit("openSelectContactsDialog", {
+			id,
+			exclude: params && params.excludeUserIds ? params.excludeUserIds : []
+		})
 	})
 }
 
@@ -45,6 +48,7 @@ export const SelectContactsDialog = memo(() => {
 	const requestId = useRef<string>("")
 	const [responseContacts, setResponseContacts] = useState<Contact[]>([])
 	const didSubmit = useRef<boolean>(false)
+	const [exclude, setExclude] = useState<number[]>([])
 
 	const submit = useCallback(() => {
 		if (didSubmit.current) {
@@ -77,10 +81,11 @@ export const SelectContactsDialog = memo(() => {
 	}, [])
 
 	useEffect(() => {
-		const listener = eventEmitter.on("openSelectContactsDialog", ({ id }: { id: string }) => {
+		const listener = eventEmitter.on("openSelectContactsDialog", ({ id, exclude: e }: { id: string; exclude: number[] }) => {
 			requestId.current = id
 			didSubmit.current = false
 
+			setExclude(e ? e : [])
 			setResponseContacts([])
 			setOpen(true)
 		})
@@ -107,6 +112,7 @@ export const SelectContactsDialog = memo(() => {
 					<List
 						responseContacts={responseContacts}
 						setResponseContacts={setResponseContacts}
+						exclude={exclude}
 					/>
 				</AlertDialogHeader>
 				<AlertDialogFooter className="items-center">

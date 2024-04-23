@@ -1,4 +1,4 @@
-import { memo } from "react"
+import { memo, useMemo } from "react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
@@ -8,7 +8,21 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import { folderIcon } from "@/assets/fileExtensionIcons"
 import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
-import { ChevronRight, ChevronDown, Timer, Heart, Link as LinkIcon, Trash, Notebook, MessageCircle, Settings } from "lucide-react"
+import {
+	ChevronRight,
+	ChevronDown,
+	Timer,
+	Heart,
+	Link as LinkIcon,
+	Trash,
+	Notebook,
+	MessageCircle,
+	Settings,
+	Contact,
+	Nfc,
+	CloudOff,
+	XCircle
+} from "lucide-react"
 import useLocation from "@/hooks/useLocation"
 
 const iconSize = 20
@@ -20,13 +34,27 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 	const { t } = useTranslation()
 	const location = useLocation()
 
+	const link = useMemo(() => {
+		const uuidEx = uuid.split("/")
+
+		return {
+			to: uuid.includes("settings") ? "/settings/$type" : uuid.includes("contacts") ? "/contacts/$type" : "/drive/$",
+			params:
+				uuid.includes("settings") || uuid.includes("contacts")
+					? {
+							type: uuidEx[1]
+						}
+					: {
+							_splat: uuid
+						}
+		}
+	}, [uuid])
+
 	return (
 		<div className="flex flex-col mb-1 px-3">
 			<Link
-				to="/drive/$"
-				params={{
-					_splat: uuid
-				}}
+				to={link.to}
+				params={link.params}
 				draggable={false}
 				className={cn(
 					"flex flex-row gap-3 w-full px-3 py-2 rounded-md transition-all items-center hover:bg-accent text-primary cursor-pointer",
@@ -96,6 +124,30 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 					<>
 						<Settings size={iconSize} />
 						<p>{t("innerSideBar.settings.general")}</p>
+					</>
+				)}
+				{uuid === "contacts/all" && (
+					<>
+						<Contact size={iconSize} />
+						<p>{t("innerSideBar.contacts.all")}</p>
+					</>
+				)}
+				{uuid === "contacts/online" && (
+					<>
+						<Nfc size={iconSize} />
+						<p>{t("innerSideBar.contacts.online")}</p>
+					</>
+				)}
+				{uuid === "contacts/offline" && (
+					<>
+						<CloudOff size={iconSize} />
+						<p>{t("innerSideBar.contacts.offline")}</p>
+					</>
+				)}
+				{uuid === "contacts/blocked" && (
+					<>
+						<XCircle size={iconSize} />
+						<p>{t("innerSideBar.contacts.blocked")}</p>
 					</>
 				)}
 			</Link>

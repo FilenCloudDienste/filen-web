@@ -57,6 +57,14 @@ export const InnerSideBar = memo(() => {
 				)}
 				{location.includes("notes") && <Notes />}
 				{location.includes("chats") && <Chats />}
+				{location.includes("contacts") && (
+					<>
+						<Button uuid="contacts/online" />
+						<Button uuid="contacts/all" />
+						<Button uuid="contacts/offline" />
+						<Button uuid="contacts/blocked" />
+					</>
+				)}
 			</div>
 			<div className="py-3 px-3 border-t flex flex-col h-12 flex-1">
 				<p className="text-muted-foreground text-sm">{sdkConfig.email}</p>

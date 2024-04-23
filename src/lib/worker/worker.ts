@@ -20,6 +20,8 @@ import { type ChatTypingType } from "@filen/sdk/dist/types/api/v3/chat/typing"
 import { type ChatLastFocusValues } from "@filen/sdk/dist/types/api/v3/chat/lastFocusUpdate"
 import { type ChatConversationsOnlineUser } from "@filen/sdk/dist/types/api/v3/chat/conversations/online"
 import { type Contact } from "@filen/sdk/dist/types/api/v3/contacts"
+import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/requests/in"
+import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/blocked"
 
 let isInitialized = false
 // We setup an eventEmitter first here in case we are running in the main thread.
@@ -1675,4 +1677,28 @@ export async function chatMarkConversationAsRead({ conversation }: { conversatio
 
 export async function chatsUnreadCount(): Promise<number> {
 	return await SDK.chats().unread()
+}
+
+export async function listContactsRequestsIn(): Promise<ContactRequest[]> {
+	return await SDK.contacts().incomingRequests()
+}
+
+export async function listContactsRequestsOut(): Promise<ContactRequest[]> {
+	return await SDK.contacts().outgoingRequests()
+}
+
+export async function listBlockedContacts(): Promise<BlockedContact[]> {
+	return await SDK.contacts().blocked()
+}
+
+export async function removeContact({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.contacts().remove({ uuid })
+}
+
+export async function blockUser({ email }: { email: string }): Promise<void> {
+	return await SDK.contacts().block({ email })
+}
+
+export async function unblockUser({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.contacts().unblock({ uuid })
 }

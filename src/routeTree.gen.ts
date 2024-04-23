@@ -14,12 +14,12 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as SyncsImport } from './routes/syncs'
 import { Route as NotesImport } from './routes/notes'
 import { Route as LoginImport } from './routes/login'
-import { Route as ContactsImport } from './routes/contacts'
 import { Route as ChatsImport } from './routes/chats'
 import { Route as IndexImport } from './routes/index'
 import { Route as SettingsTypeImport } from './routes/settings.$type'
 import { Route as NotesUuidImport } from './routes/notes.$uuid'
 import { Route as DriveSplatImport } from './routes/drive.$'
+import { Route as ContactsTypeImport } from './routes/contacts.$type'
 import { Route as ChatsUuidImport } from './routes/chats.$uuid'
 
 // Create/Update Routes
@@ -36,11 +36,6 @@ const NotesRoute = NotesImport.update({
 
 const LoginRoute = LoginImport.update({
   path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ContactsRoute = ContactsImport.update({
-  path: '/contacts',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -69,6 +64,11 @@ const DriveSplatRoute = DriveSplatImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ContactsTypeRoute = ContactsTypeImport.update({
+  path: '/contacts/$type',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ChatsUuidRoute = ChatsUuidImport.update({
   path: '/$uuid',
   getParentRoute: () => ChatsRoute,
@@ -86,10 +86,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatsImport
       parentRoute: typeof rootRoute
     }
-    '/contacts': {
-      preLoaderRoute: typeof ContactsImport
-      parentRoute: typeof rootRoute
-    }
     '/login': {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
@@ -105,6 +101,10 @@ declare module '@tanstack/react-router' {
     '/chats/$uuid': {
       preLoaderRoute: typeof ChatsUuidImport
       parentRoute: typeof ChatsImport
+    }
+    '/contacts/$type': {
+      preLoaderRoute: typeof ContactsTypeImport
+      parentRoute: typeof rootRoute
     }
     '/drive/$': {
       preLoaderRoute: typeof DriveSplatImport
@@ -126,10 +126,10 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
   ChatsRoute.addChildren([ChatsUuidRoute]),
-  ContactsRoute,
   LoginRoute,
   NotesRoute.addChildren([NotesUuidRoute]),
   SyncsRoute,
+  ContactsTypeRoute,
   DriveSplatRoute,
   SettingsTypeRoute,
 ])
