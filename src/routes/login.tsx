@@ -38,9 +38,21 @@ export function Login() {
 				twoFactorCode
 			})
 
-			await worker.initializeSDK({ config: sdk.config })
+			await worker.initializeSDK({
+				config: {
+					...sdk.config,
+					password: ""
+				}
+			})
 
-			localStorage.setItem("sdkConfig", JSON.stringify(sdk.config))
+			localStorage.setItem(
+				"sdkConfig",
+				JSON.stringify({
+					...sdk.config,
+					password: ""
+				})
+			)
+
 			localStorage.setItem("authed", "true")
 
 			navigate({

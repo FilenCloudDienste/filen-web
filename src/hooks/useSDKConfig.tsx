@@ -6,5 +6,8 @@ export type UseSDKConfig = Required<FilenSDKConfig>
 export default function useSDKConfig(): UseSDKConfig {
 	const [sdkConfig] = useLocalStorage<Required<FilenSDKConfig>>("sdkConfig")
 
-	return sdkConfig
+	return {
+		...sdkConfig,
+		password: ""
+	}
 }

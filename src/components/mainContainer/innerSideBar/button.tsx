@@ -26,6 +26,7 @@ import {
 	Send
 } from "lucide-react"
 import useLocation from "@/hooks/useLocation"
+import { useContactsStore } from "@/stores/contacts.store"
 
 const iconSize = 20
 
@@ -35,6 +36,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 	const [sideBarTreeOpen, setSideBarTreeOpen] = useLocalStorage<Record<string, boolean>>("sideBarTreeOpen", {})
 	const { t } = useTranslation()
 	const location = useLocation()
+	const { requestsInCount } = useContactsStore()
 
 	const link = useMemo(() => {
 		const uuidEx = uuid.split("/")
@@ -156,6 +158,11 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 					<>
 						<Mail size={iconSize} />
 						<p>{t("innerSideBar.contacts.in")}</p>
+						{requestsInCount > 0 && (
+							<div className="w-[20px] h-[20px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs">
+								{requestsInCount >= 9 ? "9+" : requestsInCount}
+							</div>
+						)}
 					</>
 				)}
 				{uuid === "contacts/out" && (

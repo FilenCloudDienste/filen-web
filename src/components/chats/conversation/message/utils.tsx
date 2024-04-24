@@ -1,11 +1,13 @@
 import regexifyString from "regexify-string"
 import { type ChatConversationParticipant } from "@filen/sdk/dist/types/api/v3/chat/conversations"
-import { useMemo, memo, useRef, useEffect, createElement } from "react"
+import { useMemo, memo, useRef, useEffect, createElement, useCallback } from "react"
 import EMOJI_REGEX from "emojibase-regex"
 import { type TFunction } from "i18next"
 import { customEmojis } from "../../customEmojis"
 import { cn } from "@/lib/utils"
 import { Emoji } from "emoji-mart"
+import { TooltipContent, Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Copy } from "lucide-react"
 
 export const MENTION_REGEX = /(@[\w.-]+@[\w.-]+\.\w+|@everyone)/g
 export const customEmojisList = customEmojis.map(emoji => emoji.id)
@@ -63,6 +65,14 @@ export const ReplaceMessageWithComponents = memo(
 		edited: boolean
 		t: TFunction<"translation", undefined>
 	}) => {
+		const copy = useCallback(async (text: string) => {
+			try {
+				await navigator.clipboard.writeText(text)
+			} catch (e) {
+				console.error(e)
+			}
+		}, [])
+
 		const replaced = useMemo(() => {
 			const emojiCount = content.match(emojiRegex)
 			const defaultSize = 36
@@ -139,12 +149,29 @@ export const ReplaceMessageWithComponents = memo(
 						}
 
 						return (
-							<div
+							<TooltipProvider
+								delayDuration={100}
 								key={index}
-								className="flex-col max-w-full p-2 py-1 bg-secondary border rounded-md shadow-sm basis-full"
 							>
-								{code}
-							</div>
+								<Tooltip>
+									<TooltipTrigger asChild={true}>
+										<div
+											className="flex-col max-w-full p-2 py-1 bg-secondary border rounded-md shadow-sm basis-full cursor-pointer font-mono"
+											onClick={() => copy(code)}
+										>
+											{code}
+										</div>
+									</TooltipTrigger>
+									<TooltipContent
+										side="top"
+										align="end"
+										className="cursor-pointer"
+										onClick={() => copy(code)}
+									>
+										<Copy size={18} />
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						)
 					}
 
@@ -222,7 +249,7 @@ export const ReplaceMessageWithComponents = memo(
 				},
 				input: content
 			})
-		}, [content, participants])
+		}, [content, participants, copy])
 
 		return (
 			<div className={cn("flex flex-row flex-wrap gap-1", failed && "text-red-500")}>

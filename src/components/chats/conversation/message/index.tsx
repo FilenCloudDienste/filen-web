@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback, useState, useEffect } from "react"
+import { memo, useMemo, useCallback, useState, useEffect, useRef } from "react"
 import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
 import {
 	ReplaceMessageWithComponents,
@@ -15,7 +15,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils"
 import eventEmitter from "@/lib/eventEmitter"
 import { type TFunction } from "i18next"
-import { Reply } from "lucide-react"
+import { Reply, MoreHorizontal } from "lucide-react"
 
 export const DateDivider = memo(({ timestamp }: { timestamp: number }) => {
 	return (
@@ -90,7 +90,8 @@ export const Message = memo(
 		t,
 		failedMessages,
 		editUUID,
-		replyUUID
+		replyUUID,
+		setReplyMessage
 	}: {
 		message: ChatMessage
 		conversation: ChatConversation
@@ -103,8 +104,10 @@ export const Message = memo(
 		failedMessages: string[]
 		editUUID: string
 		replyUUID: string
+		setReplyMessage: (fn: ChatMessage | ((prev: ChatMessage | null) => ChatMessage | null) | null) => void
 	}) => {
 		const [hovering, setHovering] = useState<boolean>(false)
+		const ref = useRef<HTMLDivElement>(null)
 
 		const groupWithPrevMessage = useMemo((): boolean => {
 			if (!prevMessage) {
@@ -164,6 +167,28 @@ export const Message = memo(
 			return failedMessages.some(uuid => uuid === message.uuid)
 		}, [failedMessages, message.uuid])
 
+		const triggerMoreIconContextMenu = useCallback(
+			(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+				e.preventDefault()
+
+				const contextMenuEvent = new MouseEvent("contextmenu", {
+					bubbles: true,
+					cancelable: true,
+					view: window,
+					clientX: e.clientX,
+					clientY: e.clientY
+				})
+
+				ref.current?.dispatchEvent(contextMenuEvent)
+				e.currentTarget.dispatchEvent(contextMenuEvent)
+			},
+			[]
+		)
+
+		const reply = useCallback(() => {
+			setReplyMessage(message)
+		}, [message, setReplyMessage])
+
 		return (
 			<>
 				{!prevMessage && <div className="flex flex-row p-1 px-5 gap-4">end to end encrypted chat</div>}
@@ -178,80 +203,108 @@ export const Message = memo(
 					message.senderId !== userId &&
 					!(prevMessage && prevMessage.sentTimestamp > lastFocus) && <NewDivider />}
 				{(!prevMessageSameDay || !prevMessage) && <DateDivider timestamp={message.sentTimestamp} />}
-				<ContextMenu
-					message={message}
-					setHovering={setHovering}
-				>
-					<div
-						className={cn(
-							"flex flex-row border-l-2 animate-in animate-out transition-all",
-							hovering ? (mentioningMe ? "bg-yellow-600 bg-opacity-10" : "bg-primary-foreground") : "",
-							!groupWithPrevMessage ? "p-1 px-5 gap-4" : "p-1 px-5 pl-[73px]",
-							isNewMessage
-								? "border-red-500 bg-primary-foreground"
-								: mentioningMe
-									? cn(
-											"border-yellow-500 bg-yellow-500 bg-opacity-10",
-											!isScrolling && "hover:bg-yellow-600 hover:bg-opacity-20"
-										)
-									: replyUUID === message.uuid || editUUID === message.uuid
-										? "border-indigo-500 bg-primary-foreground"
-										: cn("border-transparent", !isScrolling && "hover:bg-primary-foreground")
-						)}
-					>
-						{!groupWithPrevMessage && (
-							<div className="flex flex-col">
-								<Avatar
-									className="w-9 h-9"
-									src={message.senderAvatar}
-									fallback={message.senderEmail}
-								/>
+
+				<TooltipProvider delayDuration={0}>
+					<Tooltip>
+						<TooltipTrigger asChild={true}>
+							<div>
+								<ContextMenu
+									message={message}
+									setHovering={setHovering}
+								>
+									<div
+										ref={ref}
+										className={cn(
+											"flex flex-row border-l-2 animate-in animate-out transition-all",
+											hovering ? (mentioningMe ? "bg-yellow-600 bg-opacity-10" : "bg-primary-foreground") : "",
+											!groupWithPrevMessage ? "p-1 px-5 gap-4" : "p-1 px-5 pl-[73px]",
+											isNewMessage
+												? "border-red-500 bg-primary-foreground"
+												: mentioningMe
+													? cn(
+															"border-yellow-500 bg-yellow-500 bg-opacity-10",
+															!isScrolling && "hover:bg-yellow-600 hover:bg-opacity-20"
+														)
+													: replyUUID === message.uuid || editUUID === message.uuid
+														? "border-indigo-500 bg-primary-foreground"
+														: cn("border-transparent", !isScrolling && "hover:bg-primary-foreground")
+										)}
+									>
+										{!groupWithPrevMessage && (
+											<div className="flex flex-col">
+												<Avatar
+													className="w-9 h-9"
+													src={message.senderAvatar}
+													fallback={message.senderEmail}
+												/>
+											</div>
+										)}
+										<div className={cn("flex flex-col", !groupWithPrevMessage ? "gap-[1px]" : "")}>
+											{message.replyTo && message.replyTo.uuid && (
+												<div className="flex flex-row gap-2 text-muted-foreground text-sm items-center">
+													<Reply
+														size={16}
+														className="scale-x-[-1]"
+													/>
+													<Avatar
+														src={message.replyTo.senderAvatar}
+														className="w-4 h-4"
+													/>
+													<p className="shrink-0">
+														{message.replyTo.senderNickName.length > 0
+															? message.replyTo.senderNickName
+															: message.replyTo.senderEmail}
+														:
+													</p>
+													<ReplaceMessageWithComponentsInline
+														content={message.replyTo.message}
+														participants={conversation.participants}
+													/>
+												</div>
+											)}
+											{!groupWithPrevMessage && (
+												<div className="flex flex-row gap-2 items-center">
+													<p className="cursor-pointer hover:underline">{message.senderNickName}</p>
+													<Time
+														timestamp={message.sentTimestamp}
+														t={t}
+													/>
+												</div>
+											)}
+											<div className="flex flex-row">
+												<ReplaceMessageWithComponents
+													content={message.message}
+													participants={conversation.participants}
+													failed={didMessageFail}
+													edited={message.edited}
+													t={t}
+												/>
+											</div>
+										</div>
+									</div>
+								</ContextMenu>
 							</div>
-						)}
-						<div className={cn("flex flex-col", !groupWithPrevMessage ? "gap-[1px]" : "")}>
-							{message.replyTo && message.replyTo.uuid && (
-								<div className="flex flex-row gap-2 text-muted-foreground text-sm items-center">
-									<Reply
-										size={16}
-										className="scale-x-[-1]"
-									/>
-									<Avatar
-										src={message.replyTo.senderAvatar}
-										className="w-4 h-4"
-									/>
-									<p className="shrink-0">
-										{message.replyTo.senderNickName.length > 0
-											? message.replyTo.senderNickName
-											: message.replyTo.senderEmail}
-										:
-									</p>
-									<ReplaceMessageWithComponentsInline
-										content={message.replyTo.message}
-										participants={conversation.participants}
-									/>
-								</div>
-							)}
-							{!groupWithPrevMessage && (
-								<div className="flex flex-row gap-2 items-center">
-									<p className="cursor-pointer hover:underline">{message.senderNickName}</p>
-									<Time
-										timestamp={message.sentTimestamp}
-										t={t}
-									/>
-								</div>
-							)}
-							<div className="flex flex-row">
-								<ReplaceMessageWithComponents
-									content={message.message}
-									participants={conversation.participants}
-									failed={didMessageFail}
-									edited={message.edited}
-									t={t}
-								/>
+						</TooltipTrigger>
+						<TooltipContent
+							side="top"
+							align="end"
+							className="mb-[-15px] p-0 flex flex-row"
+						>
+							<div
+								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer"
+								onClick={reply}
+							>
+								<Reply size={20} />
 							</div>
-						</div>
-					</div>
-				</ContextMenu>
+							<div
+								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer"
+								onClick={triggerMoreIconContextMenu}
+							>
+								<MoreHorizontal size={20} />
+							</div>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 				{!nextMessage && (
 					<div
 						style={{

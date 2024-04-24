@@ -102,6 +102,7 @@ export const TextEditor = memo(
 						minSize={20}
 						maxSize={80}
 						order={1}
+						className={type === "code" ? "font-mono" : undefined}
 					>
 						<CodeMirror
 							value={value}
@@ -120,6 +121,7 @@ export const TextEditor = memo(
 							readOnly={readOnly}
 							placeholder={placeholder}
 							onBlur={onBlur}
+							className={type === "code" ? "font-mono" : undefined}
 							basicSetup={{
 								lineNumbers: type === "code",
 								searchKeymap: type === "code",
