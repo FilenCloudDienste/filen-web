@@ -1,4 +1,4 @@
-import { memo, type SetStateAction, useCallback, useMemo } from "react"
+import { memo, useCallback, useMemo, useState } from "react"
 import { cn } from "@/lib/utils"
 import useRouteParent from "@/hooks/useRouteParent"
 import { Link } from "@tanstack/react-router"
@@ -16,11 +16,12 @@ export const Note = memo(
 		userId
 	}: {
 		note: NoteType
-		setLastSelectedNote: (value: SetStateAction<string>) => void
+		setLastSelectedNote: (value: React.SetStateAction<string>) => void
 		setSelectedNote: (fn: NoteType | ((prev: NoteType | null) => NoteType | null) | null) => void
 		userId: number
 	}) => {
 		const routeParent = useRouteParent()
+		const [hovering, setHovering] = useState<boolean>(false)
 
 		const participantsWithoutUser = useMemo(() => {
 			return note.participants.filter(p => p.userId !== userId)
@@ -32,11 +33,15 @@ export const Note = memo(
 		}, [setSelectedNote, note, setLastSelectedNote])
 
 		return (
-			<ContextMenu note={note}>
+			<ContextMenu
+				note={note}
+				setHovering={setHovering}
+			>
 				<Link
 					className={cn(
 						"flex flex-row gap-4 p-4 border-l-[3px] hover:bg-primary-foreground h-full",
-						routeParent === note.uuid ? "border-l-blue-500 bg-primary-foreground" : "border-transparent"
+						routeParent === note.uuid ? "border-l-blue-500 bg-primary-foreground" : "border-transparent",
+						hovering && "bg-primary-foreground"
 					)}
 					to="/notes/$uuid"
 					params={{
@@ -46,23 +51,28 @@ export const Note = memo(
 				>
 					<div className="flex flex-col gap-2 h-full">
 						{note.archive ? (
-							<Archive className="text-yellow-500" />
+							<Archive className="text-yellow-500 shrink-0" />
 						) : note.trash ? (
-							<Trash className="text-red-500" />
+							<Trash className="text-red-500 shrink-0" />
 						) : (
 							<>
-								{note.type === "checklist" && <ListChecks className="text-purple-500" />}
-								{note.type === "text" && <Text className="text-blue-500" />}
-								{note.type === "code" && <Code className="text-red-500" />}
-								{note.type === "rich" && <NotepadText className="text-cyan-500" />}
-								{note.type === "md" && <BookMarked className="text-indigo-500" />}
+								{note.type === "checklist" && <ListChecks className="text-purple-500 shrink-0" />}
+								{note.type === "text" && <Text className="text-blue-500 shrink-0" />}
+								{note.type === "code" && <Code className="text-red-500 shrink-0" />}
+								{note.type === "rich" && <NotepadText className="text-cyan-500 shrink-0" />}
+								{note.type === "md" && <BookMarked className="text-indigo-500 shrink-0" />}
 							</>
 						)}
-						{note.pinned && <Pin className="text-muted-foreground" />}
+						{note.pinned && <Pin className="text-muted-foreground shrink-0" />}
 					</div>
 					<div className="flex flex-col grow h-full">
 						<div className="flex flex-row items-center gap-2">
-							{note.favorite && <Heart size={18} />}
+							{note.favorite && (
+								<Heart
+									size={18}
+									className="shrink-0"
+								/>
+							)}
 							<p className="line-clamp-1 text-ellipsis break-all">{note.title}</p>
 						</div>
 						<p className="line-clamp-1 text-ellipsis text-muted-foreground text-sm mt-1 break-all">
@@ -90,7 +100,7 @@ export const Note = memo(
 								return (
 									<Avatar
 										key={p.userId}
-										className="w-7 h-7"
+										className="w-7 h-7 shrink-0"
 										src={p.avatar}
 										fallback={p.email}
 									/>

@@ -187,6 +187,8 @@ export const Message = memo(
 
 		const reply = useCallback(() => {
 			setReplyMessage(message)
+
+			setTimeout(() => eventEmitter.emit("chatInputFocus"), 100)
 		}, [message, setReplyMessage])
 
 		return (
@@ -291,13 +293,13 @@ export const Message = memo(
 							className="mb-[-15px] p-0 flex flex-row"
 						>
 							<div
-								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer"
+								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
 								onClick={reply}
 							>
 								<Reply size={20} />
 							</div>
 							<div
-								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer"
+								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
 								onClick={triggerMoreIconContextMenu}
 							>
 								<MoreHorizontal size={20} />

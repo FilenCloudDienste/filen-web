@@ -165,10 +165,14 @@ export const ReplaceMessageWithComponents = memo(
 									<TooltipContent
 										side="top"
 										align="end"
-										className="cursor-pointer"
-										onClick={() => copy(code)}
+										className="cursor-pointer p-0"
 									>
-										<Copy size={18} />
+										<div
+											className="bg-transparent hover:bg-secondary p-[10px] cursor-pointer flex flex-row items-center justify-center"
+											onClick={() => copy(code)}
+										>
+											<Copy size={18} />
+										</div>
 									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>

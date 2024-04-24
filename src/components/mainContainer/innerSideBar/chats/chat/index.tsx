@@ -61,7 +61,7 @@ export const Chat = memo(
 				>
 					<div className="flex flex-row h-full">
 						<Avatar
-							className="w-10 h-10"
+							className="w-10 h-10 shrink-0"
 							src={participantsWithoutUser[0].avatar}
 							fallback={participantsWithoutUser[0].email}
 						/>
