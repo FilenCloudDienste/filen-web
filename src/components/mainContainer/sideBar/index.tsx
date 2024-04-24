@@ -11,7 +11,7 @@ import socket from "@/lib/socket"
 import eventEmitter from "@/lib/eventEmitter"
 
 export const SideBar = memo(() => {
-	const sdkConfig = useSDKConfig()
+	const { userId, baseFolderUUID } = useSDKConfig()
 	const { setUnread } = useChatsStore()
 	const unreadQueryLastUpdateRef = useRef<number>(0)
 	const { setRequestsInCount } = useContactsStore()
@@ -31,7 +31,7 @@ export const SideBar = memo(() => {
 		async (event: SocketEvent) => {
 			try {
 				if (event.type === "chatMessageNew") {
-					if (sdkConfig.userId !== event.data.senderId) {
+					if (userId !== event.data.senderId) {
 						setUnread(prev => prev + 1)
 					}
 				} else if (event.type === "chatConversationDeleted") {
@@ -41,7 +41,7 @@ export const SideBar = memo(() => {
 				console.error(e)
 			}
 		},
-		[setUnread, chatsUnreadCountQuery, sdkConfig.userId]
+		[setUnread, chatsUnreadCountQuery, userId]
 	)
 
 	useEffect(() => {
@@ -95,7 +95,7 @@ export const SideBar = memo(() => {
 		<div className="w-full flex flex-col h-full gap-2 py-3 bg-secondary border-r select-none items-center overflow-hidden dragselect-start-allowed">
 			{IS_DESKTOP && <Button id="syncs" />}
 			{IS_DESKTOP && <Button id="mounts" />}
-			<Button id={sdkConfig.baseFolderUUID} />
+			<Button id={baseFolderUUID} />
 			<Button id="transfers" />
 			<Button id="notes" />
 			<Button id="chats" />
