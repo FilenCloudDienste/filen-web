@@ -12,6 +12,16 @@ import Contact from "./contact"
 import { useTranslation } from "react-i18next"
 import { ONLINE_TIMEOUT } from "../chats/participants/participant"
 import Blocked from "./blocked"
+import Request from "./request"
+import useErrorToast from "@/hooks/useErrorToast"
+import useLoadingToast from "@/hooks/useLoadingToast"
+import { showInputDialog } from "../dialogs/input"
+import { useNavigate } from "@tanstack/react-router"
+
+const refetchQueryParams = {
+	refetchInterval: 5000,
+	refetchIntervalInBackground: true
+}
 
 export const Contacts = memo(() => {
 	const windowSize = useWindowSize()
@@ -19,24 +29,31 @@ export const Contacts = memo(() => {
 	const location = useLocation()
 	const [search, setSearch] = useState<string>("")
 	const { t } = useTranslation()
+	const loadingToast = useLoadingToast()
+	const errorToast = useErrorToast()
+	const navigate = useNavigate()
 
 	const [allQuery, requestsInQuery, requestsOutQuery, blockedQuery] = useQueries({
 		queries: [
 			{
 				queryKey: ["listContacts"],
-				queryFn: () => worker.listContacts()
+				queryFn: () => worker.listContacts(),
+				...refetchQueryParams
 			},
 			{
 				queryKey: ["listContactsRequestsIn"],
-				queryFn: () => worker.listContactsRequestsIn()
+				queryFn: () => worker.listContactsRequestsIn(),
+				...refetchQueryParams
 			},
 			{
 				queryKey: ["listContactsRequestsOut"],
-				queryFn: () => worker.listContactsRequestsOut()
+				queryFn: () => worker.listContactsRequestsOut(),
+				...refetchQueryParams
 			},
 			{
 				queryKey: ["listBlockedContacts"],
-				queryFn: () => worker.listBlockedContacts()
+				queryFn: () => worker.listBlockedContacts(),
+				...refetchQueryParams
 			}
 		]
 	})
@@ -48,6 +65,45 @@ export const Contacts = memo(() => {
 			console.error(e)
 		}
 	}, [allQuery, requestsInQuery, requestsOutQuery, blockedQuery])
+
+	const sendRequest = useCallback(async () => {
+		const inputResponse = await showInputDialog({
+			title: "newfolder",
+			continueButtonText: "create",
+			value: "",
+			autoFocusInput: true,
+			placeholder: "New folder"
+		})
+
+		if (inputResponse.cancelled) {
+			return
+		}
+
+		const toast = loadingToast()
+
+		try {
+			await worker.contactsRequestSend({ email: inputResponse.value.trim() })
+			await refetch()
+
+			navigate({
+				to: "/contacts/$type",
+				params: {
+					type: "out"
+				}
+			})
+		} catch (e) {
+			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
+		}
+	}, [refetch, errorToast, loadingToast, navigate])
 
 	const contactsSorted = useMemo(() => {
 		if (!allQuery.isSuccess) {
@@ -81,20 +137,64 @@ export const Contacts = memo(() => {
 		const searchLowerCased = search.toLowerCase().trim()
 
 		if (searchLowerCased.length === 0) {
-			return blockedQuery.data
+			return blockedQuery.data.sort((a, b) => b.email.localeCompare(a.email))
 		}
 
-		return blockedQuery.data.filter(
-			c => c.email.toLowerCase().includes(searchLowerCased) || c.nickName.toLowerCase().includes(searchLowerCased)
-		)
+		return blockedQuery.data
+			.filter(c => c.email.toLowerCase().includes(searchLowerCased) || c.nickName.toLowerCase().includes(searchLowerCased))
+			.sort((a, b) => b.email.localeCompare(a.email))
 	}, [blockedQuery.isSuccess, blockedQuery.data, search])
 
+	const requestsInSorted = useMemo(() => {
+		if (!requestsInQuery.isSuccess) {
+			return []
+		}
+
+		const searchLowerCased = search.toLowerCase().trim()
+
+		if (searchLowerCased.length === 0) {
+			return requestsInQuery.data.sort((a, b) => b.email.localeCompare(a.email))
+		}
+
+		return requestsInQuery.data
+			.filter(c => c.email.toLowerCase().includes(searchLowerCased) || c.nickName.toLowerCase().includes(searchLowerCased))
+			.sort((a, b) => b.email.localeCompare(a.email))
+	}, [requestsInQuery.isSuccess, requestsInQuery.data, search])
+
+	const requestsOutSorted = useMemo(() => {
+		if (!requestsOutQuery.isSuccess) {
+			return []
+		}
+
+		const searchLowerCased = search.toLowerCase().trim()
+
+		if (searchLowerCased.length === 0) {
+			return requestsOutQuery.data.sort((a, b) => b.email.localeCompare(a.email))
+		}
+
+		return requestsOutQuery.data
+			.filter(c => c.email.toLowerCase().includes(searchLowerCased) || c.nickName.toLowerCase().includes(searchLowerCased))
+			.sort((a, b) => b.email.localeCompare(a.email))
+	}, [requestsOutQuery.isSuccess, requestsOutQuery.data, search])
+
 	const rowVirtualizer = useVirtualizer({
-		count: location.includes("blocked") ? blockedSorted.length : contactsSorted.length,
+		count: location.includes("contacts/in")
+			? requestsInSorted.length
+			: location.includes("contacts/out")
+				? requestsOutSorted.length
+				: location.includes("blocked")
+					? blockedSorted.length
+					: contactsSorted.length,
 		getScrollElement: () => virtualizerParentRef.current,
 		estimateSize: () => 68,
 		getItemKey(index) {
-			return location.includes("blocked") ? blockedSorted[index].uuid : contactsSorted[index].uuid
+			return location.includes("contacts/in")
+				? requestsInSorted[index].uuid
+				: location.includes("contacts/out")
+					? requestsOutSorted[index].uuid
+					: location.includes("blocked")
+						? blockedSorted[index].uuid
+						: contactsSorted[index].uuid
 		},
 		overscan: 5
 	})
@@ -109,7 +209,7 @@ export const Contacts = memo(() => {
 						onChange={e => setSearch(e.target.value)}
 						placeholder={t("contacts.search")}
 					/>
-					<Button>{t("contacts.addContact")}</Button>
+					<Button onClick={sendRequest}>{t("contacts.addContact")}</Button>
 				</div>
 				<div className="flex flex-row px-4">
 					<div className="flex flex-row text-muted-foreground mt-2 pb-3 grow uppercase gap-3 line-clamp-1 text-ellipsis break-all">
@@ -122,10 +222,22 @@ export const Contacts = memo(() => {
 										? t("innerSideBar.contacts.offline")
 										: location.includes("blocked")
 											? t("innerSideBar.contacts.blocked")
-											: t("innerSideBar.contacts.all")}
+											: location.includes("contacts/in")
+												? t("innerSideBar.contacts.in")
+												: location.includes("contacts/out")
+													? t("innerSideBar.contacts.out")
+													: t("innerSideBar.contacts.all")}
 						</p>
 						<p>—</p>
-						<p>{location.includes("blocked") ? blockedSorted.length : contactsSorted.length}</p>
+						<p>
+							{location.includes("contacts/in")
+								? requestsInSorted.length
+								: location.includes("contacts/out")
+									? requestsOutSorted.length
+									: location.includes("blocked")
+										? blockedSorted.length
+										: contactsSorted.length}
+						</p>
 					</div>
 				</div>
 				<div
@@ -151,7 +263,17 @@ export const Contacts = memo(() => {
 									data-index={virtualItem.index}
 									ref={rowVirtualizer.measureElement}
 								>
-									{location.includes("blocked") ? (
+									{location.includes("contacts/in") || location.includes("contacts/out") ? (
+										<Request
+											request={
+												location.includes("contacts/in")
+													? requestsInSorted[virtualItem.index]
+													: requestsOutSorted[virtualItem.index]
+											}
+											refetch={refetch}
+											type={location.includes("contacts/in") ? "in" : "out"}
+										/>
+									) : location.includes("blocked") ? (
 										<Blocked
 											blocked={blockedSorted[virtualItem.index]}
 											refetch={refetch}

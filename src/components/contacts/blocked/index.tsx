@@ -63,7 +63,7 @@ export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; re
 			/>
 			<div className="flex flex-row gap-4 items-center justify-between grow">
 				<div className="flex flex-col">
-					<p className="line-clamp-1 text-ellipsis break-all">{blocked.nickName}</p>
+					<p className="line-clamp-1 text-ellipsis break-all">{blocked.nickName.length > 0 ? blocked.nickName : blocked.email}</p>
 					<p className="line-clamp-1 text-ellipsis break-all text-sm text-muted-foreground">{blocked.email}</p>
 				</div>
 				{hovering && (

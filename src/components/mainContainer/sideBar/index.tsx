@@ -1,10 +1,95 @@
-import { memo } from "react"
+import { memo, useEffect, useRef, useCallback } from "react"
 import Button from "./button"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { IS_DESKTOP } from "@/constants"
+import { useQuery } from "@tanstack/react-query"
+import worker from "@/lib/worker"
+import { useChatsStore } from "@/stores/chats.store"
+import { useContactsStore } from "@/stores/contacts.store"
+import { type SocketEvent } from "@filen/sdk"
+import socket from "@/lib/socket"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const SideBar = memo(() => {
 	const sdkConfig = useSDKConfig()
+	const { setUnread } = useChatsStore()
+	const unreadQueryLastUpdateRef = useRef<number>(0)
+	const { setRequestsInCount } = useContactsStore()
+	const contactsRequestInCountQueryLastUpdateRef = useRef<number>(0)
+
+	const chatsUnreadCountQuery = useQuery({
+		queryKey: ["chatsUnreadCount"],
+		queryFn: () => worker.chatsUnreadCount()
+	})
+
+	const contactsRequestInCountQuery = useQuery({
+		queryKey: ["contactsRequestInCount"],
+		queryFn: () => worker.contactsRequestInCount()
+	})
+
+	const socketEventListener = useCallback(
+		async (event: SocketEvent) => {
+			try {
+				if (event.type === "chatMessageNew") {
+					if (sdkConfig.userId !== event.data.senderId) {
+						setUnread(prev => prev + 1)
+					}
+				} else if (event.type === "chatConversationDeleted") {
+					await chatsUnreadCountQuery.refetch()
+				}
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[setUnread, chatsUnreadCountQuery, sdkConfig.userId]
+	)
+
+	useEffect(() => {
+		if (chatsUnreadCountQuery.isSuccess && unreadQueryLastUpdateRef.current !== chatsUnreadCountQuery.dataUpdatedAt) {
+			unreadQueryLastUpdateRef.current = chatsUnreadCountQuery.dataUpdatedAt
+
+			setUnread(chatsUnreadCountQuery.data)
+		}
+	}, [chatsUnreadCountQuery.isSuccess, chatsUnreadCountQuery.data, setUnread, chatsUnreadCountQuery.dataUpdatedAt])
+
+	useEffect(() => {
+		if (
+			contactsRequestInCountQuery.isSuccess &&
+			contactsRequestInCountQueryLastUpdateRef.current !== contactsRequestInCountQuery.dataUpdatedAt
+		) {
+			contactsRequestInCountQueryLastUpdateRef.current = contactsRequestInCountQuery.dataUpdatedAt
+
+			setRequestsInCount(contactsRequestInCountQuery.data)
+		}
+	}, [
+		contactsRequestInCountQuery.isSuccess,
+		contactsRequestInCountQuery.data,
+		setRequestsInCount,
+		contactsRequestInCountQuery.dataUpdatedAt
+	])
+
+	useEffect(() => {
+		const updateChatsUnreadCountListener = eventEmitter.on("updateChatsUnreadCount", () => {
+			chatsUnreadCountQuery.refetch().catch(console.error)
+		})
+
+		const updateContactsRequestsInCountListener = eventEmitter.on("updateContactsRequestsInCount", () => {
+			contactsRequestInCountQuery.refetch().catch(console.error)
+		})
+
+		return () => {
+			updateChatsUnreadCountListener.remove()
+			updateContactsRequestsInCountListener.remove()
+		}
+	}, [chatsUnreadCountQuery, contactsRequestInCountQuery])
+
+	useEffect(() => {
+		socket.addListener("socketEvent", socketEventListener)
+
+		return () => {
+			socket.removeListener("socketEvent", socketEventListener)
+		}
+	}, [socketEventListener])
 
 	return (
 		<div className="w-full flex flex-col h-full gap-2 py-3 bg-secondary border-r select-none items-center overflow-hidden dragselect-start-allowed">

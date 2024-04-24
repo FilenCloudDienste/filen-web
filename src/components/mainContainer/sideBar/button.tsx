@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useMemo, useEffect, useRef } from "react"
+import { memo, useState, useCallback, useMemo } from "react"
 import { RefreshCcw, HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings, MessageCircleMore } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
@@ -12,11 +12,8 @@ import TransfersProgress from "./transfersProgress"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
-import worker from "@/lib/worker"
-import { useQuery } from "@tanstack/react-query"
 import { useChatsStore } from "@/stores/chats.store"
-import { SocketEvent } from "@filen/sdk"
-import socket from "@/lib/socket"
+import { useContactsStore } from "@/stores/contacts.store"
 
 const iconSize = 21
 
@@ -29,13 +26,8 @@ export const Button = memo(({ id }: { id: string }) => {
 	const { t } = useTranslation()
 	const [lastSelectedNote] = useLocalStorage("lastSelectedNote", "")
 	const [lastSelectedChatsConversation] = useLocalStorage("lastSelectedChatsConversation", "")
-	const { unread, setUnread } = useChatsStore()
-	const unreadQueryLastUpdateRef = useRef<number>(0)
-
-	const chatsUnreadCountQuery = useQuery({
-		queryKey: ["chatsUnreadCount", id],
-		queryFn: () => (id === "chats" ? worker.chatsUnreadCount() : Promise.resolve<number>(0))
-	})
+	const { unread } = useChatsStore()
+	const { requestsInCount } = useContactsStore()
 
 	const onClick = useCallback(
 		(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -68,7 +60,7 @@ export const Button = memo(({ id }: { id: string }) => {
 									: id === "settings"
 										? "/settings/$type"
 										: id === "contacts"
-											? "/contacts/online"
+											? "/contacts/$type"
 											: "/",
 			params:
 				id === sdkConfig.baseFolderUUID
@@ -81,7 +73,7 @@ export const Button = memo(({ id }: { id: string }) => {
 							}
 						: id === "contacts"
 							? {
-									type: "online"
+									type: requestsInCount > 0 ? "in" : "all"
 								}
 							: id === "notes" && lastSelectedNote.length > 0
 								? { uuid: lastSelectedNote }
@@ -89,7 +81,7 @@ export const Button = memo(({ id }: { id: string }) => {
 									? { uuid: lastSelectedChatsConversation }
 									: undefined
 		}
-	}, [id, sdkConfig.baseFolderUUID, lastSelectedNote, lastSelectedChatsConversation])
+	}, [id, sdkConfig.baseFolderUUID, lastSelectedNote, lastSelectedChatsConversation, requestsInCount])
 
 	const showIndicator = useMemo(() => {
 		return (
@@ -103,53 +95,6 @@ export const Button = memo(({ id }: { id: string }) => {
 			(id === "mounts" && location.includes("mounts"))
 		)
 	}, [id, routeParent, location, sdkConfig.baseFolderUUID])
-
-	const socketEventListener = useCallback(
-		async (event: SocketEvent) => {
-			if (id !== "chats") {
-				return
-			}
-
-			try {
-				if (event.type === "chatMessageNew") {
-					if (sdkConfig.userId !== event.data.senderId) {
-						setUnread(prev => prev + 1)
-					}
-				} else if (event.type === "chatConversationDeleted") {
-					await chatsUnreadCountQuery.refetch()
-				}
-			} catch (e) {
-				console.error(e)
-			}
-		},
-		[setUnread, chatsUnreadCountQuery, id, sdkConfig.userId]
-	)
-
-	useEffect(() => {
-		const updateChatsUnreadCountListener = eventEmitter.on("updateChatsUnreadCount", () => {
-			chatsUnreadCountQuery.refetch().catch(console.error)
-		})
-
-		return () => {
-			updateChatsUnreadCountListener.remove()
-		}
-	}, [chatsUnreadCountQuery])
-
-	useEffect(() => {
-		if (chatsUnreadCountQuery.isSuccess && id === "chats" && unreadQueryLastUpdateRef.current !== chatsUnreadCountQuery.dataUpdatedAt) {
-			unreadQueryLastUpdateRef.current = chatsUnreadCountQuery.dataUpdatedAt
-
-			setUnread(chatsUnreadCountQuery.data)
-		}
-	}, [chatsUnreadCountQuery.isSuccess, chatsUnreadCountQuery.data, setUnread, id, chatsUnreadCountQuery.dataUpdatedAt])
-
-	useEffect(() => {
-		socket.addListener("socketEvent", socketEventListener)
-
-		return () => {
-			socket.removeListener("socketEvent", socketEventListener)
-		}
-	}, [socketEventListener])
 
 	return (
 		<div className={cn("flex flex-row justify-center items-center w-full", IS_DESKTOP ? "pl-[1px]" : "")}>
@@ -194,7 +139,12 @@ export const Button = memo(({ id }: { id: string }) => {
 								) : (
 									<MessageCircle size={iconSize} />
 								))}
-							{id === "contacts" && <Contact size={iconSize} />}
+							{id === "contacts" && (
+								<Contact
+									size={iconSize}
+									className={requestsInCount > 0 ? "text-red-500" : undefined}
+								/>
+							)}
 							{id === "settings" && <Settings size={iconSize} />}
 							{id === "transfers" && <ArrowDownUp size={iconSize} />}
 							{id === "transfers" && <TransfersProgress />}

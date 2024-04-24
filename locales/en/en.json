@@ -103,7 +103,9 @@
 			"online": "Online",
 			"offline": "Offline",
 			"all": "All",
-			"blocked": "Blocked"
+			"blocked": "Blocked",
+			"in": "Requests",
+			"out": "Pending"
 		}
 	},
 	"sideBar": {

@@ -62,6 +62,8 @@ export const InnerSideBar = memo(() => {
 						<Button uuid="contacts/online" />
 						<Button uuid="contacts/all" />
 						<Button uuid="contacts/offline" />
+						<Button uuid="contacts/in" />
+						<Button uuid="contacts/out" />
 						<Button uuid="contacts/blocked" />
 					</>
 				)}

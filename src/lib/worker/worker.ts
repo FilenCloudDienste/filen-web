@@ -1702,3 +1702,23 @@ export async function blockUser({ email }: { email: string }): Promise<void> {
 export async function unblockUser({ uuid }: { uuid: string }): Promise<void> {
 	return await SDK.contacts().unblock({ uuid })
 }
+
+export async function contactsRequestAccept({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.contacts().acceptRequest({ uuid })
+}
+
+export async function contactsRequestDeny({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.contacts().denyRequest({ uuid })
+}
+
+export async function contactsRequestRemove({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.contacts().deleteOutgoingRequest({ uuid })
+}
+
+export async function contactsRequestSend({ email }: { email: string }): Promise<void> {
+	return await SDK.contacts().sendRequest({ email })
+}
+
+export async function contactsRequestInCount(): Promise<number> {
+	return await SDK.contacts().incomingRequestsCount()
+}

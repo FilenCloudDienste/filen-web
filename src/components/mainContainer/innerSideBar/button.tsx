@@ -21,7 +21,9 @@ import {
 	Contact,
 	Nfc,
 	CloudOff,
-	XCircle
+	XCircle,
+	Mail,
+	Send
 } from "lucide-react"
 import useLocation from "@/hooks/useLocation"
 
@@ -148,6 +150,18 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 					<>
 						<XCircle size={iconSize} />
 						<p>{t("innerSideBar.contacts.blocked")}</p>
+					</>
+				)}
+				{uuid === "contacts/in" && (
+					<>
+						<Mail size={iconSize} />
+						<p>{t("innerSideBar.contacts.in")}</p>
+					</>
+				)}
+				{uuid === "contacts/out" && (
+					<>
+						<Send size={iconSize} />
+						<p>{t("innerSideBar.contacts.out")}</p>
 					</>
 				)}
 			</Link>

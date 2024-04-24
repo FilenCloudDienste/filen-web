@@ -40,7 +40,9 @@ export const Contact = memo(({ contact, refetch }: { contact: ContactType; refet
 				/>
 				<div className="flex flex-row gap-4 items-center justify-between grow">
 					<div className="flex flex-col">
-						<p className="line-clamp-1 text-ellipsis break-all">{contact.nickName}</p>
+						<p className="line-clamp-1 text-ellipsis break-all">
+							{contact.nickName.length > 0 ? contact.nickName : contact.email}
+						</p>
 						<p className="line-clamp-1 text-ellipsis break-all text-sm text-muted-foreground">{contact.email}</p>
 					</div>
 					<MoreVertical
