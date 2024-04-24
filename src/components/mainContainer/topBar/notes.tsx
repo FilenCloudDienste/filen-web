@@ -87,7 +87,10 @@ export const Notes = memo(() => {
 				</p>
 			</div>
 			<div className="flex flex-row">
-				<ContextMenu note={selectedNote}>
+				<ContextMenu
+					note={selectedNote}
+					setHovering={() => {}}
+				>
 					<div
 						className="flex flex-row p-1 rounded-md hover:bg-secondary cursor-pointer"
 						onClick={triggerMoreIconContextMenu}
