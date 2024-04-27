@@ -34,9 +34,8 @@ export const Participant = memo(
 			>
 				<div className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-primary-foreground">
 					<Avatar
-						className="w-7 h-7"
+						size={28}
 						src={participant.avatar}
-						fallback={participant.email}
 						status={status}
 					/>
 					<div className="flex flex-row items-center gap-3">

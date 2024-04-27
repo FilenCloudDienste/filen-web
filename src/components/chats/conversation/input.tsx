@@ -866,7 +866,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 										<div className="flex flex-row gap-2">
 											<Avatar
 												src={participant.avatar}
-												className="w-6 h-6"
+												size={24}
 											/>
 											<p className="line-clamp-1 text-ellipsis break-all">
 												{participant.nickName.length > 0 ? participant.nickName : participant.email}

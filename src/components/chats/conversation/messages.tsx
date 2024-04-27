@@ -20,7 +20,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	const windowSize = useWindowSize()
 	const inputContainerDimensions = useElementDimensions("chat-input-container")
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
-	const { messages, setMessages, failedMessages, editUUID, replyMessage, setReplyMessage } = useChatsStore()
+	const { messages, setMessages, failedMessages, editUUID, replyMessage, setReplyMessage, setEditUUID } = useChatsStore()
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const sdkConfig = useSDKConfig()
 	const [isScrolling, setIsScrolling] = useState<boolean>(false)
@@ -126,6 +126,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 						editUUID={editUUID}
 						replyUUID={replyMessage ? replyMessage.uuid : ""}
 						setReplyMessage={setReplyMessage}
+						setEditUUID={setEditUUID}
 					/>
 				</div>
 			)
@@ -141,7 +142,8 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 			failedMessages,
 			editUUID,
 			replyMessage,
-			setReplyMessage
+			setReplyMessage,
+			setEditUUID
 		]
 	)
 

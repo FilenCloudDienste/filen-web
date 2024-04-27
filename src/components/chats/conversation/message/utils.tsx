@@ -220,7 +220,8 @@ export const ReplaceMessageWithComponents = memo(
 						return (
 							<div
 								key={index}
-								className="flex flex-row"
+								className="flex flex-row cursor-default"
+								title={match}
 							>
 								<EmojiElement
 									fallback={match}
@@ -237,7 +238,8 @@ export const ReplaceMessageWithComponents = memo(
 					return (
 						<div
 							key={index}
-							className="flex flex-row"
+							className="flex flex-row cursor-default"
+							title={match}
 						>
 							<EmojiElement
 								fallback={match}

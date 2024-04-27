@@ -109,7 +109,7 @@ export const Request = memo(({ request, refetch, type }: { request: ContactReque
 			onMouseLeave={onMouseLeave}
 		>
 			<Avatar
-				className="w-11 h-11"
+				size={44}
 				src={request.avatar}
 			/>
 			<div className="flex flex-row gap-4 items-center justify-between grow">

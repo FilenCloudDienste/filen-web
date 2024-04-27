@@ -34,7 +34,7 @@ export const Contact = memo(({ contact, refetch }: { contact: ContactType; refet
 		>
 			<div className={cn("flex flex-row gap-3 items-center hover:bg-secondary shadow-sm rounded-md p-3", hovering && "bg-secondary")}>
 				<Avatar
-					className="w-11 h-11"
+					size={44}
 					src={contact.avatar}
 					status={contact.lastActive > 0 ? (contact.lastActive > Date.now() - ONLINE_TIMEOUT ? "online" : "offline") : "offline"}
 				/>

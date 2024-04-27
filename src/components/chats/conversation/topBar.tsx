@@ -45,9 +45,8 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 				onClick={editConversationName}
 			>
 				<Avatar
-					className="w-6 h-6"
+					size={24}
 					src={participantsWithoutUser[0].avatar}
-					fallback={participantsWithoutUser[0].email}
 				/>
 				<p className="line-clamp-1 text-ellipsis break-all">
 					{conversation.name && conversation.name.length > 0

@@ -15,7 +15,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils"
 import eventEmitter from "@/lib/eventEmitter"
 import { type TFunction } from "i18next"
-import { Reply, MoreHorizontal } from "lucide-react"
+import { Reply, MoreHorizontal, Edit } from "lucide-react"
 
 export const DateDivider = memo(({ timestamp }: { timestamp: number }) => {
 	return (
@@ -91,7 +91,8 @@ export const Message = memo(
 		failedMessages,
 		editUUID,
 		replyUUID,
-		setReplyMessage
+		setReplyMessage,
+		setEditUUID
 	}: {
 		message: ChatMessage
 		conversation: ChatConversation
@@ -105,6 +106,7 @@ export const Message = memo(
 		editUUID: string
 		replyUUID: string
 		setReplyMessage: (fn: ChatMessage | ((prev: ChatMessage | null) => ChatMessage | null) | null) => void
+		setEditUUID: (fn: string | ((prev: string) => string)) => void
 	}) => {
 		const [hovering, setHovering] = useState<boolean>(false)
 		const ref = useRef<HTMLDivElement>(null)
@@ -187,9 +189,17 @@ export const Message = memo(
 
 		const reply = useCallback(() => {
 			setReplyMessage(message)
+			setEditUUID("")
 
-			setTimeout(() => eventEmitter.emit("chatInputFocus"), 100)
-		}, [message, setReplyMessage])
+			eventEmitter.emit("chatInputFocus")
+		}, [message, setReplyMessage, setEditUUID])
+
+		const edit = useCallback(() => {
+			setEditUUID(message.uuid)
+			setReplyMessage(null)
+
+			eventEmitter.emit("chatInputWriteText", message.message)
+		}, [message.uuid, setEditUUID, message.message, setReplyMessage])
 
 		return (
 			<>
@@ -205,7 +215,6 @@ export const Message = memo(
 					message.senderId !== userId &&
 					!(prevMessage && prevMessage.sentTimestamp > lastFocus) && <NewDivider />}
 				{(!prevMessageSameDay || !prevMessage) && <DateDivider timestamp={message.sentTimestamp} />}
-
 				<TooltipProvider delayDuration={0}>
 					<Tooltip>
 						<TooltipTrigger asChild={true}>
@@ -235,9 +244,8 @@ export const Message = memo(
 										{!groupWithPrevMessage && (
 											<div className="flex flex-col">
 												<Avatar
-													className="w-9 h-9"
+													size={36}
 													src={message.senderAvatar}
-													fallback={message.senderEmail}
 												/>
 											</div>
 										)}
@@ -250,7 +258,7 @@ export const Message = memo(
 													/>
 													<Avatar
 														src={message.replyTo.senderAvatar}
-														className="w-4 h-4"
+														size={16}
 													/>
 													<p className="shrink-0">
 														{message.replyTo.senderNickName.length > 0
@@ -298,6 +306,14 @@ export const Message = memo(
 							>
 								<Reply size={20} />
 							</div>
+							{message.senderId === userId && (
+								<div
+									className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
+									onClick={edit}
+								>
+									<Edit size={20} />
+								</div>
+							)}
 							<div
 								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
 								onClick={triggerMoreIconContextMenu}

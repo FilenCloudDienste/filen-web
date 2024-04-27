@@ -58,7 +58,7 @@ export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; re
 			onMouseLeave={onMouseLeave}
 		>
 			<Avatar
-				className="w-11 h-11"
+				size={44}
 				src={blocked.avatar}
 			/>
 			<div className="flex flex-row gap-4 items-center justify-between grow">

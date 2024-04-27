@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useRef } from "react"
+import { memo, useState, useCallback } from "react"
 import { cn } from "@/lib/utils"
 
 export const Avatar = memo(
@@ -6,15 +6,16 @@ export const Avatar = memo(
 		src,
 		fallback,
 		className,
-		status
+		status,
+		size
 	}: {
 		src?: string | null
 		fallback?: string | null
 		className?: string
 		status?: "online" | "away" | "busy" | "offline"
+		size: number
 	}) => {
 		const [useFallback, setUseFallback] = useState<boolean>(false)
-		const ref = useRef<HTMLDivElement>(null)
 
 		const onError = useCallback(() => {
 			setUseFallback(true)
@@ -22,8 +23,11 @@ export const Avatar = memo(
 
 		return (
 			<div
-				ref={ref}
-				className={cn("flex flex-row shrink-0", className ? className : "w-8 h-8")}
+				className={cn("flex flex-row shrink-0", className)}
+				style={{
+					width: size ? size : 32,
+					height: size ? size : 32
+				}}
 			>
 				<img
 					src={!src ? "/img/fallbackAvatar.webp" : useFallback ? (fallback ? fallback : "/img/fallbackAvatar.webp") : src}
@@ -40,8 +44,8 @@ export const Avatar = memo(
 							status === "away" && "bg-yellow-500"
 						)}
 						style={{
-							marginTop: (ref.current?.getBoundingClientRect().height ?? 32) / 1.4,
-							marginLeft: (ref.current?.getBoundingClientRect().width ?? 32) / 1.4
+							marginTop: size / 1.4,
+							marginLeft: size / 1.4
 						}}
 					/>
 				)}
