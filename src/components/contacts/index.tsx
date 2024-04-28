@@ -33,7 +33,7 @@ export const Contacts = memo(() => {
 	const errorToast = useErrorToast()
 	const navigate = useNavigate()
 
-	const [allQuery, requestsInQuery, requestsOutQuery, blockedQuery] = useQueries({
+	const [allQuery, requestsInQuery, requestsOutQuery, blockedQuery, chatsQuery] = useQueries({
 		queries: [
 			{
 				queryKey: ["listContacts"],
@@ -54,17 +54,35 @@ export const Contacts = memo(() => {
 				queryKey: ["listBlockedContacts"],
 				queryFn: () => worker.listBlockedContacts(),
 				...refetchQueryParams
+			},
+			{
+				queryKey: ["listChatsConversations"],
+				queryFn: () => worker.listChatsConversations()
 			}
 		]
 	})
 
+	const chatConversations = useMemo(() => {
+		if (!chatsQuery.isSuccess) {
+			return []
+		}
+
+		return chatsQuery.data
+	}, [chatsQuery.isSuccess, chatsQuery.data])
+
 	const refetch = useCallback(async () => {
 		try {
-			await Promise.all([allQuery.refetch(), requestsInQuery.refetch(), requestsOutQuery.refetch(), blockedQuery.refetch()])
+			await Promise.all([
+				allQuery.refetch(),
+				requestsInQuery.refetch(),
+				requestsOutQuery.refetch(),
+				blockedQuery.refetch(),
+				chatsQuery.refetch()
+			])
 		} catch (e) {
 			console.error(e)
 		}
-	}, [allQuery, requestsInQuery, requestsOutQuery, blockedQuery])
+	}, [allQuery, requestsInQuery, requestsOutQuery, blockedQuery, chatsQuery])
 
 	const sendRequest = useCallback(async () => {
 		const inputResponse = await showInputDialog({
@@ -282,6 +300,7 @@ export const Contacts = memo(() => {
 										<Contact
 											contact={contactsSorted[virtualItem.index]}
 											refetch={refetch}
+											conversations={chatConversations}
 										/>
 									)}
 								</div>

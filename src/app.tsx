@@ -8,7 +8,8 @@ import "./index.css"
 import "react-quill/dist/quill.snow.css"
 import "./lib/i18n"
 
-const router = createRouter({ routeTree, history: createHashHistory() })
+export const history = createHashHistory()
+export const router = createRouter({ routeTree, history })
 
 declare module "@tanstack/react-router" {
 	interface Register {

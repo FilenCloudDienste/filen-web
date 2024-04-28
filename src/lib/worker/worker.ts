@@ -1722,3 +1722,7 @@ export async function contactsRequestSend({ email }: { email: string }): Promise
 export async function contactsRequestInCount(): Promise<number> {
 	return await SDK.contacts().incomingRequestsCount()
 }
+
+export async function createChatConversation({ contacts }: { contacts: Contact[] }): Promise<string> {
+	return await SDK.chats().create({ contacts })
+}
