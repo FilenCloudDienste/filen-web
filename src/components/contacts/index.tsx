@@ -17,6 +17,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import { showInputDialog } from "../dialogs/input"
 import { useNavigate } from "@tanstack/react-router"
+import useSDKConfig from "@/hooks/useSDKConfig"
 
 const refetchQueryParams = {
 	refetchInterval: 5000,
@@ -32,6 +33,7 @@ export const Contacts = memo(() => {
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const navigate = useNavigate()
+	const { userId } = useSDKConfig()
 
 	const [allQuery, requestsInQuery, requestsOutQuery, blockedQuery, chatsQuery] = useQueries({
 		queries: [
@@ -301,6 +303,7 @@ export const Contacts = memo(() => {
 											contact={contactsSorted[virtualItem.index]}
 											refetch={refetch}
 											conversations={chatConversations}
+											userId={userId}
 										/>
 									)}
 								</div>

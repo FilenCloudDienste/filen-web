@@ -22,6 +22,7 @@ import { type ChatConversationsOnlineUser } from "@filen/sdk/dist/types/api/v3/c
 import { type Contact } from "@filen/sdk/dist/types/api/v3/contacts"
 import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/requests/in"
 import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/blocked"
+import { type UserAccountResponse } from "@filen/sdk/dist/types/api/v3/user/account"
 
 let isInitialized = false
 // We setup an eventEmitter first here in case we are running in the main thread.
@@ -1725,4 +1726,8 @@ export async function contactsRequestInCount(): Promise<number> {
 
 export async function createChatConversation({ contacts }: { contacts: Contact[] }): Promise<string> {
 	return await SDK.chats().create({ contacts })
+}
+
+export async function fetchUserAccount(): Promise<UserAccountResponse> {
+	return await SDK.user().account()
 }

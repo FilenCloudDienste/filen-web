@@ -5,10 +5,22 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { useChatsStore } from "@/stores/chats.store"
 import { Input } from "@/components/ui/input"
+import worker from "@/lib/worker"
+import useLoadingToast from "@/hooks/useLoadingToast"
+import useErrorToast from "@/hooks/useErrorToast"
+import { useNavigate } from "@tanstack/react-router"
+import { selectContacts } from "@/components/dialogs/selectContacts"
+import useSDKConfig from "@/hooks/useSDKConfig"
+import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Chats = memo(() => {
 	const { t } = useTranslation()
-	const { search, setSearch } = useChatsStore()
+	const { search, setSearch, setConversations, setSelectedConversation } = useChatsStore()
+	const loadingToast = useLoadingToast()
+	const errorToast = useErrorToast()
+	const navigate = useNavigate()
+	const { userId } = useSDKConfig()
 
 	const onChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,6 +28,77 @@ export const Chats = memo(() => {
 		},
 		[setSearch]
 	)
+
+	const createChat = useCallback(async () => {
+		const selectedContacts = await selectContacts()
+
+		if (selectedContacts.cancelled) {
+			return
+		}
+
+		const toast = loadingToast()
+
+		try {
+			const [uuid, account] = await Promise.all([
+				worker.createChatConversation({ contacts: selectedContacts.contacts }),
+				worker.fetchUserAccount()
+			])
+
+			eventEmitter.emit("refetchChats")
+
+			const convo: ChatConversation = {
+				uuid,
+				lastMessageSender: 0,
+				lastMessage: null,
+				lastMessageTimestamp: 0,
+				lastMessageUUID: null,
+				ownerId: userId,
+				name: null,
+				participants: [
+					{
+						userId,
+						email: account.email,
+						avatar: typeof account.avatarURL === "string" ? account.avatarURL : null,
+						nickName: account.nickName,
+						metadata: "",
+						permissionsAdd: true,
+						addedTimestamp: Date.now()
+					},
+					...selectedContacts.contacts.map(contact => ({
+						userId: contact.userId,
+						email: contact.email,
+						avatar: contact.avatar,
+						nickName: contact.nickName,
+						metadata: "",
+						permissionsAdd: true,
+						addedTimestamp: Date.now()
+					}))
+				],
+				createdTimestamp: Date.now()
+			}
+
+			setConversations(prev => [...prev, convo])
+			setSelectedConversation(convo)
+
+			navigate({
+				to: "/chats/$uuid",
+				params: {
+					uuid
+				}
+			})
+		} catch (e) {
+			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
+		}
+	}, [errorToast, loadingToast, navigate, userId, setSelectedConversation, setConversations])
 
 	return (
 		<div
@@ -29,7 +112,7 @@ export const Chats = memo(() => {
 						<TooltipTrigger asChild={true}>
 							<div
 								className="hover:bg-secondary rounded-md p-1 cursor-pointer"
-								onClick={() => {}}
+								onClick={createChat}
 							>
 								<Plus />
 							</div>

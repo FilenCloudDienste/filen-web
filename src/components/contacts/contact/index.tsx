@@ -13,14 +13,27 @@ import useErrorToast from "@/hooks/useErrorToast"
 import { useTranslation } from "react-i18next"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { useChatsStore } from "@/stores/chats.store"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Contact = memo(
-	({ contact, refetch, conversations }: { contact: ContactType; refetch: () => Promise<void>; conversations: ChatConversation[] }) => {
+	({
+		contact,
+		refetch,
+		conversations,
+		userId
+	}: {
+		contact: ContactType
+		refetch: () => Promise<void>
+		conversations: ChatConversation[]
+		userId: number
+	}) => {
 		const [hovering, setHovering] = useState<boolean>(false)
 		const navigate = useNavigate()
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
 		const { t } = useTranslation()
+		const { setConversations, setSelectedConversation } = useChatsStore()
 
 		const triggerMoreIconContextMenu = useCallback(
 			(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -60,7 +73,53 @@ export const Contact = memo(
 			const toast = loadingToast()
 
 			try {
-				await worker.createChatConversation({ contacts: [contact] })
+				const [uuid, account] = await Promise.all([
+					worker.createChatConversation({ contacts: [contact] }),
+					worker.fetchUserAccount()
+				])
+
+				eventEmitter.emit("refetchChats")
+
+				const convo: ChatConversation = {
+					uuid,
+					lastMessageSender: 0,
+					lastMessage: null,
+					lastMessageTimestamp: 0,
+					lastMessageUUID: null,
+					ownerId: userId,
+					name: null,
+					participants: [
+						{
+							userId,
+							email: account.email,
+							avatar: typeof account.avatarURL === "string" ? account.avatarURL : null,
+							nickName: account.nickName,
+							metadata: "",
+							permissionsAdd: true,
+							addedTimestamp: Date.now()
+						},
+						{
+							userId: contact.userId,
+							email: contact.email,
+							avatar: contact.avatar,
+							nickName: contact.nickName,
+							metadata: "",
+							permissionsAdd: true,
+							addedTimestamp: Date.now()
+						}
+					],
+					createdTimestamp: Date.now()
+				}
+
+				setConversations(prev => [...prev, convo])
+				setSelectedConversation(convo)
+
+				navigate({
+					to: "/chats/$uuid",
+					params: {
+						uuid
+					}
+				})
 			} catch (e) {
 				console.error(e)
 
@@ -73,7 +132,7 @@ export const Contact = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [conversations, contact, errorToast, loadingToast, navigate])
+		}, [conversations, contact, errorToast, loadingToast, navigate, setConversations, setSelectedConversation, userId])
 
 		return (
 			<ContextMenu

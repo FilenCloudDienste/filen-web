@@ -14,6 +14,7 @@ import { IS_DESKTOP } from "@/constants"
 import useElementDimensions from "@/hooks/useElementDimensions"
 import { type SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Chats = memo(() => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -177,6 +178,16 @@ export const Chats = memo(() => {
 			socket.removeListener("socketEvent", socketEventListener)
 		}
 	}, [socketEventListener])
+
+	useEffect(() => {
+		const refetchChatsListener = eventEmitter.on("refetchChats", () => {
+			query.refetch().catch(console.error)
+		})
+
+		return () => {
+			refetchChatsListener.remove()
+		}
+	}, [query])
 
 	return (
 		<div
