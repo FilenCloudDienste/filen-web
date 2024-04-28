@@ -1731,3 +1731,7 @@ export async function createChatConversation({ contacts }: { contacts: Contact[]
 export async function fetchUserAccount(): Promise<UserAccountResponse> {
 	return await SDK.user().account()
 }
+
+export async function chatConversationAddParticipant({ conversation, contact }: { conversation: string; contact: Contact }): Promise<void> {
+	return await SDK.chats().addParticipant({ conversation, contact })
+}
