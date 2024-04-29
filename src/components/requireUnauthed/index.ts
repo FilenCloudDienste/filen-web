@@ -6,7 +6,7 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 export const RequireUnauthed = memo(({ children }: { children: React.ReactNode }) => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const navigate = useNavigate()
-	const sdkConfig = useSDKConfig()
+	const { baseFolderUUID } = useSDKConfig()
 
 	useEffect(() => {
 		if (authed) {
@@ -15,11 +15,11 @@ export const RequireUnauthed = memo(({ children }: { children: React.ReactNode }
 				replace: true,
 				resetScroll: true,
 				params: {
-					_splat: sdkConfig.baseFolderUUID
+					_splat: baseFolderUUID
 				}
 			})
 		}
-	}, [navigate, authed, sdkConfig])
+	}, [navigate, authed, baseFolderUUID])
 
 	if (authed) {
 		return null

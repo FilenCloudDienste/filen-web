@@ -22,7 +22,7 @@ export const Notes = memo(() => {
 	const navigate = useNavigate()
 	const routeParent = useRouteParent()
 	const queryUpdatedAtRef = useRef<number>(-1)
-	const sdkConfig = useSDKConfig()
+	const { userId } = useSDKConfig()
 
 	const query = useQuery({
 		queryKey: ["listNotes"],
@@ -143,7 +143,7 @@ export const Notes = memo(() => {
 								note={note}
 								setLastSelectedNote={setLastSelectedNote}
 								setSelectedNote={setSelectedNote}
-								userId={sdkConfig.userId}
+								userId={userId}
 							/>
 						</div>
 					)

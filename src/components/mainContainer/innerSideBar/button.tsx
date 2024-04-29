@@ -31,7 +31,7 @@ import { useContactsStore } from "@/stores/contacts.store"
 const iconSize = 20
 
 export const Button = memo(({ uuid }: { uuid: string }) => {
-	const sdkConfig = useSDKConfig()
+	const { baseFolderUUID } = useSDKConfig()
 	const routeParent = useRouteParent()
 	const [sideBarTreeOpen, setSideBarTreeOpen] = useLocalStorage<Record<string, boolean>>("sideBarTreeOpen", {})
 	const { t } = useTranslation()
@@ -65,7 +65,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 					routeParent === uuid || location === `/${uuid}` ? "bg-accent" : "bg-transparent"
 				)}
 			>
-				{uuid === sdkConfig.baseFolderUUID && (
+				{uuid === baseFolderUUID && (
 					<>
 						<div className="flex flex-row gap-2">
 							{!sideBarTreeOpen[uuid] ? (
@@ -173,7 +173,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				)}
 			</Link>
 			<div className="flex flex-col w-full overflow-hidden">
-				{validateUUID(uuid) && sdkConfig.baseFolderUUID === uuid && sideBarTreeOpen[uuid] && (
+				{validateUUID(uuid) && baseFolderUUID === uuid && sideBarTreeOpen[uuid] && (
 					<Tree
 						parent={uuid}
 						depth={1}

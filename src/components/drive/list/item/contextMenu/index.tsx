@@ -32,7 +32,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; children: React.ReactNode }) => {
 	const { items, setItems } = useDriveItemsStore()
 	const { t } = useTranslation()
-	const sdkConfig = useSDKConfig()
+	const { baseFolderUUID } = useSDKConfig()
 	const [, startTransition] = useTransition()
 	const driveURLState = useDriveURLState()
 	const navigate = useNavigate()
@@ -465,7 +465,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 								</ContextMenuItem>
 								<ContextMenuSeparator />
 								<MoveTree
-									parent={sdkConfig.baseFolderUUID}
+									parent={baseFolderUUID}
 									name={t("contextMenus.item.cloudDrive")}
 								/>
 							</ContextMenuSubContent>

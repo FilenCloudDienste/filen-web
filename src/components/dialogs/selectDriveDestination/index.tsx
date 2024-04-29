@@ -47,13 +47,13 @@ export async function selectDriveDestination(): Promise<SelectDriveDestinationRe
 }
 
 export const SelectDriveDestinationDialog = memo(() => {
-	const sdkConfig = useSDKConfig()
+	const { baseFolderUUID } = useSDKConfig()
 	const [open, setOpen] = useState<boolean>(false)
 	const { t } = useTranslation()
 	const requestId = useRef<string>("")
 	const responseUUID = useRef<string>("")
 	const didSubmit = useRef<boolean>(false)
-	const [pathname, setPathname] = useState<string>(sdkConfig.baseFolderUUID)
+	const [pathname, setPathname] = useState<string>(baseFolderUUID)
 	const { setItems } = useDriveItemsStore()
 	const [, startTransition] = useTransition()
 	const routeParent = useRouteParent()
@@ -138,17 +138,17 @@ export const SelectDriveDestinationDialog = memo(() => {
 	useEffect(() => {
 		const listener = eventEmitter.on("openSelectDriveDestinationDialog", ({ id }: { id: string }) => {
 			requestId.current = id
-			responseUUID.current = sdkConfig.baseFolderUUID
+			responseUUID.current = baseFolderUUID
 			didSubmit.current = false
 
-			setPathname(sdkConfig.baseFolderUUID)
+			setPathname(baseFolderUUID)
 			setOpen(true)
 		})
 
 		return () => {
 			listener.remove()
 		}
-	}, [sdkConfig])
+	}, [baseFolderUUID])
 
 	return (
 		<AlertDialog

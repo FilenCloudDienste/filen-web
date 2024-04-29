@@ -22,7 +22,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const { messages, setMessages, failedMessages, editUUID, replyMessage, setReplyMessage, setEditUUID } = useChatsStore()
 	const queryUpdatedAtRef = useRef<number>(-1)
-	const sdkConfig = useSDKConfig()
+	const { userId } = useSDKConfig()
 	const [isScrolling, setIsScrolling] = useState<boolean>(false)
 	const { t } = useTranslation()
 	const isFetchingPreviousMessagesRef = useRef<boolean>(false)
@@ -118,7 +118,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 						message={message}
 						prevMessage={messages[index - 1]}
 						nextMessage={messages[index + 1]}
-						userId={sdkConfig.userId}
+						userId={userId}
 						isScrolling={isScrolling}
 						lastFocus={lastFocus}
 						t={t}
@@ -135,7 +135,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 			conversation,
 			getItemKey,
 			messages,
-			sdkConfig.userId,
+			userId,
 			isScrolling,
 			lastFocus,
 			t,

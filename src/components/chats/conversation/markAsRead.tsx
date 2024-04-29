@@ -26,7 +26,7 @@ export const MarkAsRead = memo(
 	}) => {
 		const inputContainerDimensions = useElementDimensions("chat-input-container")
 		const [markingAsRead, setMarkingAsRead] = useState<boolean>(false)
-		const sdkConfig = useSDKConfig()
+		const { userId } = useSDKConfig()
 		const { t } = useTranslation()
 		const { setConversationsUnread } = useChatsStore()
 
@@ -49,7 +49,7 @@ export const MarkAsRead = memo(
 				}
 			}
 
-			const messagesFromOthers = messagesSinceLastFocus.filter(message => message.senderId !== sdkConfig.userId)
+			const messagesFromOthers = messagesSinceLastFocus.filter(message => message.senderId !== userId)
 
 			if (messagesFromOthers.length === 0) {
 				return {
@@ -64,7 +64,7 @@ export const MarkAsRead = memo(
 				count: messagesFromOthers.length,
 				since: simpleDate(messagesSorted.at(0)?.sentTimestamp ?? Date.now())
 			}
-		}, [messagesSorted, lastFocus, sdkConfig.userId])
+		}, [messagesSorted, lastFocus, userId])
 
 		const markAsRead = useCallback(async () => {
 			if (!lastFocusQuery.isSuccess || count === 0) {

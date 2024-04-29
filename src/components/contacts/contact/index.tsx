@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from "react"
+import { memo, useState, useCallback, useRef } from "react"
 import Avatar from "../../avatar"
 import { MoreVertical, MessageCircle } from "lucide-react"
 import { type Contact as ContactType } from "@filen/sdk/dist/types/api/v3/contacts"
@@ -34,6 +34,7 @@ export const Contact = memo(
 		const errorToast = useErrorToast()
 		const { t } = useTranslation()
 		const { setConversations, setSelectedConversation } = useChatsStore()
+		const isCreatingChat = useRef<boolean>(false)
 
 		const triggerMoreIconContextMenu = useCallback(
 			(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -69,6 +70,12 @@ export const Contact = memo(
 
 				return
 			}
+
+			if (isCreatingChat.current) {
+				return
+			}
+
+			isCreatingChat.current = true
 
 			const toast = loadingToast()
 
@@ -131,6 +138,8 @@ export const Contact = memo(
 				})
 			} finally {
 				toast.dismiss()
+
+				isCreatingChat.current = false
 			}
 		}, [conversations, contact, errorToast, loadingToast, navigate, setConversations, setSelectedConversation, userId])
 

@@ -12,7 +12,7 @@ import Chats from "./chats"
 import useElementDimensions from "@/hooks/useElementDimensions"
 
 export const InnerSideBar = memo(() => {
-	const sdkConfig = useSDKConfig()
+	const { baseFolderUUID, email } = useSDKConfig()
 	const windowSize = useWindowSize()
 	const location = useLocation()
 	const chatsTopDimensions = useElementDimensions("inner-sidebar-top-chats")
@@ -40,7 +40,7 @@ export const InnerSideBar = memo(() => {
 			>
 				{location.includes("drive") && (
 					<>
-						<Button uuid={sdkConfig.baseFolderUUID} />
+						<Button uuid={baseFolderUUID} />
 						<Divider />
 						<Button uuid="recents" />
 						<Button uuid="favorites" />
@@ -69,7 +69,7 @@ export const InnerSideBar = memo(() => {
 				)}
 			</div>
 			<div className="py-3 px-3 border-t flex flex-col h-12 flex-1">
-				<p className="text-muted-foreground text-sm">{sdkConfig.email}</p>
+				<p className="text-muted-foreground text-sm">{email}</p>
 			</div>
 		</div>
 	)

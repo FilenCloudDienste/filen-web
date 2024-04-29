@@ -18,7 +18,7 @@ import { useContactsStore } from "@/stores/contacts.store"
 const iconSize = 21
 
 export const Button = memo(({ id }: { id: string }) => {
-	const sdkConfig = useSDKConfig()
+	const { baseFolderUUID } = useSDKConfig()
 	const routeParent = useRouteParent()
 	const theme = useTheme()
 	const location = useLocation()
@@ -43,7 +43,7 @@ export const Button = memo(({ id }: { id: string }) => {
 	const link = useMemo(() => {
 		return {
 			to:
-				id === sdkConfig.baseFolderUUID
+				id === baseFolderUUID
 					? "/drive/$"
 					: id === "syncs"
 						? "/drive/$"
@@ -63,9 +63,9 @@ export const Button = memo(({ id }: { id: string }) => {
 											? "/contacts/$type"
 											: "/",
 			params:
-				id === sdkConfig.baseFolderUUID
+				id === baseFolderUUID
 					? {
-							_splat: sdkConfig.baseFolderUUID
+							_splat: baseFolderUUID
 						}
 					: id === "settings"
 						? {
@@ -81,12 +81,12 @@ export const Button = memo(({ id }: { id: string }) => {
 									? { uuid: lastSelectedChatsConversation }
 									: undefined
 		}
-	}, [id, sdkConfig.baseFolderUUID, lastSelectedNote, lastSelectedChatsConversation, requestsInCount])
+	}, [id, baseFolderUUID, lastSelectedNote, lastSelectedChatsConversation, requestsInCount])
 
 	const showIndicator = useMemo(() => {
 		return (
 			routeParent === id ||
-			(id === sdkConfig.baseFolderUUID && location.includes("drive")) ||
+			(id === baseFolderUUID && location.includes("drive")) ||
 			(id === "settings" && location.includes("settings")) ||
 			(id === "notes" && location.includes("notes")) ||
 			(id === "chats" && location.includes("chats")) ||
@@ -94,7 +94,7 @@ export const Button = memo(({ id }: { id: string }) => {
 			(id === "syncs" && location.includes("syncs")) ||
 			(id === "mounts" && location.includes("mounts"))
 		)
-	}, [id, routeParent, location, sdkConfig.baseFolderUUID])
+	}, [id, routeParent, location, baseFolderUUID])
 
 	return (
 		<div className={cn("flex flex-row justify-center items-center w-full", IS_DESKTOP ? "pl-[1px]" : "")}>
@@ -118,7 +118,7 @@ export const Button = memo(({ id }: { id: string }) => {
 						>
 							{id === "syncs" && <RefreshCcw size={iconSize} />}
 							{id === "mounts" && <HardDrive size={iconSize} />}
-							{id === sdkConfig.baseFolderUUID && (
+							{id === baseFolderUUID && (
 								<img
 									src={
 										theme.dark
@@ -152,7 +152,7 @@ export const Button = memo(({ id }: { id: string }) => {
 					</TooltipTrigger>
 					<TooltipContent side="right">
 						<p>
-							{id === sdkConfig.baseFolderUUID && t("sideBar.cloudDrive")}
+							{id === baseFolderUUID && t("sideBar.cloudDrive")}
 							{id === "syncs" && t("sideBar.syncs")}
 							{id === "mounts" && t("sideBar.mounts")}
 							{id === "notes" && t("sideBar.notes")}

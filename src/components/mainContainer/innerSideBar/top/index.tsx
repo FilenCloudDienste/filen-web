@@ -7,7 +7,7 @@ import Notes from "./notes"
 import Chats from "./chats"
 
 export const Top = memo(() => {
-	const sdkConfig = useSDKConfig()
+	const { baseFolderUUID } = useSDKConfig()
 	const location = useLocation()
 	const { t } = useTranslation()
 
@@ -33,7 +33,7 @@ export const Top = memo(() => {
 											? "/syncs"
 											: "/drive/$"
 					}
-					params={location.includes("settings") ? { type: "general" } : { _splat: sdkConfig.baseFolderUUID }}
+					params={location.includes("settings") ? { type: "general" } : { _splat: baseFolderUUID }}
 				>
 					{location.includes("settings")
 						? t("innerSideBar.top.settings")

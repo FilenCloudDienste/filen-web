@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next"
 import { directoryUUIDToNameCache } from "@/cache"
 
 export const Item = memo(({ path, index, pathname }: { path: string; index: number; pathname: string }) => {
-	const sdkConfig = useSDKConfig()
+	const { baseFolderUUID } = useSDKConfig()
 	const navigate = useNavigate()
 	const { t } = useTranslation()
 	const [name, setName] = useState<string>(directoryUUIDToNameCache.has(path) ? (directoryUUIDToNameCache.get(path) as string) : "")
@@ -105,7 +105,7 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 				className="text-primary cursor-pointer select-none"
 				onClick={() => navigateToPath()}
 			>
-				{path === sdkConfig.baseFolderUUID ? t("topBar.breadcrumb.cloudDrive") : name}
+				{path === baseFolderUUID ? t("topBar.breadcrumb.cloudDrive") : name}
 			</p>
 			{index < pathname.split("/").length - 1 && <ChevronRight size={18} />}
 		</div>

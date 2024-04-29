@@ -21,7 +21,7 @@ export const Item = memo(
 		index: number
 		pathname: string
 	}) => {
-		const sdkConfig = useSDKConfig()
+		const { baseFolderUUID } = useSDKConfig()
 		const { t } = useTranslation()
 		const [name, setName] = useState<string>(directoryUUIDToNameCache.has(uuid) ? (directoryUUIDToNameCache.get(uuid) as string) : "")
 
@@ -47,7 +47,7 @@ export const Item = memo(
 		}, [uuid, pathname, setPathname])
 
 		const fetchDirectoryName = useCallback(async () => {
-			if (uuid === sdkConfig.baseFolderUUID) {
+			if (uuid === baseFolderUUID) {
 				setName(t("cloudDrive"))
 
 				return
@@ -68,7 +68,7 @@ export const Item = memo(
 			} catch (e) {
 				console.error(e)
 			}
-		}, [uuid, t, sdkConfig.baseFolderUUID])
+		}, [uuid, t, baseFolderUUID])
 
 		useMountedEffect(() => {
 			fetchDirectoryName()

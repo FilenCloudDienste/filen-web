@@ -15,16 +15,18 @@ import useElementDimensions from "@/hooks/useElementDimensions"
 import { type SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
 import eventEmitter from "@/lib/eventEmitter"
+import { sortAndFilterConversations } from "./utils"
 
 export const Chats = memo(() => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const windowSize = useWindowSize()
-	const { conversations, setConversations, selectedConversation, setSelectedConversation, setConversationsUnread } = useChatsStore()
+	const { conversations, setConversations, selectedConversation, setSelectedConversation, setConversationsUnread, search } =
+		useChatsStore()
 	const [, setLastSelectedChatsConversation] = useLocalStorage("lastSelectedChatsConversation", "")
 	const navigate = useNavigate()
 	const routeParent = useRouteParent()
 	const queryUpdatedAtRef = useRef<number>(-1)
-	const sdkConfig = useSDKConfig()
+	const { userId } = useSDKConfig()
 	const topDimensions = useElementDimensions("inner-sidebar-top-chats")
 
 	const query = useQuery({
@@ -33,8 +35,8 @@ export const Chats = memo(() => {
 	})
 
 	const conversationsSorted = useMemo(() => {
-		return conversations
-	}, [conversations])
+		return sortAndFilterConversations(conversations, search, userId)
+	}, [conversations, userId, search])
 
 	const rowVirtualizer = useVirtualizer({
 		count: conversationsSorted.length,
@@ -105,7 +107,7 @@ export const Chats = memo(() => {
 							: prev
 					)
 
-					if (event.data.senderId !== sdkConfig.userId) {
+					if (event.data.senderId !== userId) {
 						setConversationsUnread(prev => ({
 							...prev,
 							[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation] + 1 : 1
@@ -131,7 +133,7 @@ export const Chats = memo(() => {
 				console.error(e)
 			}
 		},
-		[conversations, setConversations, query, setSelectedConversation, routeParent, navigate, setConversationsUnread, sdkConfig.userId]
+		[conversations, setConversations, query, setSelectedConversation, routeParent, navigate, setConversationsUnread, userId]
 	)
 
 	useEffect(() => {
@@ -216,7 +218,7 @@ export const Chats = memo(() => {
 						>
 							<Chat
 								conversation={conversation}
-								userId={sdkConfig.userId}
+								userId={userId}
 								setLastSelectedChatsConversation={setLastSelectedChatsConversation}
 								setSelectedConversation={setSelectedConversation}
 								routeParent={routeParent}
