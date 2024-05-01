@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next"
 import eventEmitter from "@/lib/eventEmitter"
 import { type Contact } from "@filen/sdk/dist/types/api/v3/contacts"
 import List from "./list"
+import { Input } from "@/components/ui/input"
 
 export type SelectContactsResponse = { cancelled: true } | { cancelled: false; contacts: Contact[] }
 
@@ -49,6 +50,7 @@ export const SelectContactsDialog = memo(() => {
 	const [responseContacts, setResponseContacts] = useState<Contact[]>([])
 	const didSubmit = useRef<boolean>(false)
 	const [exclude, setExclude] = useState<number[]>([])
+	const [search, setSearch] = useState<string>("")
 
 	const submit = useCallback(() => {
 		if (didSubmit.current) {
@@ -80,11 +82,24 @@ export const SelectContactsDialog = memo(() => {
 		setOpen(false)
 	}, [])
 
+	const onOpenChange = useCallback(
+		(openState: boolean) => {
+			setOpen(openState)
+			cancel()
+		},
+		[cancel]
+	)
+
+	const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearch(e.target.value)
+	}, [])
+
 	useEffect(() => {
 		const listener = eventEmitter.on("openSelectContactsDialog", ({ id, exclude: e }: { id: string; exclude: number[] }) => {
 			requestId.current = id
 			didSubmit.current = false
 
+			setSearch("")
 			setExclude(e ? e : [])
 			setResponseContacts([])
 			setOpen(true)
@@ -98,10 +113,7 @@ export const SelectContactsDialog = memo(() => {
 	return (
 		<AlertDialog
 			open={open}
-			onOpenChange={openState => {
-				setOpen(openState)
-				cancel()
-			}}
+			onOpenChange={onOpenChange}
 		>
 			<AlertDialogContent
 				onEscapeKeyDown={cancel}
@@ -109,10 +121,16 @@ export const SelectContactsDialog = memo(() => {
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle className="mb-1">{t("dialogs.selectContacts.title")}</AlertDialogTitle>
+					<Input
+						value={search}
+						onChange={onInputChange}
+						placeholder={t("dialogs.selectContacts.title")}
+					/>
 					<List
 						responseContacts={responseContacts}
 						setResponseContacts={setResponseContacts}
 						exclude={exclude}
+						search={search}
 					/>
 				</AlertDialogHeader>
 				<AlertDialogFooter className="items-center">

@@ -10,11 +10,13 @@ export const List = memo(
 	({
 		responseContacts,
 		setResponseContacts,
-		exclude
+		exclude,
+		search
 	}: {
 		responseContacts: ContactType[]
 		setResponseContacts: React.Dispatch<React.SetStateAction<ContactType[]>>
 		exclude: number[]
+		search: string
 	}) => {
 		const { t } = useTranslation()
 		const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -29,8 +31,16 @@ export const List = memo(
 				return []
 			}
 
-			return query.data.sort((a, b) => b.lastActive - a.lastActive)
-		}, [query.isSuccess, query.data])
+			const term = search.toLowerCase().trim()
+
+			if (term.length === 0) {
+				return query.data.sort((a, b) => b.lastActive - a.lastActive)
+			}
+
+			return query.data
+				.filter(c => c.email.toLowerCase().includes(term) || c.nickName.toLowerCase().includes(term))
+				.sort((a, b) => b.lastActive - a.lastActive)
+		}, [query.isSuccess, query.data, search])
 
 		const rowVirtualizer = useVirtualizer({
 			count: contactsSorted.length,
@@ -48,7 +58,8 @@ export const List = memo(
 				style={{
 					height: 384,
 					overflowX: "hidden",
-					overflowY: "auto"
+					overflowY: "auto",
+					marginTop: 12
 				}}
 			>
 				{query.isSuccess && contactsSorted.length === 0 ? (
