@@ -54,7 +54,12 @@ export const Chats = memo(() => {
 					maxSize={85}
 					order={1}
 				>
-					{selectedConversation && <Conversation conversation={selectedConversation} />}
+					{selectedConversation && (
+						<Conversation
+							key={`conversation-${selectedConversation.uuid}`}
+							conversation={selectedConversation}
+						/>
+					)}
 				</ResizablePanel>
 				<ResizableHandle className="bg-transparent w-0" />
 				{conversationParticipantsContainerOpen && !isMobile && (
@@ -65,7 +70,12 @@ export const Chats = memo(() => {
 						order={2}
 						className="border-l"
 					>
-						{selectedConversation && <Participants conversation={selectedConversation} />}
+						{selectedConversation && (
+							<Participants
+								key={`participants-${selectedConversation.uuid}`}
+								conversation={selectedConversation}
+							/>
+						)}
 					</ResizablePanel>
 				)}
 			</ResizablePanelGroup>

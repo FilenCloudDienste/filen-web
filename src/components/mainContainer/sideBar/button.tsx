@@ -150,7 +150,20 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === "transfers" && <TransfersProgress />}
 						</Link>
 					</TooltipTrigger>
-					<TooltipContent side="right">
+					<TooltipContent
+						side="right"
+						className="flex flex-row gap-2 items-center"
+					>
+						{id === "chats" && unread > 0 && (
+							<div className="rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs w-[16px] h-[16px]">
+								{unread >= 9 ? "9+" : unread}
+							</div>
+						)}
+						{id === "contacts" && requestsInCount > 0 && (
+							<div className="rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs w-[16px] h-[16px]">
+								{requestsInCount >= 9 ? "9+" : requestsInCount}
+							</div>
+						)}
 						<p>
 							{id === baseFolderUUID && t("sideBar.cloudDrive")}
 							{id === "syncs" && t("sideBar.syncs")}

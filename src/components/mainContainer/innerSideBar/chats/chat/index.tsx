@@ -34,7 +34,7 @@ export const Chat = memo(
 		const lastMessageSenderName = useMemo(() => {
 			const foundSender = conversation.participants.filter(p => p.userId === conversation.lastMessageSender)
 
-			if (!foundSender) {
+			if (foundSender.length !== 1) {
 				return "UnknownUser"
 			}
 

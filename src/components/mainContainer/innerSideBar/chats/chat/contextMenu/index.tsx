@@ -113,12 +113,14 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		try {
 			await worker.deleteChatConversation({ conversation: conversation.uuid })
 
+			eventEmitter.emit("refetchChats")
+
 			setConversations(prev => prev.filter(c => c.uuid !== conversation.uuid))
 			setSelectedConversation(prev => (prev ? (prev.uuid === conversation.uuid ? null : prev) : prev))
 
 			if (conversation.uuid === routeParent) {
 				navigate({
-					to: "/notes"
+					to: "/chats"
 				})
 			}
 		} catch (e) {

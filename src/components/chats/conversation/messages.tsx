@@ -1,4 +1,4 @@
-import { memo, useRef, useEffect, useMemo, useCallback, useState } from "react"
+import { memo, useRef, useEffect, useMemo, useCallback, useState, Fragment } from "react"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
@@ -15,6 +15,7 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import MarkAsRead from "./markAsRead"
 import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
+import useRouteParent from "@/hooks/useRouteParent"
 
 export const Messages = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const windowSize = useWindowSize()
@@ -27,6 +28,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	const { t } = useTranslation()
 	const isFetchingPreviousMessagesRef = useRef<boolean>(false)
 	const errorToast = useErrorToast()
+	const routeParent = useRouteParent()
 
 	const virtuosoHeight = useMemo(() => {
 		return inputContainerDimensions.height > 0
@@ -83,7 +85,10 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 
 			const previousMessagesUUIDs = previousMessages.map(m => m.uuid)
 
-			setMessages(prev => [...previousMessages, ...prev.filter(m => !previousMessagesUUIDs.includes(m.uuid))])
+			setMessages(prev => [
+				...previousMessages.filter(m => m.conversation === conversation.uuid),
+				...prev.filter(m => !previousMessagesUUIDs.includes(m.uuid) && m.conversation === conversation.uuid)
+			])
 		} catch (e) {
 			console.error(e)
 
@@ -238,10 +243,13 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 			setMessages(prev => {
 				const previousMessagesUUIDs = query.data.map(m => m.uuid)
 
-				return [...query.data, ...prev.filter(m => !previousMessagesUUIDs.includes(m.uuid))]
+				return [
+					...query.data.filter(m => m.conversation === routeParent),
+					...prev.filter(m => !previousMessagesUUIDs.includes(m.uuid) && m.conversation === routeParent)
+				]
 			})
 		}
-	}, [query.isSuccess, query.data, query.dataUpdatedAt, setMessages])
+	}, [query.isSuccess, query.data, query.dataUpdatedAt, setMessages, routeParent])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)
@@ -252,7 +260,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	}, [socketEventListener])
 
 	return (
-		<>
+		<Fragment key={`messages-${conversation.uuid}`}>
 			<MarkAsRead
 				lastFocus={lastFocus}
 				lastFocusQuery={lastFocusQuery}
@@ -269,8 +277,8 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 				alignToBottom={true}
 				computeItemKey={getItemKey}
 				isScrolling={setIsScrolling}
-				initialTopMostItemIndex={9999}
-				defaultItemHeight={50}
+				initialTopMostItemIndex={99}
+				defaultItemHeight={57}
 				itemContent={itemContent}
 				atTopThreshold={500}
 				followOutput={true}
@@ -282,7 +290,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 					width: "100%"
 				}}
 			/>
-		</>
+		</Fragment>
 	)
 })
 

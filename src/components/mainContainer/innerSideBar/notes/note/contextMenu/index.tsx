@@ -21,6 +21,7 @@ import { showSaveFilePicker } from "native-file-system-adapter"
 import striptags from "striptags"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
+import { ZipWriter } from "@zip.js/zip.js"
 
 export const ContextMenu = memo(
 	({
@@ -429,6 +430,91 @@ export const ContextMenu = memo(
 			}
 		}, [note.uuid, note.title, note.type, loadingToast, errorToast])
 
+		const exportAll = useCallback(async () => {
+			let toast: ReturnType<typeof loadingToast> | null = null
+
+			try {
+				const fileHandle = await showSaveFilePicker({
+					suggestedName: "Notes.zip"
+				})
+
+				const writer = await fileHandle.createWritable()
+				const zipWriter = new ZipWriter(writer, {
+					level: 0
+				})
+
+				toast = loadingToast()
+
+				const allNotes = await worker.listNotes()
+
+				await Promise.all(
+					allNotes.map(
+						n =>
+							new Promise<void>((resolve, reject) => {
+								worker
+									.fetchNoteContent({ uuid: n.uuid })
+									.then(({ content }) => {
+										if (n.type === "rich") {
+											content = striptags(content.split("<p><br></p>").join("\n"))
+										}
+
+										if (n.type === "checklist") {
+											const list: string[] = []
+											const ex = content
+												// eslint-disable-next-line quotes
+												.split('<ul data-checked="false">')
+												.join("")
+												// eslint-disable-next-line quotes
+												.split('<ul data-checked="true">')
+												.join("")
+												.split("\n")
+												.join("")
+												.split("<li>")
+
+											for (const listPoint of ex) {
+												const listPointEx = listPoint.split("</li>")
+
+												if (listPointEx[0].trim().length > 0) {
+													list.push(listPointEx[0].trim())
+												}
+											}
+
+											content = list.join("\n")
+										}
+
+										zipWriter
+											.add(`${n.title}.txt`, new Response(content).body!, {
+												lastModDate: new Date(),
+												lastAccessDate: new Date(),
+												creationDate: new Date()
+											})
+											.then(() => resolve())
+											.catch(reject)
+									})
+									.catch(reject)
+							})
+					)
+				)
+
+				await zipWriter.close()
+
+				writer.close()
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				if (toast) {
+					toast.dismiss()
+				}
+			}
+		}, [loadingToast, errorToast])
+
 		return (
 			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
@@ -557,6 +643,12 @@ export const ContextMenu = memo(
 						className="cursor-pointer"
 					>
 						{t("contextMenus.notes.export")}
+					</ContextMenuItem>
+					<ContextMenuItem
+						onClick={exportAll}
+						className="cursor-pointer"
+					>
+						{t("contextMenus.notes.exportAll")}
 					</ContextMenuItem>
 					<ContextMenuSeparator />
 					{!note.trash && !note.archive && (

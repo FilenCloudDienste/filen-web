@@ -12,7 +12,7 @@ import Tags from "./tags"
 export const Notes = memo(() => {
 	const { t } = useTranslation()
 	const navigate = useNavigate()
-	const { setNotes, search, setSearch } = useNotesStore()
+	const { setNotes, search, setSearch, setSelectedNote } = useNotesStore()
 
 	const createNote = useCallback(async () => {
 		try {
@@ -21,7 +21,13 @@ export const Notes = memo(() => {
 
 			setNotes(notes)
 
-			await new Promise<void>(resolve => setTimeout(resolve, 100))
+			const newNote = notes.filter(n => n.uuid === uuid)
+
+			if (newNote.length === 0) {
+				return
+			}
+
+			setSelectedNote(newNote[0])
 
 			navigate({
 				to: "/notes/$uuid",
@@ -32,7 +38,7 @@ export const Notes = memo(() => {
 		} catch (e) {
 			console.error(e)
 		}
-	}, [navigate, setNotes])
+	}, [navigate, setNotes, setSelectedNote])
 
 	const onChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
