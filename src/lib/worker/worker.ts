@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import SDK from "../sdk"
 import { type FilenSDKConfig, type FileMetadata, type FolderMetadata } from "@filen/sdk"
 import { type FileSystemFileHandle } from "native-file-system-adapter"
@@ -23,6 +25,8 @@ import { type Contact } from "@filen/sdk/dist/types/api/v3/contacts"
 import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/requests/in"
 import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/blocked"
 import { type UserAccountResponse } from "@filen/sdk/dist/types/api/v3/user/account"
+import axios, { type AxiosResponse } from "axios"
+import { workerCorsHeadCache, workerParseOGFromURLCache } from "@/cache"
 
 let isInitialized = false
 // We setup an eventEmitter first here in case we are running in the main thread.
@@ -1734,4 +1738,164 @@ export async function fetchUserAccount(): Promise<UserAccountResponse> {
 
 export async function chatConversationAddParticipant({ conversation, contact }: { conversation: string; contact: Contact }): Promise<void> {
 	return await SDK.chats().addParticipant({ conversation, contact })
+}
+
+export async function corsHead(url: string): Promise<Record<string, string>> {
+	if (workerCorsHeadCache.has(url)) {
+		return workerCorsHeadCache.get(url)!
+	}
+
+	try {
+		const response = await axios.head(url, {
+			timeout: 15000
+		})
+
+		if (typeof response.headers["content-type"] !== "string") {
+			throw new Error("Response type is not string: " + url)
+		}
+
+		workerCorsHeadCache.set(url, response.headers as Record<string, string>)
+
+		return response.headers as Record<string, string>
+	} catch {
+		// Noop
+	}
+
+	const response = await axios.head("https://gateway.filen.io/v3/cors?url=" + encodeURIComponent(url), {
+		timeout: 15000
+	})
+
+	if (typeof response.headers["content-type"] !== "string") {
+		throw new Error("Response type is not string: " + url)
+	}
+
+	workerCorsHeadCache.set(url, response.headers as Record<string, string>)
+
+	return response.headers as Record<string, string>
+}
+
+export async function corsGet(url: string): Promise<any> {
+	try {
+		const response = await axios.get(url, {
+			timeout: 15000
+		})
+
+		if (typeof response.headers["content-type"] !== "string") {
+			throw new Error("Response type is not string: " + url)
+		}
+
+		return response.data
+	} catch {
+		// Noop
+	}
+
+	const response = await axios.get("https://gateway.filen.io/v3/cors?url=" + encodeURIComponent(url), {
+		timeout: 15000
+	})
+
+	if (typeof response.headers["content-type"] !== "string") {
+		throw new Error("Response type is not string: " + url)
+	}
+
+	return response.data
+}
+
+export async function parseOGFromURL(url: string): Promise<Record<string, string>> {
+	if (workerParseOGFromURLCache.has(url)) {
+		return workerParseOGFromURLCache.get(url)!
+	}
+
+	let response: AxiosResponse<any, any>
+
+	try {
+		response = await axios.get("https://gateway.filen.io/v3/cors?url=" + encodeURIComponent(url), {
+			timeout: 15000
+		})
+
+		if (typeof response.headers["content-type"] !== "string" || response.headers["content-type"].split(";")[0].trim() !== "text/html") {
+			throw new Error("Response type is not text/html: " + url)
+		}
+	} catch {
+		// Noop
+	}
+
+	response = await axios.get("https://gateway.filen.io/v3/cors?url=" + encodeURIComponent(url), {
+		timeout: 15000
+	})
+
+	if (typeof response.headers["content-type"] !== "string" || response.headers["content-type"].split(";")[0].trim() !== "text/html") {
+		throw new Error("Response type is not text/html: " + url)
+	}
+
+	const metadata: Record<string, string> = {}
+	const ogTags = response.data.match(/<meta\s+property="og:([^"]+)"\s+content="([^"]+)"\s*\/?>/g)
+	const ogTags2 = response.data.match(/<meta\s+property='og:([^']+)'\s+content='([^']+)'\s*\/?>/g)
+
+	if (ogTags) {
+		ogTags.forEach((tag: any) => {
+			const [, property, content] = tag.match(/<meta\s+property="og:([^"]+)"\s+content="([^"]+)"\s*\/?>/)
+
+			if (typeof property === "string" && typeof content === "string") {
+				metadata["og:" + property] = content
+			}
+		})
+	}
+
+	if (ogTags2) {
+		ogTags2.forEach((tag: any) => {
+			const [, property, content] = tag.match(/<meta\s+property='og:([^']+)'\s+content='([^']+)'\s*\/?>/)
+
+			if (typeof property === "string" && typeof content === "string") {
+				metadata["og:" + property] = content
+			}
+		})
+	}
+
+	const otherTags = response.data.match(/<meta\s+name="([^"]+)"\s+content="([^"]+)"\s*\/?>/g)
+	const otherTags2 = response.data.match(/<meta\s+name='([^']+)'\s+content='([^']+)'\s*\/?>/g)
+
+	if (otherTags) {
+		otherTags.forEach((tag: any) => {
+			const [, name, content] = tag.match(/<meta\s+name="([^"]+)"\s+content="([^"]+)"\s*\/?>/)
+
+			if (typeof name === "string" && typeof content === "string") {
+				metadata["meta:" + name] = content
+			}
+		})
+	}
+
+	if (otherTags2) {
+		otherTags2.forEach((tag: any) => {
+			const [, name, content] = tag.match(/<meta\s+name='([^']+)'\s+content='([^']+)'\s*\/?>/)
+
+			if (typeof name === "string" && typeof content === "string") {
+				metadata["meta:" + name] = content
+			}
+		})
+	}
+
+	const titleMatch = response.data.match(/<title>([^<]+)<\/title>/)
+
+	if (titleMatch && titleMatch[1] && typeof titleMatch[1] === "string") {
+		metadata["title"] = titleMatch[1]
+	}
+
+	const faviconMatch = response.data.match(/<link\s+rel="icon"\s+href="([^"]+)"\s*\/?>/)
+	const faviconMatch2 = response.data.match(/<link\s+rel='icon'\s+href='([^"]+)'\s*\/?>/)
+
+	if (faviconMatch && faviconMatch[1] && typeof faviconMatch[1] === "string") {
+		metadata["favicon"] = faviconMatch[1]
+	}
+
+	if (faviconMatch2 && faviconMatch2[1] && typeof faviconMatch2[1] === "string") {
+		metadata["favicon"] = faviconMatch2[1]
+	}
+
+	workerParseOGFromURLCache.set(url, metadata)
+
+	return metadata
+}
+
+export async function chatDisableMessageEmbed({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.chats().disableMessageEmbed({ uuid })
 }

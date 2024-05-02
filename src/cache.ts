@@ -1,8 +1,13 @@
 import { keys, getItem } from "@/lib/localForage"
+import { type MessageDisplayType } from "./components/chats/conversation/message/utils"
 
 export const directorySizeCache = new Map<string, number>()
 export const directoryUUIDToNameCache = new Map<string, string>()
 export const thumbnailURLObjectCache = new Map<string, string>()
+export const chatDisplayMessageAsCache = new Map<string, Record<string, MessageDisplayType>>()
+export const chatOGDataCache = new Map<string, Record<string, Record<string, string>>>()
+export const workerCorsHeadCache = new Map<string, Record<string, string>>()
+export const workerParseOGFromURLCache = new Map<string, Record<string, string>>()
 
 /**
  * Warmup the cache.

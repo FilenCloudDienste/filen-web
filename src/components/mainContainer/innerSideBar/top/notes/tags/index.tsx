@@ -50,19 +50,19 @@ export const Tags = memo(() => {
 	return (
 		<div className="flex flex-row w-full h-auto p-4 flex-wrap gap-2">
 			<div
-				className={cn(tagClassName, activeTag === "all" ? "bg-secondary" : "")}
+				className={cn(tagClassName, activeTag === "all" && "bg-secondary")}
 				onClick={() => setActiveTag("all")}
 			>
 				{t("innerSideBar.notes.tags.all")}
 			</div>
 			<div
-				className={cn(tagClassName, activeTag === "favorites" ? "bg-secondary" : "")}
+				className={cn(tagClassName, activeTag === "favorites" && "bg-secondary")}
 				onClick={() => setActiveTag("favorites")}
 			>
 				{t("innerSideBar.notes.tags.favorites")}
 			</div>
 			<div
-				className={cn(tagClassName, activeTag === "pinned" ? "bg-secondary" : "")}
+				className={cn(tagClassName, activeTag === "pinned" && "bg-secondary")}
 				onClick={() => setActiveTag("pinned")}
 			>
 				{t("innerSideBar.notes.tags.pinned")}
@@ -75,11 +75,11 @@ export const Tags = memo(() => {
 						refetch={query.refetch}
 					>
 						<div
-							className={cn(tagClassName, activeTag === tag.name ? "bg-secondary" : "")}
+							className={cn(tagClassName, activeTag === tag.uuid && "bg-secondary")}
 							onClick={() => setActiveTag(tag.uuid)}
 						>
 							{tag.favorite && <Heart size={14} />}
-							<p>{tag.name}</p>
+							<p className="line-clamp-1 break-all text-ellipsis">{tag.name}</p>
 						</div>
 					</ContextMenu>
 				)

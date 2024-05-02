@@ -20,6 +20,7 @@ import { setItem } from "@/lib/localForage"
 import InputDialog from "@/components/dialogs/input"
 import { connect as socketConnect } from "@/lib/socket"
 import SelectContactsDialog from "@/components/dialogs/selectContacts"
+import TransparentFullScreenImageDialog from "@/components/dialogs/transparentFullScreenImage"
 
 export const persistantQueryClient = new QueryClient({
 	defaultOptions: {
@@ -133,6 +134,7 @@ export const Root = memo(() => {
 							<InputDialog />
 							<ConfirmDialog />
 							<SelectContactsDialog />
+							<TransparentFullScreenImageDialog />
 						</>
 					) : (
 						<Outlet />

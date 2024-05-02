@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { Emoji } from "emoji-mart"
 import { TooltipContent, Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Copy } from "lucide-react"
+import { validate as validateUUID } from "uuid"
 
 export const MENTION_REGEX = /(@[\w.-]+@[\w.-]+\.\w+|@everyone)/g
 export const customEmojisList = customEmojis.map(emoji => emoji.id)
@@ -307,7 +308,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 							return (
 								<p
 									key={index}
-									className="line-clamp-1 text-ellipsis break-all"
+									className="line-clamp-1 shrink-0"
 								>
 									@everyone
 								</p>
@@ -318,7 +319,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 							return (
 								<p
 									key={index}
-									className="line-clamp-1 text-ellipsis break-all"
+									className="line-clamp-1 shrink-0"
 								>
 									@UnknownUser
 								</p>
@@ -331,7 +332,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 							return (
 								<p
 									key={index}
-									className="line-clamp-1 text-ellipsis break-all"
+									className="line-clamp-1 shrink-0"
 								>
 									@UnknownUser
 								</p>
@@ -341,7 +342,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 						return (
 							<p
 								key={index}
-								className="line-clamp-1 text-ellipsis break-all"
+								className="line-clamp-1 shrink-0"
 							>
 								@{foundParticipant[0].nickName.length > 0 ? foundParticipant[0].nickName : foundParticipant[0].email}
 							</p>
@@ -354,7 +355,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 						return (
 							<p
 								key={index}
-								className="line-clamp-1 text-ellipsis break-all"
+								className="line-clamp-1 shrink-0"
 							>
 								{code}
 							</p>
@@ -365,7 +366,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 						return (
 							<p
 								key={index}
-								className="line-clamp-1 text-ellipsis break-all"
+								className="line-clamp-1 shrink-0"
 							>
 								{match}
 							</p>
@@ -376,7 +377,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 						return (
 							<p
 								key={index}
-								className="line-clamp-1 text-ellipsis break-all"
+								className="line-clamp-1 shrink-0"
 							>
 								&nbsp;
 							</p>
@@ -389,7 +390,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 						return (
 							<div
 								key={index}
-								className="flex flex-row line-clamp-1 text-ellipsis break-all"
+								className="flex flex-row shrink-0"
 							>
 								<EmojiElement
 									fallback={match}
@@ -406,7 +407,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 					return (
 						<div
 							key={index}
-							className="flex flex-row line-clamp-1 text-ellipsis break-all"
+							className="flex flex-row shrink-0"
 						>
 							<EmojiElement
 								fallback={match}
@@ -425,7 +426,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 		}, [content, participants])
 
 		return (
-			<div className="flex flex-row gap-1 line-clamp-1 text-ellipsis break-all">
+			<div className="flex flex-row overflow-hidden gap-1 line-clamp-1 text-ellipsis break-all">
 				{replaced.map((r, index) => {
 					if (typeof r === "string") {
 						if (r.length <= 0) {
@@ -433,23 +434,16 @@ export const ReplaceMessageWithComponentsInline = memo(
 						}
 
 						return (
-							<div
+							<p
 								key={index}
-								className="flex flex-row items-center line-clamp-1 text-ellipsis break-all"
+								className="shrink-0"
 							>
 								{r.trim()}
-							</div>
+							</p>
 						)
 					}
 
-					return (
-						<div
-							key={index}
-							className="flex flex-row items-center line-clamp-1 text-ellipsis break-all"
-						>
-							{r}
-						</div>
-					)
+					return r
 				})}
 			</div>
 		)
@@ -544,4 +538,98 @@ export function formatMessageDate(timestamp: number, t: TFunction<"translation",
 	}
 
 	return `${formatDate(thenDate)} ${formatTime(thenDate)}`
+}
+
+export function isMessageLink(message: string): boolean {
+	if (message.split(" ").length >= 2 || message.split("\n").length >= 2) {
+		return false
+	}
+
+	const trimmed = message.trim()
+
+	if (trimmed.indexOf("/localhost:") !== -1 && trimmed.startsWith("http://localhost:")) {
+		return true
+	}
+
+	const urlRegex =
+		/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+
+	return urlRegex.test(trimmed)
+}
+
+export type MessageDisplayType = "filenEmbed" | "youtubeEmbed" | "normal" | "xEmbed" | "og" | "image" | "audio" | "video" | "pdf" | "async"
+
+export function getMessageDisplayType(message: string): MessageDisplayType {
+	const isLink = isMessageLink(message)
+
+	if (!isLink) {
+		return "normal"
+	}
+
+	if (
+		message.includes("/youtube.com/watch") ||
+		message.includes("/youtube.com/embed") ||
+		message.includes("/www.youtube.com/watch") ||
+		message.includes("/www.youtube.com/embed") ||
+		message.includes("/youtu.be/") ||
+		message.includes("/www.youtu.be/")
+	) {
+		return "youtubeEmbed"
+	} else if (
+		(message.includes("/localhost:") ||
+			message.includes("/filen.io/") ||
+			message.includes("/drive.filen.io/") ||
+			message.includes("/drive.filen.dev/") ||
+			message.includes("/www.filen.io/")) &&
+		message.includes("/d/")
+	) {
+		return "filenEmbed"
+	} else if (
+		((message.includes("/www.twitter.com/") || message.includes("/twitter.com/")) && message.includes("/status/")) ||
+		((message.includes("/www.x.com/") || message.includes("/x.com/")) && message.includes("/status/"))
+	) {
+		return "xEmbed"
+	}
+
+	return "async"
+}
+
+export function parseYouTubeVideoId(url: string): string | null {
+	const regExp = /(?:\?v=|\/embed\/|\/watch\?v=|\/\w+\/\w+\/|youtu.be\/)([\w-]{11})/
+	const match = url.match(regExp)
+
+	if (match && match.length === 2) {
+		return match[1]
+	}
+
+	return null
+}
+
+export function parseFilenPublicLink(url: string): {
+	uuid: string
+	key: string
+} {
+	const ex = url.split("/")
+	const uuid = ex.map(part => part.split("#")[0].trim()).filter(part => validateUUID(part))
+	const keyEx = url.split("#")
+
+	return {
+		uuid: uuid.length > 0 ? uuid[0] : "",
+		key: url.indexOf("#") !== -1 ? keyEx[1].trim() : ""
+	}
+}
+
+export function extractLinksFromString(input: string): string[] {
+	const urlRegex =
+		/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+
+	const matches = input.match(urlRegex)
+
+	return matches || []
+}
+
+export function parseXStatusIdFromURL(url: string): string {
+	const ex = url.split("/")
+
+	return ex[ex.length - 1].trim()
 }

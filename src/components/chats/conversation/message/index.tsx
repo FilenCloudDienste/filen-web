@@ -6,7 +6,10 @@ import {
 	isTimestampSameMinute,
 	MENTION_REGEX,
 	formatMessageDate,
-	ReplaceMessageWithComponentsInline
+	ReplaceMessageWithComponentsInline,
+	getMessageDisplayType,
+	type MessageDisplayType,
+	extractLinksFromString
 } from "./utils"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import Avatar from "@/components/avatar"
@@ -16,6 +19,33 @@ import { cn } from "@/lib/utils"
 import eventEmitter from "@/lib/eventEmitter"
 import { type TFunction } from "i18next"
 import { Reply, MoreHorizontal, Edit } from "lucide-react"
+import useMountedEffect from "@/hooks/useMountedEffect"
+import worker from "@/lib/worker"
+import YouTube from "./embeds/youTube"
+import X from "./embeds/x"
+import Image from "./embeds/image"
+import OG from "./embeds/og"
+import Async from "./embeds/async"
+import { chatDisplayMessageAsCache, chatOGDataCache } from "@/cache"
+
+export const EMBED_CONTENT_TYPES_IMAGES = [
+	"image/png",
+	"image/jpeg",
+	"image/jpg",
+	"image/gif",
+	"image/svg",
+	"image/gifv",
+	"image/webp",
+	"image/svg+xml",
+	"image/bmp",
+	"image/tiff",
+	"image/vnd.microsoft.icon",
+	"image/x-icon",
+	"image/jp2",
+	"image/jpx",
+	"image/x-xbitmap",
+	"image/avif"
+]
 
 export const DateDivider = memo(({ timestamp }: { timestamp: number }) => {
 	return (
@@ -27,7 +57,7 @@ export const DateDivider = memo(({ timestamp }: { timestamp: number }) => {
 	)
 })
 
-export const NewDivider = memo(() => {
+export const NewDivider = memo(({ t }: { t: TFunction<"translation", undefined> }) => {
 	const markAsRead = useCallback(() => {
 		eventEmitter.emit("chatMarkAsRead")
 	}, [])
@@ -39,7 +69,7 @@ export const NewDivider = memo(() => {
 				className="text-sm text-muted-foreground break-keep px-2 whitespace-nowrap bg-red-500 rounded-md text-white cursor-pointer"
 				onClick={markAsRead}
 			>
-				NEW
+				{t("new")}
 			</p>
 		</div>
 	)
@@ -110,6 +140,16 @@ export const Message = memo(
 	}) => {
 		const [hovering, setHovering] = useState<boolean>(false)
 		const ref = useRef<HTMLDivElement>(null)
+		const links = useRef<string[]>(extractLinksFromString(message.message)).current
+		const initialDisplayAs = useRef<Record<string, MessageDisplayType>>(
+			chatDisplayMessageAsCache.has(message.uuid)
+				? chatDisplayMessageAsCache.get(message.uuid)!
+				: links.reduce((obj, link) => ({ ...obj, [link]: getMessageDisplayType(link) }), {})
+		).current
+		const [displayAs, setDisplayAs] = useState<Record<string, MessageDisplayType>>(initialDisplayAs)
+		const [ogData, setOGData] = useState<Record<string, Record<string, string>>>(
+			chatOGDataCache.has(message.uuid) ? chatOGDataCache.get(message.uuid)! : {}
+		)
 
 		const groupWithPrevMessage = useMemo((): boolean => {
 			if (!prevMessage) {
@@ -201,6 +241,73 @@ export const Message = memo(
 			eventEmitter.emit("chatInputWriteText", message.message)
 		}, [message.uuid, setEditUUID, message.message, setReplyMessage])
 
+		useMountedEffect(() => {
+			;(async () => {
+				for (const link of links) {
+					if (initialDisplayAs[link] !== "async") {
+						return
+					}
+
+					try {
+						const headers = await worker.corsHead(link)
+
+						if (typeof headers["content-type"] !== "string") {
+							return
+						}
+
+						const contentType = headers["content-type"].split(";")[0].trim()
+
+						if (EMBED_CONTENT_TYPES_IMAGES.includes(contentType)) {
+							setDisplayAs(prev => ({ ...prev, [link]: "image" }))
+
+							return
+						}
+
+						if (["audio/mp3"].includes(contentType)) {
+							setDisplayAs(prev => ({ ...prev, [link]: "audio" }))
+
+							return
+						}
+
+						if (["video/mp4"].includes(contentType)) {
+							setDisplayAs(prev => ({ ...prev, [link]: "video" }))
+
+							return
+						}
+
+						if (["application/pdf"].includes(contentType)) {
+							setDisplayAs(prev => ({ ...prev, [link]: "pdf" }))
+
+							return
+						}
+
+						if (contentType === "text/html") {
+							const og = await worker.parseOGFromURL(link)
+
+							setOGData(prev => ({ ...prev, [link]: og }))
+							setDisplayAs(prev => ({ ...prev, [link]: "og" }))
+
+							return
+						}
+					} catch (e) {
+						console.error(e)
+					}
+
+					setDisplayAs(prev => ({ ...prev, [link]: "normal" }))
+				}
+			})()
+		})
+
+		useEffect(() => {
+			if (Object.keys(displayAs).length > 0) {
+				chatDisplayMessageAsCache.set(message.uuid, displayAs)
+			}
+
+			if (Object.keys(ogData).length > 0) {
+				chatOGDataCache.set(message.uuid, ogData)
+			}
+		}, [displayAs, message.uuid, ogData])
+
 		return (
 			<>
 				{!prevMessage && <div className="flex flex-row p-1 px-5 gap-4">end to end encrypted chat</div>}
@@ -213,7 +320,7 @@ export const Message = memo(
 				)}
 				{message.sentTimestamp > lastFocus &&
 					message.senderId !== userId &&
-					!(prevMessage && prevMessage.sentTimestamp > lastFocus) && <NewDivider />}
+					!(prevMessage && prevMessage.sentTimestamp > lastFocus) && <NewDivider t={t} />}
 				{(!prevMessageSameDay || !prevMessage) && <DateDivider timestamp={message.sentTimestamp} />}
 				<TooltipProvider delayDuration={0}>
 					<Tooltip>
@@ -254,11 +361,12 @@ export const Message = memo(
 												<div className="flex flex-row gap-2 text-muted-foreground text-sm items-center">
 													<Reply
 														size={16}
-														className="scale-x-[-1]"
+														className="scale-x-[-1] shrink-0"
 													/>
 													<Avatar
 														src={message.replyTo.senderAvatar}
 														size={16}
+														className="shrink-0"
 													/>
 													<p className="shrink-0">
 														{message.replyTo.senderNickName.length > 0
@@ -290,6 +398,66 @@ export const Message = memo(
 													t={t}
 												/>
 											</div>
+											{links.length > 0 && !message.embedDisabled && (
+												<div className="flex flex-col mt-1">
+													{Object.keys(displayAs).map((link, index) => {
+														const dAs = displayAs[link]
+
+														if (dAs === "youtubeEmbed") {
+															return (
+																<YouTube
+																	link={link}
+																	key={index}
+																	messageUUID={message.uuid}
+																/>
+															)
+														}
+
+														if (dAs === "xEmbed") {
+															return (
+																<X
+																	link={link}
+																	key={index}
+																	messageUUID={message.uuid}
+																/>
+															)
+														}
+
+														if (dAs === "image") {
+															return (
+																<Image
+																	link={link}
+																	key={index}
+																	messageUUID={message.uuid}
+																/>
+															)
+														}
+
+														if (dAs === "og") {
+															return (
+																<OG
+																	link={link}
+																	key={index}
+																	messageUUID={message.uuid}
+																	ogData={ogData[link] ?? {}}
+																/>
+															)
+														}
+
+														if (dAs === "async") {
+															return (
+																<Async
+																	link={link}
+																	key={index}
+																	messageUUID={message.uuid}
+																/>
+															)
+														}
+
+														return null
+													})}
+												</div>
+											)}
 										</div>
 									</div>
 								</ContextMenu>
