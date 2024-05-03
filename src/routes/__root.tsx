@@ -128,17 +128,17 @@ export const Root = memo(() => {
 									<Outlet />
 								</DragSelect>
 							</DropZone>
-							<Transfers />
 							<SelectDriveDestinationDialog />
-							<PreviewDialog />
-							<InputDialog />
-							<ConfirmDialog />
 							<SelectContactsDialog />
-							<TransparentFullScreenImageDialog />
 						</>
 					) : (
 						<Outlet />
 					)}
+					<Transfers />
+					<PreviewDialog />
+					<InputDialog />
+					<ConfirmDialog />
+					<TransparentFullScreenImageDialog />
 					<Toaster />
 				</PersistQueryClientProvider>
 			</ThemeProvider>
