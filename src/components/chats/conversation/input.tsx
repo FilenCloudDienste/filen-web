@@ -282,6 +282,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			)
 
 			eventEmitter.emit("chatMarkAsRead")
+			eventEmitter.emit("scrollChatToBottom")
 
 			clearTimeout(typingEventTimeout.current)
 			clearEditor()
@@ -352,6 +353,9 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			focusEditor()
 			setEditUUID("")
 			setReplyMessage(null)
+
+			eventEmitter.emit("chatMarkAsRead")
+			eventEmitter.emit("scrollChatToBottom")
 
 			await Promise.all([
 				worker.sendChatTyping({ conversation: conversation.uuid, type: "up" }),

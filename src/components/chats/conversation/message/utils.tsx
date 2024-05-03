@@ -208,7 +208,7 @@ export const ReplaceMessageWithComponents = memo(
 								key={index}
 								style={{
 									height: 5,
-									width: "100%",
+									width: "200vw",
 									flexBasis: "100%"
 								}}
 							/>
@@ -259,7 +259,7 @@ export const ReplaceMessageWithComponents = memo(
 		}, [content, participants, copy])
 
 		return (
-			<div className={cn("flex flex-row flex-wrap gap-1", failed && "text-red-500")}>
+			<div className={cn("flex flex-row flex-wrap gap-1 w-full h-auto", failed && "text-red-500")}>
 				{replaced.map((r, index) => {
 					if (typeof r === "string") {
 						if (r.length <= 0) {

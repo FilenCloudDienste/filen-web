@@ -16,6 +16,7 @@ import MarkAsRead from "./markAsRead"
 import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
 import useRouteParent from "@/hooks/useRouteParent"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Messages = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const windowSize = useWindowSize()
@@ -152,6 +153,18 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		]
 	)
 
+	const scrollChatToBottom = useCallback(() => {
+		if (!virtuosoRef.current) {
+			return
+		}
+
+		virtuosoRef.current.scrollIntoView({
+			align: "end",
+			behavior: "auto",
+			index: 99
+		})
+	}, [])
+
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
 			try {
@@ -254,10 +267,35 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)
 
+		const scrollChatToBottomListener = eventEmitter.on("scrollChatToBottom", () => {
+			scrollChatToBottom()
+		})
+
 		return () => {
 			socket.removeListener("socketEvent", socketEventListener)
+
+			scrollChatToBottomListener.remove()
 		}
-	}, [socketEventListener])
+	}, [socketEventListener, scrollChatToBottom])
+
+	useEffect(() => {
+		const scrollDownInterval = setInterval(() => {
+			if (!virtuosoRef.current) {
+				return
+			}
+
+			scrollChatToBottom()
+		}, 10)
+
+		const scrollDownIntervalCancel = setTimeout(() => {
+			clearInterval(scrollDownInterval)
+		}, 300)
+
+		return () => {
+			clearInterval(scrollDownInterval)
+			clearTimeout(scrollDownIntervalCancel)
+		}
+	}, [conversation.uuid, scrollChatToBottom])
 
 	return (
 		<Fragment key={`messages-${conversation.uuid}`}>

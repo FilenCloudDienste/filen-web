@@ -49,10 +49,10 @@ export const OG = memo(({ link, messageUUID, ogData }: { link: string; messageUU
 				{image ? (
 					<img
 						src={image}
-						className="w-full h-[200px] object-contain cursor-pointer rounded-md shadow-sm mt-2 bg-primary-foreground p-4"
+						className="w-full h-[130px] object-contain cursor-pointer rounded-md shadow-sm mt-2 bg-primary-foreground p-4"
 					/>
 				) : (
-					<div className="flex flex-row items-center justify-center bg-primary-foreground w-full h-[200px] mt-2 rounded-md shadow-sm">
+					<div className="flex flex-row items-center justify-center bg-primary-foreground w-full h-[130px] mt-2 rounded-md shadow-sm">
 						<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("chat.embeds.og.noImageAvailable")}</p>
 					</div>
 				)}

@@ -356,7 +356,7 @@ export const Message = memo(
 												/>
 											</div>
 										)}
-										<div className={cn("flex flex-col", !groupWithPrevMessage ? "gap-[1px]" : "")}>
+										<div className={cn("flex flex-col w-full h-auto", !groupWithPrevMessage ? "gap-[1px]" : "")}>
 											{message.replyTo && message.replyTo.uuid && (
 												<div className="flex flex-row gap-2 text-muted-foreground text-sm items-center">
 													<Reply
@@ -389,7 +389,7 @@ export const Message = memo(
 													/>
 												</div>
 											)}
-											<div className="flex flex-row">
+											<div className="flex flex-row w-full h-auto">
 												<ReplaceMessageWithComponents
 													content={message.message}
 													participants={conversation.participants}
@@ -399,7 +399,7 @@ export const Message = memo(
 												/>
 											</div>
 											{links.length > 0 && !message.embedDisabled && (
-												<div className="flex flex-col mt-1">
+												<div className="flex flex-col mt-1 gap-2">
 													{Object.keys(displayAs).map((link, index) => {
 														const dAs = displayAs[link]
 
@@ -466,7 +466,7 @@ export const Message = memo(
 						<TooltipContent
 							side="top"
 							align="end"
-							className="mb-[-15px] p-0 flex flex-row"
+							className="mb-[-15px] p-0 flex flex-row z-[100]"
 						>
 							<div
 								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"

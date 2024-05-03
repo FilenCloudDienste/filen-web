@@ -59,7 +59,7 @@ export const Container = memo(
 		return (
 			<div
 				className={
-					"flex flex-col w-[640px] h-[360px] bg-secondary rounded-md shadow-sm border-l-[3px] border-l-" +
+					"flex flex-col w-[512px] h-[288px] bg-secondary rounded-md shadow-sm border-l-[3px] border-l-" +
 					color +
 					"-500 p-3 pt-2 gap-1"
 				}
@@ -67,7 +67,7 @@ export const Container = memo(
 				onMouseLeave={onMouseLeave}
 			>
 				<div
-					className="absolute ml-[630px] mt-[-10px] w-[10px] h-[200px]"
+					className="absolute ml-[500px] mt-[-10px] w-[10px] h-[200px]"
 					onMouseEnter={onMouseEnter}
 					onMouseLeave={onMouseLeave}
 				>
@@ -91,7 +91,7 @@ export const Container = memo(
 					className={cn(
 						"flex flex-col w-full mt-[4px] rounded-md shadow-sm overflow-x-hidden overflow-y-auto",
 						!noBackground && "bg-primary-foreground",
-						title ? "h-[280px]" : "h-[310px]"
+						title ? "h-[210px]" : "h-[240px]"
 					)}
 				>
 					{children}

@@ -67,14 +67,14 @@ export const YouTube = memo(({ link, messageUUID }: { link: string; messageUUID:
 					<div
 						className={cn(
 							"absolute z-50 cursor-pointer",
-							imgDimensions.width ? `w-[${imgDimensions.width}px]` : "w-[613px]",
-							imgDimensions.height ? `h-[${imgDimensions.height}px]` : "h-[280px]"
+							imgDimensions.width ? `w-[${imgDimensions.width}px]` : "w-[485px]",
+							imgDimensions.height ? `h-[${imgDimensions.height}px]` : "h-[210px]"
 						)}
 						onClick={onPlayClick}
 					>
 						<div className="flex flex-row items-center justify-center w-full h-full">
 							<div className="cursor-pointer bg-[rgba(1,1,1,0.6)] rounded-full p-1">
-								<PlayCircle size={30} />
+								<PlayCircle size={40} />
 							</div>
 						</div>
 					</div>
