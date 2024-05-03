@@ -2,20 +2,20 @@ export default function quillStyle() {
 	return `
         .ql-container {
             font-size: 16px;
-            font-family: "Inconsolata";
+            /*font-family: "Inconsolata";*/
             font-weight: 400;
         }
 
         .ql-editor {
             user-select: text;
-            font-family: "Inter", sans-serif;
+            /*font-family: "Inter", sans-serif;*/
         }
 
         .ql-toolbar.ql-snow {
             border: none;
             border-bottom: 1px solid hsl(var(--border));
             font-size: 16px;
-            font-family: "Inter", sans-serif;
+            /*font-family: "Inter", sans-serif;*/
             font-weight: 400;
         }
 
@@ -40,7 +40,7 @@ export default function quillStyle() {
         }
 
         .ql-formats > button:hover {
-            color: lightblue;
+            color: #3B82F6;
         }
 
         .ql-container.ql-snow {
@@ -56,7 +56,7 @@ export default function quillStyle() {
             padding: 5px 12px;
             white-space: nowrap;
             font-size: 16px;
-            font-family: "Inter", sans-serif;
+            /*font-family: "Inter", sans-serif;*/
         }
 
         .ql-snow .ql-editor blockquote {
@@ -77,7 +77,7 @@ export default function quillStyle() {
         }
 
         .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:focus, .ql-snow .ql-toolbar button:focus, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-            color: lightblue;
+            color: #3B82F6;
         }
 
         .ql-snow.ql-toolbar button:hover,
@@ -94,7 +94,7 @@ export default function quillStyle() {
         .ql-snow .ql-toolbar .ql-picker-item:hover,
         .ql-snow.ql-toolbar .ql-picker-item.ql-selected,
         .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-            color: lightblue;
+            color: #3B82F6;
         }
 
         .ql-snow.ql-toolbar button:hover .ql-fill,
@@ -125,7 +125,7 @@ export default function quillStyle() {
         .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill,
         .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill,
         .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
-            fill: lightblue;
+            fill: #3B82F6;
         }
 
         .ql-snow.ql-toolbar button:hover .ql-stroke,
@@ -175,7 +175,7 @@ export default function quillStyle() {
         }
 
         .ql-snow a {
-            color: blue;
+            color: #3B82F6;
         }
 
         .ql-snow a:hover {
@@ -206,12 +206,12 @@ export default function quillStyle() {
             display: inline-block;
             width: 18px;
             height: 18px;
-            border: 1px solid lightblue;
+            border: 1px solid #3B82F6;
             border-radius: 50%;
             margin-right: 0.5em;
             text-align: center;
             line-height: 17px;
-            background-color: lightblue;
+            background-color: #3B82F6;
         }
 
         .ql-editor ul[data-checked=false] > li {
