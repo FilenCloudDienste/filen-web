@@ -53,6 +53,12 @@ export const InnerSideBar = memo(() => {
 				{location.includes("settings") && (
 					<>
 						<Button uuid="settings/general" />
+						<Button uuid="settings/account" />
+						<Button uuid="settings/security" />
+						<Button uuid="settings/subscriptions" />
+						<Button uuid="settings/invoices" />
+						<Button uuid="settings/events" />
+						<Button uuid="settings/invite" />
 					</>
 				)}
 				{location.includes("notes") && <Notes />}

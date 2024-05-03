@@ -90,13 +90,15 @@ export const ReplaceMessageWithComponents = memo(
 			return regexifyString({
 				pattern: messageContentRegex,
 				decorator: (match, index) => {
+					const key = `${match}:${index}`
+
 					if (match.startsWith("@") && (match.split("@").length === 3 || match.startsWith("@everyone"))) {
 						const email = match.slice(1).trim()
 
 						if (email === "everyone") {
 							return (
 								<div
-									key={index}
+									key={key}
 									className="bg-indigo-500 rounded-sm p-[1px] px-1 shadow-sm"
 								>
 									<p>@everyone</p>
@@ -107,7 +109,7 @@ export const ReplaceMessageWithComponents = memo(
 						if (!email.includes("@")) {
 							return (
 								<div
-									key={index}
+									key={key}
 									className="bg-indigo-500 rounded-sm p-[1px] px-1 shadow-sm"
 								>
 									<p>@UnknownUser</p>
@@ -120,7 +122,7 @@ export const ReplaceMessageWithComponents = memo(
 						if (foundParticipant.length === 0) {
 							return (
 								<div
-									key={index}
+									key={key}
 									className="bg-indigo-500 rounded-sm p-[1px] px-1 shadow-sm"
 								>
 									<p>@UnknownUser</p>
@@ -130,7 +132,7 @@ export const ReplaceMessageWithComponents = memo(
 
 						return (
 							<div
-								key={index}
+								key={key}
 								className="bg-indigo-500 rounded-sm p-[1px] px-1 cursor-pointer shadow-sm"
 							>
 								<p>@{foundParticipant[0].nickName.length > 0 ? foundParticipant[0].nickName : foundParticipant[0].email}</p>
@@ -152,7 +154,7 @@ export const ReplaceMessageWithComponents = memo(
 						return (
 							<TooltipProvider
 								delayDuration={100}
-								key={index}
+								key={key}
 							>
 								<Tooltip>
 									<TooltipTrigger asChild={true}>
@@ -183,7 +185,7 @@ export const ReplaceMessageWithComponents = memo(
 					if (linkRegex.test(match) && (match.startsWith("https://") || match.startsWith("http://"))) {
 						return (
 							<div
-								key={index}
+								key={key}
 								style={{
 									flexDirection: "row",
 									alignItems: "center",
@@ -205,7 +207,7 @@ export const ReplaceMessageWithComponents = memo(
 					if (match.includes("\n")) {
 						return (
 							<div
-								key={index}
+								key={key}
 								style={{
 									height: 5,
 									width: "200vw",
@@ -220,7 +222,7 @@ export const ReplaceMessageWithComponents = memo(
 					if (customEmojisList.includes(customEmoji) && customEmojisListRecord[customEmoji]) {
 						return (
 							<div
-								key={index}
+								key={key}
 								className="flex flex-row cursor-default"
 								title={match}
 							>
@@ -238,7 +240,7 @@ export const ReplaceMessageWithComponents = memo(
 
 					return (
 						<div
-							key={index}
+							key={key}
 							className="flex flex-row cursor-default"
 							title={match}
 						>
@@ -301,13 +303,15 @@ export const ReplaceMessageWithComponentsInline = memo(
 			return regexifyString({
 				pattern: messageContentRegex,
 				decorator: (match, index) => {
+					const key = `${match}:${index}`
+
 					if (match.startsWith("@") && (match.split("@").length === 3 || match.startsWith("@everyone"))) {
 						const email = match.slice(1).trim()
 
 						if (email === "everyone") {
 							return (
 								<p
-									key={index}
+									key={key}
 									className="line-clamp-1 shrink-0"
 								>
 									@everyone
@@ -318,7 +322,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 						if (!email.includes("@")) {
 							return (
 								<p
-									key={index}
+									key={key}
 									className="line-clamp-1 shrink-0"
 								>
 									@UnknownUser
@@ -331,7 +335,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 						if (foundParticipant.length === 0) {
 							return (
 								<p
-									key={index}
+									key={key}
 									className="line-clamp-1 shrink-0"
 								>
 									@UnknownUser
@@ -341,7 +345,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 
 						return (
 							<p
-								key={index}
+								key={key}
 								className="line-clamp-1 shrink-0"
 							>
 								@{foundParticipant[0].nickName.length > 0 ? foundParticipant[0].nickName : foundParticipant[0].email}
@@ -354,7 +358,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 
 						return (
 							<p
-								key={index}
+								key={key}
 								className="line-clamp-1 shrink-0"
 							>
 								{code}
@@ -365,7 +369,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 					if (linkRegex.test(match) && (match.startsWith("https://") || match.startsWith("http://"))) {
 						return (
 							<p
-								key={index}
+								key={key}
 								className="line-clamp-1 shrink-0"
 							>
 								{match}
@@ -376,7 +380,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 					if (match.includes("\n")) {
 						return (
 							<p
-								key={index}
+								key={key}
 								className="line-clamp-1 shrink-0"
 							>
 								&nbsp;
@@ -389,7 +393,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 					if (customEmojisList.includes(customEmoji) && customEmojisListRecord[customEmoji]) {
 						return (
 							<div
-								key={index}
+								key={key}
 								className="flex flex-row shrink-0"
 							>
 								<EmojiElement
@@ -406,7 +410,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 
 					return (
 						<div
-							key={index}
+							key={key}
 							className="flex flex-row shrink-0"
 						>
 							<EmojiElement

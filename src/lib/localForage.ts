@@ -14,6 +14,6 @@ export const store = localForage.createInstance({
 store.defineDriver(memoryStorageDriver).catch(console.error)
 store.setDriver([store.INDEXEDDB, memoryStorageDriver._driver]).catch(console.error)
 
-export const { keys, getItem, setDriver, setItem, supports, getSerializer, getDriver, ready, removeItem } = store
+export const { keys, getItem, setDriver, setItem, supports, getSerializer, getDriver, ready, removeItem, clear } = store
 
 export default store

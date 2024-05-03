@@ -497,8 +497,7 @@ export const ContextMenu = memo(
 				)
 
 				await zipWriter.close()
-
-				writer.close()
+				await writer.close()
 			} catch (e) {
 				console.error(e)
 

@@ -10,12 +10,12 @@ export const TransfersProgress = memo(() => {
 	}
 
 	return (
-		<div className="absolute w-[50px] h-[50px]">
+		<div className="absolute w-[44px] h-[44px] text-blue-500">
 			<FlatCircularProgress
 				progress={progress}
 				showValue={false}
 				sx={{
-					strokeColor: "green",
+					strokeColor: "rgb(59 130 246 / var(--tw-text-opacity))",
 					barWidth: 8,
 					bgStrokeColor: "transparent",
 					bgColor: { value: "#000000", transparency: "10" },

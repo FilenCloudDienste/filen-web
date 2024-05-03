@@ -97,7 +97,13 @@
 		"favorites": "Favorites",
 		"trash": "Trash",
 		"settings": {
-			"general": "General"
+			"general": "General",
+			"invoices": "Invoices",
+			"subscriptions": "Subscriptions",
+			"account": "Account",
+			"events": "Events",
+			"security": "Security",
+			"invite": "Invite"
 		},
 		"contacts": {
 			"online": "Online",
@@ -233,5 +239,14 @@
 	"contacts": {
 		"addContact": "Add contact",
 		"search": "Search..."
+	},
+	"settings": {
+		"general": {
+			"storageUsed": "Storage used",
+			"files": "Files {{size}}",
+			"versionedFiles": "Versioned files {{size}}",
+			"free": "Free {{size}}",
+			"used": "{{used}} of {{max}} used"
+		}
 	}
 }

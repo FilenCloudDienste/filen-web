@@ -23,7 +23,13 @@ import {
 	CloudOff,
 	XCircle,
 	Mail,
-	Send
+	Send,
+	CalendarClock,
+	Shield,
+	Gem,
+	Wallet,
+	User2,
+	UserPlus
 } from "lucide-react"
 import useLocation from "@/hooks/useLocation"
 import { useContactsStore } from "@/stores/contacts.store"
@@ -61,8 +67,8 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				params={link.params}
 				draggable={false}
 				className={cn(
-					"flex flex-row gap-3 w-full px-3 py-2 rounded-md transition-all items-center hover:bg-accent text-primary cursor-pointer",
-					routeParent === uuid || location === `/${uuid}` ? "bg-accent" : "bg-transparent"
+					"flex flex-row gap-3 w-full px-3 py-2 rounded-md transition-all items-center hover:bg-secondary text-primary cursor-pointer",
+					routeParent === uuid || location === `/${uuid}` ? "bg-secondary" : "bg-transparent"
 				)}
 			>
 				{uuid === baseFolderUUID && (
@@ -169,6 +175,42 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 					<>
 						<Send size={iconSize} />
 						<p>{t("innerSideBar.contacts.out")}</p>
+					</>
+				)}
+				{uuid === "settings/account" && (
+					<>
+						<User2 size={iconSize} />
+						<p>{t("innerSideBar.settings.account")}</p>
+					</>
+				)}
+				{uuid === "settings/security" && (
+					<>
+						<Shield size={iconSize} />
+						<p>{t("innerSideBar.settings.security")}</p>
+					</>
+				)}
+				{uuid === "settings/subscriptions" && (
+					<>
+						<Gem size={iconSize} />
+						<p>{t("innerSideBar.settings.subscriptions")}</p>
+					</>
+				)}
+				{uuid === "settings/invoices" && (
+					<>
+						<Wallet size={iconSize} />
+						<p>{t("innerSideBar.settings.invoices")}</p>
+					</>
+				)}
+				{uuid === "settings/events" && (
+					<>
+						<CalendarClock size={iconSize} />
+						<p>{t("innerSideBar.settings.events")}</p>
+					</>
+				)}
+				{uuid === "settings/invite" && (
+					<>
+						<UserPlus size={iconSize} />
+						<p>{t("innerSideBar.settings.invite")}</p>
 					</>
 				)}
 			</Link>

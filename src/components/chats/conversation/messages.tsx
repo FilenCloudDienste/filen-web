@@ -30,6 +30,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	const isFetchingPreviousMessagesRef = useRef<boolean>(false)
 	const errorToast = useErrorToast()
 	const routeParent = useRouteParent()
+	const lastConversationUUID = useRef<string>("")
 
 	const virtuosoHeight = useMemo(() => {
 		return inputContainerDimensions.height > 0
@@ -113,28 +114,22 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	const itemContent = useCallback(
 		(index: number, message: ChatMessage) => {
 			return (
-				<div
+				<Message
 					key={getItemKey(index, message)}
-					style={{
-						overflowAnchor: "none"
-					}}
-				>
-					<Message
-						conversation={conversation}
-						message={message}
-						prevMessage={messages[index - 1]}
-						nextMessage={messages[index + 1]}
-						userId={userId}
-						isScrolling={isScrolling}
-						lastFocus={lastFocus}
-						t={t}
-						failedMessages={failedMessages}
-						editUUID={editUUID}
-						replyUUID={replyMessage ? replyMessage.uuid : ""}
-						setReplyMessage={setReplyMessage}
-						setEditUUID={setEditUUID}
-					/>
-				</div>
+					conversation={conversation}
+					message={message}
+					prevMessage={messages[index - 1]}
+					nextMessage={messages[index + 1]}
+					userId={userId}
+					isScrolling={isScrolling}
+					lastFocus={lastFocus}
+					t={t}
+					failedMessages={failedMessages}
+					editUUID={editUUID}
+					replyUUID={replyMessage ? replyMessage.uuid : ""}
+					setReplyMessage={setReplyMessage}
+					setEditUUID={setEditUUID}
+				/>
 			)
 		},
 		[
@@ -153,17 +148,20 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		]
 	)
 
-	const scrollChatToBottom = useCallback(() => {
-		if (!virtuosoRef.current) {
-			return
-		}
+	const scrollChatToBottom = useCallback(
+		(behavior: "auto" | "smooth" = "auto") => {
+			if (!virtuosoRef.current) {
+				return
+			}
 
-		virtuosoRef.current.scrollIntoView({
-			align: "end",
-			behavior: "auto",
-			index: 99
-		})
-	}, [])
+			virtuosoRef.current.scrollIntoView({
+				align: "end",
+				behavior,
+				index: messagesSorted.length > 0 ? messagesSorted.length - 1 : 99
+			})
+		},
+		[messagesSorted.length]
+	)
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
@@ -174,11 +172,12 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 					}
 
 					const key = await worker.chatKey({ conversation: conversation.uuid })
-					const message = await worker.decryptChatMessage({ message: event.data.message, key })
-					const replyToMessageDecrypted =
+					const [message, replyToMessageDecrypted] = await Promise.all([
+						worker.decryptChatMessage({ message: event.data.message, key }),
 						event.data.replyTo.uuid.length > 0 && event.data.replyTo.message.length > 0
-							? await worker.decryptChatMessage({ message: event.data.replyTo.message, key })
-							: ""
+							? worker.decryptChatMessage({ message: event.data.replyTo.message, key })
+							: Promise.resolve("")
+					])
 
 					if (message.length === 0) {
 						return
@@ -261,14 +260,18 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 					...prev.filter(m => !previousMessagesUUIDs.includes(m.uuid) && m.conversation === routeParent)
 				]
 			})
+
+			setTimeout(() => {
+				scrollChatToBottom()
+			}, 100)
 		}
-	}, [query.isSuccess, query.data, query.dataUpdatedAt, setMessages, routeParent])
+	}, [query.isSuccess, query.data, query.dataUpdatedAt, setMessages, routeParent, scrollChatToBottom])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)
 
-		const scrollChatToBottomListener = eventEmitter.on("scrollChatToBottom", () => {
-			scrollChatToBottom()
+		const scrollChatToBottomListener = eventEmitter.on("scrollChatToBottom", behavior => {
+			scrollChatToBottom(behavior)
 		})
 
 		return () => {
@@ -279,21 +282,23 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	}, [socketEventListener, scrollChatToBottom])
 
 	useEffect(() => {
-		const scrollDownInterval = setInterval(() => {
-			if (!virtuosoRef.current) {
-				return
-			}
+		if (lastConversationUUID.current !== conversation.uuid) {
+			lastConversationUUID.current = conversation.uuid
 
 			scrollChatToBottom()
-		}, 10)
 
-		const scrollDownIntervalCancel = setTimeout(() => {
-			clearInterval(scrollDownInterval)
-		}, 300)
+			const scrollDownInterval = setInterval(() => {
+				scrollChatToBottom()
+			}, 10)
+
+			setTimeout(() => {
+				clearInterval(scrollDownInterval)
+				scrollChatToBottom()
+			}, 500)
+		}
 
 		return () => {
-			clearInterval(scrollDownInterval)
-			clearTimeout(scrollDownIntervalCancel)
+			lastConversationUUID.current = ""
 		}
 	}, [conversation.uuid, scrollChatToBottom])
 

@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useMemo } from "react"
+import { memo, useCallback, useMemo } from "react"
 import { RefreshCcw, HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings, MessageCircleMore } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
@@ -15,14 +15,13 @@ import useLocation from "@/hooks/useLocation"
 import { useChatsStore } from "@/stores/chats.store"
 import { useContactsStore } from "@/stores/contacts.store"
 
-const iconSize = 21
+const iconSize = 24
 
 export const Button = memo(({ id }: { id: string }) => {
 	const { baseFolderUUID } = useSDKConfig()
 	const routeParent = useRouteParent()
 	const theme = useTheme()
 	const location = useLocation()
-	const [hovering, setHovering] = useState<boolean>(false)
 	const { t } = useTranslation()
 	const [lastSelectedNote] = useLocalStorage("lastSelectedNote", "")
 	const [lastSelectedChatsConversation] = useLocalStorage("lastSelectedChatsConversation", "")
@@ -98,20 +97,16 @@ export const Button = memo(({ id }: { id: string }) => {
 
 	return (
 		<div className={cn("flex flex-row justify-center items-center w-full", IS_DESKTOP ? "pl-[1px]" : "")}>
-			{showIndicator && (
-				<div className="w-[3px] h-10 bg-black dark:bg-white absolute left-[0px] rounded-tr-xl rounded-br-xl transition-all" />
-			)}
-			{hovering && (
-				<div className="w-[3px] h-5 bg-black dark:bg-white absolute left-[0px] rounded-tr-xl rounded-br-xl transition-all" />
-			)}
 			<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 				<Tooltip>
 					<TooltipTrigger asChild={true}>
 						<Link
-							className="flex flex-row w-12 h-12 rounded-full transition-all items-center justify-center cursor-pointer bg-neutral-200 dark:bg-primary-foreground"
+							className={cn(
+								"flex flex-row p-2 rounded-lg transition-colors items-center justify-center cursor-pointer shadow-sm font-semibold hover:text-primary text-muted-foreground",
+								showIndicator && "bg-secondary text-primary",
+								id === baseFolderUUID && "bg-primary rounded-full"
+							)}
 							onClick={onClick}
-							onMouseEnter={() => setHovering(true)}
-							onMouseLeave={() => setHovering(false)}
 							to={link.to}
 							params={link.params}
 							draggable={false}
@@ -121,11 +116,11 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === baseFolderUUID && (
 								<img
 									src={
-										theme.dark
+										!theme.dark
 											? "https://drive.filen.io/static/media/light_logo.9f8ed143e54adb31009008c527f52c95.svg"
 											: "https://drive.filen.io/static/media/dark_logo.41ab3ed5c0117abdb8e47d6bac43d9ae.svg"
 									}
-									className="w-5 h-5"
+									className="w-[20px] h-[20px]"
 									draggable={false}
 								/>
 							)}
@@ -152,7 +147,7 @@ export const Button = memo(({ id }: { id: string }) => {
 					</TooltipTrigger>
 					<TooltipContent
 						side="right"
-						className="flex flex-row gap-2 items-center"
+						className="flex flex-row gap-2 items-center text-primary"
 					>
 						{id === "chats" && unread > 0 && (
 							<div className="rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs w-[16px] h-[16px]">

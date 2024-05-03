@@ -16,7 +16,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 		return (
 			<div className="w-screen h-screen flex flex-col">
 				<div
-					className="flex flex-row w-full h-6 bg-primary-foreground z-0 select-none border-b"
+					className="flex flex-row w-full h-6 bg-secondary z-0 select-none border-b"
 					style={{
 						// @ts-expect-error not typed
 						WebkitAppRegion: "drag"

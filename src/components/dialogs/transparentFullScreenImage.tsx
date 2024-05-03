@@ -55,10 +55,10 @@ export const TransparentFullScreenImageDialog = memo(() => {
 					</div>
 				</div>
 				{src && (
-					<div className="flex flex-col">
+					<div className="flex flex-col gap-1">
 						<img
 							src={src}
-							className="object-contain max-w-[calc(100vw*0.75)] max-h-[calc(100vh*0.75)]"
+							className="object-contain max-w-[calc(100vw*0.7)] max-h-[calc(100vh*0.7)]"
 							onClick={stopPropagation}
 						/>
 						<a

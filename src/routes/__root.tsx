@@ -115,7 +115,7 @@ export const Root = memo(() => {
 	}
 
 	return (
-		<main className="font-geist overflow-hidden font-light transform-gpu antialiased">
+		<main className="font-geist overflow-hidden transform-gpu antialiased">
 			<ThemeProvider>
 				<PersistQueryClientProvider
 					client={persistantQueryClient}
