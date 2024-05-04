@@ -6,6 +6,7 @@ import InnerSideBar from "./innerSideBar"
 import TopBar from "./topBar"
 import { IS_DESKTOP } from "@/constants"
 import useIsMobile from "@/hooks/useIsMobile"
+import { cn } from "@/lib/utils"
 
 export const sidebarBasePx = 275
 export const sidebarMinPx = 275
@@ -16,7 +17,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 		return (
 			<div className="w-screen h-screen flex flex-col">
 				<div
-					className="flex flex-row w-full h-6 bg-secondary z-0 select-none border-b"
+					className="flex flex-row w-full h-[24px] z-0 select-none"
 					style={{
 						// @ts-expect-error not typed
 						WebkitAppRegion: "drag"
@@ -37,7 +38,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-row w-full h-[calc(100%-1.5rem)]">{children}</div>
+				<div className="flex flex-row w-full h-[calc(100%-24px)]">{children}</div>
 			</div>
 		)
 	}
@@ -74,12 +75,13 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 
 	return (
 		<Wrapper>
-			<div className="w-[65px] h-full">
+			<div className="w-[64px] h-full">
 				<SideBar />
 			</div>
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={e => setSidebarPercentage(e[0])}
+				className={cn("bg-muted/40", IS_DESKTOP && "rounded-tl-lg")}
 			>
 				{!isMobile && (
 					<>

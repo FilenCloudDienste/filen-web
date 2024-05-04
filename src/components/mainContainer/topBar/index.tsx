@@ -17,6 +17,8 @@ import useRouteParent from "@/hooks/useRouteParent"
 import useLocation from "@/hooks/useLocation"
 import eventEmitter from "@/lib/eventEmitter"
 import Notes from "./notes"
+import { cn } from "@/lib/utils"
+import { useTheme } from "@/providers/themeProvider"
 
 export const TopBar = memo(() => {
 	const { t } = useTranslation()
@@ -25,6 +27,7 @@ export const TopBar = memo(() => {
 	const [listType, setListType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
 	const [, startTransition] = useTransition()
 	const location = useLocation()
+	const { dark } = useTheme()
 
 	const changeListType = useCallback(() => {
 		startTransition(() => {
@@ -52,8 +55,8 @@ export const TopBar = memo(() => {
 			) : (
 				<>
 					<Breadcrumbs />
-					<div className="flex flex-row justify-end items-center gap-2 z-10 bg-white dark:bg-neutral-950 px-3">
-						<div className="flex flex-row w-[250px] h-full items-center">
+					<div className="flex flex-row justify-end items-center gap-2 z-10 px-3">
+						<div className={cn("flex flex-row w-[250px] h-full items-center", dark ? "bg-[#151518]" : "")}>
 							<div className="absolute h-full pl-2">
 								<div className="h-full flex flex-row items-center">
 									<Search

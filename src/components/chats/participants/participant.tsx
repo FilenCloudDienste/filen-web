@@ -32,7 +32,7 @@ export const Participant = memo(
 				participant={participant}
 				conversation={conversation}
 			>
-				<div className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-primary-foreground">
+				<div className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-secondary">
 					<Avatar
 						size={28}
 						src={participant.avatar}

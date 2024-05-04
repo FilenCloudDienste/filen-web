@@ -6,11 +6,14 @@ import worker from "@/lib/worker"
 import ContextMenu from "../innerSideBar/notes/note/contextMenu"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
+import { cn } from "@/lib/utils"
+import { useTheme } from "@/providers/themeProvider"
 
 export const Notes = memo(() => {
 	const { selectedNote, setSelectedNote, setNotes, synced } = useNotesStore()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
+	const { dark } = useTheme()
 
 	const triggerMoreIconContextMenu = useCallback(
 		(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -74,7 +77,7 @@ export const Notes = memo(() => {
 	}
 
 	return (
-		<div className="flex flex-row px-4 items-center gap-3 w-full h-12 z-50 bg-background shadow-sm">
+		<div className={cn("flex flex-row px-4 items-center gap-3 w-full h-12 z-50 shadow-sm", dark ? "bg-[#151518]" : "")}>
 			<div className="flex flex-row">
 				{synced ? <CheckCircle2 className="text-green-500" /> : <Loader className="animate-spin-medium" />}
 			</div>

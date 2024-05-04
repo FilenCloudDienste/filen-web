@@ -9,6 +9,7 @@ import { useContactsStore } from "@/stores/contacts.store"
 import { type SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
 import eventEmitter from "@/lib/eventEmitter"
+import { cn } from "@/lib/utils"
 
 export const SideBar = memo(() => {
 	const { userId, baseFolderUUID } = useSDKConfig()
@@ -96,7 +97,12 @@ export const SideBar = memo(() => {
 	}, [socketEventListener])
 
 	return (
-		<div className="w-full flex flex-col h-full gap-3 py-3 bg-muted/30 border-r select-none items-center overflow-hidden dragselect-start-allowed">
+		<div
+			className={cn(
+				"w-full flex flex-col h-full gap-3 py-3 select-none items-center overflow-hidden dragselect-start-allowed",
+				!IS_DESKTOP && "border-r"
+			)}
+		>
 			{IS_DESKTOP && <Button id="syncs" />}
 			{IS_DESKTOP && <Button id="mounts" />}
 			<Button id={baseFolderUUID} />
@@ -104,7 +110,6 @@ export const SideBar = memo(() => {
 			<Button id="notes" />
 			<Button id="chats" />
 			<Button id="contacts" />
-			<Button id="settings" />
 		</div>
 	)
 })

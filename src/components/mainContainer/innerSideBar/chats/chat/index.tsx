@@ -50,8 +50,8 @@ export const Chat = memo(
 			<ContextMenu conversation={conversation}>
 				<Link
 					className={cn(
-						"flex flex-row gap-3 p-3 border-l-[3px] hover:bg-primary-foreground h-full items-center",
-						routeParent === conversation.uuid ? "border-l-blue-500 bg-primary-foreground" : "border-transparent"
+						"flex flex-row gap-3 p-3 border-l-[3px] hover:bg-secondary h-full items-center",
+						routeParent === conversation.uuid ? "border-l-blue-500 bg-secondary" : "border-transparent"
 					)}
 					to="/chats/$uuid"
 					params={{

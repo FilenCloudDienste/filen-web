@@ -39,9 +39,9 @@ export const Note = memo(
 			>
 				<Link
 					className={cn(
-						"flex flex-row gap-4 p-4 border-l-[3px] hover:bg-primary-foreground h-full",
-						routeParent === note.uuid ? "border-l-blue-500 bg-primary-foreground" : "border-transparent",
-						hovering && "bg-primary-foreground"
+						"flex flex-row gap-4 p-4 border-l-[3px] hover:bg-secondary h-full",
+						routeParent === note.uuid ? "border-l-blue-500 bg-secondary" : "border-transparent",
+						hovering && "bg-secondary"
 					)}
 					to="/notes/$uuid"
 					params={{

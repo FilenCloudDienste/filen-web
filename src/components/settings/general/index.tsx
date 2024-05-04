@@ -153,7 +153,7 @@ export const General = memo(() => {
 				accept="image/png, image/jpeg, image/jpg"
 			/>
 			<div className="flex flex-col p-6 w-5/6 h-full">
-				<div className="flex flex-col gap-3 bg-primary-foreground p-4 rounded-md shadow-sm">
+				<div className="flex flex-col gap-3 bg-background border p-4 rounded-md">
 					<div className="flex flex-row items-center justify-between">
 						<p>{t("settings.general.storageUsed")}</p>
 						<p>

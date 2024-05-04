@@ -102,9 +102,8 @@ export const Button = memo(({ id }: { id: string }) => {
 					<TooltipTrigger asChild={true}>
 						<Link
 							className={cn(
-								"flex flex-row p-2 rounded-lg transition-colors items-center justify-center cursor-pointer shadow-sm font-semibold hover:text-primary text-muted-foreground",
-								showIndicator && "bg-secondary text-primary",
-								id === baseFolderUUID && "bg-primary rounded-full"
+								"flex flex-row p-[8px] rounded-lg transition-colors items-center justify-center cursor-pointer font-semibold hover:text-primary text-muted-foreground",
+								showIndicator && "bg-secondary text-primary"
 							)}
 							onClick={onClick}
 							to={link.to}
@@ -116,7 +115,7 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === baseFolderUUID && (
 								<img
 									src={
-										!theme.dark
+										theme.dark
 											? "https://drive.filen.io/static/media/light_logo.9f8ed143e54adb31009008c527f52c95.svg"
 											: "https://drive.filen.io/static/media/dark_logo.41ab3ed5c0117abdb8e47d6bac43d9ae.svg"
 									}
