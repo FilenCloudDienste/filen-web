@@ -451,7 +451,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 						{t("contextMenus.item.rename")}
 					</ContextMenuItem>
 				)}
-				{!driveURLState.sharedIn && !driveURLState.trash && (
+				{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.sharedOut && (
 					<>
 						<ContextMenuSub>
 							<ContextMenuSubTrigger

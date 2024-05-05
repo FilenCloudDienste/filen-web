@@ -152,7 +152,8 @@
 			"selectDestination": "Select destination",
 			"cloudDrive": "Cloud Drive",
 			"open": "Open",
-			"color": "Color"
+			"color": "Color",
+			"deletePermanently": "Delete permanently"
 		},
 		"drive": {
 			"uploadFiles": "Upload files",

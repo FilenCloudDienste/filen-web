@@ -21,15 +21,21 @@ import { cn } from "@/lib/utils"
 import { useTheme } from "@/providers/themeProvider"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
+import worker from "@/lib/worker"
+import useLoadingToast from "@/hooks/useLoadingToast"
+import useErrorToast from "@/hooks/useErrorToast"
+import { showConfirmDialog } from "@/components/dialogs/confirm"
 
 export const TopBar = memo(() => {
 	const { t } = useTranslation()
-	const { searchTerm, setSearchTerm } = useDriveItemsStore()
+	const { searchTerm, setSearchTerm, setItems, items } = useDriveItemsStore()
 	const parent = useRouteParent()
 	const [listType, setListType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
 	const [, startTransition] = useTransition()
 	const location = useLocation()
 	const { dark } = useTheme()
+	const loadingToast = useLoadingToast()
+	const errorToast = useErrorToast()
 
 	const changeListType = useCallback(() => {
 		startTransition(() => {
@@ -45,6 +51,44 @@ export const TopBar = memo(() => {
 		},
 		[setSearchTerm]
 	)
+
+	const emptyTrash = useCallback(async () => {
+		if (!location.includes("trash")) {
+			return
+		}
+
+		if (
+			!(await showConfirmDialog({
+				title: "d",
+				continueButtonText: "ddd",
+				description: "ookeoetrasher",
+				continueButtonVariant: "destructive"
+			}))
+		) {
+			return
+		}
+
+		const toast = loadingToast()
+
+		try {
+			await worker.emptyTrash()
+
+			startTransition(() => {
+				setItems([])
+			})
+		} catch (e) {
+			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
+		}
+	}, [loadingToast, errorToast, setItems, location])
 
 	if (location.includes("settings") || location === "/notes" || location.includes("chats") || location.includes("contacts")) {
 		return null
@@ -74,33 +118,55 @@ export const TopBar = memo(() => {
 								onChange={onSearchChange}
 							/>
 						</div>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild={true}>
-								<Button className="h-8">New</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent>
-								<DropdownMenuItem
-									className="cursor-pointer"
-									onClick={() => eventEmitter.emit("createFolderTrigger")}
-								>
-									{t("contextMenus.drive.newFolder")}
-								</DropdownMenuItem>
-								<DropdownMenuItem className="cursor-pointer">{t("contextMenus.drive.newTextFile")}</DropdownMenuItem>
-								<DropdownMenuSeparator />
-								<DropdownMenuItem
-									className="cursor-pointer"
-									onClick={() => document.getElementById("folder-input")?.click()}
-								>
-									{t("contextMenus.drive.uploadFolders")}
-								</DropdownMenuItem>
-								<DropdownMenuItem
-									className="cursor-pointer"
-									onClick={() => document.getElementById("file-input")?.click()}
-								>
-									{t("contextMenus.drive.uploadFiles")}
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
+						{location.includes("trash") ? (
+							<Button
+								className="h-8"
+								variant="destructive"
+								disabled={items.length === 0}
+								onClick={emptyTrash}
+							>
+								Empty
+							</Button>
+						) : (
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild={true}>
+									<Button
+										className="h-8"
+										disabled={
+											location.includes("shared-in") ||
+											location.includes("favorites") ||
+											location.includes("recents") ||
+											location.includes("shared-out") ||
+											location.includes("links")
+										}
+									>
+										New
+									</Button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent>
+									<DropdownMenuItem
+										className="cursor-pointer"
+										onClick={() => eventEmitter.emit("createFolderTrigger")}
+									>
+										{t("contextMenus.drive.newFolder")}
+									</DropdownMenuItem>
+									<DropdownMenuItem className="cursor-pointer">{t("contextMenus.drive.newTextFile")}</DropdownMenuItem>
+									<DropdownMenuSeparator />
+									<DropdownMenuItem
+										className="cursor-pointer"
+										onClick={() => document.getElementById("folder-input")?.click()}
+									>
+										{t("contextMenus.drive.uploadFolders")}
+									</DropdownMenuItem>
+									<DropdownMenuItem
+										className="cursor-pointer"
+										onClick={() => document.getElementById("file-input")?.click()}
+									>
+										{t("contextMenus.drive.uploadFiles")}
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						)}
 						{listType[parent] === "grid" ? (
 							<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 								<Tooltip>

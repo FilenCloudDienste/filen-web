@@ -1963,3 +1963,7 @@ export async function toggleLoginAlerts({ enabled }: { enabled: boolean }): Prom
 export async function requestAccountDeletion({ twoFactorCode }: { twoFactorCode?: string }): Promise<void> {
 	return await SDK.user().delete({ twoFactorCode })
 }
+
+export async function emptyTrash(): Promise<void> {
+	return await SDK.cloud().emptyTrash()
+}
