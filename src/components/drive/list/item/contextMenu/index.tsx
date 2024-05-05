@@ -272,9 +272,13 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				await actions.favorite({ selectedItems, favorite })
 
 				startTransition(() => {
-					setItems(prev =>
-						prev.map(prevItem => (uuids.includes(prevItem.uuid) ? { ...prevItem, favorited: favorite } : prevItem))
-					)
+					if (location.includes("favorites") && !favorite) {
+						setItems(prev => prev.filter(prevItem => !uuids.includes(prevItem.uuid)))
+					} else {
+						setItems(prev =>
+							prev.map(prevItem => (uuids.includes(prevItem.uuid) ? { ...prevItem, favorited: favorite } : prevItem))
+						)
+					}
 				})
 			} catch (e) {
 				console.error(e)
@@ -289,7 +293,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				toast.dismiss()
 			}
 		},
-		[selectedItems, setItems, errorToast, loadingToast]
+		[selectedItems, setItems, errorToast, loadingToast, location]
 	)
 
 	const share = useCallback(async () => {

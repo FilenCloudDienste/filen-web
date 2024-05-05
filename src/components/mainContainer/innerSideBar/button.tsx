@@ -15,21 +15,21 @@ import {
 	Heart,
 	Link as LinkIcon,
 	Trash,
-	Notebook,
-	MessageCircle,
 	Settings,
 	Contact,
 	Nfc,
 	CloudOff,
 	XCircle,
 	Mail,
-	Send,
 	CalendarClock,
 	Shield,
 	Gem,
 	Wallet,
 	User2,
-	UserPlus
+	UserPlus,
+	Send,
+	PhoneIncoming,
+	PhoneOutgoing
 } from "lucide-react"
 import useLocation from "@/hooks/useLocation"
 import { useContactsStore } from "@/stores/contacts.store"
@@ -114,13 +114,13 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				)}
 				{uuid === "shared-in" && (
 					<>
-						<Notebook size={iconSize} />
+						<PhoneIncoming size={iconSize} />
 						<p>{t("innerSideBar.sharedWithMe")}</p>
 					</>
 				)}
 				{uuid === "shared-out" && (
 					<>
-						<MessageCircle size={iconSize} />
+						<PhoneOutgoing size={iconSize} />
 						<p>{t("innerSideBar.sharedWithOthers")}</p>
 					</>
 				)}
