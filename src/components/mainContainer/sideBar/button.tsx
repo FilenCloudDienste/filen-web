@@ -122,7 +122,7 @@ export const Button = memo(({ id }: { id: string }) => {
 											? "https://drive.filen.io/static/media/light_logo.9f8ed143e54adb31009008c527f52c95.svg"
 											: "https://drive.filen.io/static/media/dark_logo.41ab3ed5c0117abdb8e47d6bac43d9ae.svg"
 									}
-									className="w-[20px] h-[20px]"
+									className="w-[22px] h-[22px]"
 									draggable={false}
 								/>
 							)}

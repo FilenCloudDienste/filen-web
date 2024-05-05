@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
-import { useWindowSize, useLocalStorage } from "@uidotdev/usehooks"
+import { useLocalStorage } from "@uidotdev/usehooks"
 import SideBar from "./sideBar"
 import InnerSideBar from "./innerSideBar"
 import TopBar from "./topBar"
@@ -8,6 +8,7 @@ import { IS_DESKTOP } from "@/constants"
 import useIsMobile from "@/hooks/useIsMobile"
 import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
+import useWindowSize from "@/hooks/useWindowSize"
 
 export const sidebarBasePx = 275
 export const sidebarMinPx = 275
@@ -58,14 +59,14 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 			return sidebarPercentage
 		}
 
-		const windowWidth = windowSize.width ?? window.innerWidth
+		const windowWidth = windowSize.width - 64
 		const percentage = Math.floor((sidebarBasePx / windowWidth) * 100)
 
 		return percentage
 	}, [windowSize.width, sidebarPercentage])
 
 	const sidebarSizeRange = useMemo(() => {
-		const windowWidth = windowSize.width ?? window.innerWidth
+		const windowWidth = windowSize.width - 64
 		const min = Math.floor((sidebarMinPx / windowWidth) * 100)
 		const max = Math.floor((sidebarMaxPx / windowWidth) * 100)
 

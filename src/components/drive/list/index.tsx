@@ -11,6 +11,7 @@ import { orderItemsByType } from "../utils"
 import { type SocketEvent, type FileEncryptionVersion } from "@filen/sdk"
 import socket from "@/lib/socket"
 import { convertTimestampToMs } from "@/utils"
+import { type DriveSortBy } from "./header"
 
 export const List = memo(() => {
 	const { items, setItems, searchTerm } = useDriveItemsStore()
@@ -21,6 +22,7 @@ export const List = memo(() => {
 	const [listType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
 	const { currentReceiverId, currentReceiverEmail, currentSharerEmail, currentSharerId, currentReceivers } = useDriveSharedStore()
 	const queryUpdatedAtRef = useRef<number>(-1)
+	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 
 	const query = useQuery({
 		queryKey: ["listDirectory", parent, currentReceiverId],
@@ -39,8 +41,8 @@ export const List = memo(() => {
 			return orderItemsByType({ items, type: "uploadDateDesc" })
 		}
 
-		return orderItemsByType({ items, type: "nameAsc" })
-	}, [items, location])
+		return orderItemsByType({ items, type: driveSortBy[parent] ? driveSortBy[parent] : "nameAsc" })
+	}, [items, location, driveSortBy, parent])
 
 	const itemsFiltered = useMemo(() => {
 		if (searchTerm.length === 0) {

@@ -103,13 +103,13 @@ export const SideBar = memo(() => {
 				!IS_DESKTOP && "border-r"
 			)}
 		>
-			{IS_DESKTOP && <Button id="syncs" />}
-			{IS_DESKTOP && <Button id="mounts" />}
 			<Button id={baseFolderUUID} />
 			<Button id="transfers" />
 			<Button id="notes" />
 			<Button id="chats" />
 			<Button id="contacts" />
+			{IS_DESKTOP && <Button id="syncs" />}
+			{IS_DESKTOP && <Button id="mounts" />}
 			{/*{IS_DESKTOP && <Button id="terminal" />}*/}
 		</div>
 	)

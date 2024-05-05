@@ -249,5 +249,12 @@
 			"free": "Free {{size}}",
 			"used": "{{used}} of {{max}} used"
 		}
+	},
+	"drive": {
+		"header": {
+			"name": "Name",
+			"size": "Size",
+			"modified": "Modified"
+		}
 	}
 }
