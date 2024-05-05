@@ -1,4 +1,4 @@
-import { memo } from "react"
+import { memo, useCallback } from "react"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import useRouteParent from "@/hooks/useRouteParent"
 import { useTranslation } from "react-i18next"
@@ -13,17 +13,33 @@ export const Header = memo(() => {
 	const routeParent = useRouteParent()
 	const { t } = useTranslation()
 
+	const name = useCallback(() => {
+		setDriveSortBy(prev => ({
+			...prev,
+			[routeParent]: prev[routeParent] === "nameDesc" ? "nameAsc" : "nameDesc"
+		}))
+	}, [setDriveSortBy, routeParent])
+
+	const size = useCallback(() => {
+		setDriveSortBy(prev => ({
+			...prev,
+			[routeParent]: prev[routeParent] === "sizeDesc" ? "sizeAsc" : "sizeDesc"
+		}))
+	}, [setDriveSortBy, routeParent])
+
+	const modified = useCallback(() => {
+		setDriveSortBy(prev => ({
+			...prev,
+			[routeParent]: prev[routeParent] === "lastModifiedDesc" ? "lastModifiedAsc" : "lastModifiedDesc"
+		}))
+	}, [setDriveSortBy, routeParent])
+
 	return (
 		<div className="flex flex-row px-3">
 			<div className="flex flex-row w-full h-10 items-center select-none gap-3">
 				<div
 					className="flex flex-row grow min-w-[200px] items-center cursor-pointer"
-					onClick={() =>
-						setDriveSortBy(prev => ({
-							...prev,
-							[routeParent]: prev[routeParent] === "nameDesc" ? "nameAsc" : "nameDesc"
-						}))
-					}
+					onClick={name}
 				>
 					<div className="flex flex-row gap-2 items-center">
 						<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{t("drive.header.name")}</p>
@@ -33,9 +49,7 @@ export const Header = memo(() => {
 				</div>
 				<div
 					className="flex flex-row w-[125px] items-center cursor-pointer"
-					onClick={() =>
-						setDriveSortBy(prev => ({ ...prev, [routeParent]: prev[routeParent] === "sizeDesc" ? "sizeAsc" : "sizeDesc" }))
-					}
+					onClick={size}
 				>
 					<div className="flex flex-row gap-2 items-center">
 						<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{t("drive.header.size")}</p>
@@ -45,12 +59,7 @@ export const Header = memo(() => {
 				</div>
 				<div
 					className="flex flex-row w-[250px] items-center cursor-pointer"
-					onClick={() =>
-						setDriveSortBy(prev => ({
-							...prev,
-							[routeParent]: prev[routeParent] === "lastModifiedDesc" ? "lastModifiedAsc" : "lastModifiedDesc"
-						}))
-					}
+					onClick={modified}
 				>
 					<div className="flex flex-row gap-2 items-center">
 						<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{t("drive.header.modified")}</p>
