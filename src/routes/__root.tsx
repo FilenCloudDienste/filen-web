@@ -12,7 +12,7 @@ import sdk from "@/lib/sdk"
 import DragSelect from "@/components/dragSelect"
 import DropZone from "@/components/dropZone"
 import ConfirmDialog from "@/components/dialogs/confirm"
-import SelectDriveDestinationDialog from "@/components/dialogs/selectDriveDestination"
+import SelectDriveItemDialog from "@/components/dialogs/selectDriveItem"
 import Transfers from "@/components/transfers"
 import PreviewDialog from "@/components/dialogs/previewDialog"
 import { register as registerServiceWorker } from "register-service-worker"
@@ -129,7 +129,7 @@ export const Root = memo(() => {
 									<Outlet />
 								</DragSelect>
 							</DropZone>
-							<SelectDriveDestinationDialog />
+							<SelectDriveItemDialog />
 							<SelectContactsDialog />
 						</>
 					) : (

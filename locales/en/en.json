@@ -128,8 +128,8 @@
 	},
 	"dialogs": {
 		"cancel": "Cancel",
-		"selectDriveDestination": {
-			"title": "Select destination",
+		"selectDriveItem": {
+			"title": "Select",
 			"submit": "Select",
 			"newFolder": "New folder"
 		}

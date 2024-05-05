@@ -17,7 +17,7 @@ import MoveTree from "./moveTree"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { CTRL_KEY_TEXT } from "@/constants"
 import * as actions from "./actions"
-import { selectDriveDestination } from "@/components/dialogs/selectDriveDestination"
+import { selectDriveItem } from "@/components/dialogs/selectDriveItem"
 import eventEmitter from "@/lib/eventEmitter"
 import { fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
 import useDriveURLState from "@/hooks/useDriveURLState"
@@ -88,7 +88,10 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			return
 		}
 
-		const parent = await selectDriveDestination()
+		const parent = await selectDriveItem({
+			type: "directory",
+			multiple: false
+		})
 
 		if (parent.cancelled) {
 			return
@@ -97,10 +100,10 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 		const toast = loadingToast()
 
 		try {
-			const itemsToMove = selectedItems.filter(item => item.parent !== parent.uuid)
+			const itemsToMove = selectedItems.filter(item => item.parent !== parent.items[0].uuid)
 			const movedUUIDs = itemsToMove.map(item => item.uuid)
 
-			await actions.move({ selectedItems: itemsToMove, parent: parent.uuid })
+			await actions.move({ selectedItems: itemsToMove, parent: parent.items[0].uuid })
 
 			startTransition(() => {
 				setItems(prev => prev.filter(prevItem => !movedUUIDs.includes(prevItem.uuid)))

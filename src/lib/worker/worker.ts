@@ -1967,3 +1967,21 @@ export async function requestAccountDeletion({ twoFactorCode }: { twoFactorCode?
 export async function emptyTrash(): Promise<void> {
 	return await SDK.cloud().emptyTrash()
 }
+
+export async function uploadFilesToChatUploads({ files }: { files: File[] }): Promise<DriveCloudItem[]> {
+	const base = await listDirectory({ uuid: SDK.config.baseFolderUUID!, onlyDirectories: true })
+	let parentUUID = ""
+	const baseFiltered = base.filter(item => item.type === "directory" && item.name.toLowerCase() === "chat uploads")
+
+	if (baseFiltered.length === 1) {
+		parentUUID = baseFiltered[0].uuid
+	} else {
+		parentUUID = (await createDirectory({ name: "Chat Uploads", parent: SDK.config.baseFolderUUID! })).uuid
+	}
+
+	return await promiseAllChunked(files.map(file => uploadFile({ file, parent: parentUUID })))
+}
+
+export async function enablePublicLink({ type, uuid }: { type: "file" | "directory"; uuid: string }): Promise<string> {
+	return await SDK.cloud().enablePublicLink({ type, uuid })
+}

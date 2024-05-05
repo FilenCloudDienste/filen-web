@@ -11,6 +11,7 @@ import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { promiseAllChunked } from "@/lib/utils"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { directoryUUIDToNameCache } from "@/cache"
+import useErrorToast from "@/hooks/useErrorToast"
 
 export type DriveCloudItem = Prettify<
 	CloudItem &
@@ -25,81 +26,88 @@ export const Drive = memo(() => {
 	const { currentReceiverId, currentSharerId, currentReceiverEmail, currentReceivers, currentSharerEmail } = useDriveSharedStore()
 	const [, startTransition] = useTransition()
 	const [listType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
+	const errorToast = useErrorToast()
 
 	const uploadFiles = useCallback(
 		async (e: React.ChangeEvent<HTMLInputElement>) => {
-			try {
-				if (!e.target.files) {
-					e.target.value = ""
-
-					return
-				}
-
-				const files = e.target.files
-				const parentCopy = `${parent}`
-				const promises: Promise<void>[] = []
-
-				for (const file of files) {
-					promises.push(
-						new Promise((resolve, reject) => {
-							worker
-								.uploadFile({
-									file: file,
-									parent: parentCopy,
-									sharerId: currentSharerId,
-									sharerEmail: currentSharerEmail,
-									receiverEmail: currentReceiverEmail,
-									receiverId: currentReceiverId,
-									receivers: currentReceivers
-								})
-								.then(item => {
-									if (item.parent === parentCopy) {
-										startTransition(() => {
-											setItems(prev => [
-												...prev.filter(
-													prevItem =>
-														prevItem.uuid !== item.uuid &&
-														prevItem.name.toLowerCase() !== item.name.toLowerCase()
-												),
-												item
-											])
-										})
-									}
-
-									resolve()
-								})
-								.catch(reject)
-						})
-					)
-				}
-
-				await promiseAllChunked(promises)
-
+			if (!e.target.files) {
 				e.target.value = ""
+
+				return
+			}
+
+			const files = e.target.files
+			const parentCopy = `${parent}`
+			const promises: Promise<void>[] = []
+
+			for (const file of files) {
+				promises.push(
+					new Promise((resolve, reject) => {
+						worker
+							.uploadFile({
+								file: file,
+								parent: parentCopy,
+								sharerId: currentSharerId,
+								sharerEmail: currentSharerEmail,
+								receiverEmail: currentReceiverEmail,
+								receiverId: currentReceiverId,
+								receivers: currentReceivers
+							})
+							.then(item => {
+								if (item.parent === parentCopy) {
+									startTransition(() => {
+										setItems(prev => [
+											...prev.filter(
+												prevItem =>
+													prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()
+											),
+											item
+										])
+									})
+								}
+
+								resolve()
+							})
+							.catch(reject)
+					})
+				)
+			}
+
+			try {
+				await promiseAllChunked(promises)
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				e.target.value = ""
 			}
 		},
-		[currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId, setItems, parent]
+		[currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId, setItems, parent, errorToast]
 	)
 
 	const uploadDirectory = useCallback(
 		async (e: React.ChangeEvent<HTMLInputElement>) => {
+			if (!e.target.files) {
+				e.target.value = ""
+
+				return
+			}
+
+			const files: { file: File; webkitRelativePath: string }[] = []
+
+			for (const file of e.target.files) {
+				files.push({ file, webkitRelativePath: file.webkitRelativePath })
+			}
+
+			const parentCopy = `${parent}`
+
 			try {
-				if (!e.target.files) {
-					e.target.value = ""
-
-					return
-				}
-
-				const files: { file: File; webkitRelativePath: string }[] = []
-
-				for (const file of e.target.files) {
-					files.push({ file, webkitRelativePath: file.webkitRelativePath })
-				}
-
-				const parentCopy = `${parent}`
-
 				const uploadedItems = await worker.uploadDirectory({
 					files,
 					parent: parentCopy,
@@ -128,13 +136,20 @@ export const Drive = memo(() => {
 						])
 					})
 				}
-
-				e.target.value = ""
 			} catch (e) {
 				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				e.target.value = ""
 			}
 		},
-		[currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId, setItems, parent]
+		[currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId, setItems, parent, errorToast]
 	)
 
 	return (

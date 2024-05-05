@@ -8,6 +8,10 @@ import { readLocalDroppedDirectory } from "./utils"
 import { promiseAllChunked } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import useCanUpload from "@/hooks/useCanUpload"
+import useErrorToast from "@/hooks/useErrorToast"
+import { type DriveCloudItem } from "../drive"
+import eventEmitter from "@/lib/eventEmitter"
+import useLoadingToast from "@/hooks/useLoadingToast"
 
 export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const parent = useRouteParent()
@@ -18,6 +22,8 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const [, startTransition] = useTransition()
 	const location = useLocation()
 	const canUpload = useCanUpload()
+	const errorToast = useErrorToast()
+	const loadingToast = useLoadingToast()
 
 	const handleShow = useCallback(
 		(e: React.DragEvent<HTMLDivElement>) => {
@@ -84,106 +90,170 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 
 			setShowModal(false)
 
-			if (e && e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-				const parentCopy = `${parent}`
+			let toast: ReturnType<typeof loadingToast> | null = null
 
-				const files = await readLocalDroppedDirectory(e.dataTransfer.items)
-				const promises: Promise<void>[] = []
-				const containsDirectories = files.some(file => file.webkitRelativePath.split("/").length >= 2)
+			try {
+				if (e && e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+					const parentCopy = `${parent}`
+					const isChatsUpload = location.includes("chats")
+					const files = await readLocalDroppedDirectory(e.dataTransfer.items)
+					const promises: Promise<DriveCloudItem[]>[] = []
+					const containsDirectories = files.some(file => file.webkitRelativePath.split("/").length >= 2)
 
-				if (containsDirectories) {
-					const directoryGroups: Record<string, { file: File; webkitRelativePath: string }[]> = {}
-
-					for (const file of files) {
-						const ex = file.webkitRelativePath.split("/")
-						const dirname = ex[0] ? ex[0] : file.name
-
-						if (!directoryGroups[dirname]) {
-							directoryGroups[dirname] = []
+					if (containsDirectories) {
+						if (isChatsUpload) {
+							throw new Error("Cannot attach directories to a chat.")
 						}
 
-						directoryGroups[dirname].push({ file, webkitRelativePath: file.webkitRelativePath })
-					}
+						const directoryGroups: Record<string, { file: File; webkitRelativePath: string }[]> = {}
 
-					for (const basename in directoryGroups) {
-						const directoryFiles = directoryGroups[basename]
+						for (const file of files) {
+							const ex = file.webkitRelativePath.split("/")
+							const dirname = ex[0] ? ex[0] : file.name
 
-						promises.push(
-							new Promise((resolve, reject) => {
-								worker
-									.uploadDirectory({
-										files: directoryFiles,
-										parent: parentCopy,
-										sharerId: currentSharerId,
-										sharerEmail: currentSharerEmail,
-										receiverEmail: currentReceiverEmail,
-										receiverId: currentReceiverId,
-										receivers: currentReceivers
-									})
-									.then(uploadedItems => {
-										for (const item of uploadedItems) {
-											if (item.parent !== parentCopy) {
-												continue
+							if (!directoryGroups[dirname]) {
+								directoryGroups[dirname] = []
+							}
+
+							directoryGroups[dirname].push({ file, webkitRelativePath: file.webkitRelativePath })
+						}
+
+						for (const basename in directoryGroups) {
+							const directoryFiles = directoryGroups[basename]
+
+							promises.push(
+								new Promise((resolve, reject) => {
+									worker
+										.uploadDirectory({
+											files: directoryFiles,
+											parent: parentCopy,
+											sharerId: currentSharerId,
+											sharerEmail: currentSharerEmail,
+											receiverEmail: currentReceiverEmail,
+											receiverId: currentReceiverId,
+											receivers: currentReceivers
+										})
+										.then(uploadedItems => {
+											for (const item of uploadedItems) {
+												if (item.parent !== parentCopy) {
+													continue
+												}
+
+												startTransition(() => {
+													setItems(prev => [
+														...prev.filter(
+															prevItem =>
+																prevItem.uuid !== item.uuid &&
+																prevItem.name.toLowerCase() !== item.name.toLowerCase()
+														),
+														item
+													])
+												})
 											}
 
-											startTransition(() => {
-												setItems(prev => [
-													...prev.filter(
-														prevItem =>
-															prevItem.uuid !== item.uuid &&
-															prevItem.name.toLowerCase() !== item.name.toLowerCase()
-													),
-													item
-												])
+											resolve(uploadedItems)
+										})
+										.catch(reject)
+								})
+							)
+						}
+					} else {
+						if (isChatsUpload) {
+							promises.push(worker.uploadFilesToChatUploads({ files }))
+						} else {
+							for (const file of files) {
+								promises.push(
+									new Promise((resolve, reject) => {
+										worker
+											.uploadFile({
+												file,
+												parent: parentCopy,
+												sharerId: currentSharerId,
+												sharerEmail: currentSharerEmail,
+												receiverEmail: currentReceiverEmail,
+												receiverId: currentReceiverId,
+												receivers: currentReceivers
 											})
-										}
+											.then(item => {
+												if (item.parent === parentCopy) {
+													startTransition(() => {
+														setItems(prev => [
+															...prev.filter(
+																prevItem =>
+																	prevItem.uuid !== item.uuid &&
+																	prevItem.name.toLowerCase() !== item.name.toLowerCase()
+															),
+															item
+														])
+													})
+												}
 
-										resolve()
+												resolve([item])
+											})
+											.catch(reject)
 									})
-									.catch(reject)
-							})
-						)
+								)
+							}
+						}
 					}
-				} else {
-					for (const file of files) {
-						promises.push(
-							new Promise((resolve, reject) => {
-								worker
-									.uploadFile({
-										file,
-										parent: parentCopy,
-										sharerId: currentSharerId,
-										sharerEmail: currentSharerEmail,
-										receiverEmail: currentReceiverEmail,
-										receiverId: currentReceiverId,
-										receivers: currentReceivers
-									})
-									.then(item => {
-										if (item.parent === parentCopy) {
-											startTransition(() => {
-												setItems(prev => [
-													...prev.filter(
-														prevItem =>
-															prevItem.uuid !== item.uuid &&
-															prevItem.name.toLowerCase() !== item.name.toLowerCase()
-													),
-													item
-												])
-											})
-										}
 
-										resolve()
+					const uploadedFiles = (await promiseAllChunked(promises)).flat(999999999)
+
+					if (isChatsUpload) {
+						const filesWithLinkUUIDs: { file: DriveCloudItem; linkUUID: string }[] = []
+
+						toast = loadingToast()
+
+						await promiseAllChunked(
+							uploadedFiles.map(
+								file =>
+									new Promise<void>((resolve, reject) => {
+										worker
+											.enablePublicLink({ type: file.type, uuid: file.uuid })
+											.then(linkUUID => {
+												filesWithLinkUUIDs.push({
+													file,
+													linkUUID
+												})
+
+												resolve()
+											})
+											.catch(reject)
 									})
-									.catch(reject)
-							})
+							)
 						)
+
+						eventEmitter.emit("attachFilesToChat", filesWithLinkUUIDs)
 					}
 				}
+			} catch (e) {
+				console.error(e)
 
-				await promiseAllChunked(promises)
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				if (toast) {
+					toast.dismiss()
+				}
 			}
 		},
-		[parent, setItems, currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId, canUpload]
+		[
+			parent,
+			setItems,
+			currentReceiverEmail,
+			currentReceiverId,
+			currentReceivers,
+			currentSharerEmail,
+			currentSharerId,
+			canUpload,
+			location,
+			errorToast,
+			loadingToast
+		]
 	)
 
 	return (

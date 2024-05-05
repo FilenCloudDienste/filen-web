@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next"
 import Typing from "./typing"
 import eventEmitter from "@/lib/eventEmitter"
 import useErrorToast from "@/hooks/useErrorToast"
-import { findClosestIndex, cn } from "@/lib/utils"
+import { findClosestIndex, cn, promiseAllChunked } from "@/lib/utils"
 import useElementDimensions from "@/hooks/useElementDimensions"
 import Avatar from "@/components/avatar"
 import { SearchIndex } from "emoji-mart"
@@ -23,6 +23,10 @@ import EmojiPicker from "@emoji-mart/react"
 import memoize from "lodash/memoize"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useTheme } from "@/providers/themeProvider"
+import { type DriveCloudItem } from "@/components/drive"
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu"
+import { selectDriveItem } from "@/components/dialogs/selectDriveItem"
+import useLoadingToast from "@/hooks/useLoadingToast"
 
 export type CustomElement = { type: "paragraph"; children: CustomText[] }
 export type CustomText = { text: string }
@@ -57,6 +61,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 	const typingEventTimeout = useRef<ReturnType<typeof setTimeout>>()
 	const typingEventEmitTimeout = useRef<number>(0)
 	const errorToast = useErrorToast()
+	const loadingToast = useLoadingToast()
 	const inputContainerDimensions = useElementDimensions("chat-input-container")
 	const [showMentionSuggestions, setShowMentionSuggestions] = useState<boolean>(false)
 	const [showEmojiSuggestions, setShowEmojiSuggestions] = useState<boolean>(false)
@@ -145,6 +150,26 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			focusEditor()
 
 			Transforms.insertText(editor, text.length === 0 ? shortCode + " " : (text.endsWith(" ") ? "" : " ") + shortCode + " ")
+			Transforms.select(editor, Editor.end(editor, []))
+
+			focusEditor()
+		},
+		[editor, focusEditor, getEditorText]
+	)
+
+	const insertPublicLinks = useCallback(
+		(links: string[]) => {
+			if (!editor || links.length === 0) {
+				return
+			}
+
+			const currentText = getEditorText()
+			const newText =
+				currentText.length === 0 || currentText.endsWith("\n") ? links.join("\n") + "\n\n" : "\n" + links.join("\n") + "\n\n"
+
+			focusEditor()
+
+			Transforms.insertText(editor, newText)
 			Transforms.select(editor, Editor.end(editor, []))
 
 			focusEditor()
@@ -748,6 +773,117 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		]
 	)
 
+	const attachFiles = useCallback(
+		async (e: React.ChangeEvent<HTMLInputElement>) => {
+			if (!e.target.files) {
+				e.target.value = ""
+
+				return
+			}
+
+			const files: File[] = []
+
+			for (const file of e.target.files) {
+				files.push(file)
+			}
+
+			let toast: ReturnType<typeof loadingToast> | null = null
+
+			try {
+				const uploadedFiles = await worker.uploadFilesToChatUploads({ files })
+				const filesWithLinkUUIDs: { file: DriveCloudItem; linkUUID: string }[] = []
+
+				toast = loadingToast()
+
+				await promiseAllChunked(
+					uploadedFiles.map(
+						file =>
+							new Promise<void>((resolve, reject) => {
+								worker
+									.enablePublicLink({ type: file.type, uuid: file.uuid })
+									.then(linkUUID => {
+										filesWithLinkUUIDs.push({
+											file,
+											linkUUID
+										})
+
+										resolve()
+									})
+									.catch(reject)
+							})
+					)
+				)
+
+				eventEmitter.emit("attachFilesToChat", filesWithLinkUUIDs)
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				e.target.value = ""
+
+				if (toast) {
+					toast.dismiss()
+				}
+			}
+		},
+		[errorToast, loadingToast]
+	)
+
+	const attachFilesFromDrive = useCallback(async () => {
+		const items = await selectDriveItem({
+			type: "file",
+			multiple: true
+		})
+
+		if (items.cancelled) {
+			return
+		}
+
+		const toast = loadingToast()
+
+		try {
+			const filesWithLinkUUIDs: { file: DriveCloudItem; linkUUID: string }[] = []
+
+			await promiseAllChunked(
+				items.items.map(
+					file =>
+						new Promise<void>((resolve, reject) => {
+							worker
+								.enablePublicLink({ type: file.type, uuid: file.uuid })
+								.then(linkUUID => {
+									filesWithLinkUUIDs.push({
+										file,
+										linkUUID
+									})
+
+									resolve()
+								})
+								.catch(reject)
+						})
+				)
+			)
+
+			eventEmitter.emit("attachFilesToChat", filesWithLinkUUIDs)
+		} catch (e) {
+			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
+		}
+	}, [errorToast, loadingToast])
+
 	useEffect(() => {
 		return () => {
 			if (typingEventEmitTimeout.current > 0) {
@@ -770,22 +906,63 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			setTimeout(focusEditor, 100)
 		})
 
+		const attachFilesToChatListener = eventEmitter.on("attachFilesToChat", (files: { file: DriveCloudItem; linkUUID: string }[]) => {
+			insertPublicLinks(
+				files.map(
+					file =>
+						window.location.protocol +
+						"//" +
+						window.location.host +
+						"/#/d/" +
+						file.linkUUID +
+						"#" +
+						(file.file.type === "file" ? file.file.key : "")
+				)
+			)
+		})
+
 		return () => {
 			chatInputWriteTextListener.remove()
 			chatInputFocusListener.remove()
+			attachFilesToChatListener.remove()
 		}
-	}, [clearEditor, insertText, focusEditor])
+	}, [clearEditor, insertText, focusEditor, insertPublicLinks])
 
 	return (
 		<div
 			className="flex flex-col w-full h-auto px-4 pt-0 pb-2 gap-1"
 			id="chat-input-container"
 		>
+			<input
+				type="file"
+				id="file-input"
+				multiple={true}
+				onChange={attachFiles}
+				className="hidden"
+			/>
 			<div className="absolute z-50">
-				<PlusCircle
-					size={24}
-					className="cursor-pointer mt-[12px] ml-[10px] text-muted-foreground hover:text-foreground"
-				/>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild={true}>
+						<PlusCircle
+							size={24}
+							className="cursor-pointer mt-[12px] ml-[10px] text-muted-foreground hover:text-foreground"
+						/>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuItem
+							className="cursor-pointer"
+							onClick={attachFilesFromDrive}
+						>
+							{t("contextMenus.chat.input.selectFromDrive")}
+						</DropdownMenuItem>
+						<DropdownMenuItem
+							className="cursor-pointer"
+							onClick={() => document.getElementById("file-input")?.click()}
+						>
+							{t("contextMenus.chat.input.attachFiles")}
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
 			<div className="absolute z-50 w-[1px]">
 				<Popover>

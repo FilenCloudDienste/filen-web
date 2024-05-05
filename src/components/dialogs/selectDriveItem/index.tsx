@@ -6,8 +6,7 @@ import {
 	AlertDialogContent,
 	AlertDialogDescription,
 	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle
+	AlertDialogHeader
 } from "@/components/ui/alert-dialog"
 import { useTranslation } from "react-i18next"
 import eventEmitter from "@/lib/eventEmitter"
@@ -19,44 +18,58 @@ import worker from "@/lib/worker"
 import { useDriveItemsStore } from "@/stores/drive.store"
 import useRouteParent from "@/hooks/useRouteParent"
 import { directoryUUIDToNameCache } from "@/cache"
+import { type DriveCloudItem } from "@/components/drive"
 
-export type SelectDriveDestinationResponse = { cancelled: true } | { cancelled: false; uuid: string }
+export type SelectionType = "file" | "directory" | "all"
+export type SelectDriveItemResponse = { cancelled: true } | { cancelled: false; items: DriveCloudItem[] }
 
-export async function selectDriveDestination(): Promise<SelectDriveDestinationResponse> {
-	return await new Promise<SelectDriveDestinationResponse>(resolve => {
+export async function selectDriveItem({
+	type = "directory",
+	multiple = false
+}: {
+	type: SelectionType
+	multiple: boolean
+}): Promise<SelectDriveItemResponse> {
+	return await new Promise<SelectDriveItemResponse>(resolve => {
 		const id = Math.random().toString(16).slice(2)
 
-		const listener = eventEmitter.on("selectDriveDestinationResponse", ({ uuid, id: i }: { uuid: string; id: string }) => {
+		const listener = eventEmitter.on("selectDriveItemResponse", ({ items, id: i }: { items: DriveCloudItem[]; id: string }) => {
 			if (id !== i) {
 				return
 			}
 
 			listener.remove()
 
-			if (uuid.length === 0) {
+			if (items.length === 0) {
 				resolve({ cancelled: true })
 
 				return
 			}
 
-			resolve({ cancelled: false, uuid })
+			resolve({ cancelled: false, items })
 		})
 
-		eventEmitter.emit("openSelectDriveDestinationDialog", { id })
+		eventEmitter.emit("openSelectDriveItemDialog", {
+			id,
+			type,
+			multiple
+		})
 	})
 }
 
-export const SelectDriveDestinationDialog = memo(() => {
+export const SelectDriveItemDialog = memo(() => {
 	const { baseFolderUUID } = useSDKConfig()
 	const [open, setOpen] = useState<boolean>(false)
 	const { t } = useTranslation()
 	const requestId = useRef<string>("")
-	const responseUUID = useRef<string>("")
+	const [responseItems, setResponseItems] = useState<DriveCloudItem[]>([])
 	const didSubmit = useRef<boolean>(false)
 	const [pathname, setPathname] = useState<string>(baseFolderUUID)
 	const { setItems } = useDriveItemsStore()
 	const [, startTransition] = useTransition()
 	const routeParent = useRouteParent()
+	const [selectionType, setSelectionType] = useState<SelectionType>("directory")
+	const [selectMultiple, setSelectMultiple] = useState<boolean>(false)
 
 	const parent = useMemo(() => {
 		const ex = pathname.split("/")
@@ -71,13 +84,13 @@ export const SelectDriveDestinationDialog = memo(() => {
 
 		didSubmit.current = true
 
-		eventEmitter.emit("selectDriveDestinationResponse", {
-			uuid: responseUUID.current,
+		eventEmitter.emit("selectDriveItemResponse", {
+			items: responseItems,
 			id: requestId.current
 		})
 
 		setOpen(false)
-	}, [])
+	}, [responseItems])
 
 	const cancel = useCallback(() => {
 		if (didSubmit.current) {
@@ -86,8 +99,8 @@ export const SelectDriveDestinationDialog = memo(() => {
 
 		didSubmit.current = true
 
-		eventEmitter.emit("selectDriveDestinationResponse", {
-			uuid: "",
+		eventEmitter.emit("selectDriveItemResponse", {
+			items: [],
 			id: requestId.current
 		})
 
@@ -113,7 +126,7 @@ export const SelectDriveDestinationDialog = memo(() => {
 			directoryUUIDToNameCache.set(item.uuid, inputResponse.value)
 
 			startTransition(() => {
-				eventEmitter.emit("refetchSelectDestinationDialogList", {
+				eventEmitter.emit("refetchSelectItemDialogList", {
 					uuid: parent
 				})
 
@@ -130,20 +143,19 @@ export const SelectDriveDestinationDialog = memo(() => {
 	}, [setItems, parent, routeParent])
 
 	useEffect(() => {
-		const ex = pathname.split("/")
+		const listener = eventEmitter.on(
+			"openSelectDriveItemDialog",
+			({ id, type, multiple }: { id: string; type: SelectionType; multiple: boolean }) => {
+				requestId.current = id
+				didSubmit.current = false
 
-		responseUUID.current = ex[ex.length - 1]
-	}, [pathname])
-
-	useEffect(() => {
-		const listener = eventEmitter.on("openSelectDriveDestinationDialog", ({ id }: { id: string }) => {
-			requestId.current = id
-			responseUUID.current = baseFolderUUID
-			didSubmit.current = false
-
-			setPathname(baseFolderUUID)
-			setOpen(true)
-		})
+				setResponseItems([])
+				setSelectMultiple(multiple)
+				setSelectionType(type)
+				setPathname(baseFolderUUID)
+				setOpen(true)
+			}
+		)
 
 		return () => {
 			listener.remove()
@@ -163,10 +175,10 @@ export const SelectDriveDestinationDialog = memo(() => {
 				className="outline-none focus:outline-none active:outline-none hover:outline-none"
 			>
 				<AlertDialogHeader>
-					<AlertDialogTitle>{t("dialogs.selectDriveDestination.title")}</AlertDialogTitle>
+					{/*<AlertDialogTitle>{t("dialogs.selectDriveItem.title")}</AlertDialogTitle>*/}
 					<AlertDialogDescription asChild={true}>
 						<div className="w-full h-full flex flex-col pb-2">
-							<div className="flex flex-col mb-2 mt-1">
+							<div className="flex flex-col mb-3">
 								<Breadcrumbs
 									pathname={pathname}
 									setPathname={setPathname}
@@ -175,23 +187,34 @@ export const SelectDriveDestinationDialog = memo(() => {
 							<List
 								pathname={pathname}
 								setPathname={setPathname}
+								selectionType={selectionType}
+								selectMultiple={selectMultiple}
+								responseItems={responseItems}
+								setResponseItems={setResponseItems}
 							/>
 						</div>
 					</AlertDialogDescription>
 				</AlertDialogHeader>
-				<AlertDialogFooter className="items-center">
-					<p
-						className="text-muted-foreground underline cursor-pointer mr-1 text-sm"
-						onClick={createFolder}
-					>
-						{t("dialogs.selectDriveDestination.newFolder")}
-					</p>
+				<AlertDialogFooter className="items-center mt-1">
+					{(selectionType === "directory" || selectionType === "all") && (
+						<p
+							className="text-muted-foreground underline cursor-pointer mr-1 text-sm"
+							onClick={createFolder}
+						>
+							{t("dialogs.selectDriveItem.newFolder")}
+						</p>
+					)}
 					<AlertDialogCancel onClick={cancel}>{t("dialogs.cancel")}</AlertDialogCancel>
-					<AlertDialogAction onClick={submit}>{t("dialogs.selectDriveDestination.submit")}</AlertDialogAction>
+					<AlertDialogAction
+						onClick={submit}
+						disabled={responseItems.length === 0}
+					>
+						{t("dialogs.selectDriveItem.submit")}
+					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>
 	)
 })
 
-export default SelectDriveDestinationDialog
+export default SelectDriveItemDialog
