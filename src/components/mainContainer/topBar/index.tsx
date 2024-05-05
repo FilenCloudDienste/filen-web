@@ -25,6 +25,7 @@ import worker from "@/lib/worker"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
+import useCanUpload from "@/hooks/useCanUpload"
 
 export const TopBar = memo(() => {
 	const { t } = useTranslation()
@@ -36,6 +37,7 @@ export const TopBar = memo(() => {
 	const { dark } = useTheme()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
+	const canUpload = useCanUpload()
 
 	const changeListType = useCallback(() => {
 		startTransition(() => {
@@ -132,13 +134,7 @@ export const TopBar = memo(() => {
 								<DropdownMenuTrigger asChild={true}>
 									<Button
 										className="h-8"
-										disabled={
-											location.includes("shared-in") ||
-											location.includes("favorites") ||
-											location.includes("recents") ||
-											location.includes("shared-out") ||
-											location.includes("links")
-										}
+										disabled={!canUpload}
 									>
 										New
 									</Button>

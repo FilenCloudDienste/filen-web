@@ -6,8 +6,8 @@ import { useTranslation } from "react-i18next"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { readLocalDroppedDirectory } from "./utils"
 import { promiseAllChunked } from "@/lib/utils"
-import useDriveURLState from "@/hooks/useDriveURLState"
 import useLocation from "@/hooks/useLocation"
+import useCanUpload from "@/hooks/useCanUpload"
 
 export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const parent = useRouteParent()
@@ -16,12 +16,12 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const { setItems } = useDriveItemsStore()
 	const { currentReceiverId, currentSharerId, currentReceiverEmail, currentReceivers, currentSharerEmail } = useDriveSharedStore()
 	const [, startTransition] = useTransition()
-	const driveURLState = useDriveURLState()
 	const location = useLocation()
+	const canUpload = useCanUpload()
 
 	const handleShow = useCallback(
 		(e: React.DragEvent<HTMLDivElement>) => {
-			if (!location.includes("drive")) {
+			if (!canUpload) {
 				return
 			}
 
@@ -39,27 +39,20 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 
 			setShowModal(hasFile)
 		},
-		[location]
+		[canUpload]
 	)
 
 	const onDragOver = useCallback(
 		(e: React.DragEvent<HTMLDivElement>) => {
 			e.preventDefault()
 
-			if (
-				driveURLState.favorites ||
-				driveURLState.links ||
-				driveURLState.recents ||
-				driveURLState.sharedIn ||
-				driveURLState.sharedOut ||
-				driveURLState.trash
-			) {
+			if (!canUpload) {
 				return
 			}
 
 			handleShow(e)
 		},
-		[handleShow, driveURLState]
+		[handleShow, canUpload]
 	)
 
 	const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
@@ -72,36 +65,20 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 		(e: React.DragEvent<HTMLDivElement>) => {
 			e.preventDefault()
 
-			if (
-				driveURLState.favorites ||
-				driveURLState.links ||
-				driveURLState.recents ||
-				driveURLState.sharedIn ||
-				driveURLState.sharedOut ||
-				driveURLState.trash ||
-				!location.includes("drive")
-			) {
+			if (!canUpload) {
 				return
 			}
 
 			handleShow(e)
 		},
-		[handleShow, driveURLState, location]
+		[handleShow, canUpload]
 	)
 
 	const onDrop = useCallback(
 		async (e: React.DragEvent<HTMLDivElement>) => {
 			e.preventDefault()
 
-			if (
-				driveURLState.favorites ||
-				driveURLState.links ||
-				driveURLState.recents ||
-				driveURLState.sharedIn ||
-				driveURLState.sharedOut ||
-				driveURLState.trash ||
-				!location.includes("drive")
-			) {
+			if (!canUpload) {
 				return
 			}
 
@@ -206,17 +183,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 				await promiseAllChunked(promises)
 			}
 		},
-		[
-			parent,
-			setItems,
-			currentReceiverEmail,
-			currentReceiverId,
-			currentReceivers,
-			currentSharerEmail,
-			currentSharerId,
-			driveURLState,
-			location
-		]
+		[parent, setItems, currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId, canUpload]
 	)
 
 	return (
@@ -254,7 +221,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 										onDragEnter={onDragEnter}
 										className="border border-dashed w-full h-full rounded-md flex flex-col items-center justify-center"
 									>
-										{t("dropZone.cta")}
+										{location.includes("chats") ? t("dropZone.chatsCta") : t("dropZone.cta")}
 									</div>
 								</div>
 							</DialogDescription>

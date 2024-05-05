@@ -53,7 +53,8 @@
 		}
 	},
 	"dropZone": {
-		"cta": "Upload here"
+		"cta": "Upload here",
+		"chatsCta": "Attach to chat"
 	},
 	"topBar": {
 		"breadcrumb": {
