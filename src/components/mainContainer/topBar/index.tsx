@@ -19,6 +19,8 @@ import eventEmitter from "@/lib/eventEmitter"
 import Notes from "./notes"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/providers/themeProvider"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { TOOLTIP_POPUP_DELAY } from "@/constants"
 
 export const TopBar = memo(() => {
 	const { t } = useTranslation()
@@ -100,15 +102,33 @@ export const TopBar = memo(() => {
 							</DropdownMenuContent>
 						</DropdownMenu>
 						{listType[parent] === "grid" ? (
-							<List
-								className="text-muted-foreground hover:text-primary cursor-pointer"
-								onClick={changeListType}
-							/>
+							<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+								<Tooltip>
+									<TooltipTrigger asChild={true}>
+										<List
+											className="text-muted-foreground hover:text-primary cursor-pointer"
+											onClick={changeListType}
+										/>
+									</TooltipTrigger>
+									<TooltipContent side="bottom">
+										<p>{t("topBar.listView")}</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						) : (
-							<Grid3X3
-								className="text-muted-foreground hover:text-primary cursor-pointer"
-								onClick={changeListType}
-							/>
+							<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+								<Tooltip>
+									<TooltipTrigger asChild={true}>
+										<Grid3X3
+											className="text-muted-foreground hover:text-primary cursor-pointer"
+											onClick={changeListType}
+										/>
+									</TooltipTrigger>
+									<TooltipContent side="bottom">
+										<p>{t("topBar.gridView")}</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						)}
 					</div>
 				</>
