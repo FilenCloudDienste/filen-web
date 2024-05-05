@@ -1943,3 +1943,23 @@ export async function uploadAvatar({ buffer }: { buffer: Buffer }): Promise<void
 export async function requestAccountData() {
 	return await SDK.user().gdpr()
 }
+
+export async function deleteAllVersionedFiles(): Promise<void> {
+	return await SDK.user().deleteAllVersionedFiles()
+}
+
+export async function deleteEverything(): Promise<void> {
+	return await SDK.user().deleteEverything()
+}
+
+export async function toggleFileVersioning({ enabled }: { enabled: boolean }): Promise<void> {
+	return await SDK.user().versioning({ enabled })
+}
+
+export async function toggleLoginAlerts({ enabled }: { enabled: boolean }): Promise<void> {
+	return await SDK.user().loginAlerts({ enabled })
+}
+
+export async function requestAccountDeletion({ twoFactorCode }: { twoFactorCode?: string }): Promise<void> {
+	return await SDK.user().delete({ twoFactorCode })
+}

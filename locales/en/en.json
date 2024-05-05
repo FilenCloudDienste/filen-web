@@ -122,7 +122,8 @@
 		"contacts": "Contacts",
 		"settings": "Settings",
 		"syncs": "Syncs",
-		"mounts": "Mounts"
+		"mounts": "Mounts",
+		"terminal": "Terminal"
 	},
 	"dialogs": {
 		"cancel": "Cancel",

@@ -135,7 +135,7 @@ export function Login() {
 											maxLength={6}
 											autoFocus={true}
 											onKeyDown={e => {
-												if (e.key === "Enter") {
+												if (e.key === "Enter" && twoFactorCode.length === 6) {
 													login()
 												}
 											}}

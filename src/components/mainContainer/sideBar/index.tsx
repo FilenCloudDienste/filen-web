@@ -110,6 +110,7 @@ export const SideBar = memo(() => {
 			<Button id="notes" />
 			<Button id="chats" />
 			<Button id="contacts" />
+			{/*{IS_DESKTOP && <Button id="terminal" />}*/}
 		</div>
 	)
 })

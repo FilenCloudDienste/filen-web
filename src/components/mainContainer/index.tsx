@@ -7,6 +7,7 @@ import TopBar from "./topBar"
 import { IS_DESKTOP } from "@/constants"
 import useIsMobile from "@/hooks/useIsMobile"
 import { cn } from "@/lib/utils"
+import useLocation from "@/hooks/useLocation"
 
 export const sidebarBasePx = 275
 export const sidebarMinPx = 275
@@ -50,6 +51,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 	const windowSize = useWindowSize()
 	const [sidebarPercentage, setSidebarPercentage] = useLocalStorage<number>("sidebarPercentage", 0)
 	const isMobile = useIsMobile()
+	const location = useLocation()
 
 	const sidebarSize = useMemo(() => {
 		if (sidebarPercentage > 0) {
@@ -83,7 +85,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 				onLayout={e => setSidebarPercentage(e[0])}
 				className={cn("bg-muted/40", IS_DESKTOP && "rounded-tl-lg")}
 			>
-				{!isMobile && (
+				{!isMobile && !location.includes("terminal") && (
 					<>
 						<ResizablePanel
 							defaultSize={sidebarSize}
@@ -102,7 +104,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 					order={2}
 					id="right-resizable-panel"
 				>
-					<TopBar />
+					{!location.includes("terminal") && <TopBar />}
 					<div className="flex grow">{children}</div>
 				</ResizablePanel>
 			</ResizablePanelGroup>

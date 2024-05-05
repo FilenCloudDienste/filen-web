@@ -21,6 +21,7 @@ import InputDialog from "@/components/dialogs/input"
 import { connect as socketConnect } from "@/lib/socket"
 import SelectContactsDialog from "@/components/dialogs/selectContacts"
 import TransparentFullScreenImageDialog from "@/components/dialogs/transparentFullScreenImage"
+import TwoFactorCodeDialog from "@/components/dialogs/twoFactorCodeDialog"
 
 export const persistantQueryClient = new QueryClient({
 	defaultOptions: {
@@ -139,6 +140,7 @@ export const Root = memo(() => {
 					<InputDialog />
 					<ConfirmDialog />
 					<TransparentFullScreenImageDialog />
+					<TwoFactorCodeDialog />
 					<Toaster />
 				</PersistQueryClientProvider>
 			</ThemeProvider>

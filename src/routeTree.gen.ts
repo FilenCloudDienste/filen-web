@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TerminalImport } from './routes/terminal'
 import { Route as SyncsImport } from './routes/syncs'
 import { Route as NotesImport } from './routes/notes'
 import { Route as LoginImport } from './routes/login'
@@ -23,6 +24,11 @@ import { Route as ContactsTypeImport } from './routes/contacts.$type'
 import { Route as ChatsUuidImport } from './routes/chats.$uuid'
 
 // Create/Update Routes
+
+const TerminalRoute = TerminalImport.update({
+  path: '/terminal',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SyncsRoute = SyncsImport.update({
   path: '/syncs',
@@ -98,6 +104,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SyncsImport
       parentRoute: typeof rootRoute
     }
+    '/terminal': {
+      preLoaderRoute: typeof TerminalImport
+      parentRoute: typeof rootRoute
+    }
     '/chats/$uuid': {
       preLoaderRoute: typeof ChatsUuidImport
       parentRoute: typeof ChatsImport
@@ -129,6 +139,7 @@ export const routeTree = rootRoute.addChildren([
   LoginRoute,
   NotesRoute.addChildren([NotesUuidRoute]),
   SyncsRoute,
+  TerminalRoute,
   ContactsTypeRoute,
   DriveSplatRoute,
   SettingsTypeRoute,

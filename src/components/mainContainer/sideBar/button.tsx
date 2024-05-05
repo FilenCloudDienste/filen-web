@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from "react"
-import { RefreshCcw, HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings, MessageCircleMore } from "lucide-react"
+import { RefreshCcw, HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings, MessageCircleMore, Terminal } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
@@ -60,7 +60,9 @@ export const Button = memo(({ id }: { id: string }) => {
 										? "/settings/$type"
 										: id === "contacts"
 											? "/contacts/$type"
-											: "/",
+											: id === "terminal"
+												? "/terminal"
+												: "/",
 			params:
 				id === baseFolderUUID
 					? {
@@ -91,7 +93,8 @@ export const Button = memo(({ id }: { id: string }) => {
 			(id === "chats" && location.includes("chats")) ||
 			(id === "contacts" && location.includes("contacts")) ||
 			(id === "syncs" && location.includes("syncs")) ||
-			(id === "mounts" && location.includes("mounts"))
+			(id === "mounts" && location.includes("mounts")) ||
+			(id === "terminal" && location.includes("terminal"))
 		)
 	}, [id, routeParent, location, baseFolderUUID])
 
@@ -142,6 +145,7 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === "settings" && <Settings size={iconSize} />}
 							{id === "transfers" && <ArrowDownUp size={iconSize} />}
 							{id === "transfers" && <TransfersProgress />}
+							{id === "terminal" && <Terminal size={iconSize} />}
 						</Link>
 					</TooltipTrigger>
 					<TooltipContent
@@ -167,6 +171,7 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === "contacts" && t("sideBar.contacts")}
 							{id === "settings" && t("sideBar.settings")}
 							{id === "transfers" && t("sideBar.transfers")}
+							{id === "terminal" && t("sideBar.terminal")}
 						</p>
 					</TooltipContent>
 				</Tooltip>

@@ -7,6 +7,7 @@ import { helmetCSS } from "./lib/helmet"
 import "./index.css"
 import "react-quill/dist/quill.snow.css"
 import "./lib/i18n"
+import "@xterm/xterm/css/xterm.css"
 
 export const history = createHashHistory()
 export const router = createRouter({ routeTree, history })
