@@ -357,6 +357,10 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 		[changeColor]
 	)
 
+	const publicLink = useCallback(() => {
+		eventEmitter.emit("openPublicLinkDialog", item)
+	}, [item])
+
 	return (
 		<CM>
 			<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
@@ -390,7 +394,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				<ContextMenuSeparator />
 				{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && (
 					<ContextMenuItem
-						onClick={download}
+						onClick={publicLink}
 						className="cursor-pointer"
 					>
 						{t("contextMenus.item.publicLink")}

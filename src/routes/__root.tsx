@@ -22,6 +22,7 @@ import { connect as socketConnect } from "@/lib/socket"
 import SelectContactsDialog from "@/components/dialogs/selectContacts"
 import TransparentFullScreenImageDialog from "@/components/dialogs/transparentFullScreenImage"
 import TwoFactorCodeDialog from "@/components/dialogs/twoFactorCodeDialog"
+import PublicLinkDialog from "@/components/dialogs/publicLink"
 
 export const persistantQueryClient = new QueryClient({
 	defaultOptions: {
@@ -131,6 +132,7 @@ export const Root = memo(() => {
 							</DropZone>
 							<SelectDriveItemDialog />
 							<SelectContactsDialog />
+							<PublicLinkDialog />
 						</>
 					) : (
 						<Outlet />

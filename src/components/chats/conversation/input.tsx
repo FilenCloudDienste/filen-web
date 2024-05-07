@@ -27,6 +27,7 @@ import { type DriveCloudItem } from "@/components/drive"
 import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu"
 import { selectDriveItem } from "@/components/dialogs/selectDriveItem"
 import useLoadingToast from "@/hooks/useLoadingToast"
+import { PUBLIC_LINK_BASE_URL } from "@/constants"
 
 export type CustomElement = { type: "paragraph"; children: CustomText[] }
 export type CustomText = { text: string }
@@ -908,16 +909,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 		const attachFilesToChatListener = eventEmitter.on("attachFilesToChat", (files: { file: DriveCloudItem; linkUUID: string }[]) => {
 			insertPublicLinks(
-				files.map(
-					file =>
-						window.location.protocol +
-						"//" +
-						window.location.host +
-						"/#/d/" +
-						file.linkUUID +
-						"#" +
-						(file.file.type === "file" ? file.file.key : "")
-				)
+				files.map(file => PUBLIC_LINK_BASE_URL + file.linkUUID + "#" + (file.file.type === "file" ? file.file.key : ""))
 			)
 		})
 

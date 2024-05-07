@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import SDK from "../sdk"
-import { type FilenSDKConfig, type FileMetadata, type FolderMetadata } from "@filen/sdk"
+import { type FilenSDKConfig, type FileMetadata, type FolderMetadata, type PublicLinkExpiration } from "@filen/sdk"
 import { type FileSystemFileHandle } from "native-file-system-adapter"
 import { type DriveCloudItem } from "@/components/drive"
 import { setItem, getItem, removeItem } from "@/lib/localForage"
@@ -28,6 +28,7 @@ import { type UserAccountResponse } from "@filen/sdk/dist/types/api/v3/user/acco
 import axios, { type AxiosResponse } from "axios"
 import { workerCorsHeadCache, workerParseOGFromURLCache } from "@/cache"
 import { Semaphore } from "../semaphore"
+import { type FileLinkStatusResponse } from "@filen/sdk/dist/types/api/v3/file/link/status"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -377,7 +378,8 @@ export async function uploadFile({
 	sharerEmail = "",
 	receiverId = 0,
 	receiverEmail = "",
-	receivers = []
+	receivers = [],
+	name
 }: {
 	file: File
 	parent: string
@@ -386,22 +388,24 @@ export async function uploadFile({
 	receiverId?: number
 	receiverEmail?: string
 	receivers?: CloudItemReceiver[]
+	name?: string
 }): Promise<DriveCloudItem> {
 	await waitForInitialization()
 
-	const fileId = `${file.name}:${file.size}:${file.type}:${file.lastModified}:${file.webkitRelativePath}`
+	const fileName = name ? name : file.name
+	const fileId = `${fileName}:${file.size}:${file.type}:${file.lastModified}:${file.webkitRelativePath}`
 
 	const item = await SDK.cloud().uploadWebFile({
 		file,
 		parent,
-		name: file.name,
+		name: fileName,
 		onQueued: () => {
 			postMessageToMain({
 				type: "upload",
 				data: {
 					type: "queued",
 					uuid: fileId,
-					name: file.name,
+					name: fileName,
 					size: file.size
 				}
 			})
@@ -412,7 +416,7 @@ export async function uploadFile({
 				data: {
 					type: "started",
 					uuid: fileId,
-					name: file.name,
+					name: fileName,
 					size: file.size
 				}
 			})
@@ -424,7 +428,7 @@ export async function uploadFile({
 					type: "progress",
 					uuid: fileId,
 					bytes: transferred,
-					name: file.name,
+					name: fileName,
 					size: file.size
 				}
 			})
@@ -435,7 +439,7 @@ export async function uploadFile({
 				data: {
 					type: "finished",
 					uuid: fileId,
-					name: file.name,
+					name: fileName,
 					size: file.size
 				}
 			})
@@ -447,7 +451,7 @@ export async function uploadFile({
 					type: "error",
 					uuid: fileId,
 					err,
-					name: file.name,
+					name: fileName,
 					size: file.size
 				}
 			})
@@ -1979,9 +1983,83 @@ export async function uploadFilesToChatUploads({ files }: { files: File[] }): Pr
 		parentUUID = (await createDirectory({ name: "Chat Uploads", parent: SDK.config.baseFolderUUID! })).uuid
 	}
 
-	return await promiseAllChunked(files.map(file => uploadFile({ file, parent: parentUUID })))
+	const now = Date.now()
+
+	return await promiseAllChunked(
+		files.map(file =>
+			uploadFile({
+				file,
+				parent: parentUUID,
+				name: `${now}_${file.name}`
+			})
+		)
+	)
 }
 
 export async function enablePublicLink({ type, uuid }: { type: "file" | "directory"; uuid: string }): Promise<string> {
 	return await SDK.cloud().enablePublicLink({ type, uuid })
+}
+
+export async function editPublicLink({
+	type,
+	itemUUID,
+	linkUUID,
+	password,
+	enableDownload,
+	expiration
+}: {
+	type: "file" | "directory"
+	itemUUID: string
+	linkUUID?: string
+	password?: string
+	enableDownload?: boolean
+	expiration: PublicLinkExpiration
+}): Promise<void> {
+	return await SDK.cloud().editPublicLink({ type, itemUUID, linkUUID, password, enableDownload, expiration })
+}
+
+export async function disablePublicLink({
+	type,
+	itemUUID,
+	linkUUID
+}: {
+	type: "file" | "directory"
+	itemUUID: string
+	linkUUID: string
+}): Promise<void> {
+	if (type === "directory") {
+		return await SDK.cloud().disablePublicLink({ type, itemUUID })
+	}
+
+	return await SDK.cloud().disablePublicLink({ type, itemUUID, linkUUID })
+}
+
+export async function filePublicLinkStatus({ uuid }: { uuid: string }): Promise<FileLinkStatusResponse> {
+	return await SDK.cloud().publicLinkStatus({ type: "file", uuid })
+}
+
+export async function directoryPublicLinkStatus({ uuid }: { uuid: string }): Promise<{
+	exists: boolean
+	uuid: string
+	key: string
+	expiration: number
+	expirationText: string
+	downloadBtn: 0 | 1
+	password: string | null
+}> {
+	const status = await SDK.cloud().publicLinkStatus({ type: "directory", uuid })
+
+	return {
+		exists: status.exists,
+		uuid: status.exists ? status.uuid : "",
+		key: status.exists ? status.key : "",
+		expiration: status.exists ? status.expiration : 0,
+		expirationText: status.exists ? status.expirationText : "",
+		downloadBtn: status.exists ? status.downloadBtn : 1,
+		password: status.exists ? status.password : null
+	}
+}
+
+export async function decryptDirectoryLinkKey({ key }: { key: string }): Promise<string> {
+	return await SDK.crypto().decrypt().folderLinkKey({ metadata: key })
 }

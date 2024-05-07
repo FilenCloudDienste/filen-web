@@ -132,6 +132,19 @@
 			"title": "Select",
 			"submit": "Select",
 			"newFolder": "New folder"
+		},
+		"publicLink": {
+			"title": "Public link",
+			"description": "Create a public link",
+			"close": "Close",
+			"save": "Save",
+			"enabled": "Enabled",
+			"downloadButton": "Download button",
+			"link": "Link",
+			"copyLink": "Copy",
+			"expiresAfter": "Expires after",
+			"password": "Password (leave empty to disable)",
+			"passwordPlaceholder": "Password"
 		}
 	},
 	"contextMenus": {
