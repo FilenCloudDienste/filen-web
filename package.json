@@ -63,7 +63,7 @@
 		"lodash": "^4.17.21",
 		"lucide-react": "^0.344.0",
 		"native-file-system-adapter": "^3.0.1",
-		"pdfjs-dist": "^4.0.379",
+		"pdfjs-dist": "^4.2.67",
 		"react": "^18.2.0",
 		"react-colorful": "^5.6.1",
 		"react-dom": "^18.2.0",
