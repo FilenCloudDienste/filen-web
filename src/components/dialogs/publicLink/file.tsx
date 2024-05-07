@@ -44,8 +44,7 @@ export const File = memo(
 
 		const query = useQuery({
 			queryKey: ["filePublicLinkStatus", item.uuid],
-			queryFn: () => worker.filePublicLinkStatus({ uuid: item.uuid }),
-			persister: undefined
+			queryFn: () => worker.filePublicLinkStatus({ uuid: item.uuid })
 		})
 
 		const toggleStatus = useCallback(

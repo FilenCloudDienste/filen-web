@@ -3,7 +3,7 @@ import { createRootRoute, Outlet } from "@tanstack/react-router"
 import { memo, useEffect, useState, useRef } from "react"
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClient } from "@tanstack/react-query"
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
+import { PersistQueryClientProvider, type PersistQueryClientOptions } from "@tanstack/react-query-persist-client"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import worker from "@/lib/worker"
@@ -36,17 +36,19 @@ export const persistantQueryClient = new QueryClient({
 	}
 })
 
-export const sessionQueryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			refetchOnMount: "always",
-			refetchOnReconnect: "always",
-			refetchOnWindowFocus: "always"
+export const queryClientPersister = createIDBPersister()
+
+export const UNCACHED_QUERY_KEYS = ["chatYouTubeEmbedInfo", "directoryPublicLinkStatus", "filePublicLinkStatus"]
+
+export const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
+	persister: queryClientPersister,
+	maxAge: Infinity,
+	dehydrateOptions: {
+		shouldDehydrateQuery(query) {
+			return query.queryKey.some(queryKey => UNCACHED_QUERY_KEYS.includes(queryKey as unknown as string))
 		}
 	}
-})
-
-export const queryClientPersister = createIDBPersister()
+}
 
 export const Root = memo(() => {
 	const [ready, setReady] = useState<boolean>(false)
@@ -121,7 +123,7 @@ export const Root = memo(() => {
 			<ThemeProvider>
 				<PersistQueryClientProvider
 					client={persistantQueryClient}
-					persistOptions={{ persister: queryClientPersister, maxAge: Infinity }}
+					persistOptions={persistOptions}
 				>
 					{authed ? (
 						<>

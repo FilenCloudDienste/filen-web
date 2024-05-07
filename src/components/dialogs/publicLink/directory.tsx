@@ -45,8 +45,7 @@ export const Directory = memo(
 
 		const query = useQuery({
 			queryKey: ["directoryPublicLinkStatus", item.uuid],
-			queryFn: () => worker.directoryPublicLinkStatus({ uuid: item.uuid }),
-			persister: undefined
+			queryFn: () => worker.directoryPublicLinkStatus({ uuid: item.uuid })
 		})
 
 		const toggleStatus = useCallback(

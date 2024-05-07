@@ -35,8 +35,7 @@ export const YouTube = memo(({ link, messageUUID }: { link: string; messageUUID:
 		queryFn: () =>
 			worker.corsGet(
 				"https://www.youtube.com/oembed?url=https://youtube.com/watch?v=" + parseYouTubeVideoId(link) + "&format=json"
-			) as YouTubeInfo,
-		persister: undefined
+			) as YouTubeInfo
 	})
 
 	const onPlayClick = useCallback(() => {
