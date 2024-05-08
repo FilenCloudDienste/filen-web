@@ -9,6 +9,9 @@ import ContextMenu from "./contextMenu"
 import { useNavigate } from "@tanstack/react-router"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import useLocation from "@/hooks/useLocation"
+import useErrorToast from "@/hooks/useErrorToast"
+import useLoadingToast from "@/hooks/useLoadingToast"
+import { useTranslation } from "react-i18next"
 
 export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: UseQueryResult<DriveCloudItem[], Error> }) => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -25,6 +28,9 @@ export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 	} = useDriveSharedStore()
 	const navigate = useNavigate()
 	const location = useLocation()
+	const loadingToast = useLoadingToast()
+	const errorToast = useErrorToast()
+	const { t } = useTranslation()
 
 	const grid = useGrid({
 		scrollRef: virtualizerParentRef,
@@ -95,6 +101,10 @@ export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 												currentSharerId={currentSharerId}
 												navigate={navigate}
 												pathname={location}
+												location={location}
+												errorToast={errorToast}
+												loadingToast={loadingToast}
+												t={t}
 											/>
 										</div>
 									)

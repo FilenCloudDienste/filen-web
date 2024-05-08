@@ -47,7 +47,6 @@ export const SharedWithDialog = memo(() => {
 					>
 						{t("dialogs.sharedWith.close")}
 					</Button>
-					<Button onClick={close}>{t("dialogs.sharedWith.add")}</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
