@@ -11,6 +11,9 @@ i18n.use(LanguageDetector)
 		resources: {
 			en: {
 				translation: locales.en
+			},
+			de: {
+				translation: locales.de
 			}
 		},
 		lng: storedLang ?? undefined,

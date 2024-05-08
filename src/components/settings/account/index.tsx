@@ -9,6 +9,8 @@ import { Switch } from "@/components/ui/switch"
 import { formatBytes } from "@/utils"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { showTwoFactorCodeDialog } from "@/components/dialogs/twoFactorCodeDialog"
+import { transfer } from "comlink"
+import Avatar from "@/components/avatar"
 
 export const Account = memo(() => {
 	const account = useAccount()
@@ -295,6 +297,40 @@ export const Account = memo(() => {
 		}
 	}, [loadingToast, errorToast, account])
 
+	const uploadAvatar = useCallback(
+		async (e: React.ChangeEvent<HTMLInputElement>) => {
+			if (!e.target.files || e.target.files.length !== 1 || !account) {
+				return
+			}
+
+			const toast = loadingToast()
+
+			try {
+				const file = e.target.files[0]
+				const buffer = Buffer.from(await file.arrayBuffer())
+
+				await worker.uploadAvatar({ buffer: transfer(buffer, [buffer.buffer]) })
+				await account.refetch()
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+
+				const input = document.getElementById("avatar-input") as HTMLInputElement
+
+				input.value = ""
+			}
+		},
+		[loadingToast, errorToast, account]
+	)
+
 	useEffect(() => {
 		if (account) {
 			setUsage({
@@ -312,9 +348,32 @@ export const Account = memo(() => {
 		<div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden">
 			<div className="flex flex-col p-6 w-5/6 h-full">
 				<div className="flex flex-col gap-4">
+					<input
+						className="hidden"
+						id="avatar-input"
+						onChange={uploadAvatar}
+						type="file"
+						accept="image/png, image/jpeg, image/jpg"
+					/>
+					<Section
+						name="Avatar"
+						info="Your avatar will be visible publicly"
+					>
+						<Avatar
+							src={account.account.avatarURL}
+							size={32}
+						/>
+						<p
+							className="underline cursor-pointer"
+							onClick={() => document.getElementById("avatar-input")?.click()}
+						>
+							Edit
+						</p>
+					</Section>
 					<Section
 						name="Versioned files"
 						info="Delete all versioned files"
+						className="mt-10"
 					>
 						<p className="text-muted-foreground">{formatBytes(usage.versioned)}</p>
 						<p
