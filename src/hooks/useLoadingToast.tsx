@@ -1,6 +1,12 @@
-import { useToast } from "@/components/ui/use-toast"
+import { useToast, type ToasterToast } from "@/components/ui/use-toast"
 import { Loader } from "lucide-react"
 import { useCallback } from "react"
+
+export type UseLoadingToast = () => {
+	id: string
+	dismiss: () => void
+	update: (props: ToasterToast) => void
+}
 
 export default function useLoadingToast() {
 	const { toast } = useToast()

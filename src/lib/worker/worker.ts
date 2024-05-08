@@ -2067,3 +2067,7 @@ export async function decryptDirectoryLinkKey({ key }: { key: string }): Promise
 export async function stopSharingItem({ uuid, receiverId }: { uuid: string; receiverId: number }): Promise<void> {
 	return await SDK.cloud().stopSharingItem({ uuid, receiverId })
 }
+
+export async function removeSharedItem({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.cloud().removeSharedItem({ uuid })
+}

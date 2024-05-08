@@ -10,6 +10,8 @@ import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { useNavigate } from "@tanstack/react-router"
 import useLocation from "@/hooks/useLocation"
 import { useTranslation } from "react-i18next"
+import useErrorToast from "@/hooks/useErrorToast"
+import useLoadingToast from "@/hooks/useLoadingToast"
 
 export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: UseQueryResult<DriveCloudItem[], Error> }) => {
 	const windowSize = useWindowSize()
@@ -27,6 +29,8 @@ export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 	const navigate = useNavigate()
 	const location = useLocation()
 	const { t } = useTranslation()
+	const errorToast = useErrorToast()
+	const loadingToast = useLoadingToast()
 
 	const rowVirtualizer = useVirtualizer({
 		count: items.length,
@@ -80,6 +84,9 @@ export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 									navigate={navigate}
 									pathname={location}
 									t={t}
+									location={location}
+									errorToast={errorToast}
+									loadingToast={loadingToast}
 								/>
 							)
 						})}

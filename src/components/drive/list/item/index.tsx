@@ -18,6 +18,9 @@ import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
 import { THUMBNAIL_MAX_FETCH_SIZE } from "@/constants"
 import { Badge } from "@/components/ui/badge"
 import { type TFunction } from "i18next"
+import { showConfirmDialog } from "@/components/dialogs/confirm"
+import { type UseLoadingToast } from "@/hooks/useLoadingToast"
+import { type UseErrorToast } from "@/hooks/useErrorToast"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -38,7 +41,10 @@ export const ListItem = memo(
 		setCurrentSharerEmail,
 		pathname,
 		navigate,
-		t
+		t,
+		location,
+		loadingToast,
+		errorToast
 	}: {
 		item: DriveCloudItem
 		virtualItem?: VirtualItem
@@ -56,6 +62,9 @@ export const ListItem = memo(
 		pathname: string
 		navigate: UseNavigateResult<string>
 		t: TFunction<"translation", undefined>
+		location: string
+		loadingToast: UseLoadingToast
+		errorToast: UseErrorToast
 	}) => {
 		const [hovering, setHovering] = useState<boolean>(false)
 		const [size, setSize] = useState<number>(
@@ -275,6 +284,48 @@ export const ListItem = memo(
 			[item]
 		)
 
+		const removeShared = useCallback(
+			async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+				e.preventDefault()
+				e.stopPropagation()
+
+				if (!e.shiftKey) {
+					if (
+						!(await showConfirmDialog({
+							title: "d",
+							continueButtonText: "ddd",
+							description: "ookeoetrasher",
+							continueButtonVariant: "destructive"
+						}))
+					) {
+						return
+					}
+				}
+
+				const toast = loadingToast()
+
+				try {
+					await worker.removeSharedItem({ uuid: item.uuid })
+
+					if (location.includes("shared-in")) {
+						setItems(prev => prev.filter(itm => itm.uuid !== item.uuid))
+					}
+				} catch (e) {
+					console.error(e)
+
+					const toast = errorToast((e as unknown as Error).toString())
+
+					toast.update({
+						id: toast.id,
+						duration: 5000
+					})
+				} finally {
+					toast.dismiss()
+				}
+			},
+			[errorToast, loadingToast, setItems, item.uuid, location]
+		)
+
 		useMountedEffect(() => {
 			fetchDirectorySize()
 			fetchThumbnail()
@@ -344,6 +395,7 @@ export const ListItem = memo(
 										<Badge
 											className="line-clamp-1 text-ellipsis break-all cursor-pointer"
 											variant="default"
+											onClick={removeShared}
 										>
 											{item.sharerEmail}
 										</Badge>

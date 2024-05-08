@@ -8,7 +8,7 @@ import type { ToastActionElement, ToastProps } from "@/components/ui/toast"
 const TOAST_LIMIT = Number.MAX_SAFE_INTEGER
 const TOAST_REMOVE_DELAY = Number.MAX_SAFE_INTEGER
 
-type ToasterToast = ToastProps & {
+export type ToasterToast = ToastProps & {
 	id: string
 	title?: React.ReactNode
 	description?: React.ReactNode

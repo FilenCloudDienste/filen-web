@@ -3,6 +3,7 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import useRouteParent from "@/hooks/useRouteParent"
 import { useTranslation } from "react-i18next"
 import { ArrowUp, ArrowDown } from "lucide-react"
+import { useDriveItemsStore } from "@/stores/drive.store"
 
 const iconSize = 16
 
@@ -12,6 +13,7 @@ export const Header = memo(() => {
 	const [driveSortBy, setDriveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 	const routeParent = useRouteParent()
 	const { t } = useTranslation()
+	const { items } = useDriveItemsStore()
 
 	const name = useCallback(() => {
 		setDriveSortBy(prev => ({
@@ -33,6 +35,10 @@ export const Header = memo(() => {
 			[routeParent]: prev[routeParent] === "lastModifiedDesc" ? "lastModifiedAsc" : "lastModifiedDesc"
 		}))
 	}, [setDriveSortBy, routeParent])
+
+	if (items.length === 0) {
+		return null
+	}
 
 	return (
 		<div className="flex flex-row px-3">
