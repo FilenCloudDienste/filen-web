@@ -16,6 +16,8 @@ import { Heart } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
 import { THUMBNAIL_MAX_FETCH_SIZE } from "@/constants"
+import { Badge } from "@/components/ui/badge"
+import { type TFunction } from "i18next"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -35,7 +37,8 @@ export const ListItem = memo(
 		setCurrentReceivers,
 		setCurrentSharerEmail,
 		pathname,
-		navigate
+		navigate,
+		t
 	}: {
 		item: DriveCloudItem
 		virtualItem?: VirtualItem
@@ -52,6 +55,7 @@ export const ListItem = memo(
 		setCurrentSharerEmail: (fn: string | ((prev: string) => string)) => void
 		pathname: string
 		navigate: UseNavigateResult<string>
+		t: TFunction<"translation", undefined>
 	}) => {
 		const [hovering, setHovering] = useState<boolean>(false)
 		const [size, setSize] = useState<number>(
@@ -261,6 +265,16 @@ export const ListItem = memo(
 			}
 		}, [item, thumbnailURL])
 
+		const onReceiversClick = useCallback(
+			(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+				e.preventDefault()
+				e.stopPropagation()
+
+				eventEmitter.emit("openSharedWithDialog", item)
+			},
+			[item]
+		)
+
 		useMountedEffect(() => {
 			fetchDirectorySize()
 			fetchThumbnail()
@@ -316,7 +330,7 @@ export const ListItem = memo(
 										/>
 									)}
 								</div>
-								<div className="flex flex-row dragselect-start-disallowed items-center gap-2">
+								<div className="flex flex-row grow dragselect-start-disallowed items-center gap-2">
 									{item.favorited && (
 										<Heart
 											size={18}
@@ -325,6 +339,29 @@ export const ListItem = memo(
 									)}
 									<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
 								</div>
+								{item.sharerId > 0 && item.sharerEmail.length > 0 && (
+									<div className="flex flex-row items-center pr-2">
+										<Badge
+											className="line-clamp-1 text-ellipsis break-all cursor-pointer"
+											variant="default"
+										>
+											{item.sharerEmail}
+										</Badge>
+									</div>
+								)}
+								{item.receivers.length > 0 && (
+									<div className="flex flex-row items-center pr-2">
+										<Badge
+											className="line-clamp-1 text-ellipsis break-all cursor-pointer"
+											onClick={onReceiversClick}
+											variant="default"
+										>
+											{item.receivers.length === 1
+												? item.receivers[0].email
+												: t("drive.list.item.sharedWith", { count: item.receivers.length })}
+										</Badge>
+									</div>
+								)}
 							</div>
 							<div className="flex flex-row dragselect-start-disallowed line-clamp-1 text-ellipsis w-[125px]">
 								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{formatBytes(size)}</p>

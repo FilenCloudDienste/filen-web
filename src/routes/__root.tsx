@@ -23,6 +23,7 @@ import SelectContactsDialog from "@/components/dialogs/selectContacts"
 import TransparentFullScreenImageDialog from "@/components/dialogs/transparentFullScreenImage"
 import TwoFactorCodeDialog from "@/components/dialogs/twoFactorCodeDialog"
 import PublicLinkDialog from "@/components/dialogs/publicLink"
+import SharedWithDialog from "@/components/dialogs/sharedWith"
 
 export const persistantQueryClient = new QueryClient({
 	defaultOptions: {
@@ -37,7 +38,6 @@ export const persistantQueryClient = new QueryClient({
 })
 
 export const queryClientPersister = createIDBPersister()
-
 export const UNCACHED_QUERY_KEYS = ["chatYouTubeEmbedInfo", "directoryPublicLinkStatus", "filePublicLinkStatus"]
 
 export const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
@@ -135,6 +135,7 @@ export const Root = memo(() => {
 							<SelectDriveItemDialog />
 							<SelectContactsDialog />
 							<PublicLinkDialog />
+							<SharedWithDialog />
 						</>
 					) : (
 						<Outlet />

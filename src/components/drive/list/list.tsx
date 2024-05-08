@@ -9,6 +9,7 @@ import ContextMenu from "./contextMenu"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { useNavigate } from "@tanstack/react-router"
 import useLocation from "@/hooks/useLocation"
+import { useTranslation } from "react-i18next"
 
 export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: UseQueryResult<DriveCloudItem[], Error> }) => {
 	const windowSize = useWindowSize()
@@ -25,6 +26,7 @@ export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 	} = useDriveSharedStore()
 	const navigate = useNavigate()
 	const location = useLocation()
+	const { t } = useTranslation()
 
 	const rowVirtualizer = useVirtualizer({
 		count: items.length,
@@ -77,6 +79,7 @@ export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 									currentSharerId={currentSharerId}
 									navigate={navigate}
 									pathname={location}
+									t={t}
 								/>
 							)
 						})}

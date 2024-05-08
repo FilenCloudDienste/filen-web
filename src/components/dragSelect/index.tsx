@@ -99,6 +99,9 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 				return
 			}
 
+			e.preventDefault()
+			e.stopPropagation()
+
 			setStartPos({ x: clientX, y: clientY })
 			setIsDragging(true)
 
@@ -121,6 +124,9 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 				return
 			}
 
+			e.preventDefault()
+			e.stopPropagation()
+
 			setEndPos({ x: clientX, y: clientY })
 
 			checkCollision()
@@ -128,15 +134,21 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 		[isDragging, checkCollision, startPos, location]
 	)
 
-	const handleMouseUp = useCallback((): void => {
-		if (!location.includes("drive")) {
-			return
-		}
+	const handleMouseUp = useCallback(
+		(e: React.MouseEvent<HTMLDivElement>): void => {
+			if (!location.includes("drive")) {
+				return
+			}
 
-		setIsDragging(false)
-		setStartPos({ x: 0, y: 0 })
-		setEndPos({ x: 0, y: 0 })
-	}, [location])
+			e.preventDefault()
+			e.stopPropagation()
+
+			setIsDragging(false)
+			setStartPos({ x: 0, y: 0 })
+			setEndPos({ x: 0, y: 0 })
+		},
+		[location]
+	)
 
 	const show = useMemo((): boolean => {
 		return location.includes("drive") && isDragging && startPos.x !== 0 && startPos.y !== 0 && endPos.x !== 0 && endPos.y !== 0

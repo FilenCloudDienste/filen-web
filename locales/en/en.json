@@ -145,6 +145,12 @@
 			"expiresAfter": "Expires after",
 			"password": "Password (leave empty to disable)",
 			"passwordPlaceholder": "Password"
+		},
+		"sharedWith": {
+			"title": "Shared with",
+			"add": "Add",
+			"close": "Close",
+			"remove": "Remove"
 		}
 	},
 	"contextMenus": {
@@ -270,6 +276,11 @@
 			"name": "Name",
 			"size": "Size",
 			"modified": "Modified"
+		},
+		"list": {
+			"item": {
+				"sharedWith": "Shared with {{count}}"
+			}
 		}
 	}
 }

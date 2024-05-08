@@ -2063,3 +2063,7 @@ export async function directoryPublicLinkStatus({ uuid }: { uuid: string }): Pro
 export async function decryptDirectoryLinkKey({ key }: { key: string }): Promise<string> {
 	return await SDK.crypto().decrypt().folderLinkKey({ metadata: key })
 }
+
+export async function stopSharingItem({ uuid, receiverId }: { uuid: string; receiverId: number }): Promise<void> {
+	return await SDK.cloud().stopSharingItem({ uuid, receiverId })
+}
