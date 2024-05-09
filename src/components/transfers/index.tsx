@@ -108,112 +108,114 @@ export const Transfers = memo(() => {
 					})
 				)
 			})
-		}, 250)
+		}, 100)
 	).current
 
 	const handleTransferUpdates = useCallback(
 		(message: WorkerToMainMessage) => {
-			if (message.type === "download" || message.type === "upload") {
-				const now = Date.now()
+			startTransition(() => {
+				if (message.type === "download" || message.type === "upload") {
+					const now = Date.now()
 
-				if (message.data.type === "queued") {
-					setTransfers(prev => [
-						...prev,
-						{
-							type: message.type,
-							uuid: message.data.uuid,
-							state: "queued",
-							bytes: 0,
-							name: message.data.name,
-							size: 0,
-							startedTimestamp: 0,
-							queuedTimestamp: now,
-							errorTimestamp: 0,
-							finishedTimestamp: 0,
-							progressTimestamp: 0
-						}
-					])
+					if (message.data.type === "queued") {
+						setTransfers(prev => [
+							...prev,
+							{
+								type: message.type,
+								uuid: message.data.uuid,
+								state: "queued",
+								bytes: 0,
+								name: message.data.name,
+								size: 0,
+								startedTimestamp: 0,
+								queuedTimestamp: now,
+								errorTimestamp: 0,
+								finishedTimestamp: 0,
+								progressTimestamp: 0
+							}
+						])
 
-					if (progressStarted.current === -1) {
-						progressStarted.current = now
-
-						setOpen(true)
-					} else {
-						if (now < progressStarted.current) {
+						if (progressStarted.current === -1) {
 							progressStarted.current = now
 
 							setOpen(true)
+						} else {
+							if (now < progressStarted.current) {
+								progressStarted.current = now
+
+								setOpen(true)
+							}
 						}
-					}
-				} else if (message.data.type === "started") {
-					setTransfers(prev =>
-						prev.map(transfer =>
-							transfer.uuid === message.data.uuid
-								? {
-										...transfer,
-										state: "started",
-										startedTimestamp: Date.now(),
-										size: message.data.type === "started" ? message.data.size : 0
-									}
-								: transfer
+					} else if (message.data.type === "started") {
+						setTransfers(prev =>
+							prev.map(transfer =>
+								transfer.uuid === message.data.uuid
+									? {
+											...transfer,
+											state: "started",
+											startedTimestamp: Date.now(),
+											size: message.data.type === "started" ? message.data.size : 0
+										}
+									: transfer
+							)
 						)
-					)
 
-					allBytes.current += message.data.size
-				} else if (message.data.type === "progress") {
-					const bytes = message.data.bytes
+						allBytes.current += message.data.size
+					} else if (message.data.type === "progress") {
+						const bytes = message.data.bytes
 
-					bytesSent.current += bytes
+						bytesSent.current += bytes
 
-					setTransfers(prev =>
-						prev.map(transfer =>
-							transfer.uuid === message.data.uuid
-								? {
-										...transfer,
-										bytes: transfer.bytes + bytes,
-										progressTimestamp: Date.now()
-									}
-								: transfer
+						setTransfers(prev =>
+							prev.map(transfer =>
+								transfer.uuid === message.data.uuid
+									? {
+											...transfer,
+											bytes: transfer.bytes + bytes,
+											progressTimestamp: Date.now()
+										}
+									: transfer
+							)
 						)
-					)
-				} else if (message.data.type === "finished") {
-					setFinishedTransfers(prev => [
-						...prev,
-						{
-							type: message.type,
-							uuid: message.data.uuid,
-							state: "finished",
-							bytes: message.data.type === "finished" ? message.data.size : 0,
-							name: message.data.name,
-							size: message.data.type === "finished" ? message.data.size : 0,
-							startedTimestamp: 0,
-							queuedTimestamp: now,
-							errorTimestamp: 0,
-							finishedTimestamp: Date.now(),
-							progressTimestamp: 0
+					} else if (message.data.type === "finished") {
+						setFinishedTransfers(prev => [
+							...prev,
+							{
+								type: message.type,
+								uuid: message.data.uuid,
+								state: "finished",
+								bytes: message.data.type === "finished" ? message.data.size : 0,
+								name: message.data.name,
+								size: message.data.type === "finished" ? message.data.size : 0,
+								startedTimestamp: 0,
+								queuedTimestamp: now,
+								errorTimestamp: 0,
+								finishedTimestamp: Date.now(),
+								progressTimestamp: 0
+							}
+						])
+						setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
+					} else if (message.data.type === "error") {
+						if (allBytes.current >= message.data.size) {
+							allBytes.current -= message.data.size
 						}
-					])
-					setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
-				} else if (message.data.type === "error") {
-					if (allBytes.current >= message.data.size) {
-						allBytes.current -= message.data.size
-					}
 
-					setTransfers(prev =>
-						prev.map(transfer =>
-							transfer.uuid === message.data.uuid ? { ...transfer, state: "error", errorTimestamp: Date.now() } : transfer
+						setTransfers(prev =>
+							prev.map(transfer =>
+								transfer.uuid === message.data.uuid ? { ...transfer, state: "error", errorTimestamp: Date.now() } : transfer
+							)
 						)
-					)
-				} else if (message.data.type === "stopped") {
-					if (allBytes.current >= message.data.size) {
-						allBytes.current -= message.data.size
+					} else if (message.data.type === "stopped") {
+						if (allBytes.current >= message.data.size) {
+							allBytes.current -= message.data.size
+						}
+
+						setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
 					}
 
-					setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
+					updateInfo()
 				}
-
-				updateInfo()
-			}
+			})
 		},
 		[setFinishedTransfers, setTransfers, updateInfo]
 	)
@@ -303,6 +305,8 @@ export const Transfers = memo(() => {
 								return (
 									<div
 										key={virtualItem.key}
+										data-index={virtualItem.index}
+										ref={rowVirtualizer.measureElement}
 										style={{
 											position: "absolute",
 											top: 0,

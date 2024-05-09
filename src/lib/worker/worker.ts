@@ -30,6 +30,7 @@ import { workerCorsHeadCache, workerParseOGFromURLCache } from "@/cache"
 import { Semaphore } from "../semaphore"
 import { type FileLinkStatusResponse } from "@filen/sdk/dist/types/api/v3/file/link/status"
 import { v4 as uuidv4 } from "uuid"
+import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -2456,4 +2457,16 @@ export async function updateDesktopLastActive({ timestamp }: { timestamp: number
 	await waitForInitialization()
 
 	return await SDK.user().updateDesktopLastActive({ timestamp })
+}
+
+export async function listEvents(params?: { timestamp?: number; filter?: "all" }): Promise<UserEvent[]> {
+	await waitForInitialization()
+
+	return await SDK.user().events(params)
+}
+
+export async function fetchEvent({ uuid }: { uuid: string }): Promise<UserEvent> {
+	await waitForInitialization()
+
+	return await SDK.user().event({ uuid })
 }

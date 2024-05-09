@@ -66,28 +66,41 @@ export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 							const item = items[virtualItem.index]
 
 							return (
-								<ListItem
+								<div
 									key={virtualItem.key}
-									item={item}
-									virtualItem={virtualItem}
-									items={items}
-									index={virtualItem.index}
-									type="list"
-									setCurrentReceiverEmail={setCurrentReceiverEmail}
-									setCurrentReceiverId={setCurrentReceiverId}
-									setCurrentReceivers={setCurrentReceivers}
-									setCurrentSharerEmail={setCurrentSharerEmail}
-									setCurrentSharerId={setCurrentSharerId}
-									setItems={setItems}
-									currentReceiverId={currentReceiverId}
-									currentSharerId={currentSharerId}
-									navigate={navigate}
-									pathname={location}
-									t={t}
-									location={location}
-									errorToast={errorToast}
-									loadingToast={loadingToast}
-								/>
+									data-index={virtualItem.index}
+									ref={rowVirtualizer.measureElement}
+									style={{
+										position: "absolute",
+										top: 0,
+										left: 0,
+										width: "100%",
+										height: `${virtualItem.size}px`,
+										transform: `translateY(${virtualItem.start}px)`
+									}}
+								>
+									<ListItem
+										key={virtualItem.key}
+										item={item}
+										items={items}
+										index={virtualItem.index}
+										type="list"
+										setCurrentReceiverEmail={setCurrentReceiverEmail}
+										setCurrentReceiverId={setCurrentReceiverId}
+										setCurrentReceivers={setCurrentReceivers}
+										setCurrentSharerEmail={setCurrentSharerEmail}
+										setCurrentSharerId={setCurrentSharerId}
+										setItems={setItems}
+										currentReceiverId={currentReceiverId}
+										currentSharerId={currentSharerId}
+										navigate={navigate}
+										pathname={location}
+										t={t}
+										location={location}
+										errorToast={errorToast}
+										loadingToast={loadingToast}
+									/>
+								</div>
 							)
 						})}
 				</div>

@@ -8,13 +8,19 @@ import { IS_DESKTOP } from "@/constants"
 
 export async function download({ selectedItems }: { selectedItems: DriveCloudItem[] }): Promise<void> {
 	if (IS_DESKTOP) {
-		const destination = await window.desktopAPI.showSaveDialog()
+		const destination = await window.desktopAPI.showSaveDialog({
+			nameSuggestion: selectedItems.length === 1 ? selectedItems[0].name : `Download_${Date.now()}`
+		})
 
 		if (destination.cancelled) {
 			return
 		}
 
 		if (selectedItems.length === 1) {
+			if (selectedItems[0].size <= 0) {
+				return
+			}
+
 			if (selectedItems[0].type === "directory") {
 				await window.desktopAPI.downloadDirectory({
 					uuid: selectedItems[0].uuid,
@@ -31,7 +37,8 @@ export async function download({ selectedItems }: { selectedItems: DriveCloudIte
 		} else {
 			await window.desktopAPI.downloadMultipleFilesAndDirectories({
 				items: selectedItems,
-				to: destination.path
+				to: destination.path,
+				name: destination.name
 			})
 		}
 
@@ -39,6 +46,10 @@ export async function download({ selectedItems }: { selectedItems: DriveCloudIte
 	}
 
 	if (selectedItems.length === 1) {
+		if (selectedItems[0].size <= 0) {
+			return
+		}
+
 		if (selectedItems[0].type === "directory") {
 			await workerProxy.downloadDirectory({
 				uuid: selectedItems[0].uuid,

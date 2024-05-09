@@ -4,6 +4,7 @@ import General from "./general"
 import Account from "./account"
 import Security from "./security"
 import Invite from "./invite"
+import Events from "./events"
 
 export const Settings = memo(() => {
 	const location = useLocation()
@@ -22,6 +23,10 @@ export const Settings = memo(() => {
 
 	if (location.includes("invite")) {
 		return <Invite />
+	}
+
+	if (location.includes("events")) {
+		return <Events />
 	}
 
 	return null

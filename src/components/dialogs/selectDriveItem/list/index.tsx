@@ -106,16 +106,29 @@ export const List = memo(
 							const item = itemsOrdered[virtualItem.index]
 
 							return (
-								<ListItem
+								<div
 									key={virtualItem.key}
-									item={item}
-									virtualItem={virtualItem}
-									setPathname={setPathname}
-									setResponseItems={setResponseItems}
-									responseItems={responseItems}
-									selectMultiple={selectMultiple}
-									selectionType={selectionType}
-								/>
+									data-index={virtualItem.index}
+									ref={rowVirtualizer.measureElement}
+									style={{
+										position: "absolute",
+										top: 0,
+										left: 0,
+										width: "100%",
+										height: `${virtualItem.size}px`,
+										transform: `translateY(${virtualItem.start}px)`
+									}}
+								>
+									<ListItem
+										key={virtualItem.key}
+										item={item}
+										setPathname={setPathname}
+										setResponseItems={setResponseItems}
+										responseItems={responseItems}
+										selectMultiple={selectMultiple}
+										selectionType={selectionType}
+									/>
+								</div>
 							)
 						})}
 					</div>

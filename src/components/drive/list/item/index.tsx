@@ -1,7 +1,6 @@
 import { memo, useCallback, useState, useMemo } from "react"
 import { type DriveCloudItem } from "../.."
 import { UseNavigateResult } from "@tanstack/react-router"
-import { type VirtualItem } from "@tanstack/react-virtual"
 import { fileNameToSVGIcon, ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { simpleDate, formatBytes } from "@/utils"
 import ContextMenu from "./contextMenu"
@@ -27,7 +26,6 @@ let draggedItems: DriveCloudItem[] = []
 export const ListItem = memo(
 	({
 		item,
-		virtualItem,
 		items,
 		index,
 		type,
@@ -47,7 +45,6 @@ export const ListItem = memo(
 		errorToast
 	}: {
 		item: DriveCloudItem
-		virtualItem?: VirtualItem
 		items: DriveCloudItem[]
 		index: number
 		type: "list" | "grid"
@@ -336,18 +333,6 @@ export const ListItem = memo(
 				className={cn("flex select-none dragselect-start-disallowed", type === "list" ? "flex-row" : "flex-col")}
 				draggable={true}
 				data-uuid={item.uuid}
-				style={
-					virtualItem
-						? {
-								position: "absolute",
-								top: 0,
-								left: 0,
-								width: "100%",
-								height: `${virtualItem.size}px`,
-								transform: `translateY(${virtualItem.start}px)`
-							}
-						: {}
-				}
 				onClick={onClick}
 				onDoubleClick={onDoubleClick}
 				onContextMenu={onContextMenu}

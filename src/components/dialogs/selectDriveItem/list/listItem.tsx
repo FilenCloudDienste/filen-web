@@ -1,6 +1,5 @@
 import { memo, useState, useCallback, useRef, useMemo } from "react"
 import { type DriveCloudItem } from "@/components/drive"
-import { type VirtualItem } from "@tanstack/react-virtual"
 import FolderIcon from "@/assets/fileExtensionIcons/svg/folder.svg?react"
 import { ChevronRight } from "lucide-react"
 import { formatBytes } from "@/utils"
@@ -16,7 +15,6 @@ import { type SelectionType } from ".."
 export const ListItem = memo(
 	({
 		item,
-		virtualItem,
 		setPathname,
 		responseItems,
 		setResponseItems,
@@ -24,7 +22,6 @@ export const ListItem = memo(
 		selectionType
 	}: {
 		item: DriveCloudItem
-		virtualItem: VirtualItem
 		setPathname: React.Dispatch<React.SetStateAction<string>>
 		responseItems: DriveCloudItem[]
 		setResponseItems: React.Dispatch<React.SetStateAction<DriveCloudItem[]>>
@@ -116,14 +113,6 @@ export const ListItem = memo(
 
 		return (
 			<div
-				style={{
-					position: "absolute",
-					top: 0,
-					left: 0,
-					width: "100%",
-					height: `${virtualItem.size}px`,
-					transform: `translateY(${virtualItem.start}px)`
-				}}
 				className="flex flex-row justify-between items-center hover:bg-secondary cursor-pointer px-3 rounded-md gap-5 select-none"
 				onClick={navigateToDirectory}
 			>
