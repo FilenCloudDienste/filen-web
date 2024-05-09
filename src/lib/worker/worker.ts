@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import SDK from "../sdk"
-import { type FilenSDKConfig, type FileMetadata, type FolderMetadata, type PublicLinkExpiration } from "@filen/sdk"
+import { type FilenSDKConfig, type FileMetadata, type FolderMetadata, type PublicLinkExpiration, type CloudItemTree } from "@filen/sdk"
 import { type FileSystemFileHandle } from "native-file-system-adapter"
 import { type DriveCloudItem } from "@/components/drive"
 import { setItem, getItem, removeItem } from "@/lib/localForage"
@@ -29,15 +29,72 @@ import axios, { type AxiosResponse } from "axios"
 import { workerCorsHeadCache, workerParseOGFromURLCache } from "@/cache"
 import { Semaphore } from "../semaphore"
 import { type FileLinkStatusResponse } from "@filen/sdk/dist/types/api/v3/file/link/status"
+import { v4 as uuidv4 } from "uuid"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
 let isInitialized = false
+const postMessageToMainProgressThrottle: Record<string, { next: number; storedBytes: number }> = {}
+
+// We have to throttle the "progress" events of the "download"/"upload" message type. The SDK sends too many events for the IPC to handle properly.
+// It freezes the main process if we don't throttle it.
+function throttlePostMessageToMain(message: WorkerToMainMessage, callback: (message: WorkerToMainMessage) => void) {
+	const now = Date.now()
+	let key = ""
+
+	if (message.type === "download" || message.type === "upload") {
+		if (message.data.type === "progress") {
+			key = `${message.type}:${message.data.uuid}:${message.data.name}:${message.data.type}`
+
+			if (!postMessageToMainProgressThrottle[key]) {
+				postMessageToMainProgressThrottle[key] = {
+					next: 0,
+					storedBytes: 0
+				}
+			}
+
+			postMessageToMainProgressThrottle[key].storedBytes += message.data.bytes
+
+			if (postMessageToMainProgressThrottle[key].next > now) {
+				return
+			}
+
+			message = {
+				...message,
+				data: {
+					...message.data,
+					bytes: postMessageToMainProgressThrottle[key].storedBytes
+				}
+			}
+		}
+	}
+
+	callback(message)
+
+	if (key.length > 0 && postMessageToMainProgressThrottle[key] && (message.type === "download" || message.type === "upload")) {
+		postMessageToMainProgressThrottle[key].storedBytes = 0
+		postMessageToMainProgressThrottle[key].next = now + 100
+
+		if (
+			message.data.type === "error" ||
+			message.data.type === "queued" ||
+			message.data.type === "stopped" ||
+			message.data.type === "finished"
+		) {
+			delete postMessageToMainProgressThrottle[key]
+		}
+	}
+}
+
 // We setup an eventEmitter first here in case we are running in the main thread.
-let postMessageToMain: (message: WorkerToMainMessage) => void = message => eventEmitter.emit("workerMessage", message)
+let postMessageToMain: (message: WorkerToMainMessage) => void = message => {
+	throttlePostMessageToMain(message, msg => {
+		eventEmitter.emit("workerMessage", msg)
+	})
+}
 
 export async function waitForInitialization(): Promise<void> {
-	// Only check for init if we are running inside a webworker.
+	// Only check for init if we are running inside a WebWorker.
 	if (isInitialized || !(typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope)) {
 		return
 	}
@@ -74,7 +131,7 @@ export async function deinitializeSDK(): Promise<void> {
 }
 
 export async function setMessageHandler(callback: (message: WorkerToMainMessage) => void): Promise<void> {
-	postMessageToMain = callback
+	postMessageToMain = message => throttlePostMessageToMain(message, callback)
 
 	return
 }
@@ -313,8 +370,7 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 				data: {
 					type: "queued",
 					uuid: item.uuid,
-					name: item.name,
-					size: item.size
+					name: item.name
 				}
 			})
 		},
@@ -336,8 +392,7 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 					type: "progress",
 					uuid: item.uuid,
 					bytes: transferred,
-					name: item.name,
-					size: item.size
+					name: item.name
 				}
 			})
 		},
@@ -405,8 +460,7 @@ export async function uploadFile({
 				data: {
 					type: "queued",
 					uuid: fileId,
-					name: fileName,
-					size: file.size
+					name: fileName
 				}
 			})
 		},
@@ -428,8 +482,7 @@ export async function uploadFile({
 					type: "progress",
 					uuid: fileId,
 					bytes: transferred,
-					name: fileName,
-					size: file.size
+					name: fileName
 				}
 			})
 		},
@@ -537,8 +590,7 @@ export async function uploadDirectory({
 					data: {
 						type: "queued",
 						uuid: directoryId,
-						name: name!,
-						size
+						name: name!
 					}
 				})
 			},
@@ -566,8 +618,7 @@ export async function uploadDirectory({
 						type: "progress",
 						uuid: directoryId,
 						bytes: transferred,
-						name: name!,
-						size
+						name: name!
 					}
 				})
 			},
@@ -668,10 +719,24 @@ export async function directorySize({
 
 export async function downloadMultipleFilesAndDirectoriesAsZip({
 	items,
-	fileHandle
+	fileHandle,
+	type,
+	linkUUID,
+	linkHasPassword,
+	linkPassword,
+	linkSalt,
+	dontEmitQueuedEvent,
+	id
 }: {
-	items: DriveCloudItem[]
+	items: DriveCloudItemWithPath[]
 	fileHandle: FileSystemFileHandle
+	type?: DirDownloadType
+	linkUUID?: string
+	linkHasPassword?: boolean
+	linkPassword?: string
+	linkSalt?: string
+	dontEmitQueuedEvent?: boolean
+	id?: string
 }): Promise<void> {
 	await waitForInitialization()
 
@@ -682,9 +747,9 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	})
 	const treePromises: Promise<void>[] = []
 	const directoryName = fileHandle.name
-	const directorySize = items.reduce((prev, item) => prev + item.size, 0)
-	const directoryId = await SDK.crypto().utils.hashFn({ input: items.reduce((prev, item) => prev + item.uuid, "") })
-	let didQueue = false
+	let directorySize = 0
+	const directoryId = id ? id : uuidv4()
+	let didQueue = typeof dontEmitQueuedEvent === "boolean" ? dontEmitQueuedEvent : false
 	let didStart = false
 	let didError = false
 
@@ -693,7 +758,14 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 			if (item.type === "directory") {
 				treePromises.push(
 					new Promise((resolve, reject) => {
-						getDirectoryTree({ uuid: item.uuid })
+						getDirectoryTree({
+							uuid: item.uuid,
+							type,
+							linkHasPassword,
+							linkPassword,
+							linkSalt,
+							linkUUID
+						})
 							.then(tree => {
 								for (const path in tree) {
 									const treeItem = tree[path]
@@ -723,15 +795,27 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 					})
 				)
 			} else {
-				itemsWithPath.push({ ...item, path: item.name })
+				itemsWithPath.push(item)
 			}
 		}
 
 		await promiseAllChunked(treePromises)
 
 		if (itemsWithPath.length === 0) {
+			postMessageToMain({
+				type: "download",
+				data: {
+					type: "finished",
+					uuid: directoryId,
+					name: directoryName,
+					size: directorySize
+				}
+			})
+
 			return
 		}
+
+		directorySize = itemsWithPath.reduce((prev, item) => prev + item.size, 0)
 
 		await promiseAllChunked(
 			itemsWithPath.map(item => {
@@ -763,8 +847,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 									data: {
 										type: "queued",
 										uuid: directoryId,
-										name: directoryName,
-										size: directorySize
+										name: directoryName
 									}
 								})
 							},
@@ -792,7 +875,6 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 										type: "progress",
 										uuid: directoryId,
 										name: directoryName,
-										size: directorySize,
 										bytes: transferred
 									}
 								})
@@ -881,12 +963,13 @@ export async function getDirectoryTree({
 	linkSalt?: string
 	skipCache?: boolean
 }) {
+	await waitForInitialization()
+
 	return await SDK.cloud().getDirectoryTree({ uuid, type, linkUUID, linkHasPassword, linkPassword, linkSalt, skipCache })
 }
 
 export async function downloadDirectory({
 	uuid,
-	name,
 	type,
 	linkUUID,
 	linkHasPassword,
@@ -895,7 +978,6 @@ export async function downloadDirectory({
 	fileHandle
 }: {
 	uuid: string
-	name: string
 	type?: DirDownloadType
 	linkUUID?: string
 	linkHasPassword?: boolean
@@ -903,8 +985,62 @@ export async function downloadDirectory({
 	linkSalt?: string
 	fileHandle: FileSystemFileHandle
 }): Promise<void> {
-	const tree = await getDirectoryTree({ uuid, type, linkUUID, linkHasPassword, linkPassword, linkSalt })
+	await waitForInitialization()
+
+	const directoryId = uuidv4()
+	const directoryName = fileHandle.name
 	const items: DriveCloudItemWithPath[] = []
+
+	postMessageToMain({
+		type: "download",
+		data: {
+			type: "queued",
+			uuid: directoryId,
+			name: directoryName
+		}
+	})
+
+	let tree: Record<string, CloudItemTree> = {}
+
+	try {
+		tree = await getDirectoryTree({
+			uuid,
+			type,
+			linkUUID,
+			linkHasPassword,
+			linkPassword,
+			linkSalt
+		})
+	} catch (e) {
+		const err = e as unknown as Error
+
+		postMessageToMain({
+			type: "download",
+			data: {
+				type: "error",
+				uuid: directoryId,
+				err,
+				name: directoryName,
+				size: 0
+			}
+		})
+
+		throw e
+	}
+
+	if (Object.keys(tree).length === 0) {
+		postMessageToMain({
+			type: "download",
+			data: {
+				type: "finished",
+				uuid: directoryId,
+				name: directoryName,
+				size: 0
+			}
+		})
+
+		return
+	}
 
 	for (const path in tree) {
 		const item = tree[path]
@@ -923,7 +1059,7 @@ export async function downloadDirectory({
 			receivers: [],
 			timestamp: item.lastModified,
 			favorited: false,
-			path: `${name}/${path.startsWith("/") ? path.slice(1) : path}`,
+			path: `${path.startsWith("/") ? path.slice(1) : path}`,
 			rm: ""
 		})
 	}
@@ -932,10 +1068,22 @@ export async function downloadDirectory({
 		return
 	}
 
-	await downloadMultipleFilesAndDirectoriesAsZip({ items, fileHandle })
+	await downloadMultipleFilesAndDirectoriesAsZip({
+		items,
+		fileHandle,
+		type,
+		linkUUID,
+		linkHasPassword,
+		linkPassword,
+		linkSalt,
+		dontEmitQueuedEvent: true,
+		id: directoryId
+	})
 }
 
 export async function moveItems({ items, parent }: { items: DriveCloudItem[]; parent: string }): Promise<void> {
+	await waitForInitialization()
+
 	await promiseAllChunked(
 		items.map(item =>
 			item.parent === parent
@@ -966,6 +1114,8 @@ export async function moveItems({ items, parent }: { items: DriveCloudItem[]; pa
 }
 
 export async function deleteItemsPermanently({ items }: { items: DriveCloudItem[] }): Promise<void> {
+	await waitForInitialization()
+
 	await promiseAllChunked(
 		items.map(item =>
 			item.type === "file"
@@ -986,6 +1136,8 @@ export async function deleteItemsPermanently({ items }: { items: DriveCloudItem[
 }
 
 export async function trashItems({ items }: { items: DriveCloudItem[] }): Promise<void> {
+	await waitForInitialization()
+
 	await promiseAllChunked(
 		items.map(item =>
 			item.type === "file"
@@ -1000,6 +1152,8 @@ export async function trashItems({ items }: { items: DriveCloudItem[] }): Promis
 }
 
 export async function restoreItems({ items }: { items: DriveCloudItem[] }): Promise<void> {
+	await waitForInitialization()
+
 	await promiseAllChunked(
 		items.map(item =>
 			item.type === "file"
@@ -1014,6 +1168,8 @@ export async function restoreItems({ items }: { items: DriveCloudItem[] }): Prom
 }
 
 export async function favoriteItems({ items, favorite }: { items: DriveCloudItem[]; favorite: boolean }): Promise<void> {
+	await waitForInitialization()
+
 	await promiseAllChunked(
 		items.map(item =>
 			item.favorited === favorite
@@ -1042,6 +1198,8 @@ export async function readFile({
 	end?: number
 	emitEvents?: boolean
 }): Promise<Buffer> {
+	await waitForInitialization()
+
 	if (item.type !== "file") {
 		return Buffer.from([])
 	}
@@ -1066,8 +1224,7 @@ export async function readFile({
 				data: {
 					type: "queued",
 					uuid: item.uuid,
-					name: item.name,
-					size: item.size
+					name: item.name
 				}
 			})
 		},
@@ -1097,8 +1254,7 @@ export async function readFile({
 					type: "progress",
 					uuid: item.uuid,
 					bytes: transferred,
-					name: item.name,
-					size: item.size
+					name: item.name
 				}
 			})
 		},
@@ -1157,6 +1313,8 @@ export async function readFile({
 }
 
 export async function generateImageThumbnail({ item }: { item: DriveCloudItem }): Promise<Blob> {
+	await waitForInitialization()
+
 	if (item.type !== "file") {
 		throw new Error("Item not of type file.")
 	}
@@ -1218,6 +1376,8 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
  * @returns {Promise<Blob>}
  */
 export async function generateVideoThumbnail({ item, buffer }: { item: DriveCloudItem; buffer: Buffer }): Promise<Blob> {
+	await waitForInitialization()
+
 	if (!document) {
 		throw new Error("generateVideoThumbnail cannot be run in a WebWorker.")
 	}
@@ -1325,6 +1485,8 @@ export async function generateVideoThumbnail({ item, buffer }: { item: DriveClou
  * @returns {Promise<Blob>}
  */
 export async function generatePDFThumbnail({ item, buffer }: { item: DriveCloudItem; buffer: Buffer }): Promise<Blob> {
+	await waitForInitialization()
+
 	if (!document) {
 		throw new Error("generatePDFThumbnail cannot be run in a WebWorker.")
 	}
@@ -1399,6 +1561,8 @@ export async function generatePDFThumbnail({ item, buffer }: { item: DriveCloudI
 }
 
 export async function renameItem({ item, name }: { item: DriveCloudItem; name: string }): Promise<void> {
+	await waitForInitialization()
+
 	await (item.name.toLowerCase() === name.toLowerCase()
 		? Promise.resolve()
 		: item.type === "file"
@@ -1439,6 +1603,8 @@ export async function createDirectory({
 	receiverEmail?: string
 	receivers?: CloudItemReceiver[]
 }): Promise<DriveCloudItem> {
+	await waitForInitialization()
+
 	const uuid = await SDK.cloud().createDirectory({ name, parent })
 
 	await setItem(`directoryUUIDToName:${uuid}`, name)
@@ -1471,6 +1637,8 @@ export async function shareItemsToUser({
 	receiverEmail: string
 	requestUUID?: string
 }): Promise<void> {
+	await waitForInitialization()
+
 	await SDK.cloud().shareItemsToUser({
 		files: items
 			.filter(item => item.type === "file")
@@ -1504,6 +1672,8 @@ export async function shareItemsToUser({
 }
 
 export async function listNotes(): Promise<Note[]> {
+	await waitForInitialization()
+
 	return await SDK.notes().all()
 }
 
@@ -1514,14 +1684,20 @@ export async function fetchNoteContent({ uuid }: { uuid: string }): Promise<{
 	editorId: number
 	preview: string
 }> {
+	await waitForInitialization()
+
 	return await SDK.notes().content({ uuid })
 }
 
 export async function editNoteTitle({ uuid, title }: { uuid: string; title: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().editTitle({ uuid, title })
 }
 
 export async function editNoteContent({ uuid, content, type }: { uuid: string; content: string; type: NoteType }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().edit({ uuid, content, type })
 }
 
@@ -1536,70 +1712,104 @@ export async function createNote(): Promise<{ uuid: string; title: string }> {
 }
 
 export async function trashNote({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().trash({ uuid })
 }
 
 export async function deleteNote({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().delete({ uuid })
 }
 
 export async function pinNote({ uuid, pin }: { uuid: string; pin: boolean }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().pin({ uuid, pin })
 }
 
 export async function favoriteNote({ uuid, favorite }: { uuid: string; favorite: boolean }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().favorite({ uuid, favorite })
 }
 
 export async function duplicateNote({ uuid }: { uuid: string }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.notes().duplicate({ uuid })
 }
 
 export async function listNotesTags(): Promise<NoteTag[]> {
+	await waitForInitialization()
+
 	return await SDK.notes().tags()
 }
 
 export async function createNotesTag({ name }: { name: string }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.notes().createTag({ name })
 }
 
 export async function changeNoteType({ uuid, type }: { uuid: string; type: NoteType }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().changeType({ uuid, newType: type })
 }
 
 export async function restoreNote({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().restore({ uuid })
 }
 
 export async function archiveNote({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().archive({ uuid })
 }
 
 export async function favoriteNotesTag({ uuid, favorite }: { uuid: string; favorite: boolean }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().tagFavorite({ uuid, favorite })
 }
 
 export async function deleteNotesTag({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().deleteTag({ uuid })
 }
 
 export async function renameNotesTag({ uuid, name }: { uuid: string; name: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().renameTag({ uuid, name })
 }
 
 export async function tagNote({ uuid, tag }: { uuid: string; tag: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().tag({ uuid, tag })
 }
 
 export async function untagNote({ uuid, tag }: { uuid: string; tag: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.notes().untag({ uuid, tag })
 }
 
 export async function listChatsConversations(): Promise<ChatConversation[]> {
+	await waitForInitialization()
+
 	return await SDK.chats().conversations()
 }
 
 export async function fetchChatsConversationsMessages({ uuid, timestamp }: { uuid: string; timestamp?: number }): Promise<ChatMessage[]> {
+	await waitForInitialization()
+
 	return await SDK.chats().messages({ conversation: uuid, timestamp: timestamp ? timestamp : Date.now() + 3600000 })
 }
 
@@ -1614,14 +1824,20 @@ export async function sendChatMessage({
 	replyTo: string
 	uuid?: string
 }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.chats().sendMessage({ conversation, message, replyTo, uuid })
 }
 
 export async function sendChatTyping({ conversation, type }: { conversation: string; type: ChatTypingType }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().sendTyping({ conversation, type })
 }
 
 export async function chatKey({ conversation }: { conversation: string }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.chats().chatKey({ conversation })
 }
 
@@ -1630,18 +1846,26 @@ export async function noteKey({ uuid }: { uuid: string }): Promise<string> {
 }
 
 export async function decryptChatMessage({ message, key }: { message: string; key: string }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.crypto().decrypt().chatMessage({ message, key })
 }
 
 export async function chatLastFocus(): Promise<ChatLastFocusValues[]> {
+	await waitForInitialization()
+
 	return await SDK.chats().lastFocus()
 }
 
 export async function chatUpdateLastFocus({ values }: { values: ChatLastFocusValues[] }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().updateLastFocus({ values })
 }
 
 export async function chatDeleteMessage({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().deleteMessage({ uuid })
 }
 
@@ -1654,110 +1878,164 @@ export async function chatEditMessage({
 	conversation: string
 	message: string
 }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().editMessage({ uuid, conversation, message })
 }
 
 export async function chatEditConversationName({ conversation, name }: { conversation: string; name: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().editConversationName({ conversation, name })
 }
 
 export async function deleteChatConversation({ conversation }: { conversation: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().delete({ conversation })
 }
 
 export async function chatRemoveParticipant({ conversation, userId }: { conversation: string; userId: number }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().removeParticipant({ conversation, userId })
 }
 
 export async function decryptFileMetadata({ metadata }: { metadata: string }): Promise<FileMetadata> {
+	await waitForInitialization()
+
 	return await SDK.crypto().decrypt().fileMetadata({ metadata })
 }
 
 export async function decryptFolderMetadata({ metadata }: { metadata: string }): Promise<FolderMetadata> {
+	await waitForInitialization()
+
 	return await SDK.crypto().decrypt().folderMetadata({ metadata })
 }
 
 export async function changeDirectoryColor({ color, uuid }: { color: string; uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.cloud().changeDirectoryColor({ uuid, color })
 }
 
 export async function chatConversationOnline({ conversation }: { conversation: string }): Promise<ChatConversationsOnlineUser[]> {
+	await waitForInitialization()
+
 	return await SDK.chats().conversationOnline({ conversation })
 }
 
 export async function listContacts(): Promise<Contact[]> {
+	await waitForInitialization()
+
 	return await SDK.contacts().all()
 }
 
 export async function chatConversationUnreadCount({ conversation }: { conversation: string }): Promise<number> {
+	await waitForInitialization()
+
 	return await SDK.chats().conversationUnreadCount({ conversation })
 }
 
 export async function chatMarkConversationAsRead({ conversation }: { conversation: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().markConversationAsRead({ conversation })
 }
 
 export async function chatsUnreadCount(): Promise<number> {
+	await waitForInitialization()
+
 	return await SDK.chats().unread()
 }
 
 export async function listContactsRequestsIn(): Promise<ContactRequest[]> {
+	await waitForInitialization()
+
 	return await SDK.contacts().incomingRequests()
 }
 
 export async function listContactsRequestsOut(): Promise<ContactRequest[]> {
+	await waitForInitialization()
+
 	return await SDK.contacts().outgoingRequests()
 }
 
 export async function listBlockedContacts(): Promise<BlockedContact[]> {
+	await waitForInitialization()
+
 	return await SDK.contacts().blocked()
 }
 
 export async function removeContact({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.contacts().remove({ uuid })
 }
 
 export async function blockUser({ email }: { email: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.contacts().block({ email })
 }
 
 export async function unblockUser({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.contacts().unblock({ uuid })
 }
 
 export async function contactsRequestAccept({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.contacts().acceptRequest({ uuid })
 }
 
 export async function contactsRequestDeny({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.contacts().denyRequest({ uuid })
 }
 
 export async function contactsRequestRemove({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.contacts().deleteOutgoingRequest({ uuid })
 }
 
 export async function contactsRequestSend({ email }: { email: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.contacts().sendRequest({ email })
 }
 
 export async function contactsRequestInCount(): Promise<number> {
+	await waitForInitialization()
+
 	return await SDK.contacts().incomingRequestsCount()
 }
 
 export async function createChatConversation({ contacts }: { contacts: Contact[] }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.chats().create({ contacts })
 }
 
 export async function fetchUserAccount(): Promise<UserAccountResponse> {
+	await waitForInitialization()
+
 	return await SDK.user().account()
 }
 
 export async function chatConversationAddParticipant({ conversation, contact }: { conversation: string; contact: Contact }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().addParticipant({ conversation, contact })
 }
 
 export async function corsHead(url: string): Promise<Record<string, string>> {
+	await waitForInitialization()
+
 	await corsHeadMutex.acquire()
 
 	try {
@@ -1798,6 +2076,8 @@ export async function corsHead(url: string): Promise<Record<string, string>> {
 }
 
 export async function corsGet(url: string): Promise<any> {
+	await waitForInitialization()
+
 	try {
 		const response = await axios.get(url, {
 			timeout: 15000
@@ -1824,6 +2104,8 @@ export async function corsGet(url: string): Promise<any> {
 }
 
 export async function parseOGFromURL(url: string): Promise<Record<string, string>> {
+	await waitForInitialization()
+
 	await parseOGFromURLMutex.acquire()
 
 	try {
@@ -1929,50 +2211,74 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 }
 
 export async function chatDisableMessageEmbed({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.chats().disableMessageEmbed({ uuid })
 }
 
 export async function fetchAccount() {
+	await waitForInitialization()
+
 	return await SDK.user().account()
 }
 
 export async function fetchSettings() {
+	await waitForInitialization()
+
 	return await SDK.user().settings()
 }
 
 export async function uploadAvatar({ buffer }: { buffer: Buffer }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.user().uploadAvatar({ buffer })
 }
 
 export async function requestAccountData() {
+	await waitForInitialization()
+
 	return await SDK.user().gdpr()
 }
 
 export async function deleteAllVersionedFiles(): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.user().deleteAllVersionedFiles()
 }
 
 export async function deleteEverything(): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.user().deleteEverything()
 }
 
 export async function toggleFileVersioning({ enabled }: { enabled: boolean }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.user().versioning({ enabled })
 }
 
 export async function toggleLoginAlerts({ enabled }: { enabled: boolean }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.user().loginAlerts({ enabled })
 }
 
 export async function requestAccountDeletion({ twoFactorCode }: { twoFactorCode?: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.user().delete({ twoFactorCode })
 }
 
 export async function emptyTrash(): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.cloud().emptyTrash()
 }
 
 export async function uploadFilesToChatUploads({ files }: { files: File[] }): Promise<DriveCloudItem[]> {
+	await waitForInitialization()
+
 	const base = await listDirectory({ uuid: SDK.config.baseFolderUUID!, onlyDirectories: true })
 	let parentUUID = ""
 	const baseFiltered = base.filter(item => item.type === "directory" && item.name.toLowerCase() === "chat uploads")
@@ -1997,6 +2303,8 @@ export async function uploadFilesToChatUploads({ files }: { files: File[] }): Pr
 }
 
 export async function enablePublicLink({ type, uuid }: { type: "file" | "directory"; uuid: string }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.cloud().enablePublicLink({ type, uuid })
 }
 
@@ -2015,6 +2323,8 @@ export async function editPublicLink({
 	enableDownload?: boolean
 	expiration: PublicLinkExpiration
 }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.cloud().editPublicLink({ type, itemUUID, linkUUID, password, enableDownload, expiration })
 }
 
@@ -2027,6 +2337,8 @@ export async function disablePublicLink({
 	itemUUID: string
 	linkUUID: string
 }): Promise<void> {
+	await waitForInitialization()
+
 	if (type === "directory") {
 		return await SDK.cloud().disablePublicLink({ type, itemUUID })
 	}
@@ -2047,6 +2359,8 @@ export async function directoryPublicLinkStatus({ uuid }: { uuid: string }): Pro
 	downloadBtn: 0 | 1
 	password: string | null
 }> {
+	await waitForInitialization()
+
 	const status = await SDK.cloud().publicLinkStatus({ type: "directory", uuid })
 
 	return {
@@ -2061,13 +2375,85 @@ export async function directoryPublicLinkStatus({ uuid }: { uuid: string }): Pro
 }
 
 export async function decryptDirectoryLinkKey({ key }: { key: string }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.crypto().decrypt().folderLinkKey({ metadata: key })
 }
 
 export async function stopSharingItem({ uuid, receiverId }: { uuid: string; receiverId: number }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.cloud().stopSharingItem({ uuid, receiverId })
 }
 
 export async function removeSharedItem({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.cloud().removeSharedItem({ uuid })
+}
+
+export async function appearOffline({ enabled }: { enabled: boolean }): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.user().appearOffline({ enabled })
+}
+
+export async function changeEmail({ email, password }: { email: string; password: string }): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.user().changeEmail({ email, password })
+}
+
+export async function changePassword({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.user().changePassword({ currentPassword, newPassword })
+}
+
+export async function changeNickname({ nickname }: { nickname: string }): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.user().updateNickname({ nickname })
+}
+
+export async function updatePersonalInformation({
+	city,
+	companyName,
+	country,
+	firstName,
+	lastName,
+	postalCode,
+	street,
+	streetNumber,
+	vatId
+}: {
+	city?: string
+	companyName?: string
+	country?: string
+	firstName?: string
+	lastName?: string
+	postalCode?: string
+	street?: string
+	streetNumber?: string
+	vatId?: string
+}): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.user().updatePersonalInformation({
+		city,
+		companyName,
+		country,
+		firstName,
+		lastName,
+		postalCode,
+		street,
+		streetNumber,
+		vatId
+	})
+}
+
+export async function updateDesktopLastActive({ timestamp }: { timestamp: number }): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.user().updateDesktopLastActive({ timestamp })
 }

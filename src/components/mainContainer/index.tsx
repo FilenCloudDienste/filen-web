@@ -1,20 +1,47 @@
-import { memo, useMemo } from "react"
+import { memo, useMemo, useCallback } from "react"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import SideBar from "./sideBar"
 import InnerSideBar from "./innerSideBar"
 import TopBar from "./topBar"
-import { IS_DESKTOP } from "@/constants"
+import { IS_DESKTOP, IS_APPLE_DEVICE } from "@/constants"
 import useIsMobile from "@/hooks/useIsMobile"
 import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import useWindowSize from "@/hooks/useWindowSize"
+import { X, Maximize, Minus } from "lucide-react"
+import { showConfirmDialog } from "../dialogs/confirm"
 
 export const sidebarBasePx = 275
 export const sidebarMinPx = 275
 export const sidebarMaxPx = 500
 
 export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
+	const minimizeWindow = useCallback(() => {
+		window.desktopAPI.minimizeWindow().catch(console.error)
+	}, [])
+
+	const maximizeWindow = useCallback(() => {
+		window.desktopAPI.maximizeWindow().catch(console.error)
+	}, [])
+
+	const closeWindow = useCallback(async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		if (!e.shiftKey) {
+			if (
+				!(await showConfirmDialog({
+					title: "d",
+					continueButtonText: "ddd",
+					description: "ookeoetrasher",
+					continueButtonVariant: "destructive"
+				}))
+			) {
+				return
+			}
+		}
+
+		window.desktopAPI.closeWindow().catch(console.error)
+	}, [])
+
 	if (IS_DESKTOP) {
 		return (
 			<div className="w-screen h-screen flex flex-col">
@@ -25,20 +52,45 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 						WebkitAppRegion: "drag"
 					}}
 				>
-					<div className="w-[64px] flex flex-row items-center px-3">
-						<p className="text-sm text-muted-foreground">Filen</p>
-					</div>
-					<div className="flex flex-row w-full justify-end">
-						<div
-							className="w-auto px-2 z-10 cursor-pointer text-muted-foreground font-thin text-lg h-full flex flex-row items-center justify-center hover:bg-red-600 hover:text-white"
-							style={{
-								// @ts-expect-error not typed
-								WebkitAppRegion: "no-drag"
-							}}
-						>
-							x
-						</div>
-					</div>
+					{!IS_APPLE_DEVICE && (
+						<>
+							<div className="w-[64px] flex flex-row items-center px-3">
+								<p className="text-sm text-muted-foreground">Filen</p>
+							</div>
+							<div className="flex flex-row w-full justify-end">
+								<div
+									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-secondary hover:text-white"
+									style={{
+										// @ts-expect-error not typed
+										WebkitAppRegion: "no-drag"
+									}}
+									onClick={minimizeWindow}
+								>
+									<Minus size={15} />
+								</div>
+								<div
+									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-secondary hover:text-white"
+									style={{
+										// @ts-expect-error not typed
+										WebkitAppRegion: "no-drag"
+									}}
+									onClick={maximizeWindow}
+								>
+									<Maximize size={13} />
+								</div>
+								<div
+									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-red-600 hover:text-white"
+									style={{
+										// @ts-expect-error not typed
+										WebkitAppRegion: "no-drag"
+									}}
+									onClick={closeWindow}
+								>
+									<X size={15} />
+								</div>
+							</div>
+						</>
+					)}
 				</div>
 				<div className="flex flex-row w-full h-[calc(100%-24px)]">{children}</div>
 			</div>
@@ -84,7 +136,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={e => setSidebarPercentage(e[0])}
-				className={cn("bg-muted/40", IS_DESKTOP && "rounded-tl-lg")}
+				className={cn("bg-muted/40", IS_DESKTOP && "rounded-tl-[10px]")}
 			>
 				{!isMobile && !location.includes("terminal") && (
 					<>
@@ -97,7 +149,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 						>
 							<InnerSideBar />
 						</ResizablePanel>
-						<ResizableHandle className="bg-transparent w-0 dragselect-start-disallowed" />
+						<ResizableHandle className="dragselect-start-disallowed" />
 					</>
 				)}
 				<ResizablePanel

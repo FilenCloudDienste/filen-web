@@ -4,11 +4,46 @@ import worker from "@/lib/worker"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { showInputDialog } from "@/components/dialogs/input"
 import { directoryUUIDToNameCache } from "@/cache"
+import { IS_DESKTOP } from "@/constants"
 
 export async function download({ selectedItems }: { selectedItems: DriveCloudItem[] }): Promise<void> {
+	if (IS_DESKTOP) {
+		const destination = await window.desktopAPI.showSaveDialog()
+
+		if (destination.cancelled) {
+			return
+		}
+
+		if (selectedItems.length === 1) {
+			if (selectedItems[0].type === "directory") {
+				await window.desktopAPI.downloadDirectory({
+					uuid: selectedItems[0].uuid,
+					to: destination.path,
+					name: destination.name
+				})
+			} else {
+				await window.desktopAPI.downloadFile({
+					item: selectedItems[0],
+					to: destination.path,
+					name: destination.name
+				})
+			}
+		} else {
+			await window.desktopAPI.downloadMultipleFilesAndDirectories({
+				items: selectedItems,
+				to: destination.path
+			})
+		}
+
+		return
+	}
+
 	if (selectedItems.length === 1) {
 		if (selectedItems[0].type === "directory") {
-			await workerProxy.downloadDirectory({ uuid: selectedItems[0].uuid, name: selectedItems[0].name })
+			await workerProxy.downloadDirectory({
+				uuid: selectedItems[0].uuid,
+				name: selectedItems[0].name
+			})
 		} else {
 			await workerProxy.downloadFile({ item: selectedItems[0] })
 		}

@@ -70,10 +70,10 @@ export async function downloadDirectory({
 	})
 
 	if (!useNative) {
-		return await workerLib.downloadDirectory({ uuid, name, type, linkUUID, linkHasPassword, linkPassword, linkSalt, fileHandle })
+		return await workerLib.downloadDirectory({ uuid, type, linkUUID, linkHasPassword, linkPassword, linkSalt, fileHandle })
 	}
 
-	await worker.downloadDirectory({ uuid, name, type, linkUUID, linkHasPassword, linkPassword, linkSalt, fileHandle })
+	await worker.downloadDirectory({ uuid, type, linkUUID, linkHasPassword, linkPassword, linkSalt, fileHandle })
 }
 
 /**
@@ -93,11 +93,16 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({ items }: { item
 		_preferPolyfill: !useNative
 	})
 
+	const itemsWithPath = items.map(item => ({
+		...item,
+		path: item.name
+	}))
+
 	if (!useNative) {
-		return workerLib.downloadMultipleFilesAndDirectoriesAsZip({ items, fileHandle })
+		return workerLib.downloadMultipleFilesAndDirectoriesAsZip({ items: itemsWithPath, fileHandle })
 	}
 
-	await worker.downloadMultipleFilesAndDirectoriesAsZip({ items, fileHandle })
+	await worker.downloadMultipleFilesAndDirectoriesAsZip({ items: itemsWithPath, fileHandle })
 }
 
 /**

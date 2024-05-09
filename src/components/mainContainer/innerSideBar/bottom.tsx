@@ -21,7 +21,7 @@ export const Bottom = memo(() => {
 						className="flex flex-row items-center justify-center"
 						to="/settings/$type"
 						params={{
-							type: "general"
+							type: "account"
 						}}
 					>
 						<Avatar

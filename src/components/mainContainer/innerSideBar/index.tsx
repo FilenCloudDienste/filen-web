@@ -20,7 +20,7 @@ export const InnerSideBar = memo(() => {
 	const notesTopDimensions = useElementDimensions("inner-sidebar-top-notes")
 
 	return (
-		<div className="w-full border-r flex flex-col h-full select-none">
+		<div className="w-full flex flex-col h-full select-none">
 			<Top />
 			<div
 				className={cn(

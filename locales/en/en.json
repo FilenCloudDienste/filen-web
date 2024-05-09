@@ -151,6 +151,31 @@
 			"add": "Add",
 			"close": "Close",
 			"remove": "Remove"
+		},
+		"changeEmail": {
+			"title": "Change email address",
+			"newEmail": "New email address",
+			"newEmailPlaceholder": "New email",
+			"confirmNewEmail": "Confirm new email address",
+			"confirmNewEmailPlaceholder": "Confirm new email",
+			"password": "Your password",
+			"passwordPlaceholder": "Password",
+			"close": "Close",
+			"save": "Save"
+		},
+		"personalInformation": {
+			"title": "Change personal information",
+			"firstName": "First name",
+			"lastName": "Last name",
+			"close": "Close",
+			"save": "Save",
+			"companyName": "Company name",
+			"vatId": "VAT ID",
+			"street": "Street",
+			"streetNumber": "Street number",
+			"city": "City",
+			"postalCode": "Postal code",
+			"country": "Country"
 		}
 	},
 	"contextMenus": {
@@ -268,7 +293,23 @@
 			"files": "Files {{size}}",
 			"versionedFiles": "Versioned files {{size}}",
 			"free": "Free {{size}}",
-			"used": "{{used}} of {{max}} used"
+			"used": "{{used}} of {{max}} used",
+			"dark": "Dark",
+			"light": "Light",
+			"system": "System",
+			"noteType": {
+				"md": "Markdown",
+				"rich": "Richtext",
+				"text": "Text",
+				"checklist": "Checklist",
+				"code": "Code"
+			}
+		},
+		"invite": {
+			"copy": "Copy",
+			"title": "Receive up to 30 GB of storage by inviting others",
+			"description": "For every friend you invite to Filen you receive {{yourEarnings}} - and your friend also receives {{otherEarnings}}. It's that easy.",
+			"earned": "{{earned}} of {{max}}"
 		}
 	},
 	"drive": {

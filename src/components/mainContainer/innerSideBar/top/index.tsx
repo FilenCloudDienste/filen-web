@@ -19,7 +19,7 @@ export const Top = memo(() => {
 				<Notes />
 			) : (
 				<Link
-					className="h-12 w-full flex flex-row items-center px-4 border-b shadow-sm cursor-pointer"
+					className="h-12 w-full flex flex-row items-center px-4 border-b cursor-pointer"
 					to={
 						location.includes("settings")
 							? "/settings/$type"

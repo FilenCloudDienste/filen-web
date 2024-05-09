@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import useSDKConfig from "./useSDKConfig"
+import eventEmitter from "@/lib/eventEmitter"
+import { useEffect } from "react"
 
 export default function useAccount() {
 	const sdkConfig = useSDKConfig()
@@ -9,6 +11,16 @@ export default function useAccount() {
 		queryKey: ["useAccount"],
 		queryFn: () => Promise.all([worker.fetchAccount(), worker.fetchSettings()])
 	})
+
+	useEffect(() => {
+		const listener = eventEmitter.on("useAccountRefetch", () => {
+			query.refetch().catch(console.error)
+		})
+
+		return () => {
+			listener.remove()
+		}
+	}, [query])
 
 	return query.isSuccess
 		? {

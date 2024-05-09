@@ -8,15 +8,23 @@ import worker from "@/lib/worker"
 import { useNotesStore } from "@/stores/notes.store"
 import { Input } from "@/components/ui/input"
 import Tags from "./tags"
+import { type NoteType } from "@filen/sdk/dist/types/api/v3/notes"
+import { useLocalStorage } from "@uidotdev/usehooks"
 
 export const Notes = memo(() => {
 	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const { setNotes, search, setSearch, setSelectedNote } = useNotesStore()
+	const [defaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
 
 	const createNote = useCallback(async () => {
 		try {
 			const { uuid } = await worker.createNote()
+
+			if (defaultNoteType !== "text") {
+				await worker.changeNoteType({ uuid, type: defaultNoteType })
+			}
+
 			const notes = await worker.listNotes()
 
 			setNotes(notes)
@@ -38,7 +46,7 @@ export const Notes = memo(() => {
 		} catch (e) {
 			console.error(e)
 		}
-	}, [navigate, setNotes, setSelectedNote])
+	}, [navigate, setNotes, setSelectedNote, defaultNoteType])
 
 	const onChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {

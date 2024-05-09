@@ -97,7 +97,7 @@ export const TopBar = memo(() => {
 	}
 
 	return (
-		<div className="w-full h-12 flex flex-row shadow-sm justify-between border-b select-none">
+		<div className="w-full h-12 flex flex-row justify-between border-b select-none">
 			{location.includes("notes") ? (
 				<Notes />
 			) : (
@@ -114,7 +114,7 @@ export const TopBar = memo(() => {
 								</div>
 							</div>
 							<Input
-								className="pl-8 text-sm max-w-lg shadow-sm h-8"
+								className="pl-8 text-sm max-w-lg h-9"
 								placeholder={t("topBar.searchInThisFolder")}
 								value={searchTerm}
 								onChange={onSearchChange}

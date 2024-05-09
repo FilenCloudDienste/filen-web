@@ -11,6 +11,10 @@ import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { showTwoFactorCodeDialog } from "@/components/dialogs/twoFactorCodeDialog"
 import { transfer } from "comlink"
 import Avatar from "@/components/avatar"
+import { showInputDialog } from "@/components/dialogs/input"
+import ChangeEmailDialog from "./dialogs/changeEmail"
+import eventEmitter from "@/lib/eventEmitter"
+import ChangePersonalInformationDialog from "./dialogs/personalInformation"
 
 export const Account = memo(() => {
 	const account = useAccount()
@@ -235,6 +239,33 @@ export const Account = memo(() => {
 		[loadingToast, errorToast, account]
 	)
 
+	const onAppearOfflineChange = useCallback(
+		async (checked: boolean) => {
+			if (!account) {
+				return
+			}
+
+			const toast = loadingToast()
+
+			try {
+				await worker.appearOffline({ enabled: checked })
+				await account.refetch()
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		},
+		[loadingToast, errorToast, account]
+	)
+
 	const requestAccountDeletion = useCallback(async () => {
 		if (!account) {
 			return
@@ -331,6 +362,50 @@ export const Account = memo(() => {
 		[loadingToast, errorToast, account]
 	)
 
+	const changeNickname = useCallback(async () => {
+		if (!account) {
+			return
+		}
+
+		const inputResponse = await showInputDialog({
+			title: "newfolder",
+			continueButtonText: "create",
+			value: account.account.nickName,
+			autoFocusInput: true,
+			placeholder: "New folder"
+		})
+
+		if (inputResponse.cancelled) {
+			return
+		}
+
+		const toast = loadingToast()
+
+		try {
+			await worker.changeNickname({ nickname: inputResponse.value.trim() })
+			await account.refetch()
+		} catch (e) {
+			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
+		}
+	}, [loadingToast, errorToast, account])
+
+	const changeEmail = useCallback(() => {
+		eventEmitter.emit("openChangeEmailDialog")
+	}, [])
+
+	const changePersonalInformation = useCallback(() => {
+		eventEmitter.emit("openChangePersonalInformationDialog")
+	}, [])
+
 	useEffect(() => {
 		if (account) {
 			setUsage({
@@ -345,117 +420,152 @@ export const Account = memo(() => {
 	}
 
 	return (
-		<div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden">
-			<div className="flex flex-col p-6 w-5/6 h-full">
-				<div className="flex flex-col gap-4">
-					<input
-						className="hidden"
-						id="avatar-input"
-						onChange={uploadAvatar}
-						type="file"
-						accept="image/png, image/jpeg, image/jpg"
-					/>
-					<Section
-						name="Avatar"
-						info="Your avatar will be visible publicly"
-					>
-						<Avatar
-							src={account.account.avatarURL}
-							size={32}
-						/>
-						<p
-							className="underline cursor-pointer"
-							onClick={() => document.getElementById("avatar-input")?.click()}
+		<>
+			<div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden">
+				<div className="flex flex-col p-6 w-5/6 h-full">
+					<div className="flex flex-col gap-4">
+						<Section
+							name="Avatar"
+							info="Your avatar will be visible publicly"
 						>
-							Edit
-						</p>
-					</Section>
-					<Section
-						name="Versioned files"
-						info="Delete all versioned files"
-						className="mt-10"
-					>
-						<p className="text-muted-foreground">{formatBytes(usage.versioned)}</p>
-						<p
-							className="underline cursor-pointer"
-							onClick={deleteVersioned}
+							<Avatar
+								src={account.account.avatarURL}
+								size={32}
+							/>
+							<p
+								className="underline cursor-pointer"
+								onClick={() => document.getElementById("avatar-input")?.click()}
+							>
+								Edit
+							</p>
+						</Section>
+						<Section
+							name="Versioned files"
+							info="Delete all versioned files"
+							className="mt-10"
 						>
-							Delete
-						</p>
-					</Section>
-					<Section
-						name="All files and directories"
-						info="Delete all files and folders"
-					>
-						<p className="text-muted-foreground">{formatBytes(usage.all)}</p>
-						<p
-							className="underline cursor-pointer"
-							onClick={deleteAll}
+							<p className="text-muted-foreground">{formatBytes(usage.versioned)}</p>
+							<p
+								className="underline cursor-pointer"
+								onClick={deleteVersioned}
+							>
+								Delete
+							</p>
+						</Section>
+						<Section
+							name="All files and directories"
+							info="Delete all files and folders"
 						>
-							Delete
-						</p>
-					</Section>
-					<Section
-						name="Email address"
-						info="Change your email address"
-						className="mt-10"
-					>
-						<p className="text-muted-foreground">{account.account.email}</p>
-						<p className="underline cursor-pointer">Edit</p>
-					</Section>
-					<Section
-						name="Personal information"
-						info="Edit your personal information. Will be used for invoicing and is not public"
-					>
-						<p className="underline cursor-pointer">Edit</p>
-					</Section>
-					<Section
-						name="File versioning"
-						info="Enable or disable file versioning"
-						className="mt-10"
-					>
-						<Switch
-							checked={account.settings.versioningEnabled}
-							onCheckedChange={onVersioningChange}
-						/>
-					</Section>
-					<Section
-						name="Login alerts"
-						info="Enable or disable login alerts"
-					>
-						<Switch
-							checked={account.settings.loginAlertsEnabled}
-							onCheckedChange={onLoginAlertsChange}
-						/>
-					</Section>
-					<Section
-						name="Request account data"
-						info="Request all personal data we store according to GDPR"
-						className="mt-10"
-					>
-						<p
-							className="underline cursor-pointer"
-							onClick={requestAccountData}
+							<p className="text-muted-foreground">{formatBytes(usage.all)}</p>
+							<p
+								className="underline cursor-pointer"
+								onClick={deleteAll}
+							>
+								Delete
+							</p>
+						</Section>
+						<Section
+							name="Email address"
+							info="Change your email address"
+							className="mt-10"
 						>
-							Request
-						</p>
-					</Section>
-					<Section
-						name="Request account deletion"
-						info="Request deletion of your account. We will send you a confirmation email"
-						className="mt-10"
-					>
-						<p
-							className="underline cursor-pointer text-red-500"
-							onClick={requestAccountDeletion}
+							<p className="text-muted-foreground">{account.account.email}</p>
+							<p
+								className="underline cursor-pointer"
+								onClick={changeEmail}
+							>
+								Edit
+							</p>
+						</Section>
+						<Section
+							name="Nickname"
+							info="Change your nickname"
 						>
-							Delete
-						</p>
-					</Section>
-					<div className="w-full h-20" />
+							{account.account.nickName.length > 0 && <p className="text-muted-foreground">{account.account.nickName}</p>}
+							<p
+								className="underline cursor-pointer"
+								onClick={changeNickname}
+							>
+								Edit
+							</p>
+						</Section>
+						<Section
+							name="Personal information"
+							info="Edit your personal information. Will be used for invoicing and is not public"
+						>
+							<p
+								className="underline cursor-pointer"
+								onClick={changePersonalInformation}
+							>
+								Edit
+							</p>
+						</Section>
+						<Section
+							name="File versioning"
+							info="Enable or disable file versioning"
+							className="mt-10"
+						>
+							<Switch
+								checked={account.settings.versioningEnabled}
+								onCheckedChange={onVersioningChange}
+							/>
+						</Section>
+						<Section
+							name="Login alerts"
+							info="Enable or disable login alerts"
+						>
+							<Switch
+								checked={account.settings.loginAlertsEnabled}
+								onCheckedChange={onLoginAlertsChange}
+							/>
+						</Section>
+						<Section
+							name="Appear offline"
+							info="Appear offline in chats"
+						>
+							<Switch
+								checked={account.account.appearOffline}
+								onCheckedChange={onAppearOfflineChange}
+							/>
+						</Section>
+						<Section
+							name="Request account data"
+							info="Request all personal data we store according to GDPR"
+							className="mt-10"
+						>
+							<p
+								className="underline cursor-pointer"
+								onClick={requestAccountData}
+							>
+								Request
+							</p>
+						</Section>
+						<Section
+							name="Request account deletion"
+							info="Request deletion of your account. We will send you a confirmation email"
+							className="mt-10"
+						>
+							<p
+								className="underline cursor-pointer text-red-500"
+								onClick={requestAccountDeletion}
+							>
+								Delete
+							</p>
+						</Section>
+						<div className="w-full h-20" />
+					</div>
 				</div>
 			</div>
-		</div>
+			<input
+				className="hidden"
+				id="avatar-input"
+				onChange={uploadAvatar}
+				type="file"
+				accept="image/png, image/jpeg, image/jpg"
+			/>
+			<ChangeEmailDialog />
+			<ChangePersonalInformationDialog account={account.account} />
+		</>
 	)
 })
 

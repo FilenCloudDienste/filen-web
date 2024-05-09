@@ -3,6 +3,7 @@ import useLocation from "@/hooks/useLocation"
 import General from "./general"
 import Account from "./account"
 import Security from "./security"
+import Invite from "./invite"
 
 export const Settings = memo(() => {
 	const location = useLocation()
@@ -17,6 +18,10 @@ export const Settings = memo(() => {
 
 	if (location.includes("security")) {
 		return <Security />
+	}
+
+	if (location.includes("invite")) {
+		return <Invite />
 	}
 
 	return null

@@ -1,7 +1,6 @@
 import { memo, useCallback, useState, useEffect } from "react"
 import { ChevronRight } from "lucide-react"
 import useSDKConfig from "@/hooks/useSDKConfig"
-import { validate as validateUUID } from "uuid"
 import { getItem } from "@/lib/localForage"
 import { useNavigate } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
@@ -18,10 +17,6 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 		const ex = pathname.split("/drive/").join("").split("/")
 
 		for (const exItem of ex) {
-			if (!validateUUID(exItem)) {
-				continue
-			}
-
 			builtPathname += builtPathname.length === 0 ? exItem : `/${exItem}`
 
 			if (builtPathname.endsWith(path)) {

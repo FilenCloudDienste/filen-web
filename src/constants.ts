@@ -12,3 +12,4 @@ export const THUMBNAIL_MAX_FETCH_SIZE = MiB * 32
 export const PUBLIC_LINK_BASE_URL = IS_DESKTOP
 	? "https://app.filen.io/#/d/"
 	: globalThis.location.protocol + "//" + globalThis.location.host + "/#/d/"
+export const IS_APPLE_DEVICE = UAParserResult.device.vendor === "Apple"

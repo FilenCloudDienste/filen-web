@@ -24,6 +24,8 @@ import TransparentFullScreenImageDialog from "@/components/dialogs/transparentFu
 import TwoFactorCodeDialog from "@/components/dialogs/twoFactorCodeDialog"
 import PublicLinkDialog from "@/components/dialogs/publicLink"
 import SharedWithDialog from "@/components/dialogs/sharedWith"
+import { IS_DESKTOP } from "@/constants"
+import NotificationHandler from "@/components/notificationHandler"
 
 export const persistantQueryClient = new QueryClient({
 	defaultOptions: {
@@ -69,7 +71,8 @@ export const Root = memo(() => {
 					.then(() => {
 						Promise.all([
 							worker.initializeSDK({ config: sdkConfig }),
-							"serviceWorker" in navigator
+							IS_DESKTOP ? window.desktopAPI.initSDK(sdkConfig) : Promise.resolve(),
+							!IS_DESKTOP && "serviceWorker" in navigator
 								? new Promise<void>(resolve => {
 										registerServiceWorker("/sw.js", {
 											registrationOptions: {
@@ -129,7 +132,9 @@ export const Root = memo(() => {
 						<>
 							<DropZone>
 								<DragSelect>
-									<Outlet />
+									<NotificationHandler>
+										<Outlet />
+									</NotificationHandler>
 								</DragSelect>
 							</DropZone>
 							<SelectDriveItemDialog />

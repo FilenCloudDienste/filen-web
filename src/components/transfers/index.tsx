@@ -12,8 +12,9 @@ import { calcSpeed, calcTimeLeft, getTimeRemaining, bpsToReadable } from "./util
 import { cn } from "@/lib/utils"
 import throttle from "lodash/throttle"
 import { ArrowDownUp } from "lucide-react"
+import { IS_DESKTOP } from "@/constants"
 
-const transferStateSortingPriority: Record<TransferState, number> = {
+export const transferStateSortingPriority: Record<TransferState, number> = {
 	started: 1,
 	paused: 2,
 	error: 3,
@@ -110,6 +111,113 @@ export const Transfers = memo(() => {
 		}, 250)
 	).current
 
+	const handleTransferUpdates = useCallback(
+		(message: WorkerToMainMessage) => {
+			if (message.type === "download" || message.type === "upload") {
+				const now = Date.now()
+
+				if (message.data.type === "queued") {
+					setTransfers(prev => [
+						...prev,
+						{
+							type: message.type,
+							uuid: message.data.uuid,
+							state: "queued",
+							bytes: 0,
+							name: message.data.name,
+							size: 0,
+							startedTimestamp: 0,
+							queuedTimestamp: now,
+							errorTimestamp: 0,
+							finishedTimestamp: 0,
+							progressTimestamp: 0
+						}
+					])
+
+					if (progressStarted.current === -1) {
+						progressStarted.current = now
+
+						setOpen(true)
+					} else {
+						if (now < progressStarted.current) {
+							progressStarted.current = now
+
+							setOpen(true)
+						}
+					}
+				} else if (message.data.type === "started") {
+					setTransfers(prev =>
+						prev.map(transfer =>
+							transfer.uuid === message.data.uuid
+								? {
+										...transfer,
+										state: "started",
+										startedTimestamp: Date.now(),
+										size: message.data.type === "started" ? message.data.size : 0
+									}
+								: transfer
+						)
+					)
+
+					allBytes.current += message.data.size
+				} else if (message.data.type === "progress") {
+					const bytes = message.data.bytes
+
+					bytesSent.current += bytes
+
+					setTransfers(prev =>
+						prev.map(transfer =>
+							transfer.uuid === message.data.uuid
+								? {
+										...transfer,
+										bytes: transfer.bytes + bytes,
+										progressTimestamp: Date.now()
+									}
+								: transfer
+						)
+					)
+				} else if (message.data.type === "finished") {
+					setFinishedTransfers(prev => [
+						...prev,
+						{
+							type: message.type,
+							uuid: message.data.uuid,
+							state: "finished",
+							bytes: message.data.type === "finished" ? message.data.size : 0,
+							name: message.data.name,
+							size: message.data.type === "finished" ? message.data.size : 0,
+							startedTimestamp: 0,
+							queuedTimestamp: now,
+							errorTimestamp: 0,
+							finishedTimestamp: Date.now(),
+							progressTimestamp: 0
+						}
+					])
+					setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
+				} else if (message.data.type === "error") {
+					if (allBytes.current >= message.data.size) {
+						allBytes.current -= message.data.size
+					}
+
+					setTransfers(prev =>
+						prev.map(transfer =>
+							transfer.uuid === message.data.uuid ? { ...transfer, state: "error", errorTimestamp: Date.now() } : transfer
+						)
+					)
+				} else if (message.data.type === "stopped") {
+					if (allBytes.current >= message.data.size) {
+						allBytes.current -= message.data.size
+					}
+
+					setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
+				}
+
+				updateInfo()
+			}
+		},
+		[setFinishedTransfers, setTransfers, updateInfo]
+	)
+
 	useEffect(() => {
 		if (ongoingTransfers.length === 0) {
 			bytesSent.current = 0
@@ -130,107 +238,24 @@ export const Transfers = memo(() => {
 		})
 
 		const workerMessageListener = eventEmitter.on("workerMessage", (message: WorkerToMainMessage) => {
-			startTransition(() => {
-				if (message.type === "download" || message.type === "upload") {
-					const now = Date.now()
-
-					if (message.data.type === "queued") {
-						setTransfers(prev => [
-							...prev,
-							{
-								type: message.type,
-								uuid: message.data.uuid,
-								state: "queued",
-								bytes: 0,
-								name: message.data.name,
-								size: message.data.size,
-								startedTimestamp: 0,
-								queuedTimestamp: now,
-								errorTimestamp: 0,
-								finishedTimestamp: 0,
-								progressTimestamp: 0
-							}
-						])
-
-						if (progressStarted.current === -1) {
-							progressStarted.current = now
-
-							setOpen(true)
-						} else {
-							if (now < progressStarted.current) {
-								progressStarted.current = now
-
-								setOpen(true)
-							}
-						}
-
-						allBytes.current += message.data.size
-					} else if (message.data.type === "started") {
-						setTransfers(prev =>
-							prev.map(transfer =>
-								transfer.uuid === message.data.uuid
-									? { ...transfer, state: "started", startedTimestamp: Date.now() }
-									: transfer
-							)
-						)
-					} else if (message.data.type === "progress") {
-						const bytes = message.data.bytes
-
-						bytesSent.current += bytes
-
-						setTransfers(prev =>
-							prev.map(transfer =>
-								transfer.uuid === message.data.uuid
-									? { ...transfer, bytes: transfer.bytes + bytes, progressTimestamp: Date.now() }
-									: transfer
-							)
-						)
-					} else if (message.data.type === "finished") {
-						setFinishedTransfers(prev => [
-							...prev,
-							{
-								type: message.type,
-								uuid: message.data.uuid,
-								state: "finished",
-								bytes: message.data.size,
-								name: message.data.name,
-								size: message.data.size,
-								startedTimestamp: 0,
-								queuedTimestamp: now,
-								errorTimestamp: 0,
-								finishedTimestamp: Date.now(),
-								progressTimestamp: 0
-							}
-						])
-						setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
-					} else if (message.data.type === "error") {
-						if (allBytes.current >= message.data.size) {
-							allBytes.current -= message.data.size
-						}
-
-						setTransfers(prev =>
-							prev.map(transfer =>
-								transfer.uuid === message.data.uuid ? { ...transfer, state: "error", errorTimestamp: Date.now() } : transfer
-							)
-						)
-					} else if (message.data.type === "stopped") {
-						if (allBytes.current >= message.data.size) {
-							allBytes.current -= message.data.size
-						}
-
-						setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
-					}
-
-					updateInfo()
-				}
-			})
+			handleTransferUpdates(message)
 		})
+
+		let desktopMessageListener: { remove: () => void } | null = null
+
+		if (IS_DESKTOP) {
+			desktopMessageListener = window.desktopAPI.onMainToWindowMessage(handleTransferUpdates)
+		}
 
 		return () => {
 			listener.remove()
 			workerMessageListener.remove()
+
+			if (desktopMessageListener) {
+				desktopMessageListener.remove()
+			}
 		}
-	}, [setTransfers, setProgress, setRemaining, setSpeed, t, updateInfo, setFinishedTransfers])
+	}, [setProgress, setRemaining, setSpeed, t, handleTransferUpdates])
 
 	return (
 		<Sheet

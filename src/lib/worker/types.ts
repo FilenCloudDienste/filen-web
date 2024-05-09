@@ -6,15 +6,17 @@ export type DriveCloudItemWithPath = Prettify<DriveCloudItem & { path: string }>
 export type WorkerToMainMessage =
 	| {
 			type: "download" | "upload"
-			data: { uuid: string; name: string; size: number } & (
+			data: { uuid: string; name: string } & (
 				| {
 						type: "started"
+						size: number
 				  }
 				| {
 						type: "queued"
 				  }
 				| {
 						type: "finished"
+						size: number
 				  }
 				| {
 						type: "progress"
@@ -23,9 +25,11 @@ export type WorkerToMainMessage =
 				| {
 						type: "error"
 						err: Error
+						size: number
 				  }
 				| {
 						type: "stopped"
+						size: number
 				  }
 				| {
 						type: "paused"

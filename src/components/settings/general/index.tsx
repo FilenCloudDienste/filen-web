@@ -12,6 +12,11 @@ import worker from "@/lib/worker"
 import { useNavigate } from "@tanstack/react-router"
 import { clear as clearLocalForage } from "@/lib/localForage"
 import sdk from "@/lib/sdk"
+import { IS_DESKTOP } from "@/constants"
+import { showConfirmDialog } from "@/components/dialogs/confirm"
+import { Switch } from "@/components/ui/switch"
+import { useLocalStorage } from "@uidotdev/usehooks"
+import { type NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 
 export const General = memo(() => {
 	const account = useAccount()
@@ -20,13 +25,18 @@ export const General = memo(() => {
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const navigate = useNavigate()
+	const [chatNotificationsEnabled, setChatNotificationsEnabled] = useLocalStorage<boolean>("chatNotificationsEnabled", false)
+	const [contactNotificationsEnabled, setContactNotificationsEnabled] = useLocalStorage<boolean>("contactNotificationsEnabled", false)
+	const [defaultNoteType, setDefaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
 
 	const i18nLangToString = useMemo(() => {
 		switch (i18n.language) {
+			case "en":
 			case "en-US": {
 				return "English"
 			}
 
+			case "de":
 			case "de-DE": {
 				return "Deutsch"
 			}
@@ -37,6 +47,54 @@ export const General = memo(() => {
 		}
 	}, [i18n])
 
+	const themeToString = useMemo(() => {
+		switch (theme.theme) {
+			case "dark": {
+				return t("settings.general.dark")
+			}
+
+			case "light": {
+				return t("settings.general.light")
+			}
+
+			case "system": {
+				return t("settings.general.system")
+			}
+
+			default: {
+				return t("settings.general.dark")
+			}
+		}
+	}, [theme.theme, t])
+
+	const noteTypeToString = useMemo(() => {
+		switch (defaultNoteType) {
+			case "text": {
+				return t("settings.general.noteType.text")
+			}
+
+			case "rich": {
+				return t("settings.general.noteType.rich")
+			}
+
+			case "checklist": {
+				return t("settings.general.noteType.checklist")
+			}
+
+			case "md": {
+				return t("settings.general.noteType.md")
+			}
+
+			case "code": {
+				return t("settings.general.noteType.code")
+			}
+
+			default: {
+				return t("settings.general.noteType.text")
+			}
+		}
+	}, [defaultNoteType, t])
+
 	const onThemeChange = useCallback(
 		(t: Theme) => {
 			theme.setTheme(t)
@@ -44,33 +102,60 @@ export const General = memo(() => {
 		[theme]
 	)
 
-	const logout = useCallback(async () => {
-		const toast = loadingToast()
+	const onDefaultNoteTypeChange = useCallback(
+		(type: NoteType) => {
+			setDefaultNoteType(type)
+		},
+		[setDefaultNoteType]
+	)
 
-		try {
-			window.localStorage.clear()
-			sdk.init({})
+	const logout = useCallback(
+		async (e: React.MouseEvent<HTMLParagraphElement, MouseEvent>) => {
+			if (!e.shiftKey) {
+				if (
+					!(await showConfirmDialog({
+						title: "d",
+						continueButtonText: "ddd",
+						description: "ookeoetrasher",
+						continueButtonVariant: "destructive"
+					}))
+				) {
+					return
+				}
+			}
 
-			await Promise.all([clearLocalForage(), worker.deinitializeSDK()])
+			const toast = loadingToast()
 
-			navigate({
-				to: "/login",
-				replace: true,
-				resetScroll: true
-			})
-		} catch (e) {
-			console.error(e)
+			try {
+				window.localStorage.clear()
+				sdk.init({})
 
-			const toast = errorToast((e as unknown as Error).toString())
+				await Promise.all([clearLocalForage(), worker.deinitializeSDK()])
 
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
-		} finally {
-			toast.dismiss()
-		}
-	}, [loadingToast, errorToast, navigate])
+				if (IS_DESKTOP) {
+					await window.desktopAPI.restart()
+				} else {
+					navigate({
+						to: "/login",
+						replace: true,
+						resetScroll: true
+					})
+				}
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		},
+		[loadingToast, errorToast, navigate]
+	)
 
 	const onLanguageChange = useCallback(
 		(lang: string) => {
@@ -118,7 +203,9 @@ export const General = memo(() => {
 							<div className="w-4 h-4 rounded-sm bg-secondary" />
 							<p>
 								{t("settings.general.free", {
-									size: formatBytes(account.account.storage - account.settings.versionedStorage)
+									size: formatBytes(
+										account.account.maxStorage - account.account.storage - account.settings.versionedStorage
+									)
 								})}
 							</p>
 						</div>
@@ -126,18 +213,57 @@ export const General = memo(() => {
 				</div>
 				<div className="flex flex-col gap-4 mt-10">
 					<Section
+						name="Default note type"
+						info="Change the default note type"
+					>
+						<Select onValueChange={onDefaultNoteTypeChange}>
+							<SelectTrigger className="w-[180px]">
+								<SelectValue placeholder={noteTypeToString} />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="text">{t("settings.general.noteType.text")}</SelectItem>
+								<SelectItem value="rich">{t("settings.general.noteType.rich")}</SelectItem>
+								<SelectItem value="checklist">{t("settings.general.noteType.checklist")}</SelectItem>
+								<SelectItem value="md">{t("settings.general.noteType.md")}</SelectItem>
+								<SelectItem value="code">{t("settings.general.noteType.code")}</SelectItem>
+							</SelectContent>
+						</Select>
+					</Section>
+					{IS_DESKTOP && (
+						<>
+							<Section
+								name="Chat notifications"
+								info="Enable or disable chat notifications"
+							>
+								<Switch
+									checked={chatNotificationsEnabled}
+									onCheckedChange={setChatNotificationsEnabled}
+								/>
+							</Section>
+							<Section
+								name="Contact notifications"
+								info="Enable or disable contact notifications"
+							>
+								<Switch
+									checked={contactNotificationsEnabled}
+									onCheckedChange={setContactNotificationsEnabled}
+								/>
+							</Section>
+						</>
+					)}
+					<Section
 						name="Theme"
 						info="Change the app appearance"
 						className="mt-10"
 					>
 						<Select onValueChange={onThemeChange}>
 							<SelectTrigger className="w-[180px]">
-								<SelectValue placeholder={theme.theme} />
+								<SelectValue placeholder={themeToString} />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="light">Light</SelectItem>
-								<SelectItem value="dark">Dark</SelectItem>
-								<SelectItem value="system">System</SelectItem>
+								<SelectItem value="light">{t("settings.general.light")}</SelectItem>
+								<SelectItem value="dark">{t("settings.general.dark")}</SelectItem>
+								<SelectItem value="system">{t("settings.general.system")}</SelectItem>
 							</SelectContent>
 						</Select>
 					</Section>

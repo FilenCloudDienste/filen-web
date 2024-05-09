@@ -298,7 +298,7 @@ export const Directory = memo(
 								onChange={onPasswordChange}
 								type={showPassword ? "text" : "password"}
 								placeholder={status.password ? new Array(16).join("*") : t("dialogs.publicLink.passwordPlaceholder")}
-								className="pr-14"
+								className="pr-12"
 							/>
 						</div>
 						<div className="flex flex-row gap-10 items-center justify-between">
