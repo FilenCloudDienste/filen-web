@@ -58,6 +58,7 @@ export const InnerSideBar = memo(() => {
 						<Button uuid="settings/security" />
 						<Button uuid="settings/subscriptions" />
 						<Button uuid="settings/invoices" />
+						<Button uuid="settings/plans" />
 						<Button uuid="settings/events" />
 						<Button uuid="settings/invite" />
 					</>

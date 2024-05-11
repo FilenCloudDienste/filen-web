@@ -104,7 +104,8 @@
 			"account": "Account",
 			"events": "Events",
 			"security": "Security",
-			"invite": "Invite"
+			"invite": "Invite",
+			"plans": "Plans"
 		},
 		"contacts": {
 			"online": "Online",

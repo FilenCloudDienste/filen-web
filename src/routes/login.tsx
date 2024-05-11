@@ -231,6 +231,7 @@ export function Login() {
 									className="inline-block w-full text-center text-sm underline text-muted-foreground"
 									to="/login"
 									disabled={loading}
+									draggable={false}
 								>
 									<Button
 										className="w-full select-none"
@@ -244,6 +245,7 @@ export function Login() {
 									className="inline-block w-full text-center text-sm underline text-muted-foreground select-none"
 									to="/login"
 									disabled={loading}
+									draggable={false}
 								>
 									{t("login.buttons.forgotPassword")}
 								</Link>

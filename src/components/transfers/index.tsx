@@ -312,7 +312,7 @@ export const Transfers = memo(() => {
 											top: 0,
 											left: 0,
 											width: "100%",
-											height: `${virtualItem.size}px`,
+											height: "auto",
 											transform: `translateY(${virtualItem.start}px)`
 										}}
 									>

@@ -189,59 +189,57 @@ export const Event = memo(({ event, account }: { event: UserEvent; account: User
 	}, [event, t])
 
 	return (
-		<div className="flex flex-row p-4 w-full">
-			<div className="flex flex-row border-b items-center justify-between px-4 py-3 gap-10 cursor-pointer hover:bg-secondary hover:rounded-md w-full">
-				<div className="flex flex-row gap-3 items-center">
-					{event.type === "folderColorChanged" ||
-					event.type === "folderLinkEdited" ||
-					event.type === "baseFolderCreated" ||
-					event.type === "folderMoved" ||
-					event.type === "folderRenamed" ||
-					event.type === "folderRestored" ||
-					event.type === "folderShared" ||
-					event.type === "folderTrash" ||
-					event.type === "subFolderCreated" ||
-					event.type === "deleteFolderPermanently" ? (
-						<ColoredFolderSVGIcon
-							width={24}
-							height={24}
-						/>
-					) : event.type === "fileLinkEdited" ||
-					  event.type === "fileMoved" ||
-					  event.type === "fileRenamed" ||
-					  event.type === "fileRestored" ||
-					  event.type === "fileRm" ||
-					  event.type === "fileShared" ||
-					  event.type === "fileTrash" ||
-					  event.type === "fileUploaded" ||
-					  event.type === "fileVersioned" ||
-					  event.type === "deleteFilePermanently" ? (
+		<div className="flex flex-row border-b items-center p-4 py-3 justify-between gap-10 cursor-pointer hover:bg-secondary hover:rounded-md w-full">
+			<div className="flex flex-row gap-3 items-center">
+				{event.type === "folderColorChanged" ||
+				event.type === "folderLinkEdited" ||
+				event.type === "baseFolderCreated" ||
+				event.type === "folderMoved" ||
+				event.type === "folderRenamed" ||
+				event.type === "folderRestored" ||
+				event.type === "folderShared" ||
+				event.type === "folderTrash" ||
+				event.type === "subFolderCreated" ||
+				event.type === "deleteFolderPermanently" ? (
+					<ColoredFolderSVGIcon
+						width={24}
+						height={24}
+					/>
+				) : event.type === "fileLinkEdited" ||
+				  event.type === "fileMoved" ||
+				  event.type === "fileRenamed" ||
+				  event.type === "fileRestored" ||
+				  event.type === "fileRm" ||
+				  event.type === "fileShared" ||
+				  event.type === "fileTrash" ||
+				  event.type === "fileUploaded" ||
+				  event.type === "fileVersioned" ||
+				  event.type === "deleteFilePermanently" ? (
+					<img
+						src={fileNameToSVGIcon(event.info.metadataDecrypted.name)}
+						className="w-[24px] h-[24px]"
+					/>
+				) : event.type === "itemFavorite" ? (
+					event.info.metadataDecrypted ? (
 						<img
 							src={fileNameToSVGIcon(event.info.metadataDecrypted.name)}
 							className="w-[24px] h-[24px]"
 						/>
-					) : event.type === "itemFavorite" ? (
-						event.info.metadataDecrypted ? (
-							<img
-								src={fileNameToSVGIcon(event.info.metadataDecrypted.name)}
-								className="w-[24px] h-[24px]"
-							/>
-						) : (
-							<ColoredFolderSVGIcon
-								width={24}
-								height={24}
-							/>
-						)
 					) : (
-						<Avatar
-							src={account.avatarURL}
-							size={24}
+						<ColoredFolderSVGIcon
+							width={24}
+							height={24}
 						/>
-					)}
-					<p className="line-clamp-1 text-ellipsis break-all">{eventText}</p>
-				</div>
-				<p className="text-muted-foreground text-sm shrink-0">{simpleDate(event.timestamp)}</p>
+					)
+				) : (
+					<Avatar
+						src={account.avatarURL}
+						size={24}
+					/>
+				)}
+				<p className="line-clamp-1 text-ellipsis break-all">{eventText}</p>
 			</div>
+			<p className="text-muted-foreground text-sm shrink-0">{simpleDate(event.timestamp)}</p>
 		</div>
 	)
 })

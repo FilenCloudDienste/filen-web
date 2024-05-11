@@ -45,6 +45,7 @@ export const Events = memo(() => {
 		<div className="flex flex-col w-full h-full">
 			<div
 				ref={virtualizerParentRef}
+				className="p-4"
 				style={{
 					height: windowSize.height - (IS_DESKTOP ? 24 : 0),
 					overflowX: "hidden",
@@ -77,7 +78,7 @@ export const Events = memo(() => {
 										top: 0,
 										left: 0,
 										width: "100%",
-										height: `${virtualItem.size}px`,
+										height: "auto",
 										transform: `translateY(${virtualItem.start}px)`
 									}}
 								>

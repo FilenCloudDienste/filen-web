@@ -87,7 +87,10 @@ export const Note = memo(
 								return (
 									<div
 										key={tag.uuid}
-										className="flex flex-row items-center justify-center px-2 py-1 rounded-md h-7 text-sm border shadow-sm"
+										className={cn(
+											"flex flex-row items-center justify-center px-2 py-1 rounded-md h-7 text-sm border shadow-sm",
+											routeParent === note.uuid && "bg-primary-foreground"
+										)}
 									>
 										{tag.name}
 									</div>

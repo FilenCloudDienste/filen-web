@@ -121,6 +121,7 @@ export const ListItem = memo(
 						onClick={selectItem}
 						checked={isSelected}
 						disabled={!canSelect}
+						className="mr-1 shrink-0"
 					/>
 					{item.type === "directory" ? (
 						<FolderIcon
@@ -134,11 +135,7 @@ export const ListItem = memo(
 					) : (
 						<img
 							src={thumbnailURL ? thumbnailURL : fileNameToSVGIcon(item.name)}
-							className={cn(
-								"w-[28px] h-[28px] dragselect-start-disallowed shrink-0",
-								thumbnailURL && "rounded-sm",
-								!canSelect && "opacity-50"
-							)}
+							className={cn("w-[28px] h-[28px] shrink-0", thumbnailURL && "rounded-sm", !canSelect && "opacity-50")}
 							draggable={false}
 						/>
 					)}

@@ -29,7 +29,8 @@ import {
 	UserPlus,
 	Send,
 	PhoneIncoming,
-	PhoneOutgoing
+	PhoneOutgoing,
+	Star
 } from "lucide-react"
 import useLocation from "@/hooks/useLocation"
 import { useContactsStore } from "@/stores/contacts.store"
@@ -211,6 +212,12 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 					<>
 						<UserPlus size={iconSize} />
 						<p>{t("innerSideBar.settings.invite")}</p>
+					</>
+				)}
+				{uuid === "settings/plans" && (
+					<>
+						<Star size={iconSize} />
+						<p>{t("innerSideBar.settings.plans")}</p>
 					</>
 				)}
 			</Link>

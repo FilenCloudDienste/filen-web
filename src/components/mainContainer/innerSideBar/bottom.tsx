@@ -23,6 +23,7 @@ export const Bottom = memo(() => {
 						params={{
 							type: "account"
 						}}
+						draggable={false}
 					>
 						<Avatar
 							src={account.account.avatarURL}
@@ -51,6 +52,7 @@ export const Bottom = memo(() => {
 										params={{
 											type: "general"
 										}}
+										draggable={false}
 									>
 										<Settings size={22} />
 									</Link>

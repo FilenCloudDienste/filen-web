@@ -77,6 +77,7 @@ export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: 
 						params={{
 							_splat: `${pathname}/${item.uuid}`
 						}}
+						draggable={false}
 					>
 						{item.name}
 					</Link>

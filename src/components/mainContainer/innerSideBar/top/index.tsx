@@ -34,6 +34,7 @@ export const Top = memo(() => {
 											: "/drive/$"
 					}
 					params={location.includes("settings") ? { type: "general" } : { _splat: baseFolderUUID }}
+					draggable={false}
 				>
 					{location.includes("settings")
 						? t("innerSideBar.top.settings")

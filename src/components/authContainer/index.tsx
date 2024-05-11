@@ -11,6 +11,7 @@ export const AuthContainer = memo(({ children }: { children: React.ReactNode }) 
 				<Link
 					to="/login"
 					className="flex shrink-0 flex-row justify-center py-10 sm:justify-start sm:pl-20 items-center gap-2"
+					draggable={false}
 				>
 					<img
 						src="https://drive.filen.io/static/media/light_logo.9f8ed143e54adb31009008c527f52c95.svg"
@@ -26,12 +27,14 @@ export const AuthContainer = memo(({ children }: { children: React.ReactNode }) 
 					<Link
 						to="/login"
 						className="underline text-muted-foreground text-sm select-none"
+						draggable={false}
 					>
 						{t("auth.footer.tos")}
 					</Link>
 					<Link
 						to="/login"
 						className="underline text-muted-foreground text-sm select-none"
+						draggable={false}
 					>
 						{t("auth.footer.privacy")}
 					</Link>
