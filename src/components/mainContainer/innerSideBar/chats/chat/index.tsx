@@ -53,6 +53,7 @@ export const Chat = memo(
 						"flex flex-row gap-3 p-3 border-l-[3px] hover:bg-secondary h-full items-center",
 						routeParent === conversation.uuid ? "border-l-blue-500 bg-secondary" : "border-transparent"
 					)}
+					draggable={false}
 					to="/chats/$uuid"
 					params={{
 						uuid: conversation.uuid

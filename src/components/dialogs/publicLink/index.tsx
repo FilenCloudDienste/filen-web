@@ -44,7 +44,7 @@ export const PublicLinkDialog = memo(() => {
 		<AlertDialog open={open}>
 			<AlertDialogContent
 				onEscapeKeyDown={close}
-				className="outline-none focus:outline-none active:outline-none hover:outline-none"
+				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{t("dialogs.publicLink.title")}</AlertDialogTitle>

@@ -172,13 +172,13 @@ export const SelectDriveItemDialog = memo(() => {
 		>
 			<AlertDialogContent
 				onEscapeKeyDown={cancel}
-				className="outline-none focus:outline-none active:outline-none hover:outline-none"
+				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
 			>
 				<AlertDialogHeader>
 					{/*<AlertDialogTitle>{t("dialogs.selectDriveItem.title")}</AlertDialogTitle>*/}
 					<AlertDialogDescription asChild={true}>
 						<div className="w-full h-full flex flex-col pb-2">
-							<div className="flex flex-col mb-3">
+							<div className="flex flex-col mb-4">
 								<Breadcrumbs
 									pathname={pathname}
 									setPathname={setPathname}

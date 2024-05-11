@@ -105,7 +105,7 @@ export const PreviewDialog = memo(() => {
 			open={open}
 			onOpenChange={onOpenChange}
 		>
-			<DialogContent className="fullscreen-dialog no-close-button outline-none focus:outline-none active:outline-none hover:outline-none">
+			<DialogContent className="fullscreen-dialog no-close-button outline-none focus:outline-none active:outline-none hover:outline-none select-none">
 				{item && (
 					<div className="absolute w-screen h-screen flex flex-col">
 						<div className="flex flex-row border-b h-12 shadow-md bg-secondary w-full items-center justify-between px-4 -mt-[1px] z-50">

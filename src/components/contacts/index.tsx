@@ -220,7 +220,7 @@ export const Contacts = memo(() => {
 	})
 
 	return (
-		<div className="flex flex-col w-full h-full">
+		<div className="flex flex-col w-full h-full select-none">
 			<div className="flex flex-col max-w-[75%] h-full">
 				<div className="flex flex-row gap-2 p-4">
 					<Input

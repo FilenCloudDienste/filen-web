@@ -266,7 +266,7 @@ export const Transfers = memo(() => {
 		>
 			<SheetContent
 				forceMount={true}
-				className="outline-none focus:outline-none active:outline-none hover:outline-none no-outline"
+				className="outline-none focus:outline-none active:outline-none hover:outline-none no-outline select-none"
 				onDragOver={onDragOver}
 			>
 				<SheetHeader>

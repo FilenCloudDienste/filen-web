@@ -43,7 +43,7 @@ export const TransparentFullScreenImageDialog = memo(() => {
 			onOpenChange={onOpenChange}
 		>
 			<DialogContent
-				className="fullscreen-dialog no-close-button outline-none focus:outline-none active:outline-none hover:outline-none bg-transparent flex flex-row items-center justify-center"
+				className="fullscreen-dialog no-close-button outline-none focus:outline-none active:outline-none hover:outline-none bg-transparent flex flex-row items-center justify-center select-none"
 				onClick={close}
 			>
 				<div className="absolute right-5 top-5">

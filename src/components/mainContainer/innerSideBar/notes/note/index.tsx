@@ -44,6 +44,7 @@ export const Note = memo(
 						hovering && "bg-secondary"
 					)}
 					to="/notes/$uuid"
+					draggable={false}
 					params={{
 						uuid: note.uuid
 					}}

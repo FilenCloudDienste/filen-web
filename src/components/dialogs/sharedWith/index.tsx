@@ -31,7 +31,7 @@ export const SharedWithDialog = memo(() => {
 			open={open}
 			onOpenChange={setOpen}
 		>
-			<DialogContent className="outline-none focus:outline-none active:outline-none hover:outline-none">
+			<DialogContent className="outline-none focus:outline-none active:outline-none hover:outline-none select-none">
 				<DialogHeader>{t("dialogs.sharedWith.title")}</DialogHeader>
 				{item && (
 					<List

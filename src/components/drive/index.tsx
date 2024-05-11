@@ -173,7 +173,7 @@ export const Drive = memo(() => {
 					onChange={uploadFiles}
 					className="hidden"
 				/>
-				<div className="w-full h-full flex flex-col">
+				<div className="w-full h-full flex flex-col select-none">
 					{listType[parent] !== "grid" && <Header />}
 					<List />
 				</div>

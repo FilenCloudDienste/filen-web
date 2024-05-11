@@ -39,7 +39,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 	}, [setConversationParticipantsContainerOpen])
 
 	return (
-		<div className="w-full h-12 flex flex-row px-4 border-b shadow-sm items-center gap-2 justify-between shrink-0">
+		<div className="w-full h-12 flex flex-row px-4 border-b shadow-sm items-center gap-2 justify-between shrink-0 z-[100001]">
 			<div
 				className={cn("flex flex-row gap-2 items-center", hasWritePermissions ? "cursor-pointer" : "cursor-default")}
 				onClick={editConversationName}

@@ -116,7 +116,7 @@ export const ConfirmDialog = memo(() => {
 		<AlertDialog open={open}>
 			<AlertDialogContent
 				onEscapeKeyDown={cancel}
-				className="outline-none focus:outline-none active:outline-none hover:outline-none"
+				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{props.title}</AlertDialogTitle>

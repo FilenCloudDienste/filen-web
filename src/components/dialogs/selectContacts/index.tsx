@@ -117,7 +117,7 @@ export const SelectContactsDialog = memo(() => {
 		>
 			<AlertDialogContent
 				onEscapeKeyDown={cancel}
-				className="outline-none focus:outline-none active:outline-none hover:outline-none"
+				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle className="mb-1">{t("dialogs.selectContacts.title")}</AlertDialogTitle>

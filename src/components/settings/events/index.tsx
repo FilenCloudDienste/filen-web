@@ -6,8 +6,7 @@ import { useVirtualizer } from "@tanstack/react-virtual"
 import useWindowSize from "@/hooks/useWindowSize"
 import { IS_DESKTOP } from "@/constants"
 import useAccount from "@/hooks/useAccount"
-import Avatar from "@/components/avatar"
-import { simpleDate } from "@/utils"
+import Event from "./event"
 
 export const Events = memo(() => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
@@ -43,11 +42,11 @@ export const Events = memo(() => {
 	}
 
 	return (
-		<div className="flex flex-col p-6 pb-0 w-5/6 h-full">
+		<div className="flex flex-col w-full h-full">
 			<div
 				ref={virtualizerParentRef}
 				style={{
-					height: windowSize.height - 24 - (IS_DESKTOP ? 24 : 0),
+					height: windowSize.height - (IS_DESKTOP ? 24 : 0),
 					overflowX: "hidden",
 					overflowY: "auto",
 					width: "100%"
@@ -55,7 +54,7 @@ export const Events = memo(() => {
 			>
 				{query.isSuccess && eventsSorted.length === 0 ? (
 					<div className="w-full h-full flex flex-col items-center justify-center">
-						<p className="select-none">{t("settings.events.listEmpty")}</p>
+						<p className="line-clamp-1 text-ellipsis break-all">{t("settings.events.listEmpty")}</p>
 					</div>
 				) : (
 					<div
@@ -82,16 +81,10 @@ export const Events = memo(() => {
 										transform: `translateY(${virtualItem.start}px)`
 									}}
 								>
-									<div className="flex flex-row border-b items-center justify-between px-4 py-3 gap-10 cursor-pointer hover:bg-secondary hover:rounded-md">
-										<div className="flex flex-row gap-3 items-center">
-											<Avatar
-												src={account.account.avatarURL}
-												size={24}
-											/>
-											<p className="line-clamp-1 text-ellipsis break-all">{event.type}</p>
-										</div>
-										<p className="text-muted-foreground text-sm shrink-0">{simpleDate(event.timestamp)}</p>
-									</div>
+									<Event
+										event={event}
+										account={account.account}
+									/>
 								</div>
 							)
 						})}

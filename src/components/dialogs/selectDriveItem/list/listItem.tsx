@@ -113,7 +113,7 @@ export const ListItem = memo(
 
 		return (
 			<div
-				className="flex flex-row justify-between items-center hover:bg-secondary cursor-pointer px-3 rounded-md gap-5 select-none"
+				className="flex flex-row justify-between items-center hover:bg-secondary cursor-pointer px-3 py-2 rounded-md gap-5 select-none"
 				onClick={navigateToDirectory}
 			>
 				<div className="flex flex-row items-center gap-3 text-primary line-clamp-1 text-ellipsis select-none">
