@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from "react"
+import { memo, useMemo, useCallback, useState, useRef, useEffect } from "react"
 import worker from "@/lib/worker"
 import { useQuery } from "@tanstack/react-query"
 import { Virtuoso } from "react-virtuoso"
@@ -7,10 +7,17 @@ import { IS_DESKTOP } from "@/constants"
 import useAccount from "@/hooks/useAccount"
 import Event from "./event"
 import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
+import useErrorToast from "@/hooks/useErrorToast"
 
 export const Events = memo(() => {
 	const windowSize = useWindowSize()
 	const account = useAccount()
+	const errorToast = useErrorToast()
+	const [events, setEvents] = useState<UserEvent[]>([])
+	const queryUpdatedAtRef = useRef<number>(-1)
+	const fetchingMore = useRef<boolean>(false)
+	const lastEventFetchCount = useRef<number>(-1)
+	const hasMoreEvents = useRef<boolean>(true)
 
 	const query = useQuery({
 		queryKey: ["listEvents"],
@@ -22,12 +29,46 @@ export const Events = memo(() => {
 	}, [windowSize.height])
 
 	const eventsSorted = useMemo(() => {
-		if (!query.isSuccess) {
-			return []
+		return events.sort((a, b) => b.timestamp - a.timestamp)
+	}, [events])
+
+	const fetchMore = useCallback(async () => {
+		if (eventsSorted.length === 0 || !hasMoreEvents.current) {
+			return
 		}
 
-		return query.data.sort((a, b) => b.timestamp - a.timestamp)
-	}, [query.isSuccess, query.data])
+		const lastEvent = eventsSorted.at(-1)
+
+		if (!lastEvent || fetchingMore.current || lastEventFetchCount.current === eventsSorted.length) {
+			return
+		}
+
+		lastEventFetchCount.current = eventsSorted.length
+		fetchingMore.current = true
+
+		try {
+			const moreEvents = await worker.listEvents({ timestamp: lastEvent.timestamp })
+
+			setEvents(prev => [...prev, ...moreEvents])
+
+			if (moreEvents.length === 0) {
+				hasMoreEvents.current = false
+			}
+		} catch (e) {
+			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+
+			lastEventFetchCount.current = -1
+		} finally {
+			fetchingMore.current = false
+		}
+	}, [eventsSorted, errorToast])
 
 	const getItemKey = useCallback((_: number, event: UserEvent) => event.uuid, [])
 
@@ -43,6 +84,14 @@ export const Events = memo(() => {
 		[account]
 	)
 
+	useEffect(() => {
+		if (query.isSuccess && query.dataUpdatedAt !== queryUpdatedAtRef.current) {
+			queryUpdatedAtRef.current = query.dataUpdatedAt
+
+			setEvents(query.data)
+		}
+	}, [query.isSuccess, query.data, query.dataUpdatedAt])
+
 	if (!query.isSuccess || !account) {
 		return null
 	}
@@ -57,6 +106,7 @@ export const Events = memo(() => {
 				computeItemKey={getItemKey}
 				defaultItemHeight={49}
 				itemContent={itemContent}
+				endReached={fetchMore}
 				style={{
 					overflowX: "hidden",
 					overflowY: "auto",
