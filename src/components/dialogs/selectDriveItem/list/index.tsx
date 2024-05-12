@@ -1,9 +1,8 @@
-import { memo, useEffect, useRef, useMemo } from "react"
+import { memo, useEffect, useRef, useMemo, useCallback } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { Virtuoso } from "react-virtuoso"
 import worker from "@/lib/worker"
 import ListItem from "./listItem"
-import { useTranslation } from "react-i18next"
 import eventEmitter from "@/lib/eventEmitter"
 import { orderItemsByType } from "@/components/drive/utils"
 import { type SelectionType } from ".."
@@ -26,8 +25,6 @@ export const List = memo(
 		setResponseItems: React.Dispatch<React.SetStateAction<DriveCloudItem[]>>
 	}) => {
 		const lastPathname = useRef<string>("")
-		const virtualizerParentRef = useRef<HTMLDivElement>(null)
-		const { t } = useTranslation()
 
 		const parent = useMemo(() => {
 			const ex = pathname.split("/")
@@ -48,15 +45,23 @@ export const List = memo(
 			return orderItemsByType({ items: query.data, type: "nameAsc" })
 		}, [query.isSuccess, query.data])
 
-		const rowVirtualizer = useVirtualizer({
-			count: itemsOrdered.length,
-			getScrollElement: () => virtualizerParentRef.current,
-			estimateSize: () => 44,
-			getItemKey(index) {
-				return itemsOrdered[index].uuid
+		const getItemKey = useCallback((_: number, item: DriveCloudItem) => item.uuid, [])
+
+		const itemContent = useCallback(
+			(_: number, item: DriveCloudItem) => {
+				return (
+					<ListItem
+						item={item}
+						setPathname={setPathname}
+						setResponseItems={setResponseItems}
+						responseItems={responseItems}
+						selectMultiple={selectMultiple}
+						selectionType={selectionType}
+					/>
+				)
 			},
-			overscan: 5
-		})
+			[setPathname, setResponseItems, responseItems, selectMultiple, selectionType]
+		)
 
 		useEffect(() => {
 			// We have to manually refetch the query because the component does not remount, only the location pathname changes.
@@ -82,58 +87,21 @@ export const List = memo(
 		}, [parent, query])
 
 		return (
-			<div
-				ref={virtualizerParentRef}
+			<Virtuoso
+				data={itemsOrdered}
+				totalCount={itemsOrdered.length}
+				height={384}
+				width="100%"
+				computeItemKey={getItemKey}
+				defaultItemHeight={44}
+				itemContent={itemContent}
 				style={{
-					height: 384,
 					overflowX: "hidden",
-					overflowY: "auto"
+					overflowY: "auto",
+					height: 384 + "px",
+					width: "100%"
 				}}
-			>
-				{query.isSuccess && itemsOrdered.length === 0 ? (
-					<div className="w-full h-full flex flex-col items-center justify-center">
-						<p className="select-none">{t("dialogs.selectDriveItem.listEmpty")}</p>
-					</div>
-				) : (
-					<div
-						style={{
-							height: `${rowVirtualizer.getTotalSize()}px`,
-							width: "100%",
-							position: "relative"
-						}}
-					>
-						{rowVirtualizer.getVirtualItems().map(virtualItem => {
-							const item = itemsOrdered[virtualItem.index]
-
-							return (
-								<div
-									key={virtualItem.key}
-									data-index={virtualItem.index}
-									ref={rowVirtualizer.measureElement}
-									style={{
-										position: "absolute",
-										top: 0,
-										left: 0,
-										width: "100%",
-										height: "auto",
-										transform: `translateY(${virtualItem.start}px)`
-									}}
-								>
-									<ListItem
-										key={virtualItem.key}
-										item={item}
-										setPathname={setPathname}
-										setResponseItems={setResponseItems}
-										responseItems={responseItems}
-										selectMultiple={selectMultiple}
-										selectionType={selectionType}
-									/>
-								</div>
-							)
-						})}
-					</div>
-				)}
-			</div>
+			/>
 		)
 	}
 )

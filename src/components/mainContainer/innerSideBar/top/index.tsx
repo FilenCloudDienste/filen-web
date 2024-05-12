@@ -28,12 +28,18 @@ export const Top = memo(() => {
 								: location.includes("chats")
 									? "/chats"
 									: location.includes("contacts")
-										? "/contacts"
+										? "/contacts/$type"
 										: location.includes("syncs")
 											? "/syncs"
 											: "/drive/$"
 					}
-					params={location.includes("settings") ? { type: "general" } : { _splat: baseFolderUUID }}
+					params={
+						location.includes("settings")
+							? { type: "general" }
+							: location.includes("contacts")
+								? { type: "all" }
+								: { _splat: baseFolderUUID }
+					}
 					draggable={false}
 				>
 					{location.includes("settings")

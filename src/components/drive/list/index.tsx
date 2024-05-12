@@ -322,10 +322,7 @@ export const List = memo(() => {
 			query={query}
 		/>
 	) : (
-		<ListList
-			items={itemsFiltered}
-			query={query}
-		/>
+		<ListList items={itemsFiltered} />
 	)
 })
 

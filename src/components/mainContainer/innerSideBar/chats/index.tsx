@@ -1,7 +1,7 @@
 import { memo, useRef, useEffect, useMemo, useCallback } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { Virtuoso } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
 import { useChatsStore } from "@/stores/chats.store"
 import { useLocalStorage } from "@uidotdev/usehooks"
@@ -16,9 +16,9 @@ import { type SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
 import eventEmitter from "@/lib/eventEmitter"
 import { sortAndFilterConversations } from "./utils"
+import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 
 export const Chats = memo(() => {
-	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const windowSize = useWindowSize()
 	const { conversations, setConversations, selectedConversation, setSelectedConversation, setConversationsUnread, search } =
 		useChatsStore()
@@ -38,15 +38,9 @@ export const Chats = memo(() => {
 		return sortAndFilterConversations(conversations, search, userId)
 	}, [conversations, userId, search])
 
-	const rowVirtualizer = useVirtualizer({
-		count: conversationsSorted.length,
-		getScrollElement: () => virtualizerParentRef.current,
-		estimateSize: () => 72,
-		getItemKey(index) {
-			return conversationsSorted[index].uuid
-		},
-		overscan: 5
-	})
+	const virtuosoHeight = useMemo(() => {
+		return windowSize.height - topDimensions.height - 48 - (IS_DESKTOP ? 24 : 0)
+	}, [windowSize.height, topDimensions.height])
 
 	const fetchConversationUnreadCount = useCallback(
 		async (uuid: string) => {
@@ -59,6 +53,23 @@ export const Chats = memo(() => {
 			}
 		},
 		[setConversationsUnread]
+	)
+
+	const getItemKey = useCallback((_: number, conversation: ChatConversation) => conversation.uuid, [])
+
+	const itemContent = useCallback(
+		(_: number, conversation: ChatConversation) => {
+			return (
+				<Chat
+					conversation={conversation}
+					userId={userId}
+					setLastSelectedChatsConversation={setLastSelectedChatsConversation}
+					setSelectedConversation={setSelectedConversation}
+					routeParent={routeParent}
+				/>
+			)
+		},
+		[userId, setLastSelectedChatsConversation, setSelectedConversation, routeParent]
 	)
 
 	const socketEventListener = useCallback(
@@ -192,50 +203,21 @@ export const Chats = memo(() => {
 	}, [query])
 
 	return (
-		<div
-			ref={virtualizerParentRef}
+		<Virtuoso
+			data={conversationsSorted}
+			totalCount={conversationsSorted.length}
+			height={virtuosoHeight}
+			width="100%"
+			computeItemKey={getItemKey}
+			defaultItemHeight={72}
+			itemContent={itemContent}
 			style={{
-				height: windowSize.height - topDimensions.height - 48 - (IS_DESKTOP ? 24 : 0),
 				overflowX: "hidden",
-				overflowY: "auto"
+				overflowY: "auto",
+				height: virtuosoHeight + "px",
+				width: "100%"
 			}}
-		>
-			<div
-				style={{
-					height: `${rowVirtualizer.getTotalSize()}px`,
-					width: "100%",
-					position: "relative"
-				}}
-			>
-				{rowVirtualizer.getVirtualItems().map(virtualItem => {
-					const conversation = conversationsSorted[virtualItem.index]
-
-					return (
-						<div
-							key={virtualItem.key}
-							data-index={virtualItem.index}
-							ref={rowVirtualizer.measureElement}
-							style={{
-								position: "absolute",
-								top: 0,
-								left: 0,
-								width: "100%",
-								height: "auto",
-								transform: `translateY(${virtualItem.start}px)`
-							}}
-						>
-							<Chat
-								conversation={conversation}
-								userId={userId}
-								setLastSelectedChatsConversation={setLastSelectedChatsConversation}
-								setSelectedConversation={setSelectedConversation}
-								routeParent={routeParent}
-							/>
-						</div>
-					)
-				})}
-			</div>
-		</div>
+		/>
 	)
 })
 

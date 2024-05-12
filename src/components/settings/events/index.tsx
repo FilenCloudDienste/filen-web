@@ -1,16 +1,14 @@
-import { memo, useMemo, useRef } from "react"
+import { memo, useMemo, useCallback } from "react"
 import worker from "@/lib/worker"
 import { useQuery } from "@tanstack/react-query"
-import { useTranslation } from "react-i18next"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { Virtuoso } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
 import { IS_DESKTOP } from "@/constants"
 import useAccount from "@/hooks/useAccount"
 import Event from "./event"
+import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
 
 export const Events = memo(() => {
-	const virtualizerParentRef = useRef<HTMLDivElement>(null)
-	const { t } = useTranslation()
 	const windowSize = useWindowSize()
 	const account = useAccount()
 
@@ -18,6 +16,10 @@ export const Events = memo(() => {
 		queryKey: ["listEvents"],
 		queryFn: () => worker.listEvents()
 	})
+
+	const virtuosoHeight = useMemo(() => {
+		return windowSize.height - 24 - (IS_DESKTOP ? 24 : 0)
+	}, [windowSize.height])
 
 	const eventsSorted = useMemo(() => {
 		if (!query.isSuccess) {
@@ -27,71 +29,41 @@ export const Events = memo(() => {
 		return query.data.sort((a, b) => b.timestamp - a.timestamp)
 	}, [query.isSuccess, query.data])
 
-	const rowVirtualizer = useVirtualizer({
-		count: eventsSorted.length,
-		getScrollElement: () => virtualizerParentRef.current,
-		estimateSize: () => 49,
-		getItemKey(index) {
-			return eventsSorted[index].uuid
+	const getItemKey = useCallback((_: number, event: UserEvent) => event.uuid, [])
+
+	const itemContent = useCallback(
+		(_: number, event: UserEvent) => {
+			return (
+				<Event
+					event={event}
+					account={account!.account}
+				/>
+			)
 		},
-		overscan: 5
-	})
+		[account]
+	)
 
 	if (!query.isSuccess || !account) {
 		return null
 	}
 
 	return (
-		<div className="flex flex-col w-full h-full">
-			<div
-				ref={virtualizerParentRef}
-				className="p-4"
+		<div className="flex flex-col w-full h-full p-4">
+			<Virtuoso
+				data={eventsSorted}
+				totalCount={eventsSorted.length}
+				height={virtuosoHeight}
+				width="100%"
+				computeItemKey={getItemKey}
+				defaultItemHeight={49}
+				itemContent={itemContent}
 				style={{
-					height: windowSize.height - (IS_DESKTOP ? 24 : 0),
 					overflowX: "hidden",
 					overflowY: "auto",
+					height: virtuosoHeight + "px",
 					width: "100%"
 				}}
-			>
-				{query.isSuccess && eventsSorted.length === 0 ? (
-					<div className="w-full h-full flex flex-col items-center justify-center">
-						<p className="line-clamp-1 text-ellipsis break-all">{t("settings.events.listEmpty")}</p>
-					</div>
-				) : (
-					<div
-						style={{
-							height: `${rowVirtualizer.getTotalSize()}px`,
-							width: "100%",
-							position: "relative"
-						}}
-					>
-						{rowVirtualizer.getVirtualItems().map(virtualItem => {
-							const event = eventsSorted[virtualItem.index]
-
-							return (
-								<div
-									key={virtualItem.key}
-									data-index={virtualItem.index}
-									ref={rowVirtualizer.measureElement}
-									style={{
-										position: "absolute",
-										top: 0,
-										left: 0,
-										width: "100%",
-										height: "auto",
-										transform: `translateY(${virtualItem.start}px)`
-									}}
-								>
-									<Event
-										event={event}
-										account={account.account}
-									/>
-								</div>
-							)
-						})}
-					</div>
-				)}
-			</div>
+			/>
 		</div>
 	)
 })

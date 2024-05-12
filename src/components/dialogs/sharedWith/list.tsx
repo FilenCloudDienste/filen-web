@@ -1,7 +1,8 @@
-import { memo, useRef } from "react"
+import { memo, useCallback } from "react"
 import { type DriveCloudItem } from "../../drive"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { Virtuoso } from "react-virtuoso"
 import Receiver from "./receiver"
+import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
 
 export const List = memo(
 	({
@@ -13,62 +14,38 @@ export const List = memo(
 		setItem: React.Dispatch<React.SetStateAction<DriveCloudItem | null>>
 		setOpen: React.Dispatch<React.SetStateAction<boolean>>
 	}) => {
-		const virtualizerParentRef = useRef<HTMLDivElement>(null)
+		const getItemKey = useCallback((_: number, receiver: CloudItemReceiver) => receiver.id, [])
 
-		const rowVirtualizer = useVirtualizer({
-			count: item ? item.receivers.length : 0,
-			getScrollElement: () => virtualizerParentRef.current,
-			estimateSize: () => 40,
-			getItemKey(index) {
-				return item ? item.receivers[index].id : 0
+		const itemContent = useCallback(
+			(_: number, receiver: CloudItemReceiver) => {
+				return (
+					<Receiver
+						receiver={receiver}
+						setItem={setItem}
+						item={item}
+						setOpen={setOpen}
+					/>
+				)
 			},
-			overscan: 5
-		})
+			[setItem, item, setOpen]
+		)
 
 		return (
-			<div
-				ref={virtualizerParentRef}
+			<Virtuoso
+				data={item.receivers}
+				totalCount={item.receivers.length}
+				height={384}
+				width="100%"
+				computeItemKey={getItemKey}
+				defaultItemHeight={40}
+				itemContent={itemContent}
 				style={{
-					height: 384,
 					overflowX: "hidden",
-					overflowY: "auto"
+					overflowY: "auto",
+					height: 384 + "px",
+					width: "100%"
 				}}
-			>
-				<div
-					style={{
-						height: `${rowVirtualizer.getTotalSize()}px`,
-						width: "100%",
-						position: "relative"
-					}}
-				>
-					{rowVirtualizer.getVirtualItems().map(virtualItem => {
-						const receiver = item.receivers[virtualItem.index]
-
-						return (
-							<div
-								key={virtualItem.key}
-								data-index={virtualItem.index}
-								ref={rowVirtualizer.measureElement}
-								style={{
-									position: "absolute",
-									top: 0,
-									left: 0,
-									width: "100%",
-									height: "auto",
-									transform: `translateY(${virtualItem.start}px)`
-								}}
-							>
-								<Receiver
-									receiver={receiver}
-									setItem={setItem}
-									item={item}
-									setOpen={setOpen}
-								/>
-							</div>
-						)
-					})}
-				</div>
-			</div>
+			/>
 		)
 	}
 )

@@ -1,7 +1,7 @@
 import { memo, useRef, useEffect, useMemo, useCallback } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { Virtuoso } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
 import { useNotesStore } from "@/stores/notes.store"
 import { sortAndFilterNotes } from "@/components/notes/utils"
@@ -13,9 +13,9 @@ import useRouteParent from "@/hooks/useRouteParent"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { type SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
+import { Note as NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 
 export const Notes = memo(() => {
-	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const windowSize = useWindowSize()
 	const { notes, setNotes, setSelectedNote, selectedNote, search, activeTag } = useNotesStore()
 	const [, setLastSelectedNote] = useLocalStorage("lastSelectedNote", "")
@@ -33,15 +33,21 @@ export const Notes = memo(() => {
 		return sortAndFilterNotes(notes, search, activeTag)
 	}, [notes, search, activeTag])
 
-	const rowVirtualizer = useVirtualizer({
-		count: notesSorted.length,
-		getScrollElement: () => virtualizerParentRef.current,
-		estimateSize: () => 104,
-		getItemKey(index) {
-			return notesSorted[index].uuid
+	const getItemKey = useCallback((_: number, note: NoteType) => note.uuid, [])
+
+	const itemContent = useCallback(
+		(_: number, note: NoteType) => {
+			return (
+				<Note
+					note={note}
+					setLastSelectedNote={setLastSelectedNote}
+					setSelectedNote={setSelectedNote}
+					userId={userId}
+				/>
+			)
 		},
-		overscan: 5
-	})
+		[setLastSelectedNote, setSelectedNote, userId]
+	)
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
@@ -115,49 +121,21 @@ export const Notes = memo(() => {
 	}, [socketEventListener])
 
 	return (
-		<div
-			ref={virtualizerParentRef}
+		<Virtuoso
+			data={notesSorted}
+			totalCount={notesSorted.length}
+			height={windowSize.height - 95}
+			width="100%"
+			computeItemKey={getItemKey}
+			defaultItemHeight={104}
+			itemContent={itemContent}
 			style={{
-				height: windowSize.height - 95,
 				overflowX: "hidden",
-				overflowY: "auto"
+				overflowY: "auto",
+				height: windowSize.height - 95 + "px",
+				width: "100%"
 			}}
-		>
-			<div
-				style={{
-					height: `${rowVirtualizer.getTotalSize()}px`,
-					width: "100%",
-					position: "relative"
-				}}
-			>
-				{rowVirtualizer.getVirtualItems().map(virtualItem => {
-					const note = notesSorted[virtualItem.index]
-
-					return (
-						<div
-							key={virtualItem.key}
-							data-index={virtualItem.index}
-							ref={rowVirtualizer.measureElement}
-							style={{
-								position: "absolute",
-								top: 0,
-								left: 0,
-								width: "100%",
-								height: "auto",
-								transform: `translateY(${virtualItem.start}px)`
-							}}
-						>
-							<Note
-								note={note}
-								setLastSelectedNote={setLastSelectedNote}
-								setSelectedNote={setSelectedNote}
-								userId={userId}
-							/>
-						</div>
-					)
-				})}
-			</div>
-		</div>
+		/>
 	)
 })
 

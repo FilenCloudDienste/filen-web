@@ -1,10 +1,9 @@
-import { memo, useRef, useMemo } from "react"
-import { useTranslation } from "react-i18next"
+import { memo, useMemo, useCallback } from "react"
 import worker from "@/lib/worker"
 import { useQuery } from "@tanstack/react-query"
-import { useVirtualizer } from "@tanstack/react-virtual"
 import { type Contact as ContactType } from "@filen/sdk/dist/types/api/v3/contacts"
 import Contact from "./contact"
+import { Virtuoso } from "react-virtuoso"
 
 export const List = memo(
 	({
@@ -18,9 +17,6 @@ export const List = memo(
 		exclude: number[]
 		search: string
 	}) => {
-		const { t } = useTranslation()
-		const virtualizerParentRef = useRef<HTMLDivElement>(null)
-
 		const query = useQuery({
 			queryKey: ["listContacts"],
 			queryFn: () => worker.listContacts()
@@ -42,66 +38,39 @@ export const List = memo(
 				.sort((a, b) => b.lastActive - a.lastActive)
 		}, [query.isSuccess, query.data, search])
 
-		const rowVirtualizer = useVirtualizer({
-			count: contactsSorted.length,
-			getScrollElement: () => virtualizerParentRef.current,
-			estimateSize: () => 48,
-			getItemKey(index) {
-				return contactsSorted[index].uuid
+		const getItemKey = useCallback((_: number, contact: ContactType) => contact.uuid, [])
+
+		const itemContent = useCallback(
+			(_: number, contact: ContactType) => {
+				return (
+					<Contact
+						contact={contact}
+						responseContacts={responseContacts}
+						setResponseContacts={setResponseContacts}
+						exclude={exclude}
+					/>
+				)
 			},
-			overscan: 5
-		})
+			[exclude, setResponseContacts, responseContacts]
+		)
 
 		return (
-			<div
-				ref={virtualizerParentRef}
-				style={{
-					height: 384,
-					overflowX: "hidden",
-					overflowY: "auto",
-					marginTop: 12
-				}}
-			>
-				{query.isSuccess && contactsSorted.length === 0 ? (
-					<div className="w-full h-full flex flex-col items-center justify-center">
-						<p className="select-none">{t("dialogs.selectContacts.listEmpty")}</p>
-					</div>
-				) : (
-					<div
-						style={{
-							height: `${rowVirtualizer.getTotalSize()}px`,
-							width: "100%",
-							position: "relative"
-						}}
-					>
-						{rowVirtualizer.getVirtualItems().map(virtualItem => {
-							const contact = contactsSorted[virtualItem.index]
-
-							return (
-								<div
-									key={virtualItem.key}
-									data-index={virtualItem.index}
-									ref={rowVirtualizer.measureElement}
-									style={{
-										position: "absolute",
-										top: 0,
-										left: 0,
-										width: "100%",
-										height: "auto",
-										transform: `translateY(${virtualItem.start}px)`
-									}}
-								>
-									<Contact
-										contact={contact}
-										responseContacts={responseContacts}
-										setResponseContacts={setResponseContacts}
-										exclude={exclude}
-									/>
-								</div>
-							)
-						})}
-					</div>
-				)}
+			<div className="flex flex-col">
+				<Virtuoso
+					data={contactsSorted}
+					totalCount={contactsSorted.length}
+					height={384}
+					width="100%"
+					computeItemKey={getItemKey}
+					defaultItemHeight={48}
+					itemContent={itemContent}
+					style={{
+						overflowX: "hidden",
+						overflowY: "auto",
+						height: 384 + "px",
+						width: "100%"
+					}}
+				/>
 			</div>
 		)
 	}

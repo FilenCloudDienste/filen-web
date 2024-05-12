@@ -1,10 +1,8 @@
-import { memo, useRef } from "react"
+import { memo, useMemo, useCallback } from "react"
 import { IS_DESKTOP } from "@/constants"
 import useWindowSize from "@/hooks/useWindowSize"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { Virtuoso } from "react-virtuoso"
 import ListItem from "./item"
-import { type DriveCloudItem } from ".."
-import { type UseQueryResult } from "@tanstack/react-query"
 import ContextMenu from "./contextMenu"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { useNavigate } from "@tanstack/react-router"
@@ -12,10 +10,13 @@ import useLocation from "@/hooks/useLocation"
 import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
+import { type DriveCloudItem } from ".."
+import { useLocalStorage } from "@uidotdev/usehooks"
+import { type DriveSortBy } from "./header"
+import useRouteParent from "@/hooks/useRouteParent"
 
-export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: UseQueryResult<DriveCloudItem[], Error> }) => {
+export const List = memo(({ items }: { items: DriveCloudItem[] }) => {
 	const windowSize = useWindowSize()
-	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const { setItems } = useDriveItemsStore()
 	const {
 		currentReceiverId,
@@ -31,80 +32,81 @@ export const List = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
+	const routeParent = useRouteParent()
+	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 
-	const rowVirtualizer = useVirtualizer({
-		count: items.length,
-		getScrollElement: () => virtualizerParentRef.current,
-		estimateSize: () => 44,
-		getItemKey(index) {
-			return items[index].uuid
+	const virtuosoHeight = useMemo(() => {
+		return IS_DESKTOP ? windowSize.height - 48 - 40 - 24 : windowSize.height - 48 - 40
+	}, [windowSize.height])
+
+	const getItemKey = useCallback(
+		(_: number, item: DriveCloudItem) => `${item.uuid}:${driveSortBy[routeParent] ?? "nameAsc"}`,
+		[driveSortBy, routeParent]
+	)
+	const itemSize = useCallback(() => 44, [])
+
+	const itemContent = useCallback(
+		(index: number, item: DriveCloudItem) => {
+			return (
+				<ListItem
+					item={item}
+					items={items}
+					index={index}
+					type="list"
+					setCurrentReceiverEmail={setCurrentReceiverEmail}
+					setCurrentReceiverId={setCurrentReceiverId}
+					setCurrentReceivers={setCurrentReceivers}
+					setCurrentSharerEmail={setCurrentSharerEmail}
+					setCurrentSharerId={setCurrentSharerId}
+					setItems={setItems}
+					currentReceiverId={currentReceiverId}
+					currentSharerId={currentSharerId}
+					navigate={navigate}
+					pathname={location}
+					t={t}
+					location={location}
+					errorToast={errorToast}
+					loadingToast={loadingToast}
+				/>
+			)
 		},
-		overscan: 5
-	})
+		[
+			items,
+			setCurrentReceiverEmail,
+			setCurrentReceiverId,
+			setCurrentReceivers,
+			setCurrentSharerEmail,
+			setCurrentSharerId,
+			setItems,
+			currentReceiverId,
+			currentSharerId,
+			navigate,
+			location,
+			t,
+			errorToast,
+			loadingToast
+		]
+	)
 
 	return (
 		<ContextMenu>
-			<div
-				ref={virtualizerParentRef}
+			<Virtuoso
+				data={items}
+				totalCount={items.length}
+				height={virtuosoHeight}
+				width="100%"
+				computeItemKey={getItemKey}
+				defaultItemHeight={44}
+				itemSize={itemSize}
+				fixedItemHeight={44}
+				itemContent={itemContent}
 				style={{
-					height: IS_DESKTOP ? windowSize.height - 48 - 40 - 24 : windowSize.height - 48 - 40,
 					overflowX: "hidden",
-					overflowY: "auto"
+					overflowY: "auto",
+					height: virtuosoHeight + "px",
+					width: "100%"
 				}}
-				className="dragselect-start-allowed"
-			>
-				<div
-					style={{
-						height: `${rowVirtualizer.getTotalSize()}px`,
-						width: "100%",
-						position: "relative"
-					}}
-					className="dragselect-start-allowed"
-				>
-					{query.isSuccess &&
-						rowVirtualizer.getVirtualItems().map(virtualItem => {
-							const item = items[virtualItem.index]
-
-							return (
-								<div
-									key={virtualItem.key}
-									data-index={virtualItem.index}
-									ref={rowVirtualizer.measureElement}
-									style={{
-										position: "absolute",
-										top: 0,
-										left: 0,
-										width: "100%",
-										height: "auto",
-										transform: `translateY(${virtualItem.start}px)`
-									}}
-								>
-									<ListItem
-										key={virtualItem.key}
-										item={item}
-										items={items}
-										index={virtualItem.index}
-										type="list"
-										setCurrentReceiverEmail={setCurrentReceiverEmail}
-										setCurrentReceiverId={setCurrentReceiverId}
-										setCurrentReceivers={setCurrentReceivers}
-										setCurrentSharerEmail={setCurrentSharerEmail}
-										setCurrentSharerId={setCurrentSharerId}
-										setItems={setItems}
-										currentReceiverId={currentReceiverId}
-										currentSharerId={currentSharerId}
-										navigate={navigate}
-										pathname={location}
-										t={t}
-										location={location}
-										errorToast={errorToast}
-										loadingToast={loadingToast}
-									/>
-								</div>
-							)
-						})}
-				</div>
-			</div>
+			/>
 		</ContextMenu>
 	)
 })

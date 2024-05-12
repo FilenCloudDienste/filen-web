@@ -110,7 +110,7 @@ export const Receiver = memo(
 									<X size={14} />
 								</div>
 							</TooltipTrigger>
-							<TooltipContent side="left">
+							<TooltipContent side="top">
 								<p>{t("dialogs.sharedWith.remove")}</p>
 							</TooltipContent>
 						</Tooltip>

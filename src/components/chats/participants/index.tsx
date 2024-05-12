@@ -1,10 +1,9 @@
-import { memo, useRef, useCallback, useMemo } from "react"
-import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
+import { memo, useCallback, useMemo } from "react"
+import { type ChatConversation, type ChatConversationParticipant } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { Plus } from "lucide-react"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useTranslation } from "react-i18next"
-import { useVirtualizer } from "@tanstack/react-virtual"
 import useWindowSize from "@/hooks/useWindowSize"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
@@ -15,10 +14,10 @@ import useErrorToast from "@/hooks/useErrorToast"
 import { useChatsStore } from "@/stores/chats.store"
 import eventEmitter from "@/lib/eventEmitter"
 import useSDKConfig from "@/hooks/useSDKConfig"
+import { Virtuoso } from "react-virtuoso"
 
 export const Participants = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const { t } = useTranslation()
-	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const windowSize = useWindowSize()
 	const { setConversations, setSelectedConversation } = useChatsStore()
 	const loadingToast = useLoadingToast()
@@ -30,16 +29,6 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 		queryFn: () => worker.chatConversationOnline({ conversation: conversation.uuid }),
 		refetchInterval: 15000,
 		refetchIntervalInBackground: true
-	})
-
-	const rowVirtualizer = useVirtualizer({
-		count: conversation.participants.length,
-		getScrollElement: () => virtualizerParentRef.current,
-		estimateSize: () => 56,
-		getItemKey(index) {
-			return conversation.participants[index].userId
-		},
-		overscan: 5
 	})
 
 	const hasWritePermissions = useMemo(() => {
@@ -111,6 +100,21 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 		}
 	}, [conversation, loadingToast, errorToast, setSelectedConversation, setConversations, hasWritePermissions])
 
+	const getItemKey = useCallback((_: number, participant: ChatConversationParticipant) => participant.userId, [])
+
+	const itemContent = useCallback(
+		(_: number, participant: ChatConversationParticipant) => {
+			return (
+				<Participant
+					conversation={conversation}
+					onlineUsers={onlineQuery.isSuccess ? onlineQuery.data : []}
+					participant={participant}
+				/>
+			)
+		},
+		[conversation, onlineQuery.data, onlineQuery.isSuccess]
+	)
+
 	if (!onlineQuery.isSuccess) {
 		return null
 	}
@@ -138,48 +142,21 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 				)}
 			</div>
 			<div className="flex flex-col w-full h-auto">
-				<div
-					ref={virtualizerParentRef}
+				<Virtuoso
+					data={conversation.participants}
+					totalCount={conversation.participants.length}
+					height={windowSize.height - 48}
+					width="100%"
+					computeItemKey={getItemKey}
+					defaultItemHeight={52}
+					itemContent={itemContent}
 					style={{
-						height: windowSize.height - 48,
 						overflowX: "hidden",
-						overflowY: "auto"
+						overflowY: "auto",
+						height: windowSize.height - 48 + "px",
+						width: "100%"
 					}}
-				>
-					<div
-						style={{
-							height: `${rowVirtualizer.getTotalSize()}px`,
-							width: "100%",
-							position: "relative"
-						}}
-					>
-						{rowVirtualizer.getVirtualItems().map(virtualItem => {
-							const participant = conversation.participants[virtualItem.index]
-
-							return (
-								<div
-									key={virtualItem.key}
-									data-index={virtualItem.index}
-									ref={rowVirtualizer.measureElement}
-									style={{
-										position: "absolute",
-										top: 0,
-										left: 0,
-										width: "100%",
-										height: "auto",
-										transform: `translateY(${virtualItem.start}px)`
-									}}
-								>
-									<Participant
-										conversation={conversation}
-										onlineUsers={onlineQuery.data}
-										participant={participant}
-									/>
-								</div>
-							)
-						})}
-					</div>
-				</div>
+				/>
 			</div>
 		</div>
 	)

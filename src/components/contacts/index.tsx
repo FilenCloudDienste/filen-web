@@ -1,7 +1,7 @@
-import { memo, useMemo, useRef, useState, useCallback } from "react"
+import { memo, useMemo, useState, useCallback } from "react"
 import worker from "@/lib/worker"
 import { useQueries } from "@tanstack/react-query"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { Virtuoso } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
 import { IS_DESKTOP } from "@/constants"
 import { Input } from "@/components/ui/input"
@@ -18,6 +18,8 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import { showInputDialog } from "../dialogs/input"
 import { useNavigate } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
+import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/blocked"
+import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/requests/in"
 
 const refetchQueryParams = {
 	refetchInterval: 5000,
@@ -26,7 +28,6 @@ const refetchQueryParams = {
 
 export const Contacts = memo(() => {
 	const windowSize = useWindowSize()
-	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const location = useLocation()
 	const [search, setSearch] = useState<string>("")
 	const { t } = useTranslation()
@@ -34,6 +35,10 @@ export const Contacts = memo(() => {
 	const errorToast = useErrorToast()
 	const navigate = useNavigate()
 	const { userId } = useSDKConfig()
+
+	const virtuosoHeight = useMemo(() => {
+		return windowSize.height - 72 - 44 - (IS_DESKTOP ? 24 : 0)
+	}, [windowSize.height])
 
 	const [allQuery, requestsInQuery, requestsOutQuery, blockedQuery, chatsQuery] = useQueries({
 		queries: [
@@ -197,27 +202,62 @@ export const Contacts = memo(() => {
 			.sort((a, b) => b.email.localeCompare(a.email))
 	}, [requestsOutQuery.isSuccess, requestsOutQuery.data, search])
 
-	const rowVirtualizer = useVirtualizer({
-		count: location.includes("contacts/in")
-			? requestsInSorted.length
-			: location.includes("contacts/out")
-				? requestsOutSorted.length
-				: location.includes("blocked")
-					? blockedSorted.length
-					: contactsSorted.length,
-		getScrollElement: () => virtualizerParentRef.current,
-		estimateSize: () => 68,
-		getItemKey(index) {
-			return location.includes("contacts/in")
-				? requestsInSorted[index].uuid
-				: location.includes("contacts/out")
-					? requestsOutSorted[index].uuid
-					: location.includes("blocked")
-						? blockedSorted[index].uuid
-						: contactsSorted[index].uuid
+	const getItemKeyRequestsIn = useCallback((_: number, request: ContactRequest) => request.uuid, [])
+	const getItemKeyRequestsOut = useCallback((_: number, request: ContactRequest) => request.uuid, [])
+	const getItemKeyBlocked = useCallback((_: number, blocked: BlockedContact) => blocked.uuid, [])
+	const getItemKeyContacts = useCallback((_: number, contact: ContactType) => contact.uuid, [])
+
+	const itemContentRequestsIn = useCallback(
+		(_: number, request: ContactRequest) => {
+			return (
+				<Request
+					request={request}
+					refetch={refetch}
+					type="in"
+				/>
+			)
 		},
-		overscan: 5
-	})
+		[refetch]
+	)
+
+	const itemContentRequestsOut = useCallback(
+		(_: number, request: ContactRequest) => {
+			return (
+				<Request
+					request={request}
+					refetch={refetch}
+					type="out"
+				/>
+			)
+		},
+		[refetch]
+	)
+
+	const itemContentBlocked = useCallback(
+		(_: number, blocked: BlockedContact) => {
+			return (
+				<Blocked
+					blocked={blocked}
+					refetch={refetch}
+				/>
+			)
+		},
+		[refetch]
+	)
+
+	const itemContentContacts = useCallback(
+		(_: number, contact: ContactType) => {
+			return (
+				<Contact
+					contact={contact}
+					refetch={refetch}
+					conversations={chatConversations}
+					userId={userId}
+				/>
+			)
+		},
+		[refetch, userId, chatConversations]
+	)
 
 	return (
 		<div className="flex flex-col w-full h-full select-none">
@@ -260,64 +300,72 @@ export const Contacts = memo(() => {
 						</p>
 					</div>
 				</div>
-				<div
-					ref={virtualizerParentRef}
-					className="px-4"
-					style={{
-						height: windowSize.height - 72 - 44 - (IS_DESKTOP ? 24 : 0),
-						overflowX: "hidden",
-						overflowY: "auto"
-					}}
-				>
-					<div
-						style={{
-							height: `${rowVirtualizer.getTotalSize()}px`,
-							width: "100%",
-							position: "relative"
-						}}
-					>
-						{rowVirtualizer.getVirtualItems().map(virtualItem => {
-							return (
-								<div
-									key={virtualItem.key}
-									data-index={virtualItem.index}
-									ref={rowVirtualizer.measureElement}
-									style={{
-										position: "absolute",
-										top: 0,
-										left: 0,
-										width: "100%",
-										height: "auto",
-										transform: `translateY(${virtualItem.start}px)`
-									}}
-								>
-									{location.includes("contacts/in") || location.includes("contacts/out") ? (
-										<Request
-											request={
-												location.includes("contacts/in")
-													? requestsInSorted[virtualItem.index]
-													: requestsOutSorted[virtualItem.index]
-											}
-											refetch={refetch}
-											type={location.includes("contacts/in") ? "in" : "out"}
-										/>
-									) : location.includes("blocked") ? (
-										<Blocked
-											blocked={blockedSorted[virtualItem.index]}
-											refetch={refetch}
-										/>
-									) : (
-										<Contact
-											contact={contactsSorted[virtualItem.index]}
-											refetch={refetch}
-											conversations={chatConversations}
-											userId={userId}
-										/>
-									)}
-								</div>
-							)
-						})}
-					</div>
+				<div className="flex flex-col w-full h-full px-4">
+					{location.includes("contacts/in") ? (
+						<Virtuoso
+							data={requestsInSorted}
+							totalCount={requestsInSorted.length}
+							height={virtuosoHeight}
+							width="100%"
+							computeItemKey={getItemKeyRequestsIn}
+							defaultItemHeight={68}
+							itemContent={itemContentRequestsIn}
+							style={{
+								overflowX: "hidden",
+								overflowY: "auto",
+								height: virtuosoHeight + "px",
+								width: "100%"
+							}}
+						/>
+					) : location.includes("contacts/out") ? (
+						<Virtuoso
+							data={requestsOutSorted}
+							totalCount={requestsOutSorted.length}
+							height={virtuosoHeight}
+							width="100%"
+							computeItemKey={getItemKeyRequestsOut}
+							defaultItemHeight={68}
+							itemContent={itemContentRequestsOut}
+							style={{
+								overflowX: "hidden",
+								overflowY: "auto",
+								height: virtuosoHeight + "px",
+								width: "100%"
+							}}
+						/>
+					) : location.includes("contacts/blocked") ? (
+						<Virtuoso
+							data={blockedSorted}
+							totalCount={blockedSorted.length}
+							height={virtuosoHeight}
+							width="100%"
+							computeItemKey={getItemKeyBlocked}
+							defaultItemHeight={68}
+							itemContent={itemContentBlocked}
+							style={{
+								overflowX: "hidden",
+								overflowY: "auto",
+								height: virtuosoHeight + "px",
+								width: "100%"
+							}}
+						/>
+					) : (
+						<Virtuoso
+							data={contactsSorted}
+							totalCount={contactsSorted.length}
+							height={virtuosoHeight}
+							width="100%"
+							computeItemKey={getItemKeyContacts}
+							defaultItemHeight={68}
+							itemContent={itemContentContacts}
+							style={{
+								overflowX: "hidden",
+								overflowY: "auto",
+								height: virtuosoHeight + "px",
+								width: "100%"
+							}}
+						/>
+					)}
 				</div>
 			</div>
 		</div>
