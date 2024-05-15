@@ -7,7 +7,7 @@ import { color } from "@uiw/codemirror-extensions-color"
 import { type Root, type Element, type RootContent } from "hast"
 import { ResizablePanelGroup, ResizableHandle, ResizablePanel } from "../ui/resizable"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import CodeMirror from "@uiw/react-codemirror"
+import CodeMirror, { EditorView } from "@uiw/react-codemirror"
 import MarkdownPreview from "@uiw/react-markdown-preview"
 
 export const TextEditor = memo(
@@ -114,7 +114,9 @@ export const TextEditor = memo(
 							maxWidth="100%"
 							minWidth="100%"
 							theme={editorTheme}
-							extensions={type === "code" ? [...langExtension, hyperLink, color] : undefined}
+							extensions={
+								type === "code" ? [...langExtension, hyperLink, color, EditorView.lineWrapping] : [EditorView.lineWrapping]
+							}
 							indentWithTab={indentWithTab}
 							editable={editable}
 							autoFocus={autoFocus}

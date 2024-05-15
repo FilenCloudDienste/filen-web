@@ -260,12 +260,8 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 					...prev.filter(m => !previousMessagesUUIDs.includes(m.uuid) && m.conversation === routeParent)
 				]
 			})
-
-			setTimeout(() => {
-				scrollChatToBottom()
-			}, 100)
 		}
-	}, [query.isSuccess, query.data, query.dataUpdatedAt, setMessages, routeParent, scrollChatToBottom])
+	}, [query.isSuccess, query.data, query.dataUpdatedAt, setMessages, routeParent])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)
@@ -284,17 +280,6 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	useEffect(() => {
 		if (lastConversationUUID.current !== conversation.uuid) {
 			lastConversationUUID.current = conversation.uuid
-
-			scrollChatToBottom()
-
-			const scrollDownInterval = setInterval(() => {
-				scrollChatToBottom()
-			}, 10)
-
-			setTimeout(() => {
-				clearInterval(scrollDownInterval)
-				scrollChatToBottom()
-			}, 500)
 		}
 
 		return () => {
@@ -320,8 +305,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 				alignToBottom={true}
 				computeItemKey={getItemKey}
 				isScrolling={setIsScrolling}
-				initialTopMostItemIndex={99}
-				defaultItemHeight={57}
+				initialTopMostItemIndex={9999}
 				itemContent={itemContent}
 				atTopThreshold={500}
 				followOutput={true}

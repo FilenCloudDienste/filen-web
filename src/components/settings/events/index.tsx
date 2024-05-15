@@ -88,7 +88,11 @@ export const Events = memo(() => {
 		if (query.isSuccess && query.dataUpdatedAt !== queryUpdatedAtRef.current) {
 			queryUpdatedAtRef.current = query.dataUpdatedAt
 
-			setEvents(query.data)
+			setEvents(prev => {
+				const previousEventUUIDs = query.data.map(m => m.uuid)
+
+				return [...query.data, ...prev.filter(e => !previousEventUUIDs.includes(e.uuid))]
+			})
 		}
 	}, [query.isSuccess, query.data, query.dataUpdatedAt])
 
@@ -104,7 +108,6 @@ export const Events = memo(() => {
 				height={virtuosoHeight}
 				width="100%"
 				computeItemKey={getItemKey}
-				defaultItemHeight={49}
 				itemContent={itemContent}
 				endReached={fetchMore}
 				style={{

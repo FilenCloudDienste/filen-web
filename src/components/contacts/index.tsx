@@ -308,7 +308,6 @@ export const Contacts = memo(() => {
 							height={virtuosoHeight}
 							width="100%"
 							computeItemKey={getItemKeyRequestsIn}
-							defaultItemHeight={68}
 							itemContent={itemContentRequestsIn}
 							style={{
 								overflowX: "hidden",
@@ -324,7 +323,6 @@ export const Contacts = memo(() => {
 							height={virtuosoHeight}
 							width="100%"
 							computeItemKey={getItemKeyRequestsOut}
-							defaultItemHeight={68}
 							itemContent={itemContentRequestsOut}
 							style={{
 								overflowX: "hidden",
@@ -340,7 +338,6 @@ export const Contacts = memo(() => {
 							height={virtuosoHeight}
 							width="100%"
 							computeItemKey={getItemKeyBlocked}
-							defaultItemHeight={68}
 							itemContent={itemContentBlocked}
 							style={{
 								overflowX: "hidden",
@@ -356,7 +353,6 @@ export const Contacts = memo(() => {
 							height={virtuosoHeight}
 							width="100%"
 							computeItemKey={getItemKeyContacts}
-							defaultItemHeight={68}
 							itemContent={itemContentContacts}
 							style={{
 								overflowX: "hidden",

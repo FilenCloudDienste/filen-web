@@ -1,5 +1,4 @@
-import { useState, useCallback } from "react"
-import useMountedEffect from "./useMountedEffect"
+import { useState, useCallback, useEffect } from "react"
 
 export default function useIsMobile() {
 	const [width, setWidth] = useState(window.innerWidth)
@@ -8,13 +7,13 @@ export default function useIsMobile() {
 		setWidth(window.innerWidth)
 	}, [])
 
-	useMountedEffect(() => {
+	useEffect(() => {
 		window.addEventListener("resize", handleWindowSizeChange)
 
 		return () => {
 			window.removeEventListener("resize", handleWindowSizeChange)
 		}
-	})
+	}, [handleWindowSizeChange])
 
 	return width <= 768
 }

@@ -2,7 +2,7 @@ import { ThemeProvider } from "@/providers/themeProvider"
 import { createRootRoute, Outlet } from "@tanstack/react-router"
 import { memo, useEffect, useState, useRef } from "react"
 import { Toaster } from "@/components/ui/toaster"
-import { QueryClient } from "@tanstack/react-query"
+import { QueryClient, focusManager } from "@tanstack/react-query"
 import { PersistQueryClientProvider, type PersistQueryClientOptions } from "@tanstack/react-query-persist-client"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { useLocalStorage } from "@uidotdev/usehooks"
@@ -26,6 +26,24 @@ import PublicLinkDialog from "@/components/dialogs/publicLink"
 import SharedWithDialog from "@/components/dialogs/sharedWith"
 import { IS_DESKTOP } from "@/constants"
 import NotificationHandler from "@/components/notificationHandler"
+
+focusManager.setEventListener(handleFocus => {
+	const onFocus = () => {
+		handleFocus(true)
+	}
+
+	const onBlur = () => {
+		handleFocus(false)
+	}
+
+	window.addEventListener("focus", () => onFocus, false)
+	window.addEventListener("blur", () => onBlur, false)
+
+	return () => {
+		window.removeEventListener("focus", onFocus)
+		window.removeEventListener("blur", onBlur)
+	}
+})
 
 export const persistantQueryClient = new QueryClient({
 	defaultOptions: {

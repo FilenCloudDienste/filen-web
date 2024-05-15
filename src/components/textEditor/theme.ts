@@ -3,8 +3,8 @@ import { githubLightInit, githubDarkInit } from "@uiw/codemirror-theme-github"
 export const dark = githubDarkInit({
 	settings: {
 		background: "transparent",
-		gutterBackground: "transparent",
-		gutterBorder: "transparent",
+		gutterBackground: "#151518",
+		gutterBorder: "#151518",
 		gutterActiveForeground: "white",
 		foreground: "white",
 		lineHighlight: "#171717"
@@ -14,8 +14,8 @@ export const dark = githubDarkInit({
 export const light = githubLightInit({
 	settings: {
 		background: "transparent",
-		gutterBackground: "transparent",
-		gutterBorder: "transparent",
+		gutterBackground: "white",
+		gutterBorder: "white",
 		gutterActiveForeground: "black",
 		foreground: "black"
 	}

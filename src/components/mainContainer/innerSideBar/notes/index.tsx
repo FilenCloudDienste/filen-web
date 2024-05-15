@@ -127,7 +127,6 @@ export const Notes = memo(() => {
 			height={windowSize.height - 95}
 			width="100%"
 			computeItemKey={getItemKey}
-			defaultItemHeight={104}
 			itemContent={itemContent}
 			style={{
 				overflowX: "hidden",

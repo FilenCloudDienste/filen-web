@@ -351,6 +351,35 @@
 			"deleteFolderPermanently": "{{name}} deleted permanently",
 			"deleteFilePermanently": "{{name}} deleted permanently",
 			"emailChangeAttempt": "Recorded an email change attempt"
+		},
+		"invoices": {
+			"plan": "Plan",
+			"method": "Method",
+			"date": "Date",
+			"download": "Download",
+			"amount": "Amount",
+			"paid": "Paid",
+			"noInvoices": "No invoices yet",
+			"paymentMethod": "Payment method"
+		},
+		"subscriptions": {
+			"plan": "Plan",
+			"method": "Method",
+			"date": "Date",
+			"download": "Download",
+			"amount": "Amount",
+			"status": "Status",
+			"noSubscriptions": "No subscriptions yet",
+			"cancel": "Cancel",
+			"storage": "Storage",
+			"moreInfo": "More information about your subscription",
+			"paymentMethod": "Payment method",
+			"info": "{{storage}} storage with unlimited uploads, downloads, notes and chats. Unlocking Filen's full potential.",
+			"statuses": {
+				"cancelled": "Cancelled",
+				"active": "Active",
+				"waiting": "Waiting"
+			}
 		}
 	},
 	"drive": {

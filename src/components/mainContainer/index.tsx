@@ -5,7 +5,6 @@ import SideBar from "./sideBar"
 import InnerSideBar from "./innerSideBar"
 import TopBar from "./topBar"
 import { IS_DESKTOP, IS_APPLE_DEVICE } from "@/constants"
-import useIsMobile from "@/hooks/useIsMobile"
 import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import useWindowSize from "@/hooks/useWindowSize"
@@ -92,7 +91,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 						</>
 					)}
 				</div>
-				<div className="flex flex-row w-full h-[calc(100%-24px)]">{children}</div>
+				<div className="flex flex-row w-full h-[calc(100vh-24px)]">{children}</div>
 			</div>
 		)
 	}
@@ -100,10 +99,39 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 	return <div className="w-screen h-screen flex flex-row">{children}</div>
 })
 
+export const InnerSideBarWrapper = memo(
+	({ defaultSize, minSize, maxSize, location }: { defaultSize: number; minSize: number; maxSize: number; location: string }) => {
+		if (location.includes("settings") || location.includes("chats") || location.includes("contacts")) {
+			return (
+				<div
+					className={cn("flex flex-col border-r", location.includes("chats") ? " w-[275px]" : "w-[250px]")}
+					id="left-resizable-panel"
+				>
+					<InnerSideBar />
+				</div>
+			)
+		}
+
+		return (
+			<>
+				<ResizablePanel
+					defaultSize={defaultSize}
+					minSize={minSize}
+					maxSize={maxSize}
+					order={1}
+					id="left-resizable-panel"
+				>
+					<InnerSideBar />
+				</ResizablePanel>
+				<ResizableHandle className="dragselect-start-disallowed" />
+			</>
+		)
+	}
+)
+
 export const MainContainer = memo(({ children }: { children: React.ReactNode }) => {
 	const windowSize = useWindowSize()
 	const [sidebarPercentage, setSidebarPercentage] = useLocalStorage<number>("sidebarPercentage", 0)
-	const isMobile = useIsMobile()
 	const location = useLocation()
 
 	const sidebarSize = useMemo(() => {
@@ -138,19 +166,13 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 				onLayout={e => setSidebarPercentage(e[0])}
 				className={cn("bg-muted/40", IS_DESKTOP && "rounded-tl-[10px]")}
 			>
-				{!isMobile && !location.includes("terminal") && (
-					<>
-						<ResizablePanel
-							defaultSize={sidebarSize}
-							minSize={sidebarSizeRange.min}
-							maxSize={sidebarSizeRange.max}
-							order={1}
-							id="left-resizable-panel"
-						>
-							<InnerSideBar />
-						</ResizablePanel>
-						<ResizableHandle className="dragselect-start-disallowed" />
-					</>
+				{!location.includes("terminal") && (
+					<InnerSideBarWrapper
+						defaultSize={sidebarSize}
+						minSize={sidebarSizeRange.min}
+						maxSize={sidebarSizeRange.max}
+						location={location}
+					/>
 				)}
 				<ResizablePanel
 					defaultSize={100 - sidebarSize}

@@ -37,7 +37,6 @@ export const List = memo(
 				height={384}
 				width="100%"
 				computeItemKey={getItemKey}
-				defaultItemHeight={40}
 				itemContent={itemContent}
 				style={{
 					overflowX: "hidden",

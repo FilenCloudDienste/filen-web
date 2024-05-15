@@ -50,7 +50,7 @@ export const Note = memo(
 					}}
 					onClick={select}
 				>
-					<div className="flex flex-col gap-2 h-full">
+					<div className="flex flex-col gap-2 h-full items-center">
 						{note.archive ? (
 							<Archive className="text-yellow-500 shrink-0" />
 						) : note.trash ? (
@@ -64,13 +64,18 @@ export const Note = memo(
 								{note.type === "md" && <BookMarked className="text-indigo-500 shrink-0" />}
 							</>
 						)}
-						{note.pinned && <Pin className="text-muted-foreground shrink-0" />}
+						{note.pinned && (
+							<Pin
+								className="text-muted-foreground shrink-0"
+								size={18}
+							/>
+						)}
 					</div>
 					<div className="flex flex-col grow h-full">
 						<div className="flex flex-row items-center gap-2">
 							{note.favorite && (
 								<Heart
-									size={18}
+									size={16}
 									className="shrink-0"
 								/>
 							)}

@@ -39,7 +39,7 @@ export const SideBar = memo(() => {
 					if (userId !== event.data.senderId) {
 						setUnread(prev => prev + 1)
 					}
-				} else if (event.type === "chatConversationDeleted") {
+				} else if (event.type === "chatConversationDeleted" || event.type === "chatConversationsNew") {
 					await chatsUnreadCountQuery.refetch()
 				}
 			} catch (e) {

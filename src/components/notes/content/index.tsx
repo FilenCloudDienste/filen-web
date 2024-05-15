@@ -14,6 +14,7 @@ import { type SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
 import { useNavigate } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
+import { IS_DESKTOP } from "@/constants"
 
 export const Content = memo(({ note }: { note: Note }) => {
 	const { setSelectedNote, setNotes, setSynced } = useNotesStore()
@@ -150,7 +151,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 				setValue={setValue}
 				onValueChange={onValueChange}
 				width={resizablePanelSizes.right.width}
-				height={windowSize.height - 48}
+				height={windowSize.height - 48 - (IS_DESKTOP ? 24 : 0)}
 				type={note.type}
 				placeholder="Note content..."
 			/>
@@ -164,7 +165,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 			value={value}
 			setValue={setValue}
 			onValueChange={onValueChange}
-			height={windowSize.height - 48}
+			height={windowSize.height - 48 - (IS_DESKTOP ? 24 : 0)}
 			type={editorType === "code" || editorType === "md" || note.type === "md" || note.type === "code" ? "code" : "text"}
 			placeholder="Note content..."
 			showMarkdownPreview={note.type === "md"}

@@ -148,7 +148,6 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 					height={windowSize.height - 48}
 					width="100%"
 					computeItemKey={getItemKey}
-					defaultItemHeight={52}
 					itemContent={itemContent}
 					style={{
 						overflowX: "hidden",

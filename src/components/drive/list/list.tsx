@@ -43,7 +43,6 @@ export const List = memo(({ items }: { items: DriveCloudItem[] }) => {
 		(_: number, item: DriveCloudItem) => `${item.uuid}:${driveSortBy[routeParent] ?? "nameAsc"}`,
 		[driveSortBy, routeParent]
 	)
-	const itemSize = useCallback(() => 44, [])
 
 	const itemContent = useCallback(
 		(index: number, item: DriveCloudItem) => {
@@ -97,7 +96,6 @@ export const List = memo(({ items }: { items: DriveCloudItem[] }) => {
 				width="100%"
 				computeItemKey={getItemKey}
 				defaultItemHeight={44}
-				itemSize={itemSize}
 				fixedItemHeight={44}
 				itemContent={itemContent}
 				style={{

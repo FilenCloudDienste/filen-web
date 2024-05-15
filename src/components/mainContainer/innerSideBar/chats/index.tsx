@@ -132,10 +132,25 @@ export const Chats = memo(() => {
 				) {
 					await query.refetch()
 				} else if (event.type === "chatConversationDeleted") {
+					const conversationsWithoutDeleted = sortAndFilterConversations(
+						conversations.filter(c => c.uuid !== event.data.uuid),
+						"",
+						userId
+					)
+
 					if (routeParent === event.data.uuid) {
-						navigate({
-							to: "/chats"
-						})
+						if (conversationsWithoutDeleted.length > 0) {
+							navigate({
+								to: "/chats/$uuid",
+								params: {
+									uuid: conversationsWithoutDeleted[0].uuid
+								}
+							})
+						} else {
+							navigate({
+								to: "/chats"
+							})
+						}
 					}
 
 					await query.refetch()
@@ -209,7 +224,6 @@ export const Chats = memo(() => {
 			height={virtuosoHeight}
 			width="100%"
 			computeItemKey={getItemKey}
-			defaultItemHeight={72}
 			itemContent={itemContent}
 			style={{
 				overflowX: "hidden",

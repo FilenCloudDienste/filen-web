@@ -64,7 +64,7 @@ export const Chat = memo(
 						<Avatar
 							size={40}
 							className="shrink-0"
-							src={participantsWithoutUser[0].avatar}
+							src={participantsWithoutUser[0]?.avatar}
 						/>
 						{unreadCount > 0 && (
 							<div className="absolute z-10 w-[16px] h-[16px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs mt-[26px] ml-[26px]">
@@ -76,9 +76,9 @@ export const Chat = memo(
 						<p className="line-clamp-1 text-ellipsis break-all">
 							{conversation.name && conversation.name.length > 0
 								? conversation.name
-								: participantsWithoutUser[0].nickName.length > 0
-									? participantsWithoutUser[0].nickName
-									: participantsWithoutUser[0].email}
+								: participantsWithoutUser[0]?.nickName.length > 0
+									? participantsWithoutUser[0]?.nickName
+									: participantsWithoutUser[0]?.email}
 						</p>
 						{conversation.lastMessage && conversation.lastMessage.length > 0 && (
 							<div className="text-muted-foreground line-clamp-1 text-ellipsis break-all text-sm flex flex-row overflow-hidden gap-1">

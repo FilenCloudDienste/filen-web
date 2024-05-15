@@ -223,7 +223,7 @@ export const ReplaceMessageWithComponents = memo(
 						return (
 							<div
 								key={key}
-								className="flex flex-row cursor-default"
+								className={cn("flex flex-row cursor-default", size ? `w-[${size}px] h-[${size}px]` : "w-[34px] h-[34px]")}
 								title={match}
 							>
 								<EmojiElement
@@ -241,7 +241,7 @@ export const ReplaceMessageWithComponents = memo(
 					return (
 						<div
 							key={key}
-							className="flex flex-row cursor-default"
+							className={cn("flex flex-row cursor-default", size ? `w-[${size}px] h-[${size}px]` : "w-[34px] h-[34px]")}
 							title={match}
 						>
 							<EmojiElement
@@ -394,7 +394,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 						return (
 							<div
 								key={key}
-								className="flex flex-row shrink-0"
+								className="flex flex-row shrink-0 w-[18px] h-[18px]"
 							>
 								<EmojiElement
 									fallback={match}
@@ -411,7 +411,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 					return (
 						<div
 							key={key}
-							className="flex flex-row shrink-0"
+							className="flex flex-row shrink-0 w-[18px] h-[18px]"
 						>
 							<EmojiElement
 								fallback={match}

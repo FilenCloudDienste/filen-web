@@ -1,5 +1,4 @@
 import { memo, useState } from "react"
-import { ResizablePanelGroup, ResizableHandle, ResizablePanel } from "../ui/resizable"
 import useIsMobile from "@/hooks/useIsMobile"
 import Conversation from "./conversation"
 import Participants from "./participants"
@@ -47,38 +46,24 @@ export const Chats = memo(() => {
 
 	return (
 		<div className="w-full h-screen flex flex-row">
-			<ResizablePanelGroup direction="horizontal">
-				<ResizablePanel
-					defaultSize={85}
-					minSize={20}
-					maxSize={85}
-					order={1}
-				>
+			<div className="flex flex-col grow">
+				{selectedConversation && (
+					<Conversation
+						key={`conversation-${selectedConversation.uuid}`}
+						conversation={selectedConversation}
+					/>
+				)}
+			</div>
+			{conversationParticipantsContainerOpen && !isMobile && (
+				<div className="flex flex-col w-[200px] border-l">
 					{selectedConversation && (
-						<Conversation
-							key={`conversation-${selectedConversation.uuid}`}
+						<Participants
+							key={`participants-${selectedConversation.uuid}`}
 							conversation={selectedConversation}
 						/>
 					)}
-				</ResizablePanel>
-				<ResizableHandle className="bg-transparent w-0" />
-				{conversationParticipantsContainerOpen && !isMobile && (
-					<ResizablePanel
-						defaultSize={15}
-						minSize={10}
-						maxSize={20}
-						order={2}
-						className="border-l"
-					>
-						{selectedConversation && (
-							<Participants
-								key={`participants-${selectedConversation.uuid}`}
-								conversation={selectedConversation}
-							/>
-						)}
-					</ResizablePanel>
-				)}
-			</ResizablePanelGroup>
+				</div>
+			)}
 		</div>
 	)
 })

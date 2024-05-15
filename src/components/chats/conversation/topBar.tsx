@@ -46,14 +46,14 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 			>
 				<Avatar
 					size={24}
-					src={participantsWithoutUser[0].avatar}
+					src={participantsWithoutUser[0]?.avatar}
 				/>
 				<p className="line-clamp-1 text-ellipsis break-all">
 					{conversation.name && conversation.name.length > 0
 						? conversation.name
-						: participantsWithoutUser[0].nickName.length > 0
-							? participantsWithoutUser[0].nickName
-							: participantsWithoutUser[0].email}
+						: participantsWithoutUser[0]?.nickName.length > 0
+							? participantsWithoutUser[0]?.nickName
+							: participantsWithoutUser[0]?.email}
 				</p>
 			</div>
 			<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>

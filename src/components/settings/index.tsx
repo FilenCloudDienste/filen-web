@@ -5,6 +5,8 @@ import Account from "./account"
 import Security from "./security"
 import Invite from "./invite"
 import Events from "./events"
+import Subscriptions from "./subscriptions"
+import Invoices from "./invoices"
 
 export const Settings = memo(() => {
 	const location = useLocation()
@@ -28,6 +30,14 @@ export const Settings = memo(() => {
 
 		if (location.includes("events")) {
 			return <Events />
+		}
+
+		if (location.includes("subscriptions")) {
+			return <Subscriptions />
+		}
+
+		if (location.includes("invoices")) {
+			return <Invoices />
 		}
 
 		return null

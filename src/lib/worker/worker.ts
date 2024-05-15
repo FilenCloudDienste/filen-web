@@ -2470,3 +2470,11 @@ export async function fetchEvent({ uuid }: { uuid: string }): Promise<UserEvent>
 
 	return await SDK.user().event({ uuid })
 }
+
+export async function generateInvoice({ uuid }: { uuid: string }): Promise<string> {
+	return await SDK.user().generateInvoice({ uuid })
+}
+
+export async function cancelSubscription({ uuid }: { uuid: string }): Promise<void> {
+	return await SDK.user().cancelSubscription({ uuid })
+}

@@ -11,8 +11,8 @@ export const useWindowFocus = () => {
 		const onFocus = () => setFocused(true)
 		const onBlur = () => setFocused(false)
 
-		window.addEventListener("focus", onFocus)
-		window.addEventListener("blur", onBlur)
+		window.addEventListener("focus", onFocus, false)
+		window.addEventListener("blur", onBlur, false)
 
 		return () => {
 			window.removeEventListener("focus", onFocus)

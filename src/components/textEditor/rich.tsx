@@ -100,8 +100,8 @@ export const RichTextEditor = memo(
 						: ["list"]
 				}
 				style={{
-					width: width + "px",
-					height: height - 35 + "px",
+					width: (type === "checklist" ? width + 23 : width) + "px",
+					height: (type === "checklist" ? height + 38 : height) - 35 + "px",
 					border: "none",
 					color: theme.dark ? "white" : "black",
 					marginTop: type === "checklist" ? "-47px" : undefined,

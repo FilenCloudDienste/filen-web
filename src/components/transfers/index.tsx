@@ -72,10 +72,6 @@ export const Transfers = memo(() => {
 
 	const itemContent = useCallback(
 		(_: number, transfer: Transfer) => {
-			if (!open) {
-				return null
-			}
-
 			return (
 				<div className="flex flex-col gap-2">
 					<div className="flex flex-row justify-between items-center w-full">
@@ -108,7 +104,7 @@ export const Transfers = memo(() => {
 				</div>
 			)
 		},
-		[t, open]
+		[t]
 	)
 
 	const updateInfo = useRef(
@@ -307,7 +303,6 @@ export const Transfers = memo(() => {
 					height={virtuosoHeight}
 					width="100%"
 					computeItemKey={getItemKey}
-					defaultItemHeight={60}
 					itemContent={itemContent}
 					onDragOver={onDragOver}
 					components={{
