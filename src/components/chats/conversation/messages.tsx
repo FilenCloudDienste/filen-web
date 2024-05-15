@@ -31,6 +31,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	const errorToast = useErrorToast()
 	const routeParent = useRouteParent()
 	const lastConversationUUID = useRef<string>("")
+	const [lastFocus, setLastFocus] = useState<number>(-1)
 
 	const virtuosoHeight = useMemo(() => {
 		return inputContainerDimensions.height > 0
@@ -52,7 +53,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		queryFn: () => worker.chatLastFocus()
 	})
 
-	const lastFocus = useMemo((): number => {
+	const lastFocusQueryNumber = useMemo((): number => {
 		if (!lastFocusQuery.isSuccess) {
 			return Date.now()
 		}
@@ -60,7 +61,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		const filtered = lastFocusQuery.data.filter(lf => lf.uuid === conversation.uuid)
 
 		if (filtered.length === 0) {
-			return Date.now()
+			return -1
 		}
 
 		return filtered[0].lastFocus
@@ -94,7 +95,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		} catch (e) {
 			console.error(e)
 
-			const toast = errorToast((e as unknown as Error).toString())
+			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 			toast.update({
 				id: toast.id,
@@ -122,7 +123,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 					nextMessage={messages[index + 1]}
 					userId={userId}
 					isScrolling={isScrolling}
-					lastFocus={lastFocus}
+					lastFocus={lastFocus > 0 ? lastFocus : lastFocusQueryNumber}
 					t={t}
 					failedMessages={failedMessages}
 					editUUID={editUUID}
@@ -144,7 +145,8 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 			editUUID,
 			replyMessage,
 			setReplyMessage,
-			setEditUUID
+			setEditUUID,
+			lastFocusQueryNumber
 		]
 	)
 
@@ -287,11 +289,27 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		}
 	}, [conversation.uuid, scrollChatToBottom])
 
+	useEffect(() => {
+		if (!lastFocusQuery.isSuccess) {
+			return
+		}
+
+		const filtered = lastFocusQuery.data.filter(lf => lf.uuid === conversation.uuid)
+
+		if (filtered.length === 0) {
+			return
+		}
+
+		setLastFocus(filtered[0].lastFocus)
+	}, [lastFocusQuery.isSuccess, lastFocusQuery.data, conversation.uuid])
+
 	return (
 		<Fragment key={`messages-${conversation.uuid}`}>
 			<MarkAsRead
-				lastFocus={lastFocus}
-				lastFocusQuery={lastFocusQuery}
+				key={conversation.uuid}
+				lastFocus={lastFocus > 0 ? lastFocus : lastFocusQueryNumber}
+				lastFocusValues={lastFocusQuery.isSuccess ? lastFocusQuery.data : []}
+				setLastFocus={setLastFocus}
 				messagesSorted={messagesSorted}
 				conversation={conversation}
 			/>

@@ -18,14 +18,14 @@ import PreviewDialog from "@/components/dialogs/previewDialog"
 import { register as registerServiceWorker } from "register-service-worker"
 import { setItem } from "@/lib/localForage"
 import InputDialog from "@/components/dialogs/input"
-import { connect as socketConnect } from "@/lib/socket"
 import SelectContactsDialog from "@/components/dialogs/selectContacts"
 import TransparentFullScreenImageDialog from "@/components/dialogs/transparentFullScreenImage"
 import TwoFactorCodeDialog from "@/components/dialogs/twoFactorCodeDialog"
 import PublicLinkDialog from "@/components/dialogs/publicLink"
 import SharedWithDialog from "@/components/dialogs/sharedWith"
-import { IS_DESKTOP } from "@/constants"
+import { IS_DESKTOP, UNCACHED_QUERY_KEYS } from "@/constants"
 import NotificationHandler from "@/components/notificationHandler"
+import ActivityHandler from "@/components/activityHandler"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -58,7 +58,6 @@ export const persistantQueryClient = new QueryClient({
 })
 
 export const queryClientPersister = createIDBPersister()
-export const UNCACHED_QUERY_KEYS = ["chatYouTubeEmbedInfo", "directoryPublicLinkStatus", "filePublicLinkStatus"]
 
 export const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
 	persister: queryClientPersister,
@@ -82,8 +81,6 @@ export const Root = memo(() => {
 				initRef.current = true
 
 				sdk.init(sdkConfig)
-
-				socketConnect({ apiKey: sdkConfig.apiKey })
 
 				setItem("sdkConfig", sdkConfig)
 					.then(() => {
@@ -151,7 +148,9 @@ export const Root = memo(() => {
 							<DropZone>
 								<DragSelect>
 									<NotificationHandler>
-										<Outlet />
+										<ActivityHandler>
+											<Outlet />
+										</ActivityHandler>
 									</NotificationHandler>
 								</DragSelect>
 							</DropZone>

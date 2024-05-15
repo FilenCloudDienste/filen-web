@@ -61,7 +61,7 @@ export const MoveTree = memo(({ parent, name }: { parent: string; name: string }
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).toString())
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 				toast.update({
 					id: toast.id,

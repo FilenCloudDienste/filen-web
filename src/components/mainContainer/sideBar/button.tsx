@@ -129,10 +129,12 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === "notes" && <Notebook size={iconSize} />}
 							{id === "chats" &&
 								(unread > 0 ? (
-									<MessageCircleMore
-										size={iconSize}
-										className="text-red-500"
-									/>
+									<>
+										<MessageCircleMore
+											size={iconSize}
+											className="text-red-500"
+										/>
+									</>
 								) : (
 									<MessageCircle size={iconSize} />
 								))}

@@ -9,6 +9,10 @@ import { Semaphore } from "@/lib/semaphore"
 import useLocation from "@/hooks/useLocation"
 import useWindowFocus from "@/hooks/useWindowFocus"
 import { useContactsStore } from "@/stores/contacts.store"
+import { useChatsStore } from "@/stores/chats.store"
+import { useQuery } from "@tanstack/react-query"
+import worker from "@/lib/worker"
+import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 
 export const triggeredNotificationUUIDs: Record<string, boolean> = {}
 export const notificationMutex = new Semaphore(1)
@@ -23,6 +27,13 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 	const windowFocus = useWindowFocus()
 	const { requestsInCount } = useContactsStore()
 	const currentRequestsInCountRef = useRef<number>(requestsInCount)
+	const { setSelectedConversation } = useChatsStore()
+	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
+
+	const chatConversationsQuery = useQuery({
+		queryKey: ["listChatsConversations"],
+		queryFn: () => worker.listChatsConversations()
+	})
 
 	const handleContactsNotifications = useCallback(async () => {
 		await notificationMutex.acquire()
@@ -38,7 +49,7 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 
 			if (IS_DESKTOP && contactNotificationsEnabled && (!location.includes("contacts") || !windowFocus)) {
 				const notification = new window.Notification("contacts", {
-					body: "new request",
+					body: "new contact request",
 					silent: true,
 					icon: notificationIcon
 				})
@@ -82,8 +93,37 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 				) {
 					triggeredNotificationUUIDs[`chat:${event.data.uuid}`] = true
 
-					const notification = new window.Notification("chat", {
-						body: "message",
+					if (!chatConversationsQuery.isSuccess) {
+						return
+					}
+
+					let foundConversation: ChatConversation | null = null
+					const filteredConversations = chatConversationsQuery.data.filter(c => c.uuid === event.data.conversation)
+
+					if (filteredConversations.length === 1) {
+						foundConversation = filteredConversations[0]
+					} else {
+						const fetchedConversations = await worker.listChatsConversations()
+						const filteredFetchedConversations = fetchedConversations.filter(c => c.uuid === event.data.conversation)
+
+						if (filteredFetchedConversations.length === 1) {
+							foundConversation = filteredFetchedConversations[0]
+						}
+					}
+
+					if (!foundConversation) {
+						return
+					}
+
+					const chatKey = await worker.chatKey({ conversation: event.data.conversation })
+					const messageDecrypted = await worker.decryptChatMessage({ message: event.data.message, key: chatKey })
+
+					if (!messageDecrypted || messageDecrypted.length === 0) {
+						return
+					}
+
+					const notification = new window.Notification("Chat", {
+						body: `${event.data.senderNickName.length > 0 ? event.data.senderNickName : event.data.senderEmail}: ${messageDecrypted}`,
 						silent: true,
 						icon: notificationIcon
 					})
@@ -93,10 +133,13 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 						async () => {
 							await window.desktopAPI.showWindow().catch(console.error)
 
+							setLastSelectedChatsConversation(foundConversation.uuid)
+							setSelectedConversation(foundConversation)
+
 							navigate({
 								to: "/chats/$uuid",
 								params: {
-									uuid: event.data.conversation
+									uuid: foundConversation.uuid
 								}
 							})
 						},
@@ -121,7 +164,17 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 				notificationMutex.release()
 			}
 		},
-		[userId, chatNotificationsEnabled, navigate, location, windowFocus]
+		[
+			userId,
+			chatNotificationsEnabled,
+			navigate,
+			location,
+			windowFocus,
+			chatConversationsQuery.isSuccess,
+			chatConversationsQuery.data,
+			setLastSelectedChatsConversation,
+			setSelectedConversation
+		]
 	)
 
 	useEffect(() => {

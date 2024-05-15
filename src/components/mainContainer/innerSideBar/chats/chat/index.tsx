@@ -1,4 +1,4 @@
-import { memo, type SetStateAction, useCallback, useMemo } from "react"
+import { memo, type SetStateAction, useCallback, useMemo, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { Link } from "@tanstack/react-router"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
@@ -6,6 +6,8 @@ import ContextMenu from "./contextMenu"
 import Avatar from "@/components/avatar"
 import { ReplaceMessageWithComponentsInline } from "@/components/chats/conversation/message/utils"
 import { useChatsStore } from "@/stores/chats.store"
+import worker from "@/lib/worker"
+import { useQuery } from "@tanstack/react-query"
 
 export const Chat = memo(
 	({
@@ -21,7 +23,12 @@ export const Chat = memo(
 		userId: number
 		routeParent: string
 	}) => {
-		const { conversationsUnread } = useChatsStore()
+		const { conversationsUnread, setConversationsUnread } = useChatsStore()
+
+		const query = useQuery({
+			queryKey: ["chatConversationUnreadCount", conversation.uuid],
+			queryFn: () => worker.chatConversationUnreadCount({ conversation: conversation.uuid })
+		})
 
 		const unreadCount = useMemo(() => {
 			return conversationsUnread[conversation.uuid] ? conversationsUnread[conversation.uuid] : 0
@@ -42,9 +49,27 @@ export const Chat = memo(
 		}, [conversation.participants, conversation.lastMessageSender])
 
 		const select = useCallback(() => {
+			query.refetch().catch(console.error)
+
 			setLastSelectedChatsConversation(conversation.uuid)
 			setSelectedConversation(conversation)
-		}, [setSelectedConversation, conversation, setLastSelectedChatsConversation])
+		}, [setSelectedConversation, conversation, setLastSelectedChatsConversation, query])
+
+		useEffect(() => {
+			if (query.isSuccess) {
+				setConversationsUnread(prev => {
+					const newRecord = { ...prev }
+
+					if (query.data === 0) {
+						delete newRecord[conversation.uuid]
+					} else {
+						newRecord[conversation.uuid] = query.data
+					}
+
+					return newRecord
+				})
+			}
+		}, [query.isSuccess, query.data, setConversationsUnread, conversation.uuid])
 
 		return (
 			<ContextMenu conversation={conversation}>

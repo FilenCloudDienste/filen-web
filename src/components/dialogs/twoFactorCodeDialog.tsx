@@ -12,12 +12,15 @@ import { useTranslation } from "react-i18next"
 import eventEmitter from "@/lib/eventEmitter"
 import { Button } from "@/components/ui/button"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
+import { Input } from "@/components/ui/input"
+import QRCode from "react-qr-code"
 
 export type TwoFactorDialogProps = {
 	title?: string
 	continueButtonText: string
 	continueButtonVariant?: "destructive" | "default" | "link" | "outline" | "secondary" | "ghost" | null
 	description?: string
+	keyToDisplay?: string
 }
 
 export type ShowTwoFactorCodeDialogResponse =
@@ -33,7 +36,8 @@ export async function showTwoFactorCodeDialog({
 	title,
 	continueButtonText,
 	description,
-	continueButtonVariant
+	continueButtonVariant,
+	keyToDisplay
 }: TwoFactorDialogProps): Promise<ShowTwoFactorCodeDialogResponse> {
 	return await new Promise<ShowTwoFactorCodeDialogResponse>(resolve => {
 		const id = Math.random().toString(16).slice(2)
@@ -57,7 +61,14 @@ export async function showTwoFactorCodeDialog({
 			}
 		)
 
-		eventEmitter.emit("openTwoFactorCodeDialog", { requestId: id, title, continueButtonText, continueButtonVariant, description })
+		eventEmitter.emit("openTwoFactorCodeDialog", {
+			requestId: id,
+			title,
+			continueButtonText,
+			continueButtonVariant,
+			description,
+			keyToDisplay
+		})
 	})
 }
 
@@ -73,6 +84,7 @@ export const TwoFactorCodeDialog = memo(() => {
 	const requestId = useRef<string>("")
 	const didSubmit = useRef<boolean>(false)
 	const [twoFactorCode, setTwoFactorCode] = useState<string>("")
+	const [useRecoveryKey, setUseRecoveryKey] = useState<boolean>(false)
 
 	const cancel = useCallback(() => {
 		if (didSubmit.current) {
@@ -83,7 +95,7 @@ export const TwoFactorCodeDialog = memo(() => {
 
 		eventEmitter.emit("twoFactorCodeDialogResponse", {
 			code: "",
-			cancelled: false,
+			cancelled: true,
 			requestId: requestId.current
 		})
 
@@ -91,7 +103,7 @@ export const TwoFactorCodeDialog = memo(() => {
 	}, [])
 
 	const submit = useCallback(() => {
-		if (twoFactorCode.length !== 6) {
+		if (twoFactorCode.length < 6) {
 			cancel()
 
 			return
@@ -112,11 +124,25 @@ export const TwoFactorCodeDialog = memo(() => {
 		setOpen(false)
 	}, [twoFactorCode, cancel])
 
+	const otpOnKeyDown = useCallback(
+		(e: React.KeyboardEvent<HTMLInputElement>) => {
+			if (e.key === "Enter" && twoFactorCode.length === 6) {
+				submit()
+			}
+		},
+		[submit, twoFactorCode.length]
+	)
+
+	const recoveryInputOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		setTwoFactorCode(e.target.value)
+	}, [])
+
 	useEffect(() => {
 		const listener = eventEmitter.on("openTwoFactorCodeDialog", (p: TwoFactorDialogProps & { requestId: string }) => {
 			requestId.current = p.requestId
 			didSubmit.current = false
 
+			setUseRecoveryKey(false)
 			setTwoFactorCode("")
 			setProps(p)
 			setOpen(true)
@@ -136,46 +162,73 @@ export const TwoFactorCodeDialog = memo(() => {
 				<AlertDialogHeader>
 					{props.title && <AlertDialogTitle>{props.title}</AlertDialogTitle>}
 					{props.description && <AlertDialogDescription>{props.description}</AlertDialogDescription>}
+					{props.keyToDisplay && (
+						<div className="flex flex-row justify-center">
+							<div className="flex flex-row bg-white rounded-md p-4 my-4">
+								<QRCode
+									value={props.keyToDisplay}
+									size={200}
+								/>
+							</div>
+						</div>
+					)}
 					<div className="flex flex-row items-center justify-center p-4">
-						<InputOTP
-							maxLength={6}
-							autoFocus={true}
-							onKeyDown={e => {
-								if (e.key === "Enter" && twoFactorCode.length === 6) {
-									submit()
-								}
-							}}
-							value={twoFactorCode}
-							onChange={setTwoFactorCode}
-							render={({ slots }) => (
-								<>
-									<InputOTPGroup>
-										{slots.slice(0, 3).map((slot, index) => (
-											<InputOTPSlot
-												key={index}
-												{...slot}
-											/>
-										))}{" "}
-									</InputOTPGroup>
-									<InputOTPSeparator />
-									<InputOTPGroup>
-										{slots.slice(3).map((slot, index) => (
-											<InputOTPSlot
-												key={index}
-												{...slot}
-											/>
-										))}
-									</InputOTPGroup>
-								</>
-							)}
-						/>
+						{useRecoveryKey ? (
+							<Input
+								value={twoFactorCode}
+								onChange={recoveryInputOnChange}
+								placeholder={t("dialogs.twoFactorCode.recoveryKeyPlaceholder")}
+								type="text"
+								autoFocus={true}
+							/>
+						) : (
+							<InputOTP
+								maxLength={6}
+								autoFocus={true}
+								onKeyDown={otpOnKeyDown}
+								value={twoFactorCode}
+								onChange={setTwoFactorCode}
+								render={({ slots }) => (
+									<>
+										<InputOTPGroup>
+											{slots.slice(0, 3).map((slot, index) => (
+												<InputOTPSlot
+													key={index}
+													{...slot}
+												/>
+											))}{" "}
+										</InputOTPGroup>
+										<InputOTPSeparator />
+										<InputOTPGroup>
+											{slots.slice(3).map((slot, index) => (
+												<InputOTPSlot
+													key={index}
+													{...slot}
+												/>
+											))}
+										</InputOTPGroup>
+									</>
+								)}
+							/>
+						)}
 					</div>
+					{!props.keyToDisplay && (
+						<div className="flex flex-row justify-center">
+							<p
+								className="text-sm text-muted-foreground underline cursor-pointer"
+								onClick={() => setUseRecoveryKey(true)}
+							>
+								{t("dialogs.twoFactorCode.useRecoveryKey")}
+							</p>
+						</div>
+					)}
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={cancel}>{t("dialogs.cancel")}</AlertDialogCancel>
 					<Button
 						onClick={submit}
 						variant={props.continueButtonVariant}
+						disabled={twoFactorCode.length < 6}
 					>
 						{props.continueButtonText}
 					</Button>

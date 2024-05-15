@@ -177,6 +177,10 @@
 			"city": "City",
 			"postalCode": "Postal code",
 			"country": "Country"
+		},
+		"twoFactorCode": {
+			"useRecoveryKey": "Use recovery key instead",
+			"recoveryKeyPlaceholder": "Recovery key"
 		}
 	},
 	"contextMenus": {
@@ -236,6 +240,12 @@
 			"profile": "Profile",
 			"remove": "Remove",
 			"block": "Block"
+		},
+		"chat": {
+			"input": {
+				"selectFromDrive": "Select from drive",
+				"attachFiles": "Attach files"
+			}
 		}
 	},
 	"transfers": {

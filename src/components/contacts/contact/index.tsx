@@ -15,6 +15,7 @@ import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useChatsStore } from "@/stores/chats.store"
 import eventEmitter from "@/lib/eventEmitter"
+import { useLocalStorage } from "@uidotdev/usehooks"
 
 export const Contact = memo(
 	({
@@ -35,6 +36,7 @@ export const Contact = memo(
 		const { t } = useTranslation()
 		const { setConversations, setSelectedConversation } = useChatsStore()
 		const isCreatingChat = useRef<boolean>(false)
+		const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
 
 		const triggerMoreIconContextMenu = useCallback(
 			(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -61,6 +63,9 @@ export const Contact = memo(
 			)
 
 			if (conversationExists.length === 1) {
+				setLastSelectedChatsConversation(conversationExists[0].uuid)
+				setSelectedConversation(conversationExists[0])
+
 				navigate({
 					to: "/chats/$uuid",
 					params: {
@@ -120,6 +125,7 @@ export const Contact = memo(
 
 				setConversations(prev => [...prev, convo])
 				setSelectedConversation(convo)
+				setLastSelectedChatsConversation(convo.uuid)
 
 				navigate({
 					to: "/chats/$uuid",
@@ -130,7 +136,7 @@ export const Contact = memo(
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).toString())
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 				toast.update({
 					id: toast.id,
@@ -141,7 +147,17 @@ export const Contact = memo(
 
 				isCreatingChat.current = false
 			}
-		}, [conversations, contact, errorToast, loadingToast, navigate, setConversations, setSelectedConversation, userId])
+		}, [
+			conversations,
+			contact,
+			errorToast,
+			loadingToast,
+			navigate,
+			setConversations,
+			setSelectedConversation,
+			userId,
+			setLastSelectedChatsConversation
+		])
 
 		return (
 			<ContextMenu

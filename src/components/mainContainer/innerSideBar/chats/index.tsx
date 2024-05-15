@@ -22,7 +22,7 @@ export const Chats = memo(() => {
 	const windowSize = useWindowSize()
 	const { conversations, setConversations, selectedConversation, setSelectedConversation, setConversationsUnread, search } =
 		useChatsStore()
-	const [, setLastSelectedChatsConversation] = useLocalStorage("lastSelectedChatsConversation", "")
+	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
 	const navigate = useNavigate()
 	const routeParent = useRouteParent()
 	const queryUpdatedAtRef = useRef<number>(-1)
@@ -41,19 +41,6 @@ export const Chats = memo(() => {
 	const virtuosoHeight = useMemo(() => {
 		return windowSize.height - topDimensions.height - 48 - (IS_DESKTOP ? 24 : 0)
 	}, [windowSize.height, topDimensions.height])
-
-	const fetchConversationUnreadCount = useCallback(
-		async (uuid: string) => {
-			try {
-				const count = await worker.chatConversationUnreadCount({ conversation: uuid })
-
-				setConversationsUnread(prev => ({ ...prev, [uuid]: count }))
-			} catch (e) {
-				console.error(e)
-			}
-		},
-		[setConversationsUnread]
-	)
 
 	const getItemKey = useCallback((_: number, conversation: ChatConversation) => conversation.uuid, [])
 
@@ -79,6 +66,8 @@ export const Chats = memo(() => {
 					const filteredConversations = conversations.filter(c => c.uuid === event.data.conversation)
 
 					if (filteredConversations.length === 0) {
+						await query.refetch()
+
 						return
 					}
 
@@ -140,6 +129,9 @@ export const Chats = memo(() => {
 
 					if (routeParent === event.data.uuid) {
 						if (conversationsWithoutDeleted.length > 0) {
+							setLastSelectedChatsConversation(conversationsWithoutDeleted[0].uuid)
+							setSelectedConversation(conversationsWithoutDeleted[0])
+
 							navigate({
 								to: "/chats/$uuid",
 								params: {
@@ -159,7 +151,17 @@ export const Chats = memo(() => {
 				console.error(e)
 			}
 		},
-		[conversations, setConversations, query, setSelectedConversation, routeParent, navigate, setConversationsUnread, userId]
+		[
+			conversations,
+			setConversations,
+			query,
+			setSelectedConversation,
+			routeParent,
+			navigate,
+			setConversationsUnread,
+			userId,
+			setLastSelectedChatsConversation
+		]
 	)
 
 	useEffect(() => {
@@ -176,11 +178,11 @@ export const Chats = memo(() => {
 				})
 			} else {
 				if (!selectedConversation) {
-					const foundNote = conversationsSorted.filter(note => note.uuid === routeParent)
+					const foundConvo = conversationsSorted.filter(note => note.uuid === routeParent)
 
-					if (foundNote.length === 1) {
-						setLastSelectedChatsConversation(foundNote[0].uuid)
-						setSelectedConversation(foundNote[0])
+					if (foundConvo.length === 1) {
+						setLastSelectedChatsConversation(foundConvo[0].uuid)
+						setSelectedConversation(foundConvo[0])
 					}
 				}
 			}
@@ -188,16 +190,14 @@ export const Chats = memo(() => {
 	}, [navigate, routeParent, conversationsSorted, setLastSelectedChatsConversation, setSelectedConversation, selectedConversation])
 
 	useEffect(() => {
-		if (query.isSuccess && query.dataUpdatedAt !== queryUpdatedAtRef.current) {
-			queryUpdatedAtRef.current = query.dataUpdatedAt
+		if (query.isSuccess) {
+			if (query.dataUpdatedAt !== queryUpdatedAtRef.current) {
+				queryUpdatedAtRef.current = query.dataUpdatedAt
 
-			setConversations(query.data)
-
-			for (const convo of query.data) {
-				fetchConversationUnreadCount(convo.uuid)
+				setConversations(query.data)
 			}
 		}
-	}, [query.isSuccess, query.data, query.dataUpdatedAt, setConversations, fetchConversationUnreadCount])
+	}, [query.isSuccess, query.data, query.dataUpdatedAt, setConversations])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)

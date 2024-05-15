@@ -1,9 +1,60 @@
 import SDK from "./sdk"
 
+let connected = false
+
 export const socket = SDK.socket
 
-export async function connect({ apiKey }: { apiKey: string }): Promise<void> {
-	socket.connect({ apiKey })
+/**
+ * We need to wait for an API key first before connecting.
+ * Resolves as soon as the user is logged in.
+ *
+ * @export
+ * @async
+ * @returns {Promise<string>}
+ */
+export async function waitForAPIKey(): Promise<string> {
+	return new Promise<string>(resolve => {
+		const config = window.localStorage.getItem("sdkConfig")
+
+		if (config) {
+			resolve(JSON.parse(config).apiKey)
+
+			return
+		}
+
+		const wait = setInterval(() => {
+			const config = window.localStorage.getItem("sdkConfig")
+
+			if (config) {
+				clearInterval(wait)
+
+				resolve(JSON.parse(config).apiKey)
+			}
+		}, 1000)
+	})
+}
+
+/**
+ * Connect to the socket sever using the SDK.
+ *
+ * @export
+ * @async
+ * @returns {Promise<void>}
+ */
+export async function connect(): Promise<void> {
+	if (connected) {
+		return
+	}
+
+	connected = true
+
+	try {
+		const apiKey = await waitForAPIKey()
+
+		socket.connect({ apiKey })
+	} catch (e) {
+		console.error(e)
+	}
 }
 
 export default socket

@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { cn } from "@/lib/utils"
 import eventEmitter from "@/lib/eventEmitter"
+import { useTheme } from "@/providers/themeProvider"
 
 export const TopBar = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const { userId } = useSDKConfig()
@@ -17,6 +18,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 		`conversationParticipantsContainerOpen:${conversation.uuid}`,
 		true
 	)
+	const { dark } = useTheme()
 
 	const participantsWithoutUser = useMemo(() => {
 		return conversation.participants.filter(p => p.userId !== userId)
@@ -39,7 +41,12 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 	}, [setConversationParticipantsContainerOpen])
 
 	return (
-		<div className="w-full h-12 flex flex-row px-4 border-b shadow-sm items-center gap-2 justify-between shrink-0 z-[100001]">
+		<div
+			className={cn(
+				"w-full h-12 flex flex-row px-4 border-b shadow-sm items-center gap-2 justify-between shrink-0 z-[10001] select-none",
+				dark ? "bg-[#151518]" : ""
+			)}
+		>
 			<div
 				className={cn("flex flex-row gap-2 items-center", hasWritePermissions ? "cursor-pointer" : "cursor-default")}
 				onClick={editConversationName}

@@ -74,7 +74,7 @@ export const ContextMenu = memo(
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).toString())
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 				toast.update({
 					id: toast.id,

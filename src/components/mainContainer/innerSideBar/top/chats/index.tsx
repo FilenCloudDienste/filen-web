@@ -13,6 +13,7 @@ import { selectContacts } from "@/components/dialogs/selectContacts"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import eventEmitter from "@/lib/eventEmitter"
+import { useLocalStorage } from "@uidotdev/usehooks"
 
 export const Chats = memo(() => {
 	const { t } = useTranslation()
@@ -21,6 +22,7 @@ export const Chats = memo(() => {
 	const errorToast = useErrorToast()
 	const navigate = useNavigate()
 	const { userId } = useSDKConfig()
+	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
 
 	const onChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,6 +81,7 @@ export const Chats = memo(() => {
 
 			setConversations(prev => [...prev, convo])
 			setSelectedConversation(convo)
+			setLastSelectedChatsConversation(convo.uuid)
 
 			navigate({
 				to: "/chats/$uuid",
@@ -89,7 +92,7 @@ export const Chats = memo(() => {
 		} catch (e) {
 			console.error(e)
 
-			const toast = errorToast((e as unknown as Error).toString())
+			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 			toast.update({
 				id: toast.id,
@@ -98,7 +101,7 @@ export const Chats = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [errorToast, loadingToast, navigate, userId, setSelectedConversation, setConversations])
+	}, [errorToast, loadingToast, navigate, userId, setSelectedConversation, setConversations, setLastSelectedChatsConversation])
 
 	return (
 		<div

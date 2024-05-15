@@ -72,6 +72,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 	const [emojisSuggestionsIndex, setEmojisSuggestionsIndex] = useState<number>(0)
 	const [emojisSuggestionsShortCodes, setEmojisSuggestionsShortCodes] = useState<string[]>([])
 	const theme = useTheme()
+	const focusEditorTimeout = useRef<ReturnType<typeof setTimeout>>()
 
 	const me = useMemo(() => {
 		return conversation.participants.filter(participant => participant.userId === userId)[0]
@@ -330,7 +331,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 			setFailedMessages(prev => [...prev, uuid])
 
-			const toast = errorToast((e as unknown as Error).toString())
+			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 			toast.update({
 				id: toast.id,
@@ -396,7 +397,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 			setFailedMessages(prev => [...prev, editUUID])
 
-			const toast = errorToast((e as unknown as Error).toString())
+			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 			toast.update({
 				id: toast.id,
@@ -819,7 +820,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).toString())
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 				toast.update({
 					id: toast.id,
@@ -874,7 +875,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		} catch (e) {
 			console.error(e)
 
-			const toast = errorToast((e as unknown as Error).toString())
+			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 			toast.update({
 				id: toast.id,
@@ -894,6 +895,14 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			}
 		}
 	}, [conversation.uuid])
+
+	useEffect(() => {
+		if (editor) {
+			clearTimeout(focusEditorTimeout.current)
+
+			focusEditorTimeout.current = setTimeout(focusEditor, 100)
+		}
+	}, [editor, focusEditor])
 
 	useEffect(() => {
 		const chatInputWriteTextListener = eventEmitter.on("chatInputWriteText", (text: string) => {
@@ -1121,7 +1130,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 					className="slate-editor z-10 border rounded-md shadow-sm bg-background w-full min-h-10 max-h-[40vh] overflow-y-auto overflow-x-hidden pl-11 pr-11 py-3 break-all outline-none focus:outline-none active:outline-none hover:outline-none"
 					autoCorrect="none"
 					autoCapitalize="none"
-					autoFocus={false}
+					autoFocus={true}
 					autoComplete="none"
 					spellCheck={false}
 					maxLength={1024}

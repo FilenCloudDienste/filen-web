@@ -2478,3 +2478,11 @@ export async function generateInvoice({ uuid }: { uuid: string }): Promise<strin
 export async function cancelSubscription({ uuid }: { uuid: string }): Promise<void> {
 	return await SDK.user().cancelSubscription({ uuid })
 }
+
+export async function enableTwoFactorAuthentication({ twoFactorCode }: { twoFactorCode: string }): Promise<string> {
+	return await SDK.user().enableTwoFactorAuthentication({ twoFactorCode })
+}
+
+export async function disableTwoFactorAuthentication({ twoFactorCode }: { twoFactorCode: string }): Promise<void> {
+	return await SDK.user().disableTwoFactorAuthentication({ twoFactorCode })
+}

@@ -5,10 +5,13 @@ import { RouterProvider, createRouter, createHashHistory } from "@tanstack/react
 import { routeTree } from "@/routeTree.gen"
 import { Helmet, HelmetProvider } from "react-helmet-async"
 import { helmetCSS } from "./lib/helmet"
+import { connect as socketConnect } from "@/lib/socket"
 import "./index.css"
 import "react-quill/dist/quill.snow.css"
 import "./lib/i18n"
 import "@xterm/xterm/css/xterm.css"
+
+socketConnect()
 
 export const history = createHashHistory()
 export const router = createRouter({ routeTree, history })

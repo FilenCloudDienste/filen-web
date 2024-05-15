@@ -6,12 +6,92 @@ import { showSaveFilePicker } from "native-file-system-adapter"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import useSDKConfig from "@/hooks/useSDKConfig"
+import { showTwoFactorCodeDialog } from "@/components/dialogs/twoFactorCodeDialog"
+import worker from "@/lib/worker"
 
 export const Security = memo(() => {
 	const account = useAccount()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const { masterKeys, userId } = useSDKConfig()
+
+	const onTwoFactorChange = useCallback(
+		async (checked: boolean) => {
+			if (!account) {
+				return
+			}
+
+			let toast: ReturnType<typeof loadingToast> | null = null
+
+			try {
+				if (checked) {
+					if (account.settings.twoFactorEnabled === 1) {
+						return
+					}
+
+					const code = await showTwoFactorCodeDialog({
+						title: "d",
+						continueButtonText: "ddd",
+						description: "ookeoetrasher",
+						continueButtonVariant: "destructive",
+						keyToDisplay:
+							"otpauth://totp/" +
+							encodeURIComponent("Filen") +
+							":" +
+							encodeURIComponent(account.account.email) +
+							"?secret=" +
+							encodeURIComponent(account.settings.twoFactorKey) +
+							"&issuer=" +
+							encodeURIComponent("Filen") +
+							"&digits=6&period=30"
+					})
+
+					if (code.cancelled) {
+						return
+					}
+
+					toast = loadingToast()
+
+					await worker.enableTwoFactorAuthentication({ twoFactorCode: code.code })
+					await account.refetch()
+				} else {
+					if (account.settings.twoFactorEnabled === 0) {
+						return
+					}
+
+					const code = await showTwoFactorCodeDialog({
+						title: "d",
+						continueButtonText: "ddd",
+						description: "ookeoetrasher",
+						continueButtonVariant: "destructive"
+					})
+
+					if (code.cancelled) {
+						return
+					}
+
+					toast = loadingToast()
+
+					await worker.disableTwoFactorAuthentication({ twoFactorCode: code.code })
+					await account.refetch()
+				}
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				if (toast) {
+					toast.dismiss()
+				}
+			}
+		},
+		[account, loadingToast, errorToast]
+	)
 
 	const exportMasterKeys = useCallback(async () => {
 		if (!account) {
@@ -39,7 +119,7 @@ export const Security = memo(() => {
 				console.error(e)
 
 				if (!(e as unknown as Error).toString().includes("abort")) {
-					const toast = errorToast((e as unknown as Error).toString())
+					const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 					toast.update({
 						id: toast.id,
@@ -53,7 +133,7 @@ export const Security = memo(() => {
 			console.error(e)
 
 			if (!(e as unknown as Error).toString().includes("abort")) {
-				const toast = errorToast((e as unknown as Error).toString())
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 				toast.update({
 					id: toast.id,
@@ -85,7 +165,10 @@ export const Security = memo(() => {
 						name="Two Factor Authentication"
 						info="Enable or disable Two Factor Authentication"
 					>
-						<Switch checked={account.settings.twoFactorEnabled === 1} />
+						<Switch
+							checked={account.settings.twoFactorEnabled === 1}
+							onCheckedChange={onTwoFactorChange}
+						/>
 					</Section>
 					<Section
 						name="Export master keys"

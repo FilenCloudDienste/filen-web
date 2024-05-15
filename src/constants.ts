@@ -13,3 +13,13 @@ export const PUBLIC_LINK_BASE_URL = IS_DESKTOP
 	? "https://app.filen.io/#/d/"
 	: globalThis.location.protocol + "//" + globalThis.location.host + "/#/d/"
 export const IS_APPLE_DEVICE = UAParserResult.device.vendor === "Apple"
+export const UNCACHED_QUERY_KEYS = [
+	"chatYouTubeEmbedInfo",
+	"directoryPublicLinkStatus",
+	"filePublicLinkStatus",
+	"chatConversationUnreadCount",
+	"chatLastFocus",
+	"chatConversationOnline",
+	"chatsUnreadCount",
+	"contactsRequestInCount"
+]
