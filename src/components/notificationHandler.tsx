@@ -133,6 +133,10 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 						async () => {
 							await window.desktopAPI.showWindow().catch(console.error)
 
+							if (!foundConversation) {
+								return
+							}
+
 							setLastSelectedChatsConversation(foundConversation.uuid)
 							setSelectedConversation(foundConversation)
 
