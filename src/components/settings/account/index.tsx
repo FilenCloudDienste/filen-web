@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useEffect } from "react"
+import { memo, useCallback, useState, useEffect, useRef } from "react"
 import useAccount from "@/hooks/useAccount"
 import Section from "../section"
 import useLoadingToast from "@/hooks/useLoadingToast"
@@ -34,6 +34,7 @@ export const Account = memo(() => {
 					versioned: 0
 				}
 	)
+	const lastUsageRef = useRef<number>(-1)
 
 	const requestAccountData = useCallback(async () => {
 		if (!account) {
@@ -410,7 +411,9 @@ export const Account = memo(() => {
 	}, [])
 
 	useEffect(() => {
-		if (account) {
+		if (account && lastUsageRef.current !== account.account.storage + account.settings.versionedStorage) {
+			lastUsageRef.current = account.account.storage + account.settings.versionedStorage
+
 			setUsage({
 				all: account.account.storage,
 				versioned: account.settings.versionedStorage
