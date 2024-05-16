@@ -1,4 +1,4 @@
-import { memo, useState } from "react"
+import { memo, useState, useMemo } from "react"
 import useIsMobile from "@/hooks/useIsMobile"
 import Conversation from "./conversation"
 import Participants from "./participants"
@@ -19,6 +19,18 @@ export const Chats = memo(() => {
 		true
 	)
 	const [emojisInitialized, setEmojisInitialized] = useState<boolean>(didInitializeEmojisPreviously)
+
+	const showParticipants = useMemo(() => {
+		if (
+			!isMobile ||
+			!conversationParticipantsContainerOpen ||
+			(selectedConversation && selectedConversation.participants.length <= 2)
+		) {
+			return false
+		}
+
+		return true
+	}, [isMobile, selectedConversation, conversationParticipantsContainerOpen])
 
 	useMountedEffect(() => {
 		setReplyMessage(null)
@@ -54,7 +66,7 @@ export const Chats = memo(() => {
 					/>
 				)}
 			</div>
-			{conversationParticipantsContainerOpen && !isMobile && (
+			{showParticipants && (
 				<div className="flex flex-col w-[200px] border-l">
 					{selectedConversation && (
 						<Participants

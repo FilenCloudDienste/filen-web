@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import { useEffect, useRef } from "react"
 
 declare const UNDEFINED_VOID_ONLY: unique symbol
@@ -29,5 +27,5 @@ export default function useMountedEffect(effect: Effect) {
 				onUnmount()
 			}
 		}
-	}, [])
+	}, [effect])
 }

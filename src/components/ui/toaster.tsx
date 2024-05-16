@@ -1,7 +1,8 @@
 import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
+import { memo } from "react"
 
-export function Toaster() {
+export const Toaster = memo(() => {
 	const { toasts } = useToast()
 
 	return (
@@ -24,4 +25,6 @@ export function Toaster() {
 			<ToastViewport />
 		</ToastProvider>
 	)
-}
+})
+
+export default Toaster

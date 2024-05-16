@@ -57,12 +57,13 @@ export const Typing = memo(({ conversation }: { conversation: ChatConversation }
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)
 
+		const typingUsers = typingUsersTimeout.current
+
 		return () => {
 			socket.removeListener("socketEvent", socketEventListener)
 
-			for (const typingUser in typingUsersTimeout.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
-				clearTimeout(typingUsersTimeout.current[typingUser])
+			for (const typingUser in typingUsers) {
+				clearTimeout(typingUsers[typingUser])
 			}
 		}
 	}, [socketEventListener])

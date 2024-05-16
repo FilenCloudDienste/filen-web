@@ -86,15 +86,15 @@ export const Subscriptions = memo(() => {
 					subscriptionsSorted.map(subscription => (
 						<div
 							key={subscription.id}
-							className="flex flex-col p-1 bg-secondary border rounded-lg max-w-[600px] mb-4"
+							className="flex flex-col bg-background border rounded-lg max-w-[600px] mb-4"
 						>
-							<div className="flex flex-row p-3">
-								<p>{subscription.planName}</p>
+							<div className="flex flex-row p-4 pb-0">
+								<p className="text-lg">{subscription.planName}</p>
 							</div>
-							<div className="flex flex-row bg-background rounded-md p-3 gap-10">
+							<div className="flex flex-row rounded-md p-4 gap-10">
 								<div className="flex flex-col gap-1">
 									<p>{subscription.planCost}€</p>
-									<p className="text-muted-foreground">
+									<p className="text-muted-foreground text-sm">
 										{t("settings.subscriptions.info", {
 											storage: formatBytes(subscription.storage)
 										})}

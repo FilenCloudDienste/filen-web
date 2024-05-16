@@ -389,7 +389,7 @@ export const Message = memo(
 													/>
 												</div>
 											)}
-											<div className="flex flex-row w-full h-auto">
+											<div className="flex flex-row w-full h-auto text-primary/75">
 												<ReplaceMessageWithComponents
 													content={message.message}
 													participants={conversation.participants}

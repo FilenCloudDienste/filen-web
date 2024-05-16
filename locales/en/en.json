@@ -403,6 +403,13 @@
 				"active": "Active",
 				"waiting": "Waiting"
 			}
+		},
+		"plans": {
+			"starter": "Starter",
+			"monthly": "Monthly",
+			"annually": "Annually",
+			"lifetime": "Lifetime",
+			"buyNow": "Buy now"
 		}
 	},
 	"drive": {

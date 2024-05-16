@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import SDK from "../sdk"
 import { type FilenSDKConfig, type FileMetadata, type FolderMetadata, type PublicLinkExpiration, type CloudItemTree } from "@filen/sdk"
 import { type FileSystemFileHandle } from "native-file-system-adapter"
@@ -2231,6 +2229,7 @@ export async function corsHead(url: string): Promise<Record<string, string>> {
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function corsGet(url: string): Promise<any> {
 	await waitForInitialization()
 
@@ -2269,6 +2268,7 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 			return workerParseOGFromURLCache.get(url)!
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let response: AxiosResponse<any, any>
 
 		try {
@@ -2299,6 +2299,7 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 		const ogTags2 = response.data.match(/<meta\s+property='og:([^']+)'\s+content='([^']+)'\s*\/?>/g)
 
 		if (ogTags) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			ogTags.forEach((tag: any) => {
 				const [, property, content] = tag.match(/<meta\s+property="og:([^"]+)"\s+content="([^"]+)"\s*\/?>/)
 
@@ -2309,6 +2310,7 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 		}
 
 		if (ogTags2) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			ogTags2.forEach((tag: any) => {
 				const [, property, content] = tag.match(/<meta\s+property='og:([^']+)'\s+content='([^']+)'\s*\/?>/)
 
@@ -2322,6 +2324,7 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 		const otherTags2 = response.data.match(/<meta\s+name='([^']+)'\s+content='([^']+)'\s*\/?>/g)
 
 		if (otherTags) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			otherTags.forEach((tag: any) => {
 				const [, name, content] = tag.match(/<meta\s+name="([^"]+)"\s+content="([^"]+)"\s*\/?>/)
 
@@ -2332,6 +2335,7 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 		}
 
 		if (otherTags2) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			otherTags2.forEach((tag: any) => {
 				const [, name, content] = tag.match(/<meta\s+name='([^']+)'\s+content='([^']+)'\s*\/?>/)
 
@@ -2662,4 +2666,46 @@ export async function workerCalculateThumbnailCacheUsage(): Promise<number> {
 
 export async function workerClearThumbnailCache(): Promise<void> {
 	return clearThumbnailCache()
+}
+
+export type CDNConfig = {
+	maintenance: boolean
+	readOnly: boolean
+	announcements: CDNConfigAnnouncement[]
+	pricing: CDNConfigPricing
+}
+
+export type CDNConfigAnnouncement = {
+	uuid: string
+	title: string
+	message: string
+	active: boolean
+	timestamp: number
+	platforms: string[]
+}
+
+export type CDNConfigPricing = {
+	lifetimeEnabled: boolean
+	saleEnabled: boolean
+	plans: CDNConfigPlan[]
+}
+
+export type CDNConfigPlan = {
+	termType: number
+	id: number
+	name: string
+	cost: number
+	sale: number
+	storage: number
+	popular: boolean
+	term: string
+}
+
+export async function cdnConfig(): Promise<CDNConfig> {
+	return (
+		await axios.get("https://cdn.filen.io/cfg.json", {
+			timeout: 60000,
+			responseType: "json"
+		})
+	).data
 }
