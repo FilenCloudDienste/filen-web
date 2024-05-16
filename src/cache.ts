@@ -1,4 +1,4 @@
-import { keys, getItem } from "@/lib/localForage"
+import { keys, getItem, removeItem } from "@/lib/localForage"
 import { type MessageDisplayType } from "./components/chats/conversation/message/utils"
 
 export const directorySizeCache = new Map<string, number>()
@@ -43,6 +43,45 @@ export async function warmupCacheFromDb(): Promise<void> {
 	}
 
 	console.log("Warmed up cache in", Date.now() - start, "ms")
+}
+
+/**
+ * Calculate the thumbnail cache usage (localForage).
+ *
+ * @export
+ * @async
+ * @returns {Promise<number>}
+ */
+export async function calculateThumbnailCacheUsage(): Promise<number> {
+	const dbKeys = await keys()
+	let size = 0
+
+	for (const dbKey of dbKeys) {
+		if (dbKey.startsWith("thumbnail:")) {
+			const result = await getItem<Blob>(dbKey)
+
+			size += result ? result.size : 0
+		}
+	}
+
+	return size
+}
+
+/**
+ * Clear the thumbnail cache (localForage).
+ *
+ * @export
+ * @async
+ * @returns {Promise<void>}
+ */
+export async function clearThumbnailCache(): Promise<void> {
+	const dbKeys = await keys()
+
+	for (const dbKey of dbKeys) {
+		if (dbKey.startsWith("thumbnail:")) {
+			await removeItem(dbKey)
+		}
+	}
 }
 
 warmupCacheFromDb()

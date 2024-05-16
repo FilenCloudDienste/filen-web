@@ -26,7 +26,7 @@ import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/reque
 import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/blocked"
 import { type UserAccountResponse } from "@filen/sdk/dist/types/api/v3/user/account"
 import axios, { type AxiosResponse } from "axios"
-import { workerCorsHeadCache, workerParseOGFromURLCache } from "@/cache"
+import { workerCorsHeadCache, workerParseOGFromURLCache, clearThumbnailCache, calculateThumbnailCacheUsage } from "@/cache"
 import { Semaphore } from "../semaphore"
 import { type FileLinkStatusResponse } from "@filen/sdk/dist/types/api/v3/file/link/status"
 import { v4 as uuidv4 } from "uuid"
@@ -2654,4 +2654,12 @@ export async function leaveChatConversation({ conversation }: { conversation: st
 	await waitForInitialization()
 
 	return await SDK.chats().leave({ conversation })
+}
+
+export async function workerCalculateThumbnailCacheUsage(): Promise<number> {
+	return calculateThumbnailCacheUsage()
+}
+
+export async function workerClearThumbnailCache(): Promise<void> {
+	return clearThumbnailCache()
 }

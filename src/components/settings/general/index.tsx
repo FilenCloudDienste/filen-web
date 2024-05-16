@@ -17,6 +17,7 @@ import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { Switch } from "@/components/ui/switch"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { type NoteType } from "@filen/sdk/dist/types/api/v3/notes"
+import { useQuery } from "@tanstack/react-query"
 
 export const General = memo(() => {
 	const account = useAccount()
@@ -28,6 +29,11 @@ export const General = memo(() => {
 	const [chatNotificationsEnabled, setChatNotificationsEnabled] = useLocalStorage<boolean>("chatNotificationsEnabled", false)
 	const [contactNotificationsEnabled, setContactNotificationsEnabled] = useLocalStorage<boolean>("contactNotificationsEnabled", false)
 	const [defaultNoteType, setDefaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
+
+	const thumbnailCacheQuery = useQuery({
+		queryKey: ["workerCalculateThumbnailCacheUsage"],
+		queryFn: () => worker.workerCalculateThumbnailCacheUsage()
+	})
 
 	const i18nLangToString = useMemo(() => {
 		switch (i18n.language) {
@@ -164,6 +170,42 @@ export const General = memo(() => {
 		[i18n]
 	)
 
+	const clearThumbnailCache = useCallback(
+		async (e: React.MouseEvent<HTMLParagraphElement, MouseEvent>) => {
+			if (!e.shiftKey) {
+				if (
+					!(await showConfirmDialog({
+						title: "d",
+						continueButtonText: "ddd",
+						description: "ookeoetrasher",
+						continueButtonVariant: "destructive"
+					}))
+				) {
+					return
+				}
+			}
+
+			const toast = loadingToast()
+
+			try {
+				await worker.workerClearThumbnailCache()
+				await thumbnailCacheQuery.refetch()
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		},
+		[loadingToast, errorToast, thumbnailCacheQuery]
+	)
+
 	if (!account) {
 		return null
 	}
@@ -280,6 +322,19 @@ export const General = memo(() => {
 								<SelectItem value="de-DE">Deutsch</SelectItem>
 							</SelectContent>
 						</Select>
+					</Section>
+					<Section
+						name="Thumbnail cache"
+						info="Clear the thumbnail cache"
+						className="mt-10"
+					>
+						<p className="text-muted-foreground">{formatBytes(thumbnailCacheQuery.isSuccess ? thumbnailCacheQuery.data : 0)}</p>
+						<p
+							className="underline cursor-pointer text-red-500"
+							onClick={clearThumbnailCache}
+						>
+							Clear
+						</p>
 					</Section>
 					<Section
 						name="Logout"
