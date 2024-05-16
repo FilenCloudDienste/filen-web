@@ -20,6 +20,13 @@ import cad from "./svg/cad.svg"
 import { memo, useMemo } from "react"
 import { type DirColors } from "@filen/sdk/dist/types/api/v3/dir/color"
 
+/**
+ * Convert file name to premade SVG icon.
+ *
+ * @export
+ * @param {string} name
+ * @returns {*}
+ */
 export function fileNameToSVGIcon(name: string) {
 	const parsed = pathModule.posix.parse(name.toLowerCase())
 
@@ -58,6 +65,7 @@ export function fileNameToSVGIcon(name: string) {
 		case ".jpg":
 		case ".jpeg":
 		case ".heic":
+		case ".webp":
 		case ".svg": {
 			return image
 		}
@@ -157,6 +165,14 @@ export function fileNameToSVGIcon(name: string) {
 	}
 }
 
+/**
+ * Shade a base color (make it lighter/darker).
+ *
+ * @export
+ * @param {string} color
+ * @param {number} decimal
+ * @returns {string}
+ */
 export function shadeColor(color: string, decimal: number): string {
 	const base = color.startsWith("#") ? 1 : 0
 

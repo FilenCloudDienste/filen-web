@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from "react"
+import { memo, useCallback, useMemo, useEffect } from "react"
 import { type ChatConversation, type ChatConversationParticipant } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { Plus } from "lucide-react"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
@@ -15,6 +15,8 @@ import { useChatsStore } from "@/stores/chats.store"
 import eventEmitter from "@/lib/eventEmitter"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { Virtuoso } from "react-virtuoso"
+import socket from "@/lib/socket"
+import { type SocketEvent } from "@filen/sdk"
 
 export const Participants = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const { t } = useTranslation()
@@ -114,6 +116,27 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 		},
 		[conversation, onlineQuery.data, onlineQuery.isSuccess]
 	)
+
+	const socketEventListener = useCallback(
+		async (event: SocketEvent) => {
+			try {
+				if (event.type === "chatConversationParticipantLeft") {
+					await onlineQuery.refetch()
+				}
+			} catch (e) {
+				console.error(e)
+			}
+		},
+		[onlineQuery]
+	)
+
+	useEffect(() => {
+		socket.addListener("socketEvent", socketEventListener)
+
+		return () => {
+			socket.removeListener("socketEvent", socketEventListener)
+		}
+	}, [socketEventListener])
 
 	if (!onlineQuery.isSuccess) {
 		return null

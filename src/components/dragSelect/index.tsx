@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, memo, useRef, useTransition } from "react"
+import { useState, useCallback, useMemo, memo, useRef } from "react"
 import { useDriveItemsStore } from "@/stores/drive.store"
 import useLocation from "@/hooks/useLocation"
 
@@ -11,7 +11,6 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 	const dragAreaRef = useRef<HTMLDivElement>(null)
 	const containerRef = useRef<HTMLDivElement>(null)
 	const { setItems, items } = useDriveItemsStore()
-	const [, startTransition] = useTransition()
 	const location = useLocation()
 
 	const targetRects = useMemo((): Record<string, { element: HTMLDivElement; rect: DOMRect }> => {
@@ -105,9 +104,7 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 			setStartPos({ x: clientX, y: clientY })
 			setIsDragging(true)
 
-			startTransition(() => {
-				setItems(prev => prev.map(prevItem => ({ ...prevItem, selected: false })))
-			})
+			setItems(prev => prev.map(prevItem => ({ ...prevItem, selected: false })))
 		},
 		[setItems, location]
 	)

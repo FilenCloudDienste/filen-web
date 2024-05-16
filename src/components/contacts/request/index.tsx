@@ -124,14 +124,14 @@ export const Request = memo(({ request, refetch, type }: { request: ContactReque
 								className="bg-green-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
 								onClick={accept}
 							>
-								<Check />
+								<Check size={18} />
 							</div>
 						)}
 						<div
 							className="bg-red-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
 							onClick={type === "in" ? deny : remove}
 						>
-							<X />
+							<X size={18} />
 						</div>
 					</div>
 				)}

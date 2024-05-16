@@ -1,5 +1,12 @@
 import pathModule from "path"
 
+/**
+ * Convert file name to preview type.
+ *
+ * @export
+ * @param {string} name
+ * @returns {("pdf" | "image" | "video" | "audio" | "code" | "text" | "md" | "docx" | "other")}
+ */
 export function fileNameToPreviewType(name: string) {
 	const parsed = pathModule.posix.parse(name.toLowerCase())
 
@@ -12,6 +19,7 @@ export function fileNameToPreviewType(name: string) {
 		case ".png":
 		case ".jpg":
 		case ".jpeg":
+		case ".webp":
 		case ".svg": {
 			return "image"
 		}
@@ -95,6 +103,13 @@ export function fileNameToPreviewType(name: string) {
 	}
 }
 
+/**
+ * Convert file name to thumbnail type.
+ *
+ * @export
+ * @param {string} name
+ * @returns {("pdf" | "image" | "video" | "text" | "none")}
+ */
 export function fileNameToThumbnailType(name: string) {
 	const parsed = pathModule.posix.parse(name.toLowerCase())
 
@@ -106,6 +121,7 @@ export function fileNameToThumbnailType(name: string) {
 		case ".gif":
 		case ".png":
 		case ".jpg":
+		case ".webp":
 		case ".jpeg": {
 			return "image"
 		}

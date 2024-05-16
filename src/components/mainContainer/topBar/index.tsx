@@ -1,4 +1,4 @@
-import { memo, useCallback, useTransition } from "react"
+import { memo, useCallback } from "react"
 import { Input } from "@/components/ui/input"
 import { Search, List, Grid3X3 } from "lucide-react"
 import { useTranslation } from "react-i18next"
@@ -32,7 +32,6 @@ export const TopBar = memo(() => {
 	const { searchTerm, setSearchTerm, setItems, items } = useDriveItemsStore()
 	const parent = useRouteParent()
 	const [listType, setListType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
-	const [, startTransition] = useTransition()
 	const location = useLocation()
 	const { dark } = useTheme()
 	const loadingToast = useLoadingToast()
@@ -40,16 +39,12 @@ export const TopBar = memo(() => {
 	const canUpload = useCanUpload()
 
 	const changeListType = useCallback(() => {
-		startTransition(() => {
-			setListType(prev => ({ ...prev, [parent]: listType[parent] === "grid" ? "list" : "grid" }))
-		})
+		setListType(prev => ({ ...prev, [parent]: listType[parent] === "grid" ? "list" : "grid" }))
 	}, [listType, parent, setListType])
 
 	const onSearchChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
-			startTransition(() => {
-				setSearchTerm(e.target.value)
-			})
+			setSearchTerm(e.target.value)
 		},
 		[setSearchTerm]
 	)
@@ -75,9 +70,7 @@ export const TopBar = memo(() => {
 		try {
 			await worker.emptyTrash()
 
-			startTransition(() => {
-				setItems([])
-			})
+			setItems([])
 		} catch (e) {
 			console.error(e)
 

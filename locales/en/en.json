@@ -154,7 +154,7 @@
 			"remove": "Remove"
 		},
 		"changeEmail": {
-			"title": "Change email address",
+			"title": "Change your email address",
 			"newEmail": "New email address",
 			"newEmailPlaceholder": "New email",
 			"confirmNewEmail": "Confirm new email address",
@@ -162,7 +162,20 @@
 			"password": "Your password",
 			"passwordPlaceholder": "Password",
 			"close": "Close",
-			"save": "Save"
+			"save": "Save",
+			"successToast": "Successfully changed your email address"
+		},
+		"changePassword": {
+			"title": "Change your password",
+			"newPassword": "New password",
+			"newPasswordPlaceholder": "New password",
+			"confirmNewPassword": "Confirm new password",
+			"confirmNewPasswordPlaceholder": "Confirm new password",
+			"currentPassword": "Your current password",
+			"currentPasswordPlaceholder": "Current password",
+			"close": "Close",
+			"save": "Save",
+			"successToast": "Successfully changed your password"
 		},
 		"personalInformation": {
 			"title": "Change personal information",

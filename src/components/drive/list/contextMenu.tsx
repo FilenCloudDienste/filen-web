@@ -1,4 +1,4 @@
-import { memo, useCallback, useTransition, useEffect } from "react"
+import { memo, useCallback, useEffect } from "react"
 import {
 	ContextMenu as CM,
 	ContextMenuContent,
@@ -21,7 +21,6 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 	const { setItems } = useDriveItemsStore()
 	const location = useLocation()
 	const { t } = useTranslation()
-	const [, startTransition] = useTransition()
 	const parent = useRouteParent()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
@@ -46,12 +45,10 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 
 			directoryUUIDToNameCache.set(item.uuid, inputResponse.value)
 
-			startTransition(() => {
-				setItems(prev => [
-					...prev.filter(prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()),
-					item
-				])
-			})
+			setItems(prev => [
+				...prev.filter(prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()),
+				item
+			])
 		} catch (e) {
 			console.error(e)
 

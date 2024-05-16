@@ -149,27 +149,67 @@ export async function decryptMetadata({ metadata, key }: { metadata: string; key
 	return await SDK.crypto().decrypt().metadata({ metadata, key })
 }
 
+export async function getDirectorySizeFromCacheOrFetch({
+	uuid,
+	sharerId,
+	receiverId,
+	trash
+}: {
+	uuid: string
+	sharerId?: number
+	receiverId?: number
+	trash?: boolean
+}): Promise<number> {
+	await waitForInitialization()
+
+	const cache = await getItem<number | null>("directorySize:" + uuid)
+
+	if (cache) {
+		return cache
+	}
+
+	const fetched = await directorySize({ uuid, sharerId, receiverId, trash })
+
+	return fetched
+}
+
 export async function listDirectory({ uuid, onlyDirectories }: { uuid: string; onlyDirectories?: boolean }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
 	const items = await SDK.cloud().listDirectory({ uuid, onlyDirectories })
-	const driveItems: DriveCloudItem[] = []
+	const driveItems: DriveCloudItem[] = await promiseAllChunked(
+		items.map(
+			item =>
+				new Promise<DriveCloudItem>((resolve, reject) => {
+					;(item.type === "directory"
+						? getDirectorySizeFromCacheOrFetch({
+								uuid: item.uuid,
+								sharerId: 0,
+								receiverId: 0,
+								trash: false
+							})
+						: Promise.resolve(item.size)
+					)
+						.then(size => {
+							if (item.type === "directory") {
+								setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
+							}
 
-	for (const item of items) {
-		driveItems.push({
-			...item,
-			sharerId: 0,
-			sharerEmail: "",
-			receiverId: 0,
-			receiverEmail: "",
-			selected: false,
-			receivers: []
-		})
-
-		if (item.type === "directory") {
-			setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
-		}
-	}
+							resolve({
+								...item,
+								sharerId: 0,
+								sharerEmail: "",
+								receiverId: 0,
+								receiverEmail: "",
+								selected: false,
+								receivers: [],
+								size: item.type === "directory" && size ? size : item.size
+							})
+						})
+						.catch(reject)
+				})
+		)
+	)
 
 	return driveItems
 }
@@ -178,36 +218,52 @@ export async function listDirectorySharedIn({ uuid }: { uuid: string }): Promise
 	await waitForInitialization()
 
 	const items = await SDK.cloud().listDirectorySharedIn({ uuid })
-	const driveItems: DriveCloudItem[] = []
+	const driveItems: DriveCloudItem[] = await promiseAllChunked(
+		items.map(
+			item =>
+				new Promise<DriveCloudItem>((resolve, reject) => {
+					;(item.type === "directory"
+						? getDirectorySizeFromCacheOrFetch({
+								uuid: item.uuid,
+								sharerId: item.sharerId ?? 0,
+								receiverId: item.receiverId ?? 0,
+								trash: false
+							})
+						: Promise.resolve(item.size)
+					)
+						.then(size => {
+							if (item.type === "directory") {
+								setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
+							}
 
-	for (const item of items) {
-		driveItems.push(
-			item.type === "file"
-				? {
-						...item,
-						sharerId: item.sharerId ?? 0,
-						sharerEmail: item.sharerEmail ?? "",
-						receiverId: item.receiverId ?? 0,
-						receiverEmail: item.receiverEmail ?? "",
-						selected: false,
-						favorited: false,
-						rm: ""
-					}
-				: {
-						...item,
-						sharerId: item.sharerId ?? 0,
-						sharerEmail: item.sharerEmail ?? "",
-						receiverId: item.receiverId ?? 0,
-						receiverEmail: item.receiverEmail ?? "",
-						selected: false,
-						favorited: false
-					}
+							resolve(
+								item.type === "file"
+									? {
+											...item,
+											sharerId: item.sharerId ?? 0,
+											sharerEmail: item.sharerEmail ?? "",
+											receiverId: item.receiverId ?? 0,
+											receiverEmail: item.receiverEmail ?? "",
+											selected: false,
+											favorited: false,
+											rm: ""
+										}
+									: {
+											...item,
+											sharerId: item.sharerId ?? 0,
+											sharerEmail: item.sharerEmail ?? "",
+											receiverId: item.receiverId ?? 0,
+											receiverEmail: item.receiverEmail ?? "",
+											selected: false,
+											favorited: false,
+											size: size ? size : item.size
+										}
+							)
+						})
+						.catch(reject)
+				})
 		)
-
-		if (item.type === "directory") {
-			setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
-		}
-	}
+	)
 
 	return driveItems
 }
@@ -216,36 +272,52 @@ export async function listDirectorySharedOut({ uuid, receiverId }: { uuid: strin
 	await waitForInitialization()
 
 	const items = await SDK.cloud().listDirectorySharedOut({ uuid, receiverId })
-	const driveItems: DriveCloudItem[] = []
+	const driveItems: DriveCloudItem[] = await promiseAllChunked(
+		items.map(
+			item =>
+				new Promise<DriveCloudItem>((resolve, reject) => {
+					;(item.type === "directory"
+						? getDirectorySizeFromCacheOrFetch({
+								uuid: item.uuid,
+								sharerId: item.sharerId ?? 0,
+								receiverId: item.receiverId ?? 0,
+								trash: false
+							})
+						: Promise.resolve(item.size)
+					)
+						.then(size => {
+							if (item.type === "directory") {
+								setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
+							}
 
-	for (const item of items) {
-		driveItems.push(
-			item.type === "file"
-				? {
-						...item,
-						sharerId: item.sharerId ?? 0,
-						sharerEmail: item.sharerEmail ?? "",
-						receiverId: item.receiverId ?? 0,
-						receiverEmail: item.receiverEmail ?? "",
-						selected: false,
-						favorited: false,
-						rm: ""
-					}
-				: {
-						...item,
-						sharerId: item.sharerId ?? 0,
-						sharerEmail: item.sharerEmail ?? "",
-						receiverId: item.receiverId ?? 0,
-						receiverEmail: item.receiverEmail ?? "",
-						selected: false,
-						favorited: false
-					}
+							resolve(
+								item.type === "file"
+									? {
+											...item,
+											sharerId: item.sharerId ?? 0,
+											sharerEmail: item.sharerEmail ?? "",
+											receiverId: item.receiverId ?? 0,
+											receiverEmail: item.receiverEmail ?? "",
+											selected: false,
+											favorited: false,
+											rm: ""
+										}
+									: {
+											...item,
+											sharerId: item.sharerId ?? 0,
+											sharerEmail: item.sharerEmail ?? "",
+											receiverId: item.receiverId ?? 0,
+											receiverEmail: item.receiverEmail ?? "",
+											selected: false,
+											favorited: false,
+											size: size ? size : item.size
+										}
+							)
+						})
+						.catch(reject)
+				})
 		)
-
-		if (item.type === "directory") {
-			setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
-		}
-	}
+	)
 
 	return driveItems
 }
@@ -254,23 +326,39 @@ export async function listFavorites(): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
 	const items = await SDK.cloud().listFavorites()
-	const driveItems: DriveCloudItem[] = []
+	const driveItems: DriveCloudItem[] = await promiseAllChunked(
+		items.map(
+			item =>
+				new Promise<DriveCloudItem>((resolve, reject) => {
+					;(item.type === "directory"
+						? getDirectorySizeFromCacheOrFetch({
+								uuid: item.uuid,
+								sharerId: 0,
+								receiverId: 0,
+								trash: false
+							})
+						: Promise.resolve(item.size)
+					)
+						.then(size => {
+							if (item.type === "directory") {
+								setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
+							}
 
-	for (const item of items) {
-		driveItems.push({
-			...item,
-			sharerId: 0,
-			sharerEmail: "",
-			receiverId: 0,
-			receiverEmail: "",
-			selected: false,
-			receivers: []
-		})
-
-		if (item.type === "directory") {
-			setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
-		}
-	}
+							resolve({
+								...item,
+								sharerId: 0,
+								sharerEmail: "",
+								receiverId: 0,
+								receiverEmail: "",
+								selected: false,
+								receivers: [],
+								size: item.type === "directory" && size ? size : item.size
+							})
+						})
+						.catch(reject)
+				})
+		)
+	)
 
 	return driveItems
 }
@@ -279,23 +367,39 @@ export async function listPublicLinks(): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
 	const items = await SDK.cloud().listPublicLinks()
-	const driveItems: DriveCloudItem[] = []
+	const driveItems: DriveCloudItem[] = await promiseAllChunked(
+		items.map(
+			item =>
+				new Promise<DriveCloudItem>((resolve, reject) => {
+					;(item.type === "directory"
+						? getDirectorySizeFromCacheOrFetch({
+								uuid: item.uuid,
+								sharerId: 0,
+								receiverId: 0,
+								trash: false
+							})
+						: Promise.resolve(item.size)
+					)
+						.then(size => {
+							if (item.type === "directory") {
+								setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
+							}
 
-	for (const item of items) {
-		driveItems.push({
-			...item,
-			sharerId: 0,
-			sharerEmail: "",
-			receiverId: 0,
-			receiverEmail: "",
-			selected: false,
-			receivers: []
-		})
-
-		if (item.type === "directory") {
-			setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
-		}
-	}
+							resolve({
+								...item,
+								sharerId: 0,
+								sharerEmail: "",
+								receiverId: 0,
+								receiverEmail: "",
+								selected: false,
+								receivers: [],
+								size: item.type === "directory" && size ? size : item.size
+							})
+						})
+						.catch(reject)
+				})
+		)
+	)
 
 	return driveItems
 }
@@ -304,23 +408,39 @@ export async function listRecents(): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
 	const items = await SDK.cloud().listRecents()
-	const driveItems: DriveCloudItem[] = []
+	const driveItems: DriveCloudItem[] = await promiseAllChunked(
+		items.map(
+			item =>
+				new Promise<DriveCloudItem>((resolve, reject) => {
+					;(item.type === "directory"
+						? getDirectorySizeFromCacheOrFetch({
+								uuid: item.uuid,
+								sharerId: 0,
+								receiverId: 0,
+								trash: false
+							})
+						: Promise.resolve(item.size)
+					)
+						.then(size => {
+							if (item.type === "directory") {
+								setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
+							}
 
-	for (const item of items) {
-		driveItems.push({
-			...item,
-			sharerId: 0,
-			sharerEmail: "",
-			receiverId: 0,
-			receiverEmail: "",
-			selected: false,
-			receivers: []
-		})
-
-		if (item.type === "directory") {
-			setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
-		}
-	}
+							resolve({
+								...item,
+								sharerId: 0,
+								sharerEmail: "",
+								receiverId: 0,
+								receiverEmail: "",
+								selected: false,
+								receivers: [],
+								size: item.type === "directory" && size ? size : item.size
+							})
+						})
+						.catch(reject)
+				})
+		)
+	)
 
 	return driveItems
 }
@@ -329,23 +449,39 @@ export async function listTrash(): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
 	const items = await SDK.cloud().listTrash()
-	const driveItems: DriveCloudItem[] = []
+	const driveItems: DriveCloudItem[] = await promiseAllChunked(
+		items.map(
+			item =>
+				new Promise<DriveCloudItem>((resolve, reject) => {
+					;(item.type === "directory"
+						? getDirectorySizeFromCacheOrFetch({
+								uuid: item.uuid,
+								sharerId: 0,
+								receiverId: 0,
+								trash: true
+							})
+						: Promise.resolve(item.size)
+					)
+						.then(size => {
+							if (item.type === "directory") {
+								setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
+							}
 
-	for (const item of items) {
-		driveItems.push({
-			...item,
-			sharerId: 0,
-			sharerEmail: "",
-			receiverId: 0,
-			receiverEmail: "",
-			selected: false,
-			receivers: []
-		})
-
-		if (item.type === "directory") {
-			setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
-		}
-	}
+							resolve({
+								...item,
+								sharerId: 0,
+								sharerEmail: "",
+								receiverId: 0,
+								receiverEmail: "",
+								selected: false,
+								receivers: [],
+								size: item.type === "directory" && size ? size : item.size
+							})
+						})
+						.catch(reject)
+				})
+		)
+	)
 
 	return driveItems
 }
@@ -702,6 +838,8 @@ export async function uploadDirectory({
 	}
 }
 
+const directorySizeRateLimit: Record<string, number> = {}
+
 export async function directorySize({
 	uuid,
 	sharerId,
@@ -715,7 +853,24 @@ export async function directorySize({
 }): Promise<number> {
 	await waitForInitialization()
 
-	return await SDK.cloud().directorySize({ uuid, sharerId, receiverId, trash })
+	const rateLimitKey = `${uuid}:${sharerId ?? 0}:${receiverId ?? 0}:${trash ?? false}`
+	const now = Date.now()
+
+	if (directorySizeRateLimit[rateLimitKey] && now < directorySizeRateLimit[rateLimitKey]) {
+		const cache = await getItem<number | null>("directorySize:" + uuid)
+
+		if (cache) {
+			return cache
+		}
+	}
+
+	directorySizeRateLimit[rateLimitKey] = now + 30000
+
+	const fetched = await SDK.cloud().directorySize({ uuid, sharerId, receiverId, trash })
+
+	await setItem("directorySize:" + uuid, fetched)
+
+	return fetched
 }
 
 export async function downloadMultipleFilesAndDirectoriesAsZip({
@@ -2472,17 +2627,31 @@ export async function fetchEvent({ uuid }: { uuid: string }): Promise<UserEvent>
 }
 
 export async function generateInvoice({ uuid }: { uuid: string }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.user().generateInvoice({ uuid })
 }
 
 export async function cancelSubscription({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.user().cancelSubscription({ uuid })
 }
 
 export async function enableTwoFactorAuthentication({ twoFactorCode }: { twoFactorCode: string }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.user().enableTwoFactorAuthentication({ twoFactorCode })
 }
 
 export async function disableTwoFactorAuthentication({ twoFactorCode }: { twoFactorCode: string }): Promise<void> {
+	await waitForInitialization()
+
 	return await SDK.user().disableTwoFactorAuthentication({ twoFactorCode })
+}
+
+export async function leaveChatConversation({ conversation }: { conversation: string }): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.chats().leave({ conversation })
 }

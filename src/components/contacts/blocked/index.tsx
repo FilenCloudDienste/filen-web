@@ -71,7 +71,7 @@ export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; re
 						className="bg-green-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
 						onClick={unblock}
 					>
-						<Check />
+						<Check size={18} />
 					</div>
 				)}
 			</div>

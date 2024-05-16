@@ -137,6 +137,47 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		}
 	}, [conversation.uuid, errorToast, loadingToast, setConversations, setSelectedConversation, hasWritePermissions, routeParent, navigate])
 
+	const leave = useCallback(async () => {
+		if (
+			!(await showConfirmDialog({
+				title: "d",
+				continueButtonText: "ddd",
+				description: "ookeoetrasher",
+				continueButtonVariant: "destructive"
+			}))
+		) {
+			return
+		}
+
+		const toast = loadingToast()
+
+		try {
+			await worker.leaveChatConversation({ conversation: conversation.uuid })
+
+			eventEmitter.emit("refetchChats")
+
+			setConversations(prev => prev.filter(c => c.uuid !== conversation.uuid))
+			setSelectedConversation(prev => (prev ? (prev.uuid === conversation.uuid ? null : prev) : prev))
+
+			if (conversation.uuid === routeParent) {
+				navigate({
+					to: "/chats"
+				})
+			}
+		} catch (e) {
+			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		} finally {
+			toast.dismiss()
+		}
+	}, [conversation.uuid, errorToast, loadingToast, setConversations, setSelectedConversation, routeParent, navigate])
+
 	useEffect(() => {
 		const editConversationNameListener = eventEmitter.on("editConversationName", conversationUUID => {
 			if (conversationUUID !== conversation.uuid) {
@@ -171,6 +212,18 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 						>
 							<Delete size={iconSize} />
 							{t("chats.message.delete")}
+						</ContextMenuItem>
+						<ContextMenuSeparator />
+					</>
+				)}
+				{conversation.ownerId !== userId && (
+					<>
+						<ContextMenuItem
+							onClick={leave}
+							className="cursor-pointer gap-3 text-red-500"
+						>
+							<Delete size={iconSize} />
+							{t("chats.message.leave")}
 						</ContextMenuItem>
 						<ContextMenuSeparator />
 					</>

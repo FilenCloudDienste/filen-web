@@ -9,8 +9,9 @@ import worker from "@/lib/worker"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import useSuccessToast from "@/hooks/useSuccessToast"
+import { cn } from "@/lib/utils"
 
-export const ChangeEmailDialog = memo(() => {
+export const ChangePasswordDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
 	const { t } = useTranslation()
 	const [inputs, setInputs] = useState<{
@@ -71,14 +72,14 @@ export const ChangeEmailDialog = memo(() => {
 		const toast = loadingToast()
 
 		try {
-			await worker.changeEmail({
-				email: inputs.new.trim(),
-				password: inputs.password
+			await worker.changePassword({
+				newPassword: inputs.new,
+				currentPassword: inputs.password
 			})
 
 			setTimeout(() => setOpen(false), 100)
 
-			const toast = successToast(t("dialogs.changeEmail.successToast"))
+			const toast = successToast(t("dialogs.changePassword.successToast"))
 
 			toast.update({
 				id: toast.id,
@@ -99,7 +100,7 @@ export const ChangeEmailDialog = memo(() => {
 	}, [loadingToast, errorToast, inputs, successToast, t])
 
 	useEffect(() => {
-		const listener = eventEmitter.on("openChangeEmailDialog", () => {
+		const listener = eventEmitter.on("openChangePasswordDialog", () => {
 			setInputs({
 				new: "",
 				confirm: "",
@@ -120,30 +121,60 @@ export const ChangeEmailDialog = memo(() => {
 			onOpenChange={setOpen}
 		>
 			<DialogContent className="outline-none focus:outline-none active:outline-none hover:outline-none">
-				<DialogHeader>{t("dialogs.changeEmail.title")}</DialogHeader>
+				<DialogHeader>{t("dialogs.changePassword.title")}</DialogHeader>
 				<div className="flex flex-col gap-3 mb-3">
 					<div className="flex flex-col gap-1">
-						<p className="text-sm text-muted-foreground">{t("dialogs.changeEmail.newEmail")}</p>
+						<p className="text-sm text-muted-foreground">{t("dialogs.changePassword.newPassword")}</p>
+						<div className="absolute right-0 mr-[36px] mt-[35px]">
+							{showPassword ? (
+								<EyeOff
+									size={18}
+									onClick={toggleShowPassword}
+									className="cursor-pointer"
+								/>
+							) : (
+								<Eye
+									size={18}
+									onClick={toggleShowPassword}
+									className="cursor-pointer"
+								/>
+							)}
+						</div>
 						<Input
-							type="email"
+							type={showPassword ? "text" : "password"}
 							value={inputs.new}
 							onChange={onNewChange}
-							placeholder={t("dialogs.changeEmail.newEmailPlaceholder")}
-							className={inputs.notIdentical ? "border-red-500" : undefined}
+							placeholder={t("dialogs.changePassword.newPasswordPlaceholder")}
+							className={cn("pr-12", inputs.notIdentical ? "border-red-500" : undefined)}
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
-						<p className="text-sm text-muted-foreground">{t("dialogs.changeEmail.confirmNewEmail")}</p>
+						<p className="text-sm text-muted-foreground">{t("dialogs.changePassword.confirmNewPassword")}</p>
+						<div className="absolute right-0 mr-[36px] mt-[35px]">
+							{showPassword ? (
+								<EyeOff
+									size={18}
+									onClick={toggleShowPassword}
+									className="cursor-pointer"
+								/>
+							) : (
+								<Eye
+									size={18}
+									onClick={toggleShowPassword}
+									className="cursor-pointer"
+								/>
+							)}
+						</div>
 						<Input
-							type="email"
+							type={showPassword ? "text" : "password"}
 							value={inputs.confirm}
 							onChange={onConfirmChange}
-							placeholder={t("dialogs.changeEmail.confirmNewEmailPlaceholder")}
-							className={inputs.notIdentical ? "border-red-500" : undefined}
+							placeholder={t("dialogs.changePassword.confirmNewPasswordPlaceholder")}
+							className={cn("pr-12", inputs.notIdentical ? "border-red-500" : undefined)}
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
-						<p className="text-sm text-muted-foreground">{t("dialogs.changeEmail.password")}</p>
+						<p className="text-sm text-muted-foreground">{t("dialogs.changePassword.currentPassword")}</p>
 						<div className="absolute right-0 mr-[36px] mt-[35px]">
 							{showPassword ? (
 								<EyeOff
@@ -163,7 +194,7 @@ export const ChangeEmailDialog = memo(() => {
 							type={showPassword ? "text" : "password"}
 							value={inputs.password}
 							onChange={onPasswordChange}
-							placeholder={t("dialogs.changeEmail.passwordPlaceholder")}
+							placeholder={t("dialogs.changePassword.currentPasswordPlaceholder")}
 							className="pr-12"
 						/>
 					</div>
@@ -173,13 +204,13 @@ export const ChangeEmailDialog = memo(() => {
 						onClick={close}
 						variant="outline"
 					>
-						{t("dialogs.changeEmail.close")}
+						{t("dialogs.changePassword.close")}
 					</Button>
 					<Button
 						onClick={save}
 						variant="default"
 					>
-						{t("dialogs.changeEmail.save")}
+						{t("dialogs.changePassword.save")}
 					</Button>
 				</DialogFooter>
 			</DialogContent>
@@ -187,4 +218,4 @@ export const ChangeEmailDialog = memo(() => {
 	)
 })
 
-export default ChangeEmailDialog
+export default ChangePasswordDialog

@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback, useTransition, useState } from "react"
+import { memo, useMemo, useCallback, useState } from "react"
 import {
 	ContextMenu as CM,
 	ContextMenuContent,
@@ -33,7 +33,6 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 	const { items, setItems } = useDriveItemsStore()
 	const { t } = useTranslation()
 	const { baseFolderUUID } = useSDKConfig()
-	const [, startTransition] = useTransition()
 	const driveURLState = useDriveURLState()
 	const navigate = useNavigate()
 	const { setCurrentReceiverEmail, setCurrentReceiverId, setCurrentReceivers, setCurrentSharerEmail, setCurrentSharerId } =
@@ -105,9 +104,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 
 			await actions.move({ selectedItems: itemsToMove, parent: parent.items[0].uuid })
 
-			startTransition(() => {
-				setItems(prev => prev.filter(prevItem => !movedUUIDs.includes(prevItem.uuid)))
-			})
+			setItems(prev => prev.filter(prevItem => !movedUUIDs.includes(prevItem.uuid)))
 		} catch (e) {
 			console.error(e)
 
@@ -148,9 +145,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				return
 			}
 
-			startTransition(() => {
-				setItems(prev => prev.filter(prevItem => !trashedUUIDs.includes(prevItem.uuid)))
-			})
+			setItems(prev => prev.filter(prevItem => !trashedUUIDs.includes(prevItem.uuid)))
 		} catch (e) {
 			console.error(e)
 
@@ -179,9 +174,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				return
 			}
 
-			startTransition(() => {
-				setItems(prev => prev.filter(prevItem => !deletedUUIDs.includes(prevItem.uuid)))
-			})
+			setItems(prev => prev.filter(prevItem => !deletedUUIDs.includes(prevItem.uuid)))
 		} catch (e) {
 			console.error(e)
 
@@ -208,9 +201,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 
 			await actions.restore({ selectedItems })
 
-			startTransition(() => {
-				setItems(prev => prev.filter(prevItem => !restoredUUIDs.includes(prevItem.uuid)))
-			})
+			setItems(prev => prev.filter(prevItem => !restoredUUIDs.includes(prevItem.uuid)))
 		} catch (e) {
 			console.error(e)
 
@@ -244,9 +235,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			const item = selectedItems[0]
 			const newName = await actions.rename({ item })
 
-			startTransition(() => {
-				setItems(prev => prev.map(prevItem => (prevItem.uuid === item.uuid ? { ...prevItem, name: newName } : prevItem)))
-			})
+			setItems(prev => prev.map(prevItem => (prevItem.uuid === item.uuid ? { ...prevItem, name: newName } : prevItem)))
 		} catch (e) {
 			console.error(e)
 
@@ -274,15 +263,13 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 
 				await actions.favorite({ selectedItems, favorite })
 
-				startTransition(() => {
-					if (location.includes("favorites") && !favorite) {
-						setItems(prev => prev.filter(prevItem => !uuids.includes(prevItem.uuid)))
-					} else {
-						setItems(prev =>
-							prev.map(prevItem => (uuids.includes(prevItem.uuid) ? { ...prevItem, favorited: favorite } : prevItem))
-						)
-					}
-				})
+				if (location.includes("favorites") && !favorite) {
+					setItems(prev => prev.filter(prevItem => !uuids.includes(prevItem.uuid)))
+				} else {
+					setItems(prev =>
+						prev.map(prevItem => (uuids.includes(prevItem.uuid) ? { ...prevItem, favorited: favorite } : prevItem))
+					)
+				}
 			} catch (e) {
 				console.error(e)
 
@@ -332,9 +319,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 		try {
 			await actions.changeColor({ uuid: selectedItems[0].uuid, color })
 
-			startTransition(() => {
-				setItems(prev => prev.map(prevItem => (prevItem.uuid === selectedItems[0].uuid ? { ...prevItem, color } : prevItem)))
-			})
+			setItems(prev => prev.map(prevItem => (prevItem.uuid === selectedItems[0].uuid ? { ...prevItem, color } : prevItem)))
 		} catch (e) {
 			console.error(e)
 
@@ -347,7 +332,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 		} finally {
 			toast.dismiss()
 		}
-	}, 1000)
+	}, 500)
 
 	const onColorPickerChange = useCallback(
 		(newColor: string) => {

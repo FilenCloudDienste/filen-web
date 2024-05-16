@@ -1,6 +1,6 @@
 import MainContainer from "@/components/mainContainer"
 import RequireAuth from "@/components/requireAuthed"
-import { memo, useCallback, useTransition } from "react"
+import { memo, useCallback } from "react"
 import { type CloudItem, type CloudItemShared } from "@filen/sdk"
 import List from "./list"
 import Header from "./list/header"
@@ -24,7 +24,6 @@ export const Drive = memo(() => {
 	const parent = useRouteParent()
 	const { setItems } = useDriveItemsStore()
 	const { currentReceiverId, currentSharerId, currentReceiverEmail, currentReceivers, currentSharerEmail } = useDriveSharedStore()
-	const [, startTransition] = useTransition()
 	const [listType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
 	const errorToast = useErrorToast()
 
@@ -55,15 +54,13 @@ export const Drive = memo(() => {
 							})
 							.then(item => {
 								if (item.parent === parentCopy) {
-									startTransition(() => {
-										setItems(prev => [
-											...prev.filter(
-												prevItem =>
-													prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()
-											),
-											item
-										])
-									})
+									setItems(prev => [
+										...prev.filter(
+											prevItem =>
+												prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()
+										),
+										item
+									])
 								}
 
 								resolve()
@@ -127,14 +124,10 @@ export const Drive = memo(() => {
 						continue
 					}
 
-					startTransition(() => {
-						setItems(prev => [
-							...prev.filter(
-								prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()
-							),
-							item
-						])
-					})
+					setItems(prev => [
+						...prev.filter(prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()),
+						item
+					])
 				}
 			} catch (e) {
 				console.error(e)

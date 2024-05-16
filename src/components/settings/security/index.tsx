@@ -8,6 +8,8 @@ import useErrorToast from "@/hooks/useErrorToast"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { showTwoFactorCodeDialog } from "@/components/dialogs/twoFactorCodeDialog"
 import worker from "@/lib/worker"
+import eventEmitter from "@/lib/eventEmitter"
+import ChangePasswordDialog from "./dialogs/changePassword"
 
 export const Security = memo(() => {
 	const account = useAccount()
@@ -147,6 +149,10 @@ export const Security = memo(() => {
 		}
 	}, [loadingToast, errorToast, account, masterKeys, userId])
 
+	const changePassword = useCallback(() => {
+		eventEmitter.emit("openChangePasswordDialog")
+	}, [])
+
 	if (!account) {
 		return null
 	}
@@ -159,7 +165,12 @@ export const Security = memo(() => {
 						name="Password"
 						info="Change your password"
 					>
-						<p className="underline cursor-pointer">Change</p>
+						<p
+							className="underline cursor-pointer"
+							onClick={changePassword}
+						>
+							Change
+						</p>
 					</Section>
 					<Section
 						name="Two Factor Authentication"
@@ -185,6 +196,7 @@ export const Security = memo(() => {
 					<div className="w-full h-20" />
 				</div>
 			</div>
+			<ChangePasswordDialog />
 		</div>
 	)
 })

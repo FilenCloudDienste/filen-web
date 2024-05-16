@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useRef, useCallback, useTransition, useMemo } from "react"
+import { memo, useState, useEffect, useRef, useCallback, useMemo } from "react"
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -66,7 +66,6 @@ export const SelectDriveItemDialog = memo(() => {
 	const didSubmit = useRef<boolean>(false)
 	const [pathname, setPathname] = useState<string>(baseFolderUUID)
 	const { setItems } = useDriveItemsStore()
-	const [, startTransition] = useTransition()
 	const routeParent = useRouteParent()
 	const [selectionType, setSelectionType] = useState<SelectionType>("directory")
 	const [selectMultiple, setSelectMultiple] = useState<boolean>(false)
@@ -125,18 +124,16 @@ export const SelectDriveItemDialog = memo(() => {
 
 			directoryUUIDToNameCache.set(item.uuid, inputResponse.value)
 
-			startTransition(() => {
-				eventEmitter.emit("refetchSelectItemDialogList", {
-					uuid: parent
-				})
-
-				if (routeParent === item.parent) {
-					setItems(prev => [
-						...prev.filter(prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()),
-						item
-					])
-				}
+			eventEmitter.emit("refetchSelectItemDialogList", {
+				uuid: parent
 			})
+
+			if (routeParent === item.parent) {
+				setItems(prev => [
+					...prev.filter(prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()),
+					item
+				])
+			}
 		} catch (e) {
 			console.error(e)
 		}

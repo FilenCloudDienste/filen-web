@@ -41,12 +41,14 @@ export const SideBar = memo(() => {
 					}
 				} else if (event.type === "chatConversationDeleted" || event.type === "chatConversationsNew") {
 					await chatsUnreadCountQuery.refetch()
+				} else if (event.type === "contactRequestReceived") {
+					await contactsRequestInCountQuery.refetch()
 				}
 			} catch (e) {
 				console.error(e)
 			}
 		},
-		[setUnread, chatsUnreadCountQuery, userId]
+		[setUnread, chatsUnreadCountQuery, userId, contactsRequestInCountQuery]
 	)
 
 	useEffect(() => {

@@ -62,7 +62,7 @@ export const Contact = memo(
 					conversation.participants.some(participant => participant.userId === contact.userId)
 			)
 
-			if (conversationExists.length === 1) {
+			if (conversationExists.length > 0) {
 				setLastSelectedChatsConversation(conversationExists[0].uuid)
 				setSelectedConversation(conversationExists[0])
 

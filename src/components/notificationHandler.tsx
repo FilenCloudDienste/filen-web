@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef } from "react"
+import { memo, useCallback, useEffect } from "react"
 import socket from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import { IS_DESKTOP } from "@/constants"
@@ -8,7 +8,6 @@ import { useNavigate } from "@tanstack/react-router"
 import { Semaphore } from "@/lib/semaphore"
 import useLocation from "@/hooks/useLocation"
 import useWindowFocus from "@/hooks/useWindowFocus"
-import { useContactsStore } from "@/stores/contacts.store"
 import { useChatsStore } from "@/stores/chats.store"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
@@ -25,8 +24,6 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 	const navigate = useNavigate()
 	const location = useLocation()
 	const windowFocus = useWindowFocus()
-	const { requestsInCount } = useContactsStore()
-	const currentRequestsInCountRef = useRef<number>(requestsInCount)
 	const { setSelectedConversation } = useChatsStore()
 	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
 
@@ -34,49 +31,6 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 		queryKey: ["listChatsConversations"],
 		queryFn: () => worker.listChatsConversations()
 	})
-
-	const handleContactsNotifications = useCallback(async () => {
-		await notificationMutex.acquire()
-
-		try {
-			if (requestsInCount === 0 || currentRequestsInCountRef.current === requestsInCount) {
-				currentRequestsInCountRef.current = requestsInCount
-
-				return
-			}
-
-			currentRequestsInCountRef.current = requestsInCount
-
-			if (IS_DESKTOP && contactNotificationsEnabled && (!location.includes("contacts") || !windowFocus)) {
-				const notification = new window.Notification("contacts", {
-					body: "new contact request",
-					silent: true,
-					icon: notificationIcon
-				})
-
-				notification.addEventListener(
-					"click",
-					async () => {
-						await window.desktopAPI.showWindow().catch(console.error)
-
-						navigate({
-							to: "/contacts/$type",
-							params: {
-								type: "in"
-							}
-						})
-					},
-					{
-						once: true
-					}
-				)
-			}
-		} catch (e) {
-			console.error(e)
-		} finally {
-			notificationMutex.release()
-		}
-	}, [requestsInCount, location, contactNotificationsEnabled, navigate, windowFocus])
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
@@ -162,6 +116,47 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 						}
 					)
 				}
+
+				if (
+					event.type === "contactRequestReceived" &&
+					IS_DESKTOP &&
+					contactNotificationsEnabled &&
+					(!location.includes("contacts") || !windowFocus) &&
+					!triggeredNotificationUUIDs[`contactRequest:${event.data.uuid}`]
+				) {
+					const notification = new window.Notification("Contact request", {
+						body: `${(event.data.senderNickName ?? "").length > 0 ? event.data.senderNickName : event.data.senderEmail} has sent you a contact request`,
+						silent: true,
+						icon: notificationIcon
+					})
+
+					notification.addEventListener(
+						"click",
+						async () => {
+							await window.desktopAPI.showWindow().catch(console.error)
+
+							navigate({
+								to: "/contacts/$type",
+								params: {
+									type: "in"
+								}
+							})
+						},
+						{
+							once: true
+						}
+					)
+
+					notification.addEventListener(
+						"hide",
+						() => {
+							delete triggeredNotificationUUIDs[`contactRequest:${event.data.uuid}`]
+						},
+						{
+							once: true
+						}
+					)
+				}
 			} catch (e) {
 				console.error(e)
 			} finally {
@@ -177,17 +172,10 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 			chatConversationsQuery.isSuccess,
 			chatConversationsQuery.data,
 			setLastSelectedChatsConversation,
-			setSelectedConversation
+			setSelectedConversation,
+			contactNotificationsEnabled
 		]
 	)
-
-	useEffect(() => {
-		if (requestsInCount > 0) {
-			handleContactsNotifications()
-		} else {
-			currentRequestsInCountRef.current = requestsInCount
-		}
-	}, [requestsInCount, handleContactsNotifications])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)

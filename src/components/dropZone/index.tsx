@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useTransition } from "react"
+import { memo, useCallback, useState } from "react"
 import worker from "@/lib/worker"
 import useRouteParent from "@/hooks/useRouteParent"
 import { Dialog, DialogContent, DialogDescription, DialogPortal, DialogOverlay } from "@/components/ui/dialog"
@@ -19,7 +19,6 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const { t } = useTranslation()
 	const { setItems } = useDriveItemsStore()
 	const { currentReceiverId, currentSharerId, currentReceiverEmail, currentReceivers, currentSharerEmail } = useDriveSharedStore()
-	const [, startTransition] = useTransition()
 	const location = useLocation()
 	const canUpload = useCanUpload()
 	const errorToast = useErrorToast()
@@ -139,16 +138,14 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 													continue
 												}
 
-												startTransition(() => {
-													setItems(prev => [
-														...prev.filter(
-															prevItem =>
-																prevItem.uuid !== item.uuid &&
-																prevItem.name.toLowerCase() !== item.name.toLowerCase()
-														),
-														item
-													])
-												})
+												setItems(prev => [
+													...prev.filter(
+														prevItem =>
+															prevItem.uuid !== item.uuid &&
+															prevItem.name.toLowerCase() !== item.name.toLowerCase()
+													),
+													item
+												])
 											}
 
 											resolve(uploadedItems)
@@ -176,16 +173,14 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 											})
 											.then(item => {
 												if (item.parent === parentCopy) {
-													startTransition(() => {
-														setItems(prev => [
-															...prev.filter(
-																prevItem =>
-																	prevItem.uuid !== item.uuid &&
-																	prevItem.name.toLowerCase() !== item.name.toLowerCase()
-															),
-															item
-														])
-													})
+													setItems(prev => [
+														...prev.filter(
+															prevItem =>
+																prevItem.uuid !== item.uuid &&
+																prevItem.name.toLowerCase() !== item.name.toLowerCase()
+														),
+														item
+													])
 												}
 
 												resolve([item])

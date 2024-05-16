@@ -47,6 +47,29 @@ export async function downloadFile({ item }: { item: DriveCloudItem }): Promise<
 	await worker.downloadFile({ item, fileHandle })
 }
 
+/**
+ * Download a directory.
+ *
+ * @export
+ * @async
+ * @param {{
+ * 	uuid: string
+ * 	name: string
+ * 	type?: DirDownloadType
+ * 	linkUUID?: string
+ * 	linkHasPassword?: boolean
+ * 	linkPassword?: string
+ * 	linkSalt?: string
+ * }} param0
+ * @param {string} param0.uuid
+ * @param {string} param0.name
+ * @param {DirDownloadType} param0.type
+ * @param {string} param0.linkUUID
+ * @param {boolean} param0.linkHasPassword
+ * @param {string} param0.linkPassword
+ * @param {string} param0.linkSalt
+ * @returns {Promise<void>}
+ */
 export async function downloadDirectory({
 	uuid,
 	name,

@@ -70,6 +70,7 @@ export const ListItem = memo(
 		const [thumbnailURL, setThumbnailURL] = useState<string | null>(
 			thumbnailURLObjectCache.has(item.uuid) ? thumbnailURLObjectCache.get(item.uuid)! : null
 		)
+		const [navigating, setNavigating] = useState<boolean>(false)
 
 		const previewType = useMemo(() => {
 			return fileNameToPreviewType(item.name)
@@ -121,6 +122,7 @@ export const ListItem = memo(
 			}
 
 			if (item.type === "directory" && !pathname.includes("trash")) {
+				setNavigating(true)
 				setCurrentReceiverId(item.receiverId)
 				setCurrentReceiverEmail(item.receiverEmail)
 				setCurrentSharerId(item.sharerId)
@@ -346,7 +348,8 @@ export const ListItem = memo(
 						<div
 							className={cn(
 								"dragselect-collision-check dragselect-start-disallowed flex flex-row w-full h-11 items-center justify-between gap-3 text-medium hover:bg-secondary cursor-pointer px-3",
-								item.selected || hovering ? "bg-secondary" : ""
+								item.selected || hovering ? "bg-secondary" : "",
+								navigating && "animate-pulse"
 							)}
 							data-uuid={item.uuid}
 						>
@@ -411,7 +414,10 @@ export const ListItem = memo(
 						</div>
 					) : (
 						<div
-							className="dragselect-collision-check dragselect-start-disallowed flex flex-col w-[200px] h-[200px] p-3"
+							className={cn(
+								"dragselect-collision-check dragselect-start-disallowed flex flex-col w-[200px] h-[200px] p-3",
+								navigating && "animate-pulse"
+							)}
 							data-uuid={item.uuid}
 						>
 							<div className="dragselect-start-disallowed absolute flex flex-row justify-center items-center bottom-[20px] w-[176px]">
