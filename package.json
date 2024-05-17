@@ -11,6 +11,9 @@
 		"preview": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && vite preview",
 		"serve": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && serve -s dist/"
 	},
+	"engines": {
+		"node": ">=18"
+	},
 	"dependencies": {
 		"@alptugidin/react-circular-progress-bar": "^1.1.2",
 		"@emoji-mart/data": "^1.1.2",
@@ -73,7 +76,7 @@
 		"react-error-boundary": "^4.0.13",
 		"react-helmet-async": "^2.0.4",
 		"react-i18next": "^14.1.0",
-		"react-icons": "^5.0.1",
+		"react-icons": "^5.2.1",
 		"react-qr-code": "^2.0.13",
 		"react-quill": "^2.0.0",
 		"react-resizable-panels": "^2.0.12",

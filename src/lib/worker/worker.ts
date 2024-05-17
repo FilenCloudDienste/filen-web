@@ -29,6 +29,7 @@ import { Semaphore } from "../semaphore"
 import { type FileLinkStatusResponse } from "@filen/sdk/dist/types/api/v3/file/link/status"
 import { v4 as uuidv4 } from "uuid"
 import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
+import { type PaymentMethods } from "@filen/sdk/dist/types/api/v3/user/sub/create"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -2708,4 +2709,8 @@ export async function cdnConfig(): Promise<CDNConfig> {
 			responseType: "json"
 		})
 	).data
+}
+
+export async function createSubscription({ planId, paymentMethod }: { planId: number; paymentMethod: PaymentMethods }): Promise<string> {
+	return await SDK.user().createSubscription({ planId, paymentMethod })
 }

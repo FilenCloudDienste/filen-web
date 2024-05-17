@@ -1,11 +1,9 @@
 import { memo, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
-import worker from "@/lib/worker"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useTranslation } from "react-i18next"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { formatBytes } from "@/utils"
-import { Button } from "@/components/ui/button"
+import worker from "@/lib/worker"
+import Plan from "./plan"
 
 export const Plans = memo(() => {
 	const { t } = useTranslation()
@@ -46,7 +44,7 @@ export const Plans = memo(() => {
 	}
 
 	return (
-		<div className="flex flex-row w-full h-full p-4 justify-center">
+		<div className="flex flex-col w-full h-full p-6 justify-center">
 			<Tabs
 				defaultValue="monthly"
 				className="flex flex-col items-center"
@@ -59,7 +57,10 @@ export const Plans = memo(() => {
 				</TabsList>
 				{["starter", "monthly", "annually", "lifetime"].map(term => {
 					return (
-						<TabsContent value={term}>
+						<TabsContent
+							value={term}
+							key={term}
+						>
 							<div className="flex flex-row gap-2 mt-8 flex-wrap justify-center">
 								{(term === "starter"
 									? plans.starter
@@ -70,25 +71,37 @@ export const Plans = memo(() => {
 											: plans.lifetime
 								).map(plan => {
 									return (
-										<Card
+										<Plan
 											key={plan.id}
-											className="w-[190px]"
-										>
-											<CardHeader>
-												<CardTitle>{plan.name}</CardTitle>
-												<CardDescription>
-													{plan.cost}€ {plan.term}
-												</CardDescription>
-											</CardHeader>
-											<CardContent>
-												<p>{formatBytes(plan.storage)}</p>
-											</CardContent>
-											<CardFooter>
-												<Button>{t("settings.plans.buyNow")}</Button>
-											</CardFooter>
-										</Card>
+											plan={plan}
+										/>
 									)
 								})}
+							</div>
+							<div className="flex flex-col mt-10 text-xs text-muted-foreground justify-center items-center">
+								<p className="max-w-[500px] text-center">
+									By purchasing a plan you authorize Filen to automatically charge you each billing period until you
+									cancel. You can cancel anytime via your Account page. No partial refunds.
+								</p>
+								<p>
+									You also automatically agree to our{" "}
+									<a
+										href="https://filen.io/terms"
+										target="_blank"
+										className="text-blue-500 hover:underline"
+									>
+										Terms of Service
+									</a>{" "}
+									and{" "}
+									<a
+										href="https://filen.io/privacy"
+										target="_blank"
+										className="text-blue-500 hover:underline"
+									>
+										Privacy Policy
+									</a>
+									.
+								</p>
 							</div>
 						</TabsContent>
 					)

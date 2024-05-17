@@ -409,7 +409,8 @@
 			"monthly": "Monthly",
 			"annually": "Annually",
 			"lifetime": "Lifetime",
-			"buyNow": "Buy now"
+			"buyNow": "Buy now",
+			"payInvoice": "Pay invoice"
 		}
 	},
 	"drive": {
