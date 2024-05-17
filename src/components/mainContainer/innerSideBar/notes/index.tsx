@@ -109,8 +109,21 @@ export const Notes = memo(() => {
 			queryUpdatedAtRef.current = query.dataUpdatedAt
 
 			setNotes(query.data)
+			setSelectedNote(prev => {
+				if (!prev) {
+					return prev
+				}
+
+				for (const note of query.data) {
+					if (note.uuid === prev.uuid) {
+						return note
+					}
+				}
+
+				return prev
+			})
 		}
-	}, [query.isSuccess, query.data, query.dataUpdatedAt, setNotes])
+	}, [query.isSuccess, query.data, query.dataUpdatedAt, setNotes, setSelectedNote])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)

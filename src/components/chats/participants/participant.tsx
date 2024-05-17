@@ -39,7 +39,9 @@ export const Participant = memo(
 						status={status}
 					/>
 					<div className="flex flex-row items-center gap-3">
-						<p className="line-clamp-1 text-ellipsis break-all">{participant.email}</p>
+						<p className="line-clamp-1 text-ellipsis break-all">
+							{participant.nickName.length > 0 ? participant.nickName : participant.email}
+						</p>
 						{participant.userId === conversation.ownerId && (
 							<Crown
 								size={16}

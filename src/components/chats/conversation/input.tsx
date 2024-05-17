@@ -28,6 +28,7 @@ import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuConten
 import { selectDriveItem } from "@/components/dialogs/selectDriveItem"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import { PUBLIC_LINK_BASE_URL } from "@/constants"
+import useIsMobile from "@/hooks/useIsMobile"
 
 export type CustomElement = { type: "paragraph"; children: CustomText[] }
 export type CustomText = { text: string }
@@ -73,6 +74,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 	const [emojisSuggestionsShortCodes, setEmojisSuggestionsShortCodes] = useState<string[]>([])
 	const theme = useTheme()
 	const focusEditorTimeout = useRef<ReturnType<typeof setTimeout>>()
+	const isMobile = useIsMobile()
 
 	const me = useMemo(() => {
 		return conversation.participants.filter(participant => participant.userId === userId)[0]
@@ -897,12 +899,12 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 	}, [conversation.uuid])
 
 	useEffect(() => {
-		if (editor) {
+		if (editor && !isMobile) {
 			clearTimeout(focusEditorTimeout.current)
 
 			focusEditorTimeout.current = setTimeout(focusEditor, 100)
 		}
-	}, [editor, focusEditor])
+	}, [editor, focusEditor, isMobile])
 
 	useEffect(() => {
 		const chatInputWriteTextListener = eventEmitter.on("chatInputWriteText", (text: string) => {

@@ -44,3 +44,30 @@ export function sortAndFilterConversations(conversations: ChatConversation[], se
 			}
 		})
 }
+
+/**
+ * Get a chat conversation's name.
+ *
+ * @export
+ * @param {ChatConversation} conversation
+ * @param {number} userId
+ * @returns {string}
+ */
+export function getConversationName(conversation: ChatConversation, userId: number): string {
+	if (conversation.name && conversation.name.length > 0) {
+		return conversation.name
+	}
+
+	if (conversation.participants.length <= 2) {
+		const otherParticipant = conversation.participants.filter(p => p.userId !== userId)
+
+		if (otherParticipant.length === 1) {
+			return otherParticipant[0].nickName.length > 0 ? otherParticipant[0].nickName : otherParticipant[0].email
+		}
+	}
+
+	return conversation.participants
+		.sort((a, b) => a.email.localeCompare(b.email))
+		.map(p => (p.nickName.length > 0 ? p.nickName : p.email))
+		.join(", ")
+}

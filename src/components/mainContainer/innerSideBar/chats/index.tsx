@@ -113,11 +113,76 @@ export const Chats = memo(() => {
 							[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation] + 1 : 1
 						}))
 					}
+				} else if (event.type === "chatConversationParticipantLeft") {
+					setConversations(prev =>
+						prev.map(c =>
+							c.uuid === event.data.uuid
+								? {
+										...c,
+										participants: c.participants.filter(p => p.userId !== event.data.userId)
+									}
+								: c
+						)
+					)
+
+					setSelectedConversation(prev =>
+						prev
+							? prev.uuid === event.data.uuid
+								? {
+										...prev,
+										participants: prev.participants.filter(p => p.userId !== event.data.userId)
+									}
+								: prev
+							: prev
+					)
+				} else if (event.type === "chatConversationParticipantNew") {
+					setConversations(prev =>
+						prev.map(c =>
+							c.uuid === event.data.conversation
+								? {
+										...c,
+										participants: [
+											...c.participants.filter(p => p.userId !== event.data.userId),
+											{
+												userId: event.data.userId,
+												email: event.data.email,
+												avatar: event.data.avatar,
+												nickName: event.data.nickName ? event.data.nickName : "",
+												metadata: event.data.metadata,
+												permissionsAdd: event.data.permissionsAdd,
+												addedTimestamp: event.data.addedTimestamp
+											}
+										]
+									}
+								: c
+						)
+					)
+
+					setSelectedConversation(prev =>
+						prev
+							? prev.uuid === event.data.conversation
+								? {
+										...prev,
+										participants: [
+											...prev.participants.filter(p => p.userId !== event.data.userId),
+											{
+												userId: event.data.userId,
+												email: event.data.email,
+												avatar: event.data.avatar,
+												nickName: event.data.nickName ? event.data.nickName : "",
+												metadata: event.data.metadata,
+												permissionsAdd: event.data.permissionsAdd,
+												addedTimestamp: event.data.addedTimestamp
+											}
+										]
+									}
+								: prev
+							: prev
+					)
 				} else if (
 					event.type === "chatMessageDelete" ||
 					event.type === "chatMessageEdited" ||
-					event.type === "chatConversationNameEdited" ||
-					event.type === "chatConversationParticipantLeft"
+					event.type === "chatConversationNameEdited"
 				) {
 					await query.refetch()
 				} else if (event.type === "chatConversationDeleted") {
@@ -190,14 +255,25 @@ export const Chats = memo(() => {
 	}, [navigate, routeParent, conversationsSorted, setLastSelectedChatsConversation, setSelectedConversation, selectedConversation])
 
 	useEffect(() => {
-		if (query.isSuccess) {
-			if (query.dataUpdatedAt !== queryUpdatedAtRef.current) {
-				queryUpdatedAtRef.current = query.dataUpdatedAt
+		if (query.isSuccess && query.dataUpdatedAt !== queryUpdatedAtRef.current) {
+			queryUpdatedAtRef.current = query.dataUpdatedAt
 
-				setConversations(query.data)
-			}
+			setConversations(query.data)
+			setSelectedConversation(prev => {
+				if (!prev) {
+					return prev
+				}
+
+				for (const convo of query.data) {
+					if (convo.uuid === prev.uuid) {
+						return convo
+					}
+				}
+
+				return prev
+			})
 		}
-	}, [query.isSuccess, query.data, query.dataUpdatedAt, setConversations])
+	}, [query.isSuccess, query.data, query.dataUpdatedAt, setConversations, setSelectedConversation])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)

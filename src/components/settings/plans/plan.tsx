@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react"
+import { memo, useCallback, useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatBytes } from "@/utils"
@@ -18,16 +18,23 @@ export const Plan = memo(({ plan }: { plan: CDNConfigPlan }) => {
 	const [isCreatingSubURL, setIsCreatingSubURL] = useState<boolean>(false)
 	const [subURL, setSubURL] = useState<string>("")
 
+	const cryptoAvailable = useMemo(() => {
+		return plan.name.toLowerCase().includes("lifetime")
+	}, [plan.name])
+
 	const buyPlan = useCallback(
 		async ({ planId, paymentMethod }: { planId: number; paymentMethod: PaymentMethods }) => {
-			if (isCreatingSubURL || subURL.length > 0) {
+			if (isCreatingSubURL || subURL.length > 0 || (paymentMethod === "crypto" && !cryptoAvailable)) {
 				return
 			}
 
 			setIsCreatingSubURL(true)
 
 			try {
-				const url = await worker.createSubscription({ planId, paymentMethod })
+				const url = await worker.createSubscription({
+					planId,
+					paymentMethod
+				})
 
 				setSubURL(url)
 			} catch (e) {
@@ -43,7 +50,7 @@ export const Plan = memo(({ plan }: { plan: CDNConfigPlan }) => {
 				setIsCreatingSubURL(false)
 			}
 		},
-		[errorToast, isCreatingSubURL, subURL]
+		[errorToast, isCreatingSubURL, subURL, cryptoAvailable]
 	)
 
 	return (
@@ -109,18 +116,20 @@ export const Plan = memo(({ plan }: { plan: CDNConfigPlan }) => {
 								<IoLogoPaypal />
 								<p>PayPal</p>
 							</DropdownMenuItem>
-							<DropdownMenuItem
-								className="flex flex-row gap-3 items-center cursor-pointer"
-								onClick={() =>
-									buyPlan({
-										planId: plan.id,
-										paymentMethod: "crypto"
-									})
-								}
-							>
-								<FaBitcoin />
-								<p>Crypto</p>
-							</DropdownMenuItem>
+							{cryptoAvailable && (
+								<DropdownMenuItem
+									className="flex flex-row gap-3 items-center cursor-pointer"
+									onClick={() =>
+										buyPlan({
+											planId: plan.id,
+											paymentMethod: "crypto"
+										})
+									}
+								>
+									<FaBitcoin />
+									<p>Crypto</p>
+								</DropdownMenuItem>
+							)}
 						</DropdownMenuContent>
 					</DropdownMenu>
 				)}

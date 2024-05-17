@@ -33,6 +33,10 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 		refetchIntervalInBackground: true
 	})
 
+	const participantsSorted = useMemo(() => {
+		return conversation.participants.sort((a, b) => a.email.localeCompare(b.email))
+	}, [conversation.participants])
+
 	const hasWritePermissions = useMemo(() => {
 		if (userId === conversation.ownerId) {
 			return true
@@ -166,8 +170,8 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 			</div>
 			<div className="flex flex-col w-full h-auto">
 				<Virtuoso
-					data={conversation.participants}
-					totalCount={conversation.participants.length}
+					data={participantsSorted}
+					totalCount={participantsSorted.length}
 					height={windowSize.height - 48}
 					width="100%"
 					computeItemKey={getItemKey}

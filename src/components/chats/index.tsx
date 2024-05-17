@@ -21,15 +21,11 @@ export const Chats = memo(() => {
 	const [emojisInitialized, setEmojisInitialized] = useState<boolean>(didInitializeEmojisPreviously)
 
 	const showParticipants = useMemo(() => {
-		if (
-			!isMobile ||
-			!conversationParticipantsContainerOpen ||
-			(selectedConversation && selectedConversation.participants.length <= 2)
-		) {
+		if ((selectedConversation && selectedConversation.participants.length <= 2) || isMobile) {
 			return false
 		}
 
-		return true
+		return conversationParticipantsContainerOpen
 	}, [isMobile, selectedConversation, conversationParticipantsContainerOpen])
 
 	useMountedEffect(() => {

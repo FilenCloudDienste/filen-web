@@ -1,7 +1,6 @@
 import { memo, useMemo, useCallback } from "react"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import useSDKConfig from "@/hooks/useSDKConfig"
-import Avatar from "@/components/avatar"
 import { ChevronRight, ChevronLeft, UserRoundPlus } from "lucide-react"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -15,6 +14,8 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import worker from "@/lib/worker"
 import { useChatsStore } from "@/stores/chats.store"
+import ChatAvatar from "@/components/chatAvatar"
+import { getConversationName } from "@/components/mainContainer/innerSideBar/chats/utils"
 
 export const TopBar = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const { userId } = useSDKConfig()
@@ -27,10 +28,6 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 	)
 	const { dark } = useTheme()
 	const { setConversations, setSelectedConversation } = useChatsStore()
-
-	const participantsWithoutUser = useMemo(() => {
-		return conversation.participants.filter(p => p.userId !== userId)
-	}, [conversation.participants, userId])
 
 	const hasWritePermissions = useMemo(() => {
 		return userId === conversation.ownerId
@@ -128,17 +125,12 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 				className={cn("flex flex-row gap-2 items-center", hasWritePermissions ? "cursor-pointer" : "cursor-default")}
 				onClick={editConversationName}
 			>
-				<Avatar
+				<ChatAvatar
 					size={24}
-					src={participantsWithoutUser[0]?.avatar}
+					participants={conversation.participants}
+					className="shrink-0"
 				/>
-				<p className="line-clamp-1 text-ellipsis break-all">
-					{conversation.name && conversation.name.length > 0
-						? conversation.name
-						: participantsWithoutUser[0]?.nickName.length > 0
-							? participantsWithoutUser[0]?.nickName
-							: participantsWithoutUser[0]?.email}
-				</p>
+				<p className="line-clamp-1 text-ellipsis break-all">{getConversationName(conversation, userId)}</p>
 			</div>
 			{conversation.participants.length > 2 ? (
 				<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
