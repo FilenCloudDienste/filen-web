@@ -14,6 +14,9 @@ import { Button } from "@/components/ui/button"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
 import { Input } from "@/components/ui/input"
 import QRCode from "react-qr-code"
+import { Copy } from "lucide-react"
+import useSuccessToast from "@/hooks/useSuccessToast"
+import useErrorToast from "@/hooks/useErrorToast"
 
 export type TwoFactorDialogProps = {
 	title?: string
@@ -21,6 +24,7 @@ export type TwoFactorDialogProps = {
 	continueButtonVariant?: "destructive" | "default" | "link" | "outline" | "secondary" | "ghost" | null
 	description?: string
 	keyToDisplay?: string
+	keyToDisplayRaw?: string
 }
 
 export type ShowTwoFactorCodeDialogResponse =
@@ -37,7 +41,8 @@ export async function showTwoFactorCodeDialog({
 	continueButtonText,
 	description,
 	continueButtonVariant,
-	keyToDisplay
+	keyToDisplay,
+	keyToDisplayRaw
 }: TwoFactorDialogProps): Promise<ShowTwoFactorCodeDialogResponse> {
 	return await new Promise<ShowTwoFactorCodeDialogResponse>(resolve => {
 		const id = Math.random().toString(16).slice(2)
@@ -67,7 +72,8 @@ export async function showTwoFactorCodeDialog({
 			continueButtonText,
 			continueButtonVariant,
 			description,
-			keyToDisplay
+			keyToDisplay,
+			keyToDisplayRaw
 		})
 	})
 }
@@ -85,6 +91,8 @@ export const TwoFactorCodeDialog = memo(() => {
 	const didSubmit = useRef<boolean>(false)
 	const [twoFactorCode, setTwoFactorCode] = useState<string>("")
 	const [useRecoveryKey, setUseRecoveryKey] = useState<boolean>(false)
+	const errorToast = useErrorToast()
+	const successToast = useSuccessToast()
 
 	const cancel = useCallback(() => {
 		if (didSubmit.current) {
@@ -137,6 +145,32 @@ export const TwoFactorCodeDialog = memo(() => {
 		setTwoFactorCode(e.target.value)
 	}, [])
 
+	const copyKeyToDisplay = useCallback(async () => {
+		if (!props.keyToDisplayRaw) {
+			return
+		}
+
+		try {
+			await navigator.clipboard.writeText(props.keyToDisplayRaw)
+
+			const toast = successToast("Copied to clipboard")
+
+			toast.update({
+				id: toast.id,
+				duration: 3000
+			})
+		} catch (e) {
+			console.error(e)
+
+			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+			toast.update({
+				id: toast.id,
+				duration: 5000
+			})
+		}
+	}, [props.keyToDisplayRaw, successToast, errorToast])
+
 	useEffect(() => {
 		const listener = eventEmitter.on("openTwoFactorCodeDialog", (p: TwoFactorDialogProps & { requestId: string }) => {
 			requestId.current = p.requestId
@@ -162,13 +196,26 @@ export const TwoFactorCodeDialog = memo(() => {
 				<AlertDialogHeader>
 					{props.title && <AlertDialogTitle>{props.title}</AlertDialogTitle>}
 					{props.description && <AlertDialogDescription>{props.description}</AlertDialogDescription>}
-					{props.keyToDisplay && (
-						<div className="flex flex-row justify-center">
-							<div className="flex flex-row bg-white rounded-md p-4 my-4">
-								<QRCode
-									value={props.keyToDisplay}
-									size={200}
+					{props.keyToDisplay && props.keyToDisplayRaw && (
+						<div className="flex flex-col gap-2">
+							<div className="flex flex-row justify-center">
+								<div className="flex flex-row bg-white rounded-md p-4 my-4">
+									<QRCode
+										value={props.keyToDisplay}
+										size={175}
+									/>
+								</div>
+							</div>
+							<div className="flex flex-row items-center gap-1 mb-2 justify-center">
+								<Input
+									value={props.keyToDisplayRaw}
+									onChange={e => e.preventDefault()}
+									type="text"
+									className="w-[175px]"
 								/>
+								<Button onClick={copyKeyToDisplay}>
+									<Copy size={18} />
+								</Button>
 							</div>
 						</div>
 					)}

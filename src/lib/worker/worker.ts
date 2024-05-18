@@ -30,6 +30,7 @@ import { type FileLinkStatusResponse } from "@filen/sdk/dist/types/api/v3/file/l
 import { v4 as uuidv4 } from "uuid"
 import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
 import { type PaymentMethods } from "@filen/sdk/dist/types/api/v3/user/sub/create"
+import { type FileVersionsResponse } from "@filen/sdk/dist/types/api/v3/file/versions"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -2662,10 +2663,14 @@ export async function leaveChatConversation({ conversation }: { conversation: st
 }
 
 export async function workerCalculateThumbnailCacheUsage(): Promise<number> {
+	await waitForInitialization()
+
 	return calculateThumbnailCacheUsage()
 }
 
 export async function workerClearThumbnailCache(): Promise<void> {
+	await waitForInitialization()
+
 	return clearThumbnailCache()
 }
 
@@ -2703,6 +2708,8 @@ export type CDNConfigPlan = {
 }
 
 export async function cdnConfig(): Promise<CDNConfig> {
+	await waitForInitialization()
+
 	return (
 		await axios.get("https://cdn.filen.io/cfg.json", {
 			timeout: 60000,
@@ -2712,5 +2719,27 @@ export async function cdnConfig(): Promise<CDNConfig> {
 }
 
 export async function createSubscription({ planId, paymentMethod }: { planId: number; paymentMethod: PaymentMethods }): Promise<string> {
+	await waitForInitialization()
+
 	return await SDK.user().createSubscription({ planId, paymentMethod })
+}
+
+export async function fileVersions({ uuid }: { uuid: string }): Promise<FileVersionsResponse> {
+	await waitForInitialization()
+
+	return await SDK.cloud().fileVersions({ uuid })
+}
+
+export async function restoreFileVersion({ uuid, currentUUID }: { uuid: string; currentUUID: string }): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.cloud().restoreFileVersion({ uuid, currentUUID })
+}
+
+export async function deleteFilePermanently({ uuid }: { uuid: string }): Promise<void> {
+	await waitForInitialization()
+
+	await SDK.cloud().deleteFile({
+		uuid
+	})
 }

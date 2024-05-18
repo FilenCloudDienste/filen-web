@@ -306,7 +306,6 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	return (
 		<Fragment key={`messages-${conversation.uuid}`}>
 			<MarkAsRead
-				key={conversation.uuid}
 				lastFocus={lastFocus > 0 ? lastFocus : lastFocusQueryNumber}
 				lastFocusValues={lastFocusQuery.isSuccess ? lastFocusQuery.data : []}
 				setLastFocus={setLastFocus}

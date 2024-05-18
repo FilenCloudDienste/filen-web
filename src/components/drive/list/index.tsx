@@ -12,6 +12,7 @@ import { type SocketEvent, type FileEncryptionVersion } from "@filen/sdk"
 import socket from "@/lib/socket"
 import { convertTimestampToMs } from "@/utils"
 import { type DriveSortBy } from "./header"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const List = memo(() => {
 	const { items, setItems, searchTerm } = useDriveItemsStore()
@@ -290,6 +291,16 @@ export const List = memo(() => {
 			socket.removeListener("socketEvent", socketEventListener)
 		}
 	}, [socketEventListener])
+
+	useEffect(() => {
+		const refetchDriveListener = eventEmitter.on("refetchDrive", () => {
+			query.refetch().catch(console.error)
+		})
+
+		return () => {
+			refetchDriveListener.remove()
+		}
+	}, [query])
 
 	return listType[parent] === "grid" ? (
 		<GridList

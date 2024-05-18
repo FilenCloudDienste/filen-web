@@ -346,6 +346,10 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 		eventEmitter.emit("openPublicLinkDialog", item)
 	}, [item])
 
+	const versions = useCallback(() => {
+		eventEmitter.emit("openFileVersionsDialog", item)
+	}, [item])
+
 	return (
 		<CM>
 			<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
@@ -399,7 +403,7 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 				{item.type === "file" && selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && (
 					<>
 						<ContextMenuItem
-							onClick={download}
+							onClick={versions}
 							className="cursor-pointer"
 						>
 							{t("contextMenus.item.versions")}

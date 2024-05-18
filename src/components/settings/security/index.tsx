@@ -6,7 +6,7 @@ import { showSaveFilePicker } from "native-file-system-adapter"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import useSDKConfig from "@/hooks/useSDKConfig"
-import { showTwoFactorCodeDialog } from "@/components/dialogs/twoFactorCodeDialog"
+import { showTwoFactorCodeDialog } from "@/components/dialogs/twoFactorCode"
 import worker from "@/lib/worker"
 import eventEmitter from "@/lib/eventEmitter"
 import ChangePasswordDialog from "./dialogs/changePassword"
@@ -45,7 +45,8 @@ export const Security = memo(() => {
 							encodeURIComponent(account.settings.twoFactorKey) +
 							"&issuer=" +
 							encodeURIComponent("Filen") +
-							"&digits=6&period=30"
+							"&digits=6&period=30",
+						keyToDisplayRaw: account.settings.twoFactorKey
 					})
 
 					if (code.cancelled) {

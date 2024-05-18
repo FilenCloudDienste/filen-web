@@ -20,12 +20,13 @@ import { setItem } from "@/lib/localForage"
 import InputDialog from "@/components/dialogs/input"
 import SelectContactsDialog from "@/components/dialogs/selectContacts"
 import TransparentFullScreenImageDialog from "@/components/dialogs/transparentFullScreenImage"
-import TwoFactorCodeDialog from "@/components/dialogs/twoFactorCodeDialog"
+import TwoFactorCodeDialog from "@/components/dialogs/twoFactorCode"
 import PublicLinkDialog from "@/components/dialogs/publicLink"
 import SharedWithDialog from "@/components/dialogs/sharedWith"
 import { IS_DESKTOP, UNCACHED_QUERY_KEYS } from "@/constants"
 import NotificationHandler from "@/components/notificationHandler"
 import ActivityHandler from "@/components/activityHandler"
+import FileVersionsDialog from "@/components/dialogs/fileVersions"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -158,6 +159,7 @@ export const Root = memo(() => {
 							<SelectContactsDialog />
 							<PublicLinkDialog />
 							<SharedWithDialog />
+							<FileVersionsDialog />
 						</>
 					) : (
 						<Outlet />
