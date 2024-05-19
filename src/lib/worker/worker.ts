@@ -31,6 +31,7 @@ import { v4 as uuidv4 } from "uuid"
 import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
 import { type PaymentMethods } from "@filen/sdk/dist/types/api/v3/user/sub/create"
 import { type FileVersionsResponse } from "@filen/sdk/dist/types/api/v3/file/versions"
+import { type NoteHistory } from "@filen/sdk/dist/types/api/v3/notes/history"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -1468,6 +1469,15 @@ export async function readFile({
 	return transfer(buffer, [buffer.buffer])
 }
 
+/**
+ * Generate an image thumbnail. Works in both threads.
+ *
+ * @export
+ * @async
+ * @param {{ item: DriveCloudItem }} param0
+ * @param {DriveCloudItem} param0.item
+ * @returns {Promise<Blob>}
+ */
 export async function generateImageThumbnail({ item }: { item: DriveCloudItem }): Promise<Blob> {
 	await waitForInitialization()
 
@@ -1489,13 +1499,17 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 	const originalHeight = imageBitmap.height
 	let newWidth: number
 	let newHeight: number
+	let offsetX = 0
+	let offsetY = 0
 
 	if (originalWidth > originalHeight) {
 		newWidth = THUMBNAIL_MAX_SIZE
 		newHeight = (originalHeight / originalWidth) * THUMBNAIL_MAX_SIZE
+		offsetY = (THUMBNAIL_MAX_SIZE - newHeight) / 2
 	} else {
 		newHeight = THUMBNAIL_MAX_SIZE
 		newWidth = (originalWidth / originalHeight) * THUMBNAIL_MAX_SIZE
+		offsetX = (THUMBNAIL_MAX_SIZE - newWidth) / 2
 	}
 
 	const offscreenCanvas = new OffscreenCanvas(THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
@@ -1505,11 +1519,7 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 		throw new Error("Could not create OffscreenCanvas")
 	}
 
-	ctx.fillStyle = "#000000"
-	ctx.fillRect(0, 0, THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
-
-	const offsetX = (THUMBNAIL_MAX_SIZE - newWidth) / 2
-	const offsetY = (THUMBNAIL_MAX_SIZE - newHeight) / 2
+	ctx.clearRect(0, 0, THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
 
 	ctx.drawImage(imageBitmap, offsetX, offsetY, newWidth, newHeight)
 
@@ -1587,6 +1597,8 @@ export async function generateVideoThumbnail({ item, buffer }: { item: DriveClou
 			}
 
 			const canvas = document.createElement("canvas")
+			canvas.width = THUMBNAIL_MAX_SIZE
+			canvas.height = THUMBNAIL_MAX_SIZE
 			const ctx = canvas.getContext("2d")
 
 			if (!ctx) {
@@ -1595,8 +1607,7 @@ export async function generateVideoThumbnail({ item, buffer }: { item: DriveClou
 				return
 			}
 
-			ctx.fillStyle = "#000000"
-			ctx.fillRect(0, 0, THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
+			ctx.clearRect(0, 0, THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
 
 			const offsetX = (THUMBNAIL_MAX_SIZE - newWidth) / 2
 			const offsetY = (THUMBNAIL_MAX_SIZE - newHeight) / 2
@@ -1684,14 +1695,19 @@ export async function generatePDFThumbnail({ item, buffer }: { item: DriveCloudI
 	const canvas = document.createElement("canvas")
 	const ctx = canvas.getContext("2d")
 
+	canvas.width = THUMBNAIL_MAX_SIZE
+	canvas.height = THUMBNAIL_MAX_SIZE
+
 	if (!ctx) {
 		throw new Error("Could not create canvas")
 	}
 
-	ctx.fillStyle = "#000000"
-	ctx.fillRect(0, 0, THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
+	ctx.clearRect(0, 0, THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
 
-	await page.render({ canvasContext: ctx, viewport }).promise
+	await page.render({
+		canvasContext: ctx,
+		viewport
+	}).promise
 
 	const blob = await new Promise<Blob>((resolve, reject) => {
 		canvas.toBlob(
@@ -2742,4 +2758,16 @@ export async function deleteFilePermanently({ uuid }: { uuid: string }): Promise
 	await SDK.cloud().deleteFile({
 		uuid
 	})
+}
+
+export async function noteHistory({ uuid }: { uuid: string }): Promise<NoteHistory[]> {
+	await waitForInitialization()
+
+	return await SDK.notes().history({ uuid })
+}
+
+export async function restoreNoteHistory({ uuid, id }: { uuid: string; id: number }): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.notes().restoreHistory({ uuid, id })
 }

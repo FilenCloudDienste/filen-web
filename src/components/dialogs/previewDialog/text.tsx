@@ -22,8 +22,8 @@ export const Text = memo(({ buffer, item }: { buffer: Buffer; item: DriveCloudIt
 				setValue={setValue}
 				height={windowSize.height - 48}
 				type={previewType === "code" ? "code" : "text"}
+				showMarkdownPreview={previewType === "md"}
 			/>
-			{previewType === "md" && <>mdPreview</>}
 		</div>
 	)
 })

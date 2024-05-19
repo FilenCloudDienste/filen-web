@@ -22,6 +22,7 @@ import striptags from "striptags"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { ZipWriter } from "@zip.js/zip.js"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const ContextMenu = memo(
 	({
@@ -514,12 +515,16 @@ export const ContextMenu = memo(
 			}
 		}, [loadingToast, errorToast])
 
+		const history = useCallback(() => {
+			eventEmitter.emit("openNoteHistoryDialog", note)
+		}, [note])
+
 		return (
 			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
 				<ContextMenuContent className="min-w-52">
 					<ContextMenuItem
-						onClick={() => {}}
+						onClick={history}
 						className="cursor-pointer"
 					>
 						{t("contextMenus.notes.history")}

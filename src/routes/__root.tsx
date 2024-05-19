@@ -27,6 +27,7 @@ import { IS_DESKTOP, UNCACHED_QUERY_KEYS } from "@/constants"
 import NotificationHandler from "@/components/notificationHandler"
 import ActivityHandler from "@/components/activityHandler"
 import FileVersionsDialog from "@/components/dialogs/fileVersions"
+import NoteHistoryDialog from "@/components/dialogs/noteHistory"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -160,6 +161,7 @@ export const Root = memo(() => {
 							<PublicLinkDialog />
 							<SharedWithDialog />
 							<FileVersionsDialog />
+							<NoteHistoryDialog />
 						</>
 					) : (
 						<Outlet />

@@ -10,12 +10,11 @@ export const dark = githubDarkInit({
 		lineHighlight: "#171717"
 	}
 })
-
 export const light = githubLightInit({
 	settings: {
 		background: "transparent",
-		gutterBackground: "white",
-		gutterBorder: "white",
+		gutterBackground: "#FBFBFB",
+		gutterBorder: "#FBFBFB",
 		gutterActiveForeground: "black",
 		foreground: "black"
 	}

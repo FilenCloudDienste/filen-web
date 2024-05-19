@@ -118,7 +118,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 		<div
 			className={cn(
 				"w-full h-12 flex flex-row px-4 border-b shadow-sm items-center gap-2 justify-between shrink-0 z-[10001] select-none",
-				dark ? "bg-[#151518]" : ""
+				dark ? "bg-[#151518]" : "bg-[#FBFBFB]"
 			)}
 		>
 			<div

@@ -32,17 +32,6 @@ export const List = memo(
 
 		const restore = useCallback(
 			async (version: FileVersion) => {
-				if (
-					!(await showConfirmDialog({
-						title: "d",
-						continueButtonText: "ddd",
-						description: "ookeoetrasher",
-						continueButtonVariant: "destructive"
-					}))
-				) {
-					return
-				}
-
 				const toast = loadingToast()
 
 				try {
