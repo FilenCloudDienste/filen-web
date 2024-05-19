@@ -35,6 +35,7 @@ export const SharedWithDialog = memo(() => {
 				<DialogHeader>{t("dialogs.sharedWith.title")}</DialogHeader>
 				{item && (
 					<List
+						key={item.uuid}
 						item={item}
 						setItem={setItem}
 						setOpen={setOpen}

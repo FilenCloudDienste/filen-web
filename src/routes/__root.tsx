@@ -28,6 +28,7 @@ import NotificationHandler from "@/components/notificationHandler"
 import ActivityHandler from "@/components/activityHandler"
 import FileVersionsDialog from "@/components/dialogs/fileVersions"
 import NoteHistoryDialog from "@/components/dialogs/noteHistory"
+import NoteParticipantsDialog from "@/components/dialogs/noteParticipants"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -162,6 +163,7 @@ export const Root = memo(() => {
 							<SharedWithDialog />
 							<FileVersionsDialog />
 							<NoteHistoryDialog />
+							<NoteParticipantsDialog />
 						</>
 					) : (
 						<Outlet />

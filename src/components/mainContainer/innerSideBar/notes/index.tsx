@@ -57,11 +57,18 @@ export const Notes = memo(() => {
 					event.type === "noteArchived" ||
 					event.type === "noteParticipantNew" ||
 					event.type === "noteParticipantPermissions" ||
-					event.type === "noteParticipantRemoved" ||
 					event.type === "noteTitleEdited" ||
 					event.type === "noteRestored" ||
 					event.type === "noteContentEdited"
 				) {
+					await query.refetch()
+				} else if (event.type === "noteParticipantRemoved") {
+					if (routeParent === event.data.note && event.data.userId === userId) {
+						navigate({
+							to: "/notes"
+						})
+					}
+
 					await query.refetch()
 				} else if (event.type === "noteDeleted") {
 					if (routeParent === event.data.note) {
@@ -76,7 +83,7 @@ export const Notes = memo(() => {
 				console.error(e)
 			}
 		},
-		[query, routeParent, navigate]
+		[query, routeParent, navigate, userId]
 	)
 
 	useEffect(() => {

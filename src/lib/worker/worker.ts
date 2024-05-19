@@ -10,7 +10,7 @@ import { type DirDownloadType } from "@filen/sdk/dist/types/api/v3/dir/download"
 import eventEmitter from "../eventEmitter"
 import { transfer } from "comlink"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
-import { THUMBNAIL_VERSION, THUMBNAIL_QUALITY, THUMBNAIL_MAX_SIZE } from "@/constants"
+import { THUMBNAIL_VERSION, THUMBNAIL_QUALITY } from "@/constants"
 import pdfjsLib from "../pdfJS"
 import { type Note, type NoteType, type NoteTag } from "@filen/sdk/dist/types/api/v3/notes"
 import { simpleDate } from "@/utils"
@@ -1494,34 +1494,18 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 
 	const buffer = await readFile({ item, emitEvents: false })
 	const imageBitmap = await createImageBitmap(new Blob([buffer], { type: item.mime }))
-
 	const originalWidth = imageBitmap.width
 	const originalHeight = imageBitmap.height
-	let newWidth: number
-	let newHeight: number
-	let offsetX = 0
-	let offsetY = 0
 
-	if (originalWidth > originalHeight) {
-		newWidth = THUMBNAIL_MAX_SIZE
-		newHeight = (originalHeight / originalWidth) * THUMBNAIL_MAX_SIZE
-		offsetY = (THUMBNAIL_MAX_SIZE - newHeight) / 2
-	} else {
-		newHeight = THUMBNAIL_MAX_SIZE
-		newWidth = (originalWidth / originalHeight) * THUMBNAIL_MAX_SIZE
-		offsetX = (THUMBNAIL_MAX_SIZE - newWidth) / 2
-	}
-
-	const offscreenCanvas = new OffscreenCanvas(THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
+	const offscreenCanvas = new OffscreenCanvas(originalWidth, originalHeight)
 	const ctx = offscreenCanvas.getContext("2d")
 
 	if (!ctx) {
 		throw new Error("Could not create OffscreenCanvas")
 	}
 
-	ctx.clearRect(0, 0, THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
-
-	ctx.drawImage(imageBitmap, offsetX, offsetY, newWidth, newHeight)
+	ctx.clearRect(0, 0, originalWidth, originalHeight)
+	ctx.drawImage(imageBitmap, 0, 0, originalWidth, originalHeight)
 
 	const blob = await offscreenCanvas.convertToBlob({ type: "image/jpeg", quality: THUMBNAIL_QUALITY })
 
@@ -1585,21 +1569,11 @@ export async function generateVideoThumbnail({ item, buffer }: { item: DriveClou
 		video.onseeked = () => {
 			const originalWidth = video.videoWidth
 			const originalHeight = video.videoHeight
-			let newWidth: number
-			let newHeight: number
-
-			if (originalWidth > originalHeight) {
-				newWidth = THUMBNAIL_MAX_SIZE
-				newHeight = (originalHeight / originalWidth) * THUMBNAIL_MAX_SIZE
-			} else {
-				newHeight = THUMBNAIL_MAX_SIZE
-				newWidth = (originalWidth / originalHeight) * THUMBNAIL_MAX_SIZE
-			}
-
 			const canvas = document.createElement("canvas")
-			canvas.width = THUMBNAIL_MAX_SIZE
-			canvas.height = THUMBNAIL_MAX_SIZE
 			const ctx = canvas.getContext("2d")
+
+			canvas.width = originalWidth
+			canvas.height = originalHeight
 
 			if (!ctx) {
 				reject(new Error("Could not create canvas"))
@@ -1607,12 +1581,8 @@ export async function generateVideoThumbnail({ item, buffer }: { item: DriveClou
 				return
 			}
 
-			ctx.clearRect(0, 0, THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
-
-			const offsetX = (THUMBNAIL_MAX_SIZE - newWidth) / 2
-			const offsetY = (THUMBNAIL_MAX_SIZE - newHeight) / 2
-
-			ctx.drawImage(video, offsetX, offsetY, newWidth, newHeight)
+			ctx.clearRect(0, 0, originalWidth, originalHeight)
+			ctx.drawImage(video, 0, 0, originalWidth, originalHeight)
 
 			canvas.toBlob(
 				blob => {
@@ -1671,38 +1641,18 @@ export async function generatePDFThumbnail({ item, buffer }: { item: DriveCloudI
 
 	const pdf = await pdfjsLib.getDocument(buffer).promise
 	const page = await pdf.getPage(1)
-
-	let viewport = page.getViewport({ scale: 1 })
-	const originalWidth = viewport.width
-	const originalHeight = viewport.height
-	let newWidth: number
-	let newHeight: number
-
-	if (originalWidth > originalHeight) {
-		newWidth = THUMBNAIL_MAX_SIZE
-		newHeight = (originalHeight / originalWidth) * THUMBNAIL_MAX_SIZE
-	} else {
-		newHeight = THUMBNAIL_MAX_SIZE
-		newWidth = (originalWidth / originalHeight) * THUMBNAIL_MAX_SIZE
-	}
-
-	if (newWidth !== originalWidth) {
-		viewport = page.getViewport({ scale: newWidth / viewport.width })
-	} else if (newHeight !== originalHeight) {
-		viewport = page.getViewport({ scale: newHeight / viewport.height })
-	}
-
+	const viewport = page.getViewport({ scale: 1 })
 	const canvas = document.createElement("canvas")
 	const ctx = canvas.getContext("2d")
 
-	canvas.width = THUMBNAIL_MAX_SIZE
-	canvas.height = THUMBNAIL_MAX_SIZE
+	canvas.width = viewport.width
+	canvas.height = viewport.height
 
 	if (!ctx) {
 		throw new Error("Could not create canvas")
 	}
 
-	ctx.clearRect(0, 0, THUMBNAIL_MAX_SIZE, THUMBNAIL_MAX_SIZE)
+	ctx.clearRect(0, 0, viewport.width, viewport.height)
 
 	await page.render({
 		canvasContext: ctx,
@@ -2770,4 +2720,32 @@ export async function restoreNoteHistory({ uuid, id }: { uuid: string; id: numbe
 	await waitForInitialization()
 
 	return await SDK.notes().restoreHistory({ uuid, id })
+}
+
+export async function removeNoteParticipant({ uuid, userId }: { uuid: string; userId: number }): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.notes().removeParticipant({ uuid, userId })
+}
+
+export async function userPublicKey({ email }: { email: string }): Promise<string> {
+	await waitForInitialization()
+
+	return await SDK.user().publicKey({ email })
+}
+
+export async function addNoteParticipant({
+	uuid,
+	contactUUID,
+	permissionsWrite,
+	publicKey
+}: {
+	uuid: string
+	contactUUID: string
+	permissionsWrite: boolean
+	publicKey: string
+}): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.notes().addParticipant({ uuid, contactUUID, permissionsWrite, publicKey })
 }

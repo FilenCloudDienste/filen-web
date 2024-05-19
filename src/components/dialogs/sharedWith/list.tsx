@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react"
+import { memo, useCallback, useMemo } from "react"
 import { type DriveCloudItem } from "../../drive"
 import { Virtuoso } from "react-virtuoso"
 import Receiver from "./receiver"
@@ -14,6 +14,10 @@ export const List = memo(
 		setItem: React.Dispatch<React.SetStateAction<DriveCloudItem | null>>
 		setOpen: React.Dispatch<React.SetStateAction<boolean>>
 	}) => {
+		const receiversSorted = useMemo(() => {
+			return item.receivers.sort((a, b) => a.email.localeCompare(b.email))
+		}, [item.receivers])
+
 		const getItemKey = useCallback((_: number, receiver: CloudItemReceiver) => receiver.id, [])
 
 		const itemContent = useCallback(
@@ -32,8 +36,8 @@ export const List = memo(
 
 		return (
 			<Virtuoso
-				data={item.receivers}
-				totalCount={item.receivers.length}
+				data={receiversSorted}
+				totalCount={receiversSorted.length}
 				height={384}
 				width="100%"
 				computeItemKey={getItemKey}

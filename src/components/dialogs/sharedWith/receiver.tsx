@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from "react"
+import { memo, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { X } from "lucide-react"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
@@ -25,19 +25,10 @@ export const Receiver = memo(
 		setOpen: React.Dispatch<React.SetStateAction<boolean>>
 	}) => {
 		const { t } = useTranslation()
-		const [hovering, setHovering] = useState<boolean>(false)
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
 		const { setItems } = useDriveItemsStore()
 		const location = useLocation()
-
-		const onMouseEnter = useCallback(() => {
-			setHovering(true)
-		}, [])
-
-		const onMouseLeave = useCallback(() => {
-			setHovering(false)
-		}, [])
 
 		const remove = useCallback(
 			async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -93,29 +84,23 @@ export const Receiver = memo(
 		)
 
 		return (
-			<div
-				className="flex flex-row gap-2 items-center p-2 rounded-md justify-between hover:bg-secondary"
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-			>
+			<div className="flex flex-row gap-2 items-center p-2 rounded-md justify-between hover:bg-secondary mb-1">
 				<p className="line-clamp-1 text-ellipsis break-all">{receiver.email}</p>
-				{hovering && (
-					<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
-						<Tooltip>
-							<TooltipTrigger asChild={true}>
-								<div
-									className="bg-red-500 w-6 h-6 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
-									onClick={remove}
-								>
-									<X size={14} />
-								</div>
-							</TooltipTrigger>
-							<TooltipContent side="top">
-								<p>{t("dialogs.sharedWith.remove")}</p>
-							</TooltipContent>
-						</Tooltip>
-					</TooltipProvider>
-				)}
+				<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+					<Tooltip>
+						<TooltipTrigger asChild={true}>
+							<div
+								className="bg-red-500 w-6 h-6 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
+								onClick={remove}
+							>
+								<X size={14} />
+							</div>
+						</TooltipTrigger>
+						<TooltipContent side="top">
+							<p>{t("dialogs.sharedWith.remove")}</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			</div>
 		)
 	}

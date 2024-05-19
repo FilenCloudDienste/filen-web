@@ -519,6 +519,10 @@ export const ContextMenu = memo(
 			eventEmitter.emit("openNoteHistoryDialog", note)
 		}, [note])
 
+		const participants = useCallback(() => {
+			eventEmitter.emit("openNoteParticipantsDialog", note)
+		}, [note])
+
 		return (
 			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
@@ -531,7 +535,7 @@ export const ContextMenu = memo(
 					</ContextMenuItem>
 					<ContextMenuSeparator />
 					<ContextMenuItem
-						onClick={() => {}}
+						onClick={participants}
 						className="cursor-pointer"
 					>
 						{t("contextMenus.notes.participants")}

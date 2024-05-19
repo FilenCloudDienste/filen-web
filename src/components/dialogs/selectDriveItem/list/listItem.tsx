@@ -135,7 +135,11 @@ export const ListItem = memo(
 					) : (
 						<img
 							src={thumbnailURL ? thumbnailURL : fileNameToSVGIcon(item.name)}
-							className={cn("w-[28px] h-[28px] shrink-0", thumbnailURL && "rounded-sm", !canSelect && "opacity-50")}
+							className={cn(
+								"w-[28px] h-[28px] shrink-0 object-cover",
+								thumbnailURL && "rounded-sm",
+								!canSelect && "opacity-50"
+							)}
 							draggable={false}
 						/>
 					)}

@@ -364,7 +364,10 @@ export const ListItem = memo(
 									) : (
 										<img
 											src={thumbnailURL ? thumbnailURL : fileNameToSVGIcon(item.name)}
-											className={cn("w-7 h-7 dragselect-start-disallowed shrink-0", thumbnailURL ? "rounded-sm" : "")}
+											className={cn(
+												"w-7 h-7 dragselect-start-disallowed shrink-0 object-cover",
+												thumbnailURL ? "rounded-sm" : ""
+											)}
 											draggable={false}
 										/>
 									)}
@@ -446,7 +449,7 @@ export const ListItem = memo(
 									<img
 										src={thumbnailURL ? thumbnailURL : fileNameToSVGIcon(item.name)}
 										className={cn(
-											"dragselect-start-disallowed shrink-0 rounded-md",
+											"dragselect-start-disallowed shrink-0 rounded-md object-cover",
 											thumbnailURL ? "w-full h-full" : "w-16 h-16"
 										)}
 										draggable={false}
