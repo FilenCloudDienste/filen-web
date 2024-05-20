@@ -511,6 +511,7 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 		abortControllers[item.uuid] = new AbortController()
 	}
 
+	const writer = await fileHandle.createWritable()
 	const stream = await SDK.cloud().downloadFileToReadableStream({
 		uuid: item.uuid,
 		bucket: item.bucket,
@@ -568,6 +569,8 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 			delete abortControllers[item.uuid]
 		},
 		onError: err => {
+			writer.abort(err).catch(console.error)
+
 			if (err instanceof DOMException && err.name === "AbortError") {
 				return
 			}
@@ -587,8 +590,6 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 			delete abortControllers[item.uuid]
 		}
 	})
-
-	const writer = await fileHandle.createWritable()
 
 	stream.pipeTo(writer)
 }
@@ -1032,6 +1033,9 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 		await promiseAllChunked(treePromises)
 
 		if (itemsWithPath.length === 0) {
+			await zipWriter.close().catch(console.error)
+			await writer.abort().catch(console.error)
+
 			postMessageToMain({
 				type: "download",
 				data: {
@@ -1119,7 +1123,10 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 									}
 								})
 							},
-							onError: err => {
+							onError: async err => {
+								await zipWriter.close().catch(console.error)
+								await writer.abort(err).catch(console.error)
+
 								if (err instanceof DOMException && err.name === "AbortError") {
 									return
 								}
@@ -1175,6 +1182,9 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 		delete pauseSignals[directoryId]
 		delete abortControllers[directoryId]
 	} catch (e) {
+		await zipWriter.close().catch(console.error)
+		await writer.abort(e).catch(console.error)
+
 		if (e instanceof DOMException && e.name === "AbortError") {
 			return
 		}

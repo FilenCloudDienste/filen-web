@@ -59,7 +59,9 @@ export const Transfers = memo(() => {
 	}, [transfers])
 
 	const ongoingTransfers = useMemo(() => {
-		return transfersSorted.filter(transfer => transfer.state === "queued" || transfer.state === "started")
+		return transfersSorted.filter(
+			transfer => transfer.state === "queued" || transfer.state === "started" || transfer.state === "paused"
+		)
 	}, [transfersSorted])
 
 	const virtuosoHeight = useMemo(() => {
@@ -73,11 +75,12 @@ export const Transfers = memo(() => {
 			return (
 				<Transfer
 					transfer={transfer}
+					setTransfers={setTransfers}
 					t={t}
 				/>
 			)
 		},
-		[t]
+		[t, setTransfers]
 	)
 
 	const updateInfo = useRef(
@@ -255,7 +258,7 @@ export const Transfers = memo(() => {
 				desktopMessageListener.remove()
 			}
 		}
-	}, [setProgress, setRemaining, setSpeed, t, handleTransferUpdates])
+	}, [handleTransferUpdates])
 
 	return (
 		<Sheet
