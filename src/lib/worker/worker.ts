@@ -1,5 +1,12 @@
 import SDK from "../sdk"
-import { type FilenSDKConfig, type FileMetadata, type FolderMetadata, type PublicLinkExpiration, type CloudItemTree } from "@filen/sdk"
+import {
+	type FilenSDKConfig,
+	type FileMetadata,
+	type FolderMetadata,
+	type PublicLinkExpiration,
+	type CloudItemTree,
+	PauseSignal
+} from "@filen/sdk"
 import { type FileSystemFileHandle } from "native-file-system-adapter"
 import { type DriveCloudItem } from "@/components/drive"
 import { setItem, getItem, removeItem } from "@/lib/localForage"
@@ -37,6 +44,8 @@ const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
 let isInitialized = false
 const postMessageToMainProgressThrottle: Record<string, { next: number; storedBytes: number }> = {}
+const pauseSignals: Record<string, PauseSignal> = {}
+const abortControllers: Record<string, AbortController> = {}
 
 // We have to throttle the "progress" events of the "download"/"upload" message type. The SDK sends too many events for the IPC to handle properly.
 // It freezes the main process if we don't throttle it.
@@ -494,6 +503,14 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 		return
 	}
 
+	if (!pauseSignals[item.uuid]) {
+		pauseSignals[item.uuid] = new PauseSignal()
+	}
+
+	if (!abortControllers[item.uuid]) {
+		abortControllers[item.uuid] = new AbortController()
+	}
+
 	const stream = await SDK.cloud().downloadFileToReadableStream({
 		uuid: item.uuid,
 		bucket: item.bucket,
@@ -502,6 +519,8 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 		size: item.size,
 		chunks: item.chunks,
 		key: item.key,
+		pauseSignal: pauseSignals[item.uuid],
+		abortSignal: abortControllers[item.uuid].signal,
 		onQueued: () => {
 			postMessageToMain({
 				type: "download",
@@ -544,8 +563,15 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 					size: item.size
 				}
 			})
+
+			delete pauseSignals[item.uuid]
+			delete abortControllers[item.uuid]
 		},
 		onError: err => {
+			if (err instanceof DOMException && err.name === "AbortError") {
+				return
+			}
+
 			postMessageToMain({
 				type: "download",
 				data: {
@@ -556,6 +582,9 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 					size: item.size
 				}
 			})
+
+			delete pauseSignals[item.uuid]
+			delete abortControllers[item.uuid]
 		}
 	})
 
@@ -588,10 +617,20 @@ export async function uploadFile({
 	const fileName = name ? name : file.name
 	const fileId = `${fileName}:${file.size}:${file.type}:${file.lastModified}:${file.webkitRelativePath}`
 
+	if (!pauseSignals[fileId]) {
+		pauseSignals[fileId] = new PauseSignal()
+	}
+
+	if (!abortControllers[fileId]) {
+		abortControllers[fileId] = new AbortController()
+	}
+
 	const item = await SDK.cloud().uploadWebFile({
 		file,
 		parent,
 		name: fileName,
+		pauseSignal: pauseSignals[fileId],
+		abortSignal: abortControllers[fileId].signal,
 		onQueued: () => {
 			postMessageToMain({
 				type: "upload",
@@ -634,8 +673,15 @@ export async function uploadFile({
 					size: file.size
 				}
 			})
+
+			delete pauseSignals[fileId]
+			delete abortControllers[fileId]
 		},
 		onError: err => {
+			if (err instanceof DOMException && err.name === "AbortError") {
+				return
+			}
+
 			postMessageToMain({
 				type: "upload",
 				data: {
@@ -646,6 +692,9 @@ export async function uploadFile({
 					size: file.size
 				}
 			})
+
+			delete pauseSignals[fileId]
+			delete abortControllers[fileId]
 		},
 		onUploaded: async item => {
 			// TODO: Thumbnail processing etc.
@@ -684,7 +733,7 @@ export async function uploadDirectory({
 }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const directoryId = Math.random().toString().slice(2)
+	const directoryId = uuidv4()
 	const items: DriveCloudItem[] = []
 	let size = 0
 	let name: string | null = null
@@ -711,11 +760,21 @@ export async function uploadDirectory({
 		name = "Directory"
 	}
 
+	if (!pauseSignals[directoryId]) {
+		pauseSignals[directoryId] = new PauseSignal()
+	}
+
+	if (!abortControllers[directoryId]) {
+		abortControllers[directoryId] = new AbortController()
+	}
+
 	try {
 		await SDK.cloud().uploadDirectoryFromWeb({
 			files: files.map(file => file.file) as unknown as FileList,
 			parent,
 			name,
+			pauseSignal: pauseSignals[directoryId],
+			abortSignal: abortControllers[directoryId].signal,
 			onQueued: () => {
 				if (didQueue) {
 					return
@@ -761,6 +820,10 @@ export async function uploadDirectory({
 				})
 			},
 			onError: err => {
+				if (err instanceof DOMException && err.name === "AbortError") {
+					return
+				}
+
 				if (didError) {
 					return
 				}
@@ -777,6 +840,9 @@ export async function uploadDirectory({
 						size
 					}
 				})
+
+				delete pauseSignals[directoryId]
+				delete abortControllers[directoryId]
 			},
 			onDirectoryCreated: item => {
 				setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
@@ -816,8 +882,15 @@ export async function uploadDirectory({
 			}
 		})
 
+		delete pauseSignals[directoryId]
+		delete abortControllers[directoryId]
+
 		return items
 	} catch (e) {
+		if (e instanceof DOMException && e.name === "AbortError") {
+			return []
+		}
+
 		if (!didError) {
 			didError = true
 
@@ -974,6 +1047,14 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 
 		directorySize = itemsWithPath.reduce((prev, item) => prev + item.size, 0)
 
+		if (!pauseSignals[directoryId]) {
+			pauseSignals[directoryId] = new PauseSignal()
+		}
+
+		if (!abortControllers[directoryId]) {
+			abortControllers[directoryId] = new AbortController()
+		}
+
 		await promiseAllChunked(
 			itemsWithPath.map(item => {
 				return new Promise<void>((resolve, reject) => {
@@ -992,6 +1073,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 							chunks: item.chunks,
 							size: item.size,
 							key: item.key,
+							pauseSignal: pauseSignals[directoryId],
+							abortSignal: abortControllers[directoryId].signal,
 							onQueued: () => {
 								if (didQueue) {
 									return
@@ -1037,6 +1120,10 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 								})
 							},
 							onError: err => {
+								if (err instanceof DOMException && err.name === "AbortError") {
+									return
+								}
+
 								if (didError) {
 									return
 								}
@@ -1053,6 +1140,9 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 										err
 									}
 								})
+
+								delete pauseSignals[directoryId]
+								delete abortControllers[directoryId]
 							}
 						})
 						.then(stream => {
@@ -1081,7 +1171,14 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 				size: directorySize
 			}
 		})
+
+		delete pauseSignals[directoryId]
+		delete abortControllers[directoryId]
 	} catch (e) {
+		if (e instanceof DOMException && e.name === "AbortError") {
+			return
+		}
+
 		if (!didError) {
 			didError = true
 
@@ -1361,6 +1458,14 @@ export async function readFile({
 		return Buffer.from([])
 	}
 
+	if (!pauseSignals[item.uuid]) {
+		pauseSignals[item.uuid] = new PauseSignal()
+	}
+
+	if (!abortControllers[item.uuid]) {
+		abortControllers[item.uuid] = new AbortController()
+	}
+
 	const stream = await SDK.cloud().downloadFileToReadableStream({
 		uuid: item.uuid,
 		bucket: item.bucket,
@@ -1371,6 +1476,8 @@ export async function readFile({
 		key: item.key,
 		start,
 		end,
+		pauseSignal: pauseSignals[item.uuid],
+		abortSignal: abortControllers[item.uuid].signal,
 		onQueued: () => {
 			if (!emitEvents) {
 				return
@@ -1429,8 +1536,15 @@ export async function readFile({
 					size: item.size
 				}
 			})
+
+			delete pauseSignals[item.uuid]
+			delete abortControllers[item.uuid]
 		},
 		onError: err => {
+			if (err instanceof DOMException && err.name === "AbortError") {
+				return
+			}
+
 			if (!emitEvents) {
 				return
 			}
@@ -1445,6 +1559,9 @@ export async function readFile({
 					size: item.size
 				}
 			})
+
+			delete pauseSignals[item.uuid]
+			delete abortControllers[item.uuid]
 		}
 	})
 
@@ -2748,4 +2865,51 @@ export async function addNoteParticipant({
 	await waitForInitialization()
 
 	return await SDK.notes().addParticipant({ uuid, contactUUID, permissionsWrite, publicKey })
+}
+
+export async function noteParticipantPermissions({
+	uuid,
+	permissionsWrite,
+	userId
+}: {
+	uuid: string
+	permissionsWrite: boolean
+	userId: number
+}): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.notes().participantPermissions({ uuid, permissionsWrite, userId })
+}
+
+export async function pausePauseSignal({ id }: { id: string }): Promise<void> {
+	await waitForInitialization()
+
+	if (!pauseSignals[id] || pauseSignals[id].isPaused()) {
+		return
+	}
+
+	pauseSignals[id].pause()
+}
+
+export async function resumePauseSignal({ id }: { id: string }): Promise<void> {
+	await waitForInitialization()
+
+	if (!pauseSignals[id] || !pauseSignals[id].isPaused()) {
+		return
+	}
+
+	pauseSignals[id].resume()
+}
+
+export async function abortAbortSignal({ id }: { id: string }): Promise<void> {
+	await waitForInitialization()
+
+	if (!abortControllers[id] || abortControllers[id].signal.aborted) {
+		return
+	}
+
+	abortControllers[id].abort()
+
+	delete abortControllers[id]
+	delete pauseSignals[id]
 }

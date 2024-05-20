@@ -4,15 +4,13 @@ import { useTranslation } from "react-i18next"
 import useWindowSize from "@/hooks/useWindowSize"
 import eventEmitter from "@/lib/eventEmitter"
 import { type WorkerToMainMessage } from "@/lib/worker/types"
-import { useTransfersStore, type TransferState, type Transfer } from "@/stores/transfers.store"
+import { useTransfersStore, type TransferState, type Transfer as TransferType } from "@/stores/transfers.store"
 import { Virtuoso } from "react-virtuoso"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
 import { calcSpeed, calcTimeLeft, getTimeRemaining, bpsToReadable } from "./utils"
-import { cn } from "@/lib/utils"
 import throttle from "lodash/throttle"
 import { ArrowDownUp } from "lucide-react"
 import { IS_DESKTOP } from "@/constants"
+import Transfer from "./transfer"
 
 export const transferStateSortingPriority: Record<TransferState, number> = {
 	started: 1,
@@ -68,40 +66,15 @@ export const Transfers = memo(() => {
 		return windowSize.height - (remaining > 0 && speed > 0 ? 130 : 85)
 	}, [windowSize.height, remaining, speed])
 
-	const getItemKey = useCallback((_: number, transfer: Transfer) => transfer.uuid, [])
+	const getItemKey = useCallback((_: number, transfer: TransferType) => transfer.uuid, [])
 
 	const itemContent = useCallback(
-		(_: number, transfer: Transfer) => {
+		(_: number, transfer: TransferType) => {
 			return (
-				<div className="flex flex-col gap-2">
-					<div className="flex flex-row justify-between items-center w-full">
-						<div className="flex flex-row items-center max-w-[70%]">
-							<p className="line-clamp-1 text-ellipsis">{transfer.name}</p>
-						</div>
-						{transfer.state !== "started" ? (
-							<Badge variant={transfer.state === "error" ? "destructive" : "secondary"}>
-								{t("transfers.state." + transfer.state)}
-							</Badge>
-						) : (
-							<Badge variant="default">{t("transfers.pause")}</Badge>
-						)}
-					</div>
-					<Progress
-						value={
-							["error", "queued"].includes(transfer.state)
-								? 0
-								: transfer.state === "finished"
-									? 100
-									: parseInt(((transfer.bytes / transfer.size) * 100).toFixed(0))
-						}
-						color="green"
-						className={cn(
-							"w-full h-[6px]",
-							transfer.state === "finished" ? "progress-finished" : "",
-							transfer.state === "error" ? "progress-error" : ""
-						)}
-					/>
-				</div>
+				<Transfer
+					transfer={transfer}
+					t={t}
+				/>
 			)
 		},
 		[t]

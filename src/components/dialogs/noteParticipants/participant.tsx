@@ -1,6 +1,6 @@
 import { memo, useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import { X, MoreVertical, Crown } from "lucide-react"
+import { X, Crown, Edit, Eye } from "lucide-react"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import worker from "@/lib/worker"
@@ -72,6 +72,44 @@ export const Participant = memo(
 			[errorToast, loadingToast, userId, participant.userId, note.uuid, setNote]
 		)
 
+		const togglePermissions = useCallback(async () => {
+			if (userId === participant.userId) {
+				return
+			}
+
+			const toast = loadingToast()
+
+			try {
+				await worker.noteParticipantPermissions({
+					uuid: note.uuid,
+					userId: participant.userId,
+					permissionsWrite: !participant.permissionsWrite
+				})
+
+				setNote(prev =>
+					prev
+						? {
+								...prev,
+								participants: prev.participants.map(p =>
+									p.userId === participant.userId ? { ...p, permissionsWrite: !p.permissionsWrite } : p
+								)
+							}
+						: prev
+				)
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		}, [errorToast, loadingToast, userId, participant.userId, note.uuid, setNote, participant.permissionsWrite])
+
 		return (
 			<div className="flex flex-row gap-4 items-center p-2 rounded-md justify-between hover:bg-secondary mb-1">
 				<div className="flex flex-row gap-2 items-center">
@@ -93,14 +131,20 @@ export const Participant = memo(
 							<Tooltip>
 								<TooltipTrigger asChild={true}>
 									<div
-										className="bg-secondary hover:bg-primary-foreground w-6 h-6 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
-										onClick={remove}
+										className="bg-secondary hover:bg-primary-foreground w-7 h-7 shrink-0 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
+										onClick={togglePermissions}
 									>
-										<MoreVertical size={14} />
+										{participant.permissionsWrite ? <Edit size={14} /> : <Eye size={14} />}
 									</div>
 								</TooltipTrigger>
 								<TooltipContent side="top">
-									<p>{t("dialogs.noteParticipants.settings")}</p>
+									<p>
+										{t(
+											participant.permissionsWrite
+												? "dialogs.noteParticipants.toggleReadPermissions"
+												: "dialogs.noteParticipants.toggleWritePermissions"
+										)}
+									</p>
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
@@ -108,7 +152,7 @@ export const Participant = memo(
 							<Tooltip>
 								<TooltipTrigger asChild={true}>
 									<div
-										className="bg-red-500 w-6 h-6 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
+										className="bg-red-500 w-7 h-7 shrink-0 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
 										onClick={remove}
 									>
 										<X size={14} />
