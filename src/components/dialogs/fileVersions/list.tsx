@@ -123,7 +123,7 @@ export const List = memo(
 		const itemContent = useCallback(
 			(_: number, version: FileVersion) => {
 				return (
-					<div className="flex flex-row items-center gap-4 py-2">
+					<div className="flex flex-row items-center gap-4 py-2 pr-4">
 						<div className="flex flex-row grow gap-2 items-center">
 							{item.uuid === version.uuid && <Badge>Current</Badge>}
 							<p>{simpleDate(convertTimestampToMs(version.timestamp))}</p>

@@ -91,7 +91,12 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 				>
 					{t("contextMenus.drive.newFolder")}
 				</ContextMenuItem>
-				<ContextMenuItem className="cursor-pointer">{t("contextMenus.drive.newTextFile")}</ContextMenuItem>
+				<ContextMenuItem
+					className="cursor-pointer"
+					onClick={() => eventEmitter.emit("createTextFile")}
+				>
+					{t("contextMenus.drive.newTextFile")}
+				</ContextMenuItem>
 				<ContextMenuSeparator />
 				<ContextMenuItem
 					className="cursor-pointer"

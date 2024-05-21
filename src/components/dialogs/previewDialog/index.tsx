@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useCallback, useMemo, useRef } from "react"
+import { memo, useState, useEffect, useCallback, useRef } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import eventEmitter from "@/lib/eventEmitter"
 import { type DriveCloudItem } from "@/components/drive"
@@ -9,7 +9,16 @@ import PDF from "./pdf"
 import Image from "./image"
 import Video from "./video"
 import DocX from "./docx"
-import { Loader as LoaderIcon, X } from "lucide-react"
+import { Loader as LoaderIcon, X, Save } from "lucide-react"
+import { showConfirmDialog } from "../confirm"
+import { uploadFile } from "@/lib/worker/worker"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { TOOLTIP_POPUP_DELAY } from "@/constants"
+import { useTranslation } from "react-i18next"
+import { v4 as uuidv4 } from "uuid"
+import { showInputDialog } from "../input"
+import useRouteParent from "@/hooks/useRouteParent"
+import { useDriveSharedStore } from "@/stores/drive.store"
 
 export const Loader = memo(() => {
 	return (
@@ -25,14 +34,13 @@ export const PreviewDialog = memo(() => {
 	const [urlObjects, setURLObjects] = useState<Record<string, string>>({})
 	const [buffers, setBuffers] = useState<Record<string, Buffer>>({})
 	const openRef = useRef<boolean>(false)
-
-	const previewType = useMemo(() => {
-		if (!item) {
-			return "other"
-		}
-
-		return fileNameToPreviewType(item.name)
-	}, [item])
+	const [didChange, setDidChange] = useState<boolean>(false)
+	const textRef = useRef<string>("")
+	const [saving, setSaving] = useState<boolean>(false)
+	const { t } = useTranslation()
+	const routeParent = useRouteParent()
+	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore()
+	const [previewType, setPreviewType] = useState<string>("")
 
 	const cleanup = useCallback(() => {
 		setTimeout(() => {
@@ -48,11 +56,28 @@ export const PreviewDialog = memo(() => {
 	}, [urlObjects])
 
 	const onOpenChange = useCallback(
-		(openState: boolean) => {
+		async (openState: boolean) => {
+			if (saving) {
+				return
+			}
+
+			if (didChange) {
+				if (
+					!(await showConfirmDialog({
+						title: "d",
+						continueButtonText: "ddd",
+						description: "ookeoetrasher",
+						continueButtonVariant: "destructive"
+					}))
+				) {
+					return
+				}
+			}
+
 			setOpen(openState)
 			cleanup()
 		},
-		[cleanup]
+		[cleanup, didChange, saving]
 	)
 
 	const loadFile = useCallback(
@@ -84,21 +109,147 @@ export const PreviewDialog = memo(() => {
 		[cleanup]
 	)
 
+	const saveFile = useCallback(async () => {
+		if (!item || item.type !== "file" || !didChange || textRef.current.length === 0 || saving) {
+			return
+		}
+
+		setSaving(true)
+
+		try {
+			const buffer = Buffer.from(textRef.current, "utf-8")
+			const itm = await uploadFile({
+				file: new File([buffer], item.name, {
+					type: item.mime
+				}),
+				parent: item.parent,
+				sharerId: item.sharerId,
+				receiverId: item.receiverId,
+				receiverEmail: item.receiverEmail,
+				receivers: item.receivers,
+				sharerEmail: item.sharerEmail,
+				name: item.name,
+				emitEvents: false
+			})
+
+			eventEmitter.emit("refetchDrive")
+
+			setBuffers(prev => ({ ...prev, [itm.uuid]: buffer }))
+			setItem(itm)
+			setDidChange(false)
+		} catch (e) {
+			console.error(e)
+		} finally {
+			setSaving(false)
+		}
+	}, [didChange, item, saving])
+
+	const onValueChange = useCallback((value: string) => {
+		textRef.current = value
+
+		setDidChange(true)
+	}, [])
+
+	const keyDownListener = useCallback(
+		(e: KeyboardEvent) => {
+			if (!open) {
+				return
+			}
+
+			if (e.key === "s" && (e.ctrlKey || e.metaKey) && didChange) {
+				e.preventDefault()
+				e.stopPropagation()
+
+				saveFile()
+			}
+		},
+		[open, saveFile, didChange]
+	)
+
+	const createTextFile = useCallback(async () => {
+		if (saving || didChange) {
+			return
+		}
+
+		const inputResponse = await showInputDialog({
+			title: "newfolder",
+			continueButtonText: "create",
+			value: "",
+			autoFocusInput: true,
+			placeholder: "New folder"
+		})
+
+		if (inputResponse.cancelled) {
+			return
+		}
+
+		const newTextFileItem: DriveCloudItem = {
+			name: inputResponse.value.trim(),
+			uuid: uuidv4(),
+			parent: routeParent,
+			size: 1,
+			selected: false,
+			chunks: 1,
+			type: "file",
+			bucket: "",
+			rm: "",
+			region: "",
+			sharerId: currentSharerId,
+			receiverId: currentReceiverId,
+			receiverEmail: currentReceiverEmail,
+			receivers: currentReceivers,
+			sharerEmail: currentSharerEmail,
+			favorited: false,
+			key: "",
+			lastModified: Date.now(),
+			timestamp: Date.now(),
+			version: 2,
+			mime: ""
+		}
+
+		textRef.current = ""
+
+		setPreviewType(fileNameToPreviewType(newTextFileItem.name))
+		setSaving(false)
+		setDidChange(false)
+		setItem(newTextFileItem)
+		setBuffers(prev => ({ ...prev, [newTextFileItem.uuid]: Buffer.from("", "utf8") }))
+		setOpen(true)
+	}, [saving, didChange, routeParent, currentReceiverEmail, currentReceivers, currentReceiverId, currentSharerEmail, currentSharerId])
+
 	useEffect(() => {
 		openRef.current = open
 	}, [open])
 
 	useEffect(() => {
+		window.addEventListener("keydown", keyDownListener)
+
+		return () => {
+			window.removeEventListener("keydown", keyDownListener)
+		}
+	}, [keyDownListener])
+
+	useEffect(() => {
 		const listener = eventEmitter.on("openPreviewModal", ({ item: itm }: { item: DriveCloudItem }) => {
+			textRef.current = ""
+
+			setPreviewType(fileNameToPreviewType(itm.name))
+			setSaving(false)
+			setDidChange(false)
 			setItem(itm)
-			setOpen(true)
 			loadFile({ itm })
+			setOpen(true)
+		})
+
+		const newTextFileListener = eventEmitter.on("createTextFile", () => {
+			createTextFile()
 		})
 
 		return () => {
 			listener.remove()
+			newTextFileListener.remove()
 		}
-	}, [loadFile])
+	}, [loadFile, createTextFile])
 
 	return (
 		<Dialog
@@ -109,10 +260,37 @@ export const PreviewDialog = memo(() => {
 				{item && (
 					<div className="absolute w-screen h-screen flex flex-col">
 						<div className="flex flex-row border-b h-[49px] shadow-md bg-secondary w-full items-center justify-between px-4 z-50 gap-10 -mt-[1px]">
-							<p className="line-clamp-1 text-ellipsis break-all">{item.name}</p>
+							<div className="flex flex-row items-center gap-2 grow">
+								{didChange && (
+									<>
+										{saving ? (
+											<LoaderIcon
+												size={20}
+												className="animate-spin-medium"
+											/>
+										) : (
+											<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+												<Tooltip>
+													<TooltipTrigger asChild={true}>
+														<Save
+															onClick={saveFile}
+															size={20}
+															className="cursor-pointer"
+														/>
+													</TooltipTrigger>
+													<TooltipContent side="left">
+														<p>{t("dialogs.previewDialog.save")}</p>
+													</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
+										)}
+									</>
+								)}
+								<p className="line-clamp-1 text-ellipsis break-all">{item.name}</p>
+							</div>
 							<X
 								className="h-4 w-4 opacity-70 hover:opacity-100 cursor-pointer"
-								onClick={() => setOpen(false)}
+								onClick={() => onOpenChange(false)}
 							/>
 						</div>
 						{(previewType === "text" || previewType === "code" || previewType === "md") && (
@@ -121,6 +299,7 @@ export const PreviewDialog = memo(() => {
 									<Text
 										buffer={buffers[item.uuid]}
 										item={item}
+										onValueChange={onValueChange}
 									/>
 								) : (
 									<Loader />

@@ -139,7 +139,12 @@ export const TopBar = memo(() => {
 									>
 										{t("contextMenus.drive.newFolder")}
 									</DropdownMenuItem>
-									<DropdownMenuItem className="cursor-pointer">{t("contextMenus.drive.newTextFile")}</DropdownMenuItem>
+									<DropdownMenuItem
+										className="cursor-pointer"
+										onClick={() => eventEmitter.emit("createTextFile")}
+									>
+										{t("contextMenus.drive.newTextFile")}
+									</DropdownMenuItem>
 									<DropdownMenuSeparator />
 									<DropdownMenuItem
 										className="cursor-pointer"

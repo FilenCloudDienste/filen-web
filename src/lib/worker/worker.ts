@@ -602,7 +602,8 @@ export async function uploadFile({
 	receiverId = 0,
 	receiverEmail = "",
 	receivers = [],
-	name
+	name,
+	emitEvents = true
 }: {
 	file: File
 	parent: string
@@ -612,6 +613,7 @@ export async function uploadFile({
 	receiverEmail?: string
 	receivers?: CloudItemReceiver[]
 	name?: string
+	emitEvents?: boolean
 }): Promise<DriveCloudItem> {
 	await waitForInitialization()
 
@@ -633,6 +635,10 @@ export async function uploadFile({
 		pauseSignal: pauseSignals[fileId],
 		abortSignal: abortControllers[fileId].signal,
 		onQueued: () => {
+			if (!emitEvents) {
+				return
+			}
+
 			postMessageToMain({
 				type: "upload",
 				data: {
@@ -643,6 +649,10 @@ export async function uploadFile({
 			})
 		},
 		onStarted: () => {
+			if (!emitEvents) {
+				return
+			}
+
 			postMessageToMain({
 				type: "upload",
 				data: {
@@ -654,6 +664,10 @@ export async function uploadFile({
 			})
 		},
 		onProgress: transferred => {
+			if (!emitEvents) {
+				return
+			}
+
 			postMessageToMain({
 				type: "upload",
 				data: {
@@ -665,6 +679,10 @@ export async function uploadFile({
 			})
 		},
 		onFinished: () => {
+			if (!emitEvents) {
+				return
+			}
+
 			postMessageToMain({
 				type: "upload",
 				data: {
@@ -679,6 +697,10 @@ export async function uploadFile({
 			delete abortControllers[fileId]
 		},
 		onError: err => {
+			if (!emitEvents) {
+				return
+			}
+
 			if (err instanceof DOMException && err.name === "AbortError") {
 				return
 			}
@@ -722,7 +744,8 @@ export async function uploadDirectory({
 	sharerEmail = "",
 	receiverId = 0,
 	receiverEmail = "",
-	receivers = []
+	receivers = [],
+	emitEvents = true
 }: {
 	files: { file: File; webkitRelativePath: string }[]
 	parent: string
@@ -731,6 +754,7 @@ export async function uploadDirectory({
 	receiverId?: number
 	receiverEmail?: string
 	receivers?: CloudItemReceiver[]
+	emitEvents?: boolean
 }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
@@ -777,7 +801,7 @@ export async function uploadDirectory({
 			pauseSignal: pauseSignals[directoryId],
 			abortSignal: abortControllers[directoryId].signal,
 			onQueued: () => {
-				if (didQueue) {
+				if (didQueue || !emitEvents) {
 					return
 				}
 
@@ -793,7 +817,7 @@ export async function uploadDirectory({
 				})
 			},
 			onStarted: () => {
-				if (didStart) {
+				if (didStart || !emitEvents) {
 					return
 				}
 
@@ -810,6 +834,10 @@ export async function uploadDirectory({
 				})
 			},
 			onProgress: transferred => {
+				if (!emitEvents) {
+					return
+				}
+
 				postMessageToMain({
 					type: "upload",
 					data: {
@@ -825,7 +853,7 @@ export async function uploadDirectory({
 					return
 				}
 
-				if (didError) {
+				if (didError || !emitEvents) {
 					return
 				}
 
@@ -873,15 +901,17 @@ export async function uploadDirectory({
 			}
 		})
 
-		postMessageToMain({
-			type: "upload",
-			data: {
-				type: "finished",
-				uuid: directoryId,
-				name: name!,
-				size
-			}
-		})
+		if (emitEvents) {
+			postMessageToMain({
+				type: "upload",
+				data: {
+					type: "finished",
+					uuid: directoryId,
+					name: name!,
+					size
+				}
+			})
+		}
 
 		delete pauseSignals[directoryId]
 		delete abortControllers[directoryId]
@@ -892,7 +922,7 @@ export async function uploadDirectory({
 			return []
 		}
 
-		if (!didError) {
+		if (!didError && emitEvents) {
 			didError = true
 
 			const err = e as unknown as Error
