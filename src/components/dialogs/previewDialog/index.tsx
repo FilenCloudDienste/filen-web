@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from "uuid"
 import { showInputDialog } from "../input"
 import useRouteParent from "@/hooks/useRouteParent"
 import { useDriveSharedStore } from "@/stores/drive.store"
+import useCanUpload from "@/hooks/useCanUpload"
 
 export const Loader = memo(() => {
 	return (
@@ -41,6 +42,7 @@ export const PreviewDialog = memo(() => {
 	const routeParent = useRouteParent()
 	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore()
 	const [previewType, setPreviewType] = useState<string>("")
+	const canUpload = useCanUpload()
 
 	const cleanup = useCallback(() => {
 		setTimeout(() => {
@@ -144,11 +146,18 @@ export const PreviewDialog = memo(() => {
 		}
 	}, [didChange, item, saving])
 
-	const onValueChange = useCallback((value: string) => {
-		textRef.current = value
+	const onValueChange = useCallback(
+		(value: string) => {
+			if (!canUpload) {
+				return
+			}
 
-		setDidChange(true)
-	}, [])
+			textRef.current = value
+
+			setDidChange(true)
+		},
+		[canUpload]
+	)
 
 	const keyDownListener = useCallback(
 		(e: KeyboardEvent) => {
@@ -156,18 +165,18 @@ export const PreviewDialog = memo(() => {
 				return
 			}
 
-			if (e.key === "s" && (e.ctrlKey || e.metaKey) && didChange) {
+			if (e.key === "s" && (e.ctrlKey || e.metaKey) && didChange && canUpload) {
 				e.preventDefault()
 				e.stopPropagation()
 
 				saveFile()
 			}
 		},
-		[open, saveFile, didChange]
+		[open, saveFile, didChange, canUpload]
 	)
 
 	const createTextFile = useCallback(async () => {
-		if (saving || didChange) {
+		if (saving || didChange || !canUpload) {
 			return
 		}
 
@@ -215,7 +224,17 @@ export const PreviewDialog = memo(() => {
 		setItem(newTextFileItem)
 		setBuffers(prev => ({ ...prev, [newTextFileItem.uuid]: Buffer.from("", "utf8") }))
 		setOpen(true)
-	}, [saving, didChange, routeParent, currentReceiverEmail, currentReceivers, currentReceiverId, currentSharerEmail, currentSharerId])
+	}, [
+		saving,
+		didChange,
+		routeParent,
+		currentReceiverEmail,
+		currentReceivers,
+		currentReceiverId,
+		currentSharerEmail,
+		currentSharerId,
+		canUpload
+	])
 
 	useEffect(() => {
 		openRef.current = open
