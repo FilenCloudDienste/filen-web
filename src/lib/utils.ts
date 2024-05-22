@@ -88,3 +88,15 @@ export function findClosestIndex(sourceString: string, targetString: string, giv
 
 	return -1
 }
+
+export function parseURLSearchParams(url: string): Record<string, string> {
+	const urlObj = new URL(url)
+	const params = new URLSearchParams(urlObj.search)
+	const paramMap: Record<string, string> = {}
+
+	params.forEach((value, key) => {
+		paramMap[key] = value
+	})
+
+	return paramMap
+}

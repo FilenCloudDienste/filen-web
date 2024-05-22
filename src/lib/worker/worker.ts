@@ -39,6 +39,9 @@ import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
 import { type PaymentMethods } from "@filen/sdk/dist/types/api/v3/user/sub/create"
 import { type FileVersionsResponse } from "@filen/sdk/dist/types/api/v3/file/versions"
 import { type NoteHistory } from "@filen/sdk/dist/types/api/v3/notes/history"
+import { type FileLinkPasswordResponse } from "@filen/sdk/dist/types/api/v3/file/link/password"
+import { type DirLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
+import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/link/info"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -122,11 +125,9 @@ export async function waitForInitialization(): Promise<void> {
 }
 
 export async function initializeSDK({ config }: { config: FilenSDKConfig }): Promise<void> {
-	if (isInitialized) {
-		return
-	}
-
 	SDK.init(config)
+
+	console.log("Worker SDK initialized")
 
 	isInitialized = true
 }
@@ -2952,4 +2953,32 @@ export async function abortAbortSignal({ id }: { id: string }): Promise<void> {
 
 	delete abortControllers[id]
 	delete pauseSignals[id]
+}
+
+export async function filePublicLinkHasPassword({ uuid }: { uuid: string }): Promise<FileLinkPasswordResponse> {
+	await waitForInitialization()
+
+	return await SDK.cloud().filePublicLinkHasPassword({ uuid })
+}
+
+export async function directoryPublicLinkInfo({ uuid }: { uuid: string }): Promise<DirLinkInfoResponse> {
+	await waitForInitialization()
+
+	return await SDK.cloud().directoryPublicLinkInfo({ uuid })
+}
+
+export async function filePublicLinkInfo({
+	uuid,
+	password,
+	key,
+	salt
+}: {
+	uuid: string
+	password?: string
+	key: string
+	salt?: string
+}): Promise<Omit<FileLinkInfoResponse, "size"> & { size: number }> {
+	await waitForInitialization()
+
+	return await SDK.cloud().filePublicLinkInfo({ uuid, password, key, salt })
 }

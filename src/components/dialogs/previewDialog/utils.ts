@@ -81,6 +81,7 @@ export function fileNameToPreviewType(name: string) {
 		case ".ahk":
 		case ".litcoffee":
 		case ".coffee":
+		case ".log":
 		case ".proto": {
 			return "code"
 		}

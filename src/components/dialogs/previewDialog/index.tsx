@@ -20,6 +20,7 @@ import { showInputDialog } from "../input"
 import useRouteParent from "@/hooks/useRouteParent"
 import { useDriveSharedStore } from "@/stores/drive.store"
 import useCanUpload from "@/hooks/useCanUpload"
+import useLocation from "@/hooks/useLocation"
 
 export const Loader = memo(() => {
 	return (
@@ -43,6 +44,7 @@ export const PreviewDialog = memo(() => {
 	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore()
 	const [previewType, setPreviewType] = useState<string>("")
 	const canUpload = useCanUpload()
+	const location = useLocation()
 
 	const cleanup = useCallback(() => {
 		setTimeout(() => {
@@ -148,7 +150,7 @@ export const PreviewDialog = memo(() => {
 
 	const onValueChange = useCallback(
 		(value: string) => {
-			if (!canUpload) {
+			if (!canUpload || location.includes("/f/") || location.includes("/d/")) {
 				return
 			}
 
@@ -156,7 +158,7 @@ export const PreviewDialog = memo(() => {
 
 			setDidChange(true)
 		},
-		[canUpload]
+		[canUpload, location]
 	)
 
 	const keyDownListener = useCallback(
@@ -165,18 +167,24 @@ export const PreviewDialog = memo(() => {
 				return
 			}
 
-			if (e.key === "s" && (e.ctrlKey || e.metaKey) && didChange && canUpload) {
+			if (
+				e.key === "s" &&
+				(e.ctrlKey || e.metaKey) &&
+				didChange &&
+				canUpload &&
+				!(location.includes("/f/") || location.includes("/d/"))
+			) {
 				e.preventDefault()
 				e.stopPropagation()
 
 				saveFile()
 			}
 		},
-		[open, saveFile, didChange, canUpload]
+		[open, saveFile, didChange, canUpload, location]
 	)
 
 	const createTextFile = useCallback(async () => {
-		if (saving || didChange || !canUpload) {
+		if (saving || didChange || !canUpload || location.includes("/f/") || location.includes("/d/")) {
 			return
 		}
 
@@ -233,7 +241,8 @@ export const PreviewDialog = memo(() => {
 		currentReceiverId,
 		currentSharerEmail,
 		currentSharerId,
-		canUpload
+		canUpload,
+		location
 	])
 
 	useEffect(() => {

@@ -29,6 +29,7 @@ import ActivityHandler from "@/components/activityHandler"
 import FileVersionsDialog from "@/components/dialogs/fileVersions"
 import NoteHistoryDialog from "@/components/dialogs/noteHistory"
 import NoteParticipantsDialog from "@/components/dialogs/noteParticipants"
+import { type FilenSDKConfig } from "@filen/sdk"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -79,59 +80,72 @@ export const Root = memo(() => {
 	const initRef = useRef<boolean>(false)
 
 	useEffect(() => {
-		if (authed) {
-			if (!initRef.current) {
-				initRef.current = true
+		if (!initRef.current) {
+			initRef.current = true
 
-				sdk.init(sdkConfig)
+			const initConfig = authed
+				? sdkConfig
+				: ({
+						email: "anonymous",
+						password: "anonymous",
+						masterKeys: ["anonymous"],
+						connectToSocket: true,
+						metadataCache: true,
+						twoFactorCode: "anonymous",
+						publicKey: "anonymous",
+						privateKey: "anonymous",
+						apiKey: "anonymous",
+						authVersion: 2,
+						baseFolderUUID: "anonymous",
+						userId: 1
+					} satisfies FilenSDKConfig)
 
-				setItem("sdkConfig", sdkConfig)
-					.then(() => {
-						Promise.all([
-							worker.initializeSDK({ config: sdkConfig }),
-							IS_DESKTOP ? window.desktopAPI.initSDK(sdkConfig) : Promise.resolve(),
-							!IS_DESKTOP && "serviceWorker" in navigator
-								? new Promise<void>(resolve => {
-										registerServiceWorker("/sw.js", {
-											registrationOptions: {
-												scope: "/"
-											},
-											ready: registration => {
-												console.log("ServiceWorker ready")
+			sdk.init(initConfig)
 
-												navigator.serviceWorker.addEventListener("message", event => {
-													console.log("SW message", event.data)
-												})
+			setItem("sdkConfig", initConfig)
+				.then(() => {
+					Promise.all([
+						worker.initializeSDK({ config: initConfig }),
+						IS_DESKTOP ? window.desktopAPI.initSDK(initConfig) : Promise.resolve(),
+						!IS_DESKTOP && "serviceWorker" in navigator
+							? new Promise<void>(resolve => {
+									registerServiceWorker("/sw.js", {
+										registrationOptions: {
+											scope: "/"
+										},
+										ready: registration => {
+											console.log("ServiceWorker ready")
 
-												registration.update().catch(console.error)
+											navigator.serviceWorker.addEventListener("message", event => {
+												console.log("SW message", event.data)
+											})
 
-												resolve()
-											},
-											registered: registration => {
-												console.log("ServiceWorker registered")
+											registration.update().catch(console.error)
 
-												registration.update().catch(console.error)
+											resolve()
+										},
+										registered: registration => {
+											console.log("ServiceWorker registered")
 
-												resolve()
-											},
-											error: err => {
-												console.error(err)
+											registration.update().catch(console.error)
 
-												resolve()
-											}
-										})
+											resolve()
+										},
+										error: err => {
+											console.error(err)
+
+											resolve()
+										}
 									})
-								: Promise.resolve()
-						])
-							.then(() => {
-								setReady(true)
-							})
-							.catch(console.error)
-					})
-					.catch(console.error)
-			}
-		} else {
-			setReady(true)
+								})
+							: Promise.resolve()
+					])
+						.then(() => {
+							setReady(true)
+						})
+						.catch(console.error)
+				})
+				.catch(console.error)
 		}
 	}, [authed, sdkConfig])
 

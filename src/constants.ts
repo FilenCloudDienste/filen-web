@@ -21,5 +21,7 @@ export const UNCACHED_QUERY_KEYS = [
 	"chatLastFocus",
 	"chatConversationOnline",
 	"chatsUnreadCount",
-	"contactsRequestInCount"
+	"contactsRequestInCount",
+	"filePublicLinkHasPassword",
+	"filePublicLinkInfo"
 ]

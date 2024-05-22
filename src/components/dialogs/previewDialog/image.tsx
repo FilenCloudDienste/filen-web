@@ -2,10 +2,11 @@ import { memo, useState, useRef, useCallback } from "react"
 import { Loader } from "."
 import { thumbnailURLObjectCache } from "@/cache"
 import { type DriveCloudItem } from "@/components/drive"
+import { cn } from "@/lib/utils"
 
 const ZOOM_SPEED = 0.1
 
-export const Image = memo(({ urlObject, item }: { urlObject?: string; item: DriveCloudItem }) => {
+export const Image = memo(({ urlObject, item, publicLink }: { urlObject?: string; item: DriveCloudItem; publicLink?: boolean }) => {
 	const [imageZoom, setImageZoom] = useState<number>(1)
 	const [imagePosition, setImagePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 	const ref = useRef<HTMLImageElement>(null)
@@ -75,11 +76,14 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 			{!urlObject && !thumbnailURLObjectCache.has(item.uuid) ? (
 				<Loader />
 			) : (
-				<div className="w-full h-full bg-black">
+				<div className={cn("w-full h-full", !publicLink && "bg-black")}>
 					<img
 						ref={ref}
 						src={urlObject ? urlObject : thumbnailURLObjectCache.get(item.uuid)}
-						className="w-full h-[calc(100vh-48px)] object-contain cursor-zoom-in z-10"
+						className={cn(
+							"w-full object-contain cursor-zoom-in z-10",
+							publicLink ? "h-[calc(100vh-56px)]" : "h-[calc(100vh-48px)]"
+						)}
 						draggable={false}
 						style={{
 							transform: "scale(" + imageZoom + ") translate(" + imagePosition.x + "px, " + imagePosition.y + "px)"

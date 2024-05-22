@@ -1,8 +1,9 @@
 import { memo, useCallback, useRef } from "react"
 import { renderAsync } from "docx-preview"
 import useMountedEffect from "@/hooks/useMountedEffect"
+import { cn } from "@/lib/utils"
 
-export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
+export const DocX = memo(({ buffer, publicLink }: { buffer: Buffer; publicLink?: boolean }) => {
 	const container = useRef<HTMLDivElement>(null)
 
 	const loadDocX = useCallback(async () => {
@@ -22,10 +23,10 @@ export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
 	})
 
 	return (
-		<div className="w-full h-full">
+		<div className="w-full h-full select-text">
 			<div
 				ref={container}
-				className="w-full h-[calc(100vh-48px)] overflow-auto"
+				className={cn("w-full overflow-auto select-text", publicLink ? "h-[calc(100vh-56px)]" : "h-[calc(100vh-48px)]")}
 			/>
 		</div>
 	)

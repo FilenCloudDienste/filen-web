@@ -19,7 +19,9 @@ import { Route as ChatsImport } from './routes/chats'
 import { Route as IndexImport } from './routes/index'
 import { Route as SettingsTypeImport } from './routes/settings.$type'
 import { Route as NotesUuidImport } from './routes/notes.$uuid'
+import { Route as FUuidImport } from './routes/f.$uuid'
 import { Route as DriveSplatImport } from './routes/drive.$'
+import { Route as DUuidImport } from './routes/d.$uuid'
 import { Route as ContactsTypeImport } from './routes/contacts.$type'
 import { Route as ChatsUuidImport } from './routes/chats.$uuid'
 
@@ -65,8 +67,18 @@ const NotesUuidRoute = NotesUuidImport.update({
   getParentRoute: () => NotesRoute,
 } as any)
 
+const FUuidRoute = FUuidImport.update({
+  path: '/f/$uuid',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const DriveSplatRoute = DriveSplatImport.update({
   path: '/drive/$',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DUuidRoute = DUuidImport.update({
+  path: '/d/$uuid',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -116,8 +128,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactsTypeImport
       parentRoute: typeof rootRoute
     }
+    '/d/$uuid': {
+      preLoaderRoute: typeof DUuidImport
+      parentRoute: typeof rootRoute
+    }
     '/drive/$': {
       preLoaderRoute: typeof DriveSplatImport
+      parentRoute: typeof rootRoute
+    }
+    '/f/$uuid': {
+      preLoaderRoute: typeof FUuidImport
       parentRoute: typeof rootRoute
     }
     '/notes/$uuid': {
@@ -141,7 +161,9 @@ export const routeTree = rootRoute.addChildren([
   SyncsRoute,
   TerminalRoute,
   ContactsTypeRoute,
+  DUuidRoute,
   DriveSplatRoute,
+  FUuidRoute,
   SettingsTypeRoute,
 ])
 
