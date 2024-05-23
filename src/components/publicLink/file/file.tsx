@@ -109,7 +109,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 	}, [item, errorToast, loadingToast])
 
 	const topBar = useMemo(() => {
-		if (!item) {
+		if (!item || urlState.chatEmbed) {
 			return null
 		}
 
@@ -152,7 +152,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				</div>
 			</div>
 		)
-	}, [item, dark, download, isMobile])
+	}, [item, dark, download, isMobile, urlState.chatEmbed])
 
 	const loader = useMemo(() => {
 		return (
@@ -256,7 +256,6 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 											<ImagePreview
 												urlObject={urlObject}
 												item={item}
-												publicLink={true}
 											/>
 										</>
 									) : (
@@ -271,7 +270,6 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 											<TextPreview
 												buffer={buffer}
 												item={item}
-												publicLink={true}
 											/>
 										</>
 									) : (

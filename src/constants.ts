@@ -10,7 +10,9 @@ export const THUMBNAIL_MAX_SIZE = 256
 export const MiB = 1024 * 1024
 export const THUMBNAIL_MAX_FETCH_SIZE = MiB * 32
 export const PUBLIC_LINK_BASE_URL = IS_DESKTOP
-	? "https://app.filen.io/#/d/"
+	? import.meta.env.DEV
+		? globalThis.location.protocol + "//" + globalThis.location.host + "/#/d/"
+		: "https://app.filen.io/#/d/"
 	: globalThis.location.protocol + "//" + globalThis.location.host + "/#/d/"
 export const IS_APPLE_DEVICE = UAParserResult.device.vendor === "Apple"
 export const UNCACHED_QUERY_KEYS = [
@@ -26,3 +28,5 @@ export const UNCACHED_QUERY_KEYS = [
 	"filePublicLinkInfo",
 	"directoryPublicLinkInfo"
 ]
+export const IS_INSIDE_PUBLIC_LINK_ON_LOAD =
+	typeof window !== "undefined" ? window.location.href.includes("/f/") || window.location.href.includes("/d/") : false

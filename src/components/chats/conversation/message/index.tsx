@@ -27,6 +27,7 @@ import Image from "./embeds/image"
 import OG from "./embeds/og"
 import Async from "./embeds/async"
 import { chatDisplayMessageAsCache, chatOGDataCache } from "@/cache"
+import Filen from "./embeds/filen"
 
 export const EMBED_CONTENT_TYPES_IMAGES = [
 	"image/png",
@@ -447,6 +448,16 @@ export const Message = memo(
 														if (dAs === "async") {
 															return (
 																<Async
+																	link={link}
+																	key={index}
+																	messageUUID={message.uuid}
+																/>
+															)
+														}
+
+														if (dAs === "filenEmbed") {
+															return (
+																<Filen
 																	link={link}
 																	key={index}
 																	messageUUID={message.uuid}

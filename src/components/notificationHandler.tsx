@@ -33,8 +33,8 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 	}, [location])
 
 	const chatConversationsQuery = useQuery({
-		queryKey: ["listChatsConversations", authed],
-		queryFn: () => (authed ? worker.listChatsConversations() : Promise.resolve([]))
+		queryKey: ["listChatsConversations", authed, isInsidePublicLink],
+		queryFn: () => (authed && !isInsidePublicLink ? worker.listChatsConversations() : Promise.resolve([]))
 	})
 
 	const socketEventListener = useCallback(

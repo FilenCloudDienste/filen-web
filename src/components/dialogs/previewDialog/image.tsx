@@ -3,14 +3,16 @@ import { Loader } from "."
 import { thumbnailURLObjectCache } from "@/cache"
 import { type DriveCloudItem } from "@/components/drive"
 import { cn } from "@/lib/utils"
+import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 
 const ZOOM_SPEED = 0.1
 
-export const Image = memo(({ urlObject, item, publicLink }: { urlObject?: string; item: DriveCloudItem; publicLink?: boolean }) => {
+export const Image = memo(({ urlObject, item }: { urlObject?: string; item: DriveCloudItem }) => {
 	const [imageZoom, setImageZoom] = useState<number>(1)
 	const [imagePosition, setImagePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 	const ref = useRef<HTMLImageElement>(null)
 	const [pressed, setPressed] = useState<boolean>(false)
+	const publicLinkURLState = usePublicLinkURLState()
 
 	const onMouseDown = useCallback(() => {
 		setPressed(true)
@@ -38,25 +40,32 @@ export const Image = memo(({ urlObject, item, publicLink }: { urlObject?: string
 		[pressed]
 	)
 
-	const onWheel = useCallback((e: React.WheelEvent<HTMLImageElement>) => {
-		if (e.deltaY > 0) {
-			setImageZoom(prev => {
-				const newZoom = prev + ZOOM_SPEED
+	const onWheel = useCallback(
+		(e: React.WheelEvent<HTMLImageElement>) => {
+			if (publicLinkURLState.isPublicLink) {
+				return
+			}
 
-				return newZoom
-			})
-		} else {
-			setImageZoom(prev => {
-				let newZoom = prev - ZOOM_SPEED
+			if (e.deltaY > 0) {
+				setImageZoom(prev => {
+					const newZoom = prev + ZOOM_SPEED
 
-				if (newZoom <= 0.1) {
-					newZoom = 0.1
-				}
+					return newZoom
+				})
+			} else {
+				setImageZoom(prev => {
+					let newZoom = prev - ZOOM_SPEED
 
-				return newZoom
-			})
-		}
-	}, [])
+					if (newZoom <= 0.1) {
+						newZoom = 0.1
+					}
+
+					return newZoom
+				})
+			}
+		},
+		[publicLinkURLState.isPublicLink]
+	)
 
 	const onDoubleClick = useCallback(() => {
 		setImagePosition({
@@ -76,13 +85,17 @@ export const Image = memo(({ urlObject, item, publicLink }: { urlObject?: string
 			{!urlObject && !thumbnailURLObjectCache.has(item.uuid) ? (
 				<Loader />
 			) : (
-				<div className={cn("w-full h-full", !publicLink && "bg-black")}>
+				<div className={cn("w-full h-full", !publicLinkURLState.isPublicLink && "bg-black")}>
 					<img
 						ref={ref}
 						src={urlObject ? urlObject : thumbnailURLObjectCache.get(item.uuid)}
 						className={cn(
-							"w-full object-contain cursor-zoom-in z-10",
-							publicLink ? "h-[calc(100vh-56px)]" : "h-[calc(100vh-48px)]"
+							"w-full object-contain z-10",
+							publicLinkURLState.isPublicLink
+								? publicLinkURLState.chatEmbed
+									? "h-screen cursor-pointer"
+									: "h-[calc(100vh-56px)] cursor-pointer"
+								: "h-[calc(100vh-48px)] cursor-zoom-in"
 						)}
 						draggable={false}
 						style={{

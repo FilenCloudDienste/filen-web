@@ -23,9 +23,9 @@ export const Item = memo(({ uuid, info, ex, index }: { info: DirLinkInfoDecrypte
 	}, [uuid, virtualURL, setVirtualURL])
 
 	return (
-		<div className="flex flex-row gap-1 items-center select-none">
+		<li className="flex flex-row gap-1 items-center select-none truncate">
 			<p
-				className="text-primary cursor-pointer select-none"
+				className="text-primary cursor-pointer select-none truncate"
 				onClick={navigateToPath}
 			>
 				{uuid === info.parent
@@ -34,8 +34,13 @@ export const Item = memo(({ uuid, info, ex, index }: { info: DirLinkInfoDecrypte
 						? directoryUUIDToNameCache.get(uuid)!
 						: uuid}
 			</p>
-			{index < ex.length - 1 && <ChevronRight size={18} />}
-		</div>
+			{index < ex.length - 1 && (
+				<ChevronRight
+					className="shrink-0"
+					size={18}
+				/>
+			)}
+		</li>
 	)
 })
 

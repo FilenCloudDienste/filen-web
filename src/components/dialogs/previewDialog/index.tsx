@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useCallback, useRef } from "react"
+import { memo, useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import eventEmitter from "@/lib/eventEmitter"
 import { type DriveCloudItem } from "@/components/drive"
@@ -45,6 +45,10 @@ export const PreviewDialog = memo(() => {
 	const [previewType, setPreviewType] = useState<string>("")
 	const canUpload = useCanUpload()
 	const location = useLocation()
+
+	const isInsidePublicLink = useMemo(() => {
+		return location.includes("/f/") || location.includes("/d/")
+	}, [location])
 
 	const cleanup = useCallback(() => {
 		setTimeout(() => {
@@ -150,7 +154,7 @@ export const PreviewDialog = memo(() => {
 
 	const onValueChange = useCallback(
 		(value: string) => {
-			if (!canUpload || location.includes("/f/") || location.includes("/d/")) {
+			if (!canUpload || isInsidePublicLink) {
 				return
 			}
 
@@ -158,7 +162,7 @@ export const PreviewDialog = memo(() => {
 
 			setDidChange(true)
 		},
-		[canUpload, location]
+		[canUpload, isInsidePublicLink]
 	)
 
 	const keyDownListener = useCallback(
@@ -167,24 +171,18 @@ export const PreviewDialog = memo(() => {
 				return
 			}
 
-			if (
-				e.key === "s" &&
-				(e.ctrlKey || e.metaKey) &&
-				didChange &&
-				canUpload &&
-				!(location.includes("/f/") || location.includes("/d/"))
-			) {
+			if (e.key === "s" && (e.ctrlKey || e.metaKey) && didChange && canUpload && !isInsidePublicLink) {
 				e.preventDefault()
 				e.stopPropagation()
 
 				saveFile()
 			}
 		},
-		[open, saveFile, didChange, canUpload, location]
+		[open, saveFile, didChange, canUpload, isInsidePublicLink]
 	)
 
 	const createTextFile = useCallback(async () => {
-		if (saving || didChange || !canUpload || location.includes("/f/") || location.includes("/d/")) {
+		if (saving || didChange || !canUpload || isInsidePublicLink) {
 			return
 		}
 
@@ -242,7 +240,7 @@ export const PreviewDialog = memo(() => {
 		currentSharerEmail,
 		currentSharerId,
 		canUpload,
-		location
+		isInsidePublicLink
 	])
 
 	useEffect(() => {

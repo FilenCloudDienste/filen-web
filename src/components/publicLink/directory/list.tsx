@@ -6,7 +6,6 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import { type DriveSortBy } from "@/components/drive/list/header"
 import { IS_DESKTOP } from "@/constants"
 import ListItem from "@/components/drive/list/item"
-import Header from "./header"
 
 export const List = memo(({ items, parent }: { items: DriveCloudItem[]; parent: string }) => {
 	const windowSize = useWindowSize()
@@ -33,10 +32,6 @@ export const List = memo(({ items, parent }: { items: DriveCloudItem[]; parent: 
 
 	return (
 		<>
-			<Header
-				parent={parent}
-				items={items}
-			/>
 			<Virtuoso
 				data={items}
 				totalCount={items.length}

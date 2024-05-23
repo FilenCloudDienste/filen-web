@@ -83,22 +83,24 @@ export const Root = memo(() => {
 		if (!initRef.current) {
 			initRef.current = true
 
-			const initConfig = authed
-				? sdkConfig
-				: ({
-						email: "anonymous",
-						password: "anonymous",
-						masterKeys: ["anonymous"],
-						connectToSocket: true,
-						metadataCache: true,
-						twoFactorCode: "anonymous",
-						publicKey: "anonymous",
-						privateKey: "anonymous",
-						apiKey: "anonymous",
-						authVersion: 2,
-						baseFolderUUID: "anonymous",
-						userId: 1
-					} satisfies FilenSDKConfig)
+			const initConfig = {
+				...(authed
+					? sdkConfig
+					: ({
+							email: "anonymous",
+							password: "anonymous",
+							masterKeys: ["anonymous"],
+							connectToSocket: true,
+							metadataCache: true,
+							twoFactorCode: "anonymous",
+							publicKey: "anonymous",
+							privateKey: "anonymous",
+							apiKey: "anonymous",
+							authVersion: 2,
+							baseFolderUUID: "anonymous",
+							userId: 1
+						} satisfies FilenSDKConfig))
+			} satisfies FilenSDKConfig
 
 			sdk.init(initConfig)
 

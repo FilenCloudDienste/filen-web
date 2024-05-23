@@ -18,6 +18,7 @@ import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Button } from "@/components/ui/button"
 import { download as downloadAction } from "@/components/drive/list/item/contextMenu/actions"
 import useErrorToast from "@/hooks/useErrorToast"
+import Header from "./header"
 
 export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedResponse; password?: string }) => {
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
@@ -103,18 +104,19 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 
 	return (
 		<div className="flex flex-col w-full h-screen">
-			<div className="flex flex-row h-12 w-full items-center px-3 border-b justify-between select-none">
-				<Breadcrumbs info={info} />
-				<div className="flex flex-row justify-end items-center gap-2 z-10 px-3">
+			<div className="flex flex-row h-12 w-full items-center border-b justify-between select-none">
+				<div className="flex flex-row items-center max-w-[1px] px-3">
+					<Breadcrumbs info={info} />
+				</div>
+				<div className={cn("flex flex-row gap-2 px-4 h-full items-center", dark ? "bg-[#151518]" : "bg-[#FBFBFB]")}>
 					<Button
 						size="sm"
 						className="items-center gap-2"
 						onClick={download}
 					>
 						<Download size={16} />
-						Download whole folder
 					</Button>
-					<div className={cn("flex flex-row w-[250px] h-full items-center", dark ? "bg-[#151518]" : "bg-[#FBFBFB]")}>
+					<div className="flex flex-row items-center">
 						<div className="absolute h-full pl-2">
 							<div className="h-full flex flex-row items-center">
 								<Search
@@ -135,7 +137,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 							<Tooltip>
 								<TooltipTrigger asChild={true}>
 									<ListIcon
-										className="text-muted-foreground hover:text-primary cursor-pointer"
+										className="text-muted-foreground hover:text-primary cursor-pointer shrink-0"
 										onClick={changeListType}
 									/>
 								</TooltipTrigger>
@@ -149,7 +151,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 							<Tooltip>
 								<TooltipTrigger asChild={true}>
 									<Grid3X3
-										className="text-muted-foreground hover:text-primary cursor-pointer"
+										className="text-muted-foreground hover:text-primary cursor-pointer shrink-0"
 										onClick={changeListType}
 									/>
 								</TooltipTrigger>
@@ -162,16 +164,24 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 				</div>
 			</div>
 			{!query.isSuccess ? null : (
-				<div className="dragselect-start-allowed">
-					{listType[parent] !== "grid" ? (
-						<List
+				<>
+					{listType[parent] !== "grid" && (
+						<Header
 							parent={parent}
-							items={itemsFiltered}
+							items={items}
 						/>
-					) : (
-						<Grid items={itemsFiltered} />
 					)}
-				</div>
+					<div className="dragselect-start-allowed">
+						{listType[parent] !== "grid" ? (
+							<List
+								parent={parent}
+								items={itemsFiltered}
+							/>
+						) : (
+							<Grid items={itemsFiltered} />
+						)}
+					</div>
+				</>
 			)}
 		</div>
 	)

@@ -582,8 +582,8 @@ export function getMessageDisplayType(message: string): MessageDisplayType {
 	} else if (
 		(message.includes("/localhost:") ||
 			message.includes("/filen.io/") ||
-			message.includes("/drive.filen.io/") ||
-			message.includes("/drive.filen.dev/") ||
+			message.includes("/app.filen.io/") ||
+			message.includes("/app.filen.dev/") ||
 			message.includes("/www.filen.io/")) &&
 		message.includes("/d/")
 	) {
@@ -619,13 +619,12 @@ export function parseFilenPublicLink(url: string): {
 
 	return {
 		uuid: uuid.length > 0 ? uuid[0] : "",
-		key: url.indexOf("#") !== -1 ? keyEx[1].trim() : ""
+		key: url.includes("#") && keyEx.length >= 3 ? keyEx[2].trim() : ""
 	}
 }
 
 export function extractLinksFromString(input: string): string[] {
-	const urlRegex =
-		/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+	const urlRegex = /(https?:\/\/\S+)/
 
 	const matches = input.match(urlRegex)
 

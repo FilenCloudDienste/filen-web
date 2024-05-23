@@ -4,44 +4,51 @@ import { fileNameToPreviewType } from "./utils"
 import useWindowSize from "@/hooks/useWindowSize"
 import TextEditor from "@/components/textEditor"
 import useCanUpload from "@/hooks/useCanUpload"
-import useLocation from "@/hooks/useLocation"
 import { cn } from "@/lib/utils"
+import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 
 const textDecoder = new TextDecoder()
 
 export const Text = memo(
-	({
-		buffer,
-		item,
-		onValueChange,
-		publicLink
-	}: {
-		buffer: Buffer
-		item: DriveCloudItem
-		onValueChange?: (value: string) => void
-		publicLink?: boolean
-	}) => {
+	({ buffer, item, onValueChange }: { buffer: Buffer; item: DriveCloudItem; onValueChange?: (value: string) => void }) => {
 		const [value, setValue] = useState<string>(textDecoder.decode(buffer))
 		const windowSize = useWindowSize()
 		const canUpload = useCanUpload()
-		const location = useLocation()
+		const publicLinkURLState = usePublicLinkURLState()
 
 		const previewType = useMemo(() => {
 			return fileNameToPreviewType(item.name)
 		}, [item.name])
 
+		const height = useMemo(() => {
+			if (!publicLinkURLState.isPublicLink) {
+				return windowSize.height - 48
+			}
+
+			return publicLinkURLState.chatEmbed ? windowSize.height : windowSize.height - 56
+		}, [windowSize.height, publicLinkURLState.isPublicLink, publicLinkURLState.chatEmbed])
+
 		return (
-			<div className={cn("flex flex-row w-full", publicLink ? "h-[calc(100vh-56px)]" : "h-[calc(100vh-48px)]")}>
+			<div
+				className={cn(
+					"flex flex-row w-full",
+					publicLinkURLState.isPublicLink
+						? publicLinkURLState.chatEmbed
+							? "h-screen"
+							: "h-[calc(100vh-56px)]"
+						: "h-[calc(100vh-48px)]"
+				)}
+			>
 				<TextEditor
 					fileName={item.name}
 					value={value}
 					setValue={setValue}
-					height={windowSize.height - 48}
+					height={height}
 					type={previewType === "code" ? "code" : "text"}
 					showMarkdownPreview={previewType === "md"}
 					onValueChange={onValueChange}
 					autoFocus={true}
-					readOnly={!canUpload || location.includes("/f/") || location.includes("/d/") || publicLink}
+					readOnly={!canUpload || publicLinkURLState.isPublicLink}
 				/>
 			</div>
 		)

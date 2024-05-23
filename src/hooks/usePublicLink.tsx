@@ -9,23 +9,34 @@ import { type DirLinkInfoDecryptedResponse } from "@filen/sdk/dist/types/api/v3/
 import { type DriveCloudItem } from "@/components/drive"
 import { type FileEncryptionVersion } from "@filen/sdk"
 import { directoryUUIDToNameCache } from "@/cache"
+import { useTheme } from "@/providers/themeProvider"
+import useLocation from "./useLocation"
 
 export function usePublicLinkURLState() {
 	const locationHash = useLocationHash()
 	const routeParent = useRouteParent()
+	const { dark } = useTheme()
+	const location = useLocation()
 
 	const state = useMemo(() => {
 		const ex = locationHash.split("?")
 		const parsedSearchParams = ex.length >= 2 ? parseURLSearchParams(`https://filen.io/?${ex[1]}`) : null
 
 		return {
+			isPublicLink: location.includes("/f/") || location.includes("/d/"),
 			key: ex[0],
 			uuid: routeParent,
-			embed: parsedSearchParams && typeof parsedSearchParams["embed"] !== "undefined" ? true : false,
+			embed: parsedSearchParams && parsedSearchParams["embed"] === "true" ? true : false,
 			color: parsedSearchParams && typeof parsedSearchParams["color"] === "string" ? parsedSearchParams["color"] : null,
-			hidePreview: parsedSearchParams && typeof parsedSearchParams["hidePreview"] !== "undefined" ? true : false
+			hidePreview: parsedSearchParams && parsedSearchParams["hidePreview"] === "true" ? true : false,
+			chatEmbed: parsedSearchParams && parsedSearchParams["chatEmbed"] === "true" ? true : false,
+			theme: (parsedSearchParams && ["dark", "light"].includes(parsedSearchParams["theme"])
+				? parsedSearchParams["theme"]
+				: dark
+					? "dark"
+					: "light") as "dark" | "light"
 		}
-	}, [locationHash, routeParent])
+	}, [locationHash, routeParent, dark, location])
 
 	return state
 }
