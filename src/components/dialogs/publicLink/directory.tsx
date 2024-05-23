@@ -85,12 +85,7 @@ export const Directory = memo(
 				} catch (e) {
 					console.error(e)
 
-					const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-					toast.update({
-						id: toast.id,
-						duration: 5000
-					})
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 				} finally {
 					toast.dismiss()
 
@@ -127,12 +122,7 @@ export const Directory = memo(
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				toast.dismiss()
 
@@ -150,21 +140,11 @@ export const Directory = memo(
 					PUBLIC_LINK_BASE_URL.split("/#/d/").join("/#/f/") + status.uuid + "#" + decryptedLinkKey
 				)
 
-				const toast = successToast("Copied to clipboard")
-
-				toast.update({
-					id: toast.id,
-					duration: 3000
-				})
+				successToast("Copied to clipboard")
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		}, [status, successToast, errorToast, decryptedLinkKey])
 
@@ -196,12 +176,7 @@ export const Directory = memo(
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		}, [status, errorToast])
 

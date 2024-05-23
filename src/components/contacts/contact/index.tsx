@@ -136,12 +136,7 @@ export const Contact = memo(
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				toast.dismiss()
 

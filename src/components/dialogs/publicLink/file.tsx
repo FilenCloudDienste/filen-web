@@ -84,12 +84,7 @@ export const File = memo(
 				} catch (e) {
 					console.error(e)
 
-					const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-					toast.update({
-						id: toast.id,
-						duration: 5000
-					})
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 				} finally {
 					toast.dismiss()
 
@@ -126,12 +121,7 @@ export const File = memo(
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				toast.dismiss()
 
@@ -147,21 +137,11 @@ export const File = memo(
 			try {
 				await navigator.clipboard.writeText(PUBLIC_LINK_BASE_URL + status.uuid + "#" + (item.type === "file" ? item.key : ""))
 
-				const toast = successToast("Copied to clipboard")
-
-				toast.update({
-					id: toast.id,
-					duration: 3000
-				})
+				successToast("Copied to clipboard")
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		}, [status, successToast, errorToast, item])
 

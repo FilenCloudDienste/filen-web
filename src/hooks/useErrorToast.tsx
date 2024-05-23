@@ -12,8 +12,8 @@ export default function useErrorToast() {
 	const { toast } = useToast()
 
 	const show = useCallback(
-		(reason: string) => {
-			return toast({
+		(reason: string, duration: number = 5000) => {
+			const t = toast({
 				description: (
 					<div className="flex flex-row items-center gap-2">
 						<Ban size={18} />
@@ -22,6 +22,13 @@ export default function useErrorToast() {
 				),
 				variant: "destructive"
 			})
+
+			t.update({
+				id: t.id,
+				duration
+			})
+
+			return t
 		},
 		[toast]
 	)

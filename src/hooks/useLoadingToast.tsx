@@ -19,7 +19,8 @@ export default function useLoadingToast() {
 					size={18}
 				/>
 			),
-			variant: "default"
+			variant: "default",
+			duration: Infinity
 		})
 	}, [toast])
 

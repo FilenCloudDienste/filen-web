@@ -97,19 +97,9 @@ export const Password = memo(
 				setPassword("")
 
 				if (((e as unknown as Error).message ?? "").toLowerCase().includes("wrong password")) {
-					const toast = errorToast("Wrong passworddd")
-
-					toast.update({
-						id: toast.id,
-						duration: 5000
-					})
+					errorToast("Wrong password")
 				} else {
-					const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-					toast.update({
-						id: toast.id,
-						duration: 5000
-					})
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 				}
 			} finally {
 				if (toast) {

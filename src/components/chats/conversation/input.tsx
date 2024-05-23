@@ -333,12 +333,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 			setFailedMessages(prev => [...prev, uuid])
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
 			setEditUUID("")
 			setReplyMessage(null)
@@ -399,12 +394,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 			setFailedMessages(prev => [...prev, editUUID])
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
 			setEditUUID("")
 			setReplyMessage(null)
@@ -822,12 +812,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				e.target.value = ""
 
@@ -877,12 +862,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		} catch (e) {
 			console.error(e)
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
 			toast.dismiss()
 		}

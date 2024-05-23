@@ -58,12 +58,7 @@ export const Account = memo(() => {
 				console.error(e)
 
 				if (!(e as unknown as Error).toString().includes("abort")) {
-					const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-					toast.update({
-						id: toast.id,
-						duration: 5000
-					})
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 				}
 			} finally {
 				toast.dismiss()
@@ -72,12 +67,7 @@ export const Account = memo(() => {
 			console.error(e)
 
 			if (!(e as unknown as Error).toString().includes("abort")) {
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		} finally {
 			const input = document.getElementById("avatar-input") as HTMLInputElement
@@ -121,12 +111,7 @@ export const Account = memo(() => {
 		} catch (e) {
 			console.error(e)
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
 			toast.dismiss()
 		}
@@ -178,12 +163,7 @@ export const Account = memo(() => {
 		} catch (e) {
 			console.error(e)
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
 			toast.dismiss()
 		}
@@ -203,12 +183,7 @@ export const Account = memo(() => {
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				toast.dismiss()
 			}
@@ -230,12 +205,7 @@ export const Account = memo(() => {
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				toast.dismiss()
 			}
@@ -257,12 +227,7 @@ export const Account = memo(() => {
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				toast.dismiss()
 			}
@@ -321,12 +286,7 @@ export const Account = memo(() => {
 		} catch (e) {
 			console.error(e)
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
 			toast.dismiss()
 		}
@@ -349,12 +309,7 @@ export const Account = memo(() => {
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				toast.dismiss()
 
@@ -391,12 +346,7 @@ export const Account = memo(() => {
 		} catch (e) {
 			console.error(e)
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
 			toast.dismiss()
 		}

@@ -68,12 +68,7 @@ export const ContextMenu = memo(
 				} catch (e) {
 					console.error(e)
 
-					const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-					toast.update({
-						id: toast.id,
-						duration: 5000
-					})
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 				} finally {
 					toast.dismiss()
 				}
@@ -85,21 +80,11 @@ export const ContextMenu = memo(
 			try {
 				await navigator.clipboard.writeText(message.message)
 
-				const toast = successToast("Copied to clipboard")
-
-				toast.update({
-					id: toast.id,
-					duration: 3000
-				})
+				successToast("Copied to clipboard")
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		}, [message.message, successToast, errorToast])
 
@@ -107,21 +92,11 @@ export const ContextMenu = memo(
 			try {
 				await navigator.clipboard.writeText(message.uuid)
 
-				const toast = successToast("Copied to clipboard")
-
-				toast.update({
-					id: toast.id,
-					duration: 3000
-				})
+				successToast("Copied to clipboard")
 			} catch (e) {
 				console.error(e)
 
-				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				toast.update({
-					id: toast.id,
-					duration: 5000
-				})
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		}, [message.uuid, successToast, errorToast])
 

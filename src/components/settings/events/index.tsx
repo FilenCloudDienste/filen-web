@@ -57,12 +57,7 @@ export const Events = memo(() => {
 		} catch (e) {
 			console.error(e)
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
 			lastEventFetchCount.current = -1
 		} finally {
