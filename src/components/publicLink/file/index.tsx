@@ -5,6 +5,7 @@ import { validate as validateUUID } from "uuid"
 import Password from "../password"
 import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/link/info"
 import FileComponent from "./file"
+import Invalid from "../invalid"
 
 export const File = memo(() => {
 	const filePublicLinkHasPassword = useFilePublicLinkHasPassword()
@@ -17,13 +18,14 @@ export const File = memo(() => {
 
 	return (
 		<Container loading={filePublicLinkHasPassword.loading}>
-			{!urlState || !urlState.key ? (
-				<>INvalid link</>
+			{!urlState || !urlState.key || urlState.key.length !== 32 ? (
+				<Invalid />
 			) : info ? (
 				<FileComponent info={info} />
-			) : !filePublicLinkHasPassword.status ? null : filePublicLinkHasPassword.key.length !== 32 ||
-			  !validateUUID(filePublicLinkHasPassword.uuid) ? (
-				<>Invalid link</>
+			) : !filePublicLinkHasPassword.status ? (
+				<Invalid />
+			) : filePublicLinkHasPassword.key.length !== 32 || !validateUUID(filePublicLinkHasPassword.uuid) ? (
+				<Invalid />
 			) : filePublicLinkHasPassword.hasPassword ? (
 				<Password
 					onAccess={onAccess}

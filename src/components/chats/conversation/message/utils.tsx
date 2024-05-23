@@ -584,6 +584,10 @@ export function getMessageDisplayType(message: string): MessageDisplayType {
 			message.includes("/filen.io/") ||
 			message.includes("/app.filen.io/") ||
 			message.includes("/app.filen.dev/") ||
+			message.includes("/staging-app.filen.io/") ||
+			message.includes("/staging-app.filen.dev/") ||
+			message.includes("/staging.filen.io/") ||
+			message.includes("/staging.filen.dev/") ||
 			message.includes("/www.filen.io/")) &&
 		message.includes("/d/")
 	) {

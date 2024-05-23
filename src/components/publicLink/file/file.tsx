@@ -19,6 +19,7 @@ import PDFPreview from "@/components/dialogs/previewDialog/pdf"
 import DocXPreview from "@/components/dialogs/previewDialog/docx"
 import VideoPreview from "@/components/dialogs/previewDialog/video"
 import useIsMobile from "@/hooks/useIsMobile"
+import AudioPreview from "@/components/dialogs/previewDialog/audio"
 
 export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> & { size: number } }) => {
 	const filePublicLinkInfo = useFilePublicLinkInfo(info)
@@ -78,6 +79,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				previewType === "text" ||
 				previewType === "pdf" ||
 				previewType === "docx" ||
+				previewType === "audio" ||
 				previewType === "video") &&
 			!urlState.hidePreview
 		)
@@ -177,14 +179,16 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				<div className="p-3 w-auto h-auto">
 					<img
 						src={fileNameToSVGIcon(item.name)}
-						className="w-24 h-24 shrink-0 object-cover"
+						className={cn("shrink-0 object-cover", urlState.embed || urlState.chatEmbed ? "w-12 h-12 -mt-2" : "w-24 h-24")}
 						draggable={false}
 					/>
 				</div>
-				<p className="mt-4 line-clamp-1 text-ellipsis break-all">{item.name}</p>
+				<p className={cn("line-clamp-1 text-ellipsis break-all", urlState.embed || urlState.chatEmbed ? "mt-1" : "mt-4")}>
+					{item.name}
+				</p>
 				<p className="text-muted-foreground mt-1 line-clamp-1 text-ellipsis break-all">{formatBytes(item.size)}</p>
-				<div className="flex flex-row gap-2 items-center mt-8">
-					{previewType !== "other" && !urlState.embed && (
+				<div className={cn("flex flex-row gap-2 items-center", urlState.embed || urlState.chatEmbed ? "mt-3" : "mt-8")}>
+					{previewType !== "other" && !urlState.embed && !urlState.chatEmbed && (
 						<Button
 							variant="secondary"
 							onClick={preview}
@@ -197,6 +201,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 					<Button
 						onClick={download}
 						className="items-center gap-2"
+						size={urlState.embed || urlState.chatEmbed ? "sm" : "default"}
 					>
 						<Download size={16} />
 						Download
@@ -204,7 +209,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				</div>
 			</div>
 		)
-	}, [item, preview, download, previewType, urlState.embed])
+	}, [item, preview, download, previewType, urlState.embed, urlState.chatEmbed])
 
 	const loadFile = useCallback(async () => {
 		if (!item || item.type !== "file" || didLoadItemRef.current || !canLoadItem) {
@@ -305,6 +310,19 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 											{topBar}
 											<div className={cn("h-full", isMobile ? "w-screen" : "w-full")}>
 												<DocXPreview buffer={buffer} />
+											</div>
+										</>
+									) : (
+										loader
+									)}
+								</>
+							) : previewType === "audio" ? (
+								<>
+									{urlObject ? (
+										<>
+											{topBar}
+											<div className={cn("h-full", isMobile ? "w-screen" : "w-full")}>
+												<AudioPreview urlObject={urlObject} />
 											</div>
 										</>
 									) : (

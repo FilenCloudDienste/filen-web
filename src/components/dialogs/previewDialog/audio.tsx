@@ -4,10 +4,10 @@ import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import useMountedEffect from "@/hooks/useMountedEffect"
 
-export const Video = memo(({ urlObject }: { urlObject: string }) => {
+export const Audio = memo(({ urlObject }: { urlObject: string }) => {
 	const publicLinkURLState = usePublicLinkURLState()
-	const [volume, setVolume] = useLocalStorage<number>("videoPlayerVolume", 1)
-	const ref = useRef<HTMLVideoElement>(null)
+	const [volume, setVolume] = useLocalStorage<number>("audioPlayerVolume", 1)
+	const ref = useRef<HTMLAudioElement>(null)
 
 	const onVolumeChange = useCallback(() => {
 		if (!ref.current) {
@@ -25,7 +25,7 @@ export const Video = memo(({ urlObject }: { urlObject: string }) => {
 
 	return (
 		<div className="w-full h-full bg-black">
-			<video
+			<audio
 				ref={ref}
 				controls={true}
 				autoPlay={!publicLinkURLState.isPublicLink}
@@ -44,4 +44,4 @@ export const Video = memo(({ urlObject }: { urlObject: string }) => {
 	)
 })
 
-export default Video
+export default Audio

@@ -21,6 +21,7 @@ import useRouteParent from "@/hooks/useRouteParent"
 import { useDriveSharedStore } from "@/stores/drive.store"
 import useCanUpload from "@/hooks/useCanUpload"
 import useLocation from "@/hooks/useLocation"
+import Audio from "./audio"
 
 export const Loader = memo(() => {
 	return (
@@ -341,6 +342,7 @@ export const PreviewDialog = memo(() => {
 							/>
 						)}
 						{previewType === "video" && <>{urlObjects[item.uuid] ? <Video urlObject={urlObjects[item.uuid]} /> : <Loader />}</>}
+						{previewType === "audio" && <>{urlObjects[item.uuid] ? <Audio urlObject={urlObjects[item.uuid]} /> : <Loader />}</>}
 					</div>
 				)}
 			</DialogContent>

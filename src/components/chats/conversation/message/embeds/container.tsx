@@ -13,7 +13,9 @@ export const Container = memo(
 		link,
 		color,
 		noBackground,
-		messageUUID
+		messageUUID,
+		senderId,
+		userId
 	}: {
 		children: React.ReactNode
 		title?: string
@@ -21,6 +23,8 @@ export const Container = memo(
 		color: "red" | "blue" | "indigo" | "green" | "cyan" | "purple"
 		noBackground?: boolean
 		messageUUID: string
+		senderId: number
+		userId: number
 	}) => {
 		const [hovering, setHovering] = useState<boolean>(false)
 		const loadingToast = useLoadingToast()
@@ -36,6 +40,10 @@ export const Container = memo(
 		}, [])
 
 		const disableEmbed = useCallback(async () => {
+			if (userId !== senderId) {
+				return
+			}
+
 			const toast = loadingToast()
 
 			try {
@@ -54,7 +62,7 @@ export const Container = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [loadingToast, errorToast, messageUUID, setMessages])
+		}, [loadingToast, errorToast, messageUUID, setMessages, userId, senderId])
 
 		return (
 			<div
@@ -66,19 +74,21 @@ export const Container = memo(
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
 			>
-				<div
-					className="absolute ml-[500px] mt-[-10px] w-[10px] h-[200px]"
-					onMouseEnter={onMouseEnter}
-					onMouseLeave={onMouseLeave}
-				>
-					{hovering && (
-						<X
-							className={cn("cursor-pointer", "text-muted-foreground hover:text-primary")}
-							onClick={disableEmbed}
-							size={18}
-						/>
-					)}
-				</div>
+				{senderId === userId && (
+					<div
+						className="absolute ml-[500px] mt-[-10px] w-[10px] h-[200px]"
+						onMouseEnter={onMouseEnter}
+						onMouseLeave={onMouseLeave}
+					>
+						{hovering && (
+							<X
+								className={cn("cursor-pointer", "text-muted-foreground hover:text-primary")}
+								onClick={disableEmbed}
+								size={18}
+							/>
+						)}
+					</div>
+				)}
 				<a
 					href={link}
 					target="_blank"

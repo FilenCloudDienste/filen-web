@@ -61,11 +61,13 @@ export function useFilePublicLinkHasPassword(): UseFilePublicLinkHasPassword {
 
 	const passwordQuery = useQuery({
 		queryKey: ["filePublicLinkHasPassword", routeParent],
-		queryFn: () => worker.filePublicLinkHasPassword({ uuid: routeParent })
+		queryFn: () => worker.filePublicLinkHasPassword({ uuid: routeParent }),
+		retry: false,
+		retryDelay: 0
 	})
 
 	return {
-		status: passwordQuery.isSuccess,
+		status: passwordQuery.error && passwordQuery.error.message.includes("not found") ? false : passwordQuery.isSuccess,
 		loading: passwordQuery.isFetching,
 		uuid: routeParent,
 		key: urlState.key,
@@ -96,11 +98,13 @@ export function useFilePublicLinkInfo(info?: Omit<FileLinkInfoResponse, "size"> 
 		queryFn: () =>
 			info
 				? Promise.resolve(info as unknown as Omit<FileLinkInfoResponse, "size"> & { size: number })
-				: worker.filePublicLinkInfo({ uuid: routeParent, password: "empty", key: urlState.key })
+				: worker.filePublicLinkInfo({ uuid: routeParent, password: "empty", key: urlState.key }),
+		retry: false,
+		retryDelay: 0
 	})
 
 	return {
-		status: infoQuery.isSuccess,
+		status: infoQuery.error && infoQuery.error.message.includes("not found") ? false : infoQuery.isSuccess,
 		loading: infoQuery.isFetching,
 		uuid: routeParent,
 		key: urlState.key,
@@ -127,11 +131,13 @@ export function useDirectoryPublicLinkInfo(info?: DirLinkInfoDecryptedResponse):
 
 	const infoQuery = useQuery({
 		queryKey: ["directoryPublicLinkInfo", routeParent, info, urlState.key],
-		queryFn: () => (info ? Promise.resolve(info) : worker.directoryPublicLinkInfo({ uuid: routeParent, key: urlState.key }))
+		queryFn: () => (info ? Promise.resolve(info) : worker.directoryPublicLinkInfo({ uuid: routeParent, key: urlState.key })),
+		retry: false,
+		retryDelay: 0
 	})
 
 	return {
-		status: infoQuery.isError && infoQuery.error.message.includes("not found") ? false : infoQuery.isSuccess,
+		status: infoQuery.error && infoQuery.error.message.includes("not found") ? false : infoQuery.isSuccess,
 		loading: infoQuery.isFetching,
 		uuid: routeParent,
 		key: urlState.key,

@@ -410,6 +410,8 @@ export const Message = memo(
 																	link={link}
 																	key={index}
 																	messageUUID={message.uuid}
+																	userId={userId}
+																	senderId={message.senderId}
 																/>
 															)
 														}
@@ -420,6 +422,8 @@ export const Message = memo(
 																	link={link}
 																	key={index}
 																	messageUUID={message.uuid}
+																	userId={userId}
+																	senderId={message.senderId}
 																/>
 															)
 														}
@@ -430,6 +434,8 @@ export const Message = memo(
 																	link={link}
 																	key={index}
 																	messageUUID={message.uuid}
+																	userId={userId}
+																	senderId={message.senderId}
 																/>
 															)
 														}
@@ -441,6 +447,8 @@ export const Message = memo(
 																	key={index}
 																	messageUUID={message.uuid}
 																	ogData={ogData[link] ?? {}}
+																	userId={userId}
+																	senderId={message.senderId}
 																/>
 															)
 														}
@@ -451,6 +459,8 @@ export const Message = memo(
 																	link={link}
 																	key={index}
 																	messageUUID={message.uuid}
+																	userId={userId}
+																	senderId={message.senderId}
 																/>
 															)
 														}
@@ -461,6 +471,8 @@ export const Message = memo(
 																	link={link}
 																	key={index}
 																	messageUUID={message.uuid}
+																	userId={userId}
+																	senderId={message.senderId}
 																/>
 															)
 														}

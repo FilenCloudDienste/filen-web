@@ -6,6 +6,7 @@ import Password from "../password"
 import { type DirLinkInfoDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
 import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/link/info"
 import DirectoryComponent from "./directory"
+import Invalid from "../invalid"
 
 export const Directory = memo(() => {
 	const directoryPublicLinkInfo = useDirectoryPublicLinkInfo()
@@ -27,17 +28,17 @@ export const Directory = memo(() => {
 
 	return (
 		<Container loading={directoryPublicLinkInfo.loading}>
-			{!urlState || !urlState.key ? (
-				<>INvalid link</>
+			{!urlState || !urlState.key || urlState.key.length !== 32 ? (
+				<Invalid />
 			) : info ? (
 				<DirectoryComponent
 					info={info}
 					password={password}
 				/>
 			) : !directoryPublicLinkInfo.status ? (
-				<>Invalid link</>
+				<Invalid />
 			) : !validateUUID(directoryPublicLinkInfo.uuid) ? (
-				<>INvalid link</>
+				<Invalid />
 			) : directoryPublicLinkInfo.info.hasPassword ? (
 				<Password
 					onAccess={onAccess}
