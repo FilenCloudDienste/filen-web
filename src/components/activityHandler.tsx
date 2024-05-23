@@ -1,13 +1,25 @@
-import { memo, useCallback, useEffect, useRef } from "react"
+import { memo, useCallback, useEffect, useRef, useMemo } from "react"
 import useWindowFocus from "@/hooks/useWindowFocus"
 import worker from "@/lib/worker"
+import { useLocalStorage } from "@uidotdev/usehooks"
+import useLocation from "@/hooks/useLocation"
 
 export const ActivityHandler = memo(({ children }: { children: React.ReactNode }) => {
 	const windowFocus = useWindowFocus()
 	const nextLastActiveDesktopUpdate = useRef<number>(-1)
 	const isUpdatingLastActiveDesktop = useRef<boolean>(false)
+	const location = useLocation()
+	const [authed] = useLocalStorage<boolean>("authed", false)
+
+	const isInsidePublicLink = useMemo(() => {
+		return location.includes("/f/") || location.includes("/d/")
+	}, [location])
 
 	const update = useCallback(async () => {
+		if (isInsidePublicLink || !authed) {
+			return
+		}
+
 		const now = Date.now()
 
 		if (!windowFocus || now < nextLastActiveDesktopUpdate.current || isUpdatingLastActiveDesktop.current) {
@@ -25,7 +37,7 @@ export const ActivityHandler = memo(({ children }: { children: React.ReactNode }
 		} finally {
 			isUpdatingLastActiveDesktop.current = false
 		}
-	}, [windowFocus])
+	}, [windowFocus, isInsidePublicLink, authed])
 
 	useEffect(() => {
 		const updateLastActiveDesktopInterval = setInterval(update, 1000)

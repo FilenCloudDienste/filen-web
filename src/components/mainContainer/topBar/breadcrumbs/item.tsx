@@ -86,6 +86,10 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 		}
 	}, [path, t])
 
+	const onClick = useCallback(() => {
+		navigateToPath()
+	}, [navigateToPath])
+
 	useEffect(() => {
 		fetchDirectoryName()
 	}, [fetchDirectoryName])
@@ -98,7 +102,7 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 		<div className="flex flex-row gap-1 items-center select-none">
 			<p
 				className="text-primary cursor-pointer select-none"
-				onClick={() => navigateToPath()}
+				onClick={onClick}
 			>
 				{path === baseFolderUUID ? t("topBar.breadcrumb.cloudDrive") : name}
 			</p>

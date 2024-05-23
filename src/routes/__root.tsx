@@ -116,10 +116,6 @@ export const Root = memo(() => {
 										ready: registration => {
 											console.log("ServiceWorker ready")
 
-											navigator.serviceWorker.addEventListener("message", event => {
-												console.log("SW message", event.data)
-											})
-
 											registration.update().catch(console.error)
 
 											resolve()

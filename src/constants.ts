@@ -23,5 +23,6 @@ export const UNCACHED_QUERY_KEYS = [
 	"chatsUnreadCount",
 	"contactsRequestInCount",
 	"filePublicLinkHasPassword",
-	"filePublicLinkInfo"
+	"filePublicLinkInfo",
+	"directoryPublicLinkInfo"
 ]

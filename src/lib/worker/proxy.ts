@@ -102,17 +102,17 @@ export async function downloadDirectory({
 /**
  * Download multiple files and directories as one single ZIP file.
  * When the browser does not support the NativeFileSystemAccess API (through WebWorker IPC), we have to fallback to the main thread.
- * @date 3/13/2024 - 4:06:09 AM
  *
  * @export
  * @async
- * @param {{ items: DriveCloudItem[] }} param0
- * @param {DriveCloudItem[]} param0.items
+ * @param {{ items: DriveCloudItem[], name?: string }} param0
+ * @param {{}} param0.items
+ * @param {string} param0.name
  * @returns {Promise<void>}
  */
-export async function downloadMultipleFilesAndDirectoriesAsZip({ items }: { items: DriveCloudItem[] }): Promise<void> {
+export async function downloadMultipleFilesAndDirectoriesAsZip({ items, name }: { items: DriveCloudItem[]; name?: string }): Promise<void> {
 	const fileHandle = await showSaveFilePicker({
-		suggestedName: `Download_${Date.now()}.zip`,
+		suggestedName: name ? name : `Download_${Date.now()}.zip`,
 		_preferPolyfill: !useNative
 	})
 

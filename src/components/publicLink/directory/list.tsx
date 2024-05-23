@@ -1,26 +1,20 @@
 import { memo, useMemo, useCallback } from "react"
-import { IS_DESKTOP } from "@/constants"
-import useWindowSize from "@/hooks/useWindowSize"
 import { Virtuoso } from "react-virtuoso"
-import ListItem from "./item"
-import ContextMenu from "./contextMenu"
-import { type DriveCloudItem } from ".."
+import { type DriveCloudItem } from "@/components/drive"
+import useWindowSize from "@/hooks/useWindowSize"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { type DriveSortBy } from "./header"
-import useRouteParent from "@/hooks/useRouteParent"
+import { type DriveSortBy } from "@/components/drive/list/header"
+import { IS_DESKTOP } from "@/constants"
+import ListItem from "@/components/drive/list/item"
+import Header from "./header"
 
-export const List = memo(({ items }: { items: DriveCloudItem[] }) => {
+export const List = memo(({ items, parent }: { items: DriveCloudItem[]; parent: string }) => {
 	const windowSize = useWindowSize()
-	const routeParent = useRouteParent()
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 
-	const virtuosoHeight = useMemo(() => {
-		return IS_DESKTOP ? windowSize.height - 48 - 40 - 24 : windowSize.height - 48 - 40
-	}, [windowSize.height])
-
 	const getItemKey = useCallback(
-		(_: number, item: DriveCloudItem) => `${item.uuid}:${driveSortBy[routeParent] ?? "nameAsc"}`,
-		[driveSortBy, routeParent]
+		(_: number, item: DriveCloudItem) => `${item.uuid}:${driveSortBy[parent] ?? "nameAsc"}`,
+		[driveSortBy, parent]
 	)
 
 	const itemContent = useCallback((index: number, item: DriveCloudItem) => {
@@ -33,8 +27,16 @@ export const List = memo(({ items }: { items: DriveCloudItem[] }) => {
 		)
 	}, [])
 
+	const virtuosoHeight = useMemo(() => {
+		return IS_DESKTOP ? windowSize.height - 48 - 40 - 24 : windowSize.height - 48 - 40
+	}, [windowSize.height])
+
 	return (
-		<ContextMenu>
+		<>
+			<Header
+				parent={parent}
+				items={items}
+			/>
 			<Virtuoso
 				data={items}
 				totalCount={items.length}
@@ -51,7 +53,7 @@ export const List = memo(({ items }: { items: DriveCloudItem[] }) => {
 					width: "100%"
 				}}
 			/>
-		</ContextMenu>
+		</>
 	)
 })
 

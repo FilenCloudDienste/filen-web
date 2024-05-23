@@ -29,247 +29,103 @@ import { directoryColorToHex } from "@/assets/fileExtensionIcons"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 
-export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; children: React.ReactNode }) => {
-	const { items, setItems } = useDriveItemsStore()
-	const { t } = useTranslation()
-	const { baseFolderUUID } = useSDKConfig()
-	const driveURLState = useDriveURLState()
-	const navigate = useNavigate()
-	const { setCurrentReceiverEmail, setCurrentReceiverId, setCurrentReceivers, setCurrentSharerEmail, setCurrentSharerId } =
-		useDriveSharedStore()
-	const location = useLocation()
-	const [directoryColor, setDirectoryColor] = useState<string>(directoryColorToHex(item.type === "directory" ? item.color : null))
-	const loadingToast = useLoadingToast()
-	const errorToast = useErrorToast()
-
-	const selectedItems = useMemo(() => {
-		return items.filter(item => item.selected)
-	}, [items])
-
-	const previewType = useMemo(() => {
-		if (!item) {
-			return "other"
-		}
-
-		return fileNameToPreviewType(item.name)
-	}, [item])
-
-	const openDirectory = useCallback(() => {
-		if (item.type === "directory" && !location.includes("trash")) {
-			setCurrentReceiverId(item.receiverId)
-			setCurrentReceiverEmail(item.receiverEmail)
-			setCurrentSharerId(item.sharerId)
-			setCurrentSharerEmail(item.sharerEmail)
-			setCurrentReceivers(item.receivers)
-
-			navigate({
-				to: "/drive/$",
-				params: {
-					_splat: `${location.split("/drive/").join("")}/${item.uuid}`
-				}
-			})
-
-			return
-		}
-	}, [
-		navigate,
-		location,
+export const ContextMenu = memo(
+	({
 		item,
-		setCurrentReceiverId,
-		setCurrentReceiverEmail,
-		setCurrentSharerId,
-		setCurrentSharerEmail,
-		setCurrentReceivers
-	])
+		children,
+		items,
+		setVirtualURL
+	}: {
+		item: DriveCloudItem
+		children: React.ReactNode
+		items: DriveCloudItem[]
+		setVirtualURL?: React.Dispatch<React.SetStateAction<string>>
+	}) => {
+		const { setItems } = useDriveItemsStore()
+		const { t } = useTranslation()
+		const { baseFolderUUID } = useSDKConfig()
+		const driveURLState = useDriveURLState()
+		const navigate = useNavigate()
+		const { setCurrentReceiverEmail, setCurrentReceiverId, setCurrentReceivers, setCurrentSharerEmail, setCurrentSharerId } =
+			useDriveSharedStore()
+		const location = useLocation()
+		const [directoryColor, setDirectoryColor] = useState<string>(directoryColorToHex(item.type === "directory" ? item.color : null))
+		const loadingToast = useLoadingToast()
+		const errorToast = useErrorToast()
 
-	const move = useCallback(async () => {
-		if (selectedItems.length === 0) {
-			return
-		}
+		const isInsidePublicLink = useMemo(() => {
+			return location.includes("/f/") || location.includes("/d/")
+		}, [location])
 
-		const parent = await selectDriveItem({
-			type: "directory",
-			multiple: false
-		})
+		const selectedItems = useMemo(() => {
+			return items.filter(item => item.selected)
+		}, [items])
 
-		if (parent.cancelled) {
-			return
-		}
-
-		const toast = loadingToast()
-
-		try {
-			const itemsToMove = selectedItems.filter(item => item.parent !== parent.items[0].uuid)
-			const movedUUIDs = itemsToMove.map(item => item.uuid)
-
-			await actions.move({ selectedItems: itemsToMove, parent: parent.items[0].uuid })
-
-			setItems(prev => prev.filter(prevItem => !movedUUIDs.includes(prevItem.uuid)))
-		} catch (e) {
-			console.error(e)
-
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
-		} finally {
-			toast.dismiss()
-		}
-	}, [selectedItems, setItems, errorToast, loadingToast])
-
-	const download = useCallback(async () => {
-		if (selectedItems.length === 0) {
-			return
-		}
-
-		try {
-			await actions.download({ selectedItems })
-		} catch (e) {
-			console.error(e)
-		}
-	}, [selectedItems])
-
-	const trash = useCallback(async () => {
-		if (selectedItems.length === 0) {
-			return
-		}
-
-		const toast = loadingToast()
-
-		try {
-			const trashedUUIDs = selectedItems.map(item => item.uuid)
-
-			if (!(await actions.trash({ selectedItems }))) {
-				return
+		const previewType = useMemo(() => {
+			if (!item) {
+				return "other"
 			}
 
-			setItems(prev => prev.filter(prevItem => !trashedUUIDs.includes(prevItem.uuid)))
-		} catch (e) {
-			console.error(e)
+			return fileNameToPreviewType(item.name)
+		}, [item])
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		const openDirectory = useCallback(() => {
+			if (item.type === "directory" && !location.includes("trash")) {
+				setCurrentReceiverId(item.receiverId)
+				setCurrentReceiverEmail(item.receiverEmail)
+				setCurrentSharerId(item.sharerId)
+				setCurrentSharerEmail(item.sharerEmail)
+				setCurrentReceivers(item.receivers)
 
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
-		} finally {
-			toast.dismiss()
-		}
-	}, [selectedItems, setItems, loadingToast, errorToast])
+				if (isInsidePublicLink && setVirtualURL) {
+					setVirtualURL(prev => `${prev}/${item.uuid}`)
+				} else {
+					navigate({
+						to: "/drive/$",
+						params: {
+							_splat: `${location.split("/drive/").join("")}/${item.uuid}`
+						}
+					})
+				}
 
-	const deletePermanently = useCallback(async () => {
-		if (selectedItems.length === 0) {
-			return
-		}
-
-		const toast = loadingToast()
-
-		try {
-			const deletedUUIDs = selectedItems.map(item => item.uuid)
-
-			if (!(await actions.deletePermanently({ selectedItems }))) {
 				return
 			}
+		}, [
+			navigate,
+			location,
+			item,
+			setCurrentReceiverId,
+			setCurrentReceiverEmail,
+			setCurrentSharerId,
+			setCurrentSharerEmail,
+			setCurrentReceivers,
+			isInsidePublicLink,
+			setVirtualURL
+		])
 
-			setItems(prev => prev.filter(prevItem => !deletedUUIDs.includes(prevItem.uuid)))
-		} catch (e) {
-			console.error(e)
-
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
-		} finally {
-			toast.dismiss()
-		}
-	}, [selectedItems, setItems, loadingToast, errorToast])
-
-	const restore = useCallback(async () => {
-		if (selectedItems.length === 0) {
-			return
-		}
-
-		const toast = loadingToast()
-
-		try {
-			const restoredUUIDs = selectedItems.map(item => item.uuid)
-
-			await actions.restore({ selectedItems })
-
-			setItems(prev => prev.filter(prevItem => !restoredUUIDs.includes(prevItem.uuid)))
-		} catch (e) {
-			console.error(e)
-
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
-		} finally {
-			toast.dismiss()
-		}
-	}, [selectedItems, setItems, loadingToast, errorToast])
-
-	const preview = useCallback(() => {
-		if (selectedItems.length !== 1 && previewType !== "other") {
-			return
-		}
-
-		eventEmitter.emit("openPreviewModal", { item: selectedItems[0] })
-	}, [selectedItems, previewType])
-
-	const rename = useCallback(async () => {
-		if (selectedItems.length !== 1) {
-			return
-		}
-
-		const toast = loadingToast()
-
-		try {
-			const item = selectedItems[0]
-			const newName = await actions.rename({ item })
-
-			setItems(prev => prev.map(prevItem => (prevItem.uuid === item.uuid ? { ...prevItem, name: newName } : prevItem)))
-		} catch (e) {
-			console.error(e)
-
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
-		} finally {
-			toast.dismiss()
-		}
-	}, [selectedItems, setItems, loadingToast, errorToast])
-
-	const toggleFavorite = useCallback(
-		async (favorite: boolean) => {
+		const move = useCallback(async () => {
 			if (selectedItems.length === 0) {
+				return
+			}
+
+			const parent = await selectDriveItem({
+				type: "directory",
+				multiple: false
+			})
+
+			if (parent.cancelled) {
 				return
 			}
 
 			const toast = loadingToast()
 
 			try {
-				const uuids = selectedItems.map(item => item.uuid)
+				const itemsToMove = selectedItems.filter(item => item.parent !== parent.items[0].uuid)
+				const movedUUIDs = itemsToMove.map(item => item.uuid)
 
-				await actions.favorite({ selectedItems, favorite })
+				await actions.move({ selectedItems: itemsToMove, parent: parent.items[0].uuid })
 
-				if (location.includes("favorites") && !favorite) {
-					setItems(prev => prev.filter(prevItem => !uuids.includes(prevItem.uuid)))
-				} else {
-					setItems(prev =>
-						prev.map(prevItem => (uuids.includes(prevItem.uuid) ? { ...prevItem, favorited: favorite } : prevItem))
-					)
-				}
+				setItems(prev => prev.filter(prevItem => !movedUUIDs.includes(prevItem.uuid)))
 			} catch (e) {
 				console.error(e)
 
@@ -282,237 +138,407 @@ export const ContextMenu = memo(({ item, children }: { item: DriveCloudItem; chi
 			} finally {
 				toast.dismiss()
 			}
-		},
-		[selectedItems, setItems, errorToast, loadingToast, location]
-	)
+		}, [selectedItems, setItems, errorToast, loadingToast])
 
-	const share = useCallback(async () => {
-		if (selectedItems.length === 0) {
-			return
-		}
+		const download = useCallback(async () => {
+			if (selectedItems.length === 0) {
+				return
+			}
 
-		const toast = loadingToast()
+			try {
+				await actions.download({ selectedItems })
+			} catch (e) {
+				console.error(e)
+			}
+		}, [selectedItems])
 
-		try {
-			await actions.share({ selectedItems })
-		} catch (e) {
-			console.error(e)
+		const trash = useCallback(async () => {
+			if (selectedItems.length === 0) {
+				return
+			}
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			const toast = loadingToast()
 
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
-		} finally {
-			toast.dismiss()
-		}
-	}, [selectedItems, loadingToast, errorToast])
+			try {
+				const trashedUUIDs = selectedItems.map(item => item.uuid)
 
-	const changeColor = useDebouncedCallback(async (color: string) => {
-		if (selectedItems.length !== 1) {
-			return
-		}
+				if (!(await actions.trash({ selectedItems }))) {
+					return
+				}
 
-		const toast = loadingToast()
+				setItems(prev => prev.filter(prevItem => !trashedUUIDs.includes(prevItem.uuid)))
+			} catch (e) {
+				console.error(e)
 
-		try {
-			await actions.changeColor({ uuid: selectedItems[0].uuid, color })
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 
-			setItems(prev => prev.map(prevItem => (prevItem.uuid === selectedItems[0].uuid ? { ...prevItem, color } : prevItem)))
-		} catch (e) {
-			console.error(e)
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		}, [selectedItems, setItems, loadingToast, errorToast])
 
-			const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		const deletePermanently = useCallback(async () => {
+			if (selectedItems.length === 0) {
+				return
+			}
 
-			toast.update({
-				id: toast.id,
-				duration: 5000
-			})
-		} finally {
-			toast.dismiss()
-		}
-	}, 500)
+			const toast = loadingToast()
 
-	const onColorPickerChange = useCallback(
-		(newColor: string) => {
-			setDirectoryColor(newColor)
-			changeColor(newColor)
-		},
-		[changeColor]
-	)
+			try {
+				const deletedUUIDs = selectedItems.map(item => item.uuid)
 
-	const publicLink = useCallback(() => {
-		eventEmitter.emit("openPublicLinkDialog", item)
-	}, [item])
+				if (!(await actions.deletePermanently({ selectedItems }))) {
+					return
+				}
 
-	const versions = useCallback(() => {
-		eventEmitter.emit("openFileVersionsDialog", item)
-	}, [item])
+				setItems(prev => prev.filter(prevItem => !deletedUUIDs.includes(prevItem.uuid)))
+			} catch (e) {
+				console.error(e)
 
-	return (
-		<CM>
-			<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
-			<ContextMenuContent className="min-w-52">
-				{selectedItems.length === 1 && item.type === "file" && previewType !== "other" && (
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		}, [selectedItems, setItems, loadingToast, errorToast])
+
+		const restore = useCallback(async () => {
+			if (selectedItems.length === 0) {
+				return
+			}
+
+			const toast = loadingToast()
+
+			try {
+				const restoredUUIDs = selectedItems.map(item => item.uuid)
+
+				await actions.restore({ selectedItems })
+
+				setItems(prev => prev.filter(prevItem => !restoredUUIDs.includes(prevItem.uuid)))
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		}, [selectedItems, setItems, loadingToast, errorToast])
+
+		const preview = useCallback(() => {
+			if (selectedItems.length !== 1 && previewType !== "other") {
+				return
+			}
+
+			eventEmitter.emit("openPreviewModal", { item: selectedItems[0] })
+		}, [selectedItems, previewType])
+
+		const rename = useCallback(async () => {
+			if (selectedItems.length !== 1) {
+				return
+			}
+
+			const toast = loadingToast()
+
+			try {
+				const item = selectedItems[0]
+				const newName = await actions.rename({ item })
+
+				setItems(prev => prev.map(prevItem => (prevItem.uuid === item.uuid ? { ...prevItem, name: newName } : prevItem)))
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		}, [selectedItems, setItems, loadingToast, errorToast])
+
+		const toggleFavorite = useCallback(
+			async (favorite: boolean) => {
+				if (selectedItems.length === 0) {
+					return
+				}
+
+				const toast = loadingToast()
+
+				try {
+					const uuids = selectedItems.map(item => item.uuid)
+
+					await actions.favorite({ selectedItems, favorite })
+
+					if (location.includes("favorites") && !favorite) {
+						setItems(prev => prev.filter(prevItem => !uuids.includes(prevItem.uuid)))
+					} else {
+						setItems(prev =>
+							prev.map(prevItem => (uuids.includes(prevItem.uuid) ? { ...prevItem, favorited: favorite } : prevItem))
+						)
+					}
+				} catch (e) {
+					console.error(e)
+
+					const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+					toast.update({
+						id: toast.id,
+						duration: 5000
+					})
+				} finally {
+					toast.dismiss()
+				}
+			},
+			[selectedItems, setItems, errorToast, loadingToast, location]
+		)
+
+		const share = useCallback(async () => {
+			if (selectedItems.length === 0) {
+				return
+			}
+
+			const toast = loadingToast()
+
+			try {
+				await actions.share({ selectedItems })
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		}, [selectedItems, loadingToast, errorToast])
+
+		const changeColor = useDebouncedCallback(async (color: string) => {
+			if (selectedItems.length !== 1) {
+				return
+			}
+
+			const toast = loadingToast()
+
+			try {
+				await actions.changeColor({ uuid: selectedItems[0].uuid, color })
+
+				setItems(prev => prev.map(prevItem => (prevItem.uuid === selectedItems[0].uuid ? { ...prevItem, color } : prevItem)))
+			} catch (e) {
+				console.error(e)
+
+				const toast = errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+				toast.update({
+					id: toast.id,
+					duration: 5000
+				})
+			} finally {
+				toast.dismiss()
+			}
+		}, 500)
+
+		const onColorPickerChange = useCallback(
+			(newColor: string) => {
+				setDirectoryColor(newColor)
+				changeColor(newColor)
+			},
+			[changeColor]
+		)
+
+		const publicLink = useCallback(() => {
+			eventEmitter.emit("openPublicLinkDialog", item)
+		}, [item])
+
+		const versions = useCallback(() => {
+			eventEmitter.emit("openFileVersionsDialog", item)
+		}, [item])
+
+		return (
+			<CM>
+				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
+				<ContextMenuContent className="min-w-52">
+					{selectedItems.length === 1 && item.type === "file" && previewType !== "other" && (
+						<ContextMenuItem
+							onClick={preview}
+							className="cursor-pointer"
+						>
+							{t("contextMenus.item.preview")}
+						</ContextMenuItem>
+					)}
+					{selectedItems.length === 1 && item.type === "directory" && (
+						<>
+							<ContextMenuItem
+								onClick={openDirectory}
+								className="cursor-pointer"
+							>
+								{t("contextMenus.item.open")}
+							</ContextMenuItem>
+							<ContextMenuSeparator />
+						</>
+					)}
 					<ContextMenuItem
-						onClick={preview}
+						onClick={download}
 						className="cursor-pointer"
 					>
-						{t("contextMenus.item.preview")}
+						{t("contextMenus.item.download")}
+						<ContextMenuShortcut>{CTRL_KEY_TEXT} + S</ContextMenuShortcut>
 					</ContextMenuItem>
-				)}
-				{selectedItems.length === 1 && item.type === "directory" && (
-					<>
+					{!isInsidePublicLink && <ContextMenuSeparator />}
+					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
 						<ContextMenuItem
-							onClick={openDirectory}
+							onClick={publicLink}
 							className="cursor-pointer"
 						>
-							{t("contextMenus.item.open")}
+							{t("contextMenus.item.publicLink")}
 						</ContextMenuItem>
-						<ContextMenuSeparator />
-					</>
-				)}
-				<ContextMenuItem
-					onClick={download}
-					className="cursor-pointer"
-				>
-					{t("contextMenus.item.download")}
-					<ContextMenuShortcut>{CTRL_KEY_TEXT} + S</ContextMenuShortcut>
-				</ContextMenuItem>
-				<ContextMenuSeparator />
-				{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && (
-					<ContextMenuItem
-						onClick={publicLink}
-						className="cursor-pointer"
-					>
-						{t("contextMenus.item.publicLink")}
-					</ContextMenuItem>
-				)}
-				{!driveURLState.sharedIn && !driveURLState.trash && (
-					<>
+					)}
+					{!driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
+						<>
+							<ContextMenuItem
+								onClick={share}
+								className="cursor-pointer"
+							>
+								{t("contextMenus.item.share")}
+							</ContextMenuItem>
+							<ContextMenuSeparator />
+						</>
+					)}
+					{item.type === "file" &&
+						selectedItems.length === 1 &&
+						!driveURLState.sharedIn &&
+						!driveURLState.trash &&
+						!isInsidePublicLink && (
+							<>
+								<ContextMenuItem
+									onClick={versions}
+									className="cursor-pointer"
+								>
+									{t("contextMenus.item.versions")}
+								</ContextMenuItem>
+								<ContextMenuSeparator />
+							</>
+						)}
+					{!driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
+						<>
+							<ContextMenuItem
+								onClick={() => toggleFavorite(!item.favorited)}
+								className="cursor-pointer"
+							>
+								{item.favorited ? t("contextMenus.item.unfavorite") : t("contextMenus.item.favorite")}
+							</ContextMenuItem>
+							{item.type === "directory" && (
+								<ContextMenuSub>
+									<ContextMenuSubTrigger
+										className="cursor-pointer"
+										onClick={e => e.stopPropagation()}
+									>
+										{t("contextMenus.item.color")}
+									</ContextMenuSubTrigger>
+									<ContextMenuSubContent onClick={e => e.stopPropagation()}>
+										<HexColorPicker
+											color={directoryColor}
+											onChange={onColorPickerChange}
+											onClick={e => e.stopPropagation()}
+										/>
+									</ContextMenuSubContent>
+								</ContextMenuSub>
+							)}
+							<ContextMenuSeparator />
+						</>
+					)}
+					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
 						<ContextMenuItem
-							onClick={share}
+							onClick={rename}
 							className="cursor-pointer"
 						>
-							{t("contextMenus.item.share")}
+							{t("contextMenus.item.rename")}
 						</ContextMenuItem>
-						<ContextMenuSeparator />
-					</>
-				)}
-				{item.type === "file" && selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && (
-					<>
-						<ContextMenuItem
-							onClick={versions}
-							className="cursor-pointer"
-						>
-							{t("contextMenus.item.versions")}
-						</ContextMenuItem>
-						<ContextMenuSeparator />
-					</>
-				)}
-				{!driveURLState.sharedIn && !driveURLState.trash && (
-					<>
-						<ContextMenuItem
-							onClick={() => toggleFavorite(!item.favorited)}
-							className="cursor-pointer"
-						>
-							{item.favorited ? t("contextMenus.item.unfavorite") : t("contextMenus.item.favorite")}
-						</ContextMenuItem>
-						{item.type === "directory" && (
+					)}
+					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.sharedOut && !isInsidePublicLink && (
+						<>
 							<ContextMenuSub>
 								<ContextMenuSubTrigger
 									className="cursor-pointer"
 									onClick={e => e.stopPropagation()}
 								>
-									{t("contextMenus.item.color")}
+									{t("contextMenus.item.move")}
 								</ContextMenuSubTrigger>
-								<ContextMenuSubContent onClick={e => e.stopPropagation()}>
-									<HexColorPicker
-										color={directoryColor}
-										onChange={onColorPickerChange}
-										onClick={e => e.stopPropagation()}
+								<ContextMenuSubContent>
+									<ContextMenuItem
+										onClick={move}
+										className="cursor-pointer"
+									>
+										{t("contextMenus.item.selectDestination")}
+									</ContextMenuItem>
+									<ContextMenuSeparator />
+									<MoveTree
+										parent={baseFolderUUID}
+										name={t("contextMenus.item.cloudDrive")}
 									/>
 								</ContextMenuSubContent>
 							</ContextMenuSub>
-						)}
-						<ContextMenuSeparator />
-					</>
-				)}
-				{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && (
-					<ContextMenuItem
-						onClick={rename}
-						className="cursor-pointer"
-					>
-						{t("contextMenus.item.rename")}
-					</ContextMenuItem>
-				)}
-				{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.sharedOut && (
-					<>
-						<ContextMenuSub>
-							<ContextMenuSubTrigger
+							<ContextMenuSeparator />
+						</>
+					)}
+					{driveURLState.trash && !isInsidePublicLink && (
+						<>
+							<ContextMenuItem
+								onClick={restore}
 								className="cursor-pointer"
-								onClick={e => e.stopPropagation()}
 							>
-								{t("contextMenus.item.move")}
-							</ContextMenuSubTrigger>
-							<ContextMenuSubContent>
-								<ContextMenuItem
-									onClick={move}
-									className="cursor-pointer"
-								>
-									{t("contextMenus.item.selectDestination")}
-								</ContextMenuItem>
-								<ContextMenuSeparator />
-								<MoveTree
-									parent={baseFolderUUID}
-									name={t("contextMenus.item.cloudDrive")}
-								/>
-							</ContextMenuSubContent>
-						</ContextMenuSub>
-						<ContextMenuSeparator />
-					</>
-				)}
-				{driveURLState.trash && (
-					<>
+								{t("contextMenus.item.restore")}
+							</ContextMenuItem>
+						</>
+					)}
+					{!driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
 						<ContextMenuItem
-							onClick={restore}
-							className="cursor-pointer"
-						>
-							{t("contextMenus.item.restore")}
-						</ContextMenuItem>
-					</>
-				)}
-				{!driveURLState.sharedIn && !driveURLState.trash && (
-					<ContextMenuItem
-						onClick={trash}
-						className="cursor-pointer text-red-500"
-					>
-						{t("contextMenus.item.trash")}
-					</ContextMenuItem>
-				)}
-				{driveURLState.sharedIn && (
-					<ContextMenuItem
-						onClick={download}
-						className="cursor-pointer text-red-500"
-					>
-						{t("contextMenus.item.remove")}
-					</ContextMenuItem>
-				)}
-				{driveURLState.trash && (
-					<>
-						<ContextMenuSeparator />
-						<ContextMenuItem
-							onClick={deletePermanently}
+							onClick={trash}
 							className="cursor-pointer text-red-500"
 						>
-							{t("contextMenus.item.deletePermanently")}
+							{t("contextMenus.item.trash")}
 						</ContextMenuItem>
-					</>
-				)}
-			</ContextMenuContent>
-		</CM>
-	)
-})
+					)}
+					{driveURLState.sharedIn && !isInsidePublicLink && (
+						<ContextMenuItem
+							onClick={download}
+							className="cursor-pointer text-red-500"
+						>
+							{t("contextMenus.item.remove")}
+						</ContextMenuItem>
+					)}
+					{driveURLState.trash && !isInsidePublicLink && (
+						<>
+							<ContextMenuSeparator />
+							<ContextMenuItem
+								onClick={deletePermanently}
+								className="cursor-pointer text-red-500"
+							>
+								{t("contextMenus.item.deletePermanently")}
+							</ContextMenuItem>
+						</>
+					)}
+				</ContextMenuContent>
+			</CM>
+		)
+	}
+)
 
 export default ContextMenu

@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect } from "react"
+import { memo, useCallback, useEffect, useMemo } from "react"
 import socket from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import { IS_DESKTOP } from "@/constants"
@@ -26,14 +26,23 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 	const windowFocus = useWindowFocus()
 	const { setSelectedConversation } = useChatsStore()
 	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
+	const [authed] = useLocalStorage<boolean>("authed", false)
+
+	const isInsidePublicLink = useMemo(() => {
+		return location.includes("/f/") || location.includes("/d/")
+	}, [location])
 
 	const chatConversationsQuery = useQuery({
-		queryKey: ["listChatsConversations"],
-		queryFn: () => worker.listChatsConversations()
+		queryKey: ["listChatsConversations", authed],
+		queryFn: () => (authed ? worker.listChatsConversations() : Promise.resolve([]))
 	})
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
+			if (!authed || isInsidePublicLink) {
+				return
+			}
+
 			await notificationMutex.acquire()
 
 			try {
@@ -173,7 +182,9 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 			chatConversationsQuery.data,
 			setLastSelectedChatsConversation,
 			setSelectedConversation,
-			contactNotificationsEnabled
+			contactNotificationsEnabled,
+			authed,
+			isInsidePublicLink
 		]
 	)
 

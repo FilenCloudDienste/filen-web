@@ -6,8 +6,7 @@ export const dark = githubDarkInit({
 		gutterBackground: "#151518",
 		gutterBorder: "#151518",
 		gutterActiveForeground: "white",
-		foreground: "white",
-		lineHighlight: "#171717"
+		foreground: "white"
 	}
 })
 export const light = githubLightInit({

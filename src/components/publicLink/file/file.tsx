@@ -233,7 +233,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 	}, [item, canLoadItem])
 
 	useEffect(() => {
-		if (item && canLoadItem) {
+		if (item && canLoadItem && !didLoadItemRef.current) {
 			loadFile()
 		}
 	}, [loadFile, canLoadItem, item])

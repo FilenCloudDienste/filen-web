@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, memo, useRef } from "react"
 import { useDriveItemsStore } from "@/stores/drive.store"
 import useLocation from "@/hooks/useLocation"
+import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 
 export type DragSelectPosition = { x: number; y: number }
 
@@ -10,11 +11,28 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 	const [endPos, setEndPos] = useState<DragSelectPosition>({ x: 0, y: 0 })
 	const dragAreaRef = useRef<HTMLDivElement>(null)
 	const containerRef = useRef<HTMLDivElement>(null)
-	const { setItems, items } = useDriveItemsStore()
+	const { setItems: setDriveItems, items: driveItems } = useDriveItemsStore()
+	const { setItems: setPublicLinkItems, items: publicLinkItems } = useDirectoryPublicLinkStore()
 	const location = useLocation()
 
+	const isInsidePublicLink = useMemo(() => {
+		return location.includes("/f/") || location.includes("/d/")
+	}, [location])
+
+	const canDisplay = useMemo(() => {
+		return location.includes("drive") || isInsidePublicLink
+	}, [location, isInsidePublicLink])
+
+	const setItems = useMemo(() => {
+		return isInsidePublicLink ? setPublicLinkItems : setDriveItems
+	}, [isInsidePublicLink, setPublicLinkItems, setDriveItems])
+
+	const items = useMemo(() => {
+		return isInsidePublicLink ? publicLinkItems : driveItems
+	}, [isInsidePublicLink, publicLinkItems, driveItems])
+
 	const targetRects = useMemo((): Record<string, { element: HTMLDivElement; rect: DOMRect }> => {
-		if (!location.includes("drive")) {
+		if (!canDisplay) {
 			return {}
 		}
 
@@ -40,29 +58,29 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 		}
 
 		return rects
-	}, [items, location])
+	}, [items, canDisplay])
 
 	const getSelectionRect = useCallback((): DOMRect => {
-		if (!dragAreaRef.current || !location.includes("drive")) {
+		if (!dragAreaRef.current || !canDisplay) {
 			return new DOMRect(0, 0, 0, 0)
 		}
 
 		return dragAreaRef.current.getBoundingClientRect()
-	}, [location])
+	}, [canDisplay])
 
 	const rectOverlap = useCallback(
 		(rect1: DOMRect, rect2: DOMRect): boolean => {
-			if (!location.includes("drive")) {
+			if (!canDisplay) {
 				return false
 			}
 
 			return !(rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom)
 		},
-		[location]
+		[canDisplay]
 	)
 
 	const checkCollision = useCallback((): void => {
-		if (!location.includes("drive")) {
+		if (!canDisplay) {
 			return
 		}
 
@@ -78,11 +96,11 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 		setItems(prev =>
 			prev.map(prevItem => (overlapped.includes(prevItem.uuid) ? { ...prevItem, selected: true } : { ...prevItem, selected: false }))
 		)
-	}, [getSelectionRect, rectOverlap, setItems, targetRects, location])
+	}, [getSelectionRect, rectOverlap, setItems, targetRects, canDisplay])
 
 	const handleMouseDown = useCallback(
 		(e: React.MouseEvent<HTMLDivElement>): void => {
-			if (e.button !== 0 || !location.includes("drive")) {
+			if (e.button !== 0 || !canDisplay) {
 				return
 			}
 
@@ -106,12 +124,12 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 
 			setItems(prev => prev.map(prevItem => ({ ...prevItem, selected: false })))
 		},
-		[setItems, location]
+		[setItems, canDisplay]
 	)
 
 	const handleMouseMove = useCallback(
 		(e: React.MouseEvent<HTMLDivElement>): void => {
-			if (!location.includes("drive")) {
+			if (!canDisplay) {
 				return
 			}
 
@@ -125,22 +143,22 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 
 			checkCollision()
 		},
-		[isDragging, checkCollision, startPos, location]
+		[isDragging, checkCollision, startPos, canDisplay]
 	)
 
 	const handleMouseUp = useCallback((): void => {
-		if (!location.includes("drive")) {
+		if (!canDisplay) {
 			return
 		}
 
 		setIsDragging(false)
 		setStartPos({ x: 0, y: 0 })
 		setEndPos({ x: 0, y: 0 })
-	}, [location])
+	}, [canDisplay])
 
 	const show = useMemo((): boolean => {
-		return location.includes("drive") && isDragging && startPos.x !== 0 && startPos.y !== 0 && endPos.x !== 0 && endPos.y !== 0
-	}, [isDragging, startPos, endPos, location])
+		return canDisplay && isDragging && startPos.x !== 0 && startPos.y !== 0 && endPos.x !== 0 && endPos.y !== 0
+	}, [isDragging, startPos, endPos, canDisplay])
 
 	const selectionBoxStyle = useMemo((): React.CSSProperties => {
 		return {

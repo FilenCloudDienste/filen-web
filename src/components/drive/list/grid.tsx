@@ -6,31 +6,10 @@ import { IS_DESKTOP } from "@/constants"
 import useWindowSize from "@/hooks/useWindowSize"
 import ListItem from "./item"
 import ContextMenu from "./contextMenu"
-import { useNavigate } from "@tanstack/react-router"
-import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
-import useLocation from "@/hooks/useLocation"
-import useErrorToast from "@/hooks/useErrorToast"
-import useLoadingToast from "@/hooks/useLoadingToast"
-import { useTranslation } from "react-i18next"
 
 export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: UseQueryResult<DriveCloudItem[], Error> }) => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const windowSize = useWindowSize()
-	const { setItems } = useDriveItemsStore()
-	const {
-		currentReceiverId,
-		currentSharerId,
-		setCurrentReceiverId,
-		setCurrentSharerId,
-		setCurrentReceiverEmail,
-		setCurrentReceivers,
-		setCurrentSharerEmail
-	} = useDriveSharedStore()
-	const navigate = useNavigate()
-	const location = useLocation()
-	const loadingToast = useLoadingToast()
-	const errorToast = useErrorToast()
-	const { t } = useTranslation()
 
 	const grid = useGrid({
 		scrollRef: virtualizerParentRef,
@@ -54,7 +33,8 @@ export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 				style={{
 					height: IS_DESKTOP ? windowSize.height - 48 - 24 : windowSize.height - 48,
 					overflowX: "hidden",
-					overflowY: "auto"
+					overflowY: "auto",
+					width: "100%"
 				}}
 				className="dragselect-start-allowed"
 			>
@@ -89,22 +69,7 @@ export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 											<ListItem
 												item={item}
 												index={gridItem.index}
-												items={items}
 												type="grid"
-												setCurrentReceiverEmail={setCurrentReceiverEmail}
-												setCurrentReceiverId={setCurrentReceiverId}
-												setCurrentReceivers={setCurrentReceivers}
-												setCurrentSharerEmail={setCurrentSharerEmail}
-												setCurrentSharerId={setCurrentSharerId}
-												setItems={setItems}
-												currentReceiverId={currentReceiverId}
-												currentSharerId={currentSharerId}
-												navigate={navigate}
-												pathname={location}
-												location={location}
-												errorToast={errorToast}
-												loadingToast={loadingToast}
-												t={t}
 											/>
 										</div>
 									)

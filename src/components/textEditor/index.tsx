@@ -91,6 +91,33 @@ export const TextEditor = memo(
 			}
 		}, [])
 
+		const extensions = useMemo(() => {
+			return type === "code"
+				? [
+						...langExtension,
+						hyperLink,
+						color,
+						EditorView.lineWrapping,
+						EditorView.theme({
+							"&": {
+								fontFamily: "Menlo, Monaco, Lucida Console, monospace"
+							},
+							".cm-content": {
+								padding: "0px"
+							}
+						})
+					]
+				: [
+						EditorView.lineWrapping,
+						EditorView.theme({
+							".cm-content": {
+								padding: "10px",
+								paddingTop: "13px"
+							}
+						})
+					]
+		}, [type, langExtension])
+
 		return (
 			<div className="flex flex-row w-full h-full">
 				<ResizablePanelGroup
@@ -114,16 +141,13 @@ export const TextEditor = memo(
 							maxWidth="100%"
 							minWidth="100%"
 							theme={editorTheme}
-							extensions={
-								type === "code" ? [...langExtension, hyperLink, color, EditorView.lineWrapping] : [EditorView.lineWrapping]
-							}
+							extensions={extensions}
 							indentWithTab={indentWithTab}
 							editable={editable}
 							autoFocus={autoFocus}
 							readOnly={readOnly}
 							placeholder={placeholder}
 							onBlur={onBlur}
-							className={type === "code" ? "font-mono" : undefined}
 							basicSetup={{
 								lineNumbers: type === "code",
 								searchKeymap: type === "code",

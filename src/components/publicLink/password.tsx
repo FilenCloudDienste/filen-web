@@ -6,7 +6,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import worker from "@/lib/worker"
 import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/link/info"
-import { type DirLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
+import { type DirLinkInfoDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 
 export const Password = memo(
@@ -19,7 +19,8 @@ export const Password = memo(
 	}: {
 		onAccess: (
 			fileLinkInfo: (Omit<FileLinkInfoResponse, "size"> & { size: number }) | null,
-			dirLinkInfo: DirLinkInfoResponse | null
+			dirLinkInfo: DirLinkInfoDecryptedResponse | null,
+			password: string
 		) => void
 		uuid: string
 		type: "file" | "directory"
@@ -63,13 +64,38 @@ export const Password = memo(
 						salt
 					})
 
-					onAccess(info, null)
-				} else {
-					const info = await worker.directoryPublicLinkInfo({ uuid })
+					if (!info.password || info.password.length === 0) {
+						onAccess(info, null, password)
 
-					onAccess(null, info)
+						return
+					}
+
+					onAccess(info, null, password)
+				} else {
+					const info = await worker.directoryPublicLinkInfo({
+						uuid,
+						key: decryptionKey
+					})
+
+					if (!info.hasPassword) {
+						onAccess(null, info, password)
+
+						return
+					}
+
+					await worker.directoryPublicLinkContent({
+						uuid,
+						parent: info.parent,
+						password,
+						key: decryptionKey,
+						salt: info.salt
+					})
+
+					onAccess(null, info, password)
 				}
 			} catch (e) {
+				setPassword("")
+
 				if (((e as unknown as Error).message ?? "").toLowerCase().includes("wrong password")) {
 					const toast = errorToast("Wrong passworddd")
 

@@ -40,8 +40,9 @@ import { type PaymentMethods } from "@filen/sdk/dist/types/api/v3/user/sub/creat
 import { type FileVersionsResponse } from "@filen/sdk/dist/types/api/v3/file/versions"
 import { type NoteHistory } from "@filen/sdk/dist/types/api/v3/notes/history"
 import { type FileLinkPasswordResponse } from "@filen/sdk/dist/types/api/v3/file/link/password"
-import { type DirLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
+import { type DirLinkInfoDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
 import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/link/info"
+import { type DirLinkContentDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/content"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -950,12 +951,14 @@ export async function directorySize({
 	uuid,
 	sharerId,
 	receiverId,
-	trash
+	trash,
+	linkUUID
 }: {
 	uuid: string
-	sharerId?: number | undefined
-	receiverId?: number | undefined
-	trash?: boolean | undefined
+	sharerId?: number
+	receiverId?: number
+	trash?: boolean
+	linkUUID?: string
 }): Promise<number> {
 	await waitForInitialization()
 
@@ -972,7 +975,17 @@ export async function directorySize({
 
 	directorySizeRateLimit[rateLimitKey] = now + 30000
 
-	const fetched = await SDK.cloud().directorySize({ uuid, sharerId, receiverId, trash })
+	const fetched = linkUUID
+		? await SDK.cloud().directorySizePublicLink({
+				uuid,
+				linkUUID
+			})
+		: await SDK.cloud().directorySize({
+				uuid,
+				sharerId,
+				receiverId,
+				trash
+			})
 
 	await setItem("directorySize:" + uuid, fetched)
 
@@ -2961,10 +2974,10 @@ export async function filePublicLinkHasPassword({ uuid }: { uuid: string }): Pro
 	return await SDK.cloud().filePublicLinkHasPassword({ uuid })
 }
 
-export async function directoryPublicLinkInfo({ uuid }: { uuid: string }): Promise<DirLinkInfoResponse> {
+export async function directoryPublicLinkInfo({ uuid, key }: { uuid: string; key: string }): Promise<DirLinkInfoDecryptedResponse> {
 	await waitForInitialization()
 
-	return await SDK.cloud().directoryPublicLinkInfo({ uuid })
+	return await SDK.cloud().directoryPublicLinkInfo({ uuid, key })
 }
 
 export async function filePublicLinkInfo({
@@ -2981,4 +2994,22 @@ export async function filePublicLinkInfo({
 	await waitForInitialization()
 
 	return await SDK.cloud().filePublicLinkInfo({ uuid, password, key, salt })
+}
+
+export async function directoryPublicLinkContent({
+	uuid,
+	parent,
+	password,
+	salt,
+	key
+}: {
+	uuid: string
+	parent: string
+	password?: string
+	salt?: string
+	key: string
+}): Promise<DirLinkContentDecryptedResponse> {
+	await waitForInitialization()
+
+	return await SDK.cloud().directoryPublicLinkContent({ uuid, parent, password, salt, key })
 }
