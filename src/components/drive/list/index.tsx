@@ -41,7 +41,9 @@ export const List = memo(() => {
 			return orderItemsByType({ items, type: "uploadDateDesc" })
 		}
 
-		return orderItemsByType({ items, type: driveSortBy[parent] ? driveSortBy[parent] : "nameAsc" })
+		const sortBy = driveSortBy[parent]
+
+		return orderItemsByType({ items, type: sortBy ? sortBy : "nameAsc" })
 	}, [items, location, driveSortBy, parent])
 
 	const itemsFiltered = useMemo(() => {

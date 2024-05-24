@@ -114,11 +114,15 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 								directoryGroups[dirname] = []
 							}
 
-							directoryGroups[dirname].push({ file, webkitRelativePath: file.webkitRelativePath })
+							directoryGroups[dirname]!.push({ file, webkitRelativePath: file.webkitRelativePath })
 						}
 
 						for (const basename in directoryGroups) {
 							const directoryFiles = directoryGroups[basename]
+
+							if (!directoryFiles) {
+								continue
+							}
 
 							promises.push(
 								new Promise((resolve, reject) => {

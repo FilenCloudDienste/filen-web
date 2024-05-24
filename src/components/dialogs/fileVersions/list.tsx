@@ -11,6 +11,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 import { showConfirmDialog } from "../confirm"
 import eventEmitter from "@/lib/eventEmitter"
 import { type FileEncryptionVersion } from "@filen/sdk"
+import { Loader } from "lucide-react"
 
 export const List = memo(
 	({ item, setItem }: { item: DriveCloudItem; setItem: React.Dispatch<React.SetStateAction<DriveCloudItem | null>> }) => {
@@ -140,6 +141,18 @@ export const List = memo(
 			[item.uuid, restore, del]
 		)
 
+		const components = useMemo(() => {
+			return {
+				EmptyPlaceholder: () => {
+					return (
+						<div className="flex flex-col items-center justify-center w-full h-full p-4">
+							<Loader className="animate-spin-medium" />
+						</div>
+					)
+				}
+			}
+		}, [])
+
 		return (
 			<Virtuoso
 				data={versionsSorted}
@@ -148,6 +161,7 @@ export const List = memo(
 				width="100%"
 				computeItemKey={getItemKey}
 				itemContent={itemContent}
+				components={components}
 				style={{
 					overflowX: "hidden",
 					overflowY: "auto",

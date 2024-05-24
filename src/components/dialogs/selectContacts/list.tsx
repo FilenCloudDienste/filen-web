@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query"
 import { type Contact as ContactType } from "@filen/sdk/dist/types/api/v3/contacts"
 import Contact from "./contact"
 import { Virtuoso } from "react-virtuoso"
+import { Loader } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export const List = memo(
 	({
@@ -17,6 +19,8 @@ export const List = memo(
 		exclude: number[]
 		search: string
 	}) => {
+		const { t } = useTranslation()
+
 		const query = useQuery({
 			queryKey: ["listContacts"],
 			queryFn: () => worker.listContacts()
@@ -53,6 +57,22 @@ export const List = memo(
 			},
 			[exclude, setResponseContacts, responseContacts]
 		)
+
+		if (!query.isSuccess) {
+			return (
+				<div className="flex flex-col w-full h-[384px] items-center justify-center">
+					<Loader className="animate-spin-medium" />
+				</div>
+			)
+		}
+
+		if (query.isSuccess && contactsSorted.length === 0) {
+			return (
+				<div className="flex flex-col w-full h-[384px] items-center justify-center">
+					<p className="text-muted-foreground">{t("dialogs.selectContacts.empty")}</p>
+				</div>
+			)
+		}
 
 		return (
 			<div className="flex flex-col">

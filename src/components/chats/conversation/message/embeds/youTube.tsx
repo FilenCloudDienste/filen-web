@@ -58,7 +58,6 @@ export const YouTube = memo(
 						height="100%"
 						src={"https://www.youtube.com/embed/" + parsedLink + "?autoplay=1"}
 						title={query.isSuccess ? query.data.author_name + " - " + query.data.title : "YouTube"}
-						loading="eager"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						allowFullScreen={true}
 						sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-presentation"

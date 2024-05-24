@@ -61,7 +61,7 @@ export function getConversationName(conversation: ChatConversation, userId: numb
 	if (conversation.participants.length <= 2) {
 		const otherParticipant = conversation.participants.filter(p => p.userId !== userId)
 
-		if (otherParticipant.length === 1) {
+		if (otherParticipant.length === 1 && otherParticipant[0]) {
 			return otherParticipant[0].nickName.length > 0 ? otherParticipant[0].nickName : otherParticipant[0].email
 		}
 	}

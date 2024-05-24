@@ -32,13 +32,13 @@ export const Chat = memo(
 		})
 
 		const unreadCount = useMemo(() => {
-			return conversationsUnread[conversation.uuid] ? conversationsUnread[conversation.uuid] : 0
+			return conversationsUnread[conversation.uuid] ? conversationsUnread[conversation.uuid]! : 0
 		}, [conversationsUnread, conversation.uuid])
 
 		const lastMessageSenderName = useMemo(() => {
 			const foundSender = conversation.participants.filter(p => p.userId === conversation.lastMessageSender)
 
-			if (foundSender.length !== 1) {
+			if (foundSender.length !== 1 || !foundSender[0]) {
 				return "UnknownUser"
 			}
 

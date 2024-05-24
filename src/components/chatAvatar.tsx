@@ -32,8 +32,13 @@ export function hashString(str: string): number {
 export function getColorFromHash(str: string): string {
 	const hash = hashString(str)
 	const index = hash % bgColors.length
+	const color = bgColors[index]
 
-	return bgColors[index]
+	if (!color) {
+		return bgColors[0]!
+	}
+
+	return color
 }
 
 export const ChatAvatar = memo(
@@ -64,7 +69,7 @@ export const ChatAvatar = memo(
 			if (participants.length < 2) {
 				const me = participants.filter(p => p.userId === userId)
 
-				if (me.length === 1) {
+				if (me.length === 1 && me[0]) {
 					return me[0].avatar
 				}
 
@@ -73,7 +78,7 @@ export const ChatAvatar = memo(
 
 			const other = participants.filter(p => p.userId !== userId)
 
-			if (other.length !== 1) {
+			if (other.length !== 1 || !other[0]) {
 				return null
 			}
 

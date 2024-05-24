@@ -17,8 +17,8 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 
 	const virtuosoHeight = useMemo(() => {
-		return IS_DESKTOP ? windowSize.height - 48 - 40 - 24 : windowSize.height - 48 - 40
-	}, [windowSize.height])
+		return IS_DESKTOP ? windowSize.height - 48 - (showSkeletons ? 0 : 40) - 24 : windowSize.height - 48 - (showSkeletons ? 0 : 40)
+	}, [windowSize.height, showSkeletons])
 
 	const getItemKey = useCallback(
 		(_: number, item: DriveCloudItem) => `${item.uuid}:${driveSortBy[routeParent] ?? "nameAsc"}`,
@@ -47,10 +47,10 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 										key={index}
 										className="flex flex-row h-11 gap-3 items-center px-3 mb-3"
 									>
-										<Skeleton className="w-7 h-7 rounded-md" />
-										<Skeleton className="grow rounded-md h-5" />
-										<Skeleton className="rounded-md h-5 w-[125px]" />
-										<Skeleton className="rounded-md h-5 w-[250px]" />
+										<Skeleton className="w-7 h-7 rounded-md shrink-0" />
+										<Skeleton className="grow rounded-md h-6" />
+										<Skeleton className="rounded-md h-6 w-[125px]" />
+										<Skeleton className="rounded-md h-6 w-[250px]" />
 									</div>
 								)
 							})

@@ -2,7 +2,7 @@ import { ThemeProvider } from "@/providers/themeProvider"
 import { createRootRoute, Outlet } from "@tanstack/react-router"
 import { memo, useEffect, useState, useRef, useCallback } from "react"
 import { Toaster } from "@/components/ui/toaster"
-import { QueryClient, focusManager } from "@tanstack/react-query"
+import { QueryClient, focusManager, useIsRestoring } from "@tanstack/react-query"
 import { PersistQueryClientProvider, type PersistQueryClientOptions } from "@tanstack/react-query-persist-client"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import createIDBPersister from "@/lib/queryPersister"
@@ -72,6 +72,7 @@ export const Root = memo(() => {
 	const [ready, setReady] = useState<boolean>(false)
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const initRef = useRef<boolean>(false)
+	const isRestoring = useIsRestoring()
 
 	const setup = useCallback(async () => {
 		try {
@@ -93,7 +94,7 @@ export const Root = memo(() => {
 		}
 	}, [setup])
 
-	if (!ready) {
+	if (!ready || isRestoring) {
 		return null
 	}
 

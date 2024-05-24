@@ -127,8 +127,8 @@ export const Message = memo(
 	}: {
 		message: ChatMessage
 		conversation: ChatConversation
-		prevMessage: ChatMessage
-		nextMessage: ChatMessage
+		prevMessage?: ChatMessage
+		nextMessage?: ChatMessage
 		userId: number
 		isScrolling: boolean
 		lastFocus: number
@@ -181,7 +181,7 @@ export const Message = memo(
 
 			const userEmail = conversation.participants.filter(p => p.userId === userId)
 
-			if (userEmail.length === 0) {
+			if (userEmail.length === 0 || !userEmail[0]) {
 				return false
 			}
 
@@ -197,7 +197,7 @@ export const Message = memo(
 						return false
 					}
 
-					return userEmail[0].email === email
+					return userEmail[0]!.email === email
 				}).length > 0
 			)
 		}, [message, userId, conversation.participants])
@@ -256,7 +256,13 @@ export const Message = memo(
 							return
 						}
 
-						const contentType = headers["content-type"].split(";")[0].trim()
+						const headersEx = headers["content-type"].split(";")
+
+						if (!headersEx[0]) {
+							return
+						}
+
+						const contentType = headersEx[0].trim()
 
 						if (EMBED_CONTENT_TYPES_IMAGES.includes(contentType)) {
 							setDisplayAs(prev => ({ ...prev, [link]: "image" }))

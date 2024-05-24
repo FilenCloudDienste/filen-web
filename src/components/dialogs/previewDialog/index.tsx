@@ -55,7 +55,11 @@ export const PreviewDialog = memo(() => {
 		setTimeout(() => {
 			if (!openRef.current) {
 				for (const uuid in urlObjects) {
-					globalThis.URL.revokeObjectURL(urlObjects[uuid])
+					const object = urlObjects[uuid]
+
+					if (object) {
+						globalThis.URL.revokeObjectURL(object)
+					}
 				}
 
 				setURLObjects({})
@@ -324,7 +328,7 @@ export const PreviewDialog = memo(() => {
 							<>
 								{buffers[item.uuid] ? (
 									<Text
-										buffer={buffers[item.uuid]}
+										buffer={buffers[item.uuid]!}
 										item={item}
 										onValueChange={onValueChange}
 									/>
@@ -333,16 +337,20 @@ export const PreviewDialog = memo(() => {
 								)}
 							</>
 						)}
-						{previewType === "docx" && <>{buffers[item.uuid] ? <DocX buffer={buffers[item.uuid]} /> : <Loader />}</>}
-						{previewType === "pdf" && <>{urlObjects[item.uuid] ? <PDF urlObject={urlObjects[item.uuid]} /> : <Loader />}</>}
+						{previewType === "docx" && <>{buffers[item.uuid] ? <DocX buffer={buffers[item.uuid]!} /> : <Loader />}</>}
+						{previewType === "pdf" && <>{urlObjects[item.uuid] ? <PDF urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>}
 						{previewType === "image" && (
 							<Image
 								urlObject={urlObjects[item.uuid]}
 								item={item}
 							/>
 						)}
-						{previewType === "video" && <>{urlObjects[item.uuid] ? <Video urlObject={urlObjects[item.uuid]} /> : <Loader />}</>}
-						{previewType === "audio" && <>{urlObjects[item.uuid] ? <Audio urlObject={urlObjects[item.uuid]} /> : <Loader />}</>}
+						{previewType === "video" && (
+							<>{urlObjects[item.uuid] ? <Video urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
+						)}
+						{previewType === "audio" && (
+							<>{urlObjects[item.uuid] ? <Audio urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
+						)}
 					</div>
 				)}
 			</DialogContent>

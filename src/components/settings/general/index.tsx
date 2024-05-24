@@ -17,6 +17,7 @@ import { Switch } from "@/components/ui/switch"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { type NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import { useQuery } from "@tanstack/react-query"
+import Skeletons from "../skeletons"
 
 export const General = memo(() => {
 	const account = useAccount()
@@ -195,7 +196,7 @@ export const General = memo(() => {
 	)
 
 	if (!account) {
-		return null
+		return <Skeletons />
 	}
 
 	return (

@@ -14,6 +14,8 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import { type SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
 import { Note as NoteType } from "@filen/sdk/dist/types/api/v3/notes"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useTranslation } from "react-i18next"
 
 export const Notes = memo(() => {
 	const windowSize = useWindowSize()
@@ -23,11 +25,20 @@ export const Notes = memo(() => {
 	const routeParent = useRouteParent()
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const { userId } = useSDKConfig()
+	const { t } = useTranslation()
 
 	const query = useQuery({
 		queryKey: ["listNotes"],
 		queryFn: () => worker.listNotes()
 	})
+
+	const showSkeletons = useMemo(() => {
+		if (query.isSuccess && query.data.length >= 0) {
+			return false
+		}
+
+		return true
+	}, [query.data, query.isSuccess])
 
 	const notesSorted = useMemo(() => {
 		return sortAndFilterNotes(notes, search, activeTag)
@@ -48,6 +59,40 @@ export const Notes = memo(() => {
 		},
 		[setLastSelectedNote, setSelectedNote, userId]
 	)
+
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div className="flex flex-col w-full h-full overflow-hidden py-3">
+						{showSkeletons ? (
+							new Array(100).fill(1).map((_, index) => {
+								return (
+									<div
+										key={index}
+										className="flex flex-row gap-4 px-4 mb-4"
+									>
+										<div className="flex flex-row shrink-0">
+											<Skeleton className="w-7 h-7 rounded-md shrink-0" />
+										</div>
+										<div className="flex flex-col grow gap-1">
+											<Skeleton className="h-4 w-full grow" />
+											<Skeleton className="h-2 w-full grow mt-1" />
+											<Skeleton className="h-2 w-full grow" />
+										</div>
+									</div>
+								)
+							})
+						) : (
+							<div className="flex flex-row items-center justify-center p-4 w-full h-full">
+								<p className="text-muted-foreground">{t("innerSideBar.notes.empty")}</p>
+							</div>
+						)}
+					</div>
+				)
+			}
+		}
+	}, [showSkeletons, t])
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
@@ -87,7 +132,7 @@ export const Notes = memo(() => {
 	)
 
 	useEffect(() => {
-		if (notesSorted.length > 0) {
+		if (notesSorted.length > 0 && notesSorted[0]) {
 			if (!validateUUID(routeParent)) {
 				setLastSelectedNote(notesSorted[0].uuid)
 				setSelectedNote(notesSorted[0])
@@ -102,7 +147,7 @@ export const Notes = memo(() => {
 				if (!selectedNote) {
 					const foundNote = notesSorted.filter(note => note.uuid === routeParent)
 
-					if (foundNote.length === 1) {
+					if (foundNote.length === 1 && foundNote[0]) {
 						setLastSelectedNote(foundNote[0].uuid)
 						setSelectedNote(foundNote[0])
 					}
@@ -148,6 +193,7 @@ export const Notes = memo(() => {
 			width="100%"
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
+			components={components}
 			style={{
 				overflowX: "hidden",
 				overflowY: "auto",

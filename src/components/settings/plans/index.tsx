@@ -4,6 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useTranslation } from "react-i18next"
 import worker from "@/lib/worker"
 import Plan from "./plan"
+import { Loader } from "lucide-react"
+import { IS_DESKTOP } from "@/constants"
+import { cn } from "@/lib/utils"
 
 export const Plans = memo(() => {
 	const { t } = useTranslation()
@@ -40,7 +43,16 @@ export const Plans = memo(() => {
 	}, [query.isSuccess, query.data])
 
 	if (!query.isSuccess) {
-		return null
+		return (
+			<div
+				className={cn(
+					"flex flex-col w-full items-center justify-center gap-2",
+					IS_DESKTOP ? "h-[calc(100vh-48px)]" : "h-[calc(100vh-32px)]"
+				)}
+			>
+				<Loader className="animate-spin-medium" />
+			</div>
+		)
 	}
 
 	return (

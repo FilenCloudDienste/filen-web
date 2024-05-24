@@ -7,7 +7,7 @@ import { formatBytes } from "@/utils"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import worker from "@/lib/worker"
-import { Gem } from "lucide-react"
+import { Gem, Loader } from "lucide-react"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 
 export const Subscriptions = memo(() => {
@@ -58,7 +58,16 @@ export const Subscriptions = memo(() => {
 	)
 
 	if (!account) {
-		return null
+		return (
+			<div
+				className={cn(
+					"flex flex-col w-full items-center justify-center gap-2",
+					IS_DESKTOP ? "h-[calc(100vh-48px)]" : "h-[calc(100vh-32px)]"
+				)}
+			>
+				<Loader className="animate-spin-medium" />
+			</div>
+		)
 	}
 
 	return (

@@ -72,8 +72,13 @@ export const SelectDriveItemDialog = memo(() => {
 
 	const parent = useMemo(() => {
 		const ex = pathname.split("/")
+		const part = ex[ex.length - 1]
 
-		return ex[ex.length - 1]
+		if (!part) {
+			return ""
+		}
+
+		return part
 	}, [pathname])
 
 	const submit = useCallback(() => {

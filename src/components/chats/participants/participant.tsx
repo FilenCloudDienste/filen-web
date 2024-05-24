@@ -20,7 +20,7 @@ export const Participant = memo(
 		const status = useMemo(() => {
 			const filtered = onlineUsers.filter(p => p.userId === participant.userId)
 
-			if (filtered.length === 0 || filtered[0].appearOffline) {
+			if (filtered.length === 0 || !filtered[0] || filtered[0].appearOffline) {
 				return "offline"
 			}
 

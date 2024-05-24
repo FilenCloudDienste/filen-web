@@ -424,7 +424,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 										onClick={onReceiversClick}
 										variant="default"
 									>
-										{item.receivers.length === 1
+										{item.receivers.length === 1 && item.receivers[0]
 											? item.receivers[0].email
 											: t("drive.list.item.sharedWith", { count: item.receivers.length })}
 									</Badge>

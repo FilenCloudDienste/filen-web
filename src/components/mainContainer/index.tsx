@@ -163,7 +163,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 			</div>
 			<ResizablePanelGroup
 				direction="horizontal"
-				onLayout={e => setSidebarPercentage(e[0])}
+				onLayout={e => setSidebarPercentage(e[0] ? e[0] : 20)}
 				className={cn("bg-muted/40", IS_DESKTOP && "rounded-tl-[10px]")}
 			>
 				{!location.includes("terminal") && (

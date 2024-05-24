@@ -20,6 +20,7 @@ import { useNavigate } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/blocked"
 import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/requests/in"
+import { Skeleton } from "../ui/skeleton"
 
 const refetchQueryParams = {
 	refetchInterval: 5000,
@@ -77,6 +78,44 @@ export const Contacts = memo(() => {
 		return chatsQuery.data
 	}, [chatsQuery.isSuccess, chatsQuery.data])
 
+	const showSkeletons = useMemo(() => {
+		if (location.includes("contacts/all") || location.includes("contacts/online") || location.includes("contacts/offline")) {
+			if (allQuery.isSuccess && allQuery.data.length >= 0) {
+				return false
+			}
+		}
+
+		if (location.includes("contacts/in")) {
+			if (requestsInQuery.isSuccess && requestsInQuery.data.length >= 0) {
+				return false
+			}
+		}
+
+		if (location.includes("contacts/out")) {
+			if (requestsOutQuery.isSuccess && requestsOutQuery.data.length >= 0) {
+				return false
+			}
+		}
+
+		if (location.includes("contacts/blocked")) {
+			if (blockedQuery.isSuccess && blockedQuery.data.length >= 0) {
+				return false
+			}
+		}
+
+		return true
+	}, [
+		location,
+		allQuery.isSuccess,
+		allQuery.data,
+		requestsInQuery.isSuccess,
+		requestsInQuery.data,
+		requestsOutQuery.isSuccess,
+		requestsOutQuery.data,
+		blockedQuery.isSuccess,
+		blockedQuery.data
+	])
+
 	const refetch = useCallback(async () => {
 		try {
 			await Promise.all([
@@ -132,9 +171,9 @@ export const Contacts = memo(() => {
 
 		let contacts: ContactType[] = []
 
-		if (location.includes("online")) {
+		if (location.includes("contacts/online")) {
 			contacts = allQuery.data.filter(c => c.lastActive > Date.now() - ONLINE_TIMEOUT).sort((a, b) => b.lastActive - a.lastActive)
-		} else if (location.includes("offline")) {
+		} else if (location.includes("contacts/offline")) {
 			contacts = allQuery.data.filter(c => c.lastActive < Date.now() - ONLINE_TIMEOUT).sort((a, b) => b.email.localeCompare(a.email))
 		} else {
 			contacts = allQuery.data.sort((a, b) => b.email.localeCompare(a.email))
@@ -254,6 +293,33 @@ export const Contacts = memo(() => {
 		[refetch, userId, chatConversations]
 	)
 
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div className="flex flex-col w-full h-full overflow-hidden">
+						{showSkeletons ? (
+							new Array(100).fill(1).map((_, index) => {
+								return (
+									<div
+										key={index}
+										className="flex flex-row w-full h-auto mb-2"
+									>
+										<Skeleton className="w-full h-[68px] rounded-md" />
+									</div>
+								)
+							})
+						) : (
+							<div className="flex flex-col items-center justify-center w-full h-full">
+								<p className="text-muted-foreground -mt-10">{t("contacts.empty")}</p>
+							</div>
+						)}
+					</div>
+				)
+			}
+		}
+	}, [showSkeletons, t])
+
 	return (
 		<div className="flex flex-col w-full h-full select-none">
 			<div className="flex flex-col max-w-[75%] h-full">
@@ -269,13 +335,13 @@ export const Contacts = memo(() => {
 				<div className="flex flex-row px-4">
 					<div className="flex flex-row text-muted-foreground mt-2 pb-3 grow uppercase gap-3 line-clamp-1 text-ellipsis break-all">
 						<p>
-							{location.includes("all")
+							{location.includes("contacts/all")
 								? t("innerSideBar.contacts.all")
-								: location.includes("online")
+								: location.includes("contacts/online")
 									? t("innerSideBar.contacts.online")
-									: location.includes("offline")
+									: location.includes("contacts/offline")
 										? t("innerSideBar.contacts.offline")
-										: location.includes("blocked")
+										: location.includes("contacts/blocked")
 											? t("innerSideBar.contacts.blocked")
 											: location.includes("contacts/in")
 												? t("innerSideBar.contacts.in")
@@ -289,7 +355,7 @@ export const Contacts = memo(() => {
 								? requestsInSorted.length
 								: location.includes("contacts/out")
 									? requestsOutSorted.length
-									: location.includes("blocked")
+									: location.includes("contacts/blocked")
 										? blockedSorted.length
 										: contactsSorted.length}
 						</p>
@@ -304,6 +370,7 @@ export const Contacts = memo(() => {
 							width="100%"
 							computeItemKey={getItemKeyRequestsIn}
 							itemContent={itemContentRequestsIn}
+							components={components}
 							style={{
 								overflowX: "hidden",
 								overflowY: "auto",
@@ -319,6 +386,7 @@ export const Contacts = memo(() => {
 							width="100%"
 							computeItemKey={getItemKeyRequestsOut}
 							itemContent={itemContentRequestsOut}
+							components={components}
 							style={{
 								overflowX: "hidden",
 								overflowY: "auto",
@@ -334,6 +402,7 @@ export const Contacts = memo(() => {
 							width="100%"
 							computeItemKey={getItemKeyBlocked}
 							itemContent={itemContentBlocked}
+							components={components}
 							style={{
 								overflowX: "hidden",
 								overflowY: "auto",
@@ -349,6 +418,7 @@ export const Contacts = memo(() => {
 							width="100%"
 							computeItemKey={getItemKeyContacts}
 							itemContent={itemContentContacts}
+							components={components}
 							style={{
 								overflowX: "hidden",
 								overflowY: "auto",

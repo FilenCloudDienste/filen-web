@@ -7,8 +7,13 @@ export default function useRouteParent() {
 	const routeParent = useMemo(() => {
 		if (location.includes("/")) {
 			const ex = location.split("/")
+			const part = ex[ex.length - 1]
 
-			return ex[ex.length - 1]
+			if (!part) {
+				return location
+			}
+
+			return part
 		}
 
 		return location

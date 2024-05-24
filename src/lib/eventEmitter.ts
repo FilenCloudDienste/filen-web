@@ -9,7 +9,7 @@ export const eventEmitter = {
 			LISTENERS[name] = []
 		}
 
-		LISTENERS[name].push(listener)
+		LISTENERS[name]!.push(listener)
 
 		return {
 			remove: () => {
@@ -17,7 +17,7 @@ export const eventEmitter = {
 					return
 				}
 
-				LISTENERS[name] = LISTENERS[name].filter(filteredListener => filteredListener !== listener)
+				LISTENERS[name] = LISTENERS[name]!.filter(filteredListener => filteredListener !== listener)
 			}
 		}
 	},
@@ -26,7 +26,7 @@ export const eventEmitter = {
 			return
 		}
 
-		LISTENERS[name].forEach(listener => {
+		LISTENERS[name]!.forEach(listener => {
 			listener(data)
 		})
 	}

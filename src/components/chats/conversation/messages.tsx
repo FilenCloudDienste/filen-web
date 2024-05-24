@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
 import useRouteParent from "@/hooks/useRouteParent"
 import eventEmitter from "@/lib/eventEmitter"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const Messages = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const windowSize = useWindowSize()
@@ -60,12 +61,20 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 
 		const filtered = lastFocusQuery.data.filter(lf => lf.uuid === conversation.uuid)
 
-		if (filtered.length === 0) {
+		if (filtered.length === 0 || !filtered[0]) {
 			return -1
 		}
 
 		return filtered[0].lastFocus
 	}, [lastFocusQuery.isSuccess, lastFocusQuery.data, conversation.uuid])
+
+	const showSkeletons = useMemo(() => {
+		if (query.isSuccess && query.data.length >= 0) {
+			return false
+		}
+
+		return true
+	}, [query.data, query.isSuccess])
 
 	const fetchPreviousMessages = useCallback(async () => {
 		if (messagesSorted.length === 0 || isFetchingPreviousMessagesRef.current) {
@@ -159,6 +168,51 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		},
 		[messagesSorted.length]
 	)
+
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div
+						className="flex flex-col w-full h-full overflow-hidden py-3"
+						style={{
+							transform: "scaleY(-1)"
+						}}
+					>
+						{showSkeletons ? (
+							new Array(100).fill(1).map((_, index) => {
+								return (
+									<div
+										key={index}
+										className="flex flex-row h-auto p-1 px-5 gap-3 mb-3"
+										style={{
+											transform: "scaleY(-1)"
+										}}
+									>
+										<Skeleton className="w-[36px] h-[36px] rounded-full shrink-0" />
+										<div className="flex flex-col grow gap-2">
+											<Skeleton className="w-[200px] rounded-md h-4" />
+											<Skeleton className="w-[50%] rounded-md h-3" />
+											<Skeleton className="w-[30%] rounded-md h-3" />
+											<Skeleton className="w-[10%] rounded-md h-3" />
+										</div>
+									</div>
+								)
+							})
+						) : (
+							<div
+								style={{
+									transform: "scaleY(-1)"
+								}}
+							>
+								end to end
+							</div>
+						)}
+					</div>
+				)
+			}
+		}
+	}, [showSkeletons])
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
@@ -291,7 +345,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 
 		const filtered = lastFocusQuery.data.filter(lf => lf.uuid === conversation.uuid)
 
-		if (filtered.length === 0) {
+		if (filtered.length === 0 || !filtered[0]) {
 			return
 		}
 
@@ -299,7 +353,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	}, [lastFocusQuery.isSuccess, lastFocusQuery.data, conversation.uuid])
 
 	return (
-		<Fragment key={`messages-${conversation.uuid}`}>
+		<Fragment>
 			<MarkAsRead
 				lastFocus={lastFocus > 0 ? lastFocus : lastFocusQueryNumber}
 				lastFocusValues={lastFocusQuery.isSuccess ? lastFocusQuery.data : []}
@@ -322,6 +376,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 				atTopThreshold={500}
 				followOutput={true}
 				startReached={startReached}
+				components={components}
 				style={{
 					overflowX: "hidden",
 					overflowY: "auto",

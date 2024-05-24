@@ -88,7 +88,9 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 		const overlapped: string[] = []
 
 		for (const uuid in targetRects) {
-			if (rectOverlap(selectionRect, targetRects[uuid].rect)) {
+			const rect = targetRects[uuid]
+
+			if (rect && rectOverlap(selectionRect, rect.rect)) {
 				overlapped.push(uuid)
 			}
 		}

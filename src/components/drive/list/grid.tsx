@@ -90,6 +90,10 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 
 								const item = items[gridItem.index]
 
+								if (!item) {
+									return null
+								}
+
 								return (
 									<div
 										key={item.uuid}

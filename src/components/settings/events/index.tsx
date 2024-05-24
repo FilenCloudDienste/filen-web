@@ -8,6 +8,8 @@ import useAccount from "@/hooks/useAccount"
 import Event from "./event"
 import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
 import useErrorToast from "@/hooks/useErrorToast"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useTranslation } from "react-i18next"
 
 export const Events = memo(() => {
 	const windowSize = useWindowSize()
@@ -18,6 +20,7 @@ export const Events = memo(() => {
 	const fetchingMore = useRef<boolean>(false)
 	const lastEventFetchCount = useRef<number>(-1)
 	const hasMoreEvents = useRef<boolean>(true)
+	const { t } = useTranslation()
 
 	const query = useQuery({
 		queryKey: ["listEvents"],
@@ -27,6 +30,18 @@ export const Events = memo(() => {
 	const virtuosoHeight = useMemo(() => {
 		return windowSize.height - 24 - (IS_DESKTOP ? 24 : 0)
 	}, [windowSize.height])
+
+	const showSkeletons = useMemo(() => {
+		if (!account) {
+			return true
+		}
+
+		if (query.isSuccess && query.data.length >= 0) {
+			return false
+		}
+
+		return true
+	}, [query.data, query.isSuccess, account])
 
 	const eventsSorted = useMemo(() => {
 		return events.sort((a, b) => b.timestamp - a.timestamp)
@@ -79,6 +94,33 @@ export const Events = memo(() => {
 		[account]
 	)
 
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div className="flex flex-col w-full h-full overflow-hidden py-3">
+						{showSkeletons ? (
+							new Array(100).fill(1).map((_, index) => {
+								return (
+									<div
+										key={index}
+										className="flex flex-row gap-4 px-4 mb-2 w-full"
+									>
+										<Skeleton className="h-[50px] w-full grow" />
+									</div>
+								)
+							})
+						) : (
+							<div className="flex flex-row items-center justify-center p-4 w-full h-full">
+								<p className="text-muted-foreground">{t("setttings.events.empty")}</p>
+							</div>
+						)}
+					</div>
+				)
+			}
+		}
+	}, [showSkeletons, t])
+
 	useEffect(() => {
 		if (query.isSuccess && query.dataUpdatedAt !== queryUpdatedAtRef.current) {
 			queryUpdatedAtRef.current = query.dataUpdatedAt
@@ -91,10 +133,6 @@ export const Events = memo(() => {
 		}
 	}, [query.isSuccess, query.data, query.dataUpdatedAt])
 
-	if (!query.isSuccess || !account) {
-		return null
-	}
-
 	return (
 		<div className="flex flex-col w-full h-full p-4">
 			<Virtuoso
@@ -105,6 +143,7 @@ export const Events = memo(() => {
 				computeItemKey={getItemKey}
 				itemContent={itemContent}
 				endReached={fetchMore}
+				components={components}
 				style={{
 					overflowX: "hidden",
 					overflowY: "auto",

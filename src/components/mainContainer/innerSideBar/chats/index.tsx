@@ -17,6 +17,8 @@ import socket from "@/lib/socket"
 import eventEmitter from "@/lib/eventEmitter"
 import { sortAndFilterConversations } from "./utils"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
+import { useTranslation } from "react-i18next"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const Chats = memo(() => {
 	const windowSize = useWindowSize()
@@ -28,11 +30,20 @@ export const Chats = memo(() => {
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const { userId } = useSDKConfig()
 	const topDimensions = useElementDimensions("inner-sidebar-top-chats")
+	const { t } = useTranslation()
 
 	const query = useQuery({
 		queryKey: ["listChatsConversations"],
 		queryFn: () => worker.listChatsConversations()
 	})
+
+	const showSkeletons = useMemo(() => {
+		if (query.isSuccess && query.data.length >= 0) {
+			return false
+		}
+
+		return true
+	}, [query.data, query.isSuccess])
 
 	const conversationsSorted = useMemo(() => {
 		return sortAndFilterConversations(conversations, search, userId)
@@ -59,13 +70,46 @@ export const Chats = memo(() => {
 		[userId, setLastSelectedChatsConversation, setSelectedConversation, routeParent]
 	)
 
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div className="flex flex-col w-full h-full overflow-hidden py-3">
+						{showSkeletons ? (
+							new Array(100).fill(1).map((_, index) => {
+								return (
+									<div
+										key={index}
+										className="flex flex-row gap-4 px-4 mb-4"
+									>
+										<div className="flex flex-row shrink-0">
+											<Skeleton className="w-[36px] h-[36px] rounded-full shrink-0" />
+										</div>
+										<div className="flex flex-col grow gap-1">
+											<Skeleton className="h-4 w-full grow" />
+											<Skeleton className="h-2 w-full grow mt-1" />
+										</div>
+									</div>
+								)
+							})
+						) : (
+							<div className="flex flex-row items-center justify-center p-4 w-full h-full">
+								<p className="text-muted-foreground">{t("innerSideBar.chats.empty")}</p>
+							</div>
+						)}
+					</div>
+				)
+			}
+		}
+	}, [showSkeletons, t])
+
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
 			try {
 				if (event.type === "chatMessageNew") {
 					const filteredConversations = conversations.filter(c => c.uuid === event.data.conversation)
 
-					if (filteredConversations.length === 0) {
+					if (filteredConversations.length === 0 || !filteredConversations[0]) {
 						await query.refetch()
 
 						return
@@ -110,7 +154,7 @@ export const Chats = memo(() => {
 					if (event.data.senderId !== userId) {
 						setConversationsUnread(prev => ({
 							...prev,
-							[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation] + 1 : 1
+							[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation]! + 1 : 1
 						}))
 					}
 				} else if (event.type === "chatConversationParticipantLeft") {
@@ -193,7 +237,7 @@ export const Chats = memo(() => {
 					)
 
 					if (routeParent === event.data.uuid) {
-						if (conversationsWithoutDeleted.length > 0) {
+						if (conversationsWithoutDeleted.length > 0 && conversationsWithoutDeleted[0]) {
 							setLastSelectedChatsConversation(conversationsWithoutDeleted[0].uuid)
 							setSelectedConversation(conversationsWithoutDeleted[0])
 
@@ -230,7 +274,7 @@ export const Chats = memo(() => {
 	)
 
 	useEffect(() => {
-		if (conversationsSorted.length > 0) {
+		if (conversationsSorted.length > 0 && conversationsSorted[0]) {
 			if (!validateUUID(routeParent)) {
 				setLastSelectedChatsConversation(conversationsSorted[0].uuid)
 				setSelectedConversation(conversationsSorted[0])
@@ -245,7 +289,7 @@ export const Chats = memo(() => {
 				if (!selectedConversation) {
 					const foundConvo = conversationsSorted.filter(note => note.uuid === routeParent)
 
-					if (foundConvo.length === 1) {
+					if (foundConvo.length === 1 && foundConvo[0]) {
 						setLastSelectedChatsConversation(foundConvo[0].uuid)
 						setSelectedConversation(foundConvo[0])
 					}
@@ -301,6 +345,7 @@ export const Chats = memo(() => {
 			width="100%"
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
+			components={components}
 			style={{
 				overflowX: "hidden",
 				overflowY: "auto",

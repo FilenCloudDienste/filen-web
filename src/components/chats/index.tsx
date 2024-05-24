@@ -1,4 +1,4 @@
-import { memo, useState, useMemo } from "react"
+import { memo, useMemo } from "react"
 import useIsMobile from "@/hooks/useIsMobile"
 import Conversation from "./conversation"
 import Participants from "./participants"
@@ -9,8 +9,6 @@ import { init as initEmojiMart } from "emoji-mart"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import { customEmojis } from "./customEmojis"
 
-let didInitializeEmojisPreviously = false
-
 export const Chats = memo(() => {
 	const isMobile = useIsMobile()
 	const { selectedConversation, setReplyMessage, setEditUUID } = useChatsStore()
@@ -18,7 +16,6 @@ export const Chats = memo(() => {
 		`conversationParticipantsContainerOpen:${selectedConversation?.uuid}`,
 		true
 	)
-	const [emojisInitialized, setEmojisInitialized] = useState<boolean>(didInitializeEmojisPreviously)
 
 	const showParticipants = useMemo(() => {
 		if ((selectedConversation && selectedConversation.participants.length <= 2) || isMobile) {
@@ -39,18 +36,8 @@ export const Chats = memo(() => {
 					emojis: customEmojis
 				}
 			]
-		})
-			.then(() => {
-				didInitializeEmojisPreviously = true
-
-				setEmojisInitialized(true)
-			})
-			.catch(console.error)
+		}).catch(console.error)
 	})
-
-	if (!emojisInitialized) {
-		return null
-	}
 
 	return (
 		<div className="w-full h-screen flex flex-row">

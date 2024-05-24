@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Section from "../section"
 import { formatBytes } from "@/utils"
+import Skeletons from "../skeletons"
 
 export const Invite = memo(() => {
 	const account = useAccount()
@@ -31,7 +32,7 @@ export const Invite = memo(() => {
 	}, [account, successToast, errorToast])
 
 	if (!account) {
-		return null
+		return <Skeletons />
 	}
 
 	return (

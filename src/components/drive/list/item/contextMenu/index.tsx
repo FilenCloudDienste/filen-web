@@ -117,13 +117,19 @@ export const ContextMenu = memo(
 				return
 			}
 
+			const parentItem = parent.items[0]
+
+			if (!parentItem) {
+				return
+			}
+
 			const toast = loadingToast()
 
 			try {
-				const itemsToMove = selectedItems.filter(item => item.parent !== parent.items[0].uuid)
+				const itemsToMove = selectedItems.filter(item => item.parent !== parentItem.uuid)
 				const movedUUIDs = itemsToMove.map(item => item.uuid)
 
-				await actions.move({ selectedItems: itemsToMove, parent: parent.items[0].uuid })
+				await actions.move({ selectedItems: itemsToMove, parent: parentItem.uuid })
 
 				setItems(prev => prev.filter(prevItem => !movedUUIDs.includes(prevItem.uuid)))
 			} catch (e) {
@@ -226,14 +232,15 @@ export const ContextMenu = memo(
 		}, [selectedItems, previewType])
 
 		const rename = useCallback(async () => {
-			if (selectedItems.length !== 1) {
+			const item = selectedItems[0]
+
+			if (!item) {
 				return
 			}
 
 			const toast = loadingToast()
 
 			try {
-				const item = selectedItems[0]
 				const newName = await actions.rename({ item })
 
 				setItems(prev => prev.map(prevItem => (prevItem.uuid === item.uuid ? { ...prevItem, name: newName } : prevItem)))
@@ -296,7 +303,7 @@ export const ContextMenu = memo(
 		}, [selectedItems, loadingToast, errorToast])
 
 		const changeColor = useDebouncedCallback(async (color: string) => {
-			if (selectedItems.length !== 1) {
+			if (selectedItems.length !== 1 || !selectedItems[0]) {
 				return
 			}
 
@@ -305,7 +312,9 @@ export const ContextMenu = memo(
 			try {
 				await actions.changeColor({ uuid: selectedItems[0].uuid, color })
 
-				setItems(prev => prev.map(prevItem => (prevItem.uuid === selectedItems[0].uuid ? { ...prevItem, color } : prevItem)))
+				setItems(prev =>
+					prev.map(prevItem => (selectedItems[0] && prevItem.uuid === selectedItems[0].uuid ? { ...prevItem, color } : prevItem))
+				)
 			} catch (e) {
 				console.error(e)
 

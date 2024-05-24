@@ -95,7 +95,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 		try {
 			message = (editor.children as CustomElement[])
-				.map(child => (child.children[0].text.length === 0 ? "\n" : child.children[0].text))
+				.map(child => (child.children[0] ? (child.children[0].text.length === 0 ? "\n" : child.children[0].text) : ""))
 				.join("\n")
 				.trim()
 		} catch (e) {
@@ -227,7 +227,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 	const findLastMessageToEdit = useCallback((): void => {
 		const lastMessagesFromUser = messages.filter(m => m.senderId === userId).sort((a, b) => b.sentTimestamp - a.sentTimestamp)
 
-		if (lastMessagesFromUser.length <= 0) {
+		if (lastMessagesFromUser.length <= 0 || !lastMessagesFromUser[0]) {
 			return
 		}
 
@@ -241,7 +241,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 	const sendMessage = useCallback(async (): Promise<void> => {
 		const content = getEditorText()
 
-		if (content.length === 0) {
+		if (content.length === 0 || !me) {
 			return
 		}
 
@@ -425,7 +425,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 		const selection = editor.selection
 
-		if (!selection || !selection.anchor || selection.anchor.offset <= 0) {
+		if (!selection || !selection.anchor || selection.anchor.offset <= 0 || !selection.anchor.path[0]) {
 			hideSuggestions()
 
 			return
@@ -433,7 +433,13 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 		const selected = editor.children[selection.anchor.path[0]] as CustomElement
 
-		if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
+		if (
+			!selected ||
+			!selected.children ||
+			!Array.isArray(selected.children) ||
+			selected.children.length === 0 ||
+			!selected.children[0]
+		) {
 			hideSuggestions()
 
 			return
@@ -476,7 +482,13 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			searchEmojiIndex(emojisSliced.split(":").join(""))
 				.then(result => {
 					const filtered = result.filter(
-						emoji => emoji && emoji.skins && Array.isArray(emoji.skins) && emoji.skins.length > 0 && emoji.skins[0].shortcodes
+						emoji =>
+							emoji &&
+							emoji.skins &&
+							Array.isArray(emoji.skins) &&
+							emoji.skins.length > 0 &&
+							emoji.skins[0] &&
+							emoji.skins[0].shortcodes
 					)
 
 					if (filtered.length === 0) {
@@ -485,7 +497,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 						return
 					}
 
-					const shortCodes = filtered.map(emoji => (emoji.skins ? emoji.skins[0].shortcodes : ""))
+					const shortCodes = filtered.map(emoji => (emoji.skins && emoji.skins[0] ? emoji.skins[0].shortcodes : ""))
 
 					if (shortCodes.length === 0) {
 						setEmojisSuggestionsShortCodes([])
@@ -520,9 +532,20 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			}
 
 			const selectedChildrenIndex = selection.anchor.path[0]
+
+			if (!selectedChildrenIndex) {
+				return
+			}
+
 			const selected = editor.children[selectedChildrenIndex] as CustomElement
 
-			if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
+			if (
+				!selected ||
+				!selected.children ||
+				!Array.isArray(selected.children) ||
+				selected.children.length === 0 ||
+				!selected.children[0]
+			) {
 				return
 			}
 
@@ -562,7 +585,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			const foundParticipant = conversation.participants.filter(p => p.userId === id)
 			const selection = editor.selection
 
-			if (!selection || !selection.anchor || foundParticipant.length === 0) {
+			if (!selection || !selection.anchor || foundParticipant.length === 0 || !foundParticipant[0]) {
 				hideSuggestions()
 				focusEditor()
 
@@ -570,9 +593,20 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			}
 
 			const selectedChildrenIndex = selection.anchor.path[0]
+
+			if (!selectedChildrenIndex) {
+				return
+			}
+
 			const selected = editor.children[selectedChildrenIndex] as CustomElement
 
-			if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
+			if (
+				!selected ||
+				!selected.children ||
+				!Array.isArray(selected.children) ||
+				selected.children.length === 0 ||
+				!selected.children[0]
+			) {
 				hideSuggestions()
 				focusEditor()
 
@@ -631,7 +665,13 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				e.preventDefault()
 
 				if (showMentionSuggestions && filteredMentions.length !== 0 && filteredMentions[mentionsSuggestionsIndex]) {
-					addMentionToInput(filteredMentions[mentionsSuggestionsIndex].userId)
+					const mention = filteredMentions[mentionsSuggestionsIndex]
+
+					if (!mention) {
+						return
+					}
+
+					addMentionToInput(mention.userId)
 
 					return
 				}
@@ -641,7 +681,13 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 					emojisSuggestionsShortCodes.length !== 0 &&
 					emojisSuggestionsShortCodes[emojisSuggestionsIndex]
 				) {
-					addTextAfterTextComponent(":", emojisSuggestionsShortCodes[emojisSuggestionsIndex])
+					const shortCode = emojisSuggestionsShortCodes[emojisSuggestionsIndex]
+
+					if (!shortCode) {
+						return
+					}
+
+					addTextAfterTextComponent(":", shortCode)
 
 					return
 				}

@@ -10,6 +10,7 @@ import { showTwoFactorCodeDialog } from "@/components/dialogs/twoFactorCode"
 import worker from "@/lib/worker"
 import eventEmitter from "@/lib/eventEmitter"
 import ChangePasswordDialog from "./dialogs/changePassword"
+import Skeletons from "../skeletons"
 
 export const Security = memo(() => {
 	const account = useAccount()
@@ -140,7 +141,7 @@ export const Security = memo(() => {
 	}, [])
 
 	if (!account) {
-		return null
+		return <Skeletons />
 	}
 
 	return (

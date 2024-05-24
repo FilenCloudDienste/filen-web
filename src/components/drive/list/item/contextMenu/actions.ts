@@ -7,6 +7,10 @@ import { directoryUUIDToNameCache } from "@/cache"
 import { IS_DESKTOP } from "@/constants"
 
 export async function download({ selectedItems, name }: { selectedItems: DriveCloudItem[]; name?: string }): Promise<void> {
+	if (selectedItems.length === 0 || !selectedItems[0]) {
+		return
+	}
+
 	if (IS_DESKTOP) {
 		const destination = await window.desktopAPI.showSaveDialog({
 			nameSuggestion: name ? name : selectedItems.length === 1 ? selectedItems[0].name : `Download_${Date.now()}`

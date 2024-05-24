@@ -13,7 +13,7 @@ import { validate as validateUUID } from "uuid"
 export const MENTION_REGEX = /(@[\w.-]+@[\w.-]+\.\w+|@everyone)/g
 export const customEmojisList = customEmojis.map(emoji => emoji.id)
 export const customEmojisListRecord: Record<string, string> = customEmojis.reduce(
-	(prev, value) => ({ ...prev, [value.id]: value.skins[0].src }),
+	(prev, value) => ({ ...prev, [value.id]: value.skins[0] ? value.skins[0].src : "" }),
 	{}
 )
 export const lineBreakRegex = /\n/
@@ -119,7 +119,7 @@ export const ReplaceMessageWithComponents = memo(
 
 						const foundParticipant = participants.filter(p => p.email === email)
 
-						if (foundParticipant.length === 0) {
+						if (foundParticipant.length === 0 || !foundParticipant[0]) {
 							return (
 								<div
 									key={key}
@@ -332,7 +332,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 
 						const foundParticipant = participants.filter(p => p.email === email)
 
-						if (foundParticipant.length === 0) {
+						if (foundParticipant.length === 0 || !foundParticipant[0]) {
 							return (
 								<p
 									key={key}
@@ -606,7 +606,7 @@ export function parseYouTubeVideoId(url: string): string | null {
 	const regExp = /(?:\?v=|\/embed\/|\/watch\?v=|\/\w+\/\w+\/|youtu.be\/)([\w-]{11})/
 	const match = url.match(regExp)
 
-	if (match && match.length === 2) {
+	if (match && match.length === 2 && match[1]) {
 		return match[1]
 	}
 
@@ -618,12 +618,23 @@ export function parseFilenPublicLink(url: string): {
 	key: string
 } {
 	const ex = url.split("/")
-	const uuid = ex.map(part => part.split("#")[0].trim()).filter(part => validateUUID(part))
+	const uuid = ex
+		.map(part => {
+			const partEx = part.split("#")
+			const p = partEx[0]
+
+			if (!p) {
+				return ""
+			}
+
+			return p.trim()
+		})
+		.filter(part => validateUUID(part))
 	const keyEx = url.split("#")
 
 	return {
-		uuid: uuid.length > 0 ? uuid[0] : "",
-		key: url.includes("#") && keyEx.length >= 3 ? keyEx[2].trim() : ""
+		uuid: uuid.length > 0 && uuid[0] ? uuid[0] : "",
+		key: url.includes("#") && keyEx.length >= 3 && keyEx[2] ? keyEx[2].trim() : ""
 	}
 }
 
@@ -637,6 +648,11 @@ export function extractLinksFromString(input: string): string[] {
 
 export function parseXStatusIdFromURL(url: string): string {
 	const ex = url.split("/")
+	const part = ex[ex.length - 1]
 
-	return ex[ex.length - 1].trim()
+	if (!part) {
+		return ""
+	}
+
+	return part.trim()
 }

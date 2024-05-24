@@ -7,6 +7,8 @@ import eventEmitter from "@/lib/eventEmitter"
 import { orderItemsByType } from "@/components/drive/utils"
 import { type SelectionType } from ".."
 import { type DriveCloudItem } from "@/components/drive"
+import { Loader } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export const List = memo(
 	({
@@ -24,12 +26,18 @@ export const List = memo(
 		responseItems: DriveCloudItem[]
 		setResponseItems: React.Dispatch<React.SetStateAction<DriveCloudItem[]>>
 	}) => {
+		const { t } = useTranslation()
 		const lastPathname = useRef<string>("")
 
 		const parent = useMemo(() => {
 			const ex = pathname.split("/")
+			const part = ex[ex.length - 1]
 
-			return ex[ex.length - 1]
+			if (!part) {
+				return ""
+			}
+
+			return part
 		}, [pathname])
 
 		const query = useQuery({
@@ -85,6 +93,22 @@ export const List = memo(
 				listener.remove()
 			}
 		}, [parent, query])
+
+		if (!query.isSuccess) {
+			return (
+				<div className="flex flex-col w-full h-[384px] items-center justify-center">
+					<Loader className="animate-spin-medium" />
+				</div>
+			)
+		}
+
+		if (query.isSuccess && itemsOrdered.length === 0) {
+			return (
+				<div className="flex flex-col w-full h-[384px] items-center justify-center">
+					<p className="text-muted-foreground">{t("dialogs.selectDriveItem.empty")}</p>
+				</div>
+			)
+		}
 
 		return (
 			<Virtuoso

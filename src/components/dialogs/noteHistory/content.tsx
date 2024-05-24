@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button"
 import { Text, ListChecks, Code, NotepadText, BookMarked, Loader } from "lucide-react"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
+import { useTranslation } from "react-i18next"
 
 export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
 	const windowSize = useWindowSize()
@@ -20,6 +21,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const [restoring, setRestoring] = useState<boolean>(false)
+	const { t } = useTranslation()
 
 	const query = useQuery({
 		queryKey: ["noteHistory", note.uuid],
@@ -119,7 +121,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 	}, [loadingToast, errorToast, note.uuid, selectedHistory, setOpen, restoring])
 
 	useEffect(() => {
-		if (selectedHistory || historySorted.length === 0) {
+		if (selectedHistory || historySorted.length === 0 || !historySorted[0]) {
 			return
 		}
 
@@ -127,7 +129,19 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 	}, [historySorted, selectedHistory])
 
 	if (!query.isSuccess) {
-		return null
+		return (
+			<div className="flex flex-col w-full h-[calc(100vh-48px)] items-center justify-center">
+				<Loader className="animate-spin-medium" />
+			</div>
+		)
+	}
+
+	if (query.isSuccess && historySorted.length === 0) {
+		return (
+			<div className="flex flex-col w-full h-[calc(100vh-48px)] items-center justify-center">
+				<p className="text-muted-foreground">{t("dialogs.noteHistory.empty")}</p>
+			</div>
+		)
 	}
 
 	return (

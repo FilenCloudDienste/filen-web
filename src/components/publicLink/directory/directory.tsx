@@ -53,7 +53,9 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 	})
 
 	const itemsOrdered = useMemo(() => {
-		return orderItemsByType({ items, type: driveSortBy[parent] ? driveSortBy[parent] : "nameAsc" })
+		const sortBy = driveSortBy[parent]
+
+		return orderItemsByType({ items, type: sortBy ? sortBy : "nameAsc" })
 	}, [items, driveSortBy, parent])
 
 	const itemsFiltered = useMemo(() => {

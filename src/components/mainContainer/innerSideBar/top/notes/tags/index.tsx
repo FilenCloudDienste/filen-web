@@ -43,10 +43,6 @@ export const Tags = memo(() => {
 		}
 	}, [query])
 
-	if (!query.isSuccess) {
-		return null
-	}
-
 	return (
 		<div className="flex flex-row w-full h-auto p-4 flex-wrap gap-2">
 			<div
@@ -67,23 +63,24 @@ export const Tags = memo(() => {
 			>
 				{t("innerSideBar.notes.tags.pinned")}
 			</div>
-			{query.data.map(tag => {
-				return (
-					<ContextMenu
-						tag={tag}
-						key={tag.uuid}
-						refetch={query.refetch}
-					>
-						<div
-							className={cn(tagClassName, activeTag === tag.uuid && "bg-secondary")}
-							onClick={() => setActiveTag(tag.uuid)}
+			{query.isSuccess &&
+				query.data.map(tag => {
+					return (
+						<ContextMenu
+							tag={tag}
+							key={tag.uuid}
+							refetch={query.refetch}
 						>
-							{tag.favorite && <Heart size={14} />}
-							<p className="line-clamp-1 break-all text-ellipsis">{tag.name}</p>
-						</div>
-					</ContextMenu>
-				)
-			})}
+							<div
+								className={cn(tagClassName, activeTag === tag.uuid && "bg-secondary")}
+								onClick={() => setActiveTag(tag.uuid)}
+							>
+								{tag.favorite && <Heart size={14} />}
+								<p className="line-clamp-1 break-all text-ellipsis">{tag.name}</p>
+							</div>
+						</ContextMenu>
+					)
+				})}
 			<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 				<Tooltip>
 					<TooltipTrigger asChild={true}>

@@ -69,9 +69,9 @@ function throttlePostMessageToMain(message: WorkerToMainMessage, callback: (mess
 				}
 			}
 
-			postMessageToMainProgressThrottle[key].storedBytes += message.data.bytes
+			postMessageToMainProgressThrottle[key]!.storedBytes += message.data.bytes
 
-			if (postMessageToMainProgressThrottle[key].next > now) {
+			if (postMessageToMainProgressThrottle[key]!.next > now) {
 				return
 			}
 
@@ -79,7 +79,7 @@ function throttlePostMessageToMain(message: WorkerToMainMessage, callback: (mess
 				...message,
 				data: {
 					...message.data,
-					bytes: postMessageToMainProgressThrottle[key].storedBytes
+					bytes: postMessageToMainProgressThrottle[key]!.storedBytes
 				}
 			}
 		}
@@ -88,8 +88,8 @@ function throttlePostMessageToMain(message: WorkerToMainMessage, callback: (mess
 	callback(message)
 
 	if (key.length > 0 && postMessageToMainProgressThrottle[key] && (message.type === "download" || message.type === "upload")) {
-		postMessageToMainProgressThrottle[key].storedBytes = 0
-		postMessageToMainProgressThrottle[key].next = now + 100
+		postMessageToMainProgressThrottle[key]!.storedBytes = 0
+		postMessageToMainProgressThrottle[key]!.next = now + 100
 
 		if (
 			message.data.type === "error" ||
@@ -129,7 +129,7 @@ export async function waitForInitialization(): Promise<void> {
 export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
 	SDK.init(config)
 
-	console.log("Worker SDK initialized", config)
+	console.log("Worker SDK initialized")
 
 	isInitialized = true
 }
@@ -514,7 +514,7 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 		chunks: item.chunks,
 		key: item.key,
 		pauseSignal: pauseSignals[item.uuid],
-		abortSignal: abortControllers[item.uuid].signal,
+		abortSignal: abortControllers[item.uuid]!.signal,
 		onQueued: () => {
 			postMessageToMain({
 				type: "download",
@@ -626,7 +626,7 @@ export async function uploadFile({
 		parent,
 		name: fileName,
 		pauseSignal: pauseSignals[fileId],
-		abortSignal: abortControllers[fileId].signal,
+		abortSignal: abortControllers[fileId]!.signal,
 		onQueued: () => {
 			if (!emitEvents) {
 				return
@@ -792,7 +792,7 @@ export async function uploadDirectory({
 			parent,
 			name,
 			pauseSignal: pauseSignals[directoryId],
-			abortSignal: abortControllers[directoryId].signal,
+			abortSignal: abortControllers[directoryId]!.signal,
 			onQueued: () => {
 				if (didQueue || !emitEvents) {
 					return
@@ -956,7 +956,7 @@ export async function directorySize({
 	const rateLimitKey = `${uuid}:${sharerId ?? 0}:${receiverId ?? 0}:${trash ?? false}`
 	const now = Date.now()
 
-	if (directorySizeRateLimit[rateLimitKey] && now < directorySizeRateLimit[rateLimitKey]) {
+	if (directorySizeRateLimit[rateLimitKey] && now < directorySizeRateLimit[rateLimitKey]!) {
 		const cache = await getItem<number | null>("directorySize:" + uuid)
 
 		if (cache) {
@@ -1036,7 +1036,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 								for (const path in tree) {
 									const treeItem = tree[path]
 
-									if (treeItem.type !== "file") {
+									if (!treeItem || treeItem.type !== "file") {
 										continue
 									}
 
@@ -1113,7 +1113,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 							size: item.size,
 							key: item.key,
 							pauseSignal: pauseSignals[directoryId],
-							abortSignal: abortControllers[directoryId].signal,
+							abortSignal: abortControllers[directoryId]!.signal,
 							onQueued: () => {
 								if (didQueue) {
 									return
@@ -1344,7 +1344,7 @@ export async function downloadDirectory({
 	for (const path in tree) {
 		const item = tree[path]
 
-		if (item.type !== "file") {
+		if (!item || item.type !== "file") {
 			continue
 		}
 
@@ -1522,7 +1522,7 @@ export async function readFile({
 		start,
 		end,
 		pauseSignal: pauseSignals[item.uuid],
-		abortSignal: abortControllers[item.uuid].signal,
+		abortSignal: abortControllers[item.uuid]!.signal,
 		onQueued: () => {
 			if (!emitEvents) {
 				return
@@ -2408,7 +2408,7 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 
 			if (
 				typeof response.headers["content-type"] !== "string" ||
-				response.headers["content-type"].split(";")[0].trim() !== "text/html"
+				response.headers["content-type"].split(";")[0]!.trim() !== "text/html"
 			) {
 				throw new Error("Response type is not text/html: " + url)
 			}
@@ -2420,7 +2420,10 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 			timeout: 15000
 		})
 
-		if (typeof response.headers["content-type"] !== "string" || response.headers["content-type"].split(";")[0].trim() !== "text/html") {
+		if (
+			typeof response.headers["content-type"] !== "string" ||
+			response.headers["content-type"].split(";")[0]!.trim() !== "text/html"
+		) {
 			throw new Error("Response type is not text/html: " + url)
 		}
 
@@ -2573,7 +2576,7 @@ export async function uploadFilesToChatUploads({ files }: { files: File[] }): Pr
 	let parentUUID = ""
 	const baseFiltered = base.filter(item => item.type === "directory" && item.name.toLowerCase() === "chat uploads")
 
-	if (baseFiltered.length === 1) {
+	if (baseFiltered.length === 1 && baseFiltered[0]) {
 		parentUUID = baseFiltered[0].uuid
 	} else {
 		parentUUID = (await createDirectory({ name: "Chat Uploads", parent: SDK.config.baseFolderUUID! })).uuid
@@ -2929,31 +2932,31 @@ export async function noteParticipantPermissions({
 export async function pausePauseSignal({ id }: { id: string }): Promise<void> {
 	await waitForInitialization()
 
-	if (!pauseSignals[id] || pauseSignals[id].isPaused()) {
+	if (!pauseSignals[id] || pauseSignals[id]!.isPaused()) {
 		return
 	}
 
-	pauseSignals[id].pause()
+	pauseSignals[id]!.pause()
 }
 
 export async function resumePauseSignal({ id }: { id: string }): Promise<void> {
 	await waitForInitialization()
 
-	if (!pauseSignals[id] || !pauseSignals[id].isPaused()) {
+	if (!pauseSignals[id] || !pauseSignals[id]!.isPaused()) {
 		return
 	}
 
-	pauseSignals[id].resume()
+	pauseSignals[id]!.resume()
 }
 
 export async function abortAbortSignal({ id }: { id: string }): Promise<void> {
 	await waitForInitialization()
 
-	if (!abortControllers[id] || abortControllers[id].signal.aborted) {
+	if (!abortControllers[id] || abortControllers[id]!.signal.aborted) {
 		return
 	}
 
-	abortControllers[id].abort()
+	abortControllers[id]!.abort()
 
 	delete abortControllers[id]
 	delete pauseSignals[id]

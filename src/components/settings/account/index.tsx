@@ -17,6 +17,7 @@ import eventEmitter from "@/lib/eventEmitter"
 import ChangePersonalInformationDialog from "./dialogs/personalInformation"
 import useIsMobile from "@/hooks/useIsMobile"
 import { cn } from "@/lib/utils"
+import Skeletons from "../skeletons"
 
 export const Account = memo(() => {
 	const account = useAccount()
@@ -298,10 +299,15 @@ export const Account = memo(() => {
 				return
 			}
 
+			const file = e.target.files[0]
+
+			if (!file) {
+				return
+			}
+
 			const toast = loadingToast()
 
 			try {
-				const file = e.target.files[0]
 				const buffer = Buffer.from(await file.arrayBuffer())
 
 				await worker.uploadAvatar({ buffer: transfer(buffer, [buffer.buffer]) })
@@ -372,7 +378,7 @@ export const Account = memo(() => {
 	}, [account])
 
 	if (!account) {
-		return null
+		return <Skeletons />
 	}
 
 	return (

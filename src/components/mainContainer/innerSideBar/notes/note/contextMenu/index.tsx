@@ -91,7 +91,7 @@ export const ContextMenu = memo(
 				if (selectedNote?.uuid === note.uuid) {
 					const newSelectedNote = notes.filter(n => n.uuid !== note.uuid)
 
-					if (newSelectedNote.length >= 1) {
+					if (newSelectedNote.length >= 1 && newSelectedNote[0]) {
 						setSelectedNote(newSelectedNote[0])
 
 						navigate({
@@ -187,9 +187,13 @@ export const ContextMenu = memo(
 			try {
 				const uuid = await worker.duplicateNote({ uuid: note.uuid })
 				const notes = await worker.listNotes()
+				const selected = notes.filter(n => n.uuid === uuid)[0]
 
 				setNotes(notes)
-				setSelectedNote(notes.filter(n => n.uuid === uuid)[0])
+
+				if (selected) {
+					setSelectedNote(selected)
+				}
 
 				navigate({
 					to: "/notes/$uuid",
@@ -340,7 +344,7 @@ export const ContextMenu = memo(
 					for (const listPoint of ex) {
 						const listPointEx = listPoint.split("</li>")
 
-						if (listPointEx[0].trim().length > 0) {
+						if (listPointEx[0] && listPointEx[0].trim().length > 0) {
 							list.push(listPointEx[0].trim())
 						}
 					}
@@ -410,7 +414,7 @@ export const ContextMenu = memo(
 											for (const listPoint of ex) {
 												const listPointEx = listPoint.split("</li>")
 
-												if (listPointEx[0].trim().length > 0) {
+												if (listPointEx[0] && listPointEx[0].trim().length > 0) {
 													list.push(listPointEx[0].trim())
 												}
 											}

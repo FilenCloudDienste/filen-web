@@ -57,6 +57,10 @@ export const Grid = memo(({ items }: { items: DriveCloudItem[] }) => {
 
 							const item = items[gridItem.index]
 
+							if (!item) {
+								return null
+							}
+
 							return (
 								<div
 									key={item.uuid}

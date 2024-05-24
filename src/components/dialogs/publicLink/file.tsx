@@ -179,11 +179,7 @@ export const File = memo(
 			}
 		}, [save])
 
-		if (!status) {
-			return null
-		}
-
-		if (saving) {
+		if (!status || saving) {
 			return (
 				<div className="flex flex-row py-6 items-center justify-center">
 					<Loader className="animate-spin-medium" />

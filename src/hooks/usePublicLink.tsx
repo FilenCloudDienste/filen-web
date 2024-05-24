@@ -24,13 +24,13 @@ export function usePublicLinkURLState() {
 
 		return {
 			isPublicLink: location.includes("/f/") || location.includes("/d/"),
-			key: ex[0],
+			key: ex[0] ? ex[0] : "",
 			uuid: routeParent,
 			embed: parsedSearchParams && parsedSearchParams["embed"] === "true" ? true : false,
 			color: parsedSearchParams && typeof parsedSearchParams["color"] === "string" ? parsedSearchParams["color"] : null,
 			hidePreview: parsedSearchParams && parsedSearchParams["hidePreview"] === "true" ? true : false,
 			chatEmbed: parsedSearchParams && parsedSearchParams["chatEmbed"] === "true" ? true : false,
-			theme: (parsedSearchParams && ["dark", "light"].includes(parsedSearchParams["theme"])
+			theme: (parsedSearchParams && parsedSearchParams["theme"] && ["dark", "light"].includes(parsedSearchParams["theme"])
 				? parsedSearchParams["theme"]
 				: dark
 					? "dark"

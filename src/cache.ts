@@ -26,6 +26,11 @@ export async function warmupCacheFromDb(): Promise<void> {
 		for (const dbKey of dbKeys) {
 			if (dbKey.startsWith("directoryUUIDToName:")) {
 				const ex = dbKey.split(":")
+
+				if (!ex[1]) {
+					continue
+				}
+
 				const result = await getItem<string>(dbKey)
 
 				directoryUUIDToNameCache.set(ex[1], result!)
@@ -33,6 +38,11 @@ export async function warmupCacheFromDb(): Promise<void> {
 
 			if (dbKey.startsWith("directorySize:")) {
 				const ex = dbKey.split(":")
+
+				if (!ex[1]) {
+					continue
+				}
+
 				const result = await getItem<number>(dbKey)
 
 				directorySizeCache.set(ex[1], result!)

@@ -72,15 +72,16 @@ export const MarkAsRead = memo(
 
 			try {
 				const now = Date.now()
-				const values: ChatLastFocusValues[] = lastFocusValues
+				const oldValues = lastFocusValues
+				const values: ChatLastFocusValues[] = []
 				let exists = false
 
-				for (let i = 0; i < values.length; i++) {
-					if (values[i].uuid === conversation.uuid) {
-						values[i] = {
-							...values[i],
+				for (const value of oldValues) {
+					if (value.uuid === conversation.uuid) {
+						values.push({
+							...value,
 							lastFocus: now
-						}
+						})
 
 						exists = true
 					}

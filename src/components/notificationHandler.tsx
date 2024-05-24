@@ -63,13 +63,13 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 					let foundConversation: ChatConversation | null = null
 					const filteredConversations = chatConversationsQuery.data.filter(c => c.uuid === event.data.conversation)
 
-					if (filteredConversations.length === 1) {
+					if (filteredConversations.length === 1 && filteredConversations[0]) {
 						foundConversation = filteredConversations[0]
 					} else {
 						const fetchedConversations = await worker.listChatsConversations()
 						const filteredFetchedConversations = fetchedConversations.filter(c => c.uuid === event.data.conversation)
 
-						if (filteredFetchedConversations.length === 1) {
+						if (filteredFetchedConversations.length === 1 && filteredFetchedConversations[0]) {
 							foundConversation = filteredFetchedConversations[0]
 						}
 					}

@@ -31,7 +31,7 @@ export const Notes = memo(() => {
 
 			const newNote = notes.filter(n => n.uuid === uuid)
 
-			if (newNote.length === 0) {
+			if (newNote.length === 0 || !newNote[0]) {
 				return
 			}
 

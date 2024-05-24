@@ -44,7 +44,7 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 
 		const found = conversation.participants.filter(p => p.userId === userId)
 
-		if (found.length === 0) {
+		if (found.length === 0 || !found[0]) {
 			return false
 		}
 

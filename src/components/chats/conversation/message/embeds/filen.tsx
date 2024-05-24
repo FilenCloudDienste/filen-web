@@ -29,7 +29,6 @@ export const Filen = memo(
 					<iframe
 						width="100%"
 						height="210px"
-						loading="eager"
 						src={`${PUBLIC_LINK_BASE_URL}${parsed.uuid}#${parsed.key}?embed=true&theme=${dark ? "dark" : "light"}&chatEmbed=true`}
 						title="Filen"
 						style={{
