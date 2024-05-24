@@ -120,7 +120,6 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		(index: number, message: ChatMessage) => {
 			return (
 				<Message
-					key={getItemKey(index, message)}
 					conversation={conversation}
 					message={message}
 					prevMessage={messages[index - 1]}
@@ -139,7 +138,6 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		},
 		[
 			conversation,
-			getItemKey,
 			messages,
 			userId,
 			isScrolling,

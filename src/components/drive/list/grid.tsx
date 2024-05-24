@@ -51,7 +51,14 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 	if (items.length === 0) {
 		return (
 			<ContextMenu>
-				<Empty />
+				<div
+					style={{
+						height: height - 40,
+						width: "100%"
+					}}
+				>
+					<Empty />
+				</div>
 			</ContextMenu>
 		)
 	}

@@ -242,6 +242,179 @@ export const Message = memo(
 			eventEmitter.emit("chatInputWriteText", message.message)
 		}, [message.uuid, setEditUUID, message.message, setReplyMessage])
 
+		const className = useMemo(() => {
+			return cn(
+				"flex flex-row border-l-2 animate-in animate-out transition-all",
+				hovering ? (mentioningMe ? "bg-yellow-600 bg-opacity-10" : "bg-primary-foreground") : "",
+				!groupWithPrevMessage ? "p-1 px-5 gap-4" : "p-1 px-5 pl-[73px]",
+				isNewMessage
+					? "border-red-500 bg-primary-foreground"
+					: mentioningMe
+						? cn("border-yellow-500 bg-yellow-500 bg-opacity-10", !isScrolling && "hover:bg-yellow-600 hover:bg-opacity-20")
+						: replyUUID === message.uuid || editUUID === message.uuid
+							? "border-indigo-500 bg-primary-foreground"
+							: cn("border-transparent", !isScrolling && "hover:bg-primary-foreground")
+			)
+		}, [hovering, mentioningMe, isNewMessage, groupWithPrevMessage, isScrolling, replyUUID, message.uuid, editUUID])
+
+		const embed = useMemo(() => {
+			return links.length > 0 && !message.embedDisabled ? (
+				<div className="flex flex-col mt-1 gap-2">
+					{Object.keys(displayAs).map((link, index) => {
+						const dAs = displayAs[link]
+
+						if (dAs === "youtubeEmbed") {
+							return (
+								<YouTube
+									link={link}
+									key={index}
+									messageUUID={message.uuid}
+									userId={userId}
+									senderId={message.senderId}
+								/>
+							)
+						}
+
+						if (dAs === "xEmbed") {
+							return (
+								<X
+									link={link}
+									key={index}
+									messageUUID={message.uuid}
+									userId={userId}
+									senderId={message.senderId}
+								/>
+							)
+						}
+
+						if (dAs === "image") {
+							return (
+								<Image
+									link={link}
+									key={index}
+									messageUUID={message.uuid}
+									userId={userId}
+									senderId={message.senderId}
+								/>
+							)
+						}
+
+						if (dAs === "og") {
+							return (
+								<OG
+									link={link}
+									key={index}
+									messageUUID={message.uuid}
+									ogData={ogData[link] ?? {}}
+									userId={userId}
+									senderId={message.senderId}
+								/>
+							)
+						}
+
+						if (dAs === "async") {
+							return (
+								<Async
+									link={link}
+									key={index}
+									messageUUID={message.uuid}
+									userId={userId}
+									senderId={message.senderId}
+								/>
+							)
+						}
+
+						if (dAs === "filenEmbed") {
+							return (
+								<Filen
+									link={link}
+									key={index}
+									messageUUID={message.uuid}
+									userId={userId}
+									senderId={message.senderId}
+								/>
+							)
+						}
+
+						return null
+					})}
+				</div>
+			) : null
+		}, [displayAs, links.length, message.embedDisabled, message.senderId, ogData, message.uuid, userId])
+
+		const replyTo = useMemo(() => {
+			return message.replyTo && message.replyTo.uuid ? (
+				<div className="flex flex-row gap-2 text-muted-foreground text-sm items-center">
+					<Reply
+						size={16}
+						className="scale-x-[-1] shrink-0"
+					/>
+					<Avatar
+						src={message.replyTo.senderAvatar}
+						size={16}
+						className="shrink-0"
+					/>
+					<p className="shrink-0">
+						{message.replyTo.senderNickName.length > 0 ? message.replyTo.senderNickName : message.replyTo.senderEmail}:
+					</p>
+					<ReplaceMessageWithComponentsInline
+						content={message.replyTo.message}
+						participants={conversation.participants}
+					/>
+				</div>
+			) : null
+		}, [message.replyTo, conversation.participants])
+
+		const tooltipContent = useMemo(() => {
+			return (
+				<TooltipContent
+					side="top"
+					align="end"
+					className="mb-[-15px] p-0 flex flex-row z-[100]"
+				>
+					<div
+						className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
+						onClick={reply}
+					>
+						<Reply size={20} />
+					</div>
+					{message.senderId === userId && (
+						<div
+							className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
+							onClick={edit}
+						>
+							<Edit size={20} />
+						</div>
+					)}
+					<div
+						className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
+						onClick={triggerMoreIconContextMenu}
+					>
+						<MoreHorizontal size={20} />
+					</div>
+				</TooltipContent>
+			)
+		}, [edit, message.senderId, reply, triggerMoreIconContextMenu, userId])
+
+		const top = useMemo(() => {
+			return (
+				<>
+					{!prevMessage && <div className="flex flex-row p-1 px-5 gap-4">end to end encrypted chat</div>}
+					{((prevMessage && !groupWithPrevMessage) || !prevMessage) && (
+						<div
+							style={{
+								height: 16
+							}}
+						/>
+					)}
+					{message.sentTimestamp > lastFocus &&
+						message.senderId !== userId &&
+						!(prevMessage && prevMessage.sentTimestamp > lastFocus) && <NewDivider t={t} />}
+					{(!prevMessageSameDay || !prevMessage) && <DateDivider timestamp={message.sentTimestamp} />}
+				</>
+			)
+		}, [groupWithPrevMessage, prevMessage, message.sentTimestamp, message.senderId, lastFocus, t, prevMessageSameDay, userId])
+
 		useMountedEffect(() => {
 			;(async () => {
 				for (const link of links) {
@@ -317,18 +490,7 @@ export const Message = memo(
 
 		return (
 			<>
-				{!prevMessage && <div className="flex flex-row p-1 px-5 gap-4">end to end encrypted chat</div>}
-				{((prevMessage && !groupWithPrevMessage) || !prevMessage) && (
-					<div
-						style={{
-							height: 16
-						}}
-					/>
-				)}
-				{message.sentTimestamp > lastFocus &&
-					message.senderId !== userId &&
-					!(prevMessage && prevMessage.sentTimestamp > lastFocus) && <NewDivider t={t} />}
-				{(!prevMessageSameDay || !prevMessage) && <DateDivider timestamp={message.sentTimestamp} />}
+				{top}
 				<TooltipProvider delayDuration={0}>
 					<Tooltip>
 						<TooltipTrigger asChild={true}>
@@ -339,21 +501,7 @@ export const Message = memo(
 								>
 									<div
 										ref={ref}
-										className={cn(
-											"flex flex-row border-l-2 animate-in animate-out transition-all",
-											hovering ? (mentioningMe ? "bg-yellow-600 bg-opacity-10" : "bg-primary-foreground") : "",
-											!groupWithPrevMessage ? "p-1 px-5 gap-4" : "p-1 px-5 pl-[73px]",
-											isNewMessage
-												? "border-red-500 bg-primary-foreground"
-												: mentioningMe
-													? cn(
-															"border-yellow-500 bg-yellow-500 bg-opacity-10",
-															!isScrolling && "hover:bg-yellow-600 hover:bg-opacity-20"
-														)
-													: replyUUID === message.uuid || editUUID === message.uuid
-														? "border-indigo-500 bg-primary-foreground"
-														: cn("border-transparent", !isScrolling && "hover:bg-primary-foreground")
-										)}
+										className={className}
 									>
 										{!groupWithPrevMessage && (
 											<div className="flex flex-col">
@@ -364,29 +512,7 @@ export const Message = memo(
 											</div>
 										)}
 										<div className={cn("flex flex-col w-full h-auto", !groupWithPrevMessage ? "gap-[1px]" : "")}>
-											{message.replyTo && message.replyTo.uuid && (
-												<div className="flex flex-row gap-2 text-muted-foreground text-sm items-center">
-													<Reply
-														size={16}
-														className="scale-x-[-1] shrink-0"
-													/>
-													<Avatar
-														src={message.replyTo.senderAvatar}
-														size={16}
-														className="shrink-0"
-													/>
-													<p className="shrink-0">
-														{message.replyTo.senderNickName.length > 0
-															? message.replyTo.senderNickName
-															: message.replyTo.senderEmail}
-														:
-													</p>
-													<ReplaceMessageWithComponentsInline
-														content={message.replyTo.message}
-														participants={conversation.participants}
-													/>
-												</div>
-											)}
+											{replyTo}
 											{!groupWithPrevMessage && (
 												<div className="flex flex-row gap-2 items-center">
 													<p className="cursor-pointer hover:underline">{message.senderNickName}</p>
@@ -405,119 +531,13 @@ export const Message = memo(
 													t={t}
 												/>
 											</div>
-											{links.length > 0 && !message.embedDisabled && (
-												<div className="flex flex-col mt-1 gap-2">
-													{Object.keys(displayAs).map((link, index) => {
-														const dAs = displayAs[link]
-
-														if (dAs === "youtubeEmbed") {
-															return (
-																<YouTube
-																	link={link}
-																	key={index}
-																	messageUUID={message.uuid}
-																	userId={userId}
-																	senderId={message.senderId}
-																/>
-															)
-														}
-
-														if (dAs === "xEmbed") {
-															return (
-																<X
-																	link={link}
-																	key={index}
-																	messageUUID={message.uuid}
-																	userId={userId}
-																	senderId={message.senderId}
-																/>
-															)
-														}
-
-														if (dAs === "image") {
-															return (
-																<Image
-																	link={link}
-																	key={index}
-																	messageUUID={message.uuid}
-																	userId={userId}
-																	senderId={message.senderId}
-																/>
-															)
-														}
-
-														if (dAs === "og") {
-															return (
-																<OG
-																	link={link}
-																	key={index}
-																	messageUUID={message.uuid}
-																	ogData={ogData[link] ?? {}}
-																	userId={userId}
-																	senderId={message.senderId}
-																/>
-															)
-														}
-
-														if (dAs === "async") {
-															return (
-																<Async
-																	link={link}
-																	key={index}
-																	messageUUID={message.uuid}
-																	userId={userId}
-																	senderId={message.senderId}
-																/>
-															)
-														}
-
-														if (dAs === "filenEmbed") {
-															return (
-																<Filen
-																	link={link}
-																	key={index}
-																	messageUUID={message.uuid}
-																	userId={userId}
-																	senderId={message.senderId}
-																/>
-															)
-														}
-
-														return null
-													})}
-												</div>
-											)}
+											{embed}
 										</div>
 									</div>
 								</ContextMenu>
 							</div>
 						</TooltipTrigger>
-						<TooltipContent
-							side="top"
-							align="end"
-							className="mb-[-15px] p-0 flex flex-row z-[100]"
-						>
-							<div
-								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
-								onClick={reply}
-							>
-								<Reply size={20} />
-							</div>
-							{message.senderId === userId && (
-								<div
-									className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
-									onClick={edit}
-								>
-									<Edit size={20} />
-								</div>
-							)}
-							<div
-								className="bg-transparent hover:bg-secondary p-[8px] cursor-pointer flex flex-row items-center justify-center"
-								onClick={triggerMoreIconContextMenu}
-							>
-								<MoreHorizontal size={20} />
-							</div>
-						</TooltipContent>
+						{tooltipContent}
 					</Tooltip>
 				</TooltipProvider>
 				{!nextMessage && (
