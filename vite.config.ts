@@ -7,13 +7,13 @@ import { comlink } from "vite-plugin-comlink"
 import i18nextLoader from "vite-plugin-i18next-loader"
 import svgr from "vite-plugin-svgr"
 import topLevelAwait from "vite-plugin-top-level-await"
+import million from "million/compiler"
 
 const now = Date.now()
 
 export default defineConfig({
 	base: "/",
 	plugins: [
-		react(),
 		nodePolyfills({
 			overrides: {
 				fs: "memfs"
@@ -23,6 +23,14 @@ export default defineConfig({
 		topLevelAwait({
 			promiseExportName: "__tla",
 			promiseImportName: i => `__tla_${i}`
+		}),
+		react(),
+		million.vite({
+			filter: {
+				include: "src/**/*.{mtsx,mjsx,tsx,jsx}"
+			},
+			mode: "react",
+			telemetry: false
 		}),
 		TanStackRouterVite(),
 		comlink(),

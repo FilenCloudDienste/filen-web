@@ -4,12 +4,14 @@
 	"version": "0.1.1",
 	"type": "module",
 	"scripts": {
-		"dev": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && vite",
-		"build": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && npm run build:clean && tsc && vite build",
+		"dev": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite",
+		"build": "npm run build:clean && npm run tsc && npm run build:vite",
 		"build:clean": "rimraf ./dist",
-		"lint": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && eslint . --ext ts,tsx,js,jsx --report-unused-disable-directives --max-warnings 0",
-		"preview": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && vite preview",
-		"serve": "cross-env NODE_OPTIONS=--max_old_space_size=8192 && serve -s dist/"
+		"build:vite": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite build",
+		"tsc": "cross-env NODE_OPTIONS=--max_old_space_size=16834 tsc",
+		"lint": "cross-env NODE_OPTIONS=--max_old_space_size=16834 eslint . --ext ts,tsx,js,jsx --report-unused-disable-directives --max-warnings 0",
+		"preview": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite preview",
+		"serve": "cross-env NODE_OPTIONS=--max_old_space_size=16834 serve -s dist/"
 	},
 	"engines": {
 		"node": ">=18"
