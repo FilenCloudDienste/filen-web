@@ -1,15 +1,20 @@
-import { useEffect, useRef, Fragment, memo } from "react"
+import { useEffect, useRef, Fragment, memo, useMemo } from "react"
 import { useGrid, useVirtualizer } from "@virtual-grid/react"
-import { type UseQueryResult } from "@tanstack/react-query"
 import { type DriveCloudItem } from ".."
 import { IS_DESKTOP } from "@/constants"
 import useWindowSize from "@/hooks/useWindowSize"
 import ListItem from "./item"
 import ContextMenu from "./contextMenu"
+import { Skeleton } from "@/components/ui/skeleton"
+import Empty from "./empty"
 
-export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: UseQueryResult<DriveCloudItem[], Error> }) => {
+export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; showSkeletons: boolean }) => {
 	const virtualizerParentRef = useRef<HTMLDivElement>(null)
 	const windowSize = useWindowSize()
+
+	const height = useMemo(() => {
+		return IS_DESKTOP ? windowSize.height - 48 - 24 : windowSize.height - 48
+	}, [windowSize.height])
 
 	const grid = useGrid({
 		scrollRef: virtualizerParentRef,
@@ -19,6 +24,19 @@ export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 		overscan: 5
 	})
 
+	const skeletons = useMemo(() => {
+		return new Array(100).fill(1).map((_, index) => {
+			return (
+				<div
+					key={index}
+					className="w-[200px] h-[200px] p-3"
+				>
+					<Skeleton className="w-full h-full rounded-md" />
+				</div>
+			)
+		})
+	}, [])
+
 	const rowVirtualizer = useVirtualizer(grid.rowVirtualizer)
 	const columnVirtualizer = useVirtualizer(grid.columnVirtualizer)
 
@@ -26,12 +44,24 @@ export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 		columnVirtualizer.measure()
 	}, [columnVirtualizer, grid.virtualItemWidth])
 
+	if (showSkeletons) {
+		return <div className="flex flex-row flex-wrap overflow-hidden">{skeletons}</div>
+	}
+
+	if (items.length === 0) {
+		return (
+			<ContextMenu>
+				<Empty />
+			</ContextMenu>
+		)
+	}
+
 	return (
 		<ContextMenu>
 			<div
 				ref={virtualizerParentRef}
 				style={{
-					height: IS_DESKTOP ? windowSize.height - 48 - 24 : windowSize.height - 48,
+					height,
 					overflowX: "hidden",
 					overflowY: "auto",
 					width: "100%"
@@ -46,36 +76,35 @@ export const Grid = memo(({ items, query }: { items: DriveCloudItem[]; query: Us
 					}}
 					className="dragselect-start-allowed"
 				>
-					{query.isSuccess &&
-						rowVirtualizer.getVirtualItems().map(virtualRow => (
-							<Fragment key={virtualRow.key}>
-								{columnVirtualizer.getVirtualItems().map(virtualColumn => {
-									const gridItem = grid.getVirtualItem({
-										row: virtualRow,
-										column: virtualColumn
-									})
+					{rowVirtualizer.getVirtualItems().map(virtualRow => (
+						<Fragment key={virtualRow.key}>
+							{columnVirtualizer.getVirtualItems().map(virtualColumn => {
+								const gridItem = grid.getVirtualItem({
+									row: virtualRow,
+									column: virtualColumn
+								})
 
-									if (!gridItem) {
-										return null
-									}
+								if (!gridItem) {
+									return null
+								}
 
-									const item = items[gridItem.index]
+								const item = items[gridItem.index]
 
-									return (
-										<div
-											key={item.uuid}
-											style={gridItem.style}
-										>
-											<ListItem
-												item={item}
-												index={gridItem.index}
-												type="grid"
-											/>
-										</div>
-									)
-								})}
-							</Fragment>
-						))}
+								return (
+									<div
+										key={item.uuid}
+										style={gridItem.style}
+									>
+										<ListItem
+											item={item}
+											index={gridItem.index}
+											type="grid"
+										/>
+									</div>
+								)
+							})}
+						</Fragment>
+					))}
 				</div>
 			</div>
 		</ContextMenu>

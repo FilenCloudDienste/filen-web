@@ -6,10 +6,12 @@ import ListItem from "./item"
 import ContextMenu from "./contextMenu"
 import { type DriveCloudItem } from ".."
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { type DriveSortBy } from "./header"
+import Header, { type DriveSortBy } from "./header"
 import useRouteParent from "@/hooks/useRouteParent"
+import { Skeleton } from "@/components/ui/skeleton"
+import Empty from "./empty"
 
-export const List = memo(({ items }: { items: DriveCloudItem[] }) => {
+export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; showSkeletons: boolean }) => {
 	const windowSize = useWindowSize()
 	const routeParent = useRouteParent()
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
@@ -33,25 +35,57 @@ export const List = memo(({ items }: { items: DriveCloudItem[] }) => {
 		)
 	}, [])
 
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div className="flex flex-col w-full h-full overflow-hidden py-3">
+						{showSkeletons ? (
+							new Array(100).fill(1).map((_, index) => {
+								return (
+									<div
+										key={index}
+										className="flex flex-row h-11 gap-3 items-center px-3 mb-3"
+									>
+										<Skeleton className="w-7 h-7 rounded-md" />
+										<Skeleton className="grow rounded-md h-5" />
+										<Skeleton className="rounded-md h-5 w-[125px]" />
+										<Skeleton className="rounded-md h-5 w-[250px]" />
+									</div>
+								)
+							})
+						) : (
+							<Empty />
+						)}
+					</div>
+				)
+			}
+		}
+	}, [showSkeletons])
+
 	return (
-		<ContextMenu>
-			<Virtuoso
-				data={items}
-				totalCount={items.length}
-				height={virtuosoHeight}
-				width="100%"
-				computeItemKey={getItemKey}
-				defaultItemHeight={44}
-				fixedItemHeight={44}
-				itemContent={itemContent}
-				style={{
-					overflowX: "hidden",
-					overflowY: "auto",
-					height: virtuosoHeight + "px",
-					width: "100%"
-				}}
-			/>
-		</ContextMenu>
+		<>
+			<Header />
+			<ContextMenu>
+				<Virtuoso
+					data={items}
+					totalCount={items.length}
+					height={virtuosoHeight}
+					width="100%"
+					computeItemKey={getItemKey}
+					defaultItemHeight={44}
+					fixedItemHeight={44}
+					itemContent={itemContent}
+					components={components}
+					style={{
+						overflowX: "hidden",
+						overflowY: "auto",
+						height: virtuosoHeight + "px",
+						width: "100%"
+					}}
+				/>
+			</ContextMenu>
+		</>
 	)
 })
 

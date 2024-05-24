@@ -3,13 +3,11 @@ import RequireAuth from "@/components/requireAuthed"
 import { memo, useCallback } from "react"
 import { type CloudItem, type CloudItemShared } from "@filen/sdk"
 import List from "./list"
-import Header from "./list/header"
 import { type Prettify } from "@/types"
 import worker from "@/lib/worker"
 import useRouteParent from "@/hooks/useRouteParent"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { promiseAllChunked } from "@/lib/utils"
-import { useLocalStorage } from "@uidotdev/usehooks"
 import { directoryUUIDToNameCache } from "@/cache"
 import useErrorToast from "@/hooks/useErrorToast"
 
@@ -24,7 +22,6 @@ export const Drive = memo(() => {
 	const parent = useRouteParent()
 	const { setItems } = useDriveItemsStore()
 	const { currentReceiverId, currentSharerId, currentReceiverEmail, currentReceivers, currentSharerEmail } = useDriveSharedStore()
-	const [listType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
 	const errorToast = useErrorToast()
 
 	const uploadFiles = useCallback(
@@ -157,7 +154,6 @@ export const Drive = memo(() => {
 					className="hidden"
 				/>
 				<div className="w-full h-full flex flex-col select-none">
-					{listType[parent] !== "grid" && <Header />}
 					<List />
 				</div>
 			</MainContainer>

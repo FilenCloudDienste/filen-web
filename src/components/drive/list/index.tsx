@@ -54,6 +54,14 @@ export const List = memo(() => {
 		return itemsOrdered.filter(item => item.name.toLowerCase().includes(searchTermLowered))
 	}, [itemsOrdered, searchTerm])
 
+	const showSkeletons = useMemo(() => {
+		if (query.isSuccess && query.data.length >= 0) {
+			return false
+		}
+
+		return true
+	}, [query.data, query.isSuccess])
+
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
 			try {
@@ -305,10 +313,13 @@ export const List = memo(() => {
 	return listType[parent] === "grid" ? (
 		<GridList
 			items={itemsFiltered}
-			query={query}
+			showSkeletons={showSkeletons}
 		/>
 	) : (
-		<ListList items={itemsFiltered} />
+		<ListList
+			items={itemsFiltered}
+			showSkeletons={showSkeletons}
+		/>
 	)
 })
 
