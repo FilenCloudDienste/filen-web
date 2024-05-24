@@ -11,7 +11,6 @@ import useErrorToast from "@/hooks/useErrorToast"
 import worker from "@/lib/worker"
 import { useNavigate } from "@tanstack/react-router"
 import { clear as clearLocalForage } from "@/lib/localForage"
-import sdk from "@/lib/sdk"
 import { IS_DESKTOP } from "@/constants"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { Switch } from "@/components/ui/switch"
@@ -134,9 +133,8 @@ export const General = memo(() => {
 
 			try {
 				window.localStorage.clear()
-				sdk.init({})
 
-				await Promise.all([clearLocalForage(), worker.deinitializeSDK()])
+				await clearLocalForage()
 
 				if (IS_DESKTOP) {
 					await window.desktopAPI.restart()

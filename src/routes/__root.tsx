@@ -1,35 +1,30 @@
 import { ThemeProvider } from "@/providers/themeProvider"
 import { createRootRoute, Outlet } from "@tanstack/react-router"
-import { memo, useEffect, useState, useRef } from "react"
+import { memo, useEffect, useState, useRef, useCallback } from "react"
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClient, focusManager } from "@tanstack/react-query"
 import { PersistQueryClientProvider, type PersistQueryClientOptions } from "@tanstack/react-query-persist-client"
-import useSDKConfig from "@/hooks/useSDKConfig"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import worker from "@/lib/worker"
 import createIDBPersister from "@/lib/queryPersister"
-import sdk from "@/lib/sdk"
 import DragSelect from "@/components/dragSelect"
 import DropZone from "@/components/dropZone"
 import ConfirmDialog from "@/components/dialogs/confirm"
 import SelectDriveItemDialog from "@/components/dialogs/selectDriveItem"
 import Transfers from "@/components/transfers"
 import PreviewDialog from "@/components/dialogs/previewDialog"
-import { register as registerServiceWorker } from "register-service-worker"
-import { setItem } from "@/lib/localForage"
 import InputDialog from "@/components/dialogs/input"
 import SelectContactsDialog from "@/components/dialogs/selectContacts"
 import TransparentFullScreenImageDialog from "@/components/dialogs/transparentFullScreenImage"
 import TwoFactorCodeDialog from "@/components/dialogs/twoFactorCode"
 import PublicLinkDialog from "@/components/dialogs/publicLink"
 import SharedWithDialog from "@/components/dialogs/sharedWith"
-import { IS_DESKTOP, UNCACHED_QUERY_KEYS } from "@/constants"
+import { UNCACHED_QUERY_KEYS } from "@/constants"
 import NotificationHandler from "@/components/notificationHandler"
 import ActivityHandler from "@/components/activityHandler"
 import FileVersionsDialog from "@/components/dialogs/fileVersions"
 import NoteHistoryDialog from "@/components/dialogs/noteHistory"
 import NoteParticipantsDialog from "@/components/dialogs/noteParticipants"
-import { type FilenSDKConfig } from "@filen/sdk"
+import { setup as setupApp } from "@/lib/setup"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -76,76 +71,27 @@ export const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
 export const Root = memo(() => {
 	const [ready, setReady] = useState<boolean>(false)
 	const [authed] = useLocalStorage<boolean>("authed", false)
-	const sdkConfig = useSDKConfig()
 	const initRef = useRef<boolean>(false)
+
+	const setup = useCallback(async () => {
+		try {
+			await setupApp()
+
+			console.log("Setup done")
+
+			setReady(true)
+		} catch (e) {
+			console.error(e)
+		}
+	}, [])
 
 	useEffect(() => {
 		if (!initRef.current) {
 			initRef.current = true
 
-			const initConfig = {
-				...(authed
-					? sdkConfig
-					: ({
-							email: "anonymous",
-							password: "anonymous",
-							masterKeys: ["anonymous"],
-							connectToSocket: true,
-							metadataCache: true,
-							twoFactorCode: "anonymous",
-							publicKey: "anonymous",
-							privateKey: "anonymous",
-							apiKey: "anonymous",
-							authVersion: 2,
-							baseFolderUUID: "anonymous",
-							userId: 1
-						} satisfies FilenSDKConfig))
-			} satisfies FilenSDKConfig
-
-			sdk.init(initConfig)
-
-			setItem("sdkConfig", initConfig)
-				.then(() => {
-					Promise.all([
-						worker.initializeSDK({ config: initConfig }),
-						IS_DESKTOP ? window.desktopAPI.initSDK(initConfig) : Promise.resolve(),
-						!IS_DESKTOP && "serviceWorker" in navigator
-							? new Promise<void>(resolve => {
-									registerServiceWorker("/sw.js", {
-										registrationOptions: {
-											scope: "/"
-										},
-										ready: registration => {
-											console.log("ServiceWorker ready")
-
-											registration.update().catch(console.error)
-
-											resolve()
-										},
-										registered: registration => {
-											console.log("ServiceWorker registered")
-
-											registration.update().catch(console.error)
-
-											resolve()
-										},
-										error: err => {
-											console.error(err)
-
-											resolve()
-										}
-									})
-								})
-							: Promise.resolve()
-					])
-						.then(() => {
-							setReady(true)
-						})
-						.catch(console.error)
-				})
-				.catch(console.error)
+			setup()
 		}
-	}, [authed, sdkConfig])
+	}, [setup])
 
 	if (!ready) {
 		return null

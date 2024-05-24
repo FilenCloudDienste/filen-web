@@ -26,7 +26,9 @@ export default defineConfig({
 		}),
 		TanStackRouterVite(),
 		comlink(),
-		i18nextLoader({ paths: ["./locales"] }),
+		i18nextLoader({
+			paths: ["./locales"]
+		}),
 		svgr()
 	],
 	resolve: {

@@ -1,8 +1,18 @@
 import FilenSDK from "@filen/sdk"
 
-export const sdk = new FilenSDK({
+const sdk = new FilenSDK({
+	email: "anonymous",
+	password: "anonymous",
+	masterKeys: ["anonymous"],
+	connectToSocket: true,
 	metadataCache: true,
-	connectToSocket: false
+	twoFactorCode: "anonymous",
+	publicKey: "anonymous",
+	privateKey: "anonymous",
+	apiKey: "anonymous",
+	authVersion: 2,
+	baseFolderUUID: "anonymous",
+	userId: 1
 })
 
 export default sdk

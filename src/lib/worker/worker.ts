@@ -43,6 +43,7 @@ import { type FileLinkPasswordResponse } from "@filen/sdk/dist/types/api/v3/file
 import { type DirLinkInfoDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
 import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/link/info"
 import { type DirLinkContentDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/content"
+import { type AuthInfoResponse } from "@filen/sdk/dist/types/api/v3/auth/info"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -125,22 +126,12 @@ export async function waitForInitialization(): Promise<void> {
 	})
 }
 
-export async function initializeSDK({ config }: { config: FilenSDKConfig }): Promise<void> {
+export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
 	SDK.init(config)
 
-	console.log("Worker SDK initialized")
+	console.log("Worker SDK initialized", config)
 
 	isInitialized = true
-}
-
-export async function deinitializeSDK(): Promise<void> {
-	if (!isInitialized) {
-		return
-	}
-
-	SDK.init({})
-
-	isInitialized = false
 }
 
 export async function setMessageHandler(callback: (message: WorkerToMainMessage) => void): Promise<void> {
@@ -3012,4 +3003,10 @@ export async function directoryPublicLinkContent({
 	await waitForInitialization()
 
 	return await SDK.cloud().directoryPublicLinkContent({ uuid, parent, password, salt, key })
+}
+
+export async function authInfo({ email }: { email: string }): Promise<AuthInfoResponse> {
+	await waitForInitialization()
+
+	return await SDK.api(3).auth().info({ email })
 }

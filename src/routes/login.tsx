@@ -6,11 +6,12 @@ import { useCallback, useState } from "react"
 import sdk from "@/lib/sdk"
 import { APIError } from "@filen/sdk"
 import { useToast } from "@/components/ui/use-toast"
-import worker from "@/lib/worker"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
 import { Loader, Eye } from "lucide-react"
+import { setup } from "@/lib/setup"
+import worker from "@/lib/worker"
 
 export const Route = createFileRoute("/login")({
 	component: Login
@@ -32,24 +33,38 @@ export function Login() {
 		setLoading(true)
 
 		try {
+			const authInfo = await worker.authInfo({ email })
+
+			await setup({
+				email: email,
+				password: "anonymous",
+				masterKeys: ["anonymous"],
+				connectToSocket: true,
+				metadataCache: true,
+				twoFactorCode: undefined,
+				publicKey: "anonymous",
+				privateKey: "anonymous",
+				apiKey: "anonymous",
+				authVersion: authInfo.authVersion,
+				baseFolderUUID: "anonymous",
+				userId: 1
+			})
+
 			await sdk.login({
 				email,
 				password,
 				twoFactorCode
 			})
 
-			await worker.initializeSDK({
-				config: {
-					...sdk.config,
-					password: ""
-				}
+			await setup({
+				...sdk.config
 			})
 
 			localStorage.setItem(
 				"sdkConfig",
 				JSON.stringify({
 					...sdk.config,
-					password: ""
+					password: "redacted"
 				})
 			)
 
