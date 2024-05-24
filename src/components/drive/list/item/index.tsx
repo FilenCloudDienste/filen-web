@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useMemo } from "react"
+import { memo, useCallback, useState, useMemo, useRef } from "react"
 import { type DriveCloudItem } from "../.."
 import { fileNameToSVGIcon, ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { simpleDate, formatBytes } from "@/utils"
@@ -52,6 +52,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	)
 	const [navigating, setNavigating] = useState<boolean>(false)
 	const publicLinkURLState = usePublicLinkURLState()
+	const didNavigateAwayRef = useRef<boolean>(false)
 
 	const previewType = useMemo(() => {
 		return fileNameToPreviewType(item.name)
@@ -69,8 +70,55 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 		return isInsidePublicLink ? publicLinkItems : driveItems
 	}, [isInsidePublicLink, publicLinkItems, driveItems])
 
+	const onDoubleClick = useCallback(() => {
+		if (item.type === "file" && previewType !== "other") {
+			eventEmitter.emit("openPreviewModal", { item })
+
+			return
+		}
+
+		if (item.type === "directory" && !location.includes("trash") && !navigating && !didNavigateAwayRef.current) {
+			didNavigateAwayRef.current = true
+
+			setNavigating(true)
+			setCurrentReceiverId(item.receiverId)
+			setCurrentReceiverEmail(item.receiverEmail)
+			setCurrentSharerId(item.sharerId)
+			setCurrentSharerEmail(item.sharerEmail)
+			setCurrentReceivers(item.receivers)
+
+			if (isInsidePublicLink && setVirtualURL) {
+				setVirtualURL(prev => `${prev}/${item.uuid}`)
+			} else {
+				navigate({
+					to: "/drive/$",
+					params: {
+						_splat: `${location.split("/drive/").join("")}/${item.uuid}`
+					}
+				})
+			}
+
+			return
+		}
+	}, [
+		item,
+		location,
+		navigate,
+		setCurrentReceiverId,
+		setCurrentSharerId,
+		setCurrentReceivers,
+		setCurrentReceiverEmail,
+		setCurrentSharerEmail,
+		previewType,
+		setVirtualURL,
+		isInsidePublicLink,
+		navigating
+	])
+
 	const onClick = useCallback(
 		(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+			console.log(e.detail)
+
 			if (e.shiftKey) {
 				const firstIndex = items.findIndex(item => item.selected === true)
 
@@ -103,51 +151,13 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 							}
 				)
 			})
-		},
-		[items, setItems, item.uuid, index]
-	)
 
-	const onDoubleClick = useCallback(() => {
-		if (item.type === "file" && previewType !== "other") {
-			eventEmitter.emit("openPreviewModal", { item })
-
-			return
-		}
-
-		if (item.type === "directory" && !location.includes("trash")) {
-			setNavigating(true)
-			setCurrentReceiverId(item.receiverId)
-			setCurrentReceiverEmail(item.receiverEmail)
-			setCurrentSharerId(item.sharerId)
-			setCurrentSharerEmail(item.sharerEmail)
-			setCurrentReceivers(item.receivers)
-
-			if (isInsidePublicLink && setVirtualURL) {
-				setVirtualURL(prev => `${prev}/${item.uuid}`)
-			} else {
-				navigate({
-					to: "/drive/$",
-					params: {
-						_splat: `${location.split("/drive/").join("")}/${item.uuid}`
-					}
-				})
+			if (e.detail >= 2) {
+				onDoubleClick()
 			}
-
-			return
-		}
-	}, [
-		item,
-		location,
-		navigate,
-		setCurrentReceiverId,
-		setCurrentSharerId,
-		setCurrentReceivers,
-		setCurrentReceiverEmail,
-		setCurrentSharerEmail,
-		previewType,
-		setVirtualURL,
-		isInsidePublicLink
-	])
+		},
+		[items, setItems, item.uuid, index, onDoubleClick]
+	)
 
 	const onContextMenu = useCallback(() => {
 		setItems(prev => {
@@ -353,18 +363,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	})
 
 	return (
-		<div
-			className={cn("flex select-none dragselect-start-disallowed", type === "list" ? "flex-row" : "flex-col")}
-			draggable={!isInsidePublicLink}
-			data-uuid={item.uuid}
-			onClick={onClick}
-			onDoubleClick={onDoubleClick}
-			onContextMenu={onContextMenu}
-			onDragStart={onDragStart}
-			onDragOver={onDragOver}
-			onDragLeave={onDragLeave}
-			onDrop={onDrop}
-		>
+		<div className={cn("flex select-none dragselect-start-disallowed", type === "list" ? "flex-row" : "flex-col")}>
 			<ContextMenu
 				item={item}
 				items={items}
@@ -376,7 +375,14 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 							item.selected || hovering ? "bg-secondary" : "",
 							navigating && "animate-pulse bg-secondary"
 						)}
+						draggable={!isInsidePublicLink}
 						data-uuid={item.uuid}
+						onClick={onClick}
+						onContextMenu={onContextMenu}
+						onDragStart={onDragStart}
+						onDragOver={onDragOver}
+						onDragLeave={onDragLeave}
+						onDrop={onDrop}
 					>
 						<div className="flex flex-row grow items-center dragselect-start-disallowed line-clamp-1 text-ellipsis gap-2 min-w-[200px]">
 							<div className="flex flex-row dragselect-start-disallowed shrink-0">
@@ -446,7 +452,14 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 							"dragselect-collision-check dragselect-start-disallowed flex flex-col w-[200px] h-[200px] p-3",
 							navigating && "animate-pulse"
 						)}
+						draggable={!isInsidePublicLink}
 						data-uuid={item.uuid}
+						onClick={onClick}
+						onContextMenu={onContextMenu}
+						onDragStart={onDragStart}
+						onDragOver={onDragOver}
+						onDragLeave={onDragLeave}
+						onDrop={onDrop}
 					>
 						<div className="dragselect-start-disallowed absolute flex flex-row justify-center items-center mt-[140px] w-[176px]">
 							<div

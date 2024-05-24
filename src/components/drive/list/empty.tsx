@@ -4,14 +4,31 @@ import { ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { useTranslation } from "react-i18next"
 import useCanUpload from "@/hooks/useCanUpload"
 import { Button } from "@/components/ui/button"
-import { Upload, PhoneIncoming, PhoneOutgoing, Link, Heart, Timer, Trash } from "lucide-react"
+import { Upload, PhoneIncoming, PhoneOutgoing, Link, Heart, Timer, Trash, Search } from "lucide-react"
+import { useDriveItemsStore } from "@/stores/drive.store"
 
 export const Empty = memo(() => {
 	const urlState = useDriveURLState()
 	const { t } = useTranslation()
 	const canUpload = useCanUpload()
+	const { searchTerm } = useDriveItemsStore()
 
 	const state = useMemo(() => {
+		if (searchTerm.length > 0) {
+			return {
+				icon: (
+					<Search
+						width={128}
+						height={128}
+						className="text-muted-foreground"
+					/>
+				),
+				title: t("drive.emptyPlaceholder.search.title"),
+				info: t("drive.emptyPlaceholder.search.info"),
+				uploadButton: canUpload
+			}
+		}
+
 		if (canUpload) {
 			return {
 				icon: (
@@ -22,7 +39,7 @@ export const Empty = memo(() => {
 				),
 				title: t("drive.emptyPlaceholder.drive.title"),
 				info: t("drive.emptyPlaceholder.drive.info"),
-				uploadButton: true
+				uploadButton: canUpload
 			}
 		}
 
@@ -37,7 +54,7 @@ export const Empty = memo(() => {
 				),
 				title: t("drive.emptyPlaceholder.trash.title"),
 				info: t("drive.emptyPlaceholder.trash.info"),
-				uploadButton: false
+				uploadButton: canUpload
 			}
 		}
 
@@ -52,7 +69,7 @@ export const Empty = memo(() => {
 				),
 				title: t("drive.emptyPlaceholder.recents.title"),
 				info: t("drive.emptyPlaceholder.recents.info"),
-				uploadButton: false
+				uploadButton: canUpload
 			}
 		}
 
@@ -67,7 +84,7 @@ export const Empty = memo(() => {
 				),
 				title: t("drive.emptyPlaceholder.links.title"),
 				info: t("drive.emptyPlaceholder.links.info"),
-				uploadButton: false
+				uploadButton: canUpload
 			}
 		}
 
@@ -82,7 +99,7 @@ export const Empty = memo(() => {
 				),
 				title: t("drive.emptyPlaceholder.favorites.title"),
 				info: t("drive.emptyPlaceholder.favorites.info"),
-				uploadButton: false
+				uploadButton: canUpload
 			}
 		}
 
@@ -97,7 +114,7 @@ export const Empty = memo(() => {
 				),
 				title: t("drive.emptyPlaceholder.sharedIn.title"),
 				info: t("drive.emptyPlaceholder.sharedIn.info"),
-				uploadButton: false
+				uploadButton: canUpload
 			}
 		}
 
@@ -112,7 +129,7 @@ export const Empty = memo(() => {
 				),
 				title: t("drive.emptyPlaceholder.sharedOut.title"),
 				info: t("drive.emptyPlaceholder.sharedOut.info"),
-				uploadButton: false
+				uploadButton: canUpload
 			}
 		}
 
@@ -125,9 +142,9 @@ export const Empty = memo(() => {
 			),
 			title: t("drive.emptyPlaceholder.drive.title"),
 			info: t("drive.emptyPlaceholder.drive.info"),
-			uploadButton: true
+			uploadButton: canUpload
 		}
-	}, [canUpload, urlState, t])
+	}, [canUpload, urlState, t, searchTerm])
 
 	return (
 		<div className="flex flex-row items-center justify-center w-full h-full">

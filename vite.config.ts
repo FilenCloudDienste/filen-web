@@ -26,6 +26,7 @@ export default defineConfig({
 		}),
 		react(),
 		million.vite({
+			auto: true,
 			filter: {
 				include: "src/**/*.{mtsx,mjsx,tsx,jsx}"
 			},

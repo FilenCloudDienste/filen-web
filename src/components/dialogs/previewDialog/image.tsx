@@ -42,7 +42,7 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 
 	const onWheel = useCallback(
 		(e: React.WheelEvent<HTMLImageElement>) => {
-			if (publicLinkURLState.isPublicLink) {
+			if (publicLinkURLState.isPublicLink && publicLinkURLState.chatEmbed) {
 				return
 			}
 
@@ -64,7 +64,7 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 				})
 			}
 		},
-		[publicLinkURLState.isPublicLink]
+		[publicLinkURLState.isPublicLink, publicLinkURLState.chatEmbed]
 	)
 
 	const onDoubleClick = useCallback(() => {
@@ -94,7 +94,7 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 							publicLinkURLState.isPublicLink
 								? publicLinkURLState.chatEmbed
 									? "h-screen cursor-pointer"
-									: "h-[calc(100vh-56px)] cursor-pointer"
+									: "h-[calc(100vh-56px)] cursor-zoom-in"
 								: "h-[calc(100vh-48px)] cursor-zoom-in"
 						)}
 						draggable={false}
