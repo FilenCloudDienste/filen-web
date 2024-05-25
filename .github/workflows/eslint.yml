@@ -22,7 +22,7 @@ on:
 jobs:
     eslint:
         name: Run eslint scanning
-        runs-on: self-hosted
+        runs-on: ubuntu-latest
         permissions:
             contents: read
             security-events: write
