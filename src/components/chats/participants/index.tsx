@@ -17,6 +17,7 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import { Virtuoso } from "react-virtuoso"
 import socket from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const Participants = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const { t } = useTranslation()
@@ -36,6 +37,14 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 	const participantsSorted = useMemo(() => {
 		return conversation.participants.sort((a, b) => a.email.localeCompare(b.email))
 	}, [conversation.participants])
+
+	const showSkeletons = useMemo(() => {
+		if (onlineQuery.isSuccess && onlineQuery.data.length >= 0) {
+			return false
+		}
+
+		return true
+	}, [onlineQuery.data, onlineQuery.isSuccess])
 
 	const hasWritePermissions = useMemo(() => {
 		if (userId === conversation.ownerId) {
@@ -116,6 +125,32 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 		[conversation, onlineQuery.data, onlineQuery.isSuccess]
 	)
 
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div className="flex flex-col w-full h-full overflow-hidden">
+						{showSkeletons
+							? new Array(100).fill(1).map((_, index) => {
+									return (
+										<div
+											key={index}
+											className="flex flex-row items-center p-3 py-2 gap-3 cursor-pointer hover:bg-secondary"
+										>
+											<Skeleton className="w-[28px] h-[28px] rounded-full" />
+											<div className="flex flex-row items-center gap-3 grow">
+												<Skeleton className="w-full h-[18px] rounded-md" />
+											</div>
+										</div>
+									)
+								})
+							: null}
+					</div>
+				)
+			}
+		}
+	}, [showSkeletons])
+
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
 			try {
@@ -136,10 +171,6 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 			socket.removeListener("socketEvent", socketEventListener)
 		}
 	}, [socketEventListener])
-
-	if (!onlineQuery.isSuccess) {
-		return null
-	}
 
 	return (
 		<div className="w-full h-full flex flex-col">
@@ -171,6 +202,7 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 					width="100%"
 					computeItemKey={getItemKey}
 					itemContent={itemContent}
+					components={components}
 					style={{
 						overflowX: "hidden",
 						overflowY: "auto",
