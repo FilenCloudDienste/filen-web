@@ -3,6 +3,11 @@ import useWindowFocus from "@/hooks/useWindowFocus"
 import worker from "@/lib/worker"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import useLocation from "@/hooks/useLocation"
+import useMountedEffect from "@/hooks/useMountedEffect"
+import { clear as clearLocalForage } from "@/lib/localForage"
+import { useNavigate } from "@tanstack/react-router"
+import useErrorToast from "@/hooks/useErrorToast"
+import { IS_DESKTOP } from "@/constants"
 
 export const ActivityHandler = memo(({ children }: { children: React.ReactNode }) => {
 	const windowFocus = useWindowFocus()
@@ -10,6 +15,8 @@ export const ActivityHandler = memo(({ children }: { children: React.ReactNode }
 	const isUpdatingLastActiveDesktop = useRef<boolean>(false)
 	const location = useLocation()
 	const [authed] = useLocalStorage<boolean>("authed", false)
+	const errorToast = useErrorToast()
+	const navigate = useNavigate()
 
 	const isInsidePublicLink = useMemo(() => {
 		return location.includes("/f/") || location.includes("/d/")
@@ -39,6 +46,50 @@ export const ActivityHandler = memo(({ children }: { children: React.ReactNode }
 		}
 	}, [windowFocus, isInsidePublicLink, authed])
 
+	const logout = useCallback(async () => {
+		if (!authed) {
+			return
+		}
+
+		try {
+			window.localStorage.clear()
+
+			await clearLocalForage()
+
+			if (IS_DESKTOP) {
+				await window.desktopAPI.restart()
+			} else {
+				navigate({
+					to: "/login",
+					replace: true,
+					resetScroll: true
+				})
+			}
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		}
+	}, [errorToast, navigate, authed])
+
+	const loggedOutCheck = useCallback(async () => {
+		if (!authed) {
+			return
+		}
+
+		try {
+			await worker.fetchAccount()
+
+			setTimeout(loggedOutCheck, 60000)
+		} catch (e) {
+			console.error(e)
+
+			if (e instanceof Error && e.message.toLowerCase().includes("api") && e.message.toLowerCase().includes("key")) {
+				logout()
+			}
+		}
+	}, [authed, logout])
+
 	useEffect(() => {
 		const updateLastActiveDesktopInterval = setInterval(update, 1000)
 
@@ -46,6 +97,10 @@ export const ActivityHandler = memo(({ children }: { children: React.ReactNode }
 			clearInterval(updateLastActiveDesktopInterval)
 		}
 	}, [update])
+
+	useMountedEffect(() => {
+		loggedOutCheck()
+	})
 
 	return children
 })

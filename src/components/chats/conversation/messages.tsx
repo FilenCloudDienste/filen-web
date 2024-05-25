@@ -375,6 +375,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 				followOutput={true}
 				startReached={startReached}
 				components={components}
+				overscan={windowSize.height}
 				style={{
 					overflowX: "hidden",
 					overflowY: "auto",
