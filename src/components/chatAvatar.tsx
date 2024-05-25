@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useMemo } from "react"
+import { memo, useState, useCallback, useMemo, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { type ChatConversationParticipant } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import useSDKConfig from "@/hooks/useSDKConfig"
@@ -55,6 +55,15 @@ export const ChatAvatar = memo(
 	}) => {
 		const [useFallback, setUseFallback] = useState<boolean>(false)
 		const { userId } = useSDKConfig()
+		const imgRef = useRef<HTMLImageElement>(null)
+
+		const onError = useCallback(() => {
+			setUseFallback(true)
+
+			if (imgRef.current) {
+				imgRef.current.src = "/img/fallbackAvatar.webp"
+			}
+		}, [])
 
 		const bgColor = useMemo(() => {
 			return getColorFromHash(
@@ -103,10 +112,6 @@ export const ChatAvatar = memo(
 			)
 		}, [status, size])
 
-		const onError = useCallback(() => {
-			setUseFallback(true)
-		}, [])
-
 		if (participants.length <= 2) {
 			return (
 				<div
@@ -117,7 +122,8 @@ export const ChatAvatar = memo(
 					}}
 				>
 					<img
-						src={!src ? "/img/fallbackAvatar.webp" : useFallback ? "/img/fallbackAvatar.webp" : src}
+						ref={imgRef}
+						src={!src || useFallback ? "/img/fallbackAvatar.webp" : src}
 						className="w-full h-full object-contain rounded-full"
 						onError={onError}
 					/>
