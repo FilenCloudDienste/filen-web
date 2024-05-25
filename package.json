@@ -11,7 +11,8 @@
 		"tsc": "cross-env NODE_OPTIONS=--max_old_space_size=16834 tsc",
 		"lint": "cross-env NODE_OPTIONS=--max_old_space_size=16834 eslint . --ext ts,tsx,js,jsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite preview",
-		"serve": "cross-env NODE_OPTIONS=--max_old_space_size=16834 serve -s dist/"
+		"serve": "cross-env NODE_OPTIONS=--max_old_space_size=16834 serve -s dist/",
+		"i18n:scan": "tsx ./i18nScanner.ts"
 	},
 	"engines": {
 		"node": ">=18"
@@ -103,6 +104,7 @@
 	"devDependencies": {
 		"@tanstack/eslint-plugin-query": "^5.20.1",
 		"@tanstack/router-vite-plugin": "^1.19.0",
+		"@types/fs-extra": "^11.0.4",
 		"@types/js-cookie": "^3.0.6",
 		"@types/lodash": "^4.14.202",
 		"@types/node": "^20.11.24",
@@ -120,12 +122,16 @@
 		"eslint": "^8.56.0",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.5",
+		"fs-extra": "^11.2.0",
 		"geist": "^1.2.2",
+		"glob": "^10.4.1",
 		"memfs": "^4.7.7",
 		"postcss": "^8.4.35",
 		"rimraf": "^5.0.5",
 		"serve": "^14.2.1",
 		"tailwindcss": "^3.4.1",
+		"ts-node": "^10.9.2",
+		"tsx": "^4.11.0",
 		"typescript": "^5.2.2",
 		"vite": "^5.2.8",
 		"vite-plugin-comlink": "^4.0.2",

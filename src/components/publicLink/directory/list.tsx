@@ -6,8 +6,10 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import { type DriveSortBy } from "@/components/drive/list/header"
 import { IS_DESKTOP } from "@/constants"
 import ListItem from "@/components/drive/list/item"
+import { Skeleton } from "@/components/ui/skeleton"
+import Empty from "@/components/drive/list/empty"
 
-export const List = memo(({ items, parent }: { items: DriveCloudItem[]; parent: string }) => {
+export const List = memo(({ items, parent, showSkeletons }: { items: DriveCloudItem[]; parent: string; showSkeletons: boolean }) => {
 	const windowSize = useWindowSize()
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 
@@ -30,6 +32,34 @@ export const List = memo(({ items, parent }: { items: DriveCloudItem[]; parent: 
 		return IS_DESKTOP ? windowSize.height - 48 - 40 - 24 : windowSize.height - 48 - 40
 	}, [windowSize.height])
 
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div className="flex flex-col w-full h-full overflow-hidden py-3">
+						{showSkeletons ? (
+							new Array(100).fill(1).map((_, index) => {
+								return (
+									<div
+										key={index}
+										className="flex flex-row h-11 gap-3 items-center px-3 mb-3"
+									>
+										<Skeleton className="w-7 h-7 rounded-md shrink-0" />
+										<Skeleton className="grow rounded-md h-6" />
+										<Skeleton className="rounded-md h-6 w-[125px]" />
+										<Skeleton className="rounded-md h-6 w-[250px]" />
+									</div>
+								)
+							})
+						) : (
+							<Empty />
+						)}
+					</div>
+				)
+			}
+		}
+	}, [showSkeletons])
+
 	return (
 		<>
 			<Virtuoso
@@ -41,6 +71,7 @@ export const List = memo(({ items, parent }: { items: DriveCloudItem[]; parent: 
 				defaultItemHeight={44}
 				fixedItemHeight={44}
 				itemContent={itemContent}
+				components={components}
 				style={{
 					overflowX: "hidden",
 					overflowY: "auto",

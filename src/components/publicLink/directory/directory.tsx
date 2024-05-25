@@ -87,6 +87,14 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 		}
 	}, [items, info.metadata.name, errorToast])
 
+	const showSkeletons = useMemo(() => {
+		if (query.isSuccess && query.data.files.length >= 0 && query.data.folders.length >= 0) {
+			return false
+		}
+
+		return true
+	}, [query.data, query.isSuccess])
+
 	useEffect(() => {
 		if (virtualURL.length === 0) {
 			setVirtualURL(info.parent)
@@ -106,13 +114,22 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 					<Breadcrumbs info={info} />
 				</div>
 				<div className={cn("flex flex-row gap-2 px-4 h-full items-center", dark ? "bg-[#151518]" : "bg-[#FBFBFB]")}>
-					<Button
-						size="sm"
-						className="items-center gap-2"
-						onClick={download}
-					>
-						<Download size={16} />
-					</Button>
+					<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+						<Tooltip>
+							<TooltipTrigger asChild={true}>
+								<Button
+									size="sm"
+									className="items-center gap-2"
+									onClick={download}
+								>
+									<Download size={16} />
+								</Button>
+							</TooltipTrigger>
+							<TooltipContent side="bottom">
+								<p>{t("publicLink.directory.downloadWholeDirectory")}</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 					<div className="flex flex-row items-center">
 						<div className="absolute h-full pl-2">
 							<div className="h-full flex flex-row items-center">
@@ -160,26 +177,26 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 					)}
 				</div>
 			</div>
-			{!query.isSuccess ? null : (
-				<>
-					{listType[parent] !== "grid" && (
-						<Header
-							parent={parent}
-							items={items}
-						/>
-					)}
-					<div className="dragselect-start-allowed">
-						{listType[parent] !== "grid" ? (
-							<List
-								parent={parent}
-								items={itemsFiltered}
-							/>
-						) : (
-							<Grid items={itemsFiltered} />
-						)}
-					</div>
-				</>
+			{listType[parent] !== "grid" && (
+				<Header
+					parent={parent}
+					items={items}
+				/>
 			)}
+			<div className="dragselect-start-allowed">
+				{listType[parent] !== "grid" ? (
+					<List
+						parent={parent}
+						items={itemsFiltered}
+						showSkeletons={showSkeletons}
+					/>
+				) : (
+					<Grid
+						items={itemsFiltered}
+						showSkeletons={showSkeletons}
+					/>
+				)}
+			</div>
 		</div>
 	)
 })

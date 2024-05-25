@@ -28,19 +28,10 @@ import { useDebouncedCallback } from "use-debounce"
 import { directoryColorToHex } from "@/assets/fileExtensionIcons"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
+import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 
 export const ContextMenu = memo(
-	({
-		item,
-		children,
-		items,
-		setVirtualURL
-	}: {
-		item: DriveCloudItem
-		children: React.ReactNode
-		items: DriveCloudItem[]
-		setVirtualURL?: React.Dispatch<React.SetStateAction<string>>
-	}) => {
+	({ item, children, items }: { item: DriveCloudItem; children: React.ReactNode; items: DriveCloudItem[] }) => {
 		const { setItems } = useDriveItemsStore()
 		const { t } = useTranslation()
 		const { baseFolderUUID } = useSDKConfig()
@@ -52,6 +43,7 @@ export const ContextMenu = memo(
 		const [directoryColor, setDirectoryColor] = useState<string>(directoryColorToHex(item.type === "directory" ? item.color : null))
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
+		const { setVirtualURL } = useDirectoryPublicLinkStore()
 
 		const isInsidePublicLink = useMemo(() => {
 			return location.includes("/f/") || location.includes("/d/")
@@ -77,7 +69,7 @@ export const ContextMenu = memo(
 				setCurrentSharerEmail(item.sharerEmail)
 				setCurrentReceivers(item.receivers)
 
-				if (isInsidePublicLink && setVirtualURL) {
+				if (isInsidePublicLink) {
 					setVirtualURL(prev => `${prev}/${item.uuid}`)
 				} else {
 					navigate({

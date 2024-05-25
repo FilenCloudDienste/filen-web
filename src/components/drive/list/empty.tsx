@@ -5,16 +5,20 @@ import { useTranslation } from "react-i18next"
 import useCanUpload from "@/hooks/useCanUpload"
 import { Button } from "@/components/ui/button"
 import { Upload, PhoneIncoming, PhoneOutgoing, Link, Heart, Timer, Trash, Search } from "lucide-react"
+import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { useDriveItemsStore } from "@/stores/drive.store"
+import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 
 export const Empty = memo(() => {
 	const urlState = useDriveURLState()
 	const { t } = useTranslation()
 	const canUpload = useCanUpload()
 	const { searchTerm } = useDriveItemsStore()
+	const publicLinkURLState = usePublicLinkURLState()
+	const { searchTerm: publicLinkSearchTerm } = useDirectoryPublicLinkStore()
 
 	const state = useMemo(() => {
-		if (searchTerm.length > 0) {
+		if (searchTerm.length > 0 || publicLinkSearchTerm.length > 0) {
 			return {
 				icon: (
 					<Search
@@ -25,6 +29,20 @@ export const Empty = memo(() => {
 				),
 				title: t("drive.emptyPlaceholder.search.title"),
 				info: t("drive.emptyPlaceholder.search.info"),
+				uploadButton: canUpload
+			}
+		}
+
+		if (publicLinkURLState.isPublicLink) {
+			return {
+				icon: (
+					<ColoredFolderSVGIcon
+						width={128}
+						height={128}
+					/>
+				),
+				title: t("drive.emptyPlaceholder.publicLink.title"),
+				info: t("drive.emptyPlaceholder.publicLink.info"),
 				uploadButton: canUpload
 			}
 		}
@@ -144,7 +162,7 @@ export const Empty = memo(() => {
 			info: t("drive.emptyPlaceholder.drive.info"),
 			uploadButton: canUpload
 		}
-	}, [canUpload, urlState, t, searchTerm])
+	}, [canUpload, urlState, t, searchTerm, publicLinkURLState.isPublicLink, publicLinkSearchTerm])
 
 	return (
 		<div className="flex flex-row items-center justify-center w-full h-full">

@@ -187,7 +187,7 @@ export function useDirectoryLinkContent({
 						receivers: [],
 						sharerEmail: "",
 						sharerId: 0,
-						size: 0,
+						size: query.data.directorySize[folder.uuid] ? query.data.directorySize[folder.uuid]! : 0,
 						favorited: false,
 						lastModified: folder.timestamp,
 						parent: folder.parent
@@ -205,7 +205,6 @@ export function useDirectoryLinkContent({
 						region: file.region,
 						bucket: file.bucket,
 						chunks: file.chunks,
-
 						uuid: file.uuid,
 						timestamp: file.timestamp,
 						selected: false,

@@ -3002,10 +3002,34 @@ export async function directoryPublicLinkContent({
 	password?: string
 	salt?: string
 	key: string
-}): Promise<DirLinkContentDecryptedResponse> {
+}): Promise<DirLinkContentDecryptedResponse & { directorySize: Record<string, number> }> {
 	await waitForInitialization()
 
-	return await SDK.cloud().directoryPublicLinkContent({ uuid, parent, password, salt, key })
+	const content = await SDK.cloud().directoryPublicLinkContent({ uuid, parent, password, salt, key })
+
+	return {
+		...content,
+		directorySize: (
+			await promiseAllChunked(
+				content.folders.map(
+					folder =>
+						new Promise<[string, number]>((resolve, reject) => {
+							directorySize({ uuid: folder.uuid, receiverId: 0, trash: false, sharerId: 0, linkUUID: uuid })
+								.then(size => {
+									resolve([folder.uuid, size])
+								})
+								.catch(reject)
+						})
+				)
+			)
+		).reduce(
+			(prev, current) => ({
+				...prev,
+				[current[0]]: current[1]
+			}),
+			{}
+		)
+	}
 }
 
 export async function authInfo({ email }: { email: string }): Promise<AuthInfoResponse> {
