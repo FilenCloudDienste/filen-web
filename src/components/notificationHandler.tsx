@@ -12,6 +12,7 @@ import { useChatsStore } from "@/stores/chats.store"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
+import { useTranslation } from "react-i18next"
 
 export const triggeredNotificationUUIDs: Record<string, boolean> = {}
 export const notificationMutex = new Semaphore(1)
@@ -27,6 +28,7 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 	const { setSelectedConversation } = useChatsStore()
 	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
 	const [authed] = useLocalStorage<boolean>("authed", false)
+	const { t } = useTranslation()
 
 	const isInsidePublicLink = useMemo(() => {
 		return location.includes("/f/") || location.includes("/d/")
@@ -52,13 +54,10 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 					userId !== event.data.senderId &&
 					chatNotificationsEnabled &&
 					!triggeredNotificationUUIDs[`chat:${event.data.uuid}`] &&
-					(!location.includes(event.data.conversation) || !windowFocus)
+					(!location.includes(event.data.conversation) || !windowFocus) &&
+					chatConversationsQuery.isSuccess
 				) {
 					triggeredNotificationUUIDs[`chat:${event.data.uuid}`] = true
-
-					if (!chatConversationsQuery.isSuccess) {
-						return
-					}
 
 					let foundConversation: ChatConversation | null = null
 					const filteredConversations = chatConversationsQuery.data.filter(c => c.uuid === event.data.conversation)
@@ -85,7 +84,7 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 						return
 					}
 
-					const notification = new window.Notification("Chat", {
+					const notification = new window.Notification(t("notifications.chat"), {
 						body: `${event.data.senderNickName.length > 0 ? event.data.senderNickName : event.data.senderEmail}: ${messageDecrypted}`,
 						silent: true,
 						icon: notificationIcon
@@ -133,8 +132,10 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 					(!location.includes("contacts") || !windowFocus) &&
 					!triggeredNotificationUUIDs[`contactRequest:${event.data.uuid}`]
 				) {
-					const notification = new window.Notification("Contact request", {
-						body: `${(event.data.senderNickName ?? "").length > 0 ? event.data.senderNickName : event.data.senderEmail} has sent you a contact request`,
+					const notification = new window.Notification(t("notifications.contactRequest"), {
+						body: t("notifications.contactRequestInfo", {
+							name: (event.data.senderNickName ?? "").length > 0 ? event.data.senderNickName : event.data.senderEmail
+						}),
 						silent: true,
 						icon: notificationIcon
 					})
@@ -184,7 +185,8 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 			setSelectedConversation,
 			contactNotificationsEnabled,
 			authed,
-			isInsidePublicLink
+			isInsidePublicLink,
+			t
 		]
 	)
 

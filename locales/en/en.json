@@ -845,5 +845,10 @@
 				"continue": "Empty"
 			}
 		}
+	},
+	"notifications": {
+		"chat": "Chat",
+		"contactRequest": "Contact request",
+		"contactRequestInfo": "{{name}} has sent you a contact request"
 	}
 }

@@ -414,7 +414,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 								)}
 								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
 							</div>
-							{item.sharerId > 0 && item.sharerEmail.length > 0 && (
+							{item.sharerId > 0 && item.sharerEmail.length > 0 && item.parent.length < 16 && (
 								<div className="flex flex-row items-center pr-2">
 									<Badge
 										className="line-clamp-1 text-ellipsis break-all cursor-pointer"

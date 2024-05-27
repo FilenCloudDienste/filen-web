@@ -85,17 +85,22 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 			{!urlObject && !thumbnailURLObjectCache.has(item.uuid) ? (
 				<Loader />
 			) : (
-				<div className={cn("w-full h-full", !publicLinkURLState.isPublicLink && "bg-black")}>
+				<div
+					className={cn(
+						"w-full h-full flex flex-row items-center justify-center",
+						!publicLinkURLState.isPublicLink && "bg-black"
+					)}
+				>
 					<img
 						ref={ref}
 						src={urlObject ? urlObject : thumbnailURLObjectCache.get(item.uuid)}
 						className={cn(
-							"w-full object-contain z-10",
+							"max-w-full object-contain z-10",
 							publicLinkURLState.isPublicLink
 								? publicLinkURLState.chatEmbed
-									? "h-screen cursor-pointer"
-									: "h-[calc(100vh-56px)] cursor-zoom-in"
-								: "h-[calc(100vh-48px)] cursor-zoom-in"
+									? "max-h-screen cursor-pointer"
+									: "max-h-[calc(100vh-56px)] cursor-zoom-in"
+								: "max-h-[calc(100vh-48px)] cursor-zoom-in"
 						)}
 						draggable={false}
 						style={{
