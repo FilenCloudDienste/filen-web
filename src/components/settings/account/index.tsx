@@ -247,10 +247,10 @@ export const Account = memo(() => {
 
 		if (account.settings.twoFactorEnabled) {
 			const code = await showTwoFactorCodeDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
-				continueButtonVariant: "destructive"
+				title: t("dialogs.twoFactorCode.title"),
+				continueButtonText: t("dialogs.twoFactorCode.continue"),
+				description: t("dialogs.twoFactorCode.info"),
+				continueButtonVariant: "default"
 			})
 
 			if (code.cancelled) {
