@@ -214,7 +214,10 @@
 		},
 		"twoFactorCode": {
 			"useRecoveryKey": "Use recovery key instead",
-			"recoveryKeyPlaceholder": "Recovery key"
+			"recoveryKeyPlaceholder": "Recovery key",
+			"title": "Two Factor Authentication",
+			"continue": "Continue",
+			"info": "Please enter your Two Factor Authentication code"
 		},
 		"noteParticipants": {
 			"remove": "Remove",
@@ -493,6 +496,38 @@
 				"text": "Text",
 				"checklist": "Checklist",
 				"code": "Code"
+			},
+			"sections": {
+				"defaultNoteType": {
+					"name": "Default note type",
+					"info": "Change the default note type"
+				},
+				"chatNotifications": {
+					"name": "Chat notifications",
+					"info": "Enable or disable chat notifications"
+				},
+				"contactNotifications": {
+					"name": "Contact notifications",
+					"info": "Enable or disable contact notifications"
+				},
+				"theme": {
+					"name": "Theme",
+					"info": "Change the app appearance"
+				},
+				"language": {
+					"name": "Language",
+					"info": "Change the app language"
+				},
+				"clearThumbnailCache": {
+					"name": "Thumbnail cache",
+					"info": "Clear the thumbnail cache",
+					"action": "Clear"
+				},
+				"logout": {
+					"name": "Logout",
+					"info": "Logout",
+					"action": "Logout"
+				}
 			}
 		},
 		"invite": {
@@ -578,6 +613,80 @@
 			"lifetime": "Lifetime",
 			"buyNow": "Buy now",
 			"payInvoice": "Pay invoice"
+		},
+		"security": {
+			"sections": {
+				"password": {
+					"name": "Password",
+					"info": "Change your password",
+					"action": "Change"
+				},
+				"twoFactorAuthentication": {
+					"name": "Two Factor Authentication",
+					"info": "Enable or disable Two Factor Authentication"
+				},
+				"exportMasterKeys": {
+					"name": "Export master keys",
+					"info": "Export your master keys so that you can restore your account in case you need to reset your password. You need to export your master keys everytime you change your password.",
+					"action": "Export"
+				}
+			}
+		},
+		"account": {
+			"sections": {
+				"avatar": {
+					"name": "Avatar",
+					"info": "Your avatar will be visible publicly",
+					"action": "Edit"
+				},
+				"versionedFiles": {
+					"name": "Versioned files",
+					"info": "Delete all versioned files",
+					"action": "Delete"
+				},
+				"all": {
+					"name": "All files and directories",
+					"info": "Delete all files and folders",
+					"action": "Delete"
+				},
+				"email": {
+					"name": "Email address",
+					"info": "Change your email address",
+					"action": "Change"
+				},
+				"nickName": {
+					"name": "Nickname",
+					"info": "Change your nickname",
+					"action": "Change"
+				},
+				"personalInformation": {
+					"name": "Personal information",
+					"info": "Edit your personal information. Will be used for invoicing and is not public",
+					"action": "Edit"
+				},
+				"fileVersioning": {
+					"name": "File versioning",
+					"info": "Enable or disable file versioning"
+				},
+				"loginAlerts": {
+					"name": "Login alerts",
+					"info": "Enable or disable login alerts"
+				},
+				"appearOffline": {
+					"name": "Appear offline",
+					"info": "Appear offline in chats"
+				},
+				"requestAccountData": {
+					"name": "Request account data",
+					"info": "Request all personal data we store according to GDPR",
+					"action": "Request"
+				},
+				"requestAccountDeletion": {
+					"name": "Request account deletion",
+					"info": "Request deletion of your account. We will send you a confirmation email",
+					"action": "Request"
+				}
+			}
 		}
 	},
 	"drive": {

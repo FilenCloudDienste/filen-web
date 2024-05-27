@@ -11,12 +11,14 @@ import worker from "@/lib/worker"
 import eventEmitter from "@/lib/eventEmitter"
 import ChangePasswordDialog from "./dialogs/changePassword"
 import Skeletons from "../skeletons"
+import { useTranslation } from "react-i18next"
 
 export const Security = memo(() => {
 	const account = useAccount()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const { masterKeys, userId } = useSDKConfig()
+	const { t } = useTranslation()
 
 	const onTwoFactorChange = useCallback(
 		async (checked: boolean) => {
@@ -33,10 +35,9 @@ export const Security = memo(() => {
 					}
 
 					const code = await showTwoFactorCodeDialog({
-						title: "d",
-						continueButtonText: "ddd",
-						description: "ookeoetrasher",
-						continueButtonVariant: "destructive",
+						title: t("dialogs.twoFactorCode.title"),
+						continueButtonText: t("dialogs.twoFactorCode.continue"),
+						description: t("dialogs.twoFactorCode.info"),
 						keyToDisplay:
 							"otpauth://totp/" +
 							encodeURIComponent("Filen") +
@@ -64,10 +65,9 @@ export const Security = memo(() => {
 					}
 
 					const code = await showTwoFactorCodeDialog({
-						title: "d",
-						continueButtonText: "ddd",
-						description: "ookeoetrasher",
-						continueButtonVariant: "destructive"
+						title: t("dialogs.twoFactorCode.title"),
+						continueButtonText: t("dialogs.twoFactorCode.continue"),
+						description: t("dialogs.twoFactorCode.info")
 					})
 
 					if (code.cancelled) {
@@ -89,7 +89,7 @@ export const Security = memo(() => {
 				}
 			}
 		},
-		[account, loadingToast, errorToast]
+		[account, loadingToast, errorToast, t]
 	)
 
 	const exportMasterKeys = useCallback(async () => {
@@ -149,19 +149,19 @@ export const Security = memo(() => {
 			<div className="flex flex-col p-6 w-5/6 h-full">
 				<div className="flex flex-col gap-4">
 					<Section
-						name="Password"
-						info="Change your password"
+						name={t("settings.security.sections.password.name")}
+						info={t("settings.security.sections.password.info")}
 					>
 						<p
 							className="underline cursor-pointer"
 							onClick={changePassword}
 						>
-							Change
+							{t("settings.security.sections.password.action")}
 						</p>
 					</Section>
 					<Section
-						name="Two Factor Authentication"
-						info="Enable or disable Two Factor Authentication"
+						name={t("settings.security.sections.twoFactorAuthentication.name")}
+						info={t("settings.security.sections.twoFactorAuthentication.info")}
 					>
 						<Switch
 							checked={account.settings.twoFactorEnabled === 1}
@@ -169,15 +169,15 @@ export const Security = memo(() => {
 						/>
 					</Section>
 					<Section
-						name="Export master keys"
-						info="Export your master keys so that you can restore your account in case you need to reset your password. You need to export your master keys everytime you change your password."
+						name={t("settings.security.sections.exportMasterKeys.name")}
+						info={t("settings.security.sections.exportMasterKeys.info")}
 						className="mt-10"
 					>
 						<p
 							className="underline cursor-pointer"
 							onClick={exportMasterKeys}
 						>
-							Export
+							{t("settings.security.sections.exportMasterKeys.action")}
 						</p>
 					</Section>
 					<div className="w-full h-20" />

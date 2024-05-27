@@ -368,8 +368,8 @@ export const Account = memo(() => {
 				<div className={cn("flex flex-col p-6 h-full", isMobile ? "w-full" : "w-4/6")}>
 					<div className="flex flex-col gap-4">
 						<Section
-							name="Avatar"
-							info="Your avatar will be visible publicly"
+							name={t("settings.account.sections.avatar.name")}
+							info={t("settings.account.sections.avatar.info")}
 						>
 							<Avatar
 								src={account.account.avatarURL}
@@ -379,12 +379,12 @@ export const Account = memo(() => {
 								className="underline cursor-pointer"
 								onClick={() => document.getElementById("avatar-input")?.click()}
 							>
-								Edit
+								{t("settings.account.sections.avatar.action")}
 							</p>
 						</Section>
 						<Section
-							name="Versioned files"
-							info="Delete all versioned files"
+							name={t("settings.account.sections.versionedFiles.name")}
+							info={t("settings.account.sections.versionedFiles.info")}
 							className="mt-10"
 						>
 							<p className="text-muted-foreground">{formatBytes(usage.versioned)}</p>
@@ -392,24 +392,24 @@ export const Account = memo(() => {
 								className="underline cursor-pointer"
 								onClick={deleteVersioned}
 							>
-								Delete
+								{t("settings.account.sections.versionedFiles.action")}
 							</p>
 						</Section>
 						<Section
-							name="All files and directories"
-							info="Delete all files and folders"
+							name={t("settings.account.sections.all.name")}
+							info={t("settings.account.sections.all.info")}
 						>
 							<p className="text-muted-foreground">{formatBytes(usage.all)}</p>
 							<p
 								className="underline cursor-pointer"
 								onClick={deleteAll}
 							>
-								Delete
+								{t("settings.account.sections.all.action")}
 							</p>
 						</Section>
 						<Section
-							name="Email address"
-							info="Change your email address"
+							name={t("settings.account.sections.email.name")}
+							info={t("settings.account.sections.email.info")}
 							className="mt-10"
 						>
 							<p className="text-muted-foreground">{account.account.email}</p>
@@ -417,35 +417,35 @@ export const Account = memo(() => {
 								className="underline cursor-pointer"
 								onClick={changeEmail}
 							>
-								Edit
+								{t("settings.account.sections.email.action")}
 							</p>
 						</Section>
 						<Section
-							name="Nickname"
-							info="Change your nickname"
+							name={t("settings.account.sections.nickName.name")}
+							info={t("settings.account.sections.nickName.info")}
 						>
 							{account.account.nickName.length > 0 && <p className="text-muted-foreground">{account.account.nickName}</p>}
 							<p
 								className="underline cursor-pointer"
 								onClick={changeNickname}
 							>
-								Edit
+								{t("settings.account.sections.nickName.action")}
 							</p>
 						</Section>
 						<Section
-							name="Personal information"
-							info="Edit your personal information. Will be used for invoicing and is not public"
+							name={t("settings.account.sections.personalInformation.name")}
+							info={t("settings.account.sections.personalInformation.info")}
 						>
 							<p
 								className="underline cursor-pointer"
 								onClick={changePersonalInformation}
 							>
-								Edit
+								{t("settings.account.sections.personalInformation.action")}
 							</p>
 						</Section>
 						<Section
-							name="File versioning"
-							info="Enable or disable file versioning"
+							name={t("settings.account.sections.fileVersioning.name")}
+							info={t("settings.account.sections.fileVersioning.info")}
 							className="mt-10"
 						>
 							<Switch
@@ -454,8 +454,8 @@ export const Account = memo(() => {
 							/>
 						</Section>
 						<Section
-							name="Login alerts"
-							info="Enable or disable login alerts"
+							name={t("settings.account.sections.loginAlerts.name")}
+							info={t("settings.account.sections.loginAlerts.info")}
 						>
 							<Switch
 								checked={account.settings.loginAlertsEnabled}
@@ -463,8 +463,8 @@ export const Account = memo(() => {
 							/>
 						</Section>
 						<Section
-							name="Appear offline"
-							info="Appear offline in chats"
+							name={t("settings.account.sections.appearOffline.name")}
+							info={t("settings.account.sections.appearOffline.info")}
 						>
 							<Switch
 								checked={account.account.appearOffline}
@@ -472,27 +472,27 @@ export const Account = memo(() => {
 							/>
 						</Section>
 						<Section
-							name="Request account data"
-							info="Request all personal data we store according to GDPR"
+							name={t("settings.account.sections.requestAccountData.name")}
+							info={t("settings.account.sections.requestAccountData.info")}
 							className="mt-10"
 						>
 							<p
 								className="underline cursor-pointer"
 								onClick={requestAccountData}
 							>
-								Request
+								{t("settings.account.sections.requestAccountData.action")}
 							</p>
 						</Section>
 						<Section
-							name="Request account deletion"
-							info="Request deletion of your account. We will send you a confirmation email"
+							name={t("settings.account.sections.requestAccountDeletion.name")}
+							info={t("settings.account.sections.requestAccountDeletion.info")}
 							className="mt-10"
 						>
 							<p
 								className="underline cursor-pointer text-red-500"
 								onClick={requestAccountDeletion}
 							>
-								Delete
+								{t("settings.account.sections.requestAccountDeletion.action")}
 							</p>
 						</Section>
 						<div className="w-full h-20" />

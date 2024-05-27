@@ -71,6 +71,8 @@ export const TopBar = memo(() => {
 			await worker.emptyTrash()
 
 			setItems([])
+
+			eventEmitter.emit("refetchDrive")
 		} catch (e) {
 			console.error(e)
 

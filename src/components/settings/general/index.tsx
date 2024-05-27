@@ -244,8 +244,8 @@ export const General = memo(() => {
 				</div>
 				<div className="flex flex-col gap-4 mt-10">
 					<Section
-						name="Default note type"
-						info="Change the default note type"
+						name={t("settings.general.sections.defaultNoteType.name")}
+						info={t("settings.general.sections.defaultNoteType.info")}
 					>
 						<Select onValueChange={onDefaultNoteTypeChange}>
 							<SelectTrigger className="w-[180px]">
@@ -263,8 +263,8 @@ export const General = memo(() => {
 					{IS_DESKTOP && (
 						<>
 							<Section
-								name="Chat notifications"
-								info="Enable or disable chat notifications"
+								name={t("settings.general.sections.chatNotifications.name")}
+								info={t("settings.general.sections.chatNotifications.info")}
 							>
 								<Switch
 									checked={chatNotificationsEnabled}
@@ -272,8 +272,8 @@ export const General = memo(() => {
 								/>
 							</Section>
 							<Section
-								name="Contact notifications"
-								info="Enable or disable contact notifications"
+								name={t("settings.general.sections.contactNotifications.name")}
+								info={t("settings.general.sections.contactNotifications.info")}
 							>
 								<Switch
 									checked={contactNotificationsEnabled}
@@ -283,8 +283,8 @@ export const General = memo(() => {
 						</>
 					)}
 					<Section
-						name="Theme"
-						info="Change the app appearance"
+						name={t("settings.general.sections.theme.name")}
+						info={t("settings.general.sections.theme.info")}
 						className="mt-10"
 					>
 						<Select onValueChange={onThemeChange}>
@@ -299,8 +299,8 @@ export const General = memo(() => {
 						</Select>
 					</Section>
 					<Section
-						name="Language"
-						info="Change the app language"
+						name={t("settings.general.sections.language.name")}
+						info={t("settings.general.sections.language.info")}
 					>
 						<Select onValueChange={onLanguageChange}>
 							<SelectTrigger className="w-[180px]">
@@ -313,8 +313,8 @@ export const General = memo(() => {
 						</Select>
 					</Section>
 					<Section
-						name="Thumbnail cache"
-						info="Clear the thumbnail cache"
+						name={t("settings.general.sections.clearThumbnailCache.name")}
+						info={t("settings.general.sections.clearThumbnailCache.info")}
 						className="mt-10"
 					>
 						<p className="text-muted-foreground">{formatBytes(thumbnailCacheQuery.isSuccess ? thumbnailCacheQuery.data : 0)}</p>
@@ -322,19 +322,19 @@ export const General = memo(() => {
 							className="underline cursor-pointer text-red-500"
 							onClick={clearThumbnailCache}
 						>
-							Clear
+							{t("settings.general.sections.clearThumbnailCache.action")}
 						</p>
 					</Section>
 					<Section
-						name="Logout"
-						info="Logout"
+						name={t("settings.general.sections.logout.name")}
+						info={t("settings.general.sections.logout.info")}
 						className="mt-10"
 					>
 						<p
 							className="underline cursor-pointer text-red-500"
 							onClick={logout}
 						>
-							Logout
+							{t("settings.general.sections.logout.action")}
 						</p>
 					</Section>
 					<div className="w-full h-20" />

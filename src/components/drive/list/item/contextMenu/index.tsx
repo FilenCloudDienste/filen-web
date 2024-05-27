@@ -157,7 +157,7 @@ export const ContextMenu = memo(
 					title: t("contextMenus.item.dialogs.trash.title"),
 					continueButtonText: t("contextMenus.item.dialogs.trash.continue"),
 					description: t("contextMenus.item.dialogs.trash.description", {
-						item: item.name
+						name: item.name
 					}),
 					continueButtonVariant: "destructive"
 				}))
@@ -194,7 +194,7 @@ export const ContextMenu = memo(
 					title: t("contextMenus.item.dialogs.deletePermanently.title"),
 					continueButtonText: t("contextMenus.item.dialogs.deletePermanently.continue"),
 					description: t("contextMenus.item.dialogs.deletePermanently.description", {
-						item: item.name
+						name: item.name
 					}),
 					continueButtonVariant: "destructive"
 				}))
