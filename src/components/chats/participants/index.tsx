@@ -188,7 +188,7 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 								</div>
 							</TooltipTrigger>
 							<TooltipContent side="left">
-								<p>{t("innerSideBar.notes.createNote")}</p>
+								<p>{t("chats.addParticipants")}</p>
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>

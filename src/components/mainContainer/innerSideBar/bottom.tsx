@@ -58,7 +58,7 @@ export const Bottom = memo(() => {
 									</Link>
 								</TooltipTrigger>
 								<TooltipContent side="top">
-									<p>{t("innerSideBar.notes.createNote")}</p>
+									<p>{t("innerSideBar.bottom.settings")}</p>
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>

@@ -139,7 +139,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 							</div>
 						</TooltipTrigger>
 						<TooltipContent side="left">
-							<p>{t("innerSideBar.notes.createNote")}</p>
+							<p>{conversationParticipantsContainerOpen ? t("chats.hideParticipants") : t("chats.showParticipants")}</p>
 						</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>
@@ -155,7 +155,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 							</div>
 						</TooltipTrigger>
 						<TooltipContent side="left">
-							<p>{t("innerSideBar.notes.createNote")}</p>
+							<p>{t("chats.addParticipants")}</p>
 						</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>

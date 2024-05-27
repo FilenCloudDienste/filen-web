@@ -195,7 +195,7 @@ export const Contact = memo(
 										</div>
 									</TooltipTrigger>
 									<TooltipContent side="top">
-										<p>{t("innerSideBar.notes.createNote")}</p>
+										<p>{t("contacts.openChat")}</p>
 									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
@@ -210,7 +210,7 @@ export const Contact = memo(
 										</div>
 									</TooltipTrigger>
 									<TooltipContent side="top">
-										<p>{t("innerSideBar.notes.createNote")}</p>
+										<p>{t("contacts.more")}</p>
 									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>

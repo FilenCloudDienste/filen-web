@@ -84,6 +84,9 @@
 			"contacts": "Contacts",
 			"syncs": "Syncs"
 		},
+		"bottom": {
+			"settings": "Settings"
+		},
 		"notes": {
 			"search": "Search...",
 			"tags": {
@@ -341,6 +344,9 @@
 		"newMessagesSince": "{{count}} new messages since {{since}}",
 		"markAsRead": "Mark as read",
 		"newMessageSince": "{{count}} new message since {{since}}",
+		"showParticipants": "Show participants",
+		"hideParticipants": "Hide participants",
+		"addParticipants": "Add participants",
 		"message": {
 			"time": {
 				"now": "Now",
@@ -410,6 +416,8 @@
 		"addContact": "Add contact",
 		"search": "Search...",
 		"empty": "No contacts yet",
+		"openChat": "Open chat",
+		"more": "More",
 		"dialogs": {
 			"unblock": {
 				"title": "Unblock user",
