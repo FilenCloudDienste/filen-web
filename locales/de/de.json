@@ -1,27 +1,34 @@
 {
+	"cloudDrive": "Cloud Drive",
+	"new": "Neu",
+	"image": "Bild",
 	"login": {
-		"header": "Anmelden",
-		"description": "Geben Sie unten Ihre E-Mail und Ihr Passwort ein, um sich bei Ihrem Konto anzumelden",
+		"header": "Anmeldung",
+		"description": "Geben Sie unten Ihre E-Mail und Ihr Passwort ein, um sich anzumelden",
+		"useTwoFactorRecoveryKey": "Stattdessen Wiederherstellungsschlüssel verwenden",
 		"buttons": {
 			"login": "Anmelden",
-			"createAccount": "Ein Konto erstellen",
+			"createAccount": "Konto erstellen",
 			"forgotPassword": "Passwort vergessen?"
 		},
 		"placeholders": {
 			"normal": {
 				"email": "E-Mail-Adresse",
 				"password": "Passwort",
-				"2faCode": "2FA-Code"
+				"2faCode": "2FA-Code",
+				"2faRecoveryKey": "Wiederherstellungsschlüssel"
 			},
 			"example": {
 				"email": "ich@beispiel.com",
 				"password": "****************",
-				"2faCode": "381740"
+				"2faCode": "381740",
+				"2faRecoveryKey": "Wiederherstellungsschlüssel"
 			}
 		},
 		"alerts": {
 			"emailOrPasswordWrong": "E-Mail oder Passwort falsch",
-			"enter2FA": "Bitte geben Sie Ihren Zwei-Faktor-Authentifizierungscode ein"
+			"enter2FA": "Bitte geben Sie Ihren 2FA-Code ein",
+			"enter2FARecoveryKey": "Bitte geben Sie Ihren 2FA-Wiederherstellungsschlüssel ein"
 		}
 	},
 	"auth": {
@@ -34,48 +41,801 @@
 		"errors": {
 			"invalid_params": "Ungültige Parameter",
 			"internal_error": "Interner Fehler",
-			"rate_limited": "Begrenzungsrate überschritten"
+			"rate_limited": "Begrenzung erreicht"
 		}
 	},
 	"topbar": {
 		"placeholders": {
 			"normal": {
-				"search": "In diesem Ordner suchen..."
+				"search": "In diesem Verzeichnis suchen..."
 			},
 			"example": {
-				"search": "In diesem Ordner suchen..."
+				"search": "In diesem Verzeichnis suchen..."
 			}
 		}
 	},
 	"dropZone": {
-		"cta": "Hier hochladen"
+		"cta": "Hier hochladen",
+		"chatsCta": "Zum Chat hinzufügen"
 	},
 	"topBar": {
 		"breadcrumb": {
-			"cloudDrive": "Cloud-Speicher"
+			"cloudDrive": "Cloud Drive"
 		},
-		"searchInThisFolder": "In diesem Ordner suchen..."
+		"searchInThisFolder": "In diesem Verzeichnis suchen...",
+		"breadcrumbs": {
+			"recents": "Kürzlich",
+			"cloudDrive": "Cloud Drive",
+			"links": "Links",
+			"sharedWithMe": "Mit mir geteilt",
+			"sharedWithOthers": "Mit anderen geteilt",
+			"favorites": "Favoriten",
+			"trash": "Papierkorb",
+			"directory": "Verzeichnis"
+		},
+		"listView": "Listenansicht",
+		"gridView": "Rasteransicht"
 	},
 	"innerSideBar": {
-		"recents": "Zuletzt verwendet",
-		"cloudDrive": "Cloud-Speicher",
+		"top": {
+			"settings": "Einstellungen",
+			"notes": "Notizen",
+			"chats": "Chats",
+			"contacts": "Kontakte",
+			"syncs": "Synchronisationen"
+		},
+		"notes": {
+			"search": "Suchen...",
+			"tags": {
+				"all": "Alle",
+				"favorites": "Favoriten",
+				"pinned": "Angeheftet"
+			},
+			"createNote": "Notiz erstellen",
+			"createTag": "Tag erstellen",
+			"empty": "Noch keine Notizen"
+		},
+		"chats": {
+			"empty": "Noch keine Chats",
+			"search": "Suchen...",
+			"createChat": "Chat erstellen"
+		},
+		"recents": "Kürzlich",
+		"cloudDrive": "Cloud Drive",
 		"links": "Links",
 		"sharedWithMe": "Mit mir geteilt",
 		"sharedWithOthers": "Mit anderen geteilt",
 		"favorites": "Favoriten",
-		"trash": "Papierkorb"
+		"trash": "Papierkorb",
+		"settings": {
+			"general": "Allgemein",
+			"invoices": "Rechnungen",
+			"subscriptions": "Abonnements",
+			"account": "Konto",
+			"events": "Ereignisse",
+			"security": "Sicherheit",
+			"invite": "Einladen",
+			"plans": "Pläne"
+		},
+		"contacts": {
+			"online": "Online",
+			"offline": "Offline",
+			"all": "Alle",
+			"blocked": "Blockiert",
+			"in": "Anfragen",
+			"out": "Ausstehend"
+		}
 	},
 	"sideBar": {
-		"cloudDrive": "Cloud-Speicher",
+		"cloudDrive": "Cloud Drive",
 		"transfers": "Übertragungen",
 		"notes": "Notizen",
 		"chats": "Chats",
 		"contacts": "Kontakte",
-		"settings": "Einstellungen"
+		"settings": "Einstellungen",
+		"syncs": "Synchronisationen",
+		"mounts": "Laufwerke",
+		"terminal": "Terminal"
 	},
 	"dialogs": {
-		"confirm": {
-			"cancel": "Abbrechen"
+		"cancel": "Abbrechen",
+		"selectDriveItem": {
+			"title": "Auswählen",
+			"submit": "Auswählen",
+			"newFolder": "Neues Verzeichnis",
+			"empty": "Noch keine Dateien oder Verzeichnisse hochgeladen"
+		},
+		"selectContacts": {
+			"title": "Kontakte auswählen",
+			"submit": "Auswählen",
+			"empty": "Noch keine Kontakte"
+		},
+		"publicLink": {
+			"title": "Öffentlicher Link",
+			"description": "Einen öffentlichen Link erstellen",
+			"close": "Schließen",
+			"save": "Speichern",
+			"enabled": "Aktiviert",
+			"downloadButton": "Download-Button",
+			"link": "Link",
+			"copyLink": "Kopieren",
+			"expiresAfter": "Läuft ab nach",
+			"password": "Passwort (leer lassen zum Deaktivieren)",
+			"passwordPlaceholder": "Passwort"
+		},
+		"sharedWith": {
+			"title": "Geteilt mit",
+			"add": "Hinzufügen",
+			"close": "Schließen",
+			"remove": "Entfernen",
+			"stopSharing": {
+				"title": "Teilen beenden",
+				"description": "Sind Sie sicher, dass Sie das Teilen von {{item}} mit {{name}} beenden möchten?",
+				"continue": "Teilen beenden"
+			}
+		},
+		"changeEmail": {
+			"title": "Ihre E-Mail-Adresse ändern",
+			"newEmail": "Neue E-Mail-Adresse",
+			"newEmailPlaceholder": "Neue E-Mail",
+			"confirmNewEmail": "Neue E-Mail-Adresse bestätigen",
+			"confirmNewEmailPlaceholder": "Neue E-Mail bestätigen",
+			"password": "Ihr Passwort",
+			"passwordPlaceholder": "Passwort",
+			"close": "Schließen",
+			"save": "Speichern",
+			"successToast": "E-Mail-Adresse erfolgreich geändert"
+		},
+		"changePassword": {
+			"title": "Ihr Passwort ändern",
+			"newPassword": "Neues Passwort",
+			"newPasswordPlaceholder": "Neues Passwort",
+			"confirmNewPassword": "Neues Passwort bestätigen",
+			"confirmNewPasswordPlaceholder": "Neues Passwort bestätigen",
+			"currentPassword": "Ihr aktuelles Passwort",
+			"currentPasswordPlaceholder": "Aktuelles Passwort",
+			"close": "Schließen",
+			"save": "Speichern",
+			"successToast": "Passwort erfolgreich geändert"
+		},
+		"personalInformation": {
+			"title": "Persönliche Informationen ändern",
+			"firstName": "Vorname",
+			"lastName": "Nachname",
+			"close": "Schließen",
+			"save": "Speichern",
+			"companyName": "Firmenname",
+			"vatId": "USt-IdNr",
+			"street": "Straße",
+			"streetNumber": "Hausnummer",
+			"city": "Stadt",
+			"postalCode": "Postleitzahl",
+			"country": "Land"
+		},
+		"twoFactorCode": {
+			"useRecoveryKey": "Stattdessen Wiederherstellungsschlüssel verwenden",
+			"recoveryKeyPlaceholder": "Wiederherstellungsschlüssel",
+			"title": "Zwei-Faktor-Authentifizierung",
+			"continue": "Fortsetzen",
+			"info": "Bitte geben Sie Ihren Zwei-Faktor-Authentifizierungscode ein"
+		},
+		"noteParticipants": {
+			"remove": "Entfernen",
+			"toggleReadPermissions": "Leseberechtigungen ändern",
+			"toggleWritePermissions": "Schreibberechtigungen ändern",
+			"title": "Teilnehmer",
+			"close": "Schließen"
+		},
+		"fileVersions": {
+			"title": "Dateiversionen",
+			"delete": {
+				"title": "Dateiversion löschen",
+				"description": "Sind Sie sicher, dass Sie {{name}} endgültig löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschen"
+			}
+		},
+		"noteHistory": {
+			"empty": "Noch keine vorherigen Notizversionen"
+		},
+		"previewDialog": {
+			"save": "Speichern"
+		},
+		"transparentFullScreenImage": {
+			"openOriginal": "Original öffnen"
+		}
+	},
+	"contextMenus": {
+		"item": {
+			"download": "Herunterladen",
+			"publicLink": "Öffentlicher Link",
+			"share": "Teilen",
+			"versions": "Versionen",
+			"favorite": "Zu Favoriten",
+			"unfavorite": "Aus Favoriten entfernen",
+			"rename": "Umbenennen",
+			"move": "Verschieben",
+			"trash": "In den Papierkorb legen",
+			"restore": "Wiederherstellen",
+			"preview": "Vorschau",
+			"edit": "Bearbeiten",
+			"remove": "Entfernen",
+			"stopSharing": "Teilen beenden",
+			"selectDestination": "Ziel auswählen",
+			"cloudDrive": "Cloud Drive",
+			"open": "Öffnen",
+			"color": "Farbe",
+			"deletePermanently": "Endgültig löschen",
+			"dialogs": {
+				"trash": {
+					"title": "Papierkorb",
+					"description": "Sind Sie sicher, dass Sie {{name}} in den Papierkorb verschieben möchten? Sie können es später wiederherstellen.",
+					"continue": "In den Papierkorb legen"
+				},
+				"deletePermanently": {
+					"title": "Endgültig löschen",
+					"description": "Sind Sie sicher, dass Sie {{name}} endgültig löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!.",
+					"continue": "Löschen"
+				}
+			}
+		},
+		"drive": {
+			"uploadFiles": "Dateien hochladen",
+			"uploadFolders": "Verzeichnisse hochladen",
+			"newTextFile": "Neue Textdatei",
+			"newFolder": "Neues Verzeichnis"
+		},
+		"notes": {
+			"history": "Verlauf",
+			"participants": "Teilnehmer",
+			"type": "Typ",
+			"pin": "Anheften",
+			"unpin": "Losheften",
+			"favorite": "Zu Favoriten",
+			"unfavorite": "Aus Favoriten entfernen",
+			"duplicate": "Duplizieren",
+			"export": "Exportieren",
+			"exportAll": "Alles exportieren",
+			"archive": "Archivieren",
+			"restore": "Wiederherstellen",
+			"trash": "In den Papierkorb legen",
+			"delete": "Löschen",
+			"rename": "Umbenennen",
+			"tags": "Tags",
+			"types": {
+				"md": "Markdown",
+				"rich": "Rich-Text",
+				"text": "Text",
+				"checklist": "Checkliste",
+				"code": "Code"
+			}
+		},
+		"contacts": {
+			"profile": "Profil",
+			"remove": "Entfernen",
+			"block": "Blockieren"
+		},
+		"chat": {
+			"input": {
+				"selectFromDrive": "Aus dem Laufwerk wählen",
+				"attachFiles": "Dateien anhängen"
+			}
+		}
+	},
+	"transfers": {
+		"title": "Übertragungen",
+		"remaining": "Verbleibende Zeit: {{time}}",
+		"noActiveTransfers": "Keine aktiven Übertragungen",
+		"state": {
+			"finished": "Fertig",
+			"queued": "In Warteschlange",
+			"started": "Gestartet",
+			"error": "Fehler",
+			"stopped": "Gestoppt",
+			"paused": "Pausiert"
+		},
+		"pause": "Pausieren",
+		"resume": "Fortsetzen",
+		"stop": "Stoppen"
+	},
+	"chats": {
+		"newMessagesSince": "{{count}} neue Nachrichten seit {{since}}",
+		"markAsRead": "Als gelesen markieren",
+		"newMessageSince": "{{count}} neue Nachricht seit {{since}}",
+		"message": {
+			"time": {
+				"now": "Jetzt",
+				"secondAgo": "vor {{seconds}} Sekunde",
+				"secondsAgo": "vor {{seconds}} Sekunden",
+				"minuteAgo": "vor {{minutes}} Minute",
+				"minutesAgo": "vor {{minutes}} Minuten",
+				"hourAgo": "vor {{hours}} Stunde",
+				"hoursAgo": "vor {{hours}} Stunden",
+				"todayAt": "Heute um {{date}}",
+				"yesterdayAt": "Gestern um {{date}}"
+			},
+			"edited": "Bearbeitet",
+			"reply": "Antworten",
+			"delete": "Löschen",
+			"edit": "Bearbeiten",
+			"copyId": "ID kopieren",
+			"copyText": "Text kopieren",
+			"leave": "Verlassen"
+		},
+		"input": {
+			"placeholder": "Eine Nachricht senden...",
+			"typing": "schreibt...",
+			"typingMultiple": "schreiben...",
+			"replyingTo": "Antwortet auf"
+		},
+		"dialogs": {
+			"deleteMessage": {
+				"title": "Nachricht löschen",
+				"description": "Sind Sie sicher, dass Sie diese Nachricht löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschen"
+			},
+			"removeParticipant": {
+				"title": "Teilnehmer entfernen",
+				"description": "Sind Sie sicher, dass Sie {{name}} aus diesem Chat entfernen möchten?",
+				"continue": "Entfernen"
+			},
+			"deleteConversation": {
+				"title": "Chat löschen",
+				"description": "Sind Sie sicher, dass Sie diesen Chat löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschen"
+			},
+			"leaveConversation": {
+				"title": "Chat verlassen",
+				"description": "Sind Sie sicher, dass Sie diesen Chat verlassen möchten?",
+				"continue": "Verlassen"
+			},
+			"editName": {
+				"title": "Namen ändern",
+				"placeholder": "Neuer Name",
+				"continue": "Speichern"
+			}
+		},
+		"embeds": {
+			"og": {
+				"noTitleAvailable": "Kein Titel verfügbar",
+				"noDescriptionAvailable": "Keine Beschreibung verfügbar",
+				"noImageAvailable": "Kein Bild verfügbar"
+			}
+		},
+		"participants": {
+			"profile": "Profil",
+			"remove": "Entfernen"
+		}
+	},
+	"contacts": {
+		"addContact": "Kontakt hinzufügen",
+		"search": "Suchen...",
+		"empty": "Noch keine Kontakte",
+		"dialogs": {
+			"unblock": {
+				"title": "Benutzer entsperren",
+				"description": "Sind Sie sicher, dass Sie {{name}} entsperren möchten?",
+				"continue": "Entsperren"
+			},
+			"remove": {
+				"title": "Kontakt entfernen",
+				"description": "Sind Sie sicher, dass Sie {{name}} aus Ihren Kontakten entfernen möchten?",
+				"continue": "Entfernen"
+			},
+			"block": {
+				"title": "Benutzer blockieren",
+				"description": "Sind Sie sicher, dass Sie {{name}} blockieren möchten?",
+				"continue": "Blockieren"
+			},
+			"sendRequest": {
+				"title": "Kontaktanfrage senden",
+				"placeholder": "E-Mail-Adresse eines Filen-Benutzers",
+				"continue": "Senden"
+			}
+		}
+	},
+	"settings": {
+		"dialogs": {
+			"deleteVersions": {
+				"title": "Dateiversionen löschen",
+				"description": "Sind Sie sicher, dass Sie alle Dateiversionen löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschen"
+			},
+			"deleteAll": {
+				"title": "Alle Dateien und Verzeichnisse löschen",
+				"description": "Sind Sie sicher, dass Sie alle Dateien und Verzeichnisse löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschen"
+			},
+			"deleteAll2": {
+				"title": "Alle Dateien und Verzeichnisse löschen",
+				"description": "Sind Sie wirklich sicher? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschen"
+			},
+			"deleteAll3": {
+				"title": "Alle Dateien und Verzeichnisse löschen",
+				"description": "Sind Sie 100% sicher? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschen"
+			},
+			"requestAccountDeletion": {
+				"title": "Kontolöschung",
+				"description": "Sind Sie sicher, dass Sie Ihr Konto und alle damit verbundenen Daten löschen möchten? Wir werden Ihnen eine Bestätigungs-E-Mail senden. Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschung beantragen"
+			},
+			"logout": {
+				"title": "Abmelden",
+				"description": "Sind Sie sicher, dass Sie sich abmelden möchten?",
+				"continue": "Abmelden"
+			},
+			"clearThumbnailCache": {
+				"title": "Thumbnail-Cache leeren",
+				"description": "Sind Sie sicher, dass Sie den lokalen Thumbnail-Cache leeren möchten? Dadurch wird Speicherplatz freigegeben, aber Bildvorschauen müssen bei Bedarf erneut generiert werden.",
+				"continue": "Leeren"
+			},
+			"cancelSubscription": {
+				"title": "Abonnement kündigen",
+				"description": "Sind Sie sicher, dass Sie Ihr Abonnement kündigen möchten?",
+				"continue": "Kündigen"
+			},
+			"nickName": {
+				"title": "Spitzname bearbeiten",
+				"placeholder": "Neuer Spitzname",
+				"continue": "Speichern"
+			}
+		},
+		"general": {
+			"storageUsed": "Speicher verwendet",
+			"files": "Dateien {{size}}",
+			"versionedFiles": "Versionierte Dateien {{size}}",
+			"free": "Frei {{size}}",
+			"used": "{{used}} von {{max}} verwendet",
+			"dark": "Dunkel",
+			"light": "Hell",
+			"system": "System",
+			"noteType": {
+				"md": "Markdown",
+				"rich": "Rich-Text",
+				"text": "Text",
+				"checklist": "Checkliste",
+				"code": "Code"
+			},
+			"sections": {
+				"defaultNoteType": {
+					"name": "Standardnotiztyp",
+					"info": "Ändern Sie den Standardnotiztyp"
+				},
+				"chatNotifications": {
+					"name": "Chat-Benachrichtigungen",
+					"info": "Chat-Benachrichtigungen aktivieren oder deaktivieren"
+				},
+				"contactNotifications": {
+					"name": "Kontakt-Benachrichtigungen",
+					"info": "Kontakt-Benachrichtigungen aktivieren oder deaktivieren"
+				},
+				"theme": {
+					"name": "Design",
+					"info": "Erscheinungsbild der App ändern"
+				},
+				"language": {
+					"name": "Sprache",
+					"info": "Sprache der App ändern"
+				},
+				"clearThumbnailCache": {
+					"name": "Thumbnail-Cache",
+					"info": "Thumbnail-Cache leeren",
+					"action": "Leeren"
+				},
+				"logout": {
+					"name": "Abmelden",
+					"info": "Abmelden",
+					"action": "Abmelden"
+				}
+			}
+		},
+		"invite": {
+			"copy": "Kopieren",
+			"title": "Erhalten Sie bis zu 30 GB Speicher, indem Sie andere einladen",
+			"description": "Für jeden Freund, den Sie zu Filen einladen, erhalten Sie {{yourEarnings}} - und Ihr Freund erhält ebenfalls {{otherEarnings}}. So einfach ist das.",
+			"earned": "{{earned}} von {{max}}"
+		},
+		"events": {
+			"empty": "Noch keine Ereignisse",
+			"fileUploaded": "{{name}} hochgeladen",
+			"fileVersioned": "{{name}} versioniert",
+			"versionedFileRestored": "{{name}} aus Dateiversionen wiederhergestellt",
+			"fileMoved": "{{name}} verschoben",
+			"fileRenamed": "{{name}} umbenannt zu {{newName}}",
+			"fileTrash": "{{name}} in den Papierkorb verschoben",
+			"fileRm": "{{name}} gelöscht",
+			"fileRestored": "{{name}} aus dem Papierkorb wiederhergestellt",
+			"fileShared": "{{name}} mit {{email}} geteilt",
+			"fileLinkEdited": "Öffentlicher Link von {{name}} bearbeitet",
+			"folderTrash": "{{name}} in den Papierkorb verschoben",
+			"folderShared": "{{name}} mit {{email}} geteilt",
+			"folderMoved": "{{name}} verschoben",
+			"folderRenamed": "{{name}} umbenannt zu {{newName}}",
+			"subFolderCreated": "{{name}} erstellt",
+			"baseFolderCreated": "{{name}} erstellt",
+			"folderRestored": "{{name}} aus dem Papierkorb wiederhergestellt",
+			"folderColorChanged": "Farbe von {{name}} geändert",
+			"login": "Eingeloggt",
+			"deleteVersioned": "Versionierte Dateien gelöscht",
+			"deleteAll": "Alle Dateien und Verzeichnisse gelöscht",
+			"deleteUnfinished": "Unvollendete Uploads gelöscht",
+			"trashEmptied": "Papierkorb geleert",
+			"requestAccountDeletion": "Kontolöschung beantragt",
+			"2faEnabled": "Zwei-Faktor-Authentifizierung aktiviert",
+			"2faDisabled": "Zwei-Faktor-Authentifizierung deaktiviert",
+			"codeRedeemed": "Code {{code}} eingelöst",
+			"emailChanged": "E-Mail-Adresse geändert zu {{email}}",
+			"passwordChanged": "Passwort geändert",
+			"removedSharedInItems": "{{count}} freigegebene Elemente von {{email}} entfernt",
+			"removedSharedOutItems": "{{count}} freigegebene Elemente mit {{email}} entfernt",
+			"folderLinkEdited": "Verzeichnislink bearbeitet",
+			"itemFavoriteAdded": "{{name}} zu Favoriten hinzugefügt",
+			"itemFavoriteRemoved": "{{name}} aus Favoriten entfernt",
+			"failedLogin": "Fehlgeschlagener Login",
+			"deleteFolderPermanently": "{{name}} dauerhaft gelöscht",
+			"deleteFilePermanently": "{{name}} dauerhaft gelöscht",
+			"emailChangeAttempt": "E-Mail-Änderungsversuch aufgezeichnet"
+		},
+		"invoices": {
+			"plan": "Tarif",
+			"method": "Methode",
+			"date": "Datum",
+			"download": "Herunterladen",
+			"amount": "Betrag",
+			"paid": "Bezahlt",
+			"noInvoices": "Noch keine Rechnungen",
+			"paymentMethod": "Zahlungsmethode"
+		},
+		"subscriptions": {
+			"plan": "Tarif",
+			"method": "Methode",
+			"date": "Datum",
+			"download": "Herunterladen",
+			"amount": "Betrag",
+			"status": "Status",
+			"noSubscriptions": "Noch keine Abonnements",
+			"cancel": "Kündigen",
+			"storage": "Speicher",
+			"moreInfo": "Mehr Informationen zu Ihrem Abonnement",
+			"paymentMethod": "Zahlungsmethode",
+			"info": "{{storage}} Speicher mit unbegrenzten Uploads, Downloads, Notizen und Chats. Nutzen Sie das volle Potenzial von Filen.",
+			"statuses": {
+				"cancelled": "Storniert",
+				"active": "Aktiv",
+				"waiting": "Wartend"
+			}
+		},
+		"plans": {
+			"starter": "Starter",
+			"monthly": "Monatlich",
+			"annually": "Jährlich",
+			"lifetime": "Lebenslang",
+			"buyNow": "Jetzt kaufen",
+			"payInvoice": "Rechnung bezahlen"
+		},
+		"security": {
+			"sections": {
+				"password": {
+					"name": "Passwort",
+					"info": "Ändern Sie Ihr Passwort",
+					"action": "Ändern"
+				},
+				"twoFactorAuthentication": {
+					"name": "Zwei-Faktor-Authentifizierung",
+					"info": "Zwei-Faktor-Authentifizierung aktivieren oder deaktivieren"
+				},
+				"exportMasterKeys": {
+					"name": "Master-Schlüssel exportieren",
+					"info": "Exportieren Sie Ihre Master-Schlüssel, damit Sie Ihr Konto wiederherstellen können, falls Sie Ihr Passwort zurücksetzen müssen. Sie müssen Ihre Master-Schlüssel jedes Mal exportieren, wenn Sie Ihr Passwort ändern.",
+					"action": "Exportieren"
+				}
+			}
+		},
+		"account": {
+			"sections": {
+				"avatar": {
+					"name": "Avatar",
+					"info": "Ihr Avatar wird öffentlich sichtbar sein",
+					"action": "Bearbeiten"
+				},
+				"versionedFiles": {
+					"name": "Versionierte Dateien",
+					"info": "Alle versionierten Dateien löschen",
+					"action": "Löschen"
+				},
+				"all": {
+					"name": "Alle Dateien und Verzeichnisse",
+					"info": "Alle Dateien und Ordner löschen",
+					"action": "Löschen"
+				},
+				"email": {
+					"name": "E-Mail-Adresse",
+					"info": "Ändern Sie Ihre E-Mail-Adresse",
+					"action": "Ändern"
+				},
+				"nickName": {
+					"name": "Spitzname",
+					"info": "Ändern Sie Ihren Spitznamen",
+					"action": "Ändern"
+				},
+				"personalInformation": {
+					"name": "Persönliche Informationen",
+					"info": "Bearbeiten Sie Ihre persönlichen Informationen. Wird für Rechnungen verwendet und ist nicht öffentlich",
+					"action": "Bearbeiten"
+				},
+				"fileVersioning": {
+					"name": "Dateiversionierung",
+					"info": "Dateiversionierung aktivieren oder deaktivieren"
+				},
+				"loginAlerts": {
+					"name": "Login-Benachrichtigungen",
+					"info": "Login-Benachrichtigungen aktivieren oder deaktivieren"
+				},
+				"appearOffline": {
+					"name": "Offline erscheinen",
+					"info": "Offline in Chats erscheinen"
+				},
+				"requestAccountData": {
+					"name": "Anforderung von Kontodaten",
+					"info": "Fordern Sie alle personenbezogenen Daten an, die wir gemäß DSGVO speichern",
+					"action": "Anfordern"
+				},
+				"requestAccountDeletion": {
+					"name": "Kontolöschung anfordern",
+					"info": "Fordern Sie die Löschung Ihres Kontos an. Wir senden Ihnen eine Bestätigungs-E-Mail",
+					"action": "Anfordern"
+				}
+			}
+		}
+	},
+	"drive": {
+		"header": {
+			"name": "Name",
+			"size": "Größe",
+			"modified": "Geändert"
+		},
+		"list": {
+			"item": {
+				"sharedWith": "Geteilt mit {{count}}"
+			}
+		},
+		"dialogs": {
+			"createTextFile": {
+				"title": "Textdatei erstellen",
+				"placeholder": "Name",
+				"continue": "Erstellen"
+			},
+			"createDirectory": {
+				"title": "Verzeichnis erstellen",
+				"placeholder": "Name",
+				"continue": "Erstellen"
+			},
+			"rename": {
+				"title": "Umbenennen",
+				"placeholder": "Neuer Name",
+				"continue": "Umbenennen"
+			},
+			"share": {
+				"title": "Teilen",
+				"placeholder": "E-Mail-Adresse eines Filen-Benutzers",
+				"continue": "Teilen"
+			}
+		},
+		"emptyPlaceholder": {
+			"uploadFiles": "Dateien hochladen",
+			"search": {
+				"title": "Suche",
+				"info": "Nichts gefunden für \"{{search}}\""
+			},
+			"publicLink": {
+				"title": "Leeres Verzeichnis",
+				"info": "Der Besitzer dieses Verzeichnisses hat noch keine Dateien darin hochgeladen"
+			},
+			"drive": {
+				"title": "Noch keine Dateien oder Verzeichnisse hochgeladen",
+				"info": "Dateien oder Verzeichnisse hierher ziehen und ablegen oder die Schaltfläche unten drücken"
+			},
+			"trash": {
+				"title": "Noch nichts im Papierkorb",
+				"info": "Dateien und Verzeichnisse, die in den Papierkorb verschoben werden, erscheinen hier"
+			},
+			"recents": {
+				"title": "Noch keine Dateien hochgeladen",
+				"info": "Kürzlich hochgeladene Dateien werden hier angezeigt"
+			},
+			"links": {
+				"title": "Noch keine öffentlichen Links erstellt",
+				"info": "Öffentliche Links von Dateien und Verzeichnissen werden hier angezeigt"
+			},
+			"favorites": {
+				"title": "Noch nichts favorisiert",
+				"info": "Favorisierte Dateien und Verzeichnisse werden hier angezeigt"
+			},
+			"sharedIn": {
+				"title": "Noch nichts mit Ihnen geteilt",
+				"info": "Mit Ihnen geteilte Dateien und Verzeichnisse werden hier angezeigt"
+			},
+			"sharedOut": {
+				"title": "Noch nichts mit anderen geteilt",
+				"info": "Mit anderen geteilte Dateien und Verzeichnisse werden hier angezeigt"
+			}
+		}
+	},
+	"publicLink": {
+		"invalid": "Ungültiger öffentlicher Link",
+		"invalidInfo": "Dieser öffentliche Link ist entweder abgelaufen oder existiert nicht",
+		"back": "Zurück",
+		"directory": {
+			"downloadWholeDirectory": "Gesamtes Verzeichnis herunterladen"
+		}
+	},
+	"notes": {
+		"dialogs": {
+			"removeParticipant": {
+				"title": "Teilnehmer entfernen",
+				"description": "Sind Sie sicher, dass Sie {{name}} aus dieser Notiz entfernen möchten?",
+				"continue": "Entfernen"
+			},
+			"deleteNote": {
+				"title": "Notiz löschen",
+				"description": "Sind Sie sicher, dass Sie {{name}} löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschen"
+			},
+			"deleteTag": {
+				"title": "Tag löschen",
+				"description": "Sind Sie sicher, dass Sie {{name}} löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Löschen"
+			},
+			"renameTag": {
+				"title": "Umbenennen",
+				"placeholder": "Neuer Name",
+				"continue": "Umbenennen"
+			},
+			"createTag": {
+				"title": "Tag erstellen",
+				"placeholder": "Name",
+				"continue": "Erstellen"
+			},
+			"renameNote": {
+				"title": "Umbenennen",
+				"placeholder": "Neuer Name",
+				"continue": "Umbenennen"
+			}
+		}
+	},
+	"previewDialog": {
+		"unsavedChanges": {
+			"title": "Nicht gespeicherte Änderungen",
+			"description": "Sind Sie sicher, dass Sie ohne Speichern verlassen möchten? Alle Änderungen gehen verloren.",
+			"continue": "Schließen"
+		}
+	},
+	"sharedIn": {
+		"dialogs": {
+			"remove": {
+				"title": "Entfernen",
+				"description": "Sind Sie sicher, dass Sie {{item}} aus Ihren Freigaben entfernen möchten? Sie werden dann keinen Zugriff mehr darauf haben!",
+				"continue": "Entfernen"
+			}
+		}
+	},
+	"desktop": {
+		"dialogs": {
+			"close": {
+				"title": "Schließen",
+				"description": "Sind Sie sicher, dass Sie Filen verlassen möchten?",
+				"continue": "Beenden"
+			}
+		}
+	},
+	"trash": {
+		"dialogs": {
+			"empty": {
+				"title": "Papierkorb leeren",
+				"description": "Sind Sie sicher, dass Sie Ihren Papierkorb leeren möchten? Diese Aktion kann nicht rückgängig gemacht werden!",
+				"continue": "Leeren"
+			}
 		}
 	}
 }
