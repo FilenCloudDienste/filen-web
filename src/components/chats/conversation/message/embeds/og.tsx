@@ -25,7 +25,7 @@ export const OG = memo(
 					? ogData["meta:title"]
 					: typeof ogData["title"] === "string"
 						? ogData["title"]
-						: t("chat.embeds.og.noTitleAvailable")
+						: t("chats.embeds.og.noTitleAvailable")
 		).current
 
 		const description = useRef<string>(
@@ -35,7 +35,7 @@ export const OG = memo(
 					? ogData["meta:description"]
 					: typeof ogData["description"] === "string"
 						? ogData["description"]
-						: t("chat.embeds.og.noDescriptionAvailable")
+						: t("chats.embeds.og.noDescriptionAvailable")
 		).current
 
 		const image = useRef<string | null>(
@@ -69,7 +69,7 @@ export const OG = memo(
 					) : (
 						<div className="flex flex-row items-center justify-center bg-primary-foreground w-full h-[130px] mt-2 rounded-md shadow-sm">
 							<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">
-								{t("chat.embeds.og.noImageAvailable")}
+								{t("chats.embeds.og.noImageAvailable")}
 							</p>
 						</div>
 					)}

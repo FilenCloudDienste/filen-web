@@ -28,7 +28,9 @@ export const Empty = memo(() => {
 					/>
 				),
 				title: t("drive.emptyPlaceholder.search.title"),
-				info: t("drive.emptyPlaceholder.search.info"),
+				info: t("drive.emptyPlaceholder.search.info", {
+					search: searchTerm.length > 0 ? searchTerm : publicLinkSearchTerm
+				}),
 				uploadButton: canUpload
 			}
 		}

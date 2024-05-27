@@ -112,7 +112,7 @@ export const Events = memo(() => {
 							})
 						) : (
 							<div className="flex flex-row items-center justify-center p-4 w-full h-full">
-								<p className="text-muted-foreground">{t("setttings.events.empty")}</p>
+								<p className="text-muted-foreground">{t("settings.events.empty")}</p>
 							</div>
 						)}
 					</div>

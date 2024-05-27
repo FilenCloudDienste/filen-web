@@ -29,6 +29,8 @@ import { directoryColorToHex } from "@/assets/fileExtensionIcons"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
+import { showConfirmDialog } from "@/components/dialogs/confirm"
+import { showInputDialog } from "@/components/dialogs/input"
 
 export const ContextMenu = memo(
 	({ item, children, items }: { item: DriveCloudItem; children: React.ReactNode; items: DriveCloudItem[] }) => {
@@ -150,6 +152,19 @@ export const ContextMenu = memo(
 				return
 			}
 
+			if (
+				!(await showConfirmDialog({
+					title: t("contextMenus.item.dialogs.trash.title"),
+					continueButtonText: t("contextMenus.item.dialogs.trash.continue"),
+					description: t("contextMenus.item.dialogs.trash.description", {
+						item: item.name
+					}),
+					continueButtonVariant: "destructive"
+				}))
+			) {
+				return
+			}
+
 			const toast = loadingToast()
 
 			try {
@@ -167,10 +182,23 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [selectedItems, setItems, loadingToast, errorToast])
+		}, [selectedItems, setItems, loadingToast, errorToast, t, item.name])
 
 		const deletePermanently = useCallback(async () => {
 			if (selectedItems.length === 0) {
+				return
+			}
+
+			if (
+				!(await showConfirmDialog({
+					title: t("contextMenus.item.dialogs.deletePermanently.title"),
+					continueButtonText: t("contextMenus.item.dialogs.deletePermanently.continue"),
+					description: t("contextMenus.item.dialogs.deletePermanently.description", {
+						item: item.name
+					}),
+					continueButtonVariant: "destructive"
+				}))
+			) {
 				return
 			}
 
@@ -191,7 +219,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [selectedItems, setItems, loadingToast, errorToast])
+		}, [selectedItems, setItems, loadingToast, errorToast, t, item.name])
 
 		const restore = useCallback(async () => {
 			if (selectedItems.length === 0) {
@@ -230,10 +258,26 @@ export const ContextMenu = memo(
 				return
 			}
 
+			const inputResponse = await showInputDialog({
+				title: t("drive.dialogs.rename.title"),
+				continueButtonText: t("drive.dialogs.rename.continue"),
+				value: item.name,
+				autoFocusInput: true,
+				placeholder: t("drive.dialogs.rename.placeholder"),
+				continueButtonVariant: "default"
+			})
+
+			if (inputResponse.cancelled || inputResponse.value.toLowerCase() === item.name.toLowerCase()) {
+				return item.name
+			}
+
 			const toast = loadingToast()
 
 			try {
-				const newName = await actions.rename({ item })
+				const newName = await actions.rename({
+					item,
+					newName: inputResponse.value.trim()
+				})
 
 				setItems(prev => prev.map(prevItem => (prevItem.uuid === item.uuid ? { ...prevItem, name: newName } : prevItem)))
 			} catch (e) {
@@ -243,7 +287,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [selectedItems, setItems, loadingToast, errorToast])
+		}, [selectedItems, setItems, loadingToast, errorToast, t])
 
 		const toggleFavorite = useCallback(
 			async (favorite: boolean) => {
@@ -256,7 +300,10 @@ export const ContextMenu = memo(
 				try {
 					const uuids = selectedItems.map(item => item.uuid)
 
-					await actions.favorite({ selectedItems, favorite })
+					await actions.favorite({
+						selectedItems,
+						favorite
+					})
 
 					if (location.includes("favorites") && !favorite) {
 						setItems(prev => prev.filter(prevItem => !uuids.includes(prevItem.uuid)))
@@ -281,10 +328,26 @@ export const ContextMenu = memo(
 				return
 			}
 
+			const inputResponse = await showInputDialog({
+				title: t("drive.dialogs.share.title"),
+				continueButtonText: t("drive.dialogs.share.continue"),
+				value: "",
+				autoFocusInput: true,
+				placeholder: t("drive.dialogs.share.placeholder"),
+				continueButtonVariant: "default"
+			})
+
+			if (inputResponse.cancelled) {
+				return
+			}
+
 			const toast = loadingToast()
 
 			try {
-				await actions.share({ selectedItems })
+				await actions.share({
+					selectedItems,
+					receiverEmail: inputResponse.value.trim()
+				})
 			} catch (e) {
 				console.error(e)
 
@@ -292,7 +355,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [selectedItems, loadingToast, errorToast])
+		}, [selectedItems, loadingToast, errorToast, t])
 
 		const changeColor = useDebouncedCallback(async (color: string) => {
 			if (selectedItems.length !== 1 || !selectedItems[0]) {

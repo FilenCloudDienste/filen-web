@@ -25,11 +25,12 @@ export const Tags = memo(() => {
 	const createTag = useCallback(async () => {
 		try {
 			const inputResponse = await showInputDialog({
-				title: "createtag",
-				continueButtonText: "create",
+				title: t("notes.dialogs.createTag.title"),
+				continueButtonText: t("notes.dialogs.createTag.continue"),
 				value: "",
 				autoFocusInput: true,
-				placeholder: "tag name"
+				placeholder: t("notes.dialogs.createTag.placeholder"),
+				continueButtonVariant: "default"
 			})
 
 			if (inputResponse.cancelled || ["all", "favorites", "pinned"].includes(inputResponse.value.toLowerCase().trim())) {
@@ -41,7 +42,7 @@ export const Tags = memo(() => {
 		} catch (e) {
 			console.error(e)
 		}
-	}, [query])
+	}, [query, t])
 
 	return (
 		<div className="flex flex-row w-full h-auto p-4 flex-wrap gap-2">

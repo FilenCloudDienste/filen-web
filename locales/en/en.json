@@ -1,5 +1,7 @@
 {
 	"cloudDrive": "Cloud Drive",
+	"new": "New",
+	"image": "Image",
 	"login": {
 		"header": "Login",
 		"description": "Enter you email and password below to login to your account",
@@ -45,10 +47,10 @@
 	"topbar": {
 		"placeholders": {
 			"normal": {
-				"search": "Search in this folder..."
+				"search": "Search in this directory..."
 			},
 			"example": {
-				"search": "Search in this folder..."
+				"search": "Search in this directory..."
 			}
 		}
 	},
@@ -60,7 +62,7 @@
 		"breadcrumb": {
 			"cloudDrive": "Cloud Drive"
 		},
-		"searchInThisFolder": "Search in this folder...",
+		"searchInThisFolder": "Search in this directory...",
 		"breadcrumbs": {
 			"recents": "Recents",
 			"cloudDrive": "Cloud Drive",
@@ -70,7 +72,9 @@
 			"favorites": "Favorites",
 			"trash": "Trash",
 			"directory": "Directory"
-		}
+		},
+		"listView": "List view",
+		"gridView": "Grid view"
 	},
 	"innerSideBar": {
 		"top": {
@@ -88,7 +92,13 @@
 				"pinned": "Pinned"
 			},
 			"createNote": "Create note",
-			"createTag": "Create tag"
+			"createTag": "Create tag",
+			"empty": "No notes yet"
+		},
+		"chats": {
+			"empty": "No chats yet",
+			"search": "Search...",
+			"createChat": "Create chat"
 		},
 		"recents": "Recents",
 		"cloudDrive": "Cloud Drive",
@@ -132,7 +142,13 @@
 		"selectDriveItem": {
 			"title": "Select",
 			"submit": "Select",
-			"newFolder": "New folder"
+			"newFolder": "New directory",
+			"empty": "No files or directories uploaded yet"
+		},
+		"selectContacts": {
+			"title": "Select contacts",
+			"submit": "Select",
+			"empty": "No contacts yet"
 		},
 		"publicLink": {
 			"title": "Public link",
@@ -151,7 +167,12 @@
 			"title": "Shared with",
 			"add": "Add",
 			"close": "Close",
-			"remove": "Remove"
+			"remove": "Remove",
+			"stopSharing": {
+				"title": "Stop sharing",
+				"description": "Are you sure you want to stop sharing {{item}} with {{name}}?",
+				"continue": "Stop sharing"
+			}
 		},
 		"changeEmail": {
 			"title": "Change your email address",
@@ -199,8 +220,25 @@
 			"remove": "Remove",
 			"toggleReadPermissions": "Change to read permissions",
 			"toggleWritePermissions": "Change to write permissions",
-			"title": "Note participants",
+			"title": "Participants",
 			"close": "Close"
+		},
+		"fileVersions": {
+			"title": "File versions",
+			"delete": {
+				"title": "Delete file version",
+				"description": "Are you sure you want to delete {{name}} permanently? This action cannot be undone!",
+				"continue": "Delete"
+			}
+		},
+		"noteHistory": {
+			"empty": "No previous note versions yet"
+		},
+		"previewDialog": {
+			"save": "Save"
+		},
+		"transparentFullScreenImage": {
+			"openOriginal": "Open original"
 		}
 	},
 	"contextMenus": {
@@ -223,13 +261,25 @@
 			"cloudDrive": "Cloud Drive",
 			"open": "Open",
 			"color": "Color",
-			"deletePermanently": "Delete permanently"
+			"deletePermanently": "Delete permanently",
+			"dialogs": {
+				"trash": {
+					"title": "Trash",
+					"description": "Are you sure you want to send {{name}} to the trash? You can always recover it afterwards.",
+					"continue": "Trash"
+				},
+				"deletePermanently": {
+					"title": "Delete permanently",
+					"description": "Are you sure you want to delete {{name}} permanently? This action cannot be undone!.",
+					"continue": "Delete"
+				}
+			}
 		},
 		"drive": {
 			"uploadFiles": "Upload files",
-			"uploadFolders": "Upload folders",
+			"uploadFolders": "Upload directories",
 			"newTextFile": "New text file",
-			"newFolder": "New folder"
+			"newFolder": "New directory"
 		},
 		"notes": {
 			"history": "History",
@@ -305,20 +355,129 @@
 			"delete": "Delete",
 			"edit": "Edit",
 			"copyId": "Copy ID",
-			"copyText": "Copy text"
+			"copyText": "Copy text",
+			"leave": "Leave"
 		},
 		"input": {
 			"placeholder": "Send a message...",
 			"typing": "is typing...",
 			"typingMultiple": "are typing...",
 			"replyingTo": "Replying to"
+		},
+		"dialogs": {
+			"deleteMessage": {
+				"title": "Delete message",
+				"description": "Are you sure you want to delete this message? This action cannot be undone!",
+				"continue": "Delete"
+			},
+			"removeParticipant": {
+				"title": "Remove participant",
+				"description": "Are you sure you want to remove {{name}} from this chat?",
+				"continue": "Remove"
+			},
+			"deleteConversation": {
+				"title": "Delete chat",
+				"description": "Are you sure you want to delete this chat? This action cannot be undone!",
+				"continue": "Delete"
+			},
+			"leaveConversation": {
+				"title": "Leave chat",
+				"description": "Are you sure you want to leave this chat?",
+				"continue": "Leave"
+			},
+			"editName": {
+				"title": "Edit name",
+				"placeholder": "New name",
+				"continue": "Save"
+			}
+		},
+		"embeds": {
+			"og": {
+				"noTitleAvailable": "No title available",
+				"noDescriptionAvailable": "No description available",
+				"noImageAvailable": "No image available"
+			}
+		},
+		"participants": {
+			"profile": "Profile",
+			"remove": "Remove"
 		}
 	},
 	"contacts": {
 		"addContact": "Add contact",
-		"search": "Search..."
+		"search": "Search...",
+		"empty": "No contacts yet",
+		"dialogs": {
+			"unblock": {
+				"title": "Unblock user",
+				"description": "Are you sure you want to unblock {{name}}?",
+				"continue": "Unblock"
+			},
+			"remove": {
+				"title": "Remove contact",
+				"description": "Are you sure you want to remove {{name}} from your contacts?",
+				"continue": "Remove"
+			},
+			"block": {
+				"title": "Block user",
+				"description": "Are you sure you want to block {{name}}?",
+				"continue": "Block"
+			},
+			"sendRequest": {
+				"title": "Send contact request",
+				"placeholder": "Email address of a Filen user",
+				"continue": "Send"
+			}
+		}
 	},
 	"settings": {
+		"dialogs": {
+			"deleteVersions": {
+				"title": "Delete file versions",
+				"description": "Are you sure you want to delete all file versions? This action cannot be undone!",
+				"continue": "Delete"
+			},
+			"deleteAll": {
+				"title": "Delete all files and directories",
+				"description": "Are you sure you want to delete all files and directories? This action cannot be undone!",
+				"continue": "Delete"
+			},
+			"deleteAll2": {
+				"title": "Delete all files and directories",
+				"description": "Are you really sure? This action cannot be undone!",
+				"continue": "Delete"
+			},
+			"deleteAll3": {
+				"title": "Delete all files and directories",
+				"description": "Are you 100% sure? This action cannot be undone!",
+				"continue": "Delete"
+			},
+			"requestAccountDeletion": {
+				"title": "Account deletion",
+				"description": "Are you sure you want to delete your account and all data associated with it? We will send you a confirmation email. This action cannot be undone!",
+				"continue": "Request deletion"
+			},
+			"logout": {
+				"title": "Logout",
+				"description": "Are you sure you want to logout?",
+				"continue": "Logout"
+			},
+			"clearThumbnailCache": {
+				"title": "Clear thumbnail cache",
+				"description": "Are you sure you want to clear the local thumbnail cache? This will free up local storage space, but image previews will need to be generated again when needed.",
+				"continue": "Clear"
+			},
+			"cancelSubscription": {
+				"title": "Cancel subscription",
+				"description": "Are you sure you want to cancel your subscription?",
+				"continue": "Cancel"
+			},
+			"nickName": {
+				"title": "Edit nickname",
+				"placeholder": "New nickname",
+				"continue": "Save"
+			}
+		},
 		"general": {
 			"storageUsed": "Storage used",
 			"files": "Files {{size}}",
@@ -343,6 +502,7 @@
 			"earned": "{{earned}} of {{max}}"
 		},
 		"events": {
+			"empty": "No events yet",
 			"fileUploaded": "{{name}} uploaded",
 			"fileVersioned": "{{name}} versioned",
 			"versionedFileRestored": "{{name}} restored from file versions",
@@ -363,7 +523,7 @@
 			"folderColorChanged": "Color of {{name}} changed",
 			"login": "Logged in",
 			"deleteVersioned": "Versioned files deleted",
-			"deleteAll": "All files and folders deleted",
+			"deleteAll": "All files and directories deleted",
 			"deleteUnfinished": "Unfinished uploads deleted",
 			"trashEmptied": "Trash emptied",
 			"requestAccountDeletion": "Requested account deletion",
@@ -374,7 +534,7 @@
 			"passwordChanged": "Password changed",
 			"removedSharedInItems": "{{count}} shared items from {{email}} removed",
 			"removedSharedOutItems": "{{count}} shared items with {{email}} removed",
-			"folderLinkEdited": "Edited a folder link",
+			"folderLinkEdited": "Edited a directory link",
 			"itemFavoriteAdded": "{{name}} added to favorites",
 			"itemFavoriteRemoved": "{{name}} removed from favorites",
 			"failedLogin": "Failed login",
@@ -429,6 +589,143 @@
 		"list": {
 			"item": {
 				"sharedWith": "Shared with {{count}}"
+			}
+		},
+		"dialogs": {
+			"createTextFile": {
+				"title": "Create text file",
+				"placeholder": "Name",
+				"continue": "Create"
+			},
+			"createDirectory": {
+				"title": "Create directory",
+				"placeholder": "Name",
+				"continue": "Create"
+			},
+			"rename": {
+				"title": "Rename",
+				"placeholder": "New name",
+				"continue": "Rename"
+			},
+			"share": {
+				"title": "Share",
+				"placeholder": "Email address of a Filen user",
+				"continue": "Share"
+			}
+		},
+		"emptyPlaceholder": {
+			"uploadFiles": "Upload files",
+			"search": {
+				"title": "Search",
+				"info": "Nothing found for \"{{search}}\""
+			},
+			"publicLink": {
+				"title": "Empty directory",
+				"info": "The owner of this directory has not uploaded any files into it yet"
+			},
+			"drive": {
+				"title": "No files or directories uploaded yet",
+				"info": "Drag and drop files or directories here or press the button below"
+			},
+			"trash": {
+				"title": "Nothing in the trash yet",
+				"info": "Files and directories sent to the trash will appear here"
+			},
+			"recents": {
+				"title": "No files uploaded yet",
+				"info": "Recently uploaded files will appear here"
+			},
+			"links": {
+				"title": "No public links created yet",
+				"info": "Public links of files and directories will appear here"
+			},
+			"favorites": {
+				"title": "Nothing favorited yet",
+				"info": "Favorites files and directories will appear here"
+			},
+			"sharedIn": {
+				"title": "Nothing shared with you yet",
+				"info": "Shared files and directories will appear here"
+			},
+			"sharedOut": {
+				"title": "Nothing shared with others yet",
+				"info": "Shared files and directories will appear here"
+			}
+		}
+	},
+	"publicLink": {
+		"invalid": "Invalid public link",
+		"invalidInfo": "This public link either expired or does not exist",
+		"back": "Go back",
+		"directory": {
+			"downloadWholeDirectory": "Download whole directory"
+		}
+	},
+	"notes": {
+		"dialogs": {
+			"removeParticipant": {
+				"title": "Remove participant",
+				"description": "Are you sure you want to remove {{name}} from this note?",
+				"continue": "Remove"
+			},
+			"deleteNote": {
+				"title": "Delete note",
+				"description": "Are you sure you want to delete {{name}}? This action cannot be undone!",
+				"continue": "Delete"
+			},
+			"deleteTag": {
+				"title": "Delete tag",
+				"description": "Are you sure you want to delete {{name}}? This action cannot be undone!",
+				"continue": "Delete"
+			},
+			"renameTag": {
+				"title": "Rename",
+				"placeholder": "New name",
+				"continue": "Rename"
+			},
+			"createTag": {
+				"title": "Create tag",
+				"placeholder": "Name",
+				"continue": "Create"
+			},
+			"renameNote": {
+				"title": "Rename",
+				"placeholder": "New name",
+				"continue": "Rename"
+			}
+		}
+	},
+	"previewDialog": {
+		"unsavedChanges": {
+			"title": "Unsaved changes",
+			"description": "Are you sure you want to exit without saving? All changes will be lost.",
+			"continue": "Close"
+		}
+	},
+	"sharedIn": {
+		"dialogs": {
+			"remove": {
+				"title": "Remove",
+				"description": "Are you sure you want to remove {{item}} from your shares? You will no longer be able to access it!",
+				"continue": "Remove"
+			}
+		}
+	},
+	"desktop": {
+		"dialogs": {
+			"close": {
+				"title": "Close",
+				"description": "Are you sure you want to exit Filen?",
+				"continue": "Exit"
+			}
+		}
+	},
+	"trash": {
+		"dialogs": {
+			"empty": {
+				"title": "Empty trash",
+				"description": "Are you sure you want to empty your trash? This action cannot be undone!",
+				"continue": "Empty"
 			}
 		}
 	}

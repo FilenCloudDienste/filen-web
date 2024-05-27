@@ -116,14 +116,14 @@ export const Chats = memo(() => {
 							</div>
 						</TooltipTrigger>
 						<TooltipContent side="left">
-							<p>{t("innerSideBar.notes.createChat")}</p>
+							<p>{t("innerSideBar.chats.createChat")}</p>
 						</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>
 			</div>
 			<div className="flex flex-row w-full h-auto px-4 pb-4">
 				<Input
-					placeholder={t("innerSideBar.notes.search")}
+					placeholder={t("innerSideBar.chats.search")}
 					value={search}
 					onChange={onChange}
 				/>

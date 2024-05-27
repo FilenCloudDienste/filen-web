@@ -3,10 +3,12 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import eventEmitter from "@/lib/eventEmitter"
 import { type DriveCloudItem } from "@/components/drive"
 import List from "./list"
+import { useTranslation } from "react-i18next"
 
 export const FileVersionsDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
 	const [item, setItem] = useState<DriveCloudItem | null>(null)
+	const { t } = useTranslation()
 
 	const onOpenChange = useCallback((openState: boolean) => {
 		setOpen(openState)
@@ -29,7 +31,7 @@ export const FileVersionsDialog = memo(() => {
 			onOpenChange={onOpenChange}
 		>
 			<DialogContent className="outline-none focus:outline-none active:outline-none hover:outline-none select-none">
-				<DialogTitle>File versions</DialogTitle>
+				<DialogTitle>{t("dialogs.fileVersions.title")}</DialogTitle>
 				{item && (
 					<div className="flex flex-col">
 						<List

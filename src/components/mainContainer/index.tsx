@@ -10,12 +10,15 @@ import useLocation from "@/hooks/useLocation"
 import useWindowSize from "@/hooks/useWindowSize"
 import { X, Maximize, Minus } from "lucide-react"
 import { showConfirmDialog } from "../dialogs/confirm"
+import { useTranslation } from "react-i18next"
 
 export const sidebarBasePx = 275
 export const sidebarMinPx = 275
 export const sidebarMaxPx = 500
 
 export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
+	const { t } = useTranslation()
+
 	const minimizeWindow = useCallback(() => {
 		window.desktopAPI.minimizeWindow().catch(console.error)
 	}, [])
@@ -24,22 +27,25 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 		window.desktopAPI.maximizeWindow().catch(console.error)
 	}, [])
 
-	const closeWindow = useCallback(async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-		if (!e.shiftKey) {
-			if (
-				!(await showConfirmDialog({
-					title: "d",
-					continueButtonText: "ddd",
-					description: "ookeoetrasher",
-					continueButtonVariant: "destructive"
-				}))
-			) {
-				return
+	const closeWindow = useCallback(
+		async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+			if (!e.shiftKey) {
+				if (
+					!(await showConfirmDialog({
+						title: t("desktop.dialogs.close.title"),
+						continueButtonText: t("desktop.dialogs.close.continue"),
+						description: t("desktop.dialogs.close.description"),
+						continueButtonVariant: "destructive"
+					}))
+				) {
+					return
+				}
 			}
-		}
 
-		window.desktopAPI.closeWindow().catch(console.error)
-	}, [])
+			window.desktopAPI.closeWindow().catch(console.error)
+		},
+		[t]
+	)
 
 	if (IS_DESKTOP) {
 		return (

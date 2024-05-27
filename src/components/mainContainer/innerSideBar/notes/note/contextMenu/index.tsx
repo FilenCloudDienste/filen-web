@@ -72,10 +72,12 @@ export const ContextMenu = memo(
 		const deleteNote = useCallback(async () => {
 			if (
 				!(await showConfirmDialog({
-					title: "delete",
-					continueButtonText: "delete",
-					continueButtonVariant: "destructive",
-					description: "delele"
+					title: t("notes.dialogs.deleteNote.title"),
+					continueButtonText: t("notes.dialogs.deleteNote.continue"),
+					description: t("notes.dialogs.deleteNote.description", {
+						name: note.title
+					}),
+					continueButtonVariant: "destructive"
 				}))
 			) {
 				return
@@ -88,7 +90,7 @@ export const ContextMenu = memo(
 
 				setNotes(prev => prev.filter(prevNote => prevNote.uuid !== note.uuid))
 
-				if (selectedNote?.uuid === note.uuid) {
+				if (selectedNote && selectedNote.uuid === note.uuid) {
 					const newSelectedNote = notes.filter(n => n.uuid !== note.uuid)
 
 					if (newSelectedNote.length >= 1 && newSelectedNote[0]) {
@@ -111,7 +113,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [note.uuid, setNotes, setSelectedNote, notes, navigate, selectedNote?.uuid, errorToast, loadingToast])
+		}, [note.uuid, setNotes, setSelectedNote, notes, navigate, selectedNote, errorToast, loadingToast, t, note.title])
 
 		const favorite = useCallback(async () => {
 			const toast = loadingToast()

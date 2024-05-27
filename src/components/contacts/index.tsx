@@ -132,11 +132,11 @@ export const Contacts = memo(() => {
 
 	const sendRequest = useCallback(async () => {
 		const inputResponse = await showInputDialog({
-			title: "newfolder",
-			continueButtonText: "create",
+			title: t("contacts.dialogs.sendRequest.title"),
+			continueButtonText: t("contacts.dialogs.sendRequest.continue"),
 			value: "",
 			autoFocusInput: true,
-			placeholder: "New folder"
+			placeholder: t("contacts.dialogs.sendRequest.placeholder")
 		})
 
 		if (inputResponse.cancelled) {
@@ -162,7 +162,7 @@ export const Contacts = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [refetch, errorToast, loadingToast, navigate])
+	}, [refetch, errorToast, loadingToast, navigate, t])
 
 	const contactsSorted = useMemo(() => {
 		if (!allQuery.isSuccess) {

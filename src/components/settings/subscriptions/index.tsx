@@ -32,9 +32,9 @@ export const Subscriptions = memo(() => {
 
 			if (
 				!(await showConfirmDialog({
-					title: "d",
-					continueButtonText: "ddd",
-					description: "ookeoetrasher",
+					title: t("settings.dialogs.cancelSubscription.title"),
+					continueButtonText: t("settings.dialogs.cancelSubscription.continue"),
+					description: t("settings.dialogs.cancelSubscription.description"),
 					continueButtonVariant: "destructive"
 				}))
 			) {
@@ -54,7 +54,7 @@ export const Subscriptions = memo(() => {
 				toast.dismiss()
 			}
 		},
-		[loadingToast, errorToast, account]
+		[loadingToast, errorToast, account, t]
 	)
 
 	if (!account) {

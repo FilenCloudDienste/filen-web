@@ -328,9 +328,11 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 			if (!e.shiftKey) {
 				if (
 					!(await showConfirmDialog({
-						title: "d",
-						continueButtonText: "ddd",
-						description: "ookeoetrasher",
+						title: t("sharedIn.dialogs.remove.title"),
+						continueButtonText: t("sharedIn.dialogs.remove.continue"),
+						description: t("sharedIn.dialogs.remove.description", {
+							item: item.name
+						}),
 						continueButtonVariant: "destructive"
 					}))
 				) {
@@ -354,7 +356,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 				toast.dismiss()
 			}
 		},
-		[errorToast, loadingToast, setItems, item.uuid, location, isInsidePublicLink]
+		[errorToast, loadingToast, setItems, item.uuid, location, isInsidePublicLink, t, item.name]
 	)
 
 	useMountedEffect(() => {

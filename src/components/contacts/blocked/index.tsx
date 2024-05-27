@@ -6,11 +6,13 @@ import worker from "@/lib/worker"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
+import { useTranslation } from "react-i18next"
 
 export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; refetch: () => Promise<void> }) => {
 	const [hovering, setHovering] = useState<boolean>(false)
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
+	const { t } = useTranslation()
 
 	const onMouseLeave = useCallback(() => {
 		setHovering(false)
@@ -23,9 +25,11 @@ export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; re
 	const unblock = useCallback(async () => {
 		if (
 			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
+				title: t("contacts.dialogs.unblock.title"),
+				continueButtonText: t("contacts.dialogs.unblock.continue"),
+				description: t("contacts.dialogs.unblock.description", {
+					name: blocked.nickName.length > 0 ? blocked.nickName : blocked.email
+				}),
 				continueButtonVariant: "destructive"
 			}))
 		) {
@@ -44,7 +48,7 @@ export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; re
 		} finally {
 			toast.dismiss()
 		}
-	}, [blocked.uuid, errorToast, loadingToast, refetch])
+	}, [blocked.uuid, errorToast, loadingToast, refetch, t, blocked.nickName, blocked.email])
 
 	return (
 		<div

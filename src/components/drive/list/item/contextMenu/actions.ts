@@ -1,8 +1,6 @@
 import { type DriveCloudItem } from "@/components/drive"
 import * as workerProxy from "@/lib/worker/proxy"
 import worker from "@/lib/worker"
-import { showConfirmDialog } from "@/components/dialogs/confirm"
-import { showInputDialog } from "@/components/dialogs/input"
 import { directoryUUIDToNameCache } from "@/cache"
 import { IS_DESKTOP } from "@/constants"
 
@@ -71,91 +69,73 @@ export async function download({ selectedItems, name }: { selectedItems: DriveCl
 }
 
 export async function move({ selectedItems, parent }: { selectedItems: DriveCloudItem[]; parent: string }): Promise<void> {
-	await worker.moveItems({ items: selectedItems, parent })
+	await worker.moveItems({
+		items: selectedItems,
+		parent
+	})
 }
 
 export async function trash({ selectedItems }: { selectedItems: DriveCloudItem[] }): Promise<boolean> {
-	if (
-		!(await showConfirmDialog({
-			title: "d",
-			continueButtonText: "ddd",
-			description: "ookeoetrasher",
-			continueButtonVariant: "destructive"
-		}))
-	) {
-		return false
-	}
-
-	await worker.trashItems({ items: selectedItems })
+	await worker.trashItems({
+		items: selectedItems
+	})
 
 	return true
 }
 
 export async function restore({ selectedItems }: { selectedItems: DriveCloudItem[] }): Promise<void> {
-	await worker.restoreItems({ items: selectedItems })
+	await worker.restoreItems({
+		items: selectedItems
+	})
 }
 
-export async function rename({ item }: { item: DriveCloudItem }): Promise<string> {
-	const inputResponse = await showInputDialog({
-		title: "rename",
-		continueButtonText: "rename",
-		continueButtonVariant: "default",
-		value: item.name,
-		autoFocusInput: true,
-		placeholder: item.name
+export async function rename({ item, newName }: { item: DriveCloudItem; newName: string }): Promise<string> {
+	await worker.renameItem({
+		item,
+		name: newName
 	})
 
-	if (inputResponse.cancelled || inputResponse.value.toLowerCase() === item.name.toLowerCase()) {
-		return item.name
-	}
-
-	await worker.renameItem({ item, name: inputResponse.value })
-
 	if (item.type === "directory") {
-		directoryUUIDToNameCache.set(item.uuid, inputResponse.value)
+		directoryUUIDToNameCache.set(item.uuid, newName)
 	}
 
-	return inputResponse.value
+	return newName
 }
 
 export async function deletePermanently({ selectedItems }: { selectedItems: DriveCloudItem[] }): Promise<boolean> {
-	if (
-		!(await showConfirmDialog({
-			title: "d",
-			continueButtonText: "perm deelete",
-			description: "perm",
-			continueButtonVariant: "destructive"
-		}))
-	) {
-		return false
-	}
-
-	await worker.deleteItemsPermanently({ items: selectedItems })
+	await worker.deleteItemsPermanently({
+		items: selectedItems
+	})
 
 	return true
 }
 
 export async function favorite({ selectedItems, favorite }: { selectedItems: DriveCloudItem[]; favorite: boolean }): Promise<void> {
-	await worker.favoriteItems({ items: selectedItems, favorite })
+	await worker.favoriteItems({
+		items: selectedItems,
+		favorite
+	})
 }
 
-export async function share({ selectedItems, requestUUID }: { selectedItems: DriveCloudItem[]; requestUUID?: string }): Promise<void> {
-	const inputResponse = await showInputDialog({
-		title: "share",
-		continueButtonText: "share",
-		continueButtonVariant: "default",
-		value: "",
-		autoFocusInput: true,
-		placeholder: "email"
+export async function share({
+	selectedItems,
+	requestUUID,
+	receiverEmail
+}: {
+	selectedItems: DriveCloudItem[]
+	requestUUID?: string
+	receiverEmail: string
+}): Promise<void> {
+	await worker.shareItemsToUser({
+		items: selectedItems,
+		receiverEmail,
+		requestUUID
 	})
-
-	if (inputResponse.cancelled) {
-		return
-	}
-
-	await worker.shareItemsToUser({ items: selectedItems, receiverEmail: inputResponse.value, requestUUID })
 }
 
 export async function changeColor({ uuid, color }: { uuid: string; color: string }): Promise<void> {
-	await worker.changeDirectoryColor({ uuid, color })
+	await worker.changeDirectoryColor({
+		uuid,
+		color
+	})
 }

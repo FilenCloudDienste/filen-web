@@ -35,9 +35,11 @@ export const Participant = memo(
 				if (!e.shiftKey) {
 					if (
 						!(await showConfirmDialog({
-							title: "d",
-							continueButtonText: "ddd",
-							description: "ookeoetrasher",
+							title: t("notes.dialogs.removeParticipant.title"),
+							continueButtonText: t("notes.dialogs.removeParticipant.continue"),
+							description: t("notes.dialogs.removeParticipant.description", {
+								name: participant.nickName.length > 0 ? participant.nickName : participant.email
+							}),
 							continueButtonVariant: "destructive"
 						}))
 					) {
@@ -64,7 +66,7 @@ export const Participant = memo(
 					toast.dismiss()
 				}
 			},
-			[errorToast, loadingToast, userId, participant.userId, note.uuid, setNote]
+			[errorToast, loadingToast, userId, participant.userId, note.uuid, setNote, t, participant.nickName, participant.email]
 		)
 
 		const togglePermissions = useCallback(async () => {

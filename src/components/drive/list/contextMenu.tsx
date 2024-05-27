@@ -25,13 +25,13 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 
-	const createFolder = useCallback(async () => {
+	const createDirectory = useCallback(async () => {
 		const inputResponse = await showInputDialog({
-			title: "newfolder",
-			continueButtonText: "create",
+			title: t("drive.dialogs.createDirectory.title"),
+			continueButtonText: t("drive.dialogs.createDirectory.continue"),
 			value: "",
 			autoFocusInput: true,
-			placeholder: "New folder"
+			placeholder: t("drive.dialogs.createDirectory.placeholder")
 		})
 
 		if (inputResponse.cancelled) {
@@ -56,15 +56,15 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 		} finally {
 			toast.dismiss()
 		}
-	}, [setItems, parent, loadingToast, errorToast])
+	}, [setItems, parent, loadingToast, errorToast, t])
 
 	useEffect(() => {
-		const createFolderTriggerListener = eventEmitter.on("createFolderTrigger", createFolder)
+		const createDirectoryTriggerListener = eventEmitter.on("createFolderTrigger", createDirectory)
 
 		return () => {
-			createFolderTriggerListener.remove()
+			createDirectoryTriggerListener.remove()
 		}
-	}, [createFolder])
+	}, [createDirectory])
 
 	if (!location.includes("drive")) {
 		return children
@@ -82,7 +82,7 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 			<ContextMenuContent className="min-w-52">
 				<ContextMenuItem
 					className="cursor-pointer"
-					onClick={createFolder}
+					onClick={createDirectory}
 				>
 					{t("contextMenus.drive.newFolder")}
 				</ContextMenuItem>

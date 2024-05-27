@@ -111,14 +111,14 @@ export const SelectDriveItemDialog = memo(() => {
 		setOpen(false)
 	}, [])
 
-	const createFolder = useCallback(async () => {
+	const createDirectory = useCallback(async () => {
 		try {
 			const inputResponse = await showInputDialog({
-				title: "newfolder",
-				continueButtonText: "create",
+				title: t("drive.dialogs.createDirectory.title"),
+				continueButtonText: t("drive.dialogs.createDirectory.continue"),
 				value: "",
 				autoFocusInput: true,
-				placeholder: "New folder"
+				placeholder: t("drive.dialogs.createDirectory.placeholder")
 			})
 
 			if (inputResponse.cancelled) {
@@ -142,7 +142,7 @@ export const SelectDriveItemDialog = memo(() => {
 		} catch (e) {
 			console.error(e)
 		}
-	}, [setItems, parent, routeParent])
+	}, [setItems, parent, routeParent, t])
 
 	useEffect(() => {
 		const listener = eventEmitter.on(
@@ -201,7 +201,7 @@ export const SelectDriveItemDialog = memo(() => {
 					{(selectionType === "directory" || selectionType === "all") && (
 						<p
 							className="text-muted-foreground underline cursor-pointer mr-1 text-sm"
-							onClick={createFolder}
+							onClick={createDirectory}
 						>
 							{t("dialogs.selectDriveItem.newFolder")}
 						</p>

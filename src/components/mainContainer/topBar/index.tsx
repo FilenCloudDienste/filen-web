@@ -56,9 +56,9 @@ export const TopBar = memo(() => {
 
 		if (
 			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
+				title: t("trash.dialogs.empty.title"),
+				continueButtonText: t("trash.dialogs.empty.continue"),
+				description: t("trash.dialogs.empty.description"),
 				continueButtonVariant: "destructive"
 			}))
 		) {
@@ -78,7 +78,7 @@ export const TopBar = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [loadingToast, errorToast, setItems, location])
+	}, [loadingToast, errorToast, setItems, location, t])
 
 	if (location.includes("settings") || location === "/notes" || location.includes("chats") || location.includes("contacts")) {
 		return null

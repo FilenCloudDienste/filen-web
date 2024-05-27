@@ -18,6 +18,7 @@ import ChangePersonalInformationDialog from "./dialogs/personalInformation"
 import useIsMobile from "@/hooks/useIsMobile"
 import { cn } from "@/lib/utils"
 import Skeletons from "../skeletons"
+import { useTranslation } from "react-i18next"
 
 export const Account = memo(() => {
 	const account = useAccount()
@@ -36,6 +37,7 @@ export const Account = memo(() => {
 				}
 	)
 	const lastUsageRef = useRef<number>(-1)
+	const { t } = useTranslation()
 
 	const requestAccountData = useCallback(async () => {
 		if (!account) {
@@ -80,20 +82,9 @@ export const Account = memo(() => {
 	const deleteVersioned = useCallback(async () => {
 		if (
 			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
-				continueButtonVariant: "destructive"
-			}))
-		) {
-			return
-		}
-
-		if (
-			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
+				title: t("settings.dialogs.deleteVersions.title"),
+				continueButtonText: t("settings.dialogs.deleteVersions.continue"),
+				description: t("settings.dialogs.deleteVersions.description"),
 				continueButtonVariant: "destructive"
 			}))
 		) {
@@ -116,14 +107,14 @@ export const Account = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [loadingToast, errorToast])
+	}, [loadingToast, errorToast, t])
 
 	const deleteAll = useCallback(async () => {
 		if (
 			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
+				title: t("settings.dialogs.deleteAll.title"),
+				continueButtonText: t("settings.dialogs.deleteAll.continue"),
+				description: t("settings.dialogs.deleteAll.description"),
 				continueButtonVariant: "destructive"
 			}))
 		) {
@@ -132,9 +123,9 @@ export const Account = memo(() => {
 
 		if (
 			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
+				title: t("settings.dialogs.deleteAll2.title"),
+				continueButtonText: t("settings.dialogs.deleteAll2.continue"),
+				description: t("settings.dialogs.deleteAll2.description"),
 				continueButtonVariant: "destructive"
 			}))
 		) {
@@ -143,9 +134,9 @@ export const Account = memo(() => {
 
 		if (
 			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
+				title: t("settings.dialogs.deleteAll3.title"),
+				continueButtonText: t("settings.dialogs.deleteAll3.continue"),
+				description: t("settings.dialogs.deleteAll3.description"),
 				continueButtonVariant: "destructive"
 			}))
 		) {
@@ -168,7 +159,7 @@ export const Account = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [loadingToast, errorToast])
+	}, [loadingToast, errorToast, t])
 
 	const onVersioningChange = useCallback(
 		async (checked: boolean) => {
@@ -243,20 +234,9 @@ export const Account = memo(() => {
 
 		if (
 			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
-				continueButtonVariant: "destructive"
-			}))
-		) {
-			return
-		}
-
-		if (
-			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
+				title: t("settings.dialogs.requestAccountDeletion.title"),
+				continueButtonText: t("settings.dialogs.requestAccountDeletion.continue"),
+				description: t("settings.dialogs.requestAccountDeletion.description"),
 				continueButtonVariant: "destructive"
 			}))
 		) {
@@ -291,7 +271,7 @@ export const Account = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [loadingToast, errorToast, account])
+	}, [loadingToast, errorToast, account, t])
 
 	const uploadAvatar = useCallback(
 		async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -333,11 +313,12 @@ export const Account = memo(() => {
 		}
 
 		const inputResponse = await showInputDialog({
-			title: "newfolder",
-			continueButtonText: "create",
+			title: t("settings.dialogs.nickName.title"),
+			continueButtonText: t("settings.dialogs.nickName.continue"),
 			value: account.account.nickName,
 			autoFocusInput: true,
-			placeholder: "New folder"
+			placeholder: t("settings.dialogs.nickName.placeholder"),
+			continueButtonVariant: "default"
 		})
 
 		if (inputResponse.cancelled) {
@@ -356,7 +337,7 @@ export const Account = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [loadingToast, errorToast, account])
+	}, [loadingToast, errorToast, account, t])
 
 	const changeEmail = useCallback(() => {
 		eventEmitter.emit("openChangeEmailDialog")

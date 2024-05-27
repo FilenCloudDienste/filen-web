@@ -40,9 +40,11 @@ export const ContextMenu = memo(
 		const remove = useCallback(async () => {
 			if (
 				!(await showConfirmDialog({
-					title: "d",
-					continueButtonText: "ddd",
-					description: "ookeoetrasher",
+					title: t("contacts.dialogs.remove.title"),
+					continueButtonText: t("contacts.dialogs.remove.continue"),
+					description: t("contacts.dialogs.remove.description", {
+						name: contact.nickName.length > 0 ? contact.nickName : contact.email
+					}),
 					continueButtonVariant: "destructive"
 				}))
 			) {
@@ -61,14 +63,16 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [contact.uuid, errorToast, loadingToast, refetch])
+		}, [contact.uuid, errorToast, loadingToast, refetch, t, contact.nickName, contact.email])
 
 		const block = useCallback(async () => {
 			if (
 				!(await showConfirmDialog({
-					title: "d",
-					continueButtonText: "ddd",
-					description: "ookeoetrasher",
+					title: t("contacts.dialogs.block.title"),
+					continueButtonText: t("contacts.dialogs.block.continue"),
+					description: t("contacts.dialogs.block.description", {
+						name: contact.nickName.length > 0 ? contact.nickName : contact.email
+					}),
 					continueButtonVariant: "destructive"
 				}))
 			) {
@@ -87,7 +91,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [contact.email, errorToast, loadingToast, refetch])
+		}, [contact.email, errorToast, loadingToast, refetch, t, contact.nickName])
 
 		return (
 			<CM onOpenChange={setHovering}>

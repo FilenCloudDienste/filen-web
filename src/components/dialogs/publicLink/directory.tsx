@@ -23,12 +23,14 @@ export const Directory = memo(
 		item,
 		setOpen,
 		saving,
-		setSaving
+		setSaving,
+		setShowSave
 	}: {
 		item: DriveCloudItem
 		setOpen: React.Dispatch<React.SetStateAction<boolean>>
 		saving: boolean
 		setSaving: React.Dispatch<React.SetStateAction<boolean>>
+		setShowSave: React.Dispatch<React.SetStateAction<boolean>>
 	}) => {
 		const { t } = useTranslation()
 		const loadingToast = useLoadingToast()
@@ -186,8 +188,9 @@ export const Directory = memo(
 				setExpiration(query.data.exists ? (query.data.expirationText as unknown as PublicLinkExpiration) : "never")
 				decryptLinkKey()
 				setDownloadBtn(query.data.exists ? query.data.downloadBtn === 1 : true)
+				setShowSave(query.data.exists)
 			}
-		}, [query.isSuccess, query.data, decryptLinkKey])
+		}, [query.isSuccess, query.data, decryptLinkKey, setShowSave])
 
 		useEffect(() => {
 			const savePublicLinkListener = eventEmitter.on("savePublicLink", () => {

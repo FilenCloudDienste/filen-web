@@ -35,9 +35,12 @@ export const Receiver = memo(
 				if (!e.shiftKey) {
 					if (
 						!(await showConfirmDialog({
-							title: "d",
-							continueButtonText: "ddd",
-							description: "ookeoetrasher",
+							title: t("dialogs.sharedWith.stopSharing.title"),
+							continueButtonText: t("dialogs.sharedWith.stopSharing.continue"),
+							description: t("dialogs.sharedWith.stopSharing.description", {
+								item: item.name,
+								name: receiver.email
+							}),
 							continueButtonVariant: "destructive"
 						}))
 					) {
@@ -75,7 +78,7 @@ export const Receiver = memo(
 					toast.dismiss()
 				}
 			},
-			[errorToast, loadingToast, item.uuid, receiver.id, setItem, location, setItems, setOpen]
+			[errorToast, loadingToast, item.uuid, receiver.id, setItem, location, setItems, setOpen, t, receiver.email, item.name]
 		)
 
 		return (

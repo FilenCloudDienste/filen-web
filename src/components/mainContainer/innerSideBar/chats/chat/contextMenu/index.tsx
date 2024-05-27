@@ -39,11 +39,11 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 
 	const editName = useCallback(async () => {
 		const inputResponse = await showInputDialog({
-			title: "name",
-			continueButtonText: "edit",
+			title: t("chats.dialogs.editName.title"),
+			continueButtonText: t("chats.dialogs.editName.continue"),
 			value: conversation.name ? conversation.name : "",
 			autoFocusInput: true,
-			placeholder: "Name"
+			placeholder: t("chats.dialogs.editName.placeholder")
 		})
 
 		if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {
@@ -66,7 +66,7 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		} finally {
 			toast.dismiss()
 		}
-	}, [conversation.uuid, errorToast, loadingToast, setConversations, setSelectedConversation, conversation.name])
+	}, [conversation.uuid, errorToast, loadingToast, setConversations, setSelectedConversation, conversation.name, t])
 
 	const copyId = useCallback(async () => {
 		try {
@@ -84,9 +84,9 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		if (
 			!hasWritePermissions ||
 			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
+				title: t("chats.dialogs.deleteConversation.title"),
+				continueButtonText: t("chats.dialogs.deleteConversation.continue"),
+				description: t("chats.dialogs.deleteConversation.description"),
 				continueButtonVariant: "destructive"
 			}))
 		) {
@@ -115,14 +115,24 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		} finally {
 			toast.dismiss()
 		}
-	}, [conversation.uuid, errorToast, loadingToast, setConversations, setSelectedConversation, hasWritePermissions, routeParent, navigate])
+	}, [
+		conversation.uuid,
+		errorToast,
+		loadingToast,
+		setConversations,
+		setSelectedConversation,
+		hasWritePermissions,
+		routeParent,
+		navigate,
+		t
+	])
 
 	const leave = useCallback(async () => {
 		if (
 			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
+				title: t("chats.dialogs.leaveConversation.title"),
+				continueButtonText: t("chats.dialogs.leaveConversation.continue"),
+				description: t("chats.dialogs.leaveConversation.description"),
 				continueButtonVariant: "destructive"
 			}))
 		) {
@@ -151,7 +161,7 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		} finally {
 			toast.dismiss()
 		}
-	}, [conversation.uuid, errorToast, loadingToast, setConversations, setSelectedConversation, routeParent, navigate])
+	}, [conversation.uuid, errorToast, loadingToast, setConversations, setSelectedConversation, routeParent, navigate, t])
 
 	useEffect(() => {
 		const editConversationNameListener = eventEmitter.on("editConversationName", conversationUUID => {

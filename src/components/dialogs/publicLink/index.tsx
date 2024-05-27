@@ -20,6 +20,7 @@ export const PublicLinkDialog = memo(() => {
 	const { t } = useTranslation()
 	const [item, setItem] = useState<DriveCloudItem | null>(null)
 	const [saving, setSaving] = useState<boolean>(false)
+	const [showSave, setShowSave] = useState<boolean>(false)
 
 	const close = useCallback(() => {
 		setOpen(false)
@@ -32,6 +33,7 @@ export const PublicLinkDialog = memo(() => {
 	useEffect(() => {
 		const listener = eventEmitter.on("openPublicLinkDialog", (itm: DriveCloudItem) => {
 			setItem(itm)
+			setShowSave(false)
 			setOpen(true)
 		})
 
@@ -58,6 +60,7 @@ export const PublicLinkDialog = memo(() => {
 									setOpen={setOpen}
 									saving={saving}
 									setSaving={setSaving}
+									setShowSave={setShowSave}
 								/>
 							) : (
 								<Directory
@@ -66,6 +69,7 @@ export const PublicLinkDialog = memo(() => {
 									setOpen={setOpen}
 									saving={saving}
 									setSaving={setSaving}
+									setShowSave={setShowSave}
 								/>
 							)}
 						</>
@@ -73,12 +77,14 @@ export const PublicLinkDialog = memo(() => {
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={close}>{t("dialogs.publicLink.close")}</AlertDialogCancel>
-					<Button
-						onClick={save}
-						disabled={saving}
-					>
-						{t("dialogs.publicLink.save")}
-					</Button>
+					{showSave && (
+						<Button
+							onClick={save}
+							disabled={saving}
+						>
+							{t("dialogs.publicLink.save")}
+						</Button>
+					)}
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

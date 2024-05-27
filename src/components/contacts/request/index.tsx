@@ -5,7 +5,6 @@ import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/reque
 import worker from "@/lib/worker"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
-import { showConfirmDialog } from "@/components/dialogs/confirm"
 import eventEmitter from "@/lib/eventEmitter"
 import { useContactsStore } from "@/stores/contacts.store"
 
@@ -62,17 +61,6 @@ export const Request = memo(({ request, refetch, type }: { request: ContactReque
 	}, [request.uuid, errorToast, loadingToast, refetch, setRequestsInCount])
 
 	const remove = useCallback(async () => {
-		if (
-			!(await showConfirmDialog({
-				title: "d",
-				continueButtonText: "ddd",
-				description: "ookeoetrasher",
-				continueButtonVariant: "destructive"
-			}))
-		) {
-			return
-		}
-
 		const toast = loadingToast()
 
 		try {

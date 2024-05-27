@@ -49,9 +49,9 @@ export const ContextMenu = memo(
 				if (!e.shiftKey) {
 					if (
 						!(await showConfirmDialog({
-							title: "d",
-							continueButtonText: "ddd",
-							description: "ookeoetrasher",
+							title: t("chats.dialogs.deleteMessage.title"),
+							continueButtonText: t("chats.dialogs.deleteMessage.continue"),
+							description: t("chats.dialogs.deleteMessage.description"),
 							continueButtonVariant: "destructive"
 						}))
 					) {
@@ -73,7 +73,7 @@ export const ContextMenu = memo(
 					toast.dismiss()
 				}
 			},
-			[message.uuid, loadingToast, errorToast, setMessages]
+			[message.uuid, loadingToast, errorToast, setMessages, t]
 		)
 
 		const copyText = useCallback(async () => {

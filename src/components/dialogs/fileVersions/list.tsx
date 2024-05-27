@@ -12,11 +12,13 @@ import { showConfirmDialog } from "../confirm"
 import eventEmitter from "@/lib/eventEmitter"
 import { type FileEncryptionVersion } from "@filen/sdk"
 import { Loader } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export const List = memo(
 	({ item, setItem }: { item: DriveCloudItem; setItem: React.Dispatch<React.SetStateAction<DriveCloudItem | null>> }) => {
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
+		const { t } = useTranslation()
 
 		const query = useQuery({
 			queryKey: ["fileVersions", item.uuid],
@@ -79,9 +81,11 @@ export const List = memo(
 			async (version: FileVersion) => {
 				if (
 					!(await showConfirmDialog({
-						title: "d",
-						continueButtonText: "ddd",
-						description: "ookeoetrasher",
+						title: t("dialogs.fileVersions.delete.title"),
+						continueButtonText: t("dialogs.fileVersions.delete.continue"),
+						description: t("dialogs.fileVersions.delete.description", {
+							name: simpleDate(version.timestamp)
+						}),
 						continueButtonVariant: "destructive"
 					}))
 				) {
@@ -106,7 +110,7 @@ export const List = memo(
 					toast.dismiss()
 				}
 			},
-			[loadingToast, errorToast, query]
+			[loadingToast, errorToast, query, t]
 		)
 
 		const getItemKey = useCallback((_: number, version: FileVersion) => version.uuid, [])

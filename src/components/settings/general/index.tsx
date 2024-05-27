@@ -120,9 +120,9 @@ export const General = memo(() => {
 			if (!e.shiftKey) {
 				if (
 					!(await showConfirmDialog({
-						title: "d",
-						continueButtonText: "ddd",
-						description: "ookeoetrasher",
+						title: t("settings.dialogs.logout.title"),
+						continueButtonText: t("settings.dialogs.logout.continue"),
+						description: t("settings.dialogs.logout.description"),
 						continueButtonVariant: "destructive"
 					}))
 				) {
@@ -154,7 +154,7 @@ export const General = memo(() => {
 				toast.dismiss()
 			}
 		},
-		[loadingToast, errorToast, navigate]
+		[loadingToast, errorToast, navigate, t]
 	)
 
 	const onLanguageChange = useCallback(
@@ -169,9 +169,9 @@ export const General = memo(() => {
 			if (!e.shiftKey) {
 				if (
 					!(await showConfirmDialog({
-						title: "d",
-						continueButtonText: "ddd",
-						description: "ookeoetrasher",
+						title: t("settings.dialogs.clearThumbnailCache.title"),
+						continueButtonText: t("settings.dialogs.clearThumbnailCache.continue"),
+						description: t("settings.dialogs.clearThumbnailCache.description"),
 						continueButtonVariant: "destructive"
 					}))
 				) {
@@ -192,7 +192,7 @@ export const General = memo(() => {
 				toast.dismiss()
 			}
 		},
-		[loadingToast, errorToast, thumbnailCacheQuery]
+		[loadingToast, errorToast, thumbnailCacheQuery, t]
 	)
 
 	if (!account) {

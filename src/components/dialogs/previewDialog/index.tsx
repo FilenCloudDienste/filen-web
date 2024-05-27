@@ -77,9 +77,9 @@ export const PreviewDialog = memo(() => {
 			if (didChange) {
 				if (
 					!(await showConfirmDialog({
-						title: "d",
-						continueButtonText: "ddd",
-						description: "ookeoetrasher",
+						title: t("previewDialog.unsavedChanges.title"),
+						continueButtonText: t("previewDialog.unsavedChanges.continue"),
+						description: t("previewDialog.unsavedChanges.description"),
 						continueButtonVariant: "destructive"
 					}))
 				) {
@@ -90,7 +90,7 @@ export const PreviewDialog = memo(() => {
 			setOpen(openState)
 			cleanup()
 		},
-		[cleanup, didChange, saving]
+		[cleanup, didChange, saving, t]
 	)
 
 	const loadFile = useCallback(
@@ -192,11 +192,11 @@ export const PreviewDialog = memo(() => {
 		}
 
 		const inputResponse = await showInputDialog({
-			title: "newfolder",
-			continueButtonText: "create",
+			title: t("drive.dialogs.createTextFile.title"),
+			continueButtonText: t("drive.dialogs.createTextFile.continue"),
 			value: "",
 			autoFocusInput: true,
-			placeholder: "New folder"
+			placeholder: t("drive.dialogs.createTextFile.placeholder")
 		})
 
 		if (inputResponse.cancelled) {
@@ -245,7 +245,8 @@ export const PreviewDialog = memo(() => {
 		currentSharerEmail,
 		currentSharerId,
 		canUpload,
-		isInsidePublicLink
+		isInsidePublicLink,
+		t
 	])
 
 	useEffect(() => {

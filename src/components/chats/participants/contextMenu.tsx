@@ -43,9 +43,11 @@ export const ContextMenu = memo(
 			if (
 				!hasWritePermissions ||
 				!(await showConfirmDialog({
-					title: "d",
-					continueButtonText: "ddd",
-					description: "ookeoetrasher",
+					title: t("chats.dialogs.removeParticipant.title"),
+					continueButtonText: t("chats.dialogs.removeParticipant.continue"),
+					description: t("chats.dialogs.removeParticipant.description", {
+						name: participant.nickName.length > 0 ? participant.nickName : participant.email
+					}),
 					continueButtonVariant: "destructive"
 				}))
 			) {
@@ -85,7 +87,10 @@ export const ContextMenu = memo(
 			setConversations,
 			setSelectedConversation,
 			participant.userId,
-			hasWritePermissions
+			hasWritePermissions,
+			t,
+			participant.email,
+			participant.nickName
 		])
 
 		const profile = useCallback(() => {
@@ -101,7 +106,7 @@ export const ContextMenu = memo(
 						className="cursor-pointer gap-3"
 					>
 						<User2 size={iconSize} />
-						{t("chats.message.profile")}
+						{t("chats.participants.profile")}
 					</ContextMenuItem>
 					{hasWritePermissions && userId !== participant.userId && (
 						<>
@@ -111,7 +116,7 @@ export const ContextMenu = memo(
 								className="cursor-pointer gap-3 text-red-500"
 							>
 								<Delete size={iconSize} />
-								{t("chats.message.remove")}
+								{t("chats.participants.remove")}
 							</ContextMenuItem>
 						</>
 					)}

@@ -8,12 +8,14 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/providers/themeProvider"
+import { useTranslation } from "react-i18next"
 
 export const Notes = memo(() => {
 	const { selectedNote, setSelectedNote, setNotes, synced } = useNotesStore()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const { dark } = useTheme()
+	const { t } = useTranslation()
 
 	const triggerMoreIconContextMenu = useCallback(
 		(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -38,11 +40,12 @@ export const Notes = memo(() => {
 		}
 
 		const inputResponse = await showInputDialog({
-			title: "title",
-			continueButtonText: "edit",
+			title: t("notes.dialogs.renameNote.title"),
+			continueButtonText: t("notes.dialogs.renameNote.continue"),
 			value: selectedNote.title,
 			autoFocusInput: true,
-			placeholder: "Title"
+			placeholder: t("notes.dialogs.renameNote.placeholder"),
+			continueButtonVariant: "default"
 		})
 
 		if (inputResponse.cancelled) {
@@ -65,7 +68,7 @@ export const Notes = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [selectedNote, setSelectedNote, setNotes, loadingToast, errorToast])
+	}, [selectedNote, setSelectedNote, setNotes, loadingToast, errorToast, t])
 
 	if (!selectedNote) {
 		return null

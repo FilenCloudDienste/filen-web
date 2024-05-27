@@ -32,10 +32,12 @@ export const ContextMenu = memo(
 		const deleteTag = useCallback(async () => {
 			if (
 				!(await showConfirmDialog({
-					title: "delete",
-					continueButtonText: "delete",
-					continueButtonVariant: "destructive",
-					description: "delele"
+					title: t("notes.dialogs.deleteTag.title"),
+					continueButtonText: t("notes.dialogs.deleteTag.continue"),
+					description: t("notes.dialogs.deleteTag.description", {
+						name: tag.name
+					}),
+					continueButtonVariant: "destructive"
 				}))
 			) {
 				return
@@ -53,7 +55,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [tag.uuid, refetch, loadingToast, errorToast])
+		}, [tag.uuid, refetch, loadingToast, errorToast, t, tag.name])
 
 		const favorite = useCallback(async () => {
 			const toast = loadingToast()
@@ -94,11 +96,12 @@ export const ContextMenu = memo(
 
 		const rename = useCallback(async () => {
 			const inputResponse = await showInputDialog({
-				title: "rename",
-				continueButtonText: "rename",
-				value: "",
+				title: t("notes.dialogs.renameTag.title"),
+				continueButtonText: t("notes.dialogs.renameTag.continue"),
+				value: tag.name,
 				autoFocusInput: true,
-				placeholder: "rename"
+				placeholder: t("notes.dialogs.renameTag.placeholder"),
+				continueButtonVariant: "default"
 			})
 
 			if (inputResponse.cancelled) {
@@ -121,7 +124,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [tag.uuid, refetch, loadingToast, errorToast])
+		}, [tag.uuid, refetch, loadingToast, errorToast, t, tag.name])
 
 		return (
 			<CM>
