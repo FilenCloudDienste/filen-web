@@ -856,5 +856,11 @@
 		"chat": "Chat",
 		"contactRequest": "Contact request",
 		"contactRequestInfo": "{{name}} has sent you a contact request"
+	},
+	"cookieConsent": {
+		"description": "This site uses cookies to measure and improve your experience.",
+		"optOut": "Opt-out",
+		"onlyNeeded": "Only needed",
+		"accept": "Accept"
 	}
 }

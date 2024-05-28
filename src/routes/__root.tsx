@@ -25,6 +25,7 @@ import FileVersionsDialog from "@/components/dialogs/fileVersions"
 import NoteHistoryDialog from "@/components/dialogs/noteHistory"
 import NoteParticipantsDialog from "@/components/dialogs/noteParticipants"
 import { setup as setupApp } from "@/lib/setup"
+import CookieConsent from "@/components/cookieConsent"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -105,35 +106,37 @@ export const Root = memo(() => {
 					client={persistantQueryClient}
 					persistOptions={persistOptions}
 				>
-					{authed ? (
-						<>
-							<DropZone>
-								<DragSelect>
-									<NotificationHandler>
-										<ActivityHandler>
-											<Outlet />
-										</ActivityHandler>
-									</NotificationHandler>
-								</DragSelect>
-							</DropZone>
-							<SelectDriveItemDialog />
-							<SelectContactsDialog />
-							<PublicLinkDialog />
-							<SharedWithDialog />
-							<FileVersionsDialog />
-							<NoteHistoryDialog />
-							<NoteParticipantsDialog />
-						</>
-					) : (
-						<Outlet />
-					)}
-					<Transfers />
-					<PreviewDialog />
-					<InputDialog />
-					<ConfirmDialog />
-					<TransparentFullScreenImageDialog />
-					<TwoFactorCodeDialog />
-					<Toaster />
+					<CookieConsent>
+						{authed ? (
+							<>
+								<DropZone>
+									<DragSelect>
+										<NotificationHandler>
+											<ActivityHandler>
+												<Outlet />
+											</ActivityHandler>
+										</NotificationHandler>
+									</DragSelect>
+								</DropZone>
+								<SelectDriveItemDialog />
+								<SelectContactsDialog />
+								<PublicLinkDialog />
+								<SharedWithDialog />
+								<FileVersionsDialog />
+								<NoteHistoryDialog />
+								<NoteParticipantsDialog />
+							</>
+						) : (
+							<Outlet />
+						)}
+						<Transfers />
+						<PreviewDialog />
+						<InputDialog />
+						<ConfirmDialog />
+						<TransparentFullScreenImageDialog />
+						<TwoFactorCodeDialog />
+						<Toaster />
+					</CookieConsent>
 				</PersistQueryClientProvider>
 			</ThemeProvider>
 		</main>
