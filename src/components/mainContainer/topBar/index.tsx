@@ -117,7 +117,7 @@ export const TopBar = memo(() => {
 								disabled={items.length === 0}
 								onClick={emptyTrash}
 							>
-								Empty
+								{t("empty")}
 							</Button>
 						) : (
 							<DropdownMenu>
@@ -126,7 +126,7 @@ export const TopBar = memo(() => {
 										className="h-8"
 										disabled={!canUpload}
 									>
-										New
+										{t("new")}
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent>

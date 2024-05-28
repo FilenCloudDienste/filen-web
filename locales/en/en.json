@@ -2,6 +2,7 @@
 	"cloudDrive": "Cloud Drive",
 	"new": "New",
 	"image": "Image",
+	"empty": "Empty",
 	"login": {
 		"header": "Login",
 		"description": "Enter you email and password below to login to your account",
