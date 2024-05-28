@@ -18,7 +18,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils"
 import eventEmitter from "@/lib/eventEmitter"
 import { type TFunction } from "i18next"
-import { Reply, MoreHorizontal, Edit } from "lucide-react"
+import { Reply, MoreHorizontal, Edit, Lock, CheckCircle } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import worker from "@/lib/worker"
 import YouTube from "./embeds/youTube"
@@ -28,6 +28,7 @@ import OG from "./embeds/og"
 import Async from "./embeds/async"
 import { chatDisplayMessageAsCache, chatOGDataCache } from "@/cache"
 import Filen from "./embeds/filen"
+import { useTranslation } from "react-i18next"
 
 export const EMBED_CONTENT_TYPES_IMAGES = [
 	"image/png",
@@ -47,6 +48,31 @@ export const EMBED_CONTENT_TYPES_IMAGES = [
 	"image/x-xbitmap",
 	"image/avif"
 ]
+
+export const Header = memo(() => {
+	const { t } = useTranslation()
+
+	return (
+		<div className="flex flex-col gap-1">
+			<p className="text-xl">{t("chats.header.title")}</p>
+			<p className="text-muted-foreground">{t("chats.header.description")}</p>
+			<div className="flex flex-row gap-2 items-center mt-3">
+				<Lock
+					className="shrink-0"
+					size={22}
+				/>
+				<p className="text-muted-foreground">{t("chats.header.feature1")}</p>
+			</div>
+			<div className="flex flex-row gap-2 items-center mt-2">
+				<CheckCircle
+					className="shrink-0"
+					size={22}
+				/>
+				<p className="text-muted-foreground">{t("chats.header.feature2")}</p>
+			</div>
+		</div>
+	)
+})
 
 export const DateDivider = memo(({ timestamp }: { timestamp: number }) => {
 	return (
@@ -399,7 +425,11 @@ export const Message = memo(
 		const top = useMemo(() => {
 			return (
 				<>
-					{!prevMessage && <div className="flex flex-row p-1 px-5 gap-4">end to end encrypted chat</div>}
+					{!prevMessage && (
+						<div className="flex flex-row px-5">
+							<Header />
+						</div>
+					)}
 					{((prevMessage && !groupWithPrevMessage) || !prevMessage) && (
 						<div
 							style={{

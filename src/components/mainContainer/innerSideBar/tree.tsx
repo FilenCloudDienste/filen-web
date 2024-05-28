@@ -5,7 +5,7 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import { ChevronRight, ChevronDown } from "lucide-react"
 import useRouteParent from "@/hooks/useRouteParent"
 import { Link } from "@tanstack/react-router"
-import { folderIcon } from "@/assets/fileExtensionIcons"
+import { ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { orderItemsByType } from "@/components/drive/utils"
 
 export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: number; pathname: string }) => {
@@ -51,10 +51,10 @@ export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: 
 								onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [item.uuid]: true }))}
 								size={16}
 							/>
-							<img
-								src={folderIcon}
-								className="w-4 h-4 shrink-0"
-								draggable={false}
+							<ColoredFolderSVGIcon
+								width={16}
+								height={16}
+								color={item.type === "directory" ? item.color : undefined}
 							/>
 						</>
 					) : (
@@ -64,10 +64,10 @@ export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: 
 								onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [item.uuid]: false }))}
 								size={16}
 							/>
-							<img
-								src={folderIcon}
-								className="w-4 h-4 shrink-0"
-								draggable={false}
+							<ColoredFolderSVGIcon
+								width={16}
+								height={16}
+								color={item.type === "directory" ? item.color : undefined}
 							/>
 						</>
 					)}

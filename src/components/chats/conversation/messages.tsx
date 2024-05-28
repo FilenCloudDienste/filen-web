@@ -6,7 +6,7 @@ import useElementDimensions from "@/hooks/useElementDimensions"
 import useWindowSize from "@/hooks/useWindowSize"
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso"
 import { useChatsStore } from "@/stores/chats.store"
-import Message from "./message"
+import Message, { Header } from "./message"
 import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
 import { IS_DESKTOP } from "@/constants"
 import socket from "@/lib/socket"
@@ -199,11 +199,12 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 							})
 						) : (
 							<div
+								className="flex flex-row px-5 pb-2"
 								style={{
 									transform: "scaleY(-1)"
 								}}
 							>
-								end to end
+								<Header />
 							</div>
 						)}
 					</div>

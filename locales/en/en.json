@@ -347,6 +347,12 @@
 		"showParticipants": "Show participants",
 		"hideParticipants": "Hide participants",
 		"addParticipants": "Add participants",
+		"header": {
+			"title": "End-to-end encrypted chat",
+			"description": "Filen secures every chat with zero-knowledge end-to-end encryption by default.",
+			"feature1": "Only the members of the chat can decrypt and read the content",
+			"feature2": "The system ensures that the data received actually comes from the displayed user and has not been changed"
+		},
 		"message": {
 			"time": {
 				"now": "Now",

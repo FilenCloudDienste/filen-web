@@ -298,27 +298,23 @@ export const Contacts = memo(() => {
 			EmptyPlaceholder: () => {
 				return (
 					<div className="flex flex-col w-full h-full overflow-hidden">
-						{showSkeletons ? (
-							new Array(100).fill(1).map((_, index) => {
-								return (
-									<div
-										key={index}
-										className="flex flex-row w-full h-auto mb-2"
-									>
-										<Skeleton className="w-full h-[68px] rounded-md" />
-									</div>
-								)
-							})
-						) : (
-							<div className="flex flex-col items-center justify-center w-full h-full">
-								<p className="text-muted-foreground -mt-10">{t("contacts.empty")}</p>
-							</div>
-						)}
+						{showSkeletons
+							? new Array(100).fill(1).map((_, index) => {
+									return (
+										<div
+											key={index}
+											className="flex flex-row w-full h-auto mb-2"
+										>
+											<Skeleton className="w-full h-[68px] rounded-md" />
+										</div>
+									)
+								})
+							: null}
 					</div>
 				)
 			}
 		}
-	}, [showSkeletons, t])
+	}, [showSkeletons])
 
 	return (
 		<div className="flex flex-col w-full h-full select-none">
