@@ -11,9 +11,7 @@ import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
 import { IS_DESKTOP } from "@/constants"
 import socket from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
-import useSDKConfig from "@/hooks/useSDKConfig"
 import MarkAsRead from "./markAsRead"
-import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
 import useRouteParent from "@/hooks/useRouteParent"
 import eventEmitter from "@/lib/eventEmitter"
@@ -23,11 +21,9 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	const windowSize = useWindowSize()
 	const inputContainerDimensions = useElementDimensions("chat-input-container")
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
-	const { messages, setMessages, failedMessages, editUUID, replyMessage, setReplyMessage, setEditUUID } = useChatsStore()
+	const { messages, setMessages } = useChatsStore()
 	const queryUpdatedAtRef = useRef<number>(-1)
-	const { userId } = useSDKConfig()
 	const [isScrolling, setIsScrolling] = useState<boolean>(false)
-	const { t } = useTranslation()
 	const isFetchingPreviousMessagesRef = useRef<boolean>(false)
 	const errorToast = useErrorToast()
 	const routeParent = useRouteParent()
@@ -124,32 +120,12 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 					message={message}
 					prevMessage={messages[index - 1]}
 					nextMessage={messages[index + 1]}
-					userId={userId}
 					isScrolling={isScrolling}
 					lastFocus={lastFocus > 0 ? lastFocus : lastFocusQueryNumber}
-					t={t}
-					failedMessages={failedMessages}
-					editUUID={editUUID}
-					replyUUID={replyMessage ? replyMessage.uuid : ""}
-					setReplyMessage={setReplyMessage}
-					setEditUUID={setEditUUID}
 				/>
 			)
 		},
-		[
-			conversation,
-			messages,
-			userId,
-			isScrolling,
-			lastFocus,
-			t,
-			failedMessages,
-			editUUID,
-			replyMessage,
-			setReplyMessage,
-			setEditUUID,
-			lastFocusQueryNumber
-		]
+		[conversation, messages, isScrolling, lastFocus, lastFocusQueryNumber]
 	)
 
 	const scrollChatToBottom = useCallback(

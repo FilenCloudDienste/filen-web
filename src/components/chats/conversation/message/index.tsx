@@ -29,6 +29,8 @@ import Async from "./embeds/async"
 import { chatDisplayMessageAsCache, chatOGDataCache } from "@/cache"
 import Filen from "./embeds/filen"
 import { useTranslation } from "react-i18next"
+import useSDKConfig from "@/hooks/useSDKConfig"
+import { useChatsStore } from "@/stores/chats.store"
 
 export const EMBED_CONTENT_TYPES_IMAGES = [
 	"image/png",
@@ -141,30 +143,19 @@ export const Message = memo(
 		conversation,
 		prevMessage,
 		nextMessage,
-		userId,
 		isScrolling,
-		lastFocus,
-		t,
-		failedMessages,
-		editUUID,
-		replyUUID,
-		setReplyMessage,
-		setEditUUID
+		lastFocus
 	}: {
 		message: ChatMessage
 		conversation: ChatConversation
 		prevMessage?: ChatMessage
 		nextMessage?: ChatMessage
-		userId: number
 		isScrolling: boolean
 		lastFocus: number
-		t: TFunction<"translation", undefined>
-		failedMessages: string[]
-		editUUID: string
-		replyUUID: string
-		setReplyMessage: (fn: ChatMessage | ((prev: ChatMessage | null) => ChatMessage | null) | null) => void
-		setEditUUID: (fn: string | ((prev: string) => string)) => void
 	}) => {
+		const { failedMessages, setReplyMessage, setEditUUID, editUUID, replyMessage } = useChatsStore()
+		const { t } = useTranslation()
+		const { userId } = useSDKConfig()
 		const [hovering, setHovering] = useState<boolean>(false)
 		const ref = useRef<HTMLDivElement>(null)
 		const links = useRef<string[]>(extractLinksFromString(message.message)).current
@@ -177,6 +168,10 @@ export const Message = memo(
 		const [ogData, setOGData] = useState<Record<string, Record<string, string>>>(
 			chatOGDataCache.has(message.uuid) ? chatOGDataCache.get(message.uuid)! : {}
 		)
+
+		const replyUUID = useMemo(() => {
+			return replyMessage ? replyMessage.uuid : ""
+		}, [replyMessage])
 
 		const groupWithPrevMessage = useMemo((): boolean => {
 			if (!prevMessage) {
