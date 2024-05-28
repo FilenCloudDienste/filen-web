@@ -17,7 +17,7 @@ import { type DirDownloadType } from "@filen/sdk/dist/types/api/v3/dir/download"
 import eventEmitter from "../eventEmitter"
 import { transfer } from "comlink"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
-import { THUMBNAIL_VERSION, THUMBNAIL_QUALITY } from "@/constants"
+import { THUMBNAIL_VERSION, THUMBNAIL_QUALITY, THUMBNAIL_MAX_SIZE } from "@/constants"
 import pdfjsLib from "../pdfJS"
 import { type Note, type NoteType, type NoteTag } from "@filen/sdk/dist/types/api/v3/notes"
 import { simpleDate } from "@/utils"
@@ -1658,18 +1658,37 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 	const imageBitmap = await createImageBitmap(new Blob([buffer], { type: item.mime }))
 	const originalWidth = imageBitmap.width
 	const originalHeight = imageBitmap.height
+	let thumbnailWidth = originalWidth
+	let thumbnailHeight = originalHeight
 
-	const offscreenCanvas = new OffscreenCanvas(originalWidth, originalHeight)
+	if (originalWidth > THUMBNAIL_MAX_SIZE || originalHeight > THUMBNAIL_MAX_SIZE) {
+		const aspectRatio = originalWidth / originalHeight
+
+		if (originalWidth > originalHeight) {
+			thumbnailWidth = THUMBNAIL_MAX_SIZE
+			thumbnailHeight = Math.round(THUMBNAIL_MAX_SIZE / aspectRatio)
+		} else {
+			thumbnailHeight = THUMBNAIL_MAX_SIZE
+			thumbnailWidth = Math.round(THUMBNAIL_MAX_SIZE * aspectRatio)
+		}
+	}
+
+	const offscreenCanvas = new OffscreenCanvas(thumbnailWidth, thumbnailHeight)
 	const ctx = offscreenCanvas.getContext("2d")
 
 	if (!ctx) {
 		throw new Error("Could not create OffscreenCanvas")
 	}
 
-	ctx.clearRect(0, 0, originalWidth, originalHeight)
-	ctx.drawImage(imageBitmap, 0, 0, originalWidth, originalHeight)
+	ctx.clearRect(0, 0, thumbnailWidth, thumbnailHeight)
+	ctx.fillStyle = "black"
+	ctx.fillRect(0, 0, thumbnailWidth, thumbnailHeight)
+	ctx.drawImage(imageBitmap, 0, 0, thumbnailWidth, thumbnailHeight)
 
-	const blob = await offscreenCanvas.convertToBlob({ type: "image/jpeg", quality: THUMBNAIL_QUALITY })
+	const blob = await offscreenCanvas.convertToBlob({
+		type: "image/jpeg",
+		quality: THUMBNAIL_QUALITY
+	})
 
 	await setItem<Blob>(dbKey, blob)
 
@@ -1731,11 +1750,26 @@ export async function generateVideoThumbnail({ item, buffer }: { item: DriveClou
 		video.onseeked = () => {
 			const originalWidth = video.videoWidth
 			const originalHeight = video.videoHeight
+			let thumbnailWidth = originalWidth
+			let thumbnailHeight = originalHeight
+
+			if (originalWidth > THUMBNAIL_MAX_SIZE || originalHeight > THUMBNAIL_MAX_SIZE) {
+				const aspectRatio = originalWidth / originalHeight
+
+				if (originalWidth > originalHeight) {
+					thumbnailWidth = THUMBNAIL_MAX_SIZE
+					thumbnailHeight = Math.round(THUMBNAIL_MAX_SIZE / aspectRatio)
+				} else {
+					thumbnailHeight = THUMBNAIL_MAX_SIZE
+					thumbnailWidth = Math.round(THUMBNAIL_MAX_SIZE * aspectRatio)
+				}
+			}
+
 			const canvas = document.createElement("canvas")
 			const ctx = canvas.getContext("2d")
 
-			canvas.width = originalWidth
-			canvas.height = originalHeight
+			canvas.height = thumbnailHeight
+			canvas.width = thumbnailWidth
 
 			if (!ctx) {
 				reject(new Error("Could not create canvas"))
@@ -1743,7 +1777,9 @@ export async function generateVideoThumbnail({ item, buffer }: { item: DriveClou
 				return
 			}
 
-			ctx.clearRect(0, 0, originalWidth, originalHeight)
+			ctx.clearRect(0, 0, thumbnailWidth, thumbnailHeight)
+			ctx.fillStyle = "black"
+			ctx.fillRect(0, 0, thumbnailWidth, thumbnailHeight)
 			ctx.drawImage(video, 0, 0, originalWidth, originalHeight)
 
 			canvas.toBlob(
