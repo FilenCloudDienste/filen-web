@@ -4,17 +4,55 @@ import worker from "@/lib/worker"
 import { directoryUUIDToNameCache } from "@/cache"
 import { IS_DESKTOP } from "@/constants"
 
+export const activeDownloads: Record<string, boolean> = {}
+
 export async function download({ selectedItems, name }: { selectedItems: DriveCloudItem[]; name?: string }): Promise<void> {
+	selectedItems = selectedItems.filter(item => !activeDownloads[item.uuid])
+
 	if (selectedItems.length === 0 || !selectedItems[0]) {
 		return
 	}
 
-	if (IS_DESKTOP) {
-		const destination = await window.desktopAPI.showSaveDialog({
-			nameSuggestion: name ? name : selectedItems.length === 1 ? selectedItems[0].name : `Download_${Date.now()}`
-		})
+	for (const item of selectedItems) {
+		activeDownloads[item.uuid] = true
+	}
 
-		if (destination.cancelled) {
+	try {
+		if (IS_DESKTOP) {
+			const destination = await window.desktopAPI.showSaveDialog({
+				nameSuggestion: name ? name : selectedItems.length === 1 ? selectedItems[0].name : `Download_${Date.now()}`
+			})
+
+			if (destination.cancelled) {
+				return
+			}
+
+			if (selectedItems.length === 1) {
+				if (selectedItems[0].size <= 0) {
+					return
+				}
+
+				if (selectedItems[0].type === "directory") {
+					await window.desktopAPI.downloadDirectory({
+						uuid: selectedItems[0].uuid,
+						to: destination.path,
+						name: destination.name
+					})
+				} else {
+					await window.desktopAPI.downloadFile({
+						item: selectedItems[0],
+						to: destination.path,
+						name: destination.name
+					})
+				}
+			} else {
+				await window.desktopAPI.downloadMultipleFilesAndDirectories({
+					items: selectedItems,
+					to: destination.path,
+					name: destination.name
+				})
+			}
+
 			return
 		}
 
@@ -24,47 +62,23 @@ export async function download({ selectedItems, name }: { selectedItems: DriveCl
 			}
 
 			if (selectedItems[0].type === "directory") {
-				await window.desktopAPI.downloadDirectory({
+				await workerProxy.downloadDirectory({
 					uuid: selectedItems[0].uuid,
-					to: destination.path,
-					name: destination.name
+					name: selectedItems[0].name
 				})
 			} else {
-				await window.desktopAPI.downloadFile({
-					item: selectedItems[0],
-					to: destination.path,
-					name: destination.name
-				})
+				await workerProxy.downloadFile({ item: selectedItems[0] })
 			}
 		} else {
-			await window.desktopAPI.downloadMultipleFilesAndDirectories({
+			await workerProxy.downloadMultipleFilesAndDirectoriesAsZip({
 				items: selectedItems,
-				to: destination.path,
-				name: destination.name
+				name
 			})
 		}
-
-		return
-	}
-
-	if (selectedItems.length === 1) {
-		if (selectedItems[0].size <= 0) {
-			return
+	} finally {
+		for (const item of selectedItems) {
+			delete activeDownloads[item.uuid]
 		}
-
-		if (selectedItems[0].type === "directory") {
-			await workerProxy.downloadDirectory({
-				uuid: selectedItems[0].uuid,
-				name: selectedItems[0].name
-			})
-		} else {
-			await workerProxy.downloadFile({ item: selectedItems[0] })
-		}
-	} else {
-		await workerProxy.downloadMultipleFilesAndDirectoriesAsZip({
-			items: selectedItems,
-			name
-		})
 	}
 }
 

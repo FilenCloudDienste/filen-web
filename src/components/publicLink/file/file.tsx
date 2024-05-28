@@ -7,7 +7,7 @@ import { fileNameToSVGIcon } from "@/assets/fileExtensionIcons"
 import { type DriveCloudItem } from "@/components/drive"
 import { formatBytes } from "@/utils"
 import { Button } from "@/components/ui/button"
-import { downloadFile } from "@/lib/worker/proxy"
+import { download as downloadAction } from "@/components/drive/list/item/contextMenu/actions"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import worker from "@/lib/worker"
@@ -93,7 +93,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 		const toast = loadingToast()
 
 		try {
-			await downloadFile({ item })
+			await downloadAction({ selectedItems: [item] })
 		} catch (e) {
 			console.error(e)
 
