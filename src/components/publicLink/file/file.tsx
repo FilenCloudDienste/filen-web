@@ -9,7 +9,6 @@ import { formatBytes } from "@/utils"
 import { Button } from "@/components/ui/button"
 import { download as downloadAction } from "@/components/drive/list/item/contextMenu/actions"
 import useErrorToast from "@/hooks/useErrorToast"
-import useLoadingToast from "@/hooks/useLoadingToast"
 import worker from "@/lib/worker"
 import ImagePreview from "@/components/dialogs/previewDialog/image"
 import { cn } from "@/lib/utils"
@@ -23,7 +22,6 @@ import AudioPreview from "@/components/dialogs/previewDialog/audio"
 
 export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> & { size: number } }) => {
 	const filePublicLinkInfo = useFilePublicLinkInfo(info)
-	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const urlState = usePublicLinkURLState()
 	const [urlObject, setURLObject] = useState<string | null>(null)
@@ -90,8 +88,6 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 			return
 		}
 
-		const toast = loadingToast()
-
 		try {
 			await downloadAction({ selectedItems: [item] })
 		} catch (e) {
@@ -100,10 +96,8 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 			if (!(e as unknown as Error).toString().includes("abort")) {
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
-		} finally {
-			toast.dismiss()
 		}
-	}, [item, errorToast, loadingToast])
+	}, [item, errorToast])
 
 	const topBar = useMemo(() => {
 		if (!item || urlState.chatEmbed) {

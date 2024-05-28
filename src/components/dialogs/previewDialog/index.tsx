@@ -9,7 +9,7 @@ import PDF from "./pdf"
 import Image from "./image"
 import Video from "./video"
 import DocX from "./docx"
-import { Loader as LoaderIcon, X, Save } from "lucide-react"
+import { Loader as LoaderIcon, X, Save, ArrowLeft, ArrowRight } from "lucide-react"
 import { showConfirmDialog } from "../confirm"
 import { uploadFile } from "@/lib/worker/worker"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -18,10 +18,12 @@ import { useTranslation } from "react-i18next"
 import { v4 as uuidv4 } from "uuid"
 import { showInputDialog } from "../input"
 import useRouteParent from "@/hooks/useRouteParent"
-import { useDriveSharedStore } from "@/stores/drive.store"
+import { useDriveSharedStore, useDriveItemsStore } from "@/stores/drive.store"
 import useCanUpload from "@/hooks/useCanUpload"
 import useLocation from "@/hooks/useLocation"
 import Audio from "./audio"
+
+const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
 
 export const Loader = memo(() => {
 	return (
@@ -46,10 +48,99 @@ export const PreviewDialog = memo(() => {
 	const [previewType, setPreviewType] = useState<string>("")
 	const canUpload = useCanUpload()
 	const location = useLocation()
+	const { items } = useDriveItemsStore()
 
 	const isInsidePublicLink = useMemo(() => {
 		return location.includes("/f/") || location.includes("/d/")
 	}, [location])
+
+	const nextAndPreviousItems = useMemo(() => {
+		if (!item || didChange || isInsidePublicLink || !open) {
+			return {
+				nextItem: null,
+				previousItem: null,
+				nextItemPreviewType: null,
+				previousItemPreviewType: null
+			}
+		}
+
+		const itemIndex = items.findIndex(i => i.uuid === item.uuid)
+
+		if (itemIndex === -1) {
+			return {
+				nextItem: null,
+				previousItem: null,
+				nextItemPreviewType: null,
+				previousItemPreviewType: null
+			}
+		}
+
+		let nextItem: DriveCloudItem | null = null
+		let previousItem: DriveCloudItem | null = null
+
+		for (let i = itemIndex; i <= items.length; i++) {
+			const nItem = items[i]
+
+			if (nItem && goToPreviewTypes.includes(fileNameToPreviewType(nItem.name)) && i !== itemIndex) {
+				nextItem = nItem
+
+				break
+			}
+		}
+
+		for (let i = itemIndex; i >= 0; i--) {
+			const pItem = items[i]
+
+			if (pItem && goToPreviewTypes.includes(fileNameToPreviewType(pItem.name)) && i !== itemIndex) {
+				previousItem = pItem
+
+				break
+			}
+		}
+
+		return {
+			nextItem,
+			previousItem,
+			nextItemPreviewType: nextItem ? fileNameToPreviewType(nextItem.name) : null,
+			previousItemPreviewType: previousItem ? fileNameToPreviewType(previousItem.name) : null
+		}
+	}, [item, items, didChange, isInsidePublicLink, open])
+
+	const canGoToPreviousItem = useMemo(() => {
+		return (
+			nextAndPreviousItems.previousItem &&
+			!didChange &&
+			nextAndPreviousItems.previousItemPreviewType &&
+			goToPreviewTypes.includes(nextAndPreviousItems.previousItemPreviewType) &&
+			open
+		)
+	}, [nextAndPreviousItems, didChange, open])
+
+	const canGoToNextItem = useMemo(() => {
+		return (
+			nextAndPreviousItems.nextItem &&
+			!didChange &&
+			nextAndPreviousItems.nextItemPreviewType &&
+			goToPreviewTypes.includes(nextAndPreviousItems.nextItemPreviewType) &&
+			open
+		)
+	}, [nextAndPreviousItems, didChange, open])
+
+	const goToPreviousItem = useCallback(() => {
+		if (!canGoToPreviousItem || !nextAndPreviousItems.previousItem) {
+			return
+		}
+
+		eventEmitter.emit("openPreviewModal", { item: nextAndPreviousItems.previousItem })
+	}, [nextAndPreviousItems, canGoToPreviousItem])
+
+	const goToNextItem = useCallback(() => {
+		if (!canGoToNextItem || !nextAndPreviousItems.nextItem) {
+			return
+		}
+
+		eventEmitter.emit("openPreviewModal", { item: nextAndPreviousItems.nextItem })
+	}, [nextAndPreviousItems, canGoToNextItem])
 
 	const cleanup = useCallback(() => {
 		setTimeout(() => {
@@ -181,9 +272,29 @@ export const PreviewDialog = memo(() => {
 				e.stopPropagation()
 
 				saveFile()
+
+				return
+			}
+
+			if (e.key === "ArrowLeft" && canGoToPreviousItem) {
+				e.preventDefault()
+				e.stopPropagation()
+
+				goToPreviousItem()
+
+				return
+			}
+
+			if (e.key === "ArrowRight" && canGoToNextItem) {
+				e.preventDefault()
+				e.stopPropagation()
+
+				goToNextItem()
+
+				return
 			}
 		},
-		[open, saveFile, didChange, canUpload, isInsidePublicLink]
+		[open, saveFile, didChange, canUpload, isInsidePublicLink, canGoToPreviousItem, goToPreviousItem, goToNextItem, canGoToNextItem]
 	)
 
 	const createTextFile = useCallback(async () => {
@@ -325,6 +436,26 @@ export const PreviewDialog = memo(() => {
 								onClick={() => onOpenChange(false)}
 							/>
 						</div>
+						{goToPreviewTypes.includes(previewType) && !isInsidePublicLink && (
+							<>
+								{canGoToPreviousItem && (
+									<div
+										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full bg-secondary cursor-pointer left-4 opacity-75 text-white"
+										onClick={goToPreviousItem}
+									>
+										<ArrowLeft />
+									</div>
+								)}
+								{canGoToNextItem && (
+									<div
+										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full bg-secondary cursor-pointer right-4 opacity-75 text-white"
+										onClick={goToNextItem}
+									>
+										<ArrowRight />
+									</div>
+								)}
+							</>
+						)}
 						{(previewType === "text" || previewType === "code" || previewType === "md") && (
 							<>
 								{buffers[item.uuid] ? (
