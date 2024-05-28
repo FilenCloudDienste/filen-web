@@ -112,9 +112,10 @@ export const PreviewDialog = memo(() => {
 			!didChange &&
 			nextAndPreviousItems.previousItemPreviewType &&
 			goToPreviewTypes.includes(nextAndPreviousItems.previousItemPreviewType) &&
-			open
+			open &&
+			goToPreviewTypes.includes(previewType)
 		)
-	}, [nextAndPreviousItems, didChange, open])
+	}, [nextAndPreviousItems, didChange, open, previewType])
 
 	const canGoToNextItem = useMemo(() => {
 		return (
@@ -122,9 +123,10 @@ export const PreviewDialog = memo(() => {
 			!didChange &&
 			nextAndPreviousItems.nextItemPreviewType &&
 			goToPreviewTypes.includes(nextAndPreviousItems.nextItemPreviewType) &&
-			open
+			open &&
+			goToPreviewTypes.includes(previewType)
 		)
-	}, [nextAndPreviousItems, didChange, open])
+	}, [nextAndPreviousItems, didChange, open, previewType])
 
 	const goToPreviousItem = useCallback(() => {
 		if (!canGoToPreviousItem || !nextAndPreviousItems.previousItem) {

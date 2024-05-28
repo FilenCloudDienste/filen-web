@@ -109,7 +109,7 @@ export function fileNameToPreviewType(name: string) {
  *
  * @export
  * @param {string} name
- * @returns {("pdf" | "image" | "video" | "text" | "none")}
+ * @returns {("pdf" | "image" | "video" | "none")}
  */
 export function fileNameToThumbnailType(name: string) {
 	const parsed = pathModule.posix.parse(name.toLowerCase())
@@ -129,10 +129,6 @@ export function fileNameToThumbnailType(name: string) {
 
 		case ".mp4": {
 			return "video"
-		}
-
-		case ".txt": {
-			return "text"
 		}
 
 		default: {
