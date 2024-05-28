@@ -4,6 +4,7 @@ import { thumbnailURLObjectCache } from "@/cache"
 import { type DriveCloudItem } from "@/components/drive"
 import { cn } from "@/lib/utils"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
+import { LoaderIcon } from "lucide-react"
 
 const ZOOM_SPEED = 0.1
 
@@ -91,6 +92,14 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 						!publicLinkURLState.isPublicLink && "bg-black"
 					)}
 				>
+					{!urlObject && (
+						<div className="w-full h-full absolute flex flex-row items-center justify-center z-50">
+							<LoaderIcon
+								className="animate-spin-medium text-white"
+								size={30}
+							/>
+						</div>
+					)}
 					<img
 						ref={ref}
 						src={urlObject ? urlObject : thumbnailURLObjectCache.get(item.uuid)}
