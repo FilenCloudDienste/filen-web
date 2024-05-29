@@ -81,8 +81,10 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 	}, [conversation.participants, userId])
 
 	const filteredMentions = useMemo(() => {
+		const search = (mentionsSuggestionsText.startsWith("@") ? mentionsSuggestionsText.slice(1) : mentionsSuggestionsText).toLowerCase()
+
 		return conversation.participants
-			.filter(p => p.nickName.includes(mentionsSuggestionsText) || p.email.includes(mentionsSuggestionsText))
+			.filter(p => p.nickName.toLowerCase().includes(search) || p.email.toLowerCase().includes(search))
 			.slice(0, 10)
 	}, [mentionsSuggestionsText, conversation.participants])
 
@@ -425,27 +427,21 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 		const selection = editor.selection
 
-		if (!selection || !selection.anchor || selection.anchor.offset <= 0 || !selection.anchor.path[0]) {
+		if (!selection || !selection.anchor || selection.anchor.offset <= 0) {
 			hideSuggestions()
 
 			return
 		}
 
-		const selected = editor.children[selection.anchor.path[0]] as CustomElement
+		const selected = editor.children[selection.anchor.path[0]!] as CustomElement
 
-		if (
-			!selected ||
-			!selected.children ||
-			!Array.isArray(selected.children) ||
-			selected.children.length === 0 ||
-			!selected.children[0]
-		) {
+		if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
 			hideSuggestions()
 
 			return
 		}
 
-		const text = selected.children[0].text
+		const text = selected.children[0]!.text
 
 		if (text.length === 0 || !(text.includes("@") || text.includes(":"))) {
 			hideSuggestions()
@@ -532,24 +528,13 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			}
 
 			const selectedChildrenIndex = selection.anchor.path[0]
+			const selected = editor.children[selectedChildrenIndex!] as CustomElement
 
-			if (!selectedChildrenIndex) {
+			if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
 				return
 			}
 
-			const selected = editor.children[selectedChildrenIndex] as CustomElement
-
-			if (
-				!selected ||
-				!selected.children ||
-				!Array.isArray(selected.children) ||
-				selected.children.length === 0 ||
-				!selected.children[0]
-			) {
-				return
-			}
-
-			const message = selected.children[0].text
+			const message = selected.children[0]!.text
 			const closestIndex = findClosestIndex(message, component, selection.anchor.offset)
 
 			if (closestIndex === -1) {
@@ -585,7 +570,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			const foundParticipant = conversation.participants.filter(p => p.userId === id)
 			const selection = editor.selection
 
-			if (!selection || !selection.anchor || foundParticipant.length === 0 || !foundParticipant[0]) {
+			if (!selection || !selection.anchor || foundParticipant.length === 0) {
 				hideSuggestions()
 				focusEditor()
 
@@ -593,27 +578,16 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			}
 
 			const selectedChildrenIndex = selection.anchor.path[0]
+			const selected = editor.children[selectedChildrenIndex!] as CustomElement
 
-			if (!selectedChildrenIndex) {
-				return
-			}
-
-			const selected = editor.children[selectedChildrenIndex] as CustomElement
-
-			if (
-				!selected ||
-				!selected.children ||
-				!Array.isArray(selected.children) ||
-				selected.children.length === 0 ||
-				!selected.children[0]
-			) {
+			if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
 				hideSuggestions()
 				focusEditor()
 
 				return
 			}
 
-			const message = selected.children[0].text
+			const message = selected.children[0]!.text
 			const closestIndex = findClosestIndex(message, "@", selection.anchor.offset)
 
 			if (closestIndex === -1) {
@@ -623,7 +597,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				return
 			}
 
-			const replacedMessage = message.slice(0, closestIndex) + "@" + foundParticipant[0].email + " "
+			const replacedMessage = message.slice(0, closestIndex) + "@" + foundParticipant[0]!.email + " "
 
 			if (replacedMessage.trim().length === 0) {
 				hideSuggestions()
@@ -664,7 +638,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			if (e.key === "Enter" && !e.shiftKey && !e.altKey && !e.metaKey && !e.ctrlKey) {
 				e.preventDefault()
 
-				if (showMentionSuggestions && filteredMentions.length !== 0 && filteredMentions[mentionsSuggestionsIndex]) {
+				if (showMentionSuggestions && filteredMentions.length > 0) {
 					const mention = filteredMentions[mentionsSuggestionsIndex]
 
 					if (!mention) {
@@ -676,11 +650,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 					return
 				}
 
-				if (
-					showEmojiSuggestions &&
-					emojisSuggestionsShortCodes.length !== 0 &&
-					emojisSuggestionsShortCodes[emojisSuggestionsIndex]
-				) {
+				if (showEmojiSuggestions && emojisSuggestionsShortCodes.length > 0) {
 					const shortCode = emojisSuggestionsShortCodes[emojisSuggestionsIndex]
 
 					if (!shortCode) {

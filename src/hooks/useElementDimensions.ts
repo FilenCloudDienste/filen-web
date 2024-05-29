@@ -1,4 +1,4 @@
-import { useState, useCallback, useLayoutEffect } from "react"
+import { useState, useCallback, useEffect } from "react"
 
 export type Dimensions = {
 	width: number
@@ -21,7 +21,7 @@ export default function useElementDimensions(elementId: string): Dimensions {
 		})
 	}, [elementId])
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		const element = document.getElementById(elementId)
 
 		if (!element) {
