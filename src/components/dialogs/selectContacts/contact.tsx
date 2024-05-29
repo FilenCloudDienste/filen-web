@@ -38,7 +38,7 @@ export const Contact = memo(
 		return (
 			<div
 				className={cn(
-					"flex flex-row gap-2 items-center p-2 rounded-md justify-between",
+					"flex flex-row gap-2 items-center p-2 rounded-md justify-between mb-1",
 					isSelected && "bg-secondary",
 					isExcluded ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-secondary"
 				)}

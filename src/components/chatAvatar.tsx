@@ -2,6 +2,7 @@ import { memo, useState, useCallback, useMemo, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { type ChatConversationParticipant } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import useSDKConfig from "@/hooks/useSDKConfig"
+import { type NoteParticipant } from "@filen/sdk/dist/types/api/v3/notes"
 
 export const bgColors = ["bg-blue-500", "bg-indigo-500", "bg-purple-500", "bg-yellow-500", "bg-cyan-500", "bg-orange-500", "bg-gray-500"]
 
@@ -46,12 +47,14 @@ export const ChatAvatar = memo(
 		participants,
 		className,
 		status,
-		size
+		size,
+		type = "chat"
 	}: {
-		participants: ChatConversationParticipant[]
+		participants: ChatConversationParticipant[] | NoteParticipant[]
 		className?: string
 		status?: "online" | "away" | "busy" | "offline"
 		size: number
+		type?: "chat" | "note"
 	}) => {
 		const [useFallback, setUseFallback] = useState<boolean>(false)
 		const { userId } = useSDKConfig()
@@ -112,7 +115,7 @@ export const ChatAvatar = memo(
 			)
 		}, [status, size])
 
-		if (participants.length <= 2) {
+		if (type === "chat" ? participants.length <= 2 : participants.length < 2) {
 			return (
 				<div
 					className={cn("flex flex-row shrink-0", className)}

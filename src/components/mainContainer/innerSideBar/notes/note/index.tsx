@@ -6,7 +6,7 @@ import { Archive, Trash, Text, ListChecks, Code, NotepadText, Pin, Heart, BookMa
 import { type Note as NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import ContextMenu from "./contextMenu"
 import { simpleDate } from "@/utils"
-import Avatar from "@/components/avatar"
+import ChatAvatar from "@/components/chatAvatar"
 
 export const Note = memo(
 	({
@@ -105,16 +105,12 @@ export const Note = memo(
 					</div>
 					{participantsWithoutUser.length > 0 && (
 						<div className="flex flex-row min-h-full justify-center items-center">
-							{participantsWithoutUser.map(p => {
-								return (
-									<Avatar
-										key={p.userId}
-										className="shrink-0"
-										size={28}
-										src={p.avatar}
-									/>
-								)
-							})}
+							<ChatAvatar
+								className="shrink-0"
+								size={28}
+								participants={participantsWithoutUser}
+								type="note"
+							/>
 						</div>
 					)}
 				</Link>

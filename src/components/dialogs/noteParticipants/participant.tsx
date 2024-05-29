@@ -107,12 +107,12 @@ export const Participant = memo(
 				<div className="flex flex-row gap-2 items-center">
 					<Avatar
 						src={participant.avatar}
-						size={24}
+						size={32}
 					/>
 					{participant.userId === note.ownerId && (
 						<Crown
 							className="text-yellow-500"
-							size={16}
+							size={18}
 						/>
 					)}
 					<p className="line-clamp-1 text-ellipsis break-all">{participant.email}</p>
@@ -123,10 +123,10 @@ export const Participant = memo(
 							<Tooltip>
 								<TooltipTrigger asChild={true}>
 									<div
-										className="bg-secondary hover:bg-primary-foreground w-7 h-7 shrink-0 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
+										className="bg-secondary hover:bg-primary-foreground w-8 h-8 shrink-0 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
 										onClick={togglePermissions}
 									>
-										{participant.permissionsWrite ? <Edit size={14} /> : <Eye size={14} />}
+										{participant.permissionsWrite ? <Edit size={16} /> : <Eye size={16} />}
 									</div>
 								</TooltipTrigger>
 								<TooltipContent side="top">
@@ -144,10 +144,10 @@ export const Participant = memo(
 							<Tooltip>
 								<TooltipTrigger asChild={true}>
 									<div
-										className="bg-red-500 w-7 h-7 shrink-0 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
+										className="bg-red-500 w-8 h-8 shrink-0 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
 										onClick={remove}
 									>
-										<X size={14} />
+										<X size={16} />
 									</div>
 								</TooltipTrigger>
 								<TooltipContent side="top">
