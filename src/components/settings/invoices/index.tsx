@@ -80,7 +80,7 @@ export const Invoices = memo(() => {
 
 	return (
 		<div className={cn("flex flex-col w-full overflow-y-auto", IS_DESKTOP ? "h-[calc(100vh-24px)]" : "h-screen")}>
-			<div className="flex flex-col w-full px-4 pb-4">
+			<div className="flex flex-col w-full">
 				{invoicesSorted.length === 0 && account ? (
 					<div
 						className={cn(

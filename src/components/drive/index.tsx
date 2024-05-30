@@ -7,7 +7,7 @@ import { type Prettify } from "@/types"
 import worker from "@/lib/worker"
 import useRouteParent from "@/hooks/useRouteParent"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
-import { promiseAllChunked } from "@/lib/utils"
+import { promiseAllChunked, dialogsOpen } from "@/lib/utils"
 import { directoryUUIDToNameCache } from "@/cache"
 import useErrorToast from "@/hooks/useErrorToast"
 
@@ -20,7 +20,7 @@ export type DriveCloudItem = Prettify<
 
 export const Drive = memo(() => {
 	const parent = useRouteParent()
-	const { setItems } = useDriveItemsStore()
+	const { setItems, searchTerm } = useDriveItemsStore()
 	const { currentReceiverId, currentSharerId, currentReceiverEmail, currentReceivers, currentSharerEmail } = useDriveSharedStore()
 	const errorToast = useErrorToast()
 
@@ -134,7 +134,7 @@ export const Drive = memo(() => {
 
 	const keyDownListener = useCallback(
 		(e: KeyboardEvent) => {
-			if (e.key === "a" && (e.ctrlKey || e.metaKey)) {
+			if (e.key === "a" && (e.ctrlKey || e.metaKey) && searchTerm.length === 0 && !dialogsOpen()) {
 				e.preventDefault()
 				e.stopPropagation()
 
@@ -143,7 +143,7 @@ export const Drive = memo(() => {
 				return
 			}
 		},
-		[setItems]
+		[setItems, searchTerm]
 	)
 
 	useEffect(() => {

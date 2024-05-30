@@ -63,7 +63,7 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 					<div className="absolute bottom-4 right-4 z-50">
 						<Button
 							variant="secondary"
-							className="items-center gap-2 shadow-sm"
+							className="items-center gap-2"
 						>
 							<AlertCircle size={16} />
 							Report abuse

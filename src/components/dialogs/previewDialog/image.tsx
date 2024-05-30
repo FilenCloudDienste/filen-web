@@ -5,6 +5,7 @@ import { type DriveCloudItem } from "@/components/drive"
 import { cn } from "@/lib/utils"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { LoaderIcon } from "lucide-react"
+import { useTheme } from "@/providers/themeProvider"
 
 const ZOOM_SPEED = 0.1
 
@@ -14,6 +15,7 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 	const ref = useRef<HTMLImageElement>(null)
 	const [pressed, setPressed] = useState<boolean>(false)
 	const publicLinkURLState = usePublicLinkURLState()
+	const { dark } = useTheme()
 
 	const onMouseDown = useCallback(() => {
 		setPressed(true)
@@ -89,7 +91,7 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 				<div
 					className={cn(
 						"w-full h-full flex flex-row items-center justify-center",
-						!publicLinkURLState.isPublicLink && "bg-black"
+						!publicLinkURLState.isPublicLink && (dark ? "bg-black" : "bg-white")
 					)}
 				>
 					{!urlObject && (

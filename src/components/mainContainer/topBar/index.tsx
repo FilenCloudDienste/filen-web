@@ -112,14 +112,14 @@ export const TopBar = memo(() => {
 	}
 
 	return (
-		<div className="w-full h-12 flex flex-row justify-between border-b select-none">
+		<div className="w-full h-12 flex flex-row justify-between border-b select-none dragselect-start-allowed">
 			{location.includes("notes") ? (
 				<Notes />
 			) : (
 				<>
 					<Breadcrumbs />
-					<div className="flex flex-row justify-end items-center gap-2 z-10 px-3">
-						<div className={cn("flex flex-row w-[250px] h-full items-center", dark ? "bg-[#151518]" : "bg-[#FBFBFB]")}>
+					<div className="flex flex-row justify-end items-center gap-3 z-10 px-3">
+						<div className={cn("flex flex-row min-w-[250px] h-full items-center", dark ? "bg-[#151518]" : "bg-[#FBFBFB]")}>
 							<div className="absolute h-full pl-2">
 								<div className="h-full flex flex-row items-center">
 									<Search

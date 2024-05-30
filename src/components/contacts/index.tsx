@@ -21,6 +21,7 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/blocked"
 import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/requests/in"
 import { Skeleton } from "../ui/skeleton"
+import { Plus } from "lucide-react"
 
 const refetchQueryParams = {
 	refetchInterval: 5000,
@@ -319,14 +320,21 @@ export const Contacts = memo(() => {
 	return (
 		<div className="flex flex-col w-full h-full select-none">
 			<div className="flex flex-col max-w-[75%] h-full">
-				<div className="flex flex-row gap-2 p-4">
+				<div className="flex flex-row gap-2 p-4 items-center">
 					<Input
 						className="grow"
 						value={search}
 						onChange={e => setSearch(e.target.value)}
 						placeholder={t("contacts.search")}
 					/>
-					<Button onClick={sendRequest}>{t("contacts.addContact")}</Button>
+					<Button
+						onClick={sendRequest}
+						size="sm"
+						className="items-center gap-2"
+					>
+						<Plus size={16} />
+						{t("contacts.addContact")}
+					</Button>
 				</div>
 				<div className="flex flex-row px-4">
 					<div className="flex flex-row text-muted-foreground mt-2 pb-3 grow uppercase gap-3 line-clamp-1 text-ellipsis break-all">

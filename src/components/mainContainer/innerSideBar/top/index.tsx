@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next"
 import useLocation from "@/hooks/useLocation"
 import Notes from "./notes"
 import Chats from "./chats"
+import { cn } from "@/lib/utils"
 
 export const Top = memo(() => {
 	const { baseFolderUUID } = useSDKConfig()
@@ -19,7 +20,10 @@ export const Top = memo(() => {
 				<Notes />
 			) : (
 				<Link
-					className="h-12 w-full flex flex-row items-center px-4 border-b cursor-pointer"
+					className={cn(
+						"w-full flex flex-row items-center px-4 cursor-pointer",
+						location.includes("drive") ? "border-b h-12" : "h-6 mt-3"
+					)}
 					to={
 						location.includes("settings")
 							? "/settings/$type"

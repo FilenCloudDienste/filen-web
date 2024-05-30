@@ -99,7 +99,7 @@ export const ReplaceMessageWithComponents = memo(
 							return (
 								<div
 									key={key}
-									className="bg-indigo-500 rounded-sm p-[1px] px-1 shadow-sm"
+									className="bg-indigo-500 rounded-sm p-[1px] px-1 text-white select-note"
 								>
 									<p>@everyone</p>
 								</div>
@@ -110,7 +110,7 @@ export const ReplaceMessageWithComponents = memo(
 							return (
 								<div
 									key={key}
-									className="bg-indigo-500 rounded-sm p-[1px] px-1 shadow-sm"
+									className="bg-indigo-500 rounded-sm p-[1px] px-1 text-white select-note"
 								>
 									<p>@UnknownUser</p>
 								</div>
@@ -123,7 +123,7 @@ export const ReplaceMessageWithComponents = memo(
 							return (
 								<div
 									key={key}
-									className="bg-indigo-500 rounded-sm p-[1px] px-1 shadow-sm"
+									className="bg-indigo-500 rounded-sm p-[1px] px-1 text-white select-note"
 								>
 									<p>@UnknownUser</p>
 								</div>
@@ -133,7 +133,7 @@ export const ReplaceMessageWithComponents = memo(
 						return (
 							<div
 								key={key}
-								className="bg-indigo-500 rounded-sm p-[1px] px-1 cursor-pointer shadow-sm"
+								className="bg-indigo-500 rounded-sm p-[1px] px-1 cursor-pointer text-white select-note"
 							>
 								<p>@{foundParticipant[0].nickName.length > 0 ? foundParticipant[0].nickName : foundParticipant[0].email}</p>
 							</div>
@@ -159,7 +159,7 @@ export const ReplaceMessageWithComponents = memo(
 								<Tooltip>
 									<TooltipTrigger asChild={true}>
 										<div
-											className="flex-col max-w-full p-2 py-1 bg-secondary border rounded-md shadow-sm basis-full cursor-pointer font-mono"
+											className="flex-col max-w-full p-2 py-1 bg-secondary border rounded-md basis-full cursor-pointer font-mono"
 											onClick={() => copy(code)}
 										>
 											{code}

@@ -15,6 +15,7 @@ import socket from "@/lib/socket"
 import { useNavigate } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { IS_DESKTOP } from "@/constants"
+import { useTranslation } from "react-i18next"
 
 export const Content = memo(({ note }: { note: Note }) => {
 	const { setSelectedNote, setNotes, setSynced } = useNotesStore()
@@ -28,6 +29,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const navigate = useNavigate()
 	const { userId } = useSDKConfig()
+	const { t } = useTranslation()
 
 	const query = useQuery({
 		queryKey: ["fetchNoteContent", note.uuid],
@@ -38,9 +40,13 @@ export const Content = memo(({ note }: { note: Note }) => {
 		return fileNameToPreviewType(note.title)
 	}, [note.title])
 
+	const hasWritePermissions = useMemo(() => {
+		return note.participants.some(p => p.userId === userId && (p.isOwner || p.permissionsWrite))
+	}, [note.participants, userId])
+
 	const editContent = useCallback(
 		async (val: string) => {
-			if (parent !== note.uuid || JSON.stringify(initialValueRef.current) === JSON.stringify(val)) {
+			if (parent !== note.uuid || JSON.stringify(initialValueRef.current) === JSON.stringify(val) || !hasWritePermissions) {
 				setSynced(true)
 
 				return
@@ -60,7 +66,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 				console.error(e)
 			}
 		},
-		[parent, note.uuid, setSelectedNote, setNotes, note.type, setSynced]
+		[parent, note.uuid, setSelectedNote, setNotes, note.type, setSynced, hasWritePermissions]
 	)
 
 	const editContentDebounce = useCallback(
@@ -74,12 +80,12 @@ export const Content = memo(({ note }: { note: Note }) => {
 
 	const onValueChange = useCallback(
 		(val: string) => {
-			if (parent === note.uuid && JSON.stringify(initialValueRef.current) !== JSON.stringify(val)) {
+			if (parent === note.uuid && JSON.stringify(initialValueRef.current) !== JSON.stringify(val) && hasWritePermissions) {
 				setSynced(false)
 				editContentDebounce(val)
 			}
 		},
-		[editContentDebounce, note.uuid, parent, setSynced]
+		[editContentDebounce, note.uuid, parent, setSynced, hasWritePermissions]
 	)
 
 	const socketEventListener = useCallback(
@@ -107,7 +113,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 
 	const keyDownListener = useCallback(
 		(e: KeyboardEvent) => {
-			if (e.key === "s" && (e.ctrlKey || e.metaKey) && value.length > 0) {
+			if (e.key === "s" && (e.ctrlKey || e.metaKey) && value.length > 0 && hasWritePermissions) {
 				e.preventDefault()
 				e.stopPropagation()
 
@@ -116,7 +122,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 				return
 			}
 		},
-		[editContent, value]
+		[editContent, value, hasWritePermissions]
 	)
 
 	useEffect(() => {
@@ -169,7 +175,8 @@ export const Content = memo(({ note }: { note: Note }) => {
 				width={resizablePanelSizes.right.width}
 				height={windowSize.height - 48 - (IS_DESKTOP ? 24 : 0)}
 				type={note.type}
-				placeholder="Note content..."
+				placeholder={t("notes.contentPlaceholder")}
+				readOnly={!hasWritePermissions}
 			/>
 		)
 	}
@@ -183,8 +190,9 @@ export const Content = memo(({ note }: { note: Note }) => {
 			onValueChange={onValueChange}
 			height={windowSize.height - 48 - (IS_DESKTOP ? 24 : 0)}
 			type={editorType === "code" || editorType === "md" || note.type === "md" || note.type === "code" ? "code" : "text"}
-			placeholder="Note content..."
+			placeholder={t("notes.contentPlaceholder")}
 			showMarkdownPreview={note.type === "md"}
+			readOnly={!hasWritePermissions}
 		/>
 	)
 })

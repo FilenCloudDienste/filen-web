@@ -6,7 +6,7 @@ import useRouteParent from "@/hooks/useRouteParent"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useTheme } from "@/providers/themeProvider"
 import { useTranslation } from "react-i18next"
-import { TOOLTIP_POPUP_DELAY, IS_DESKTOP } from "@/constants"
+import { IS_DESKTOP } from "@/constants"
 import eventEmitter from "@/lib/eventEmitter"
 import TransfersProgress from "./transfersProgress"
 import { useLocalStorage } from "@uidotdev/usehooks"
@@ -100,13 +100,14 @@ export const Button = memo(({ id }: { id: string }) => {
 
 	return (
 		<div className={cn("flex flex-row justify-center items-center w-full", IS_DESKTOP ? "pl-[1px]" : "")}>
-			<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+			<TooltipProvider delayDuration={100}>
 				<Tooltip>
 					<TooltipTrigger asChild={true}>
 						<Link
 							className={cn(
-								"flex flex-row p-[8px] rounded-lg transition-colors items-center justify-center cursor-pointer font-semibold hover:text-primary text-muted-foreground",
-								showIndicator && "bg-secondary text-primary"
+								"flex flex-row p-[8px] rounded-lg transition-colors items-center justify-center cursor-pointer font-semibold hover:text-primary",
+								showIndicator && "bg-secondary text-primary",
+								theme.dark && !showIndicator && "text-muted-foreground"
 							)}
 							onClick={onClick}
 							to={link.to}

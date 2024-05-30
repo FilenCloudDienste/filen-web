@@ -52,7 +52,7 @@ export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; re
 
 	return (
 		<div
-			className="flex flex-row gap-3 items-center hover:bg-secondary shadow-sm rounded-md p-3"
+			className="flex flex-row gap-3 items-center hover:bg-secondary rounded-md p-3"
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 		>

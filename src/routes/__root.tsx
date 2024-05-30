@@ -100,7 +100,7 @@ export const Root = memo(() => {
 	}
 
 	return (
-		<main className="overflow-hidden transform-gpu font-inter antialiased">
+		<main className="overflow-hidden font-inter">
 			<ThemeProvider>
 				<PersistQueryClientProvider
 					client={persistantQueryClient}

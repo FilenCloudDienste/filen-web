@@ -56,7 +56,7 @@ export const Plans = memo(() => {
 	}
 
 	return (
-		<div className="flex flex-col w-full h-full p-6 justify-center">
+		<div className="flex flex-col w-full h-full p-8 justify-center">
 			<Tabs
 				defaultValue="monthly"
 				className="flex flex-col items-center"

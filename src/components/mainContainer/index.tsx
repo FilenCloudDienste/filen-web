@@ -60,11 +60,11 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 					{!IS_APPLE_DEVICE && (
 						<>
 							<div className="w-[64px] flex flex-row items-center px-3">
-								<p className="text-sm text-muted-foreground">Filen</p>
+								<p className="text-sm">Filen</p>
 							</div>
 							<div className="flex flex-row w-full justify-end">
 								<div
-									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-secondary hover:text-white"
+									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-secondary hover:text-primary"
 									style={{
 										// @ts-expect-error not typed
 										WebkitAppRegion: "no-drag"
@@ -74,7 +74,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 									<Minus size={15} />
 								</div>
 								<div
-									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-secondary hover:text-white"
+									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-secondary hover:text-primary"
 									style={{
 										// @ts-expect-error not typed
 										WebkitAppRegion: "no-drag"

@@ -189,7 +189,7 @@ export const Event = memo(({ event, account }: { event: UserEvent; account: User
 	}, [event, t])
 
 	return (
-		<div className="flex flex-row border-b items-center p-4 py-3 justify-between gap-10 cursor-pointer hover:bg-secondary hover:rounded-md w-full">
+		<div className="flex flex-row border-b items-center p-4 py-3 justify-between gap-10 hover:bg-secondary hover:rounded-md w-full">
 			<div className="flex flex-row gap-3 items-center">
 				{event.type === "folderColorChanged" ||
 				event.type === "folderLinkEdited" ||

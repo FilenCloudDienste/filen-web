@@ -42,6 +42,7 @@ import {
 	BookMarked,
 	Hash
 } from "lucide-react"
+import useSDKConfig from "@/hooks/useSDKConfig"
 
 const iconSize = 16
 
@@ -60,6 +61,7 @@ export const ContextMenu = memo(
 		const navigate = useNavigate()
 		const errorToast = useErrorToast()
 		const loadingToast = useLoadingToast()
+		const { userId } = useSDKConfig()
 
 		const tagsQuery = useQuery({
 			queryKey: ["listNotesTags"],
@@ -89,6 +91,52 @@ export const ContextMenu = memo(
 				toast.dismiss()
 			}
 		}, [note.uuid, setNotes, setSelectedNote, loadingToast, errorToast])
+
+		const leave = useCallback(async () => {
+			if (
+				!(await showConfirmDialog({
+					title: t("notes.dialogs.leaveNote.title"),
+					continueButtonText: t("notes.dialogs.leaveNote.continue"),
+					description: t("notes.dialogs.leaveNote.description", {
+						name: note.title
+					}),
+					continueButtonVariant: "destructive"
+				}))
+			) {
+				return
+			}
+
+			const toast = loadingToast()
+
+			try {
+				await worker.removeNoteParticipant({ uuid: note.uuid, userId })
+
+				setNotes(prev => prev.filter(prevNote => prevNote.uuid !== note.uuid))
+
+				if (selectedNote && selectedNote.uuid === note.uuid) {
+					const newSelectedNote = notes.filter(n => n.uuid !== note.uuid)
+
+					if (newSelectedNote.length >= 1 && newSelectedNote[0]) {
+						setSelectedNote(newSelectedNote[0])
+
+						navigate({
+							to: "/notes/$uuid",
+							params: {
+								uuid: newSelectedNote[0].uuid
+							}
+						})
+					} else {
+						setSelectedNote(null)
+					}
+				}
+			} catch (e) {
+				console.error(e)
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			} finally {
+				toast.dismiss()
+			}
+		}, [note.uuid, setNotes, setSelectedNote, loadingToast, errorToast, t, navigate, note.title, notes, selectedNote, userId])
 
 		const deleteNote = useCallback(async () => {
 			if (
@@ -633,7 +681,7 @@ export const ContextMenu = memo(
 						{t("contextMenus.notes.exportAll")}
 					</ContextMenuItem>
 					<ContextMenuSeparator />
-					{!note.trash && !note.archive && (
+					{!note.trash && !note.archive && note.ownerId === userId && (
 						<>
 							<ContextMenuItem
 								onClick={archive}
@@ -645,7 +693,7 @@ export const ContextMenu = memo(
 							<ContextMenuSeparator />
 						</>
 					)}
-					{(note.trash || note.archive) && (
+					{(note.trash || note.archive) && note.ownerId === userId && (
 						<>
 							<ContextMenuItem
 								onClick={restore}
@@ -657,21 +705,33 @@ export const ContextMenu = memo(
 							<ContextMenuSeparator />
 						</>
 					)}
-					{note.trash ? (
+					{note.ownerId === userId ? (
+						<>
+							{note.trash ? (
+								<ContextMenuItem
+									onClick={deleteNote}
+									className="cursor-pointer text-red-500 gap-3"
+								>
+									<Delete size={iconSize} />
+									{t("contextMenus.notes.delete")}
+								</ContextMenuItem>
+							) : (
+								<ContextMenuItem
+									onClick={trash}
+									className="cursor-pointer text-red-500 gap-3"
+								>
+									<Trash size={iconSize} />
+									{t("contextMenus.notes.trash")}
+								</ContextMenuItem>
+							)}
+						</>
+					) : (
 						<ContextMenuItem
-							onClick={deleteNote}
+							onClick={leave}
 							className="cursor-pointer text-red-500 gap-3"
 						>
 							<Delete size={iconSize} />
-							{t("contextMenus.notes.delete")}
-						</ContextMenuItem>
-					) : (
-						<ContextMenuItem
-							onClick={trash}
-							className="cursor-pointer text-red-500 gap-3"
-						>
-							<Trash size={iconSize} />
-							{t("contextMenus.notes.trash")}
+							{t("contextMenus.notes.leave")}
 						</ContextMenuItem>
 					)}
 				</ContextMenuContent>

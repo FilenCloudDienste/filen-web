@@ -75,7 +75,7 @@ export const Notes = memo(() => {
 	}
 
 	return (
-		<div className={cn("flex flex-row px-4 items-center gap-3 w-full h-12 z-50 shadow-sm", dark ? "bg-[#151518]" : "bg-[#FBFBFB]")}>
+		<div className={cn("flex flex-row px-4 items-center gap-3 w-full h-12 z-50", dark ? "bg-[#151518]" : "bg-[#FBFBFB]")}>
 			<div className="flex flex-row">
 				{synced ? <CheckCircle2 className="text-green-500" /> : <Loader className="animate-spin-medium" />}
 			</div>

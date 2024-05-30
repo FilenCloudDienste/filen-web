@@ -404,7 +404,7 @@ export const PreviewDialog = memo(() => {
 			<DialogContent className="fullscreen-dialog no-close-button outline-none focus:outline-none active:outline-none hover:outline-none select-none">
 				{item && (
 					<div className="absolute w-screen h-screen flex flex-col">
-						<div className="flex flex-row border-b h-[49px] shadow-md bg-secondary w-full items-center justify-between px-4 z-50 gap-10 -mt-[1px]">
+						<div className="flex flex-row border-b h-[49px] bg-secondary w-full items-center justify-between px-4 z-50 gap-10 -mt-[1px]">
 							<div className="flex flex-row items-center gap-2 grow">
 								{didChange && (
 									<>
@@ -442,7 +442,7 @@ export const PreviewDialog = memo(() => {
 							<>
 								{canGoToPreviousItem && (
 									<div
-										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full bg-secondary cursor-pointer left-4 opacity-75 text-white"
+										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full bg-secondary cursor-pointer left-4 opacity-75 text-primary"
 										onClick={goToPreviousItem}
 									>
 										<ArrowLeft />
@@ -450,7 +450,7 @@ export const PreviewDialog = memo(() => {
 								)}
 								{canGoToNextItem && (
 									<div
-										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full bg-secondary cursor-pointer right-4 opacity-75 text-white"
+										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full bg-secondary cursor-pointer right-4 opacity-75 text-primary"
 										onClick={goToNextItem}
 									>
 										<ArrowRight />

@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 import ContextMenu from "./contextMenu"
 
 export const tagClassName =
-	"flex flex-row gap-1 items-center justify-center px-2 py-1 rounded-md bg-muted/30 hover:bg-secondary cursor-pointer h-7 text-sm"
+	"flex flex-row gap-1 items-center justify-center px-2 py-1 rounded-md bg-muted/35 text-muted-foreground hover:bg-secondary hover:text-primary cursor-pointer h-7 text-sm"
 
 export const Tags = memo(() => {
 	const { t } = useTranslation()
@@ -47,19 +47,19 @@ export const Tags = memo(() => {
 	return (
 		<div className="flex flex-row w-full h-auto p-4 flex-wrap gap-2">
 			<div
-				className={cn(tagClassName, activeTag === "all" && "bg-secondary")}
+				className={cn(tagClassName, activeTag === "all" && "bg-secondary text-primary")}
 				onClick={() => setActiveTag("all")}
 			>
 				{t("innerSideBar.notes.tags.all")}
 			</div>
 			<div
-				className={cn(tagClassName, activeTag === "favorites" && "bg-secondary")}
+				className={cn(tagClassName, activeTag === "favorites" && "bg-secondary text-primary")}
 				onClick={() => setActiveTag("favorites")}
 			>
 				{t("innerSideBar.notes.tags.favorites")}
 			</div>
 			<div
-				className={cn(tagClassName, activeTag === "pinned" && "bg-secondary")}
+				className={cn(tagClassName, activeTag === "pinned" && "bg-secondary text-primary")}
 				onClick={() => setActiveTag("pinned")}
 			>
 				{t("innerSideBar.notes.tags.pinned")}
@@ -73,7 +73,7 @@ export const Tags = memo(() => {
 							refetch={query.refetch}
 						>
 							<div
-								className={cn(tagClassName, activeTag === tag.uuid && "bg-secondary")}
+								className={cn(tagClassName, activeTag === tag.uuid && "bg-secondary text-primary")}
 								onClick={() => setActiveTag(tag.uuid)}
 							>
 								{tag.favorite && <Heart size={14} />}
@@ -92,7 +92,7 @@ export const Tags = memo(() => {
 							<Plus size={18} />
 						</div>
 					</TooltipTrigger>
-					<TooltipContent side="left">
+					<TooltipContent>
 						<p>{t("innerSideBar.notes.createTag")}</p>
 					</TooltipContent>
 				</Tooltip>

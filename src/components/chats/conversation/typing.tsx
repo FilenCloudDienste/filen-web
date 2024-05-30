@@ -68,7 +68,7 @@ export const Typing = memo(({ conversation }: { conversation: ChatConversation }
 		}
 	}, [socketEventListener])
 
-	return <div className="flex flex-row items-center gap-1">{typingUsers.length === 0 ? <>&nbsp;</> : typing}</div>
+	return <div className="flex flex-row items-center gap-1 text-sm h-4">{typingUsers.length === 0 ? <>&nbsp;</> : typing}</div>
 })
 
 export default Typing

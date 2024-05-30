@@ -44,7 +44,7 @@ export const Text = memo(
 					value={value}
 					setValue={setValue}
 					height={height}
-					type={previewType === "code" ? "code" : "text"}
+					type={previewType === "code" || previewType === "md" ? "code" : "text"}
 					showMarkdownPreview={previewType === "md"}
 					onValueChange={onValueChange}
 					autoFocus={true}

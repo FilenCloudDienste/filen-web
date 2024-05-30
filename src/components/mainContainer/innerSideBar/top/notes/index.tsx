@@ -57,7 +57,7 @@ export const Notes = memo(() => {
 
 	return (
 		<div
-			className="h-auto w-full flex flex-col border-b shadow-sm"
+			className="h-auto w-full flex flex-col"
 			id="inner-sidebar-top-notes"
 		>
 			<div className="h-12 w-full flex flex-row items-center px-4 justify-between">

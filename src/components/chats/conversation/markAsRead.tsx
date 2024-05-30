@@ -135,7 +135,7 @@ export const MarkAsRead = memo(
 
 		return (
 			<div
-				className="absolute h-auto bg-indigo-500 mt-12 z-[10001] px-2 py-1 rounded-b-lg flex flex-row items-center justify-between cursor-pointer whitespace-nowrap gap-4 select-none opacity-95"
+				className="absolute h-auto bg-indigo-500 mt-12 z-50 px-2 py-1 rounded-b-lg flex flex-row items-center justify-between cursor-pointer whitespace-nowrap gap-4 select-none opacity-95 text-white"
 				style={{
 					width: inputContainerDimensions.width
 				}}

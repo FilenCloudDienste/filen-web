@@ -1,3 +1,5 @@
+/* eslint-disable quotes */
+
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -99,4 +101,17 @@ export function parseURLSearchParams(url: string): Record<string, string> {
 	})
 
 	return paramMap
+}
+
+/**
+ * Returns true if one or more dialogs are open.
+ *
+ * @export
+ * @returns {boolean}
+ */
+export function dialogsOpen(): boolean {
+	const alerts = document.querySelectorAll('div[role="alertdialog"]')
+	const dialogs = document.querySelectorAll('div[role="dialog"]')
+
+	return alerts.length > 0 || dialogs.length > 0
 }

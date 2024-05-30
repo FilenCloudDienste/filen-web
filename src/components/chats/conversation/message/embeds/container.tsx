@@ -62,9 +62,7 @@ export const Container = memo(
 		return (
 			<div
 				className={
-					"flex flex-col w-[512px] h-[288px] bg-secondary rounded-md shadow-sm border-l-[3px] border-l-" +
-					color +
-					"-500 p-3 pt-2 gap-1"
+					"flex flex-col w-[512px] h-[288px] bg-secondary rounded-md border-l-[3px] border-l-" + color + "-500 p-3 pt-2 gap-1"
 				}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
@@ -94,7 +92,7 @@ export const Container = memo(
 				{title && <p className="line-clamp-1 text-ellipsis break-all">{title}</p>}
 				<div
 					className={cn(
-						"flex flex-col w-full mt-[4px] rounded-md shadow-sm overflow-x-hidden overflow-y-auto",
+						"flex flex-col w-full mt-[4px] rounded-md overflow-x-hidden overflow-y-auto",
 						!noBackground && "bg-primary-foreground",
 						title ? "h-[210px]" : "h-[240px]"
 					)}

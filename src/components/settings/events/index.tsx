@@ -28,7 +28,7 @@ export const Events = memo(() => {
 	})
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - 24 - (IS_DESKTOP ? 24 : 0)
+		return windowSize.height - 16 - (IS_DESKTOP ? 24 : 0)
 	}, [windowSize.height])
 
 	const showSkeletons = useMemo(() => {

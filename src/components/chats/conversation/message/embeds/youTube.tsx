@@ -61,7 +61,7 @@ export const YouTube = memo(
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						allowFullScreen={true}
 						sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-presentation"
-						className="overflow-hidden border-none rounded-md shadow-sm"
+						className="overflow-hidden border-none rounded-md"
 					/>
 				) : (
 					<>

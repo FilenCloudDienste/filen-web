@@ -77,7 +77,7 @@ export const Request = memo(({ request, refetch, type }: { request: ContactReque
 
 	return (
 		<div
-			className="flex flex-row gap-3 items-center hover:bg-secondary shadow-sm rounded-md p-3"
+			className="flex flex-row gap-3 items-center hover:bg-secondary rounded-md p-3"
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 		>

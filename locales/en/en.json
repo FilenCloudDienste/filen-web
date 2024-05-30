@@ -305,6 +305,7 @@
 			"delete": "Delete",
 			"rename": "Rename",
 			"tags": "Tags",
+			"leave": "Leave",
 			"types": {
 				"md": "Markdown",
 				"rich": "Richtext",
@@ -786,6 +787,7 @@
 		}
 	},
 	"notes": {
+		"contentPlaceholder": "Note content...",
 		"dialogs": {
 			"removeParticipant": {
 				"title": "Remove participant",
@@ -816,6 +818,11 @@
 				"title": "Rename",
 				"placeholder": "New name",
 				"continue": "Rename"
+			},
+			"leaveNote": {
+				"title": "Leave note",
+				"description": "Are you sure you want to leave {{name}}? You will no longer be able to access the note.",
+				"continue": "Leave"
 			}
 		}
 	},
