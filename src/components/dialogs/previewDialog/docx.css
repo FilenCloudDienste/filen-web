@@ -1,0 +1,89 @@
+.docx-viewer {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer h1 {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer h2 {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer h3 {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer h4 {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer h5 {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer h6 {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer p {
+	margin-bottom: 1em;
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer strong {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer b {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer a {
+	color: blue;
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer a:hover {
+	text-decoration: underline;
+}
+
+.docx-viewer ul,
+.docx-viewer ol {
+	margin-left: 2em;
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 1em;
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer table th,
+.docx-viewer table td {
+	border: 1px solid #ddd;
+	padding: 8px;
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.docx-viewer table th {
+	background-color: #f2f2f2;
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+}
