@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react"
+import { memo, useCallback, useRef, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Search, List, Grid3X3 } from "lucide-react"
 import { useTranslation } from "react-i18next"
@@ -26,6 +26,7 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import useCanUpload from "@/hooks/useCanUpload"
+import useDriveURLState from "@/hooks/useDriveURLState"
 
 export const TopBar = memo(() => {
 	const { t } = useTranslation()
@@ -37,6 +38,8 @@ export const TopBar = memo(() => {
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const canUpload = useCanUpload()
+	const searchInputRef = useRef<HTMLInputElement>(null)
+	const driveURLState = useDriveURLState()
 
 	const changeListType = useCallback(() => {
 		setListType(prev => ({ ...prev, [parent]: listType[parent] === "grid" ? "list" : "grid" }))
@@ -82,6 +85,28 @@ export const TopBar = memo(() => {
 		}
 	}, [loadingToast, errorToast, setItems, location, t])
 
+	const keyDownListener = useCallback(
+		(e: KeyboardEvent) => {
+			if (e.key === "f" && (e.ctrlKey || e.metaKey) && searchInputRef.current && driveURLState.drive) {
+				e.preventDefault()
+				e.stopPropagation()
+
+				searchInputRef.current.focus()
+
+				return
+			}
+		},
+		[driveURLState.drive]
+	)
+
+	useEffect(() => {
+		window.addEventListener("keydown", keyDownListener)
+
+		return () => {
+			window.removeEventListener("keydown", keyDownListener)
+		}
+	}, [keyDownListener])
+
 	if (location.includes("settings") || location === "/notes" || location.includes("chats") || location.includes("contacts")) {
 		return null
 	}
@@ -104,6 +129,7 @@ export const TopBar = memo(() => {
 								</div>
 							</div>
 							<Input
+								ref={searchInputRef}
 								className="pl-8 text-sm max-w-lg h-9"
 								placeholder={t("topBar.searchInThisFolder")}
 								value={searchTerm}

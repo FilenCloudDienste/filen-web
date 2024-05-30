@@ -180,7 +180,7 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 	return (
 		<CM>
 			<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
-			<ContextMenuContent className="min-w-52">
+			<ContextMenuContent className="min-w-48">
 				{hasWritePermissions && (
 					<>
 						<ContextMenuItem

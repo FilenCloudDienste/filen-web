@@ -14,6 +14,9 @@ import { showInputDialog } from "@/components/dialogs/input"
 import { type RefetchOptions, type QueryObserverResult } from "@tanstack/react-query"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
+import { Delete, Heart, Edit } from "lucide-react"
+
+const iconSize = 16
 
 export const ContextMenu = memo(
 	({
@@ -129,33 +132,37 @@ export const ContextMenu = memo(
 		return (
 			<CM>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
-				<ContextMenuContent className="min-w-52">
+				<ContextMenuContent className="min-w-48">
 					{tag.favorite ? (
 						<ContextMenuItem
 							onClick={unfavorite}
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 						>
+							<Heart size={iconSize} />
 							{t("contextMenus.notes.unfavorite")}
 						</ContextMenuItem>
 					) : (
 						<ContextMenuItem
 							onClick={favorite}
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 						>
+							<Heart size={iconSize} />
 							{t("contextMenus.notes.favorite")}
 						</ContextMenuItem>
 					)}
 					<ContextMenuItem
 						onClick={rename}
-						className="cursor-pointer"
+						className="cursor-pointer gap-3"
 					>
+						<Edit size={iconSize} />
 						{t("contextMenus.notes.rename")}
 					</ContextMenuItem>
 					<ContextMenuSeparator />
 					<ContextMenuItem
 						onClick={deleteTag}
-						className="cursor-pointer text-red-500"
+						className="cursor-pointer text-red-500 gap-3"
 					>
+						<Delete size={iconSize} />
 						{t("contextMenus.notes.delete")}
 					</ContextMenuItem>
 				</ContextMenuContent>

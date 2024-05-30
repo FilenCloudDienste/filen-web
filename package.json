@@ -59,7 +59,7 @@
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.0",
 		"comlink": "^4.4.1",
-		"docx-preview": "github:VolodymyrBaydalka/docxjs",
+		"docx-preview": "^0.3.2",
 		"emoji-mart": "^5.5.2",
 		"emojibase-regex": "^15.3.0",
 		"hacktimer": "^1.1.3",

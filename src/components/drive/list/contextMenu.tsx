@@ -16,6 +16,9 @@ import eventEmitter from "@/lib/eventEmitter"
 import { directoryUUIDToNameCache } from "@/cache"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
+import { Folder, Text, Upload } from "lucide-react"
+
+const iconSize = 16
 
 export const ContextMenu = memo(({ children }: { children: React.ReactNode }) => {
 	const { setItems } = useDriveItemsStore()
@@ -79,30 +82,34 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 			}}
 		>
 			<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
-			<ContextMenuContent className="min-w-52">
+			<ContextMenuContent className="min-w-48">
 				<ContextMenuItem
-					className="cursor-pointer"
+					className="cursor-pointer gap-3"
 					onClick={createDirectory}
 				>
+					<Folder size={iconSize} />
 					{t("contextMenus.drive.newFolder")}
 				</ContextMenuItem>
 				<ContextMenuItem
-					className="cursor-pointer"
+					className="cursor-pointer gap-3"
 					onClick={() => eventEmitter.emit("createTextFile")}
 				>
+					<Text size={iconSize} />
 					{t("contextMenus.drive.newTextFile")}
 				</ContextMenuItem>
 				<ContextMenuSeparator />
 				<ContextMenuItem
-					className="cursor-pointer"
+					className="cursor-pointer gap-3"
 					onClick={() => document.getElementById("folder-input")?.click()}
 				>
+					<Upload size={iconSize} />
 					{t("contextMenus.drive.uploadFolders")}
 				</ContextMenuItem>
 				<ContextMenuItem
-					className="cursor-pointer"
+					className="cursor-pointer gap-3"
 					onClick={() => document.getElementById("file-input")?.click()}
 				>
+					<Upload size={iconSize} />
 					{t("contextMenus.drive.uploadFiles")}
 				</ContextMenuItem>
 			</ContextMenuContent>

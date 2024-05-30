@@ -23,6 +23,27 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { ZipWriter } from "@zip.js/zip.js"
 import eventEmitter from "@/lib/eventEmitter"
+import {
+	RotateCcw,
+	Delete,
+	Users2,
+	History,
+	Heart,
+	Pin,
+	Copy,
+	Download,
+	Archive,
+	Trash,
+	Notebook,
+	Text,
+	ListChecks,
+	Code,
+	NotepadText,
+	BookMarked,
+	Hash
+} from "lucide-react"
+
+const iconSize = 16
 
 export const ContextMenu = memo(
 	({
@@ -462,57 +483,65 @@ export const ContextMenu = memo(
 		return (
 			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
-				<ContextMenuContent className="min-w-52">
+				<ContextMenuContent className="min-w-48">
 					<ContextMenuItem
 						onClick={history}
-						className="cursor-pointer"
+						className="cursor-pointer gap-3"
 					>
+						<History size={iconSize} />
 						{t("contextMenus.notes.history")}
 					</ContextMenuItem>
 					<ContextMenuSeparator />
 					<ContextMenuItem
 						onClick={participants}
-						className="cursor-pointer"
+						className="cursor-pointer gap-3"
 					>
+						<Users2 size={iconSize} />
 						{t("contextMenus.notes.participants")}
 					</ContextMenuItem>
 					<ContextMenuSeparator />
 					<ContextMenuSub>
 						<ContextMenuSubTrigger
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 							onClick={e => e.stopPropagation()}
 						>
+							<Notebook size={iconSize} />
 							{t("contextMenus.notes.type")}
 						</ContextMenuSubTrigger>
 						<ContextMenuSubContent>
 							<ContextMenuItem
 								onClick={() => changeType("text")}
-								className={cn("cursor-pointer", note.type === "text" ? "text-blue-500" : "")}
+								className={cn("cursor-pointer gap-3", note.type === "text" ? "text-blue-500" : "")}
 							>
+								<Text size={iconSize} />
 								{t("contextMenus.notes.types.text")}
 							</ContextMenuItem>
 							<ContextMenuItem
 								onClick={() => changeType("rich")}
-								className={cn("cursor-pointer", note.type === "rich" ? "text-blue-500" : "")}
+								className={cn("cursor-pointer gap-3", note.type === "rich" ? "text-blue-500" : "")}
 							>
+								<NotepadText size={iconSize} />
 								{t("contextMenus.notes.types.rich")}
 							</ContextMenuItem>
 							<ContextMenuItem
 								onClick={() => changeType("checklist")}
-								className={cn("cursor-pointer", note.type === "checklist" ? "text-blue-500" : "")}
+								className={cn("cursor-pointer gap-3", note.type === "checklist" ? "text-blue-500" : "")}
 							>
+								<ListChecks size={iconSize} />
 								{t("contextMenus.notes.types.checklist")}
 							</ContextMenuItem>
 							<ContextMenuItem
 								onClick={() => changeType("md")}
-								className={cn("cursor-pointer", note.type === "md" ? "text-blue-500" : "")}
+								className={cn("cursor-pointer gap-3", note.type === "md" ? "text-blue-500" : "")}
 							>
+								<BookMarked size={iconSize} />
 								{t("contextMenus.notes.types.md")}
 							</ContextMenuItem>
 							<ContextMenuItem
 								onClick={() => changeType("code")}
-								className={cn("cursor-pointer", note.type === "code" ? "text-blue-500" : "")}
+								className={cn("cursor-pointer gap-3", note.type === "code" ? "text-blue-500" : "")}
 							>
+								<Code size={iconSize} />
 								{t("contextMenus.notes.types.code")}
 							</ContextMenuItem>
 						</ContextMenuSubContent>
@@ -521,30 +550,34 @@ export const ContextMenu = memo(
 					{note.pinned ? (
 						<ContextMenuItem
 							onClick={unpin}
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 						>
+							<Pin size={iconSize} />
 							{t("contextMenus.notes.unpin")}
 						</ContextMenuItem>
 					) : (
 						<ContextMenuItem
 							onClick={pin}
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 						>
+							<Pin size={iconSize} />
 							{t("contextMenus.notes.pin")}
 						</ContextMenuItem>
 					)}
 					{note.favorite ? (
 						<ContextMenuItem
 							onClick={unfavorite}
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 						>
+							<Heart size={iconSize} />
 							{t("contextMenus.notes.unfavorite")}
 						</ContextMenuItem>
 					) : (
 						<ContextMenuItem
 							onClick={favorite}
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 						>
+							<Heart size={iconSize} />
 							{t("contextMenus.notes.favorite")}
 						</ContextMenuItem>
 					)}
@@ -552,9 +585,10 @@ export const ContextMenu = memo(
 						<>
 							<ContextMenuSub>
 								<ContextMenuSubTrigger
-									className="cursor-pointer"
+									className="cursor-pointer gap-3"
 									onClick={e => e.stopPropagation()}
 								>
+									<Hash size={iconSize} />
 									{t("contextMenus.notes.tags")}
 								</ContextMenuSubTrigger>
 								<ContextMenuSubContent>
@@ -565,8 +599,9 @@ export const ContextMenu = memo(
 											<ContextMenuItem
 												key={tag.uuid}
 												onClick={() => (includesTag ? untagNote(tag) : tagNote(tag))}
-												className={cn("cursor-pointer", includesTag ? "text-blue-500" : "")}
+												className={cn("cursor-pointer gap-3", includesTag ? "text-blue-500" : "")}
 											>
+												<Hash size={iconSize} />
 												{tag.name}
 											</ContextMenuItem>
 										)
@@ -578,20 +613,23 @@ export const ContextMenu = memo(
 					<ContextMenuSeparator />
 					<ContextMenuItem
 						onClick={duplicate}
-						className="cursor-pointer"
+						className="cursor-pointer gap-3"
 					>
+						<Copy size={iconSize} />
 						{t("contextMenus.notes.duplicate")}
 					</ContextMenuItem>
 					<ContextMenuItem
 						onClick={exportNote}
-						className="cursor-pointer"
+						className="cursor-pointer gap-3"
 					>
+						<Download size={iconSize} />
 						{t("contextMenus.notes.export")}
 					</ContextMenuItem>
 					<ContextMenuItem
 						onClick={exportAll}
-						className="cursor-pointer"
+						className="cursor-pointer gap-3"
 					>
+						<Download size={iconSize} />
 						{t("contextMenus.notes.exportAll")}
 					</ContextMenuItem>
 					<ContextMenuSeparator />
@@ -599,8 +637,9 @@ export const ContextMenu = memo(
 						<>
 							<ContextMenuItem
 								onClick={archive}
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 							>
+								<Archive size={iconSize} />
 								{t("contextMenus.notes.archive")}
 							</ContextMenuItem>
 							<ContextMenuSeparator />
@@ -610,8 +649,9 @@ export const ContextMenu = memo(
 						<>
 							<ContextMenuItem
 								onClick={restore}
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 							>
+								<RotateCcw size={iconSize} />
 								{t("contextMenus.notes.restore")}
 							</ContextMenuItem>
 							<ContextMenuSeparator />
@@ -620,15 +660,17 @@ export const ContextMenu = memo(
 					{note.trash ? (
 						<ContextMenuItem
 							onClick={deleteNote}
-							className="cursor-pointer text-red-500"
+							className="cursor-pointer text-red-500 gap-3"
 						>
+							<Delete size={iconSize} />
 							{t("contextMenus.notes.delete")}
 						</ContextMenuItem>
 					) : (
 						<ContextMenuItem
 							onClick={trash}
-							className="cursor-pointer text-red-500"
+							className="cursor-pointer text-red-500 gap-3"
 						>
+							<Trash size={iconSize} />
 							{t("contextMenus.notes.trash")}
 						</ContextMenuItem>
 					)}

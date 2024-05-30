@@ -117,7 +117,7 @@ export const ContextMenu = memo(
 		return (
 			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
-				<ContextMenuContent className="min-w-52">
+				<ContextMenuContent className="min-w-48">
 					<ContextMenuItem
 						onClick={reply}
 						className="cursor-pointer gap-3"

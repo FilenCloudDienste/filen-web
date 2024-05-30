@@ -1,6 +1,6 @@
 import MainContainer from "@/components/mainContainer"
 import RequireAuth from "@/components/requireAuthed"
-import { memo, useCallback } from "react"
+import { memo, useCallback, useEffect } from "react"
 import { type CloudItem, type CloudItemShared } from "@filen/sdk"
 import List from "./list"
 import { type Prettify } from "@/types"
@@ -131,6 +131,28 @@ export const Drive = memo(() => {
 		},
 		[currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId, setItems, parent, errorToast]
 	)
+
+	const keyDownListener = useCallback(
+		(e: KeyboardEvent) => {
+			if (e.key === "a" && (e.ctrlKey || e.metaKey)) {
+				e.preventDefault()
+				e.stopPropagation()
+
+				setItems(prev => prev.map(prevItem => ({ ...prevItem, selected: true })))
+
+				return
+			}
+		},
+		[setItems]
+	)
+
+	useEffect(() => {
+		window.addEventListener("keydown", keyDownListener)
+
+		return () => {
+			window.removeEventListener("keydown", keyDownListener)
+		}
+	}, [keyDownListener])
 
 	return (
 		<RequireAuth>

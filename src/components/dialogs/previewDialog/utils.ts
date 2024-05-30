@@ -95,7 +95,7 @@ export function fileNameToPreviewType(name: string) {
 		}
 
 		case ".docx": {
-			return "docx"
+			return "other" //"docx"
 		}
 
 		default: {

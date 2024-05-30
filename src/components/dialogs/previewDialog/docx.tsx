@@ -6,15 +6,22 @@ import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 
 export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
 	const container = useRef<HTMLDivElement>(null)
+	const styleContainer = useRef<HTMLDivElement>(null)
 	const publicLinkURLState = usePublicLinkURLState()
 
 	const loadDocX = useCallback(async () => {
-		if (!container.current) {
+		if (!container.current || !styleContainer.current) {
 			return
 		}
 
 		try {
-			await renderAsync(buffer, container.current as HTMLElement)
+			await renderAsync(
+				new Blob([buffer], {
+					type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+				}),
+				container.current as HTMLElement,
+				styleContainer.current as HTMLElement
+			)
 		} catch (e) {
 			console.error(e)
 		}
@@ -26,6 +33,7 @@ export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
 
 	return (
 		<div className="w-full h-full select-text">
+			<div ref={styleContainer} />
 			<div
 				ref={container}
 				className={cn(

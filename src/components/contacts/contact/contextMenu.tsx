@@ -96,7 +96,7 @@ export const ContextMenu = memo(
 		return (
 			<CM onOpenChange={setHovering}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
-				<ContextMenuContent className="min-w-52">
+				<ContextMenuContent className="min-w-48">
 					<ContextMenuItem
 						onClick={profile}
 						className="cursor-pointer gap-3"

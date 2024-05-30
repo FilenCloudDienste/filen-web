@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next"
 import { simpleDate } from "@/utils"
 import eventEmitter from "@/lib/eventEmitter"
 import { useChatsStore } from "@/stores/chats.store"
+import useRouteParent from "@/hooks/useRouteParent"
 
 export const MarkAsRead = memo(
 	({
@@ -30,6 +31,7 @@ export const MarkAsRead = memo(
 		const { userId } = useSDKConfig()
 		const { t } = useTranslation()
 		const { setConversationsUnread } = useChatsStore()
+		const routeParent = useRouteParent()
 
 		const { show, count, since } = useMemo(() => {
 			if (messagesSorted.length === 0) {
@@ -40,7 +42,9 @@ export const MarkAsRead = memo(
 				}
 			}
 
-			const messagesSinceLastFocus = messagesSorted.filter(message => message.sentTimestamp > lastFocus)
+			const messagesSinceLastFocus = messagesSorted.filter(
+				message => message.sentTimestamp > lastFocus && routeParent === message.conversation
+			)
 
 			if (messagesSinceLastFocus.length === 0) {
 				return {
@@ -65,7 +69,7 @@ export const MarkAsRead = memo(
 				count: messagesFromOthers.length,
 				since: simpleDate(messagesSinceLastFocus.at(0)?.sentTimestamp ?? Date.now())
 			}
-		}, [messagesSorted, lastFocus, userId])
+		}, [messagesSorted, lastFocus, userId, routeParent])
 
 		const markAsRead = useCallback(async () => {
 			setMarkingAsRead(true)

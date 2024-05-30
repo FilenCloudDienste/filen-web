@@ -24,7 +24,7 @@ export const InnerSideBar = memo(() => {
 			<Top />
 			<div
 				className={cn(
-					"flex flex-col overflow-y-auto overflow-x-hidden dragselect-start-disallowed",
+					"flex flex-col overflow-y-auto overflow-x-hidden dragselect-start-allowed",
 					!location.includes("notes") && !location.includes("chats") ? "py-3" : ""
 				)}
 				style={{

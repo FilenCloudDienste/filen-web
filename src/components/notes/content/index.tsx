@@ -105,6 +105,20 @@ export const Content = memo(({ note }: { note: Note }) => {
 		[query, parent, navigate, userId, note.uuid]
 	)
 
+	const keyDownListener = useCallback(
+		(e: KeyboardEvent) => {
+			if (e.key === "s" && (e.ctrlKey || e.metaKey) && value.length > 0) {
+				e.preventDefault()
+				e.stopPropagation()
+
+				editContent(value)
+
+				return
+			}
+		},
+		[editContent, value]
+	)
+
 	useEffect(() => {
 		if (query.isSuccess && queryUpdatedAtRef.current !== query.dataUpdatedAt) {
 			queryUpdatedAtRef.current = query.dataUpdatedAt
@@ -133,11 +147,13 @@ export const Content = memo(({ note }: { note: Note }) => {
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)
+		window.addEventListener("keydown", keyDownListener)
 
 		return () => {
 			socket.removeListener("socketEvent", socketEventListener)
+			window.removeEventListener("keydown", keyDownListener)
 		}
-	}, [socketEventListener])
+	}, [socketEventListener, keyDownListener])
 
 	if (!query.isSuccess) {
 		return null

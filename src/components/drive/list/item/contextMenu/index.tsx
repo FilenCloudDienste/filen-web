@@ -1,11 +1,10 @@
-import { memo, useMemo, useCallback, useState } from "react"
+import { memo, useMemo, useCallback, useState, useEffect } from "react"
 import {
 	ContextMenu as CM,
 	ContextMenuContent,
 	ContextMenuItem,
 	ContextMenuTrigger,
 	ContextMenuSeparator,
-	ContextMenuShortcut,
 	ContextMenuSub,
 	ContextMenuSubTrigger,
 	ContextMenuSubContent
@@ -15,7 +14,6 @@ import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { useTranslation } from "react-i18next"
 import MoveTree from "./moveTree"
 import useSDKConfig from "@/hooks/useSDKConfig"
-import { CTRL_KEY_TEXT } from "@/constants"
 import * as actions from "./actions"
 import { selectDriveItem } from "@/components/dialogs/selectDriveItem"
 import eventEmitter from "@/lib/eventEmitter"
@@ -31,6 +29,23 @@ import useErrorToast from "@/hooks/useErrorToast"
 import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { showInputDialog } from "@/components/dialogs/input"
+import {
+	Eye,
+	Download,
+	Link,
+	PhoneOutgoing,
+	History,
+	Heart,
+	Edit,
+	Move,
+	Trash,
+	Navigation,
+	PaintBucket,
+	RotateCcw,
+	Delete
+} from "lucide-react"
+
+const iconSize = 16
 
 export const ContextMenu = memo(
 	({ item, children, items }: { item: DriveCloudItem; children: React.ReactNode; items: DriveCloudItem[] }) => {
@@ -395,15 +410,47 @@ export const ContextMenu = memo(
 			eventEmitter.emit("openFileVersionsDialog", item)
 		}, [item])
 
+		const keyDownListener = useCallback(
+			(e: KeyboardEvent) => {
+				if (e.key === "s" && (e.ctrlKey || e.metaKey) && selectedItems.length > 0) {
+					e.preventDefault()
+					e.stopPropagation()
+
+					download()
+
+					return
+				}
+
+				if (e.key === "Delete" && selectedItems.length > 0) {
+					e.preventDefault()
+					e.stopPropagation()
+
+					trash()
+
+					return
+				}
+			},
+			[selectedItems, trash, download]
+		)
+
+		useEffect(() => {
+			window.addEventListener("keydown", keyDownListener)
+
+			return () => {
+				window.removeEventListener("keydown", keyDownListener)
+			}
+		}, [keyDownListener])
+
 		return (
 			<CM>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
-				<ContextMenuContent className="min-w-52">
+				<ContextMenuContent className="min-w-48">
 					{selectedItems.length === 1 && item.type === "file" && previewType !== "other" && (
 						<ContextMenuItem
 							onClick={preview}
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 						>
+							<Eye size={iconSize} />
 							{t("contextMenus.item.preview")}
 						</ContextMenuItem>
 					)}
@@ -411,8 +458,9 @@ export const ContextMenu = memo(
 						<>
 							<ContextMenuItem
 								onClick={openDirectory}
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 							>
+								<Navigation size={iconSize} />
 								{t("contextMenus.item.open")}
 							</ContextMenuItem>
 							<ContextMenuSeparator />
@@ -420,17 +468,18 @@ export const ContextMenu = memo(
 					)}
 					<ContextMenuItem
 						onClick={download}
-						className="cursor-pointer"
+						className="cursor-pointer gap-3"
 					>
+						<Download size={iconSize} />
 						{t("contextMenus.item.download")}
-						<ContextMenuShortcut>{CTRL_KEY_TEXT} + S</ContextMenuShortcut>
 					</ContextMenuItem>
-					{!isInsidePublicLink && <ContextMenuSeparator />}
+					{!isInsidePublicLink && !driveURLState.sharedIn && <ContextMenuSeparator />}
 					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
 						<ContextMenuItem
 							onClick={publicLink}
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 						>
+							<Link size={iconSize} />
 							{t("contextMenus.item.publicLink")}
 						</ContextMenuItem>
 					)}
@@ -438,8 +487,9 @@ export const ContextMenu = memo(
 						<>
 							<ContextMenuItem
 								onClick={share}
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 							>
+								<PhoneOutgoing size={iconSize} />
 								{t("contextMenus.item.share")}
 							</ContextMenuItem>
 							<ContextMenuSeparator />
@@ -453,8 +503,9 @@ export const ContextMenu = memo(
 							<>
 								<ContextMenuItem
 									onClick={versions}
-									className="cursor-pointer"
+									className="cursor-pointer gap-3"
 								>
+									<History size={iconSize} />
 									{t("contextMenus.item.versions")}
 								</ContextMenuItem>
 								<ContextMenuSeparator />
@@ -464,16 +515,18 @@ export const ContextMenu = memo(
 						<>
 							<ContextMenuItem
 								onClick={() => toggleFavorite(!item.favorited)}
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 							>
+								<Heart size={iconSize} />
 								{item.favorited ? t("contextMenus.item.unfavorite") : t("contextMenus.item.favorite")}
 							</ContextMenuItem>
 							{item.type === "directory" && (
 								<ContextMenuSub>
 									<ContextMenuSubTrigger
-										className="cursor-pointer"
+										className="cursor-pointer gap-3"
 										onClick={e => e.stopPropagation()}
 									>
+										<PaintBucket size={iconSize} />
 										{t("contextMenus.item.color")}
 									</ContextMenuSubTrigger>
 									<ContextMenuSubContent onClick={e => e.stopPropagation()}>
@@ -491,8 +544,9 @@ export const ContextMenu = memo(
 					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
 						<ContextMenuItem
 							onClick={rename}
-							className="cursor-pointer"
+							className="cursor-pointer gap-3"
 						>
+							<Edit size={iconSize} />
 							{t("contextMenus.item.rename")}
 						</ContextMenuItem>
 					)}
@@ -500,15 +554,16 @@ export const ContextMenu = memo(
 						<>
 							<ContextMenuSub>
 								<ContextMenuSubTrigger
-									className="cursor-pointer"
+									className="cursor-pointer gap-3"
 									onClick={e => e.stopPropagation()}
 								>
+									<Move size={iconSize} />
 									{t("contextMenus.item.move")}
 								</ContextMenuSubTrigger>
 								<ContextMenuSubContent>
 									<ContextMenuItem
 										onClick={move}
-										className="cursor-pointer"
+										className="cursor-pointer gap-3"
 									>
 										{t("contextMenus.item.selectDestination")}
 									</ContextMenuItem>
@@ -526,8 +581,9 @@ export const ContextMenu = memo(
 						<>
 							<ContextMenuItem
 								onClick={restore}
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 							>
+								<RotateCcw size={iconSize} />
 								{t("contextMenus.item.restore")}
 							</ContextMenuItem>
 						</>
@@ -535,17 +591,10 @@ export const ContextMenu = memo(
 					{!driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
 						<ContextMenuItem
 							onClick={trash}
-							className="cursor-pointer text-red-500"
+							className="cursor-pointer text-red-500 gap-3"
 						>
+							<Trash size={iconSize} />
 							{t("contextMenus.item.trash")}
-						</ContextMenuItem>
-					)}
-					{driveURLState.sharedIn && !isInsidePublicLink && (
-						<ContextMenuItem
-							onClick={download}
-							className="cursor-pointer text-red-500"
-						>
-							{t("contextMenus.item.remove")}
 						</ContextMenuItem>
 					)}
 					{driveURLState.trash && !isInsidePublicLink && (
@@ -553,8 +602,9 @@ export const ContextMenu = memo(
 							<ContextMenuSeparator />
 							<ContextMenuItem
 								onClick={deletePermanently}
-								className="cursor-pointer text-red-500"
+								className="cursor-pointer text-red-500 gap-3"
 							>
+								<Delete size={iconSize} />
 								{t("contextMenus.item.deletePermanently")}
 							</ContextMenuItem>
 						</>

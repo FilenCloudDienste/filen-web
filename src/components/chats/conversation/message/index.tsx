@@ -178,7 +178,7 @@ export const Message = memo(
 				return false
 			}
 
-			return prevMessage.senderId === message.senderId && isTimestampSameMinute(message.sentTimestamp, prevMessage.sentTimestamp)
+			return prevMessage.senderId === message.senderId && isTimestampSameMinute(prevMessage.sentTimestamp, message.sentTimestamp)
 		}, [message, prevMessage])
 
 		const prevMessageSameDay = useMemo((): boolean => {
