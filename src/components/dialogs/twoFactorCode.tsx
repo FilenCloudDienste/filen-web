@@ -209,7 +209,7 @@ export const TwoFactorCodeDialog = memo(() => {
 							</div>
 						</div>
 					)}
-					<div className="flex flex-row items-center justify-center p-4">
+					<div className="flex flex-row items-center justify-center p-4 py-8">
 						{useRecoveryKey ? (
 							<Input
 								value={twoFactorCode}
@@ -250,7 +250,7 @@ export const TwoFactorCodeDialog = memo(() => {
 						)}
 					</div>
 					{!props.keyToDisplay && (
-						<div className="flex flex-row justify-center">
+						<div className="flex flex-row justify-center pb-4">
 							<p
 								className="text-sm text-muted-foreground underline cursor-pointer"
 								onClick={() => setUseRecoveryKey(true)}

@@ -11,19 +11,25 @@ import {
 import { useTranslation } from "react-i18next"
 import eventEmitter from "@/lib/eventEmitter"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import useSuccessToast from "@/hooks/useSuccessToast"
+import useErrorToast from "@/hooks/useErrorToast"
+import { Copy } from "lucide-react"
 
 export type ConfirmDialogProps = {
 	title: string
 	continueButtonText: string
 	continueButtonVariant?: "destructive" | "default" | "link" | "outline" | "secondary" | "ghost" | null
 	description: string
+	withInputField?: string
 }
 
 export async function showConfirmDialog({
 	title,
 	continueButtonText,
 	description,
-	continueButtonVariant
+	continueButtonVariant,
+	withInputField
 }: ConfirmDialogProps): Promise<boolean> {
 	return await new Promise<boolean>(resolve => {
 		const id = Math.random().toString(16).slice(2)
@@ -38,7 +44,14 @@ export async function showConfirmDialog({
 			resolve(confirmed)
 		})
 
-		eventEmitter.emit("openConfirmDialog", { requestId: id, title, continueButtonText, continueButtonVariant, description })
+		eventEmitter.emit("openConfirmDialog", {
+			requestId: id,
+			title,
+			continueButtonText,
+			continueButtonVariant,
+			description,
+			withInputField
+		})
 	})
 }
 
@@ -49,10 +62,13 @@ export const ConfirmDialog = memo(() => {
 		title: "",
 		continueButtonText: "",
 		description: "",
-		continueButtonVariant: "default"
+		continueButtonVariant: "default",
+		withInputField: undefined
 	})
 	const requestId = useRef<string>("")
 	const didSubmit = useRef<boolean>(false)
+	const successToast = useSuccessToast()
+	const errorToast = useErrorToast()
 
 	const submit = useCallback(() => {
 		if (didSubmit.current) {
@@ -83,6 +99,22 @@ export const ConfirmDialog = memo(() => {
 
 		setOpen(false)
 	}, [])
+
+	const copyInputField = useCallback(async () => {
+		if (!props.withInputField) {
+			return
+		}
+
+		try {
+			await navigator.clipboard.writeText(props.withInputField)
+
+			successToast(t("copiedToClipboard"))
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		}
+	}, [props.withInputField, successToast, errorToast, t])
 
 	useEffect(() => {
 		const keyDownListener = (e: KeyboardEvent) => {
@@ -121,6 +153,19 @@ export const ConfirmDialog = memo(() => {
 				<AlertDialogHeader>
 					<AlertDialogTitle>{props.title}</AlertDialogTitle>
 					<AlertDialogDescription>{props.description}</AlertDialogDescription>
+					{props.withInputField && (
+						<div className="flex flex-row items-center gap-1 py-4 justify-center">
+							<Input
+								value={props.withInputField}
+								onChange={e => e.preventDefault()}
+								type="text"
+								className="w-full"
+							/>
+							<Button onClick={copyInputField}>
+								<Copy size={18} />
+							</Button>
+						</div>
+					)}
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={cancel}>{t("dialogs.cancel")}</AlertDialogCancel>

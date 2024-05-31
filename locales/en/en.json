@@ -506,6 +506,11 @@
 				"title": "Edit nickname",
 				"placeholder": "New nickname",
 				"continue": "Save"
+			},
+			"twoFactorAuthenticationRecoveryKey": {
+				"title": "Recovery key",
+				"description": "Please store your Two Factor Authentication recovery key in a save location. It is the only way to regain access to your account in case you lose your Two Factor Authentication device!",
+				"continue": "Done"
 			}
 		},
 		"general": {

@@ -12,6 +12,7 @@ import eventEmitter from "@/lib/eventEmitter"
 import ChangePasswordDialog from "./dialogs/changePassword"
 import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
+import { showConfirmDialog } from "@/components/dialogs/confirm"
 
 export const Security = memo(() => {
 	const account = useAccount()
@@ -57,8 +58,17 @@ export const Security = memo(() => {
 
 					toast = loadingToast()
 
-					await worker.enableTwoFactorAuthentication({ twoFactorCode: code.code })
+					const recoveryKey = await worker.enableTwoFactorAuthentication({ twoFactorCode: code.code })
+
 					await account.refetch()
+
+					await showConfirmDialog({
+						title: t("settings.dialogs.twoFactorAuthenticationRecoveryKey.title"),
+						continueButtonText: t("settings.dialogs.twoFactorAuthenticationRecoveryKey.continue"),
+						description: t("settings.dialogs.twoFactorAuthenticationRecoveryKey.description"),
+						continueButtonVariant: "default",
+						withInputField: recoveryKey
+					})
 				} else {
 					if (account.settings.twoFactorEnabled === 0) {
 						return
