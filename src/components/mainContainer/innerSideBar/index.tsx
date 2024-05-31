@@ -1,8 +1,8 @@
-import { memo } from "react"
+import { memo, useMemo } from "react"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import Button from "./button"
 import { IS_DESKTOP } from "@/constants"
-import { useWindowSize } from "@uidotdev/usehooks"
+import useWindowSize from "@/hooks/useWindowSize"
 import Divider from "./divider"
 import Notes from "./notes"
 import { cn } from "@/lib/utils"
@@ -19,6 +19,18 @@ export const InnerSideBar = memo(() => {
 	const chatsTopDimensions = useElementDimensions("inner-sidebar-top-chats")
 	const notesTopDimensions = useElementDimensions("inner-sidebar-top-notes")
 
+	const containerHeight = useMemo(() => {
+		const topHeight = location.includes("chats")
+			? chatsTopDimensions.height
+			: location.includes("notes")
+				? notesTopDimensions.height
+				: location.includes("drive")
+					? 48
+					: 24
+
+		return windowSize.height - (IS_DESKTOP ? 24 : 0) - 48 - topHeight
+	}, [location, chatsTopDimensions.height, notesTopDimensions.height, windowSize.height])
+
 	return (
 		<div className="w-full flex flex-col h-full select-none">
 			<Top />
@@ -28,15 +40,7 @@ export const InnerSideBar = memo(() => {
 					!location.includes("notes") && !location.includes("chats") ? "py-3" : ""
 				)}
 				style={{
-					height:
-						(windowSize.height ?? window.innerHeight) -
-						48 -
-						(location.includes("chats")
-							? chatsTopDimensions.height
-							: location.includes("notes")
-								? notesTopDimensions.height
-								: 48) -
-						(IS_DESKTOP ? 24 : 0)
+					height: containerHeight
 				}}
 			>
 				{location.includes("drive") && (

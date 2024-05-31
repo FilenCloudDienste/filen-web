@@ -113,7 +113,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 				<div className="flex flex-row items-center max-w-[1px] px-3">
 					<Breadcrumbs info={info} />
 				</div>
-				<div className={cn("flex flex-row gap-2 px-4 h-full items-center", dark ? "bg-[#151518]" : "bg-[#FBFBFB]")}>
+				<div className={cn("flex flex-row gap-2 px-4 h-full items-center", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
 					<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 						<Tooltip>
 							<TooltipTrigger asChild={true}>

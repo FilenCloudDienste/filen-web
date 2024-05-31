@@ -127,7 +127,7 @@ export const Time = memo(({ timestamp, t }: { timestamp: number; t: TFunction<"t
 		<TooltipProvider delayDuration={750}>
 			<Tooltip>
 				<TooltipTrigger asChild={true}>
-					<p className="text-muted-foreground text-sm cursor-default">{date.simple}</p>
+					<p className="text-muted-foreground text-xs cursor-default">{date.simple}</p>
 				</TooltipTrigger>
 				<TooltipContent side="top">
 					<p>{date.full}</p>
@@ -547,7 +547,7 @@ export const Message = memo(
 													/>
 												</div>
 											)}
-											<div className="flex flex-row w-full h-auto text-primary/75">
+											<div className="flex flex-row w-full h-auto text-muted-foreground">
 												<ReplaceMessageWithComponents
 													content={message.message}
 													participants={conversation.participants}

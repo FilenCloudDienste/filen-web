@@ -108,7 +108,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 			<div
 				className={cn(
 					"flex flex-row w-full h-14 border-b items-center px-4 justify-between z-50 gap-4",
-					dark ? "bg-[#151518]" : "bg-[#FBFBFB]"
+					dark ? "bg-[#151518]" : "bg-[#FFFFFF]"
 				)}
 			>
 				<div className="flex flex-row gap-2 items-center">

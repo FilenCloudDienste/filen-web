@@ -106,7 +106,7 @@ export const Button = memo(({ id }: { id: string }) => {
 						<Link
 							className={cn(
 								"flex flex-row p-[8px] rounded-lg transition-colors items-center justify-center cursor-pointer font-semibold hover:text-primary",
-								showIndicator && "bg-secondary text-primary",
+								showIndicator && (theme.dark ? "bg-secondary text-primary" : "bg-[lightgray] text-primary"),
 								theme.dark && !showIndicator && "text-muted-foreground"
 							)}
 							onClick={onClick}

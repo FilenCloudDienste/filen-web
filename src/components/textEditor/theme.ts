@@ -12,8 +12,8 @@ export const dark = githubDarkInit({
 export const light = githubLightInit({
 	settings: {
 		background: "transparent",
-		gutterBackground: "#FBFBFB",
-		gutterBorder: "#FBFBFB",
+		gutterBackground: "#FFFFFF",
+		gutterBorder: "#FFFFFF",
 		gutterActiveForeground: "black",
 		foreground: "black"
 	}

@@ -35,7 +35,7 @@ import {
 import useLocation from "@/hooks/useLocation"
 import { useContactsStore } from "@/stores/contacts.store"
 
-const iconSize = 20
+const iconSize = 18
 
 export const Button = memo(({ uuid }: { uuid: string }) => {
 	const { baseFolderUUID } = useSDKConfig()
@@ -62,13 +62,13 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 	}, [uuid])
 
 	return (
-		<div className="flex flex-col mb-1 px-3">
+		<div className="flex flex-col mb-0.5 px-3">
 			<Link
 				to={link.to}
 				params={link.params}
 				draggable={false}
 				className={cn(
-					"flex flex-row gap-3 w-full px-3 py-2 rounded-md transition-all items-center hover:bg-secondary text-primary cursor-pointer",
+					"flex flex-row gap-2.5 w-full px-3 py-2 rounded-md transition-all items-center hover:bg-secondary text-primary cursor-pointer",
 					routeParent === uuid || location === `/${uuid}` ? "bg-secondary" : "bg-transparent"
 				)}
 			>

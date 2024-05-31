@@ -16,8 +16,7 @@ module.exports = {
 		},
 		extend: {
 			fontFamily: {
-				geist: ["Geist", "Regular"],
-				inter: ["Inter", "Regular"]
+				geist: ["Geist", "Regular"]
 			},
 			colors: {
 				border: "hsl(var(--border))",
@@ -59,21 +58,7 @@ module.exports = {
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)"
 			},
-			fontSize: {
-				xs: ["0.6375rem", { lineHeight: "0.85rem" }], // 10.2px
-				sm: ["0.85rem", { lineHeight: "1.133rem" }], // 13.6px
-				base: ["1.02rem", { lineHeight: "1.36rem" }], // 16.32px
-				lg: ["1.19rem", { lineHeight: "1.59rem" }], // 19.04px
-				xl: ["1.275rem", { lineHeight: "1.78rem" }], // 20.4px
-				"2xl": ["1.53rem", { lineHeight: "2.04rem" }], // 24.48px
-				"3xl": ["1.955rem", { lineHeight: "2.34rem" }], // 31.28px
-				"4xl": ["2.295rem", { lineHeight: "2.55rem" }], // 36.72px
-				"5xl": ["3.06rem", { lineHeight: "1" }], // 48.96px
-				"6xl": ["3.825rem", { lineHeight: "1" }], // 61.2px
-				"7xl": ["4.59rem", { lineHeight: "1" }], // 73.44px
-				"8xl": ["6.12rem", { lineHeight: "1" }], // 97.92px
-				"9xl": ["8.16rem", { lineHeight: "1" }] // 130.56px
-			},
+
 			keyframes: {
 				"accordion-down": {
 					from: { height: "0" },

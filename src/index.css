@@ -9,11 +9,6 @@
 		url(/fonts/geist/GeistVariableVF.woff2) format("woff2");
 }
 
-@font-face {
-	font-family: "Inter";
-	src: url(/fonts/inter/Inter-Regular.otf) format("opentype");
-}
-
 @layer base {
 	:root {
 		--background: 0 0% 100%;
@@ -69,7 +64,7 @@
 	* {
 		@apply border-border;
 		font-family:
-			"Inter",
+			"Geist",
 			system-ui,
 			-apple-system,
 			BlinkMacSystemFont,

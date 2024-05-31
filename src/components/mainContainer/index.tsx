@@ -11,6 +11,7 @@ import useWindowSize from "@/hooks/useWindowSize"
 import { X, Maximize, Minus } from "lucide-react"
 import { showConfirmDialog } from "../dialogs/confirm"
 import { useTranslation } from "react-i18next"
+import { useTheme } from "@/providers/themeProvider"
 
 export const sidebarBasePx = 275
 export const sidebarMinPx = 275
@@ -18,6 +19,7 @@ export const sidebarMaxPx = 500
 
 export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 	const { t } = useTranslation()
+	const { dark } = useTheme()
 
 	const minimizeWindow = useCallback(() => {
 		window.desktopAPI.minimizeWindow().catch(console.error)
@@ -49,7 +51,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 
 	if (IS_DESKTOP) {
 		return (
-			<div className="w-screen h-screen flex flex-col">
+			<div className={cn("w-screen h-screen flex flex-col", !dark && "bg-secondary")}>
 				<div
 					className="flex flex-row w-full h-[24px] z-0 select-none"
 					style={{
@@ -60,11 +62,14 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 					{!IS_APPLE_DEVICE && (
 						<>
 							<div className="w-[64px] flex flex-row items-center px-3">
-								<p className="text-sm">Filen</p>
+								<p className="text-sm text-muted-foreground">Filen</p>
 							</div>
 							<div className="flex flex-row w-full justify-end">
 								<div
-									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-secondary hover:text-primary"
+									className={cn(
+										"w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:text-primary",
+										dark ? "hover:bg-secondary" : "hover:bg-[lightgray]"
+									)}
 									style={{
 										// @ts-expect-error not typed
 										WebkitAppRegion: "no-drag"
@@ -74,7 +79,10 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 									<Minus size={15} />
 								</div>
 								<div
-									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-secondary hover:text-primary"
+									className={cn(
+										"w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:text-primary",
+										dark ? "hover:bg-secondary" : "hover:bg-[lightgray]"
+									)}
 									style={{
 										// @ts-expect-error not typed
 										WebkitAppRegion: "no-drag"
@@ -102,7 +110,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 		)
 	}
 
-	return <div className="w-screen h-screen flex flex-row">{children}</div>
+	return <div className={cn("w-screen h-screen flex flex-row", !dark && "bg-secondary")}>{children}</div>
 })
 
 export const InnerSideBarWrapper = memo(
@@ -110,7 +118,7 @@ export const InnerSideBarWrapper = memo(
 		if (location.includes("settings") || location.includes("chats") || location.includes("contacts")) {
 			return (
 				<div
-					className={cn("flex flex-col border-r", location.includes("chats") ? " w-[275px]" : "w-[250px]")}
+					className={cn("flex flex-col border-r", location.includes("chats") ? " w-[275px]" : "w-[225px]")}
 					id="left-resizable-panel"
 				>
 					<InnerSideBar />
@@ -139,6 +147,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 	const windowSize = useWindowSize()
 	const [sidebarPercentage, setSidebarPercentage] = useLocalStorage<number>("sidebarPercentage", 0)
 	const location = useLocation()
+	const { dark } = useTheme()
 
 	const sidebarSize = useMemo(() => {
 		if (sidebarPercentage > 0) {
@@ -170,7 +179,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={e => setSidebarPercentage(e[0] ? e[0] : 20)}
-				className={cn("bg-muted/40", IS_DESKTOP && "rounded-tl-[10px]")}
+				className={cn(dark ? "bg-muted/40" : "bg-background", IS_DESKTOP && "rounded-tl-[10px]")}
 			>
 				{!location.includes("terminal") && (
 					<InnerSideBarWrapper

@@ -119,7 +119,7 @@ export const TopBar = memo(() => {
 				<>
 					<Breadcrumbs />
 					<div className="flex flex-row justify-end items-center gap-3 z-10 px-3">
-						<div className={cn("flex flex-row min-w-[250px] h-full items-center", dark ? "bg-[#151518]" : "bg-[#FBFBFB]")}>
+						<div className={cn("flex flex-row min-w-[250px] h-full items-center", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
 							<div className="absolute h-full pl-2">
 								<div className="h-full flex flex-row items-center">
 									<Search
