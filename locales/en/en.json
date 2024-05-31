@@ -3,6 +3,7 @@
 	"new": "New",
 	"image": "Image",
 	"empty": "Empty",
+	"copiedToClipboard": "Copied to clipboard",
 	"login": {
 		"header": "Login",
 		"description": "Enter you email and password below to login to your account",
@@ -275,9 +276,19 @@
 					"description": "Are you sure you want to send {{name}} to the trash? You can always recover it afterwards.",
 					"continue": "Trash"
 				},
+				"trashMultiple": {
+					"title": "Trash",
+					"description": "Are you sure you want to send {{count}} items to the trash? You can always recover it afterwards.",
+					"continue": "Trash"
+				},
 				"deletePermanently": {
 					"title": "Delete permanently",
-					"description": "Are you sure you want to delete {{name}} permanently? This action cannot be undone!.",
+					"description": "Are you sure you want to delete {{name}} permanently? This action cannot be undone!",
+					"continue": "Delete"
+				},
+				"deletePermanentlyMultiple": {
+					"title": "Delete permanently",
+					"description": "Are you sure you want to delete {{count}} items permanently? This action cannot be undone!",
 					"continue": "Delete"
 				}
 			}

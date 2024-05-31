@@ -72,13 +72,13 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		try {
 			await navigator.clipboard.writeText(conversation.uuid)
 
-			successToast("Copied to clipboard")
+			successToast(t("copiedToClipboard"))
 		} catch (e) {
 			console.error(e)
 
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		}
-	}, [conversation.uuid, successToast, errorToast])
+	}, [conversation.uuid, successToast, errorToast, t])
 
 	const deleteConversation = useCallback(async () => {
 		if (

@@ -142,13 +142,13 @@ export const Directory = memo(
 					PUBLIC_LINK_BASE_URL.split("/#/d/").join("/#/f/") + status.uuid + "#" + decryptedLinkKey
 				)
 
-				successToast("Copied to clipboard")
+				successToast(t("copiedToClipboard"))
 			} catch (e) {
 				console.error(e)
 
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
-		}, [status, successToast, errorToast, decryptedLinkKey])
+		}, [status, successToast, errorToast, decryptedLinkKey, t])
 
 		const onPasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 			setPassword(e.target.value)

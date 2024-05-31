@@ -20,6 +20,7 @@ export const UNCACHED_QUERY_KEYS = [
 	"directoryPublicLinkStatus",
 	"filePublicLinkStatus",
 	"chatConversationUnreadCount",
+	"chatLastFocus",
 	"chatConversationOnline",
 	"chatsUnreadCount",
 	"contactsRequestInCount",

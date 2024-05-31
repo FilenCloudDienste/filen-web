@@ -80,25 +80,25 @@ export const ContextMenu = memo(
 			try {
 				await navigator.clipboard.writeText(message.message)
 
-				successToast("Copied to clipboard")
+				successToast(t("copiedToClipboard"))
 			} catch (e) {
 				console.error(e)
 
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
-		}, [message.message, successToast, errorToast])
+		}, [message.message, successToast, errorToast, t])
 
 		const copyId = useCallback(async () => {
 			try {
 				await navigator.clipboard.writeText(message.uuid)
 
-				successToast("Copied to clipboard")
+				successToast(t("copiedToClipboard"))
 			} catch (e) {
 				console.error(e)
 
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
-		}, [message.uuid, successToast, errorToast])
+		}, [message.uuid, successToast, errorToast, t])
 
 		const reply = useCallback(() => {
 			setReplyMessage(message)

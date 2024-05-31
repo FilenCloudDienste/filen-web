@@ -153,13 +153,13 @@ export const TwoFactorCodeDialog = memo(() => {
 		try {
 			await navigator.clipboard.writeText(props.keyToDisplayRaw)
 
-			successToast("Copied to clipboard")
+			successToast(t("copiedToClipboard"))
 		} catch (e) {
 			console.error(e)
 
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		}
-	}, [props.keyToDisplayRaw, successToast, errorToast])
+	}, [props.keyToDisplayRaw, successToast, errorToast, t])
 
 	useEffect(() => {
 		const listener = eventEmitter.on("openTwoFactorCodeDialog", (p: TwoFactorDialogProps & { requestId: string }) => {

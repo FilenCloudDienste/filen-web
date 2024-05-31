@@ -159,7 +159,7 @@ export const ReplaceMessageWithComponents = memo(
 								<Tooltip>
 									<TooltipTrigger asChild={true}>
 										<div
-											className="flex-col max-w-full p-2 py-1 bg-secondary border rounded-md basis-full cursor-pointer font-mono"
+											className="flex-col max-w-full p-2 py-1 bg-primary-foreground border rounded-md basis-full cursor-pointer font-mono"
 											onClick={() => copy(code)}
 										>
 											{code}

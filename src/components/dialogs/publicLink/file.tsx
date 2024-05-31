@@ -139,13 +139,13 @@ export const File = memo(
 			try {
 				await navigator.clipboard.writeText(PUBLIC_LINK_BASE_URL + status.uuid + "#" + (item.type === "file" ? item.key : ""))
 
-				successToast("Copied to clipboard")
+				successToast(t("copiedToClipboard"))
 			} catch (e) {
 				console.error(e)
 
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
-		}, [status, successToast, errorToast, item])
+		}, [status, successToast, errorToast, item, t])
 
 		const onPasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 			setPassword(e.target.value)

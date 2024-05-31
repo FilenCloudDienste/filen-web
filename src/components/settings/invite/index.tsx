@@ -23,13 +23,13 @@ export const Invite = memo(() => {
 		try {
 			await navigator.clipboard.writeText(`https://filen.io/r/${account.account.refId}`)
 
-			successToast("Copied to clipboard")
+			successToast(t("copiedToClipboard"))
 		} catch (e) {
 			console.error(e)
 
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		}
-	}, [account, successToast, errorToast])
+	}, [account, successToast, errorToast, t])
 
 	if (!account) {
 		return <Skeletons />

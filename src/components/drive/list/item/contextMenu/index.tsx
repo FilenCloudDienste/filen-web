@@ -169,11 +169,18 @@ export const ContextMenu = memo(
 
 			if (
 				!(await showConfirmDialog({
-					title: t("contextMenus.item.dialogs.trash.title"),
-					continueButtonText: t("contextMenus.item.dialogs.trash.continue"),
-					description: t("contextMenus.item.dialogs.trash.description", {
-						name: item.name
-					}),
+					title:
+						selectedItems.length >= 2
+							? t("contextMenus.item.dialogs.trashMultiple.title")
+							: t("contextMenus.item.dialogs.trash.title"),
+					continueButtonText:
+						selectedItems.length >= 2
+							? t("contextMenus.item.dialogs.trashMultiple.continue")
+							: t("contextMenus.item.dialogs.trash.continue"),
+					description:
+						selectedItems.length >= 2
+							? t("contextMenus.item.dialogs.trashMultiple.description", { count: selectedItems.length })
+							: t("contextMenus.item.dialogs.trash.description", { name: item.name }),
 					continueButtonVariant: "destructive"
 				}))
 			) {
@@ -206,11 +213,18 @@ export const ContextMenu = memo(
 
 			if (
 				!(await showConfirmDialog({
-					title: t("contextMenus.item.dialogs.deletePermanently.title"),
-					continueButtonText: t("contextMenus.item.dialogs.deletePermanently.continue"),
-					description: t("contextMenus.item.dialogs.deletePermanently.description", {
-						name: item.name
-					}),
+					title:
+						selectedItems.length >= 2
+							? t("contextMenus.item.dialogs.deletePermanentlyMultiple.title")
+							: t("contextMenus.item.dialogs.deletePermanently.title"),
+					continueButtonText:
+						selectedItems.length >= 2
+							? t("contextMenus.item.dialogs.deletePermanentlyMultiple.continue")
+							: t("contextMenus.item.dialogs.deletePermanently.continue"),
+					description:
+						selectedItems.length >= 2
+							? t("contextMenus.item.dialogs.deletePermanentlyMultiple.description", { count: selectedItems.length })
+							: t("contextMenus.item.dialogs.deletePermanently.description", { name: item.name }),
 					continueButtonVariant: "destructive"
 				}))
 			) {
