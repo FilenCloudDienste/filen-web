@@ -43,6 +43,7 @@ import {
 	Hash
 } from "lucide-react"
 import useSDKConfig from "@/hooks/useSDKConfig"
+import useSuccessToast from "@/hooks/useSuccessToast"
 
 const iconSize = 16
 
@@ -62,6 +63,7 @@ export const ContextMenu = memo(
 		const errorToast = useErrorToast()
 		const loadingToast = useLoadingToast()
 		const { userId } = useSDKConfig()
+		const successToast = useSuccessToast()
 
 		const tagsQuery = useQuery({
 			queryKey: ["listNotesTags"],
@@ -528,6 +530,18 @@ export const ContextMenu = memo(
 			eventEmitter.emit("openNoteParticipantsDialog", note)
 		}, [note])
 
+		const copyId = useCallback(async () => {
+			try {
+				await navigator.clipboard.writeText(note.uuid)
+
+				successToast(t("copiedToClipboard"))
+			} catch (e) {
+				console.error(e)
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			}
+		}, [note.uuid, successToast, errorToast, t])
+
 		return (
 			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
@@ -679,6 +693,14 @@ export const ContextMenu = memo(
 					>
 						<Download size={iconSize} />
 						{t("contextMenus.notes.exportAll")}
+					</ContextMenuItem>
+					<ContextMenuSeparator />
+					<ContextMenuItem
+						onClick={copyId}
+						className="cursor-pointer gap-3"
+					>
+						<Copy size={iconSize} />
+						{t("contextMenus.notes.copyId")}
 					</ContextMenuItem>
 					<ContextMenuSeparator />
 					{!note.trash && !note.archive && note.ownerId === userId && (

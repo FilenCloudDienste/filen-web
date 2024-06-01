@@ -272,6 +272,7 @@
 			"open": "Open",
 			"color": "Color",
 			"deletePermanently": "Delete permanently",
+			"copyId": "Copy ID",
 			"dialogs": {
 				"trash": {
 					"title": "Trash",
@@ -319,6 +320,7 @@
 			"rename": "Rename",
 			"tags": "Tags",
 			"leave": "Leave",
+			"copyId": "Copy ID",
 			"types": {
 				"md": "Markdown",
 				"rich": "Richtext",
@@ -337,6 +339,12 @@
 				"selectFromDrive": "Select from drive",
 				"attachFiles": "Attach files"
 			}
+		},
+		"chats": {
+			"editName": "Edit name",
+			"leave": "Leave",
+			"delete": "Delete",
+			"copyId": "Copy ID"
 		}
 	},
 	"transfers": {

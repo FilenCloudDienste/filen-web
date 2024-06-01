@@ -1,4 +1,4 @@
-import { memo, useState, useRef, useCallback } from "react"
+import { memo, useState, useRef, useCallback, useEffect } from "react"
 import { Loader } from "."
 import { thumbnailURLObjectCache } from "@/cache"
 import { type DriveCloudItem } from "@/components/drive"
@@ -16,6 +16,7 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 	const [pressed, setPressed] = useState<boolean>(false)
 	const publicLinkURLState = usePublicLinkURLState()
 	const { dark } = useTheme()
+	const prevItemUUIDRef = useRef<string>("")
 
 	const onMouseDown = useCallback(() => {
 		setPressed(true)
@@ -82,6 +83,18 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 			setImageZoom(1)
 		}
 	}, [imageZoom])
+
+	useEffect(() => {
+		if (item.uuid !== prevItemUUIDRef.current) {
+			prevItemUUIDRef.current = item.uuid
+
+			setImageZoom(1)
+			setImagePosition({
+				x: 0,
+				y: 0
+			})
+		}
+	}, [item])
 
 	return (
 		<>

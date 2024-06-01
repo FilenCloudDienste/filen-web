@@ -188,27 +188,30 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 							className="cursor-pointer gap-3"
 						>
 							<Text size={iconSize} />
-							{t("chats.message.edit")}
-						</ContextMenuItem>
-						<ContextMenuSeparator />
-						<ContextMenuItem
-							onClick={deleteConversation}
-							className="cursor-pointer gap-3 text-red-500"
-						>
-							<Delete size={iconSize} />
-							{t("chats.message.delete")}
+							{t("contextMenus.chats.editName")}
 						</ContextMenuItem>
 						<ContextMenuSeparator />
 					</>
 				)}
-				{conversation.ownerId !== userId && (
+				{conversation.ownerId !== userId ? (
 					<>
 						<ContextMenuItem
 							onClick={leave}
 							className="cursor-pointer gap-3 text-red-500"
 						>
 							<Delete size={iconSize} />
-							{t("chats.message.leave")}
+							{t("contextMenus.chats.leave")}
+						</ContextMenuItem>
+						<ContextMenuSeparator />
+					</>
+				) : (
+					<>
+						<ContextMenuItem
+							onClick={deleteConversation}
+							className="cursor-pointer gap-3 text-red-500"
+						>
+							<Delete size={iconSize} />
+							{t("contextMenus.chats.delete")}
 						</ContextMenuItem>
 						<ContextMenuSeparator />
 					</>
@@ -218,7 +221,7 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 					className="cursor-pointer gap-3"
 				>
 					<Copy size={iconSize} />
-					{t("chats.message.copyId")}
+					{t("contextMenus.chats.copyId")}
 				</ContextMenuItem>
 			</ContextMenuContent>
 		</CM>

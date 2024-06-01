@@ -8,7 +8,7 @@ import { Button } from "../ui/button"
 import eventEmitter from "@/lib/eventEmitter"
 
 export const Notes = memo(() => {
-	const { selectedNote } = useNotesStore()
+	const { selectedNote, notes } = useNotesStore()
 	const { t } = useTranslation()
 
 	const create = useCallback(() => {
@@ -22,7 +22,7 @@ export const Notes = memo(() => {
 					key={`${selectedNote.uuid}-${selectedNote.type}`}
 					note={selectedNote}
 				/>
-			) : (
+			) : notes.length === 0 ? (
 				<div className="flex flex-row items-center justify-center w-full h-full">
 					<div className="flex flex-col p-4 justify-center items-center">
 						<Notebook
@@ -42,7 +42,7 @@ export const Notes = memo(() => {
 						</Button>
 					</div>
 				</div>
-			)}
+			) : null}
 		</div>
 	)
 })

@@ -42,8 +42,11 @@ import {
 	Navigation,
 	PaintBucket,
 	RotateCcw,
-	Delete
+	Delete,
+	Copy
 } from "lucide-react"
+import useSuccessToast from "@/hooks/useSuccessToast"
+import { selectContacts } from "@/components/dialogs/selectContacts"
 
 const iconSize = 16
 
@@ -61,6 +64,7 @@ export const ContextMenu = memo(
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
 		const { setVirtualURL } = useDirectoryPublicLinkStore()
+		const successToast = useSuccessToast()
 
 		const isInsidePublicLink = useMemo(() => {
 			return location.includes("/f/") || location.includes("/d/")
@@ -357,26 +361,23 @@ export const ContextMenu = memo(
 				return
 			}
 
-			const inputResponse = await showInputDialog({
-				title: t("drive.dialogs.share.title"),
-				continueButtonText: t("drive.dialogs.share.continue"),
-				value: "",
-				autoFocusInput: true,
-				placeholder: t("drive.dialogs.share.placeholder"),
-				continueButtonVariant: "default"
-			})
+			const contacts = await selectContacts()
 
-			if (inputResponse.cancelled) {
+			if (contacts.cancelled) {
 				return
 			}
 
 			const toast = loadingToast()
 
 			try {
-				await actions.share({
-					selectedItems,
-					receiverEmail: inputResponse.value.trim()
-				})
+				await Promise.all(
+					contacts.contacts.map(contact =>
+						actions.share({
+							selectedItems,
+							receiverEmail: contact.email
+						})
+					)
+				)
 			} catch (e) {
 				console.error(e)
 
@@ -384,7 +385,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [selectedItems, loadingToast, errorToast, t])
+		}, [selectedItems, loadingToast, errorToast])
 
 		const changeColor = useDebouncedCallback(async (color: string) => {
 			if (selectedItems.length !== 1 || !selectedItems[0]) {
@@ -423,6 +424,18 @@ export const ContextMenu = memo(
 		const versions = useCallback(() => {
 			eventEmitter.emit("openFileVersionsDialog", item)
 		}, [item])
+
+		const copyId = useCallback(async () => {
+			try {
+				await navigator.clipboard.writeText(item.uuid)
+
+				successToast(t("copiedToClipboard"))
+			} catch (e) {
+				console.error(e)
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			}
+		}, [item.uuid, successToast, errorToast, t])
 
 		const keyDownListener = useCallback(
 			(e: KeyboardEvent) => {
@@ -591,6 +604,15 @@ export const ContextMenu = memo(
 							<ContextMenuSeparator />
 						</>
 					)}
+					{(driveURLState.sharedIn || isInsidePublicLink) && <ContextMenuSeparator />}
+					<ContextMenuItem
+						onClick={copyId}
+						className="cursor-pointer gap-3"
+					>
+						<Copy size={iconSize} />
+						{t("contextMenus.chats.copyId")}
+					</ContextMenuItem>
+					{!driveURLState.sharedIn && !isInsidePublicLink && <ContextMenuSeparator />}
 					{driveURLState.trash && !isInsidePublicLink && (
 						<>
 							<ContextMenuItem
