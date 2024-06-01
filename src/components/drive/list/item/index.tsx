@@ -12,7 +12,7 @@ import { fileNameToThumbnailType, fileNameToPreviewType } from "@/components/dia
 import { cn } from "@/lib/utils"
 import { Heart } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
-import { THUMBNAIL_MAX_FETCH_SIZE } from "@/constants"
+import { THUMBNAIL_MAX_FETCH_SIZE, MAX_PREVIEW_SIZE } from "@/constants"
 import { Badge } from "@/components/ui/badge"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { useDriveSharedStore, useDriveItemsStore } from "@/stores/drive.store"
@@ -71,7 +71,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	}, [isInsidePublicLink, publicLinkItems, driveItems])
 
 	const onDoubleClick = useCallback(() => {
-		if (item.type === "file" && previewType !== "other") {
+		if (item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE > item.size) {
 			eventEmitter.emit("openPreviewModal", { item })
 
 			return

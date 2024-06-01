@@ -47,6 +47,7 @@ import {
 } from "lucide-react"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import { selectContacts } from "@/components/dialogs/selectContacts"
+import { MAX_PREVIEW_SIZE } from "@/constants"
 
 const iconSize = 16
 
@@ -472,7 +473,7 @@ export const ContextMenu = memo(
 			<CM>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
 				<ContextMenuContent className="min-w-48">
-					{selectedItems.length === 1 && item.type === "file" && previewType !== "other" && (
+					{selectedItems.length === 1 && item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE > item.size && (
 						<ContextMenuItem
 							onClick={preview}
 							className="cursor-pointer gap-3"

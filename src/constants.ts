@@ -30,3 +30,4 @@ export const UNCACHED_QUERY_KEYS = [
 ]
 export const IS_INSIDE_PUBLIC_LINK_ON_LOAD =
 	typeof window !== "undefined" ? window.location.href.includes("/f/") || window.location.href.includes("/d/") : false
+export const MAX_PREVIEW_SIZE = 256 * MiB
