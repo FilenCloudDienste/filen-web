@@ -4,8 +4,9 @@ import useRouteParent from "@/hooks/useRouteParent"
 import { useTranslation } from "react-i18next"
 import { ArrowUp, ArrowDown } from "lucide-react"
 import { useDriveItemsStore } from "@/stores/drive.store"
+import { cn } from "@/lib/utils"
 
-const iconSize = 16
+const iconSize = 14
 
 export type DriveSortBy = Record<string, "nameAsc" | "nameDesc" | "sizeAsc" | "sizeDesc" | "lastModifiedAsc" | "lastModifiedDesc">
 
@@ -41,13 +42,20 @@ export const Header = memo(() => {
 	}
 
 	return (
-		<div className="flex flex-row px-3">
-			<div className="flex flex-row w-full h-10 items-center select-none gap-3">
+		<div className="flex flex-row px-3 text-sm">
+			<div className="flex flex-row w-full h-8 items-center select-none gap-3">
 				<div
 					className="flex flex-row grow min-w-[200px] items-center cursor-pointer"
 					onClick={name}
 				>
-					<div className="flex flex-row gap-2 items-center">
+					<div
+						className={cn(
+							"flex flex-row gap-2 items-center",
+							!driveSortBy[routeParent] || driveSortBy[routeParent] === "nameAsc" || driveSortBy[routeParent] === "nameDesc"
+								? "text-primary"
+								: "text-muted-foreground"
+						)}
+					>
 						<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{t("drive.header.name")}</p>
 						{(!driveSortBy[routeParent] || driveSortBy[routeParent] === "nameAsc") && <ArrowUp size={iconSize} />}
 						{driveSortBy[routeParent] === "nameDesc" && <ArrowDown size={iconSize} />}
@@ -57,7 +65,14 @@ export const Header = memo(() => {
 					className="flex flex-row w-[125px] items-center cursor-pointer"
 					onClick={size}
 				>
-					<div className="flex flex-row gap-2 items-center">
+					<div
+						className={cn(
+							"flex flex-row gap-2 items-center",
+							driveSortBy[routeParent] === "sizeAsc" || driveSortBy[routeParent] === "sizeDesc"
+								? "text-primary"
+								: "text-muted-foreground"
+						)}
+					>
 						<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{t("drive.header.size")}</p>
 						{driveSortBy[routeParent] === "sizeAsc" && <ArrowUp size={iconSize} />}
 						{driveSortBy[routeParent] === "sizeDesc" && <ArrowDown size={iconSize} />}
@@ -67,7 +82,14 @@ export const Header = memo(() => {
 					className="flex flex-row w-[250px] items-center cursor-pointer"
 					onClick={modified}
 				>
-					<div className="flex flex-row gap-2 items-center">
+					<div
+						className={cn(
+							"flex flex-row gap-2 items-center",
+							driveSortBy[routeParent] === "lastModifiedAsc" || driveSortBy[routeParent] === "lastModifiedDesc"
+								? "text-primary"
+								: "text-muted-foreground"
+						)}
+					>
 						<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis">{t("drive.header.modified")}</p>
 						{driveSortBy[routeParent] === "lastModifiedAsc" && <ArrowUp size={iconSize} />}
 						{driveSortBy[routeParent] === "lastModifiedDesc" && <ArrowDown size={iconSize} />}

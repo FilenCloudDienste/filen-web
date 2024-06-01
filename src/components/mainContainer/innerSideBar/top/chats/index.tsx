@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react"
+import { memo, useCallback, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { Plus } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -97,6 +97,14 @@ export const Chats = memo(() => {
 			toast.dismiss()
 		}
 	}, [errorToast, loadingToast, navigate, userId, setSelectedConversation, setConversations, setLastSelectedChatsConversation])
+
+	useEffect(() => {
+		const createChatListener = eventEmitter.on("createChat", createChat)
+
+		return () => {
+			createChatListener.remove()
+		}
+	}, [createChat])
 
 	return (
 		<div

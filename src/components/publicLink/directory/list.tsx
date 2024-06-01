@@ -29,7 +29,7 @@ export const List = memo(({ items, parent, showSkeletons }: { items: DriveCloudI
 	}, [])
 
 	const virtuosoHeight = useMemo(() => {
-		return IS_DESKTOP ? windowSize.height - 48 - 40 - 24 : windowSize.height - 48 - 40
+		return IS_DESKTOP ? windowSize.height - 48 - 32 - 24 : windowSize.height - 48 - 32
 	}, [windowSize.height])
 
 	const components = useMemo(() => {

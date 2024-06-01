@@ -75,33 +75,35 @@ export const Notes = memo(() => {
 	}
 
 	return (
-		<div className={cn("flex flex-row px-4 items-center gap-3 w-full h-12 z-50", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
-			<div className="flex flex-row">
-				{synced ? <CheckCircle2 className="text-green-500" /> : <Loader className="animate-spin-medium" />}
-			</div>
-			<div className="flex flex-row grow">
-				<p
-					className="line-clamp-1 text-ellipsis break-all cursor-text"
-					onClick={rename}
-				>
-					{selectedNote.title}
-				</p>
-			</div>
-			<div className="flex flex-row">
-				<ContextMenu
-					note={selectedNote}
-					setHovering={() => {}}
-				>
-					<div
-						className="flex flex-row p-1 rounded-md hover:bg-secondary cursor-pointer"
-						onClick={triggerMoreIconContextMenu}
+		<div className="w-full h-12 flex flex-row justify-between border-b select-none">
+			<div className={cn("flex flex-row px-4 items-center gap-3 w-full h-12 z-50", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
+				<div className="flex flex-row">
+					{synced ? <CheckCircle2 className="text-green-500" /> : <Loader className="animate-spin-medium" />}
+				</div>
+				<div className="flex flex-row grow">
+					<p
+						className="line-clamp-1 text-ellipsis break-all cursor-text"
+						onClick={rename}
 					>
-						<MoreVertical
+						{selectedNote.title}
+					</p>
+				</div>
+				<div className="flex flex-row">
+					<ContextMenu
+						note={selectedNote}
+						setHovering={() => {}}
+					>
+						<div
+							className="flex flex-row p-1 rounded-md hover:bg-secondary cursor-pointer"
 							onClick={triggerMoreIconContextMenu}
-							className="cursor-pointer"
-						/>
-					</div>
-				</ContextMenu>
+						>
+							<MoreVertical
+								onClick={triggerMoreIconContextMenu}
+								className="cursor-pointer"
+							/>
+						</div>
+					</ContextMenu>
+				</div>
 			</div>
 		</div>
 	)

@@ -16,6 +16,7 @@ import socket from "@/lib/socket"
 import { Note as NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useTranslation } from "react-i18next"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Notes = memo(() => {
 	const windowSize = useWindowSize()
@@ -60,6 +61,10 @@ export const Notes = memo(() => {
 		[setLastSelectedNote, setSelectedNote, userId]
 	)
 
+	const create = useCallback(() => {
+		eventEmitter.emit("createNote")
+	}, [])
+
 	const components = useMemo(() => {
 		return {
 			EmptyPlaceholder: () => {
@@ -84,15 +89,21 @@ export const Notes = memo(() => {
 								)
 							})
 						) : (
-							<div className="flex flex-row items-center justify-center p-4 w-full h-full">
+							<div className="flex flex-col items-center justify-center p-4 w-full h-full">
 								<p className="text-muted-foreground">{t("innerSideBar.notes.empty")}</p>
+								<p
+									className="text-blue-500 hover:underline cursor-pointer text-sm"
+									onClick={create}
+								>
+									{t("innerSideBar.notes.emptyCreate")}
+								</p>
 							</div>
 						)}
 					</div>
 				)
 			}
 		}
-	}, [showSkeletons, t])
+	}, [showSkeletons, t, create])
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {

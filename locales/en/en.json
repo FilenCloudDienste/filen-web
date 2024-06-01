@@ -98,10 +98,12 @@
 			},
 			"createNote": "Create note",
 			"createTag": "Create tag",
-			"empty": "No notes yet"
+			"empty": "No notes yet",
+			"emptyCreate": "Create one"
 		},
 		"chats": {
 			"empty": "No chats yet",
+			"emptyCreate": "Create one",
 			"search": "Search...",
 			"createChat": "Create chat"
 		},
@@ -360,6 +362,11 @@
 		"showParticipants": "Show participants",
 		"hideParticipants": "Hide participants",
 		"addParticipants": "Add participants",
+		"empty": {
+			"title": "No chats yet",
+			"description": "Chats that you have created or that you have been added to will appear here",
+			"create": "Create"
+		},
 		"header": {
 			"title": "End-to-end encrypted chat",
 			"description": "Filen secures every chat with zero-knowledge end-to-end encryption by default.",
@@ -804,6 +811,11 @@
 	},
 	"notes": {
 		"contentPlaceholder": "Note content...",
+		"empty": {
+			"title": "No notes yet",
+			"description": "Notes that you have created or that you have been added to will appear here",
+			"create": "Create"
+		},
 		"dialogs": {
 			"removeParticipant": {
 				"title": "Remove participant",

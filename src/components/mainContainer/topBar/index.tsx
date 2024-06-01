@@ -111,111 +111,107 @@ export const TopBar = memo(() => {
 		return null
 	}
 
-	return (
+	return location.includes("notes") ? (
+		<Notes />
+	) : (
 		<div className="w-full h-12 flex flex-row justify-between border-b select-none dragselect-start-allowed">
-			{location.includes("notes") ? (
-				<Notes />
-			) : (
-				<>
-					<Breadcrumbs />
-					<div className="flex flex-row justify-end items-center gap-3 z-10 px-3">
-						<div className={cn("flex flex-row min-w-[250px] h-full items-center", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
-							<div className="absolute h-full pl-2">
-								<div className="h-full flex flex-row items-center">
-									<Search
-										className="text-muted-foreground"
-										size={16}
-									/>
-								</div>
-							</div>
-							<Input
-								ref={searchInputRef}
-								className="pl-8 text-sm max-w-lg h-9"
-								placeholder={t("topBar.searchInThisFolder")}
-								value={searchTerm}
-								onChange={onSearchChange}
+			<Breadcrumbs />
+			<div className="flex flex-row justify-end items-center gap-3 z-10 px-3">
+				<div className={cn("flex flex-row min-w-[250px] h-full items-center", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
+					<div className="absolute h-full pl-2">
+						<div className="h-full flex flex-row items-center">
+							<Search
+								className="text-muted-foreground"
+								size={16}
 							/>
 						</div>
-						{location.includes("trash") ? (
+					</div>
+					<Input
+						ref={searchInputRef}
+						className="pl-8 text-sm max-w-lg h-9"
+						placeholder={t("topBar.searchInThisFolder")}
+						value={searchTerm}
+						onChange={onSearchChange}
+					/>
+				</div>
+				{location.includes("trash") ? (
+					<Button
+						className="h-8"
+						variant="destructive"
+						disabled={items.length === 0}
+						onClick={emptyTrash}
+					>
+						{t("empty")}
+					</Button>
+				) : (
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild={true}>
 							<Button
 								className="h-8"
-								variant="destructive"
-								disabled={items.length === 0}
-								onClick={emptyTrash}
+								disabled={!canUpload}
 							>
-								{t("empty")}
+								{t("new")}
 							</Button>
-						) : (
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild={true}>
-									<Button
-										className="h-8"
-										disabled={!canUpload}
-									>
-										{t("new")}
-									</Button>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent>
-									<DropdownMenuItem
-										className="cursor-pointer"
-										onClick={() => eventEmitter.emit("createFolderTrigger")}
-									>
-										{t("contextMenus.drive.newFolder")}
-									</DropdownMenuItem>
-									<DropdownMenuItem
-										className="cursor-pointer"
-										onClick={() => eventEmitter.emit("createTextFile")}
-									>
-										{t("contextMenus.drive.newTextFile")}
-									</DropdownMenuItem>
-									<DropdownMenuSeparator />
-									<DropdownMenuItem
-										className="cursor-pointer"
-										onClick={() => document.getElementById("folder-input")?.click()}
-									>
-										{t("contextMenus.drive.uploadFolders")}
-									</DropdownMenuItem>
-									<DropdownMenuItem
-										className="cursor-pointer"
-										onClick={() => document.getElementById("file-input")?.click()}
-									>
-										{t("contextMenus.drive.uploadFiles")}
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
-						)}
-						{listType[parent] === "grid" ? (
-							<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
-								<Tooltip>
-									<TooltipTrigger asChild={true}>
-										<List
-											className="text-muted-foreground hover:text-primary cursor-pointer"
-											onClick={changeListType}
-										/>
-									</TooltipTrigger>
-									<TooltipContent side="bottom">
-										<p>{t("topBar.listView")}</p>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
-						) : (
-							<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
-								<Tooltip>
-									<TooltipTrigger asChild={true}>
-										<Grid3X3
-											className="text-muted-foreground hover:text-primary cursor-pointer"
-											onClick={changeListType}
-										/>
-									</TooltipTrigger>
-									<TooltipContent side="bottom">
-										<p>{t("topBar.gridView")}</p>
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
-						)}
-					</div>
-				</>
-			)}
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuItem
+								className="cursor-pointer"
+								onClick={() => eventEmitter.emit("createFolderTrigger")}
+							>
+								{t("contextMenus.drive.newFolder")}
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								className="cursor-pointer"
+								onClick={() => eventEmitter.emit("createTextFile")}
+							>
+								{t("contextMenus.drive.newTextFile")}
+							</DropdownMenuItem>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem
+								className="cursor-pointer"
+								onClick={() => document.getElementById("folder-input")?.click()}
+							>
+								{t("contextMenus.drive.uploadFolders")}
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								className="cursor-pointer"
+								onClick={() => document.getElementById("file-input")?.click()}
+							>
+								{t("contextMenus.drive.uploadFiles")}
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				)}
+				{listType[parent] === "grid" ? (
+					<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+						<Tooltip>
+							<TooltipTrigger asChild={true}>
+								<List
+									className="text-muted-foreground hover:text-primary cursor-pointer"
+									onClick={changeListType}
+								/>
+							</TooltipTrigger>
+							<TooltipContent side="bottom">
+								<p>{t("topBar.listView")}</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
+				) : (
+					<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+						<Tooltip>
+							<TooltipTrigger asChild={true}>
+								<Grid3X3
+									className="text-muted-foreground hover:text-primary cursor-pointer"
+									onClick={changeListType}
+								/>
+							</TooltipTrigger>
+							<TooltipContent side="bottom">
+								<p>{t("topBar.gridView")}</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
+				)}
+			</div>
 		</div>
 	)
 })

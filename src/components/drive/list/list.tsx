@@ -17,7 +17,7 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 
 	const virtuosoHeight = useMemo(() => {
-		return IS_DESKTOP ? windowSize.height - 48 - (showSkeletons ? 0 : 40) - 24 : windowSize.height - 48 - (showSkeletons ? 0 : 40)
+		return IS_DESKTOP ? windowSize.height - 48 - (showSkeletons ? 0 : 32) - 24 : windowSize.height - 48 - (showSkeletons ? 0 : 32)
 	}, [windowSize.height, showSkeletons])
 
 	const getItemKey = useCallback(

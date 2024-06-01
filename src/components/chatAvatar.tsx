@@ -60,6 +60,10 @@ export const ChatAvatar = memo(
 		const { userId } = useSDKConfig()
 		const imgRef = useRef<HTMLImageElement>(null)
 
+		const participantsSorted = useMemo(() => {
+			return participants.sort((a, b) => a.email.localeCompare(b.email))
+		}, [participants])
+
 		const onError = useCallback(() => {
 			setUseFallback(true)
 
@@ -69,17 +73,12 @@ export const ChatAvatar = memo(
 		}, [])
 
 		const bgColor = useMemo(() => {
-			return getColorFromHash(
-				participants
-					.sort((a, b) => a.email.localeCompare(b.email))
-					.map(p => p.email)
-					.join(":")
-			)
-		}, [participants])
+			return getColorFromHash(participantsSorted.map(p => p.email).join(":"))
+		}, [participantsSorted])
 
 		const src = useMemo(() => {
-			if (participants.length < 2) {
-				const me = participants.filter(p => p.userId === userId)
+			if (participantsSorted.length < 2 && type === "chat") {
+				const me = participantsSorted.filter(p => p.userId === userId)
 
 				if (me.length === 1 && me[0]) {
 					return me[0].avatar
@@ -88,14 +87,14 @@ export const ChatAvatar = memo(
 				return null
 			}
 
-			const other = participants.filter(p => p.userId !== userId)
+			const other = participantsSorted.filter(p => p.userId !== userId)
 
 			if (other.length !== 1 || !other[0]) {
 				return null
 			}
 
 			return other[0].avatar
-		}, [participants, userId])
+		}, [participantsSorted, userId, type])
 
 		const statusComponent = useMemo(() => {
 			return (
@@ -115,7 +114,7 @@ export const ChatAvatar = memo(
 			)
 		}, [status, size])
 
-		if (type === "chat" ? participants.length <= 2 : participants.length < 2) {
+		if (type === "note" ? participants.length < 2 : participants.length <= 2) {
 			return (
 				<div
 					className={cn("flex flex-row shrink-0", className)}

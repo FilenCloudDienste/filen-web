@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react"
+import { memo, useCallback, useEffect } from "react"
 import { useNavigate } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import { Plus } from "lucide-react"
@@ -10,14 +10,21 @@ import { Input } from "@/components/ui/input"
 import Tags from "./tags"
 import { type NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import { useLocalStorage } from "@uidotdev/usehooks"
+import eventEmitter from "@/lib/eventEmitter"
+import useErrorToast from "@/hooks/useErrorToast"
+import useLoadingToast from "@/hooks/useLoadingToast"
 
 export const Notes = memo(() => {
 	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const { setNotes, search, setSearch, setSelectedNote } = useNotesStore()
 	const [defaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
+	const loadingToast = useLoadingToast()
+	const errorToast = useErrorToast()
 
 	const createNote = useCallback(async () => {
+		const toast = loadingToast()
+
 		try {
 			const { uuid } = await worker.createNote()
 
@@ -45,8 +52,12 @@ export const Notes = memo(() => {
 			})
 		} catch (e) {
 			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			toast.dismiss()
 		}
-	}, [navigate, setNotes, setSelectedNote, defaultNoteType])
+	}, [navigate, setNotes, setSelectedNote, defaultNoteType, loadingToast, errorToast])
 
 	const onChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +65,14 @@ export const Notes = memo(() => {
 		},
 		[setSearch]
 	)
+
+	useEffect(() => {
+		const createNoteListener = eventEmitter.on("createNote", createNote)
+
+		return () => {
+			createNoteListener.remove()
+		}
+	}, [createNote])
 
 	return (
 		<div

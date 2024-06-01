@@ -70,6 +70,10 @@ export const Chats = memo(() => {
 		[userId, setLastSelectedChatsConversation, setSelectedConversation, routeParent]
 	)
 
+	const create = useCallback(() => {
+		eventEmitter.emit("createChat")
+	}, [])
+
 	const components = useMemo(() => {
 		return {
 			EmptyPlaceholder: () => {
@@ -93,15 +97,21 @@ export const Chats = memo(() => {
 								)
 							})
 						) : (
-							<div className="flex flex-row items-center justify-center p-4 w-full h-full">
+							<div className="flex flex-col items-center justify-center p-4 w-full h-full">
 								<p className="text-muted-foreground">{t("innerSideBar.chats.empty")}</p>
+								<p
+									className="text-blue-500 cursor-pointer hover:underline"
+									onClick={create}
+								>
+									{t("innerSideBar.chats.emptyCreate")}
+								</p>
 							</div>
 						)}
 					</div>
 				)
 			}
 		}
-	}, [showSkeletons, t])
+	}, [showSkeletons, t, create])
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
