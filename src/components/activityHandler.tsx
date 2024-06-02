@@ -8,6 +8,8 @@ import { clear as clearLocalForage } from "@/lib/localForage"
 import { useNavigate } from "@tanstack/react-router"
 import useErrorToast from "@/hooks/useErrorToast"
 import { IS_DESKTOP } from "@/constants"
+import socket from "@/lib/socket"
+import { type SocketEvent } from "@filen/sdk"
 
 export const ActivityHandler = memo(({ children }: { children: React.ReactNode }) => {
 	const windowFocus = useWindowFocus()
@@ -90,13 +92,26 @@ export const ActivityHandler = memo(({ children }: { children: React.ReactNode }
 		}
 	}, [authed, logout])
 
+	const socketEventListener = useCallback(
+		(event: SocketEvent) => {
+			if (event.type === "passwordChanged") {
+				logout()
+			}
+		},
+		[logout]
+	)
+
 	useEffect(() => {
 		const updateLastActiveDesktopInterval = setInterval(update, 1000)
 
+		socket.addListener("socketEvent", socketEventListener)
+
 		return () => {
 			clearInterval(updateLastActiveDesktopInterval)
+
+			socket.removeListener("socketEvent", socketEventListener)
 		}
-	}, [update])
+	}, [update, socketEventListener])
 
 	useMountedEffect(() => {
 		loggedOutCheck()

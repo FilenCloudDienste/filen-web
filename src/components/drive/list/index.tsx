@@ -72,7 +72,8 @@ export const List = memo(() => {
 					event.type === "fileTrash" ||
 					event.type === "folderTrash" ||
 					event.type === "fileMove" ||
-					event.type === "folderMove"
+					event.type === "folderMove" ||
+					event.type === "fileDeletedPermanent"
 				) {
 					setItems(prev => prev.filter(i => i.uuid !== event.data.uuid))
 				} else if (event.type === "trashEmpty") {

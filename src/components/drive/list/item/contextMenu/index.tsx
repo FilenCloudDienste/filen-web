@@ -362,7 +362,9 @@ export const ContextMenu = memo(
 				return
 			}
 
-			const contacts = await selectContacts()
+			const contacts = await selectContacts({
+				excludeUserIds: selectedItems.map(item => item.receivers.map(receiver => receiver.id)).flat(99999999999)
+			})
 
 			if (contacts.cancelled) {
 				return
