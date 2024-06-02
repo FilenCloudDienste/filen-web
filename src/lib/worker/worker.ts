@@ -44,6 +44,7 @@ import { type DirLinkInfoDecryptedResponse } from "@filen/sdk/dist/types/api/v3/
 import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/link/info"
 import { type DirLinkContentDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/content"
 import { type AuthInfoResponse } from "@filen/sdk/dist/types/api/v3/auth/info"
+import { type UserProfileResponse } from "@filen/sdk/dist/types/api/v3/user/profile"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -3072,4 +3073,10 @@ export async function authInfo({ email }: { email: string }): Promise<AuthInfoRe
 	await waitForInitialization()
 
 	return await SDK.api(3).auth().info({ email })
+}
+
+export async function userProfile({ id }: { id: number }): Promise<UserProfileResponse> {
+	await waitForInitialization()
+
+	return await SDK.api(3).user().profile({ id })
 }

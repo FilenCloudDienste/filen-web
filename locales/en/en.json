@@ -85,6 +85,55 @@
 			}
 		}
 	},
+	"reset": {
+		"header": "Reset password",
+		"description": "Enter your email address, your new password and import your master keys to reset your password",
+		"importMasterKeys": "Import keys",
+		"masterKeysImported": "Keys imported",
+		"masterKeysNotImported": "No keys imported",
+		"placeholders": {
+			"normal": {
+				"email": "Email address",
+				"password": "Password",
+				"confirmPassword": "Confirm password"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"buttons": {
+			"reset": "Reset",
+			"back": "Back"
+		},
+		"dialogs": {
+			"noMasterKeysImported": {
+				"title": "Reset password",
+				"continue": "I understand",
+				"description": "I understand that by resetting my password without my exported master keys I will render all data stored on my account inaccessible due to how zero-knowledge end-to-end encryption works."
+			},
+			"noMasterKeysImported2": {
+				"title": "Reset password",
+				"continue": "I am sure",
+				"description": "Are you sure? You are about to delete all data stored on your account if you do not import your master keys. You can simply ignore this warning if you do not have your master keys file and you want to reset your account."
+			},
+			"noMasterKeysImported3": {
+				"title": "Reset password",
+				"continue": "Yes",
+				"description": "Are you really sure?"
+			}
+		},
+		"alerts": {
+			"invalidMasterKeysFile": "Invalid master keys file",
+			"invalidMasterKeysFileWrongUserId": "Those keys belongs to a different account",
+			"masterKeysImported": "Master keys imported",
+			"passwordWeak": "Your chosen password is too weak",
+			"passwordsNotMatching": "Passwords are not the same",
+			"invalidMasterKeys": "Invalid master keys",
+			"passwordChanged": "Password changed successfully"
+		}
+	},
 	"auth": {
 		"footer": {
 			"tos": "Terms of Service",

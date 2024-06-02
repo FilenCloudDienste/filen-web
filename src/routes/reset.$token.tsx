@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import AuthContainer from "@/components/authContainer"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -6,53 +6,21 @@ import { useCallback, useState, useMemo } from "react"
 import sdk from "@/lib/sdk"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
-import { Loader, Eye, XCircle, CheckCircle, EyeOff } from "lucide-react"
+import { Loader, Eye, XCircle, CheckCircle, EyeOff, Info } from "lucide-react"
 import { setup } from "@/lib/setup"
 import useErrorToast from "@/hooks/useErrorToast"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
-import { showInputDialog } from "@/components/dialogs/input"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
+import { ratePassword } from "./register"
+import useRouteParent from "@/hooks/useRouteParent"
+import worker from "@/lib/worker"
 
-export const Route = createFileRoute("/register")({
-	component: Register
+export const Route = createFileRoute("/reset/$token")({
+	component: Reset
 })
 
-export function ratePassword(password: string): {
-	strength: "weak" | "normal" | "strong" | "best"
-	uppercase: boolean
-	lowercase: boolean
-	specialChars: boolean
-	length: boolean
-} {
-	const hasUppercase = /[A-Z]/.test(password)
-	const hasLowercase = /[a-z]/.test(password)
-	const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password)
-	const length = password.length
-
-	let strength: "weak" | "normal" | "strong" | "best" = "weak"
-
-	if (length >= 10 && hasUppercase && hasLowercase && hasSpecialChars) {
-		if (length >= 16) {
-			strength = "best"
-		} else {
-			strength = "strong"
-		}
-	} else if (length >= 10 && ((hasUppercase && hasLowercase) || (hasUppercase && hasSpecialChars) || (hasLowercase && hasSpecialChars))) {
-		strength = "normal"
-	}
-
-	return {
-		strength,
-		uppercase: hasUppercase,
-		lowercase: hasLowercase,
-		specialChars: hasSpecialChars,
-		length: length >= 10
-	}
-}
-
-export function Register() {
-	const [email, setEmail] = useState<string>("")
+export function Reset() {
 	const [password, setPassword] = useState<string>("")
 	const [confirmPassword, setConfirmPassword] = useState<string>("")
 	const [showPassword, setShowPassword] = useState<boolean>(false)
@@ -61,61 +29,173 @@ export function Register() {
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
 	const successToast = useSuccessToast()
+	const token = useRouteParent()
+	const [email, setEmail] = useState<string>("")
+	const [importedMasterKeys, setImportedMasterKeys] = useState<string[]>([])
+	const navigate = useNavigate()
 
 	const passwordStrength = useMemo(() => {
 		return ratePassword(password)
 	}, [password])
 
-	const resend = useCallback(async () => {
-		const inputResponse = await showInputDialog({
-			title: t("register.dialogs.confirmationSend.title"),
-			continueButtonText: t("register.dialogs.confirmationSend.continue"),
-			value: "",
-			autoFocusInput: true,
-			placeholder: t("register.dialogs.confirmationSend.placeholder")
-		})
+	const parseMasterKeys = useCallback(
+		async (e: React.ChangeEvent<HTMLInputElement>) => {
+			const target = e.target
 
-		if (inputResponse.cancelled) {
-			return
-		}
+			if (!target.files) {
+				errorToast(t("reset.alerts.invalidMasterKeysFile"))
 
-		const toast = loadingToast()
+				return
+			}
 
-		try {
-			await sdk.api(3).confirmationSend({ email: inputResponse.value.trim() })
+			const file = target.files[0]
 
-			successToast(t("register.alerts.confirmationSent", { email: inputResponse.value.trim() }))
-		} catch (e) {
-			console.error(e)
+			if (!file) {
+				errorToast(t("reset.alerts.invalidMasterKeysFile"))
 
-			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-		} finally {
-			toast.dismiss()
-		}
-	}, [loadingToast, errorToast, successToast, t])
+				return
+			}
 
-	const register = useCallback(async () => {
+			setLoading(true)
+
+			const toast = loadingToast()
+
+			try {
+				const authInfo = await worker.authInfo({ email })
+				const content = await new Promise<string>((resolve, reject) => {
+					const reader = new FileReader()
+
+					reader.onloadend = () => {
+						try {
+							resolve(Buffer.from(reader.result as string, "base64").toString("utf-8"))
+						} catch (e) {
+							reject(e)
+						}
+					}
+
+					reader.onerror = reject
+
+					reader.readAsText(file)
+				})
+
+				if (!content.includes("_VALID_FILEN_MASTERKEY_")) {
+					errorToast(t("reset.alerts.invalidMasterKeysFile"))
+
+					return
+				}
+
+				const keysEx = content.split("|")
+				const masterKeys: string[] = []
+
+				for (const key of keysEx) {
+					if (key.split("_VALID_FILEN_MASTERKEY_").length === 3) {
+						const foundKey = key.split("_VALID_FILEN_MASTERKEY_").join("")
+
+						if (foundKey.length > 16 && foundKey.length < 128) {
+							if (foundKey.includes("@")) {
+								const foundKeyEx = foundKey.split("@")
+								const foundKeyKey = foundKeyEx[0]
+								const foundUserId = foundKeyEx[1]
+
+								if (foundUserId && foundKeyKey && parseInt(foundUserId) === authInfo.id) {
+									masterKeys.push(foundKeyKey)
+								} else {
+									errorToast(t("reset.alerts.invalidMasterKeysFileWrongUserId"))
+
+									return
+								}
+							} else {
+								masterKeys.push(foundKey)
+							}
+						}
+					} else {
+						errorToast(t("reset.alerts.invalidMasterKeysFile"))
+
+						return
+					}
+				}
+
+				if (masterKeys.length === 0) {
+					errorToast(t("reset.alerts.invalidMasterKeysFile"))
+
+					return
+				}
+
+				setImportedMasterKeys(masterKeys)
+
+				successToast(t("reset.alerts.masterKeysImported"))
+			} catch (e) {
+				console.error(e)
+
+				target.value = ""
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			} finally {
+				toast.dismiss()
+
+				setLoading(false)
+			}
+		},
+		[errorToast, t, loadingToast, email, successToast]
+	)
+
+	const reset = useCallback(async () => {
 		if (loading) {
 			return
 		}
 
 		if (passwordStrength.strength === "weak") {
-			errorToast(t("register.alerts.passwordWeak"))
+			errorToast(t("reset.alerts.passwordWeak"))
 
 			return
 		}
 
 		if (password !== confirmPassword) {
-			errorToast(t("register.alerts.passwordsNotMatching"))
+			errorToast(t("reset.alerts.passwordsNotMatching"))
 
 			return
+		}
+
+		if (importedMasterKeys.length === 0) {
+			if (
+				!(await showConfirmDialog({
+					title: t("reset.dialogs.noMasterKeysImported.title"),
+					continueButtonText: t("reset.dialogs.noMasterKeysImported.continue"),
+					description: t("reset.dialogs.noMasterKeysImported.description"),
+					continueButtonVariant: "destructive"
+				}))
+			) {
+				return
+			}
+
+			if (
+				!(await showConfirmDialog({
+					title: t("reset.dialogs.noMasterKeysImported2.title"),
+					continueButtonText: t("reset.dialogs.noMasterKeysImported2.continue"),
+					description: t("reset.dialogs.noMasterKeysImported2.description"),
+					continueButtonVariant: "destructive"
+				}))
+			) {
+				return
+			}
+
+			if (
+				!(await showConfirmDialog({
+					title: t("reset.dialogs.noMasterKeysImported3.title"),
+					continueButtonText: t("reset.dialogs.noMasterKeysImported3.continue"),
+					description: t("reset.dialogs.noMasterKeysImported3.description"),
+					continueButtonVariant: "destructive"
+				}))
+			) {
+				return
+			}
 		}
 
 		setLoading(true)
 
 		try {
 			await setup({
-				email: email,
+				email: "anonymous",
 				password: "anonymous",
 				masterKeys: ["anonymous"],
 				connectToSocket: true,
@@ -135,21 +215,39 @@ export function Register() {
 				salt,
 				authVersion: 2
 			})
+			const hasRecoveryKeys = importedMasterKeys.length > 0
+			const newMasterKeys =
+				importedMasterKeys.length > 0 ? [...importedMasterKeys, derived.derivedMasterKeys] : [derived.derivedMasterKeys]
 
-			await sdk.api(3).register({
-				email,
+			if (newMasterKeys.length === 0) {
+				errorToast(t("reset.alerts.invalidMasterKeys"))
+
+				return
+			}
+
+			const newMasterKeysEncrypted = await sdk
+				.crypto()
+				.encrypt()
+				.metadata({
+					metadata: newMasterKeys.join("|"),
+					key: newMasterKeys[newMasterKeys.length - 1]
+				})
+
+			await sdk.api(3).user().password().forgotReset({
+				token,
 				password: derived.derivedPassword,
 				salt,
-				authVersion: 2
+				authVersion: 2,
+				hasRecoveryKeys,
+				newMasterKeys: newMasterKeysEncrypted
 			})
 
-			await showConfirmDialog({
-				title: t("register.alerts.success.title"),
-				continueButtonText: t("register.alerts.success.continue"),
-				description: t("register.alerts.success.description", {
-					email
-				}),
-				continueButtonVariant: "default"
+			successToast(t("reset.alerts.passwordChanged"))
+
+			navigate({
+				to: "/login",
+				replace: true,
+				resetScroll: true
 			})
 		} catch (e) {
 			console.error(e)
@@ -162,15 +260,15 @@ export function Register() {
 			setShowPassword(false)
 			setLoading(false)
 		}
-	}, [errorToast, passwordStrength.strength, t, email, password, confirmPassword, loading])
+	}, [errorToast, passwordStrength.strength, t, password, confirmPassword, token, loading, importedMasterKeys, successToast, navigate])
 
 	const onKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLInputElement>) => {
 			if (e.key === "Enter") {
-				register()
+				reset()
 			}
 		},
-		[register]
+		[reset]
 	)
 
 	return (
@@ -178,25 +276,59 @@ export function Register() {
 			<AuthContainer>
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-2">
-						<h1 className="text-2xl font-semibold">{t("register.header")}</h1>
-						<p className="text-muted-foreground text-sm">{t("register.description")}</p>
+						<h1 className="text-2xl font-semibold">{t("reset.header")}</h1>
+						<p className="text-muted-foreground text-sm">{t("reset.description")}</p>
 					</div>
 					<div className="flex flex-col gap-3">
 						<Input
 							id="email"
-							placeholder={t("register.placeholders.example.email")}
+							placeholder={t("reset.placeholders.example.email")}
 							required={true}
 							type="email"
 							value={email}
 							onChange={e => setEmail(e.target.value)}
 							onKeyDown={onKeyDown}
 						/>
+						<div className="w-full flex flex-row gap-2">
+							<input
+								type="file"
+								accept="text/plain"
+								id="master-keys-input"
+								className="hidden"
+								onChange={parseMasterKeys}
+							/>
+							<div className="flex flex-row items-center gap-2 grow">
+								{importedMasterKeys.length > 0 ? (
+									<>
+										<CheckCircle
+											size={16}
+											className="text-green-500"
+										/>
+										<p className="text-sm text-muted-foreground">{t("reset.masterKeysImported")}</p>
+									</>
+								) : (
+									<>
+										<XCircle
+											size={16}
+											className="text-red-500"
+										/>
+										<p className="text-sm text-muted-foreground">{t("reset.masterKeysNotImported")}</p>
+									</>
+								)}
+							</div>
+							<Button
+								onClick={() => document.getElementById("master-keys-input")?.click()}
+								disabled={loading}
+							>
+								{t("reset.importMasterKeys")}
+							</Button>
+						</div>
 						<div className="w-full flex flex-row">
 							<Input
 								id="password"
 								required={true}
 								type={showPassword ? "text" : "password"}
-								placeholder={t("register.placeholders.normal.password")}
+								placeholder={t("reset.placeholders.normal.password")}
 								value={password}
 								onChange={e => setPassword(e.target.value)}
 								onKeyDown={onKeyDown}
@@ -225,7 +357,7 @@ export function Register() {
 								id="confirmPassword"
 								required={true}
 								type={showPassword ? "text" : "password"}
-								placeholder={t("register.placeholders.normal.confirmPassword")}
+								placeholder={t("reset.placeholders.normal.confirmPassword")}
 								value={confirmPassword}
 								onChange={e => setConfirmPassword(e.target.value)}
 								onKeyDown={onKeyDown}
@@ -342,12 +474,24 @@ export function Register() {
 							</div>
 						)}
 						<Button
-							className="w-full select-none mt-2"
+							className="w-full select-none mt-2 items-center gap-2"
 							type="submit"
-							onClick={register}
+							onClick={reset}
 							disabled={loading}
 						>
-							{loading ? <Loader className="animate-spin-medium" /> : t("register.buttons.register")}
+							{loading ? (
+								<Loader className="animate-spin-medium" />
+							) : (
+								<>
+									{importedMasterKeys.length === 0 && (
+										<Info
+											size={16}
+											className="text-red-500"
+										/>
+									)}
+									{t("reset.buttons.reset")}
+								</>
+							)}
 						</Button>
 						<Link
 							className="inline-block w-full text-center text-sm underline text-muted-foreground"
@@ -360,21 +504,8 @@ export function Register() {
 								variant="outline"
 								disabled={loading}
 							>
-								{t("register.buttons.login")}
+								{t("reset.buttons.back")}
 							</Button>
-						</Link>
-						<Link
-							className="inline-block w-full text-center text-sm underline text-muted-foreground select-none"
-							to="/register"
-							disabled={loading}
-							draggable={false}
-							onClick={e => {
-								e.preventDefault()
-
-								resend()
-							}}
-						>
-							{t("register.buttons.resendConfirmation")}
 						</Link>
 					</div>
 				</div>

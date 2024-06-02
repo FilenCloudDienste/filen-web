@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { useCallback, useState } from "react"
 import sdk from "@/lib/sdk"
 import { APIError } from "@filen/sdk"
-import { useToast } from "@/components/ui/use-toast"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
@@ -28,7 +27,6 @@ export function Login() {
 	const [showTwoFactorCodeInput, setShowTwoFactorCodeInput] = useState<boolean>(false)
 	const [useTwoFactorRecoveryKey, setUseTwoFactorRecoveryKey] = useState<boolean>(false)
 	const [showPassword, setShowPassword] = useState<boolean>(false)
-	const { toast } = useToast()
 	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const [loading, setLoading] = useState<boolean>(false)
@@ -65,6 +63,10 @@ export function Login() {
 	}, [loadingToast, errorToast, successToast, t])
 
 	const login = useCallback(async () => {
+		if (loading) {
+			return
+		}
+
 		setLoading(true)
 
 		try {
@@ -128,14 +130,11 @@ export function Login() {
 			setShowTwoFactorCodeInput(false)
 			setUseTwoFactorRecoveryKey(false)
 
-			toast({
-				variant: "destructive",
-				description: (e as Error).message
-			})
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
 			setLoading(false)
 		}
-	}, [email, password, twoFactorCode, toast, navigate])
+	}, [email, password, twoFactorCode, navigate, loading, errorToast])
 
 	return (
 		<RequireUnauthed>
