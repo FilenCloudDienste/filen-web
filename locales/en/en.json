@@ -6,7 +6,7 @@
 	"copiedToClipboard": "Copied to clipboard",
 	"login": {
 		"header": "Login",
-		"description": "Enter you email and password below to login to your account",
+		"description": "Enter your email and password below to login to your account",
 		"useTwoFactorRecoveryKey": "Use recovery key instead",
 		"buttons": {
 			"login": "Login",
@@ -27,10 +27,62 @@
 				"2faRecoveryKey": "Recovery key"
 			}
 		},
+		"dialogs": {
+			"forgotPassword": {
+				"title": "Forgot password",
+				"continue": "Send instructions",
+				"placeholder": "Email address"
+			}
+		},
 		"alerts": {
 			"emailOrPasswordWrong": "Email or password wrong",
 			"enter2FA": "Please enter your Two Factor Authentication code",
-			"enter2FARecoveryKey": "Please enter your Two Factor Authentication recovery key"
+			"enter2FARecoveryKey": "Please enter your Two Factor Authentication recovery key",
+			"forgotPasswordSent": "Password reset instructions sent to {{email}}"
+		}
+	},
+	"register": {
+		"header": "Create an account",
+		"description": "Enter your email and password below to create an account",
+		"buttons": {
+			"register": "Create account",
+			"resendConfirmation": "Resend confirmation email",
+			"login": "Login"
+		},
+		"passwordStrength": {
+			"length": "Length",
+			"uppercase": "Uppercase characters",
+			"lowercase": "Lowercase characters",
+			"specialChars": "Special characters"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "Email address",
+				"password": "Password",
+				"confirmPassword": "Confirm password"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"dialogs": {
+			"confirmationSend": {
+				"title": "Resend confirmation email",
+				"continue": "Send",
+				"placeholder": "Email address"
+			}
+		},
+		"alerts": {
+			"passwordWeak": "Your chosen password is too weak",
+			"confirmationSent": "Confirmation email sent to {{email}}",
+			"passwordsNotMatching": "Passwords are not the same",
+			"success": {
+				"title": "Account created",
+				"continue": "Continue",
+				"description": "We have sent a confirmation email to {{email}}. Please click the link in the email to confirm you registration. Make sure to also check your spam folder."
+			}
 		}
 	},
 	"auth": {

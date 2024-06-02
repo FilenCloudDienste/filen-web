@@ -7,16 +7,23 @@ import { Loader, Shield, Lock, EyeOff, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { cn } from "@/lib/utils"
+import useLocation from "@/hooks/useLocation"
 
 export const Container = memo(({ children, loading }: { children: React.ReactNode; loading: boolean }) => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const isMobile = useIsMobile()
 	const urlState = usePublicLinkURLState()
+	const location = useLocation()
 
 	return (
 		<div className={cn("flex flex-row w-screen h-screen select-none", urlState.color && `bg-[#${urlState.color}]`)}>
 			{!isMobile && !IS_DESKTOP && !urlState.embed && (
-				<div className="flex flex-col w-[350px] border-r p-10 justify-center shrink-0 z-50 bg-background dragselect-start-allowed">
+				<div
+					className={cn(
+						"flex flex-col w-[350px] border-r p-10 justify-center shrink-0 z-50 bg-background",
+						location.includes("/d/") && "dragselect-start-allowed"
+					)}
+				>
 					<div className="absolute top-10 left-10">
 						<Link
 							to={authed ? "/" : "login"}

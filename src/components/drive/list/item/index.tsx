@@ -23,6 +23,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
+import useDriveURLState from "@/hooks/useDriveURLState"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -53,6 +54,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const [navigating, setNavigating] = useState<boolean>(false)
 	const publicLinkURLState = usePublicLinkURLState()
 	const didNavigateAwayRef = useRef<boolean>(false)
+	const driveURLState = useDriveURLState()
 
 	const previewType = useMemo(() => {
 		return fileNameToPreviewType(item.name)
@@ -414,7 +416,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 								)}
 								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
 							</div>
-							{item.sharerId > 0 && item.sharerEmail.length > 0 && item.parent.length < 16 && (
+							{item.sharerId > 0 && item.sharerEmail.length > 0 && !driveURLState.insideParent && (
 								<div className="flex flex-row items-center pr-2">
 									<Badge
 										className="line-clamp-1 text-ellipsis break-all cursor-pointer"

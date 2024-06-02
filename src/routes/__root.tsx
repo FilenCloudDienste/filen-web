@@ -135,10 +135,10 @@ export const Root = memo(() => {
 						<ConfirmDialog />
 						<TransparentFullScreenImageDialog />
 						<TwoFactorCodeDialog />
-						<Toaster />
 					</CookieConsent>
 				</PersistQueryClientProvider>
 			</ThemeProvider>
+			<Toaster />
 		</main>
 	)
 })

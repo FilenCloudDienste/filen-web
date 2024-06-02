@@ -12,6 +12,10 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/comp
 import { Loader, Eye } from "lucide-react"
 import { setup } from "@/lib/setup"
 import worker from "@/lib/worker"
+import { showInputDialog } from "@/components/dialogs/input"
+import useErrorToast from "@/hooks/useErrorToast"
+import useSuccessToast from "@/hooks/useSuccessToast"
+import useLoadingToast from "@/hooks/useLoadingToast"
 
 export const Route = createFileRoute("/login")({
 	component: Login
@@ -28,6 +32,37 @@ export function Login() {
 	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const [loading, setLoading] = useState<boolean>(false)
+	const errorToast = useErrorToast()
+	const loadingToast = useLoadingToast()
+	const successToast = useSuccessToast()
+
+	const forgot = useCallback(async () => {
+		const inputResponse = await showInputDialog({
+			title: t("login.dialogs.forgotPassword.title"),
+			continueButtonText: t("login.dialogs.forgotPassword.continue"),
+			value: "",
+			autoFocusInput: true,
+			placeholder: t("login.dialogs.forgotPassword.placeholder")
+		})
+
+		if (inputResponse.cancelled) {
+			return
+		}
+
+		const toast = loadingToast()
+
+		try {
+			await sdk.api(3).user().password().forgot({ email: inputResponse.value.trim() })
+
+			successToast(t("login.alerts.forgotPasswordSent", { email: inputResponse.value.trim() }))
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			toast.dismiss()
+		}
+	}, [loadingToast, errorToast, successToast, t])
 
 	const login = useCallback(async () => {
 		setLoading(true)
@@ -218,6 +253,7 @@ export function Login() {
 										placeholder={t("login.placeholders.normal.password")}
 										value={password}
 										onChange={e => setPassword(e.target.value)}
+										className="pr-12"
 										onKeyDown={e => {
 											if (e.key === "Enter") {
 												login()
@@ -244,7 +280,7 @@ export function Login() {
 								</Button>
 								<Link
 									className="inline-block w-full text-center text-sm underline text-muted-foreground"
-									to="/login"
+									to="/register"
 									disabled={loading}
 									draggable={false}
 								>
@@ -261,6 +297,11 @@ export function Login() {
 									to="/login"
 									disabled={loading}
 									draggable={false}
+									onClick={e => {
+										e.preventDefault()
+
+										forgot()
+									}}
 								>
 									{t("login.buttons.forgotPassword")}
 								</Link>

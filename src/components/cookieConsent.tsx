@@ -1,6 +1,5 @@
-import { memo, useEffect, useCallback, useRef } from "react"
+import { memo, useCallback } from "react"
 import { IS_DESKTOP } from "@/constants"
-import { useToast } from "./ui/use-toast"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { useTranslation } from "react-i18next"
 import { Button } from "./ui/button"
@@ -8,37 +7,28 @@ import { Button } from "./ui/button"
 export type CookieConsentValues = "full" | "needed" | "undecided"
 
 export const CookieConsent = memo(({ children }: { children: React.ReactNode }) => {
-	const { toast } = useToast()
 	const [cookieConsent, setCookieConsent] = useLocalStorage<CookieConsentValues>("cookieConsent", "undecided")
 	const { t } = useTranslation()
-	const toastRef = useRef<ReturnType<typeof toast> | null>(null)
 
 	const accept = useCallback(() => {
-		if (toastRef.current) {
-			toastRef.current.dismiss()
-
-			setCookieConsent("full")
-		}
+		setCookieConsent("full")
 	}, [setCookieConsent])
 
 	const onlyNeeded = useCallback(() => {
-		if (toastRef.current) {
-			toastRef.current.dismiss()
-
-			setCookieConsent("needed")
-		}
+		setCookieConsent("needed")
 	}, [setCookieConsent])
 
-	const showConsent = useCallback(() => {
-		if (IS_DESKTOP || cookieConsent !== "undecided" || toastRef.current) {
-			return
-		}
+	if (IS_DESKTOP || cookieConsent === "needed" || cookieConsent === "full") {
+		return children
+	}
 
-		toastRef.current = toast({
-			duration: Infinity,
-			description: t("cookieConsent.description"),
-			action: (
-				<div className="flex flex-col gap-2">
+	return (
+		<>
+			<div className="z-50 flex flex-row bg-background border rounded-sm absolute bottom-4 right-4 p-4 gap-4">
+				<div className="flex flex-row max-w-72">
+					<p>{t("cookieConsent.description")}</p>
+				</div>
+				<div className="flex flex-col gap-2 justify-center">
 					<Button
 						size="sm"
 						variant="outline"
@@ -53,17 +43,10 @@ export const CookieConsent = memo(({ children }: { children: React.ReactNode }) 
 						{t("cookieConsent.accept")}
 					</Button>
 				</div>
-			)
-		})
-	}, [cookieConsent, toast, t, onlyNeeded, accept])
-
-	useEffect(() => {
-		if (!IS_DESKTOP) {
-			showConsent()
-		}
-	}, [showConsent])
-
-	return children
+			</div>
+			{children}
+		</>
+	)
 })
 
 export default CookieConsent
