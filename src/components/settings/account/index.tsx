@@ -15,16 +15,14 @@ import { showInputDialog } from "@/components/dialogs/input"
 import ChangeEmailDialog from "./dialogs/changeEmail"
 import eventEmitter from "@/lib/eventEmitter"
 import ChangePersonalInformationDialog from "./dialogs/personalInformation"
-import useIsMobile from "@/hooks/useIsMobile"
-import { cn } from "@/lib/utils"
 import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
+import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 
 export const Account = memo(() => {
 	const account = useAccount()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
-	const isMobile = useIsMobile()
 	const [usage, setUsage] = useState<{ all: number; versioned: number }>(
 		account
 			? {
@@ -38,6 +36,7 @@ export const Account = memo(() => {
 	)
 	const lastUsageRef = useRef<number>(-1)
 	const { t } = useTranslation()
+	const settingsContainerSize = useSettingsContainerSize()
 
 	const requestAccountData = useCallback(async () => {
 		if (!account) {
@@ -365,7 +364,12 @@ export const Account = memo(() => {
 	return (
 		<>
 			<div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden">
-				<div className={cn("flex flex-col p-6 h-full", isMobile ? "w-full" : "w-4/6")}>
+				<div
+					className="flex flex-col p-6 h-full"
+					style={{
+						width: settingsContainerSize.width
+					}}
+				>
 					<div className="flex flex-col gap-4">
 						<Section
 							name={t("settings.account.sections.avatar.name")}

@@ -77,6 +77,7 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 					fixedItemHeight={44}
 					itemContent={itemContent}
 					components={components}
+					id="virtuoso-drive-list"
 					style={{
 						overflowX: "hidden",
 						overflowY: "auto",

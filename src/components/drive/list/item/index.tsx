@@ -10,7 +10,7 @@ import eventEmitter from "@/lib/eventEmitter"
 import { generateThumbnail } from "@/lib/worker/proxy"
 import { fileNameToThumbnailType, fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
 import { cn } from "@/lib/utils"
-import { Heart } from "lucide-react"
+import { Heart, MoreHorizontal } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import { THUMBNAIL_MAX_FETCH_SIZE, MAX_PREVIEW_SIZE } from "@/constants"
 import { Badge } from "@/components/ui/badge"
@@ -24,6 +24,7 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import useDriveURLState from "@/hooks/useDriveURLState"
+import useDriveListColumnSize from "@/hooks/useDriveListColumnSize"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -55,6 +56,9 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const publicLinkURLState = usePublicLinkURLState()
 	const didNavigateAwayRef = useRef<boolean>(false)
 	const driveURLState = useDriveURLState()
+	const [mouseHovering, setMouseHovering] = useState<boolean>(false)
+	const listItemRef = useRef<HTMLDivElement>(null)
+	const driveListColumnSize = useDriveListColumnSize()
 
 	const previewType = useMemo(() => {
 		return fileNameToPreviewType(item.name)
@@ -359,6 +363,38 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 		[errorToast, loadingToast, setItems, item.uuid, location, isInsidePublicLink, t, item.name]
 	)
 
+	const onMouseEnter = useCallback(() => {
+		setMouseHovering(true)
+	}, [])
+
+	const onMouseLeave = useCallback(() => {
+		setMouseHovering(false)
+	}, [])
+
+	const triggerMoreIconContextMenu = useCallback(
+		(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+			e.preventDefault()
+			e.stopPropagation()
+
+			if (!mouseHovering || !listItemRef.current) {
+				return
+			}
+
+			onContextMenu()
+
+			const contextMenuEvent = new MouseEvent("contextmenu", {
+				bubbles: true,
+				cancelable: true,
+				view: window,
+				clientX: e.clientX,
+				clientY: e.clientY
+			})
+
+			listItemRef.current.dispatchEvent(contextMenuEvent)
+		},
+		[onContextMenu, mouseHovering]
+	)
+
 	useMountedEffect(() => {
 		fetchDirectorySize()
 		fetchThumbnail()
@@ -372,6 +408,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 			>
 				{type === "list" ? (
 					<div
+						ref={listItemRef}
 						className={cn(
 							"dragselect-collision-check dragselect-start-disallowed flex flex-row w-full h-11 items-center justify-between gap-3 text-medium hover:bg-secondary cursor-pointer px-3",
 							item.selected || hovering ? "bg-secondary" : "",
@@ -385,8 +422,15 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 						onDragOver={onDragOver}
 						onDragLeave={onDragLeave}
 						onDrop={onDrop}
+						onMouseEnter={onMouseEnter}
+						onMouseLeave={onMouseLeave}
 					>
-						<div className="flex flex-row grow items-center dragselect-start-disallowed line-clamp-1 text-ellipsis gap-2 min-w-[200px]">
+						<div
+							className="flex flex-row items-center dragselect-start-disallowed gap-2"
+							style={{
+								width: driveListColumnSize.name
+							}}
+						>
 							<div className="flex flex-row dragselect-start-disallowed shrink-0">
 								{item.type === "directory" ? (
 									<ColoredFolderSVGIcon
@@ -405,7 +449,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 									/>
 								)}
 							</div>
-							<div className="flex flex-row grow dragselect-start-disallowed items-center gap-2">
+							<div className="flex flex-row dragselect-start-disallowed items-center gap-2 line-clamp-1 text-ellipsis break-all">
 								{item.favorited && (
 									<Heart
 										size={18}
@@ -439,13 +483,32 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 								</div>
 							)}
 						</div>
-						<div className="flex flex-row dragselect-start-disallowed line-clamp-1 text-ellipsis w-[125px]">
+						<div
+							className="flex flex-row dragselect-start-disallowed line-clamp-1 break-all text-ellipsis"
+							style={{
+								width: driveListColumnSize.size
+							}}
+						>
 							<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{formatBytes(size)}</p>
 						</div>
-						<div className="flex flex-row dragselect-start-disallowed line-clamp-1 text-ellipsis w-[250px]">
+						<div
+							className="flex flex-row dragselect-start-disallowed line-clamp-1 break-all text-ellipsis"
+							style={{
+								width: driveListColumnSize.modified
+							}}
+						>
 							<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">
 								{simpleDate(item.lastModified)}
 							</p>
+						</div>
+						<div
+							className="flex flex-row dragselect-start-disallowed text-muted-foreground hover:text-primary"
+							onClick={triggerMoreIconContextMenu}
+							style={{
+								width: driveListColumnSize.more
+							}}
+						>
+							<MoreHorizontal className={cn(!mouseHovering && "hidden")} />
 						</div>
 					</div>
 				) : (
@@ -477,7 +540,8 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 						<div
 							className={cn(
 								"flex flex-col dragselect-start-disallowed w-full rounded-md border h-full hover:bg-secondary cursor-pointer items-center justify-center",
-								item.selected || hovering ? "bg-secondary border-primary" : ""
+								item.selected || hovering ? "bg-secondary border-blue-500" : "",
+								thumbnailURL && (item.selected || hovering) && "border-2"
 							)}
 						>
 							{item.type === "directory" ? (

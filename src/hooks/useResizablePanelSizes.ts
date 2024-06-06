@@ -1,13 +1,18 @@
 import useWindowSize from "./useWindowSize"
 import { useMemo } from "react"
 import { useLocalStorage } from "@uidotdev/usehooks"
+import useLocation from "./useLocation"
 
 export default function useResizablePanelSizes() {
 	const windowSize = useWindowSize()
-	const [sidebarPercentage] = useLocalStorage<number>("sidebarPercentage", 0)
+	const location = useLocation()
+	const [resizablePanelSizes] = useLocalStorage<(number | undefined | null)[]>(
+		location.includes("notes") ? "mainContainerResizablePanelSizes:notes" : "mainContainerResizablePanelSizes",
+		[undefined, undefined]
+	)
 
 	const sizes = useMemo(() => {
-		if (!windowSize || !sidebarPercentage) {
+		if (!windowSize || !resizablePanelSizes) {
 			return {
 				left: {
 					width: 0,
@@ -35,7 +40,7 @@ export default function useResizablePanelSizes() {
 				height: rightPanelRect?.height ?? 0
 			}
 		}
-	}, [windowSize, sidebarPercentage])
+	}, [windowSize, resizablePanelSizes])
 
 	return sizes
 }

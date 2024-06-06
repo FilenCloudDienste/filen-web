@@ -13,6 +13,7 @@ import ChangePasswordDialog from "./dialogs/changePassword"
 import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
+import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 
 export const Security = memo(() => {
 	const account = useAccount()
@@ -20,6 +21,7 @@ export const Security = memo(() => {
 	const errorToast = useErrorToast()
 	const { masterKeys, userId } = useSDKConfig()
 	const { t } = useTranslation()
+	const settingsContainerSize = useSettingsContainerSize()
 
 	const onTwoFactorChange = useCallback(
 		async (checked: boolean) => {
@@ -156,7 +158,12 @@ export const Security = memo(() => {
 
 	return (
 		<div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden">
-			<div className="flex flex-col p-6 w-5/6 h-full">
+			<div
+				className="flex flex-col p-6 h-full"
+				style={{
+					width: settingsContainerSize.width
+				}}
+			>
 				<div className="flex flex-col gap-4">
 					<Section
 						name={t("settings.security.sections.password.name")}

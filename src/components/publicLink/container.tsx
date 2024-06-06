@@ -1,4 +1,4 @@
-import { memo } from "react"
+import { memo, useMemo } from "react"
 import { Link } from "@tanstack/react-router"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import useIsMobile from "@/hooks/useIsMobile"
@@ -8,21 +8,35 @@ import { Button } from "@/components/ui/button"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
+import useWindowSize from "@/hooks/useWindowSize"
 
 export const Container = memo(({ children, loading }: { children: React.ReactNode; loading: boolean }) => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const isMobile = useIsMobile()
 	const urlState = usePublicLinkURLState()
 	const location = useLocation()
+	const windowSize = useWindowSize()
+
+	const widths = useMemo(() => {
+		const sideBar = isMobile ? 0 : windowSize.width > 1200 ? 350 : 250
+
+		return {
+			sideBar,
+			container: windowSize.width - sideBar
+		}
+	}, [isMobile, windowSize.width])
 
 	return (
 		<div className={cn("flex flex-row w-screen h-screen select-none", urlState.color && `bg-[#${urlState.color}]`)}>
 			{!isMobile && !IS_DESKTOP && !urlState.embed && (
 				<div
 					className={cn(
-						"flex flex-col w-[350px] border-r p-10 justify-center shrink-0 z-50 bg-background",
+						"flex flex-col border-r p-10 justify-center shrink-0 z-50 bg-background",
 						location.includes("/d/") && "dragselect-start-allowed"
 					)}
+					style={{
+						width: widths.sideBar
+					}}
 				>
 					<div className="absolute top-10 left-10">
 						<Link
@@ -65,7 +79,12 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 					</Link>
 				</div>
 			)}
-			<div className="flex flex-row grow bg-muted/40">
+			<div
+				className="flex flex-row bg-muted/40"
+				style={{
+					width: widths.container
+				}}
+			>
 				{!urlState.embed && (
 					<div className="absolute bottom-4 right-4 z-50">
 						<Button

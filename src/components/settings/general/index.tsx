@@ -18,6 +18,7 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import { type NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import { useQuery } from "@tanstack/react-query"
 import Skeletons from "../skeletons"
+import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 
 export const General = memo(() => {
 	const account = useAccount()
@@ -29,6 +30,7 @@ export const General = memo(() => {
 	const [chatNotificationsEnabled, setChatNotificationsEnabled] = useLocalStorage<boolean>("chatNotificationsEnabled", false)
 	const [contactNotificationsEnabled, setContactNotificationsEnabled] = useLocalStorage<boolean>("contactNotificationsEnabled", false)
 	const [defaultNoteType, setDefaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
+	const settingsContainerSize = useSettingsContainerSize()
 
 	const thumbnailCacheQuery = useQuery({
 		queryKey: ["workerCalculateThumbnailCacheUsage"],
@@ -201,7 +203,12 @@ export const General = memo(() => {
 
 	return (
 		<div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden">
-			<div className="flex flex-col p-6 w-5/6 h-full">
+			<div
+				className="flex flex-col p-6 h-full"
+				style={{
+					width: settingsContainerSize.width
+				}}
+			>
 				<div className="flex flex-col gap-3 bg-background border p-4 rounded-md">
 					<div className="flex flex-row items-center justify-between">
 						<p>{t("settings.general.storageUsed")}</p>
@@ -215,7 +222,7 @@ export const General = memo(() => {
 					<Progress value={(account.account.storage / account.account.maxStorage) * 100} />
 					<div className="flex flex-row items-center gap-6">
 						<div className="flex flex-row items-center gap-2">
-							<div className="w-4 h-4 rounded-sm bg-primary" />
+							<div className="w-4 h-4 rounded-sm bg-primary shrink-0" />
 							<p>
 								{t("settings.general.files", {
 									size: formatBytes(account.account.storage - account.settings.versionedStorage)
@@ -223,7 +230,7 @@ export const General = memo(() => {
 							</p>
 						</div>
 						<div className="flex flex-row items-center gap-2">
-							<div className="w-4 h-4 rounded-sm bg-primary" />
+							<div className="w-4 h-4 rounded-sm bg-primary shrink-0" />
 							<p>
 								{t("settings.general.versionedFiles", {
 									size: formatBytes(account.settings.versionedStorage)
@@ -231,7 +238,7 @@ export const General = memo(() => {
 							</p>
 						</div>
 						<div className="flex flex-row items-center gap-2">
-							<div className="w-4 h-4 rounded-sm bg-secondary" />
+							<div className="w-4 h-4 rounded-sm bg-secondary shrink-0" />
 							<p>
 								{t("settings.general.free", {
 									size: formatBytes(

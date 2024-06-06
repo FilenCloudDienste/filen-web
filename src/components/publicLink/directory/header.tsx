@@ -5,12 +5,14 @@ import { ArrowUp, ArrowDown } from "lucide-react"
 import { type DriveSortBy } from "@/components/drive/list/header"
 import { type DriveCloudItem } from "@/components/drive"
 import { cn } from "@/lib/utils"
+import useDriveListColumnSize from "@/hooks/useDriveListColumnSize"
 
 const iconSize = 14
 
 export const Header = memo(({ parent, items }: { parent: string; items: DriveCloudItem[] }) => {
 	const [driveSortBy, setDriveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 	const { t } = useTranslation()
+	const driveListColumnSize = useDriveListColumnSize()
 
 	const name = useCallback(() => {
 		setDriveSortBy(prev => ({
@@ -41,8 +43,11 @@ export const Header = memo(({ parent, items }: { parent: string; items: DriveClo
 		<div className="flex flex-row px-3 text-sm">
 			<div className="flex flex-row w-full h-10 items-center select-none gap-3">
 				<div
-					className="flex flex-row grow min-w-[200px] items-center cursor-pointer"
+					className="flex flex-row items-center cursor-pointer"
 					onClick={name}
+					style={{
+						width: driveListColumnSize.name
+					}}
 				>
 					<div
 						className={cn(
@@ -58,8 +63,11 @@ export const Header = memo(({ parent, items }: { parent: string; items: DriveClo
 					</div>
 				</div>
 				<div
-					className="flex flex-row w-[125px] items-center cursor-pointer"
+					className="flex flex-row items-center cursor-pointer"
 					onClick={size}
+					style={{
+						width: driveListColumnSize.size
+					}}
 				>
 					<div
 						className={cn(
@@ -75,8 +83,11 @@ export const Header = memo(({ parent, items }: { parent: string; items: DriveClo
 					</div>
 				</div>
 				<div
-					className="flex flex-row w-[250px] items-center cursor-pointer"
+					className="flex flex-row items-center cursor-pointer"
 					onClick={modified}
+					style={{
+						width: driveListColumnSize.modified
+					}}
 				>
 					<div
 						className={cn(
@@ -90,6 +101,14 @@ export const Header = memo(({ parent, items }: { parent: string; items: DriveClo
 						{driveSortBy[parent] === "lastModifiedAsc" && <ArrowUp size={iconSize} />}
 						{driveSortBy[parent] === "lastModifiedDesc" && <ArrowDown size={iconSize} />}
 					</div>
+				</div>
+				<div
+					className="flex flex-row"
+					style={{
+						width: driveListColumnSize.more
+					}}
+				>
+					&nbsp;
 				</div>
 			</div>
 		</div>

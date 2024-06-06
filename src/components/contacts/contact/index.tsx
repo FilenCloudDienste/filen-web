@@ -41,6 +41,7 @@ export const Contact = memo(
 		const triggerMoreIconContextMenu = useCallback(
 			(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 				e.preventDefault()
+				e.stopPropagation()
 
 				const contextMenuEvent = new MouseEvent("contextmenu", {
 					bubbles: true,

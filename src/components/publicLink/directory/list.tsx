@@ -29,7 +29,7 @@ export const List = memo(({ items, parent, showSkeletons }: { items: DriveCloudI
 	}, [])
 
 	const virtuosoHeight = useMemo(() => {
-		return IS_DESKTOP ? windowSize.height - 48 - 32 - 24 : windowSize.height - 48 - 32
+		return windowSize.height - 48 - 40 - (IS_DESKTOP ? 24 : 0)
 	}, [windowSize.height])
 
 	const components = useMemo(() => {
@@ -61,25 +61,24 @@ export const List = memo(({ items, parent, showSkeletons }: { items: DriveCloudI
 	}, [showSkeletons])
 
 	return (
-		<>
-			<Virtuoso
-				data={items}
-				totalCount={items.length}
-				height={virtuosoHeight}
-				width="100%"
-				computeItemKey={getItemKey}
-				defaultItemHeight={44}
-				fixedItemHeight={44}
-				itemContent={itemContent}
-				components={components}
-				style={{
-					overflowX: "hidden",
-					overflowY: "auto",
-					height: virtuosoHeight + "px",
-					width: "100%"
-				}}
-			/>
-		</>
+		<Virtuoso
+			data={items}
+			totalCount={items.length}
+			height={virtuosoHeight}
+			width="100%"
+			computeItemKey={getItemKey}
+			defaultItemHeight={44}
+			fixedItemHeight={44}
+			itemContent={itemContent}
+			components={components}
+			id="virtuoso-drive-list"
+			style={{
+				overflowX: "hidden",
+				overflowY: "auto",
+				height: virtuosoHeight + "px",
+				width: "100%"
+			}}
+		/>
 	)
 })
 
