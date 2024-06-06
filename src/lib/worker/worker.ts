@@ -45,6 +45,7 @@ import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/lin
 import { type DirLinkContentDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/content"
 import { type AuthInfoResponse } from "@filen/sdk/dist/types/api/v3/auth/info"
 import { type UserProfileResponse } from "@filen/sdk/dist/types/api/v3/user/profile"
+import { fileNameToThumbnailType } from "@/components/dialogs/previewDialog/utils"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -714,9 +715,22 @@ export async function uploadFile({
 			delete abortControllers[fileId]
 		},
 		onUploaded: async item => {
-			// TODO: Thumbnail processing etc.
+			if (item.type !== "file") {
+				return
+			}
 
-			console.log(item)
+			await generateThumbnailInsideWorker({
+				item: {
+					...item,
+					sharerId: 0,
+					sharerEmail: "",
+					receiverId: 0,
+					receiverEmail: "",
+					selected: false,
+					receivers: [],
+					size: item.size
+				}
+			})
 		}
 	})
 
@@ -891,7 +905,20 @@ export async function uploadDirectory({
 					receivers
 				})
 
-				// TODO: Thumbnail processing etc.
+				if (item.type === "file") {
+					await generateThumbnailInsideWorker({
+						item: {
+							...item,
+							sharerId: 0,
+							sharerEmail: "",
+							receiverId: 0,
+							receiverEmail: "",
+							selected: false,
+							receivers: [],
+							size: item.size
+						}
+					})
+				}
 			}
 		})
 
@@ -3079,4 +3106,21 @@ export async function userProfile({ id }: { id: number }): Promise<UserProfileRe
 	await waitForInitialization()
 
 	return await SDK.api(3).user().profile({ id })
+}
+
+export async function generateThumbnailInsideWorker({ item }: { item: DriveCloudItem }): Promise<void> {
+	if (item.type !== "file") {
+		throw new Error("Item not of type file.")
+	}
+
+	const thumbnailType = fileNameToThumbnailType(item.name)
+	const dbKey = `thumbnail:${item.uuid}:${THUMBNAIL_VERSION}`
+
+	if (thumbnailType === "image") {
+		const blob = await generateImageThumbnail({ item })
+
+		await setItem(dbKey, blob)
+
+		return
+	}
 }

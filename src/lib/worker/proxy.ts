@@ -198,7 +198,7 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 				if (fromDb) {
 					blob = fromDb
 				} else {
-					const chunkedEnd = 1024 * 1024 * 8 - 1
+					const chunkedEnd = 1024 * 1024 * 12 - 1
 
 					const buffer = await worker.readFile({
 						item,

@@ -115,3 +115,23 @@ export function dialogsOpen(): boolean {
 
 	return alerts.length > 0 || dialogs.length > 0
 }
+
+/**
+ * Converts pixel values to percentage based on the container width.
+ * @param {number} pixelValue - The value in pixels to be converted.
+ * @param {number} containerWidth - The total width of the container in pixels.
+ * @returns {number} - The value converted to a percentage.
+ */
+export function pixelsToPercentage(pixelValue: number, containerWidth: number): number {
+	return (pixelValue / containerWidth) * 100
+}
+
+/**
+ * Converts percentage values to pixels based on the container width.
+ * @param {number} percentageValue - The value in percentage to be converted.
+ * @param {number} containerWidth - The total width of the container in pixels.
+ * @returns {number} - The value converted to pixels.
+ */
+export function percentageToPixels(percentageValue: number, containerWidth: number): number {
+	return (percentageValue / 100) * containerWidth
+}

@@ -1,21 +1,17 @@
-import { memo, useMemo, useCallback } from "react"
+import { memo, useCallback, useMemo } from "react"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
-import { useLocalStorage } from "@uidotdev/usehooks"
 import SideBar from "./sideBar"
 import InnerSideBar from "./innerSideBar"
 import TopBar from "./topBar"
 import { IS_DESKTOP, IS_APPLE_DEVICE } from "@/constants"
-import { cn } from "@/lib/utils"
+import { cn, pixelsToPercentage, percentageToPixels } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
-import useWindowSize from "@/hooks/useWindowSize"
+import { useLocalStorage } from "@uidotdev/usehooks"
 import { X, Maximize, Minus } from "lucide-react"
 import { showConfirmDialog } from "../dialogs/confirm"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "@/providers/themeProvider"
-
-export const sidebarBasePx = 275
-export const sidebarMinPx = 275
-export const sidebarMaxPx = 500
+import useWindowSize from "@/hooks/useWindowSize"
 
 export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 	const { t } = useTranslation()
@@ -114,7 +110,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 })
 
 export const InnerSideBarWrapper = memo(
-	({ defaultSize, minSize, maxSize, location }: { defaultSize: number; minSize: number; maxSize: number; location: string }) => {
+	({ defaultSize, minSize, maxSize, location }: { defaultSize?: number; minSize?: number; maxSize?: number; location: string }) => {
 		if (location.includes("settings") || location.includes("chats") || location.includes("contacts")) {
 			return (
 				<div
@@ -144,32 +140,51 @@ export const InnerSideBarWrapper = memo(
 )
 
 export const MainContainer = memo(({ children }: { children: React.ReactNode }) => {
-	const windowSize = useWindowSize()
-	const [sidebarPercentage, setSidebarPercentage] = useLocalStorage<number>("sidebarPercentage", 0)
 	const location = useLocation()
 	const { dark } = useTheme()
+	const windowSize = useWindowSize()
+	const [resizablePanelSizes, setResizablePanelSizes] = useLocalStorage<(number | undefined | null)[]>(
+		location.includes("notes") ? "mainContainerResizablePanelSizes:notes" : "mainContainerResizablePanelSizes",
+		[undefined, undefined]
+	)
 
-	const sidebarSize = useMemo(() => {
-		if (sidebarPercentage > 0) {
-			return sidebarPercentage
+	const panelContainerWidth = useMemo(() => {
+		return windowSize.width - 64
+	}, [windowSize.width])
+
+	const panelSizes = useMemo(() => {
+		const leftDefaultSize = 300
+		const leftMinSize = 250
+		const leftMaxSize = panelContainerWidth / 2
+
+		const left = {
+			value: resizablePanelSizes[0]
+				? pixelsToPercentage(resizablePanelSizes[0], panelContainerWidth)
+				: pixelsToPercentage(leftDefaultSize, panelContainerWidth),
+			minSize: pixelsToPercentage(leftMinSize, panelContainerWidth),
+			maxSize: pixelsToPercentage(leftMaxSize, panelContainerWidth)
 		}
-
-		const windowWidth = windowSize.width - 64
-		const percentage = Math.floor((sidebarBasePx / windowWidth) * 100)
-
-		return percentage
-	}, [windowSize.width, sidebarPercentage])
-
-	const sidebarSizeRange = useMemo(() => {
-		const windowWidth = windowSize.width - 64
-		const min = Math.floor((sidebarMinPx / windowWidth) * 100)
-		const max = Math.floor((sidebarMaxPx / windowWidth) * 100)
 
 		return {
-			min,
-			max
+			left,
+			right: {
+				value: resizablePanelSizes[1]
+					? pixelsToPercentage(resizablePanelSizes[1], panelContainerWidth)
+					: pixelsToPercentage(panelContainerWidth - leftDefaultSize, panelContainerWidth)
+			}
 		}
-	}, [windowSize.width])
+	}, [resizablePanelSizes, panelContainerWidth])
+
+	const updatePanelSizes = useCallback(
+		(e?: (number | undefined | null)[]) => {
+			if (!e || !e[0] || !e[1]) {
+				return
+			}
+
+			setResizablePanelSizes([percentageToPixels(e[0], panelContainerWidth), percentageToPixels(e[1], panelContainerWidth)])
+		},
+		[setResizablePanelSizes, panelContainerWidth]
+	)
 
 	return (
 		<Wrapper>
@@ -178,19 +193,19 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 			</div>
 			<ResizablePanelGroup
 				direction="horizontal"
-				onLayout={e => setSidebarPercentage(e[0] ? e[0] : 20)}
+				onLayout={updatePanelSizes}
 				className={cn(dark ? "bg-muted/40" : "bg-background", IS_DESKTOP && "rounded-tl-[10px]")}
 			>
 				{!location.includes("terminal") && (
 					<InnerSideBarWrapper
-						defaultSize={sidebarSize}
-						minSize={sidebarSizeRange.min}
-						maxSize={sidebarSizeRange.max}
+						defaultSize={panelSizes.left.value}
+						minSize={panelSizes.left.minSize}
+						maxSize={panelSizes.left.maxSize}
 						location={location}
 					/>
 				)}
 				<ResizablePanel
-					defaultSize={100 - sidebarSize}
+					defaultSize={panelSizes.right.value}
 					order={2}
 					id="right-resizable-panel"
 				>

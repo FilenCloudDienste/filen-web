@@ -9,6 +9,8 @@ import { ResizablePanelGroup, ResizableHandle, ResizablePanel } from "../ui/resi
 import { useLocalStorage } from "@uidotdev/usehooks"
 import CodeMirror, { EditorView } from "@uiw/react-codemirror"
 import MarkdownPreview from "@uiw/react-markdown-preview"
+import { usePublicLinkURLState } from "@/hooks/usePublicLink"
+import useLocation from "@/hooks/useLocation"
 
 export const TextEditor = memo(
 	({
@@ -40,8 +42,17 @@ export const TextEditor = memo(
 		showMarkdownPreview?: boolean
 		onBlur?: () => void
 	}) => {
+		const publicLinkURLState = usePublicLinkURLState()
 		const theme = useTheme()
-		const [resizablePanelSizes, setResizablePanelSizes] = useLocalStorage<number[]>("textEditorResizablePanelSizes", [50, 50])
+		const location = useLocation()
+		const [resizablePanelSizes, setResizablePanelSizes] = useLocalStorage<number[]>(
+			location.includes("notes")
+				? "textEditorResizablePanelSizes:notes"
+				: publicLinkURLState.isPublicLink
+					? "textEditorResizablePanelSizes:publicLink"
+					: "textEditorResizablePanelSizes",
+			[50, 50]
+		)
 
 		const onChange = useCallback(
 			(val: string) => {

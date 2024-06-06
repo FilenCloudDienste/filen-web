@@ -119,8 +119,6 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 
 	const onClick = useCallback(
 		(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-			console.log(e.detail)
-
 			if (e.shiftKey) {
 				const firstIndex = items.findIndex(item => item.selected === true)
 

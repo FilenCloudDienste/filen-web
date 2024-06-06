@@ -185,7 +185,9 @@ export const ContextMenu = memo(
 					description:
 						selectedItems.length >= 2
 							? t("contextMenus.item.dialogs.trashMultiple.description", { count: selectedItems.length })
-							: t("contextMenus.item.dialogs.trash.description", { name: item.name }),
+							: t("contextMenus.item.dialogs.trash.description", {
+									name: selectedItems[0] ? selectedItems[0].name : ""
+								}),
 					continueButtonVariant: "destructive"
 				}))
 			) {
@@ -209,7 +211,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [selectedItems, setItems, loadingToast, errorToast, t, item.name])
+		}, [selectedItems, setItems, loadingToast, errorToast, t])
 
 		const deletePermanently = useCallback(async () => {
 			if (selectedItems.length === 0) {

@@ -50,6 +50,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const onDragOver = useCallback(
 		(e: React.DragEvent<HTMLDivElement>) => {
 			e.preventDefault()
+			e.stopPropagation()
 
 			if (!canUpload) {
 				return
@@ -62,6 +63,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 
 	const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
 		e.preventDefault()
+		e.stopPropagation()
 
 		setShowModal(false)
 	}, [])
@@ -69,6 +71,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const onDragEnter = useCallback(
 		(e: React.DragEvent<HTMLDivElement>) => {
 			e.preventDefault()
+			e.stopPropagation()
 
 			if (!canUpload) {
 				return
@@ -82,12 +85,13 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const onDrop = useCallback(
 		async (e: React.DragEvent<HTMLDivElement>) => {
 			e.preventDefault()
+			e.stopPropagation()
+
+			setShowModal(false)
 
 			if (!canUpload) {
 				return
 			}
-
-			setShowModal(false)
 
 			let toast: ReturnType<typeof loadingToast> | null = null
 
@@ -264,12 +268,14 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 						onDragOver={onDragOver}
 						onDragLeave={onDragLeave}
 						onDragEnter={onDragEnter}
+						onDrop={onDrop}
 						className="bg-transparent"
 					>
 						<DialogContent
 							onDragOver={onDragOver}
 							onDragLeave={onDragLeave}
 							onDragEnter={onDragEnter}
+							onDrop={onDrop}
 							className="w-[300px] h-[300px] no-close-button outline-none focus:outline-none active:outline-none hover:outline-none"
 						>
 							<DialogDescription asChild={true}>
@@ -277,12 +283,14 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 									onDragOver={onDragOver}
 									onDragLeave={onDragLeave}
 									onDragEnter={onDragEnter}
+									onDrop={onDrop}
 									className="w-full h-full flex flex-col items-center justify-center p-4"
 								>
 									<div
 										onDragOver={onDragOver}
 										onDragLeave={onDragLeave}
 										onDragEnter={onDragEnter}
+										onDrop={onDrop}
 										className="border border-dashed w-full h-full rounded-md flex flex-col items-center justify-center"
 									>
 										{location.includes("chats") ? t("dropZone.chatsCta") : t("dropZone.cta")}

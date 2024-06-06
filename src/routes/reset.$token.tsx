@@ -98,14 +98,18 @@ export function Reset() {
 								const foundUserId = foundKeyEx[1]
 
 								if (foundUserId && foundKeyKey && parseInt(foundUserId) === authInfo.id) {
-									masterKeys.push(foundKeyKey)
+									if (!masterKeys.includes(foundKeyKey)) {
+										masterKeys.push(foundKeyKey)
+									}
 								} else {
 									errorToast(t("reset.alerts.invalidMasterKeysFileWrongUserId"))
 
 									return
 								}
 							} else {
-								masterKeys.push(foundKey)
+								if (!masterKeys.includes(foundKey)) {
+									masterKeys.push(foundKey)
+								}
 							}
 						}
 					} else {
@@ -217,7 +221,9 @@ export function Reset() {
 			})
 			const hasRecoveryKeys = importedMasterKeys.length > 0
 			const newMasterKeys =
-				importedMasterKeys.length > 0 ? [...importedMasterKeys, derived.derivedMasterKeys] : [derived.derivedMasterKeys]
+				importedMasterKeys.length > 0
+					? [...importedMasterKeys.filter(key => key !== derived.derivedMasterKeys), derived.derivedMasterKeys]
+					: [derived.derivedMasterKeys]
 
 			if (newMasterKeys.length === 0) {
 				errorToast(t("reset.alerts.invalidMasterKeys"))
