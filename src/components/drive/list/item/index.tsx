@@ -431,32 +431,34 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 								width: driveListColumnSize.name
 							}}
 						>
-							<div className="flex flex-row dragselect-start-disallowed shrink-0">
-								{item.type === "directory" ? (
-									<ColoredFolderSVGIcon
-										width="1.75rem"
-										height="1.75rem"
-										color={item.color}
-									/>
-								) : (
-									<img
-										src={thumbnailURL ? thumbnailURL : fileNameToSVGIcon(item.name)}
-										className={cn(
-											"w-7 h-7 dragselect-start-disallowed shrink-0 object-cover",
-											thumbnailURL ? "rounded-sm" : ""
-										)}
-										draggable={false}
-									/>
-								)}
-							</div>
-							<div className="flex flex-row dragselect-start-disallowed items-center gap-2 line-clamp-1 text-ellipsis break-all">
-								{item.favorited && (
-									<Heart
-										size={18}
-										className="dragselect-start-disallowed shrink-0"
-									/>
-								)}
-								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
+							<div className="flex flex-row items-center grow gap-2">
+								<div className="flex flex-row dragselect-start-disallowed shrink-0">
+									{item.type === "directory" ? (
+										<ColoredFolderSVGIcon
+											width="1.75rem"
+											height="1.75rem"
+											color={item.color}
+										/>
+									) : (
+										<img
+											src={thumbnailURL ? thumbnailURL : fileNameToSVGIcon(item.name)}
+											className={cn(
+												"w-7 h-7 dragselect-start-disallowed shrink-0 object-cover",
+												thumbnailURL ? "rounded-sm" : ""
+											)}
+											draggable={false}
+										/>
+									)}
+								</div>
+								<div className="flex flex-row dragselect-start-disallowed items-center gap-2 line-clamp-1 text-ellipsis break-all">
+									{item.favorited && (
+										<Heart
+											size={18}
+											className="dragselect-start-disallowed shrink-0"
+										/>
+									)}
+									<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
+								</div>
 							</div>
 							{item.sharerId > 0 && item.sharerEmail.length > 0 && !driveURLState.insideParent && (
 								<div className="flex flex-row items-center pr-2">

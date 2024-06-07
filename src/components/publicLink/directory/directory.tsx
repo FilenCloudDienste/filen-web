@@ -121,12 +121,13 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 									size="sm"
 									className="items-center gap-2"
 									onClick={download}
+									disabled={items.length === 0}
 								>
 									<Download size={16} />
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="bottom">
-								<p>{t("publicLink.directory.downloadWholeDirectory")}</p>
+								<p>{t("publicLink.directory.downloadDirectory")}</p>
 							</TooltipContent>
 						</Tooltip>
 					</TooltipProvider>

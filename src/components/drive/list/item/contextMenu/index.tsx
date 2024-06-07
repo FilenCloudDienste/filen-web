@@ -67,10 +67,6 @@ export const ContextMenu = memo(
 		const { setVirtualURL } = useDirectoryPublicLinkStore()
 		const successToast = useSuccessToast()
 
-		const isInsidePublicLink = useMemo(() => {
-			return location.includes("/f/") || location.includes("/d/")
-		}, [location])
-
 		const selectedItems = useMemo(() => {
 			return items.filter(item => item.selected)
 		}, [items])
@@ -91,7 +87,7 @@ export const ContextMenu = memo(
 				setCurrentSharerEmail(item.sharerEmail)
 				setCurrentReceivers(item.receivers)
 
-				if (isInsidePublicLink) {
+				if (driveURLState.publicLink) {
 					setVirtualURL(prev => `${prev}/${item.uuid}`)
 				} else {
 					navigate({
@@ -113,7 +109,7 @@ export const ContextMenu = memo(
 			setCurrentSharerId,
 			setCurrentSharerEmail,
 			setCurrentReceivers,
-			isInsidePublicLink,
+			driveURLState.publicLink,
 			setVirtualURL
 		])
 
@@ -168,7 +164,7 @@ export const ContextMenu = memo(
 		}, [selectedItems])
 
 		const trash = useCallback(async () => {
-			if (selectedItems.length === 0) {
+			if (selectedItems.length === 0 || driveURLState.sharedIn || driveURLState.publicLink) {
 				return
 			}
 
@@ -211,10 +207,10 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [selectedItems, setItems, loadingToast, errorToast, t])
+		}, [selectedItems, setItems, loadingToast, errorToast, t, driveURLState.sharedIn, driveURLState.publicLink])
 
 		const deletePermanently = useCallback(async () => {
-			if (selectedItems.length === 0) {
+			if (selectedItems.length === 0 || !driveURLState.trash || driveURLState.publicLink) {
 				return
 			}
 
@@ -255,7 +251,7 @@ export const ContextMenu = memo(
 			} finally {
 				toast.dismiss()
 			}
-		}, [selectedItems, setItems, loadingToast, errorToast, t, item.name])
+		}, [selectedItems, setItems, loadingToast, errorToast, t, item.name, driveURLState.trash, driveURLState.publicLink])
 
 		const restore = useCallback(async () => {
 			if (selectedItems.length === 0) {
@@ -457,12 +453,16 @@ export const ContextMenu = memo(
 					e.preventDefault()
 					e.stopPropagation()
 
-					trash()
+					if (driveURLState.trash && !driveURLState.publicLink) {
+						deletePermanently()
+					} else {
+						trash()
+					}
 
 					return
 				}
 			},
-			[selectedItems, trash, download]
+			[selectedItems, trash, download, driveURLState.publicLink, driveURLState.trash, deletePermanently]
 		)
 
 		useEffect(() => {
@@ -505,8 +505,8 @@ export const ContextMenu = memo(
 						<Download size={iconSize} />
 						{t("contextMenus.item.download")}
 					</ContextMenuItem>
-					{!isInsidePublicLink && !driveURLState.sharedIn && <ContextMenuSeparator />}
-					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
+					{!driveURLState.publicLink && !driveURLState.sharedIn && <ContextMenuSeparator />}
+					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
 						<ContextMenuItem
 							onClick={publicLink}
 							className="cursor-pointer gap-3"
@@ -515,7 +515,7 @@ export const ContextMenu = memo(
 							{t("contextMenus.item.publicLink")}
 						</ContextMenuItem>
 					)}
-					{!driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
+					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
 						<>
 							<ContextMenuItem
 								onClick={share}
@@ -531,7 +531,7 @@ export const ContextMenu = memo(
 						selectedItems.length === 1 &&
 						!driveURLState.sharedIn &&
 						!driveURLState.trash &&
-						!isInsidePublicLink && (
+						!driveURLState.publicLink && (
 							<>
 								<ContextMenuItem
 									onClick={versions}
@@ -543,7 +543,7 @@ export const ContextMenu = memo(
 								<ContextMenuSeparator />
 							</>
 						)}
-					{!driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
+					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
 						<>
 							<ContextMenuItem
 								onClick={() => toggleFavorite(!item.favorited)}
@@ -573,7 +573,7 @@ export const ContextMenu = memo(
 							<ContextMenuSeparator />
 						</>
 					)}
-					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
+					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
 						<ContextMenuItem
 							onClick={rename}
 							className="cursor-pointer gap-3"
@@ -582,7 +582,7 @@ export const ContextMenu = memo(
 							{t("contextMenus.item.rename")}
 						</ContextMenuItem>
 					)}
-					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.sharedOut && !isInsidePublicLink && (
+					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.sharedOut && !driveURLState.publicLink && (
 						<>
 							<ContextMenuSub>
 								<ContextMenuSubTrigger
@@ -606,19 +606,23 @@ export const ContextMenu = memo(
 									/>
 								</ContextMenuSubContent>
 							</ContextMenuSub>
+							{selectedItems.length > 1 && <ContextMenuSeparator />}
+						</>
+					)}
+					{selectedItems.length === 1 && (
+						<>
+							<ContextMenuSeparator />
+							<ContextMenuItem
+								onClick={copyId}
+								className="cursor-pointer gap-3"
+							>
+								<Copy size={iconSize} />
+								{t("contextMenus.chats.copyId")}
+							</ContextMenuItem>
 							<ContextMenuSeparator />
 						</>
 					)}
-					{(driveURLState.sharedIn || isInsidePublicLink) && <ContextMenuSeparator />}
-					<ContextMenuItem
-						onClick={copyId}
-						className="cursor-pointer gap-3"
-					>
-						<Copy size={iconSize} />
-						{t("contextMenus.chats.copyId")}
-					</ContextMenuItem>
-					{!driveURLState.sharedIn && !isInsidePublicLink && <ContextMenuSeparator />}
-					{driveURLState.trash && !isInsidePublicLink && (
+					{driveURLState.trash && !driveURLState.publicLink && (
 						<>
 							<ContextMenuItem
 								onClick={restore}
@@ -629,7 +633,7 @@ export const ContextMenu = memo(
 							</ContextMenuItem>
 						</>
 					)}
-					{!driveURLState.sharedIn && !driveURLState.trash && !isInsidePublicLink && (
+					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
 						<ContextMenuItem
 							onClick={trash}
 							className="cursor-pointer text-red-500 gap-3"
@@ -638,7 +642,7 @@ export const ContextMenu = memo(
 							{t("contextMenus.item.trash")}
 						</ContextMenuItem>
 					)}
-					{driveURLState.trash && !isInsidePublicLink && (
+					{driveURLState.trash && !driveURLState.publicLink && (
 						<>
 							<ContextMenuSeparator />
 							<ContextMenuItem

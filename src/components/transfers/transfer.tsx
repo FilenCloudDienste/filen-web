@@ -82,12 +82,12 @@ export const Transfer = memo(
 		}, [transfer.uuid, transfer.state, setTransfers, progressNormalized, transfer.type])
 
 		return (
-			<div className="flex flex-col gap-2">
-				<div className="flex flex-row justify-between items-center w-full">
+			<div className="flex flex-col gap-2 mb-3">
+				<div className="flex flex-row justify-between items-center w-full gap-2">
 					<div className="flex flex-row items-center max-w-[70%]">
-						<p className="line-clamp-1 text-ellipsis">{transfer.name}</p>
+						<p className="line-clamp-1 text-ellipsis break-all">{transfer.name}</p>
 					</div>
-					<div className="flex flex-row gap-1">
+					<div className="flex flex-row gap-1 shrink-0">
 						{transfer.state === "error" ||
 						transfer.state === "queued" ||
 						transfer.state === "finished" ||

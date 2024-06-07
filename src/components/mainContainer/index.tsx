@@ -12,6 +12,7 @@ import { showConfirmDialog } from "../dialogs/confirm"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "@/providers/themeProvider"
 import useWindowSize from "@/hooks/useWindowSize"
+import useIsMobile from "@/hooks/useIsMobile"
 
 export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 	const { t } = useTranslation()
@@ -111,10 +112,26 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 
 export const InnerSideBarWrapper = memo(
 	({ defaultSize, minSize, maxSize, location }: { defaultSize?: number; minSize?: number; maxSize?: number; location: string }) => {
-		if (location.includes("settings") || location.includes("chats") || location.includes("contacts")) {
+		const isMobile = useIsMobile()
+
+		if (isMobile) {
 			return (
 				<div
-					className={cn("flex flex-col border-r", location.includes("chats") ? " w-[275px]" : "w-[225px]")}
+					className="flex flex-col border-r w-[150px]"
+					id="left-resizable-panel"
+				>
+					<InnerSideBar />
+				</div>
+			)
+		}
+
+		if (location.includes("settings") || location.includes("chats") || location.includes("contacts") || location.includes("drive")) {
+			return (
+				<div
+					className={cn(
+						"flex flex-col border-r",
+						location.includes("drive") ? "w-[250px]" : location.includes("chats") ? "w-[275px]" : "w-[225px]"
+					)}
 					id="left-resizable-panel"
 				>
 					<InnerSideBar />

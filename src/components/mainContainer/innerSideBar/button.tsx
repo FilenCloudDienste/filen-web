@@ -79,11 +79,13 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 								<ChevronRight
 									size={iconSize - 2}
 									onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: true }))}
+									className="shrink-0"
 								/>
 							) : (
 								<ChevronDown
 									size={iconSize - 2}
 									onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: false }))}
+									className="shrink-0"
 								/>
 							)}
 							<img
@@ -97,73 +99,109 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				)}
 				{uuid === "recents" && (
 					<>
-						<Timer size={iconSize} />
+						<Timer
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.recents")}</p>
 					</>
 				)}
 				{uuid === "favorites" && (
 					<>
-						<Heart size={iconSize} />
+						<Heart
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.favorites")}</p>
 					</>
 				)}
 				{uuid === "trash" && (
 					<>
-						<Trash size={iconSize} />
+						<Trash
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.trash")}</p>
 					</>
 				)}
 				{uuid === "shared-in" && (
 					<>
-						<PhoneIncoming size={iconSize} />
+						<PhoneIncoming
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.sharedWithMe")}</p>
 					</>
 				)}
 				{uuid === "shared-out" && (
 					<>
-						<PhoneOutgoing size={iconSize} />
+						<PhoneOutgoing
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.sharedWithOthers")}</p>
 					</>
 				)}
 				{uuid === "links" && (
 					<>
-						<LinkIcon size={iconSize} />
+						<LinkIcon
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.links")}</p>
 					</>
 				)}
 				{uuid === "settings/general" && (
 					<>
-						<Settings size={iconSize} />
+						<Settings
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.settings.general")}</p>
 					</>
 				)}
 				{uuid === "contacts/all" && (
 					<>
-						<Contact size={iconSize} />
+						<Contact
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.contacts.all")}</p>
 					</>
 				)}
 				{uuid === "contacts/online" && (
 					<>
-						<Nfc size={iconSize} />
+						<Nfc
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.contacts.online")}</p>
 					</>
 				)}
 				{uuid === "contacts/offline" && (
 					<>
-						<CloudOff size={iconSize} />
+						<CloudOff
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.contacts.offline")}</p>
 					</>
 				)}
 				{uuid === "contacts/blocked" && (
 					<>
-						<XCircle size={iconSize} />
+						<XCircle
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.contacts.blocked")}</p>
 					</>
 				)}
 				{uuid === "contacts/in" && (
 					<>
-						<Mail size={iconSize} />
+						<Mail
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.contacts.in")}</p>
 						{requestsInCount > 0 && (
 							<div className="w-[20px] h-[20px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs">
@@ -174,49 +212,73 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				)}
 				{uuid === "contacts/out" && (
 					<>
-						<Send size={iconSize} />
+						<Send
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.contacts.out")}</p>
 					</>
 				)}
 				{uuid === "settings/account" && (
 					<>
-						<User2 size={iconSize} />
+						<User2
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.settings.account")}</p>
 					</>
 				)}
 				{uuid === "settings/security" && (
 					<>
-						<Shield size={iconSize} />
+						<Shield
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.settings.security")}</p>
 					</>
 				)}
 				{uuid === "settings/subscriptions" && (
 					<>
-						<Gem size={iconSize} />
+						<Gem
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.settings.subscriptions")}</p>
 					</>
 				)}
 				{uuid === "settings/invoices" && (
 					<>
-						<Wallet size={iconSize} />
+						<Wallet
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.settings.invoices")}</p>
 					</>
 				)}
 				{uuid === "settings/events" && (
 					<>
-						<CalendarClock size={iconSize} />
+						<CalendarClock
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.settings.events")}</p>
 					</>
 				)}
 				{uuid === "settings/invite" && (
 					<>
-						<UserPlus size={iconSize} />
+						<UserPlus
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.settings.invite")}</p>
 					</>
 				)}
 				{uuid === "settings/plans" && (
 					<>
-						<Star size={iconSize} />
+						<Star
+							size={iconSize}
+							className="shrink-0"
+						/>
 						<p>{t("innerSideBar.settings.plans")}</p>
 					</>
 				)}

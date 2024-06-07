@@ -9,6 +9,7 @@ import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import useWindowSize from "@/hooks/useWindowSize"
+import { useTranslation } from "react-i18next"
 
 export const Container = memo(({ children, loading }: { children: React.ReactNode; loading: boolean }) => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
@@ -16,6 +17,7 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 	const urlState = usePublicLinkURLState()
 	const location = useLocation()
 	const windowSize = useWindowSize()
+	const { t } = useTranslation()
 
 	const widths = useMemo(() => {
 		const sideBar = isMobile ? 0 : windowSize.width > 1200 ? 350 : 250
@@ -53,21 +55,21 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 						</Link>
 					</div>
 					<div className="flex flex-col">
-						<p className="text-muted-foreground uppercase">We are Filen</p>
-						<p className="text-3xl">Private and secure cloud storage</p>
+						<p className="text-muted-foreground uppercase">{t("publicLink.sideBar.ad.header")}</p>
+						<p className="text-3xl">{t("publicLink.sideBar.ad.title")}</p>
 					</div>
 					<div className="flex flex-col mt-8 gap-3">
 						<div className="flex flex-row gap-2">
 							<Shield size={22} />
-							<p>Privacy by design</p>
+							<p>{t("publicLink.sideBar.ad.info1")}</p>
 						</div>
 						<div className="flex flex-row gap-2">
 							<Lock size={22} />
-							<p>End-to-end encryption</p>
+							<p>{t("publicLink.sideBar.ad.info2")}</p>
 						</div>
 						<div className="flex flex-row gap-2">
 							<EyeOff size={22} />
-							<p>Zero knowledge technology</p>
+							<p>{t("publicLink.sideBar.ad.info3")}</p>
 						</div>
 					</div>
 					<Link
@@ -75,7 +77,7 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 						className="shrink-0 w-full mt-8"
 						draggable={false}
 					>
-						<Button className="w-full">10 GB for free</Button>
+						<Button className="w-full">{t("publicLink.sideBar.ad.cta")}</Button>
 					</Link>
 				</div>
 			)}
@@ -92,7 +94,7 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 							className="items-center gap-2"
 						>
 							<AlertCircle size={16} />
-							Report abuse
+							{t("publicLink.sideBar.reportAbuse")}
 						</Button>
 					</div>
 				)}

@@ -65,8 +65,8 @@ export const Transfers = memo(() => {
 	}, [transfersSorted])
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - (remaining > 0 && speed > 0 ? 130 : 85)
-	}, [windowSize.height, remaining, speed])
+		return windowSize.height - 130
+	}, [windowSize.height])
 
 	const getItemKey = useCallback((_: number, transfer: TransferType) => transfer.uuid, [])
 
@@ -270,7 +270,7 @@ export const Transfers = memo(() => {
 				className="outline-none focus:outline-none active:outline-none hover:outline-none no-outline select-none"
 				onDragOver={onDragOver}
 			>
-				<SheetHeader>
+				<SheetHeader className="mb-4">
 					<SheetTitle>{transfersSorted.length > 0 && t("transfers.title")}</SheetTitle>
 				</SheetHeader>
 				<Virtuoso
@@ -286,7 +286,9 @@ export const Transfers = memo(() => {
 							return (
 								<div
 									className="w-full flex flex-col items-center justify-center text-muted-foreground gap-2"
-									style={{ height: windowSize.height - 85 }}
+									style={{
+										height: virtuosoHeight
+									}}
 								>
 									<ArrowDownUp size={60} />
 									<p>{t("transfers.noActiveTransfers")}</p>
@@ -301,12 +303,14 @@ export const Transfers = memo(() => {
 						width: "100%"
 					}}
 				/>
-				{remaining > 0 && speed > 0 && (
-					<div className="flex flex-row justify-between items-center gap-4 h-14 text-muted-foreground">
-						<p>{remainingReadable}</p>
-						<p>{bpsToReadable(speed)}</p>
-					</div>
-				)}
+				<div className="flex flex-row justify-between items-center gap-4 h-12 text-muted-foreground">
+					{remaining > 0 && speed > 0 && (
+						<>
+							<p>{remainingReadable}</p>
+							<p>{bpsToReadable(speed)}</p>
+						</>
+					)}
+				</div>
 			</SheetContent>
 		</Sheet>
 	)

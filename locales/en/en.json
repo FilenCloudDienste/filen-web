@@ -915,7 +915,19 @@
 		"invalidInfo": "This public link either expired or does not exist",
 		"back": "Go back",
 		"directory": {
-			"downloadWholeDirectory": "Download whole directory"
+			"downloadWholeDirectory": "Download whole directory",
+			"downloadDirectory": "Download directory"
+		},
+		"sideBar": {
+			"ad": {
+				"header": "We are Filen",
+				"title": "Private and secure cloud storage",
+				"info1": "Privacy by design",
+				"info2": "End-to-end encryption",
+				"info3": "Zero knowledge technology",
+				"cta": "10 GB storage for free"
+			},
+			"reportAbuse": "Report abuse"
 		}
 	},
 	"notes": {

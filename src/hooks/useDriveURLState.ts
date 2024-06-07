@@ -16,7 +16,8 @@ export default function useDriveURLState() {
 			sharedIn: location.includes("shared-in"),
 			sharedOut: location.includes("shared-out"),
 			links: location.includes("links"),
-			insideParent: parent.length === 36 && validateUUID(parent)
+			insideParent: parent.length === 36 && validateUUID(parent),
+			publicLink: location.includes("/d/") || location.includes("/f/")
 		}
 	}, [location, parent])
 

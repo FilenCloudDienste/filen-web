@@ -12,7 +12,10 @@ export const Breadcrumbs = memo(({ info }: { info: DirLinkInfoDecryptedResponse 
 
 	return ex.map((uuid, index) => {
 		return (
-			<ul className="flex items-center">
+			<ul
+				className="flex items-center"
+				key={uuid}
+			>
 				<Item
 					key={uuid}
 					uuid={uuid}

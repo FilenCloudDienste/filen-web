@@ -41,7 +41,7 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 
 	useEffect(() => {
 		columnVirtualizer.measure()
-	}, [columnVirtualizer, grid.virtualItemWidth])
+	}, [columnVirtualizer, grid.virtualItemWidth, windowSize.width, windowSize.height])
 
 	if (showSkeletons) {
 		return <div className="flex flex-row flex-wrap overflow-hidden">{skeletons}</div>
@@ -64,7 +64,7 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 		<div
 			ref={virtualizerParentRef}
 			style={{
-				height: height,
+				height,
 				width: "100%",
 				overflowX: "hidden",
 				overflowY: "auto"
