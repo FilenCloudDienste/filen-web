@@ -3,13 +3,17 @@ import worker from "@/lib/worker"
 import eventEmitter from "@/lib/eventEmitter"
 import { useEffect } from "react"
 
-export default function useAccount() {
+export default function useAccount(setupRefetchListener: boolean = true) {
 	const query = useQuery({
 		queryKey: ["useAccount"],
 		queryFn: () => Promise.all([worker.fetchAccount(), worker.fetchSettings()])
 	})
 
 	useEffect(() => {
+		if (!setupRefetchListener) {
+			return
+		}
+
 		const listener = eventEmitter.on("useAccountRefetch", () => {
 			query.refetch().catch(console.error)
 		})
@@ -17,7 +21,7 @@ export default function useAccount() {
 		return () => {
 			listener.remove()
 		}
-	}, [query])
+	}, [query, setupRefetchListener])
 
 	return query.isSuccess
 		? {

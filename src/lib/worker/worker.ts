@@ -3109,6 +3109,8 @@ export async function userProfile({ id }: { id: number }): Promise<UserProfileRe
 }
 
 export async function generateThumbnailInsideWorker({ item }: { item: DriveCloudItem }): Promise<void> {
+	await waitForInitialization()
+
 	if (item.type !== "file") {
 		throw new Error("Item not of type file.")
 	}
@@ -3123,4 +3125,10 @@ export async function generateThumbnailInsideWorker({ item }: { item: DriveCloud
 
 		return
 	}
+}
+
+export async function didExportMasterKeys(): Promise<void> {
+	await waitForInitialization()
+
+	return await SDK.user().didExportMasterKeys()
 }

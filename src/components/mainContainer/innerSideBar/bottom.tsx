@@ -3,11 +3,12 @@ import useAccount from "@/hooks/useAccount"
 import { Progress } from "@/components/ui/progress"
 import { useTranslation } from "react-i18next"
 import { formatBytes } from "@/utils"
-import { Settings } from "lucide-react"
+import { Settings, AlertTriangle } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { Link } from "@tanstack/react-router"
 import Avatar from "@/components/avatar"
+import { cn } from "@/lib/utils"
 
 export const Bottom = memo(() => {
 	const account = useAccount()
@@ -54,7 +55,15 @@ export const Bottom = memo(() => {
 										}}
 										draggable={false}
 									>
-										<Settings size={22} />
+										{!account.account.didExportMasterKeys && (
+											<div className="absolute -mt-1.5 z-50 ml-3 bg-red-500 rounded-full w-4 h-4 flex flex-row items-center justify-center text-sm text-white uppercase">
+												!
+											</div>
+										)}
+										<Settings
+											size={22}
+											className={cn(!account.account.didExportMasterKeys && "text-red-500")}
+										/>
 									</Link>
 								</TooltipTrigger>
 								<TooltipContent side="top">

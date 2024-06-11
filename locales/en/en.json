@@ -776,7 +776,8 @@
 				"exportMasterKeys": {
 					"name": "Export master keys",
 					"info": "Export your master keys so that you can restore your account in case you need to reset your password. You need to export your master keys everytime you change your password.",
-					"action": "Export"
+					"action": "Export",
+					"subInfo": "Please export your master keys and store them in a separate safe location. You need your master keys when you reset your password to avoid data loss. You need to export your master keys everytime you change your password."
 				}
 			}
 		},

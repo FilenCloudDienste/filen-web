@@ -34,6 +34,7 @@ import {
 } from "lucide-react"
 import useLocation from "@/hooks/useLocation"
 import { useContactsStore } from "@/stores/contacts.store"
+import useAccount from "@/hooks/useAccount"
 
 const iconSize = 18
 
@@ -44,6 +45,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 	const { t } = useTranslation()
 	const location = useLocation()
 	const { requestsInCount } = useContactsStore()
+	const account = useAccount(false)
 
 	const link = useMemo(() => {
 		const uuidEx = uuid.split("/")
@@ -232,9 +234,11 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 					<>
 						<Shield
 							size={iconSize}
-							className="shrink-0"
+							className={cn("shrink-0", account && !account.account.didExportMasterKeys && "text-red-500")}
 						/>
-						<p>{t("innerSideBar.settings.security")}</p>
+						<p className={cn(account && !account.account.didExportMasterKeys && "text-red-500")}>
+							{t("innerSideBar.settings.security")}
+						</p>
 					</>
 				)}
 				{uuid === "settings/subscriptions" && (

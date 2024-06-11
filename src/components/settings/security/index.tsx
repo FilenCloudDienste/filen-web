@@ -14,6 +14,8 @@ import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
+import { cn } from "@/lib/utils"
+import { AlertTriangle } from "lucide-react"
 
 export const Security = memo(() => {
 	const account = useAccount()
@@ -126,6 +128,10 @@ export const Security = memo(() => {
 				)
 
 				await writer.close()
+
+				await worker.didExportMasterKeys()
+
+				eventEmitter.emit("useAccountRefetch")
 			} catch (e) {
 				console.error(e)
 
@@ -189,13 +195,26 @@ export const Security = memo(() => {
 						name={t("settings.security.sections.exportMasterKeys.name")}
 						info={t("settings.security.sections.exportMasterKeys.info")}
 						className="mt-10"
+						nameClassName={!account.account.didExportMasterKeys ? "text-red-500" : undefined}
+						subInfo={
+							!account.account.didExportMasterKeys ? t("settings.security.sections.exportMasterKeys.subInfo") : undefined
+						}
+						subInfoClassName={!account.account.didExportMasterKeys ? "text-bold mt-4" : undefined}
 					>
-						<p
-							className="underline cursor-pointer"
-							onClick={exportMasterKeys}
-						>
-							{t("settings.security.sections.exportMasterKeys.action")}
-						</p>
+						<div className="flex flex-row items-center gap-2">
+							{!account.account.didExportMasterKeys && (
+								<AlertTriangle
+									size={16}
+									className="text-red-500"
+								/>
+							)}
+							<p
+								className={cn("underline cursor-pointer", !account.account.didExportMasterKeys && "text-red-500")}
+								onClick={exportMasterKeys}
+							>
+								{t("settings.security.sections.exportMasterKeys.action")}
+							</p>
+						</div>
 					</Section>
 					<div className="w-full h-20" />
 				</div>
