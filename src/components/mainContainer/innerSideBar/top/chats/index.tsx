@@ -56,6 +56,7 @@ export const Chats = memo(() => {
 				lastMessageUUID: null,
 				ownerId: userId,
 				name: null,
+				ownerMetadata: null,
 				participants: [
 					{
 						userId,
