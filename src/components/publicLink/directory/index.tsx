@@ -27,7 +27,10 @@ export const Directory = memo(() => {
 	)
 
 	return (
-		<Container loading={directoryPublicLinkInfo.loading}>
+		<Container
+			loading={directoryPublicLinkInfo.loading}
+			hasInfo={info !== null}
+		>
 			{!urlState || !urlState.key || urlState.key.length !== 32 ? (
 				<Invalid />
 			) : info ? (

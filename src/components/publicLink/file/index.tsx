@@ -17,7 +17,10 @@ export const File = memo(() => {
 	}, [])
 
 	return (
-		<Container loading={filePublicLinkHasPassword.loading}>
+		<Container
+			loading={filePublicLinkHasPassword.loading}
+			hasInfo={info !== null}
+		>
 			{!urlState || !urlState.key || urlState.key.length !== 32 ? (
 				<Invalid />
 			) : info ? (

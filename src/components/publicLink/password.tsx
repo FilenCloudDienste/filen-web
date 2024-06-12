@@ -8,6 +8,7 @@ import worker from "@/lib/worker"
 import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/link/info"
 import { type DirLinkInfoDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
+import { usePublicLinkStore } from "@/stores/publicLink.store"
 
 export const Password = memo(
 	({
@@ -33,10 +34,19 @@ export const Password = memo(
 		const [loading, setLoading] = useState<boolean>(false)
 		const [showPassword, setShowPassword] = useState<boolean>(false)
 		const urlState = usePublicLinkURLState()
+		const { setPasswordState } = usePublicLinkStore()
 
-		const onPasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-			setPassword(e.target.value)
-		}, [])
+		const onPasswordChange = useCallback(
+			(e: React.ChangeEvent<HTMLInputElement>) => {
+				setPassword(e.target.value)
+
+				setPasswordState({
+					uuid,
+					password: e.target.value
+				})
+			},
+			[uuid, setPasswordState]
+		)
 
 		const toggleShowPassword = useCallback(() => {
 			setShowPassword(prev => !prev)

@@ -350,6 +350,25 @@
 		},
 		"transparentFullScreenImage": {
 			"openOriginal": "Open original"
+		},
+		"report": {
+			"title": "Report abuse",
+			"email": "Email address",
+			"emailPlaceholder": "Email address",
+			"comment": "Comment",
+			"commentPlaceholder": "Please provide us with all the needed details so that we can take appropriate action as soon as possible (optional)",
+			"reason": "Reason",
+			"close": "Close",
+			"send": "Send",
+			"successToast": "Abuse report sent",
+			"reasons": {
+				"cp": "Child sexual abuse material",
+				"dmca": "Copyright infrigement",
+				"stolen": "Stolen data",
+				"other": "Other",
+				"spam": "Spam",
+				"malware": "Malware"
+			}
 		}
 	},
 	"contextMenus": {

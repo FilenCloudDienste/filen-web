@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react"
+import { memo, useMemo, useCallback } from "react"
 import { Link } from "@tanstack/react-router"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import useIsMobile from "@/hooks/useIsMobile"
@@ -10,8 +10,10 @@ import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import useWindowSize from "@/hooks/useWindowSize"
 import { useTranslation } from "react-i18next"
+import ReportDialog from "./reportDialog"
+import eventEmitter from "@/lib/eventEmitter"
 
-export const Container = memo(({ children, loading }: { children: React.ReactNode; loading: boolean }) => {
+export const Container = memo(({ children, loading, hasInfo }: { children: React.ReactNode; loading: boolean; hasInfo: boolean }) => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const isMobile = useIsMobile()
 	const urlState = usePublicLinkURLState()
@@ -27,6 +29,10 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 			container: windowSize.width - sideBar
 		}
 	}, [isMobile, windowSize.width])
+
+	const report = useCallback(() => {
+		eventEmitter.emit("openReportDialog")
+	}, [])
 
 	return (
 		<div className={cn("flex flex-row w-screen h-[100dvh] select-none", urlState.color && `bg-[#${urlState.color}]`)}>
@@ -87,11 +93,12 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 					width: widths.container
 				}}
 			>
-				{!urlState.embed && (
+				{!urlState.embed && hasInfo && (
 					<div className="absolute bottom-4 right-4 z-50">
 						<Button
 							variant="secondary"
 							className="items-center gap-2"
+							onClick={report}
 						>
 							<AlertCircle size={16} />
 							{t("publicLink.sideBar.reportAbuse")}
@@ -109,6 +116,7 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 					children
 				)}
 			</div>
+			{!urlState.embed && <ReportDialog />}
 		</div>
 	)
 })
