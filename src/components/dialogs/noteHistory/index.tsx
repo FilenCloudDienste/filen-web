@@ -31,7 +31,7 @@ export const NoteHistoryDialog = memo(() => {
 		>
 			<DialogContent className="fullscreen-dialog no-close-button outline-none focus:outline-none active:outline-none hover:outline-none select-none">
 				{note && (
-					<div className="absolute w-screen h-screen flex flex-col">
+					<div className="absolute w-screen h-[100dvh] flex flex-col">
 						<div className="flex flex-row border-b h-[49px] bg-secondary w-full items-center justify-between px-4 z-50 gap-10 -mt-[1px]">
 							<p className="line-clamp-1 text-ellipsis break-all">{note.title}</p>
 							<X

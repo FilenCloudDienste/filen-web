@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button"
 import { download as downloadAction } from "@/components/drive/list/item/contextMenu/actions"
 import useErrorToast from "@/hooks/useErrorToast"
 import Header from "./header"
+import useIsMobile from "@/hooks/useIsMobile"
 
 export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedResponse; password?: string }) => {
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
@@ -28,6 +29,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 	const { t } = useTranslation()
 	const { dark } = useTheme()
 	const errorToast = useErrorToast()
+	const isMobile = useIsMobile()
 
 	const parent = useMemo(() => {
 		if (virtualURL.length === 0) {
@@ -108,7 +110,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 	}, [query.isSuccess, query.data, query.dataUpdatedAt, content, setItems, info.parent, setVirtualURL, virtualURL])
 
 	return (
-		<div className="flex flex-col w-full h-screen">
+		<div className="flex flex-col w-full h-[100dvh]">
 			<div className="flex flex-row h-12 w-full items-center border-b justify-between select-none">
 				<div className="flex flex-row items-center max-w-[1px] px-3">
 					<Breadcrumbs info={info} />
@@ -119,7 +121,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 							<TooltipTrigger asChild={true}>
 								<Button
 									size="sm"
-									className="items-center gap-2"
+									className="items-center gap-2 shrink-0"
 									onClick={download}
 									disabled={items.length === 0}
 								>
@@ -141,7 +143,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 							</div>
 						</div>
 						<Input
-							className="pl-8 text-sm max-w-lg h-9"
+							className={cn("pl-8 text-sm h-9", isMobile ? "w-[125px]" : "max-w-lg")}
 							placeholder={t("topBar.searchInThisFolder")}
 							value={searchTerm}
 							onChange={e => setSearchTerm(e.target.value)}

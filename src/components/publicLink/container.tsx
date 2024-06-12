@@ -29,7 +29,7 @@ export const Container = memo(({ children, loading }: { children: React.ReactNod
 	}, [isMobile, windowSize.width])
 
 	return (
-		<div className={cn("flex flex-row w-screen h-screen select-none", urlState.color && `bg-[#${urlState.color}]`)}>
+		<div className={cn("flex flex-row w-screen h-[100dvh] select-none", urlState.color && `bg-[#${urlState.color}]`)}>
 			{!isMobile && !IS_DESKTOP && !urlState.embed && (
 				<div
 					className={cn(

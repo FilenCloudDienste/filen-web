@@ -1,7 +1,7 @@
 import useWindowSize from "./useWindowSize"
 import { useMemo } from "react"
 
-export default function useSettingsContainerSize() {
+export default function useContactsContainerSize() {
 	const windowSize = useWindowSize()
 
 	const sizes = useMemo(() => {

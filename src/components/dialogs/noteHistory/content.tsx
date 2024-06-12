@@ -130,7 +130,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 
 	if (!query.isSuccess) {
 		return (
-			<div className="flex flex-col w-full h-[calc(100vh-48px)] items-center justify-center">
+			<div className="flex flex-col w-full h-[calc(100dvh-48px)] items-center justify-center">
 				<Loader className="animate-spin-medium" />
 			</div>
 		)
@@ -138,14 +138,14 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 
 	if (query.isSuccess && historySorted.length === 0) {
 		return (
-			<div className="flex flex-col w-full h-[calc(100vh-48px)] items-center justify-center">
+			<div className="flex flex-col w-full h-[calc(100dvh-48px)] items-center justify-center">
 				<p className="text-muted-foreground">{t("dialogs.noteHistory.empty")}</p>
 			</div>
 		)
 	}
 
 	return (
-		<div className="flex flex-col w-full h-[calc(100vh-48px)]">
+		<div className="flex flex-col w-full h-[calc(100dvh-48px)]">
 			<div className="flex flex-row">
 				<div className="flex flex-col w-[300px] border-r h-full">
 					<Virtuoso

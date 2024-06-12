@@ -22,6 +22,9 @@ import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/block
 import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/requests/in"
 import { Skeleton } from "../ui/skeleton"
 import { Plus } from "lucide-react"
+import useContactsContainerSize from "@/hooks/useContactsContainerSize"
+import { sortAndFilterConversations } from "../mainContainer/innerSideBar/chats/utils"
+import useIsMobile from "@/hooks/useIsMobile"
 
 const refetchQueryParams = {
 	refetchInterval: 5000,
@@ -37,6 +40,8 @@ export const Contacts = memo(() => {
 	const errorToast = useErrorToast()
 	const navigate = useNavigate()
 	const { userId } = useSDKConfig()
+	const contactsContainerSize = useContactsContainerSize()
+	const isMobile = useIsMobile()
 
 	const virtuosoHeight = useMemo(() => {
 		return windowSize.height - 72 - 44 - (IS_DESKTOP ? 24 : 0)
@@ -76,8 +81,8 @@ export const Contacts = memo(() => {
 			return []
 		}
 
-		return chatsQuery.data
-	}, [chatsQuery.isSuccess, chatsQuery.data])
+		return sortAndFilterConversations(chatsQuery.data, "", userId)
+	}, [chatsQuery.isSuccess, chatsQuery.data, userId])
 
 	const showSkeletons = useMemo(() => {
 		if (location.includes("contacts/all") || location.includes("contacts/online") || location.includes("contacts/offline")) {
@@ -319,7 +324,12 @@ export const Contacts = memo(() => {
 
 	return (
 		<div className="flex flex-col w-full h-full select-none">
-			<div className="flex flex-col max-w-[75%] h-full">
+			<div
+				className="flex flex-col h-full"
+				style={{
+					width: contactsContainerSize.width
+				}}
+			>
 				<div className="flex flex-row gap-2 p-4 items-center">
 					<Input
 						className="grow"
@@ -333,7 +343,7 @@ export const Contacts = memo(() => {
 						className="items-center gap-2"
 					>
 						<Plus size={16} />
-						{t("contacts.addContact")}
+						{!isMobile && t("contacts.addContact")}
 					</Button>
 				</div>
 				<div className="flex flex-row px-4">

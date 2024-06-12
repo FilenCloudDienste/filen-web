@@ -62,7 +62,7 @@ export const Subscriptions = memo(() => {
 			<div
 				className={cn(
 					"flex flex-col w-full items-center justify-center gap-2",
-					IS_DESKTOP ? "h-[calc(100vh-48px)]" : "h-[calc(100vh-32px)]"
+					IS_DESKTOP ? "h-[calc(100dvh-48px)]" : "h-[calc(100dvh-32px)]"
 				)}
 			>
 				<Loader className="animate-spin-medium" />
@@ -71,13 +71,13 @@ export const Subscriptions = memo(() => {
 	}
 
 	return (
-		<div className={cn("flex flex-col w-full overflow-y-auto", IS_DESKTOP ? "h-[calc(100vh-24px)]" : "h-screen")}>
+		<div className={cn("flex flex-col w-full overflow-y-auto", IS_DESKTOP ? "h-[calc(100dvh-24px)]" : "h-[100dvh]")}>
 			<div className="flex flex-col w-full p-4">
 				{subscriptionsSorted.length === 0 && account ? (
 					<div
 						className={cn(
 							"flex flex-col w-full items-center justify-center gap-2",
-							IS_DESKTOP ? "h-[calc(100vh-48px)]" : "h-[calc(100vh-32px)]"
+							IS_DESKTOP ? "h-[calc(100dvh-48px)]" : "h-[calc(100dvh-32px)]"
 						)}
 					>
 						<Gem

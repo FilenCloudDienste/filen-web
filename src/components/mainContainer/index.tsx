@@ -48,7 +48,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 
 	if (IS_DESKTOP) {
 		return (
-			<div className={cn("w-screen h-screen flex flex-col", !dark && "bg-secondary")}>
+			<div className={cn("w-screen h-[100dvh] flex flex-col", !dark && "bg-secondary")}>
 				<div
 					className="flex flex-row w-full h-[24px] z-0 select-none"
 					style={{
@@ -102,12 +102,12 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 						</>
 					)}
 				</div>
-				<div className="flex flex-row w-full h-[calc(100vh-24px)]">{children}</div>
+				<div className="flex flex-row w-full h-[calc(100dvh-24px)]">{children}</div>
 			</div>
 		)
 	}
 
-	return <div className={cn("w-screen h-screen flex flex-row", !dark && "bg-secondary")}>{children}</div>
+	return <div className={cn("w-screen h-[100dvh] flex flex-row", !dark && "bg-secondary")}>{children}</div>
 })
 
 export const InnerSideBarWrapper = memo(
@@ -117,7 +117,10 @@ export const InnerSideBarWrapper = memo(
 		if (isMobile) {
 			return (
 				<div
-					className="flex flex-col border-r w-[150px]"
+					className={cn(
+						"flex flex-col border-r",
+						location.includes("chats") || location.includes("notes") ? "w-[150px]" : "w-[68px]"
+					)}
 					id="left-resizable-panel"
 				>
 					<InnerSideBar />
@@ -130,7 +133,7 @@ export const InnerSideBarWrapper = memo(
 				<div
 					className={cn(
 						"flex flex-col border-r",
-						location.includes("drive") ? "w-[250px]" : location.includes("chats") ? "w-[275px]" : "w-[225px]"
+						location.includes("drive") || location.includes("chats") || location.includes("notes") ? "w-[250px]" : "w-[225px]"
 					)}
 					id="left-resizable-panel"
 				>
@@ -150,7 +153,10 @@ export const InnerSideBarWrapper = memo(
 				>
 					<InnerSideBar />
 				</ResizablePanel>
-				<ResizableHandle className="dragselect-start-disallowed" />
+				<ResizableHandle
+					className="dragselect-start-disallowed"
+					withHandle={true}
+				/>
 			</>
 		)
 	}

@@ -1,7 +1,7 @@
 import { memo, useRef, useEffect, useMemo, useCallback } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
-import { Virtuoso } from "react-virtuoso"
+import { Virtuoso, type VirtuosoHandle } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
 import { useChatsStore } from "@/stores/chats.store"
 import { useLocalStorage } from "@uidotdev/usehooks"
@@ -31,6 +31,8 @@ export const Chats = memo(() => {
 	const { userId } = useSDKConfig()
 	const topDimensions = useElementDimensions("inner-sidebar-top-chats")
 	const { t } = useTranslation()
+	const virtuosoRef = useRef<VirtuosoHandle>(null)
+	const lastAutoScrollConversationUUIDRef = useRef<string>("")
 
 	const query = useQuery({
 		queryKey: ["listChatsConversations"],
@@ -282,6 +284,31 @@ export const Chats = memo(() => {
 			setLastSelectedChatsConversation
 		]
 	)
+
+	useEffect(() => {
+		if (
+			validateUUID(routeParent) &&
+			selectedConversation &&
+			conversationsSorted.length > 0 &&
+			selectedConversation.uuid === routeParent &&
+			virtuosoRef.current &&
+			lastAutoScrollConversationUUIDRef.current !== selectedConversation.uuid
+		) {
+			lastAutoScrollConversationUUIDRef.current = selectedConversation.uuid
+
+			const index = conversationsSorted.findIndex(conversation => conversation.uuid === selectedConversation.uuid)
+
+			if (index === -1) {
+				return
+			}
+
+			virtuosoRef.current.scrollToIndex({
+				index,
+				align: "center",
+				behavior: "auto"
+			})
+		}
+	}, [conversationsSorted, routeParent, selectedConversation])
 
 	useEffect(() => {
 		if (conversationsSorted.length > 0 && conversationsSorted[0]) {

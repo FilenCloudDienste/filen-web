@@ -25,6 +25,8 @@ import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import useDriveURLState from "@/hooks/useDriveURLState"
 import useDriveListColumnSize from "@/hooks/useDriveListColumnSize"
+import { useDoubleTap } from "use-double-tap"
+import useIsMobile from "@/hooks/useIsMobile"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -59,6 +61,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const [mouseHovering, setMouseHovering] = useState<boolean>(false)
 	const listItemRef = useRef<HTMLDivElement>(null)
 	const driveListColumnSize = useDriveListColumnSize()
+	const isMobile = useIsMobile()
 
 	const previewType = useMemo(() => {
 		return fileNameToPreviewType(item.name)
@@ -162,6 +165,10 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 		},
 		[items, setItems, item.uuid, index, onDoubleClick]
 	)
+
+	const onDoubleTap = useDoubleTap(() => {
+		onDoubleClick()
+	})
 
 	const onContextMenu = useCallback(() => {
 		setItems(prev => {
@@ -414,9 +421,9 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 							item.selected || hovering ? "bg-secondary" : "",
 							navigating && "animate-pulse bg-secondary"
 						)}
+						onClick={isMobile ? onDoubleTap.onClick : onClick}
 						draggable={!isInsidePublicLink}
 						data-uuid={item.uuid}
-						onClick={onClick}
 						onContextMenu={onContextMenu}
 						onDragStart={onDragStart}
 						onDragOver={onDragOver}
@@ -521,7 +528,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 						)}
 						draggable={!isInsidePublicLink}
 						data-uuid={item.uuid}
-						onClick={onClick}
+						onClick={isMobile ? onDoubleTap.onClick : onClick}
 						onContextMenu={onContextMenu}
 						onDragStart={onDragStart}
 						onDragOver={onDragOver}

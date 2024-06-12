@@ -1,7 +1,7 @@
 import { memo, useRef, useEffect, useMemo, useCallback } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
-import { Virtuoso } from "react-virtuoso"
+import { Virtuoso, type VirtuosoHandle } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
 import { useNotesStore } from "@/stores/notes.store"
 import { sortAndFilterNotes } from "@/components/notes/utils"
@@ -27,6 +27,8 @@ export const Notes = memo(() => {
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const { userId } = useSDKConfig()
 	const { t } = useTranslation()
+	const virtuosoRef = useRef<VirtuosoHandle>(null)
+	const lastAutoScrollNoteUUIDRef = useRef<string>("")
 
 	const query = useQuery({
 		queryKey: ["listNotes"],
@@ -143,6 +145,31 @@ export const Notes = memo(() => {
 	)
 
 	useEffect(() => {
+		if (
+			validateUUID(routeParent) &&
+			selectedNote &&
+			notesSorted.length > 0 &&
+			selectedNote.uuid === routeParent &&
+			virtuosoRef.current &&
+			lastAutoScrollNoteUUIDRef.current !== selectedNote.uuid
+		) {
+			lastAutoScrollNoteUUIDRef.current = selectedNote.uuid
+
+			const index = notesSorted.findIndex(note => note.uuid === selectedNote.uuid)
+
+			if (index === -1) {
+				return
+			}
+
+			virtuosoRef.current.scrollToIndex({
+				index,
+				align: "center",
+				behavior: "auto"
+			})
+		}
+	}, [notesSorted, routeParent, selectedNote])
+
+	useEffect(() => {
 		if (notesSorted.length > 0 && notesSorted[0]) {
 			if (!validateUUID(routeParent)) {
 				setLastSelectedNote(notesSorted[0].uuid)
@@ -198,6 +225,7 @@ export const Notes = memo(() => {
 
 	return (
 		<Virtuoso
+			ref={virtuosoRef}
 			data={notesSorted}
 			totalCount={notesSorted.length}
 			height={windowSize.height - 95}

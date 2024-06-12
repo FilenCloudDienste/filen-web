@@ -41,9 +41,9 @@ export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
 					"w-full overflow-hidden select-text justify-center flex flex-row",
 					publicLinkURLState.isPublicLink
 						? publicLinkURLState.embed || publicLinkURLState.chatEmbed
-							? "h-screen"
-							: "h-[calc(100vh-56px)]"
-						: "h-[calc(100vh-48px)]"
+							? "h-[100dvh]"
+							: "h-[calc(100dvh-56px)]"
+						: "h-[calc(100dvh-48px)]"
 				)}
 			>
 				<div className="flex flex-row w-[800px] h-full justify-center overflow-y-auto bg-white">

@@ -6,7 +6,7 @@ export const AuthContainer = memo(({ children }: { children: React.ReactNode }) 
 	const { t } = useTranslation()
 
 	return (
-		<div className="flex h-screen w-screen flex-col overflow-y-auto overflow-x-hidden">
+		<div className="flex h-[100dvh] w-screen flex-col overflow-y-auto overflow-x-hidden">
 			<Link
 				to="/login"
 				className="flex shrink-0 flex-row justify-center py-10 sm:justify-start sm:pl-20 items-center gap-2"

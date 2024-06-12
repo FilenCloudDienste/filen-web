@@ -122,9 +122,9 @@ export const Image = memo(({ urlObject, item }: { urlObject?: string; item: Driv
 							"max-w-full object-contain z-10",
 							publicLinkURLState.isPublicLink
 								? publicLinkURLState.chatEmbed
-									? "max-h-screen cursor-pointer"
-									: "max-h-[calc(100vh-56px)] cursor-zoom-in"
-								: "max-h-[calc(100vh-48px)] cursor-zoom-in"
+									? "max-h-[100dvh] cursor-pointer"
+									: "max-h-[calc(100dvh-56px)] cursor-zoom-in"
+								: "max-h-[calc(100dvh-48px)] cursor-zoom-in"
 						)}
 						draggable={false}
 						style={{

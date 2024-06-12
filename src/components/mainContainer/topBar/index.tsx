@@ -27,6 +27,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import useCanUpload from "@/hooks/useCanUpload"
 import useDriveURLState from "@/hooks/useDriveURLState"
+import useIsMobile from "@/hooks/useIsMobile"
 
 export const TopBar = memo(() => {
 	const { t } = useTranslation()
@@ -40,6 +41,7 @@ export const TopBar = memo(() => {
 	const canUpload = useCanUpload()
 	const searchInputRef = useRef<HTMLInputElement>(null)
 	const driveURLState = useDriveURLState()
+	const isMobile = useIsMobile()
 
 	const changeListType = useCallback(() => {
 		setListType(prev => ({ ...prev, [parent]: listType[parent] === "grid" ? "list" : "grid" }))
@@ -115,9 +117,15 @@ export const TopBar = memo(() => {
 		<Notes />
 	) : (
 		<div className="w-full h-12 flex flex-row justify-between border-b select-none dragselect-start-allowed">
-			<Breadcrumbs />
+			{!isMobile && <Breadcrumbs />}
 			<div className="flex flex-row justify-end items-center gap-3 z-10 px-3">
-				<div className={cn("flex flex-row min-w-[250px] h-full items-center", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
+				<div
+					className={cn(
+						"flex flex-row h-full items-center",
+						dark ? "bg-[#151518]" : "bg-[#FFFFFF]",
+						isMobile ? "w-auto" : "min-w-[250px]"
+					)}
+				>
 					<div className="absolute h-full pl-2">
 						<div className="h-full flex flex-row items-center">
 							<Search
@@ -136,7 +144,7 @@ export const TopBar = memo(() => {
 				</div>
 				{location.includes("trash") ? (
 					<Button
-						className="h-8"
+						className="h-8 shrink-0"
 						variant="destructive"
 						disabled={items.length === 0}
 						onClick={emptyTrash}
@@ -147,7 +155,7 @@ export const TopBar = memo(() => {
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild={true}>
 							<Button
-								className="h-8"
+								className="h-8 shrink-0"
 								disabled={!canUpload}
 							>
 								{t("new")}
@@ -187,7 +195,7 @@ export const TopBar = memo(() => {
 						<Tooltip>
 							<TooltipTrigger asChild={true}>
 								<List
-									className="text-muted-foreground hover:text-primary cursor-pointer"
+									className="text-muted-foreground hover:text-primary cursor-pointer shrink-0"
 									onClick={changeListType}
 								/>
 							</TooltipTrigger>
@@ -201,7 +209,7 @@ export const TopBar = memo(() => {
 						<Tooltip>
 							<TooltipTrigger asChild={true}>
 								<Grid3X3
-									className="text-muted-foreground hover:text-primary cursor-pointer"
+									className="text-muted-foreground hover:text-primary cursor-pointer shrink-0"
 									onClick={changeListType}
 								/>
 							</TooltipTrigger>

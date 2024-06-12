@@ -36,7 +36,7 @@ export const Invite = memo(() => {
 	}
 
 	return (
-		<div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden">
+		<div className="flex flex-col w-full h-[100dvh] overflow-y-auto overflow-x-hidden">
 			<div className="flex flex-col p-6 h-full max-w-[600px]">
 				<p>{t("settings.invite.title")}</p>
 				<p className="text-muted-foreground text-sm">

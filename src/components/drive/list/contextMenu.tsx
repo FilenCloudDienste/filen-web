@@ -17,6 +17,7 @@ import { directoryUUIDToNameCache } from "@/cache"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { Folder, Text, Upload } from "lucide-react"
+import useIsMobile from "@/hooks/useIsMobile"
 
 const iconSize = 16
 
@@ -27,6 +28,7 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 	const parent = useRouteParent()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
+	const isMobile = useIsMobile()
 
 	const createDirectory = useCallback(async () => {
 		const inputResponse = await showInputDialog({
@@ -69,7 +71,7 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 		}
 	}, [createDirectory])
 
-	if (!location.includes("drive")) {
+	if (!location.includes("drive") || isMobile) {
 		return children
 	}
 

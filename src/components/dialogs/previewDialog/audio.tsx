@@ -35,9 +35,9 @@ export const Audio = memo(({ urlObject }: { urlObject: string }) => {
 					"w-full object-contain",
 					publicLinkURLState.isPublicLink
 						? publicLinkURLState.embed || publicLinkURLState.chatEmbed
-							? "h-screen"
-							: "h-[calc(100vh-56px)]"
-						: "h-[calc(100vh-48px)]"
+							? "h-[100dvh]"
+							: "h-[calc(100dvh-56px)]"
+						: "h-[calc(100dvh-48px)]"
 				)}
 			/>
 		</div>

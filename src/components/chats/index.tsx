@@ -56,7 +56,7 @@ export const Chats = memo(() => {
 	})
 
 	return (
-		<div className="w-full h-screen flex flex-row">
+		<div className="w-full h-[100dvh] flex flex-row">
 			{conversationSorted.length === 0 ? (
 				<div className="flex flex-row items-center justify-center w-full h-full">
 					<div className="flex flex-col p-4 justify-center items-center">
@@ -87,7 +87,7 @@ export const Chats = memo(() => {
 							/>
 						)}
 					</div>
-					{showParticipants && selectedConversation && (
+					{showParticipants && selectedConversation && !isMobile && (
 						<div className="flex flex-col w-[200px] border-l">
 							<Participants
 								key={`participants-${selectedConversation.uuid}`}

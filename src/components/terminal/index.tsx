@@ -24,7 +24,7 @@ export const Terminal = memo(() => {
 	}, [])
 
 	return (
-		<div className="flex flex-col w-full h-[calc(100vh-24px)] bg-black">
+		<div className="flex flex-col w-full h-[calc(100dvh-24px)] bg-black">
 			<div
 				ref={containerRef}
 				className="w-full h-full p-3"

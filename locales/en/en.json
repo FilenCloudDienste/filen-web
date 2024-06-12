@@ -471,6 +471,7 @@
 		"showParticipants": "Show participants",
 		"hideParticipants": "Hide participants",
 		"addParticipants": "Add participants",
+		"emojisMatching": "Emojis matching {{text}}",
 		"empty": {
 			"title": "No chats yet",
 			"description": "Chats that you have created or that you have been added to will appear here",
@@ -506,7 +507,8 @@
 			"placeholder": "Send a message...",
 			"typing": "is typing...",
 			"typingMultiple": "are typing...",
-			"replyingTo": "Replying to"
+			"replyingTo": "Replying to",
+			"placeholderMobile": "Message..."
 		},
 		"dialogs": {
 			"deleteMessage": {

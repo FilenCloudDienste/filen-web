@@ -963,33 +963,35 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
-			<div className="absolute z-50 w-[1px]">
-				<Popover>
-					<PopoverTrigger asChild={true}>
-						<Smile
-							size={24}
-							className={"cursor-pointer mt-[12px] text-muted-foreground hover:text-foreground"}
-							style={{
-								marginLeft: inputContainerDimensions.width - 70
-							}}
-						/>
-					</PopoverTrigger>
-					<PopoverContent
-						className="bg-transparent border-none w-auto h-auto"
-						align="end"
-					>
-						<EmojiPicker
-							onEmojiSelect={(e: { shortcodes: string }) => insertEmoji(e.shortcodes)}
-							autoFocus={true}
-							icons="outline"
-							locale="en"
-							theme={theme.theme}
-							data={emojiData}
-							custom={customEmojis}
-						/>
-					</PopoverContent>
-				</Popover>
-			</div>
+			{!isMobile && (
+				<div className="absolute z-50 w-[1px]">
+					<Popover>
+						<PopoverTrigger asChild={true}>
+							<Smile
+								size={24}
+								className={"cursor-pointer mt-[12px] text-muted-foreground hover:text-foreground"}
+								style={{
+									marginLeft: inputContainerDimensions.width - 70
+								}}
+							/>
+						</PopoverTrigger>
+						<PopoverContent
+							className="bg-transparent border-none w-auto h-auto"
+							align="end"
+						>
+							<EmojiPicker
+								onEmojiSelect={(e: { shortcodes: string }) => insertEmoji(e.shortcodes)}
+								autoFocus={true}
+								icons="outline"
+								locale="en"
+								theme={theme.theme}
+								data={emojiData}
+								custom={customEmojis}
+							/>
+						</PopoverContent>
+					</Popover>
+				</div>
+			)}
 			{replyMessage && (
 				<div
 					className="absolute mt-[-30px]"
@@ -1019,11 +1021,11 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 						width: inputContainerDimensions.width - 32
 					}}
 				>
-					<div className="flex flex-col bg-secondary p-1 px-2 pb-5 rounded-t-lg gap-2">
+					<div className="flex flex-col bg-secondary p-1.5 px-2 pb-5 rounded-t-lg gap-2">
 						<div className="flex flex-row gap-1 items-center justify-between">
 							<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("chats.input.replyingTo")}</p>
 							<XCircle
-								size={16}
+								size={18}
 								className="cursor-pointer text-muted-foreground hover:text-primary"
 								onClick={hideSuggestions}
 							/>
@@ -1033,7 +1035,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 								return (
 									<div
 										className={cn(
-											"flex flex-row items-center justify-between py-2 px-2 rounded-md hover:bg-primary-foreground cursor-pointer",
+											"flex flex-row items-center justify-between py-2 px-2 rounded-md hover:bg-primary-foreground cursor-pointer mb-0.5",
 											index === mentionsSuggestionsIndex ? "bg-primary-foreground" : "bg-transparent"
 										)}
 										key={participant.userId}
@@ -1067,13 +1069,13 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 						width: inputContainerDimensions.width - 32
 					}}
 				>
-					<div className="flex flex-col bg-secondary p-1 px-2 pb-5 rounded-t-lg gap-2">
+					<div className="flex flex-col bg-secondary p-1.5 px-2 pb-5 rounded-t-lg gap-2">
 						<div className="flex flex-row gap-1 items-center justify-between">
 							<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">
-								emojis matching {emojisSuggestionsText}
+								{t("chats.emojisMatching", { text: emojisSuggestionsText })}
 							</p>
 							<XCircle
-								size={16}
+								size={18}
 								className="cursor-pointer text-muted-foreground hover:text-primary"
 								onClick={hideSuggestions}
 							/>
@@ -1083,7 +1085,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 								return (
 									<div
 										className={cn(
-											"flex flex-row items-center justify-between py-2 px-2 rounded-md hover:bg-primary-foreground cursor-pointer",
+											"flex flex-row items-center justify-between py-2 px-2 rounded-md hover:bg-primary-foreground cursor-pointer mb-0.5",
 											index === emojisSuggestionsIndex ? "bg-primary-foreground" : "bg-transparent"
 										)}
 										key={shortCode + ":" + index}
@@ -1124,8 +1126,11 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				<Editable
 					onKeyDown={onKeyDown}
 					onKeyUp={onKeyUp}
-					placeholder={t("chats.input.placeholder")}
-					className="slate-editor z-10 border rounded-md bg-background w-full min-h-10 max-h-[40vh] overflow-y-auto overflow-x-hidden pl-11 pr-11 py-3 break-all outline-none focus:outline-none active:outline-none hover:outline-none"
+					placeholder={isMobile ? t("chats.input.placeholderMobile") : t("chats.input.placeholder")}
+					className={cn(
+						"slate-editor z-10 border rounded-md bg-background w-full min-h-10 max-h-[40vh] overflow-y-auto overflow-x-hidden pl-11 py-3 break-all outline-none focus:outline-none active:outline-none hover:outline-none",
+						!isMobile && "pr-11"
+					)}
 					autoCorrect="none"
 					autoCapitalize="none"
 					autoFocus={true}

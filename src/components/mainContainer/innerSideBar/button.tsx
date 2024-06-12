@@ -5,7 +5,7 @@ import useRouteParent from "@/hooks/useRouteParent"
 import Tree from "./tree"
 import { validate as validateUUID } from "uuid"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { folderIcon } from "@/assets/fileExtensionIcons"
+import { ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import {
@@ -35,8 +35,7 @@ import {
 import useLocation from "@/hooks/useLocation"
 import { useContactsStore } from "@/stores/contacts.store"
 import useAccount from "@/hooks/useAccount"
-
-const iconSize = 18
+import useIsMobile from "@/hooks/useIsMobile"
 
 export const Button = memo(({ uuid }: { uuid: string }) => {
 	const { baseFolderUUID } = useSDKConfig()
@@ -46,6 +45,8 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 	const location = useLocation()
 	const { requestsInCount } = useContactsStore()
 	const account = useAccount(false)
+	const isMobile = useIsMobile()
+	const iconSize = isMobile ? 20 : 18
 
 	const link = useMemo(() => {
 		const uuidEx = uuid.split("/")
@@ -77,26 +78,29 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				{uuid === baseFolderUUID && (
 					<>
 						<div className="flex flex-row gap-2">
-							{!sideBarTreeOpen[uuid] ? (
-								<ChevronRight
-									size={iconSize - 2}
-									onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: true }))}
-									className="shrink-0"
-								/>
-							) : (
-								<ChevronDown
-									size={iconSize - 2}
-									onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: false }))}
-									className="shrink-0"
-								/>
+							{!isMobile && (
+								<>
+									{!sideBarTreeOpen[uuid] ? (
+										<ChevronRight
+											size={iconSize - 2}
+											onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: true }))}
+											className="shrink-0"
+										/>
+									) : (
+										<ChevronDown
+											size={iconSize - 2}
+											onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: false }))}
+											className="shrink-0"
+										/>
+									)}
+								</>
 							)}
-							<img
-								src={folderIcon}
-								className="w-5 h-5 shrink-0"
-								draggable={false}
+							<ColoredFolderSVGIcon
+								width={20}
+								height={20}
 							/>
 						</div>
-						<p>{t("innerSideBar.cloudDrive")}</p>
+						{!isMobile && <p>{t("innerSideBar.cloudDrive")}</p>}
 					</>
 				)}
 				{uuid === "recents" && (
@@ -105,7 +109,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.recents")}</p>
+						{!isMobile && <p>{t("innerSideBar.recents")}</p>}
 					</>
 				)}
 				{uuid === "favorites" && (
@@ -114,7 +118,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.favorites")}</p>
+						{!isMobile && <p>{t("innerSideBar.favorites")}</p>}
 					</>
 				)}
 				{uuid === "trash" && (
@@ -123,7 +127,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.trash")}</p>
+						{!isMobile && <p>{t("innerSideBar.trash")}</p>}
 					</>
 				)}
 				{uuid === "shared-in" && (
@@ -132,7 +136,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.sharedWithMe")}</p>
+						{!isMobile && <p>{t("innerSideBar.sharedWithMe")}</p>}
 					</>
 				)}
 				{uuid === "shared-out" && (
@@ -141,7 +145,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.sharedWithOthers")}</p>
+						{!isMobile && <p>{t("innerSideBar.sharedWithOthers")}</p>}
 					</>
 				)}
 				{uuid === "links" && (
@@ -150,7 +154,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.links")}</p>
+						{!isMobile && <p>{t("innerSideBar.links")}</p>}
 					</>
 				)}
 				{uuid === "settings/general" && (
@@ -159,7 +163,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.settings.general")}</p>
+						{!isMobile && <p>{t("innerSideBar.settings.general")}</p>}
 					</>
 				)}
 				{uuid === "contacts/all" && (
@@ -168,7 +172,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.contacts.all")}</p>
+						{!isMobile && <p>{t("innerSideBar.contacts.all")}</p>}
 					</>
 				)}
 				{uuid === "contacts/online" && (
@@ -177,7 +181,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.contacts.online")}</p>
+						{!isMobile && <p>{t("innerSideBar.contacts.online")}</p>}
 					</>
 				)}
 				{uuid === "contacts/offline" && (
@@ -186,7 +190,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.contacts.offline")}</p>
+						{!isMobile && <p>{t("innerSideBar.contacts.offline")}</p>}
 					</>
 				)}
 				{uuid === "contacts/blocked" && (
@@ -195,7 +199,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.contacts.blocked")}</p>
+						{!isMobile && <p>{t("innerSideBar.contacts.blocked")}</p>}
 					</>
 				)}
 				{uuid === "contacts/in" && (
@@ -204,11 +208,15 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.contacts.in")}</p>
-						{requestsInCount > 0 && (
-							<div className="w-[20px] h-[20px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs">
-								{requestsInCount >= 9 ? "9+" : requestsInCount}
-							</div>
+						{!isMobile && (
+							<>
+								<p>{t("innerSideBar.contacts.in")}</p>
+								{requestsInCount > 0 && (
+									<div className="w-[20px] h-[20px] rounded-full bg-red-500 text-white flex flex-row items-center justify-center text-xs">
+										{requestsInCount >= 9 ? "9+" : requestsInCount}
+									</div>
+								)}
+							</>
 						)}
 					</>
 				)}
@@ -218,7 +226,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.contacts.out")}</p>
+						{!isMobile && <p>{t("innerSideBar.contacts.out")}</p>}
 					</>
 				)}
 				{uuid === "settings/account" && (
@@ -227,7 +235,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.settings.account")}</p>
+						{!isMobile && <p>{t("innerSideBar.settings.account")}</p>}
 					</>
 				)}
 				{uuid === "settings/security" && (
@@ -236,9 +244,11 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className={cn("shrink-0", account && !account.account.didExportMasterKeys && "text-red-500")}
 						/>
-						<p className={cn(account && !account.account.didExportMasterKeys && "text-red-500")}>
-							{t("innerSideBar.settings.security")}
-						</p>
+						{!isMobile && (
+							<p className={cn(account && !account.account.didExportMasterKeys && "text-red-500")}>
+								{t("innerSideBar.settings.security")}
+							</p>
+						)}
 					</>
 				)}
 				{uuid === "settings/subscriptions" && (
@@ -247,7 +257,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.settings.subscriptions")}</p>
+						{!isMobile && <p>{t("innerSideBar.settings.subscriptions")}</p>}
 					</>
 				)}
 				{uuid === "settings/invoices" && (
@@ -256,7 +266,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.settings.invoices")}</p>
+						{!isMobile && <p>{t("innerSideBar.settings.invoices")}</p>}
 					</>
 				)}
 				{uuid === "settings/events" && (
@@ -265,7 +275,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.settings.events")}</p>
+						{!isMobile && <p>{t("innerSideBar.settings.events")}</p>}
 					</>
 				)}
 				{uuid === "settings/invite" && (
@@ -274,7 +284,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.settings.invite")}</p>
+						{!isMobile && <p>{t("innerSideBar.settings.invite")}</p>}
 					</>
 				)}
 				{uuid === "settings/plans" && (
@@ -283,19 +293,21 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							size={iconSize}
 							className="shrink-0"
 						/>
-						<p>{t("innerSideBar.settings.plans")}</p>
+						{!isMobile && <p>{t("innerSideBar.settings.plans")}</p>}
 					</>
 				)}
 			</Link>
-			<div className="flex flex-col w-full overflow-hidden">
-				{validateUUID(uuid) && baseFolderUUID === uuid && sideBarTreeOpen[uuid] && (
-					<Tree
-						parent={uuid}
-						depth={1}
-						pathname={uuid}
-					/>
-				)}
-			</div>
+			{!isMobile && (
+				<div className="flex flex-col w-full overflow-hidden">
+					{validateUUID(uuid) && baseFolderUUID === uuid && sideBarTreeOpen[uuid] && (
+						<Tree
+							parent={uuid}
+							depth={1}
+							pathname={uuid}
+						/>
+					)}
+				</div>
+			)}
 		</div>
 	)
 })

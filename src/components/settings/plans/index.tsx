@@ -47,7 +47,7 @@ export const Plans = memo(() => {
 			<div
 				className={cn(
 					"flex flex-col w-full items-center justify-center gap-2",
-					IS_DESKTOP ? "h-[calc(100vh-48px)]" : "h-[calc(100vh-32px)]"
+					IS_DESKTOP ? "h-[calc(100dvh-48px)]" : "h-[calc(100dvh-32px)]"
 				)}
 			>
 				<Loader className="animate-spin-medium" />
