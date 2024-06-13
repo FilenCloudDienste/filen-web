@@ -26,6 +26,7 @@ import NoteHistoryDialog from "@/components/dialogs/noteHistory"
 import NoteParticipantsDialog from "@/components/dialogs/noteParticipants"
 import { setup as setupApp } from "@/lib/setup"
 import CookieConsent from "@/components/cookieConsent"
+import ProfileDialog from "@/components/dialogs/profile"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -135,6 +136,7 @@ export const Root = memo(() => {
 						<ConfirmDialog />
 						<TransparentFullScreenImageDialog />
 						<TwoFactorCodeDialog />
+						<ProfileDialog />
 					</CookieConsent>
 				</PersistQueryClientProvider>
 			</ThemeProvider>

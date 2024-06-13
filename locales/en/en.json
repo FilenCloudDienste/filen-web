@@ -369,6 +369,13 @@
 				"spam": "Spam",
 				"malware": "Malware"
 			}
+		},
+		"profile": {
+			"memberSince": "Member since {{since}}",
+			"add": "Send contact request",
+			"block": "Block",
+			"remove": "Remove from contacts",
+			"unblock": "Unblock"
 		}
 	},
 	"contextMenus": {

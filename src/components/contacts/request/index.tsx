@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react"
+import { memo, useCallback } from "react"
 import Avatar from "../../avatar"
 import { Check, X } from "lucide-react"
 import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/requests/in"
@@ -9,18 +9,9 @@ import eventEmitter from "@/lib/eventEmitter"
 import { useContactsStore } from "@/stores/contacts.store"
 
 export const Request = memo(({ request, refetch, type }: { request: ContactRequest; refetch: () => Promise<void>; type: "in" | "out" }) => {
-	const [hovering, setHovering] = useState<boolean>(false)
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const { setRequestsInCount } = useContactsStore()
-
-	const onMouseLeave = useCallback(() => {
-		setHovering(false)
-	}, [])
-
-	const onMouseEnter = useCallback(() => {
-		setHovering(true)
-	}, [])
 
 	const accept = useCallback(async () => {
 		const toast = loadingToast()
@@ -76,11 +67,7 @@ export const Request = memo(({ request, refetch, type }: { request: ContactReque
 	}, [request.uuid, errorToast, loadingToast, refetch])
 
 	return (
-		<div
-			className="flex flex-row gap-3 items-center hover:bg-secondary rounded-md p-3"
-			onMouseEnter={onMouseEnter}
-			onMouseLeave={onMouseLeave}
-		>
+		<div className="flex flex-row gap-3 items-center hover:bg-secondary rounded-md p-3">
 			<Avatar
 				size={44}
 				src={request.avatar}
@@ -90,24 +77,22 @@ export const Request = memo(({ request, refetch, type }: { request: ContactReque
 					<p className="line-clamp-1 text-ellipsis break-all">{request.nickName.length > 0 ? request.nickName : request.email}</p>
 					<p className="line-clamp-1 text-ellipsis break-all text-sm text-muted-foreground">{request.email}</p>
 				</div>
-				{hovering && (
-					<div className="flex flex-row gap-3">
-						{type === "in" && (
-							<div
-								className="bg-green-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
-								onClick={accept}
-							>
-								<Check size={18} />
-							</div>
-						)}
+				<div className="flex flex-row gap-3">
+					{type === "in" && (
 						<div
-							className="bg-red-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
-							onClick={type === "in" ? deny : remove}
+							className="bg-green-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
+							onClick={accept}
 						>
-							<X size={18} />
+							<Check size={18} />
 						</div>
+					)}
+					<div
+						className="bg-red-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
+						onClick={type === "in" ? deny : remove}
+					>
+						<X size={18} />
 					</div>
-				)}
+				</div>
 			</div>
 		</div>
 	)

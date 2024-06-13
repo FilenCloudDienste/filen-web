@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react"
+import { memo, useCallback } from "react"
 import Avatar from "../../avatar"
 import { Check } from "lucide-react"
 import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/blocked"
@@ -9,18 +9,9 @@ import useErrorToast from "@/hooks/useErrorToast"
 import { useTranslation } from "react-i18next"
 
 export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; refetch: () => Promise<void> }) => {
-	const [hovering, setHovering] = useState<boolean>(false)
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const { t } = useTranslation()
-
-	const onMouseLeave = useCallback(() => {
-		setHovering(false)
-	}, [])
-
-	const onMouseEnter = useCallback(() => {
-		setHovering(true)
-	}, [])
 
 	const unblock = useCallback(async () => {
 		if (
@@ -51,11 +42,7 @@ export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; re
 	}, [blocked.uuid, errorToast, loadingToast, refetch, t, blocked.nickName, blocked.email])
 
 	return (
-		<div
-			className="flex flex-row gap-3 items-center hover:bg-secondary rounded-md p-3"
-			onMouseEnter={onMouseEnter}
-			onMouseLeave={onMouseLeave}
-		>
+		<div className="flex flex-row gap-3 items-center hover:bg-secondary rounded-md p-3">
 			<Avatar
 				size={44}
 				src={blocked.avatar}
@@ -65,14 +52,12 @@ export const Blocked = memo(({ blocked, refetch }: { blocked: BlockedContact; re
 					<p className="line-clamp-1 text-ellipsis break-all">{blocked.nickName.length > 0 ? blocked.nickName : blocked.email}</p>
 					<p className="line-clamp-1 text-ellipsis break-all text-sm text-muted-foreground">{blocked.email}</p>
 				</div>
-				{hovering && (
-					<div
-						className="bg-green-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
-						onClick={unblock}
-					>
-						<Check size={18} />
-					</div>
-				)}
+				<div
+					className="bg-green-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
+					onClick={unblock}
+				>
+					<Check size={18} />
+				</div>
 			</div>
 		</div>
 	)

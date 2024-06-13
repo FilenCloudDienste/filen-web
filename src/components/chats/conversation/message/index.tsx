@@ -504,6 +504,10 @@ export const Message = memo(
 			})()
 		})
 
+		const profile = useCallback(() => {
+			eventEmitter.emit("openProfileDialog", message.senderId)
+		}, [message.senderId])
+
 		useEffect(() => {
 			if (Object.keys(displayAs).length > 0) {
 				chatDisplayMessageAsCache.set(message.uuid, displayAs)
@@ -541,7 +545,12 @@ export const Message = memo(
 											{replyTo}
 											{!groupWithPrevMessage && (
 												<div className="flex flex-row gap-2 items-center">
-													<p className="cursor-pointer hover:underline">{message.senderNickName}</p>
+													<p
+														className="cursor-pointer hover:underline"
+														onClick={profile}
+													>
+														{message.senderNickName}
+													</p>
 													<Time
 														timestamp={message.sentTimestamp}
 														t={t}
