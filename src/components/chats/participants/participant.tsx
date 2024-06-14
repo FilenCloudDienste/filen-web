@@ -1,9 +1,10 @@
-import { memo, useMemo } from "react"
+import { memo, useMemo, useCallback } from "react"
 import { Crown } from "lucide-react"
 import Avatar from "@/components/avatar"
 import ContextMenu from "./contextMenu"
 import { type ChatConversationParticipant, type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { type ChatConversationsOnlineUser } from "@filen/sdk/dist/types/api/v3/chat/conversations/online"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const ONLINE_TIMEOUT = 300000
 
@@ -27,12 +28,19 @@ export const Participant = memo(
 			return filtered[0].lastActive > 0 ? (filtered[0].lastActive > Date.now() - ONLINE_TIMEOUT ? "online" : "offline") : "offline"
 		}, [participant.userId, onlineUsers])
 
+		const profile = useCallback(() => {
+			eventEmitter.emit("openProfileDialog", participant.userId)
+		}, [participant.userId])
+
 		return (
 			<ContextMenu
 				participant={participant}
 				conversation={conversation}
 			>
-				<div className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-secondary">
+				<div
+					className="flex flex-row items-center p-3 gap-3 cursor-pointer hover:bg-secondary"
+					onClick={profile}
+				>
 					<Avatar
 						size={28}
 						src={participant.avatar}

@@ -9,6 +9,7 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import { showConfirmDialog } from "../confirm"
 import { type Note, type NoteParticipant } from "@filen/sdk/dist/types/api/v3/notes"
 import Avatar from "@/components/avatar"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Participant = memo(
 	({
@@ -102,9 +103,16 @@ export const Participant = memo(
 			}
 		}, [errorToast, loadingToast, userId, participant.userId, note.uuid, setNote, participant.permissionsWrite])
 
+		const profile = useCallback(() => {
+			eventEmitter.emit("openProfileDialog", participant.userId)
+		}, [participant.userId])
+
 		return (
 			<div className="flex flex-row gap-4 items-center p-2 rounded-md justify-between hover:bg-secondary mb-1">
-				<div className="flex flex-row gap-2 items-center">
+				<div
+					className="flex flex-row gap-2 items-center cursor-pointer"
+					onClick={profile}
+				>
 					<Avatar
 						src={participant.avatar}
 						size={32}
