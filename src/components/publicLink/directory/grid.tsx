@@ -1,26 +1,15 @@
-import { useGrid, useVirtualizer } from "@virtual-grid/react"
-import { memo, useEffect, useRef, Fragment, useMemo } from "react"
+import { memo, useRef, useMemo, forwardRef, useCallback } from "react"
 import useWindowSize from "@/hooks/useWindowSize"
 import { IS_DESKTOP } from "@/constants"
 import { type DriveCloudItem } from "@/components/drive"
 import ListItem from "@/components/drive/list/item"
 import Empty from "@/components/drive/list/empty"
 import { Skeleton } from "@/components/ui/skeleton"
+import { VirtuosoGrid, type VirtuosoGridHandle, type GridComponents } from "react-virtuoso"
 
 export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; showSkeletons: boolean }) => {
-	const virtualizerParentRef = useRef<HTMLDivElement>(null)
+	const virtuosoRef = useRef<VirtuosoGridHandle>(null)
 	const windowSize = useWindowSize()
-
-	const grid = useGrid({
-		scrollRef: virtualizerParentRef,
-		count: items.length,
-		columns: "auto",
-		size: 200,
-		overscan: 5
-	})
-
-	const rowVirtualizer = useVirtualizer(grid.rowVirtualizer)
-	const columnVirtualizer = useVirtualizer(grid.columnVirtualizer)
 
 	const height = useMemo(() => {
 		return IS_DESKTOP ? windowSize.height - 48 - 24 : windowSize.height - 48
@@ -39,9 +28,44 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 		})
 	}, [])
 
-	useEffect(() => {
-		columnVirtualizer.measure()
-	}, [columnVirtualizer, grid.virtualItemWidth, windowSize.width, windowSize.height])
+	const getItemKey = useCallback((_: number, item: DriveCloudItem) => item.uuid, [])
+
+	const itemContent = useCallback((index: number, item: DriveCloudItem) => {
+		return (
+			<ListItem
+				item={item}
+				index={index}
+				type="grid"
+			/>
+		)
+	}, [])
+
+	const components = useMemo(() => {
+		return {
+			Item: props => {
+				return (
+					<div
+						{...props}
+						style={{
+							width: "200px"
+						}}
+					/>
+				)
+			},
+			List: forwardRef(({ style, children }, listRef) => (
+				<div
+					ref={listRef}
+					style={{
+						display: "flex",
+						flexWrap: "wrap",
+						...style
+					}}
+				>
+					{children}
+				</div>
+			))
+		} as GridComponents
+	}, [])
 
 	if (showSkeletons) {
 		return <div className="flex flex-row flex-wrap overflow-hidden">{skeletons}</div>
@@ -62,57 +86,28 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 
 	return (
 		<div
-			ref={virtualizerParentRef}
+			className="flex flex-row w-full"
 			style={{
-				height,
-				width: "100%",
-				overflowX: "hidden",
-				overflowY: "auto"
+				height: height + "px"
 			}}
-			className="dragselect-start-allowed"
 		>
-			<div
+			<VirtuosoGrid
+				ref={virtuosoRef}
+				totalCount={items.length}
+				data={items}
+				width="100%"
+				height={height}
+				id="virtuoso-drive-list"
 				style={{
-					position: "relative",
-					width: `${columnVirtualizer.getTotalSize()}px`,
-					height: `${rowVirtualizer.getTotalSize()}px`
+					overflowX: "hidden",
+					overflowY: "auto",
+					height: height + "px",
+					width: "100%"
 				}}
-				className="dragselect-start-allowed"
-			>
-				{rowVirtualizer.getVirtualItems().map(virtualRow => (
-					<Fragment key={virtualRow.key}>
-						{columnVirtualizer.getVirtualItems().map(virtualColumn => {
-							const gridItem = grid.getVirtualItem({
-								row: virtualRow,
-								column: virtualColumn
-							})
-
-							if (!gridItem) {
-								return null
-							}
-
-							const item = items[gridItem.index]
-
-							if (!item) {
-								return null
-							}
-
-							return (
-								<div
-									key={item.uuid}
-									style={gridItem.style}
-								>
-									<ListItem
-										item={item}
-										index={gridItem.index}
-										type="grid"
-									/>
-								</div>
-							)
-						})}
-					</Fragment>
-				))}
-			</div>
+				components={components}
+				computeItemKey={getItemKey}
+				itemContent={itemContent}
+			/>
 		</div>
 	)
 })

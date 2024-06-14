@@ -170,24 +170,6 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 		onDoubleClick()
 	})
 
-	const onContextMenu = useCallback(() => {
-		setItems(prev => {
-			const selected = prev.filter(item => item.selected).length
-
-			return prev.map(prevItem =>
-				prevItem.uuid === item.uuid
-					? {
-							...prevItem,
-							selected: true
-						}
-					: {
-							...prevItem,
-							selected: selected > 1 ? prevItem.selected : false
-						}
-			)
-		})
-	}, [setItems, item.uuid])
-
 	const onDragStart = useCallback(() => {
 		if (isInsidePublicLink) {
 			return
@@ -387,8 +369,6 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 				return
 			}
 
-			onContextMenu()
-
 			const contextMenuEvent = new MouseEvent("contextmenu", {
 				bubbles: true,
 				cancelable: true,
@@ -399,7 +379,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 
 			listItemRef.current.dispatchEvent(contextMenuEvent)
 		},
-		[onContextMenu, mouseHovering]
+		[mouseHovering]
 	)
 
 	useMountedEffect(() => {
@@ -424,7 +404,6 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 						onClick={isMobile ? onDoubleTap.onClick : onClick}
 						draggable={!isInsidePublicLink}
 						data-uuid={item.uuid}
-						onContextMenu={onContextMenu}
 						onDragStart={onDragStart}
 						onDragOver={onDragOver}
 						onDragLeave={onDragLeave}
@@ -529,7 +508,6 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 						draggable={!isInsidePublicLink}
 						data-uuid={item.uuid}
 						onClick={isMobile ? onDoubleTap.onClick : onClick}
-						onContextMenu={onContextMenu}
 						onDragStart={onDragStart}
 						onDragOver={onDragOver}
 						onDragLeave={onDragLeave}

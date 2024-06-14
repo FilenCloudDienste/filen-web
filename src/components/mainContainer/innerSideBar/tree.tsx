@@ -72,7 +72,7 @@ export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: 
 						</>
 					)}
 					<Link
-						className="text-primary text-ellipsis line-clamp-1 grow"
+						className="text-primary text-ellipsis line-clamp-1 grow items-center"
 						to="/drive/$"
 						params={{
 							_splat: `${pathname}/${item.uuid}`

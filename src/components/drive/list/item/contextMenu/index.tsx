@@ -465,6 +465,31 @@ export const ContextMenu = memo(
 			[selectedItems, trash, download, driveURLState.publicLink, driveURLState.trash, deletePermanently]
 		)
 
+		const onOpenChange = useCallback(
+			(isOpen: boolean) => {
+				if (isOpen) {
+					setItems(prev => {
+						const selected = prev.filter(item => item.selected).length
+
+						return prev.map(prevItem =>
+							prevItem.uuid === item.uuid
+								? {
+										...prevItem,
+										selected: true
+									}
+								: {
+										...prevItem,
+										selected: selected > 1 ? prevItem.selected : false
+									}
+						)
+					})
+				} else {
+					setItems(prev => prev.map(prevItem => (prevItem.uuid === item.uuid ? { ...prevItem, selected: false } : prevItem)))
+				}
+			},
+			[setItems, item.uuid]
+		)
+
 		useEffect(() => {
 			window.addEventListener("keydown", keyDownListener)
 
@@ -474,7 +499,7 @@ export const ContextMenu = memo(
 		}, [keyDownListener])
 
 		return (
-			<CM>
+			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
 				<ContextMenuContent className="min-w-48">
 					{selectedItems.length === 1 && item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE > item.size && (

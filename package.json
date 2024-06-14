@@ -88,7 +88,7 @@
 		"react-quill": "^2.0.0",
 		"react-resizable-panels": "^2.0.12",
 		"react-twitter-embed": "^4.0.4",
-		"react-virtuoso": "^4.7.8",
+		"react-virtuoso": "^4.7.11",
 		"regexify-string": "^1.0.19",
 		"register-service-worker": "^1.7.2",
 		"slate": "^0.102.0",

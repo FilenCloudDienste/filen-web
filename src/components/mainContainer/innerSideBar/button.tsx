@@ -77,7 +77,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 			>
 				{uuid === baseFolderUUID && (
 					<>
-						<div className="flex flex-row gap-2">
+						<div className="flex flex-row gap-2 items-center">
 							{!isMobile && (
 								<>
 									{!sideBarTreeOpen[uuid] ? (
