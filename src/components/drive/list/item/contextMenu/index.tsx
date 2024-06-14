@@ -53,7 +53,7 @@ const iconSize = 16
 
 export const ContextMenu = memo(
 	({ item, children, items }: { item: DriveCloudItem; children: React.ReactNode; items: DriveCloudItem[] }) => {
-		const { setItems } = useDriveItemsStore()
+		const { setItems: setDriveItems } = useDriveItemsStore()
 		const { t } = useTranslation()
 		const { baseFolderUUID } = useSDKConfig()
 		const driveURLState = useDriveURLState()
@@ -64,8 +64,16 @@ export const ContextMenu = memo(
 		const [directoryColor, setDirectoryColor] = useState<string>(directoryColorToHex(item.type === "directory" ? item.color : null))
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
-		const { setVirtualURL } = useDirectoryPublicLinkStore()
+		const { setVirtualURL, setItems: setPublicLinkItems } = useDirectoryPublicLinkStore()
 		const successToast = useSuccessToast()
+
+		const isInsidePublicLink = useMemo(() => {
+			return location.includes("/f/") || location.includes("/d/")
+		}, [location])
+
+		const setItems = useMemo(() => {
+			return isInsidePublicLink ? setPublicLinkItems : setDriveItems
+		}, [isInsidePublicLink, setPublicLinkItems, setDriveItems])
 
 		const selectedItems = useMemo(() => {
 			return items.filter(item => item.selected)
@@ -484,7 +492,7 @@ export const ContextMenu = memo(
 						)
 					})
 				} else {
-					setItems(prev => prev.map(prevItem => (prevItem.uuid === item.uuid ? { ...prevItem, selected: false } : prevItem)))
+					setItems(prev => prev.map(prevItem => ({ ...prevItem, selected: false })))
 				}
 			},
 			[setItems, item.uuid]

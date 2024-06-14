@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react"
+import { memo, useMemo, useCallback } from "react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
@@ -64,6 +64,14 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 		}
 	}, [uuid])
 
+	const openTree = useCallback(() => {
+		setSideBarTreeOpen(prev => ({ ...prev, [uuid]: true }))
+	}, [setSideBarTreeOpen, uuid])
+
+	const closeTree = useCallback(() => {
+		setSideBarTreeOpen({})
+	}, [setSideBarTreeOpen])
+
 	return (
 		<div className="flex flex-col mb-0.5 px-3">
 			<Link
@@ -83,13 +91,13 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 									{!sideBarTreeOpen[uuid] ? (
 										<ChevronRight
 											size={iconSize - 2}
-											onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: true }))}
+											onClick={openTree}
 											className="shrink-0"
 										/>
 									) : (
 										<ChevronDown
 											size={iconSize - 2}
-											onClick={() => setSideBarTreeOpen(prev => ({ ...prev, [uuid]: false }))}
+											onClick={closeTree}
 											className="shrink-0"
 										/>
 									)}

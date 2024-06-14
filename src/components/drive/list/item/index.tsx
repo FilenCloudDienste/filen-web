@@ -516,11 +516,17 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 						<div className="dragselect-start-disallowed absolute flex flex-row justify-center items-center mt-[140px] w-[176px]">
 							<div
 								className={cn(
-									"flex flex-row max-w-[150px] h-full items-center rounded-full px-[8px] py-[3px] justify-center",
+									"flex flex-row max-w-[150px] h-full items-center rounded-full px-[8px] py-[3px] justify-center gap-2",
 									thumbnailURL ? (item.selected || hovering ? "bg-secondary" : "bg-primary-foreground") : "",
 									navigating && "bg-secondary"
 								)}
 							>
+								{item.favorited && (
+									<Heart
+										size={18}
+										className="dragselect-start-disallowed shrink-0"
+									/>
+								)}
 								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
 							</div>
 						</div>
