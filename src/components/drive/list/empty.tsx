@@ -4,7 +4,7 @@ import { ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { useTranslation } from "react-i18next"
 import useCanUpload from "@/hooks/useCanUpload"
 import { Button } from "@/components/ui/button"
-import { Upload, PhoneIncoming, PhoneOutgoing, Link, Heart, Timer, Trash, Search } from "lucide-react"
+import { Upload, FolderInput, FolderOutput, Link, Heart, Timer, Trash, Search } from "lucide-react"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { useDriveItemsStore } from "@/stores/drive.store"
 import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
@@ -126,7 +126,7 @@ export const Empty = memo(() => {
 		if (urlState.sharedIn) {
 			return {
 				icon: (
-					<PhoneIncoming
+					<FolderInput
 						width={128}
 						height={128}
 						className="text-muted-foreground"
@@ -141,7 +141,7 @@ export const Empty = memo(() => {
 		if (urlState.sharedOut) {
 			return {
 				icon: (
-					<PhoneOutgoing
+					<FolderOutput
 						width={128}
 						height={128}
 						className="text-muted-foreground"

@@ -33,7 +33,7 @@ import {
 	Eye,
 	Download,
 	Link,
-	PhoneOutgoing,
+	FolderOutput,
 	History,
 	Heart,
 	Edit,
@@ -554,7 +554,7 @@ export const ContextMenu = memo(
 								onClick={share}
 								className="cursor-pointer gap-3"
 							>
-								<PhoneOutgoing size={iconSize} />
+								<FolderOutput size={iconSize} />
 								{t("contextMenus.item.share")}
 							</ContextMenuItem>
 							<ContextMenuSeparator />

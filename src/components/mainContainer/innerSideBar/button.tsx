@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from "react"
+import { memo, useMemo, useCallback, useRef } from "react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
@@ -28,8 +28,8 @@ import {
 	User2,
 	UserPlus,
 	Send,
-	PhoneIncoming,
-	PhoneOutgoing,
+	FolderOutput,
+	FolderInput,
 	Star
 } from "lucide-react"
 import useLocation from "@/hooks/useLocation"
@@ -46,7 +46,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 	const { requestsInCount } = useContactsStore()
 	const account = useAccount(false)
 	const isMobile = useIsMobile()
-	const iconSize = isMobile ? 20 : 18
+	const iconSize = useRef<number>(isMobile ? 20 : 19).current
 
 	const link = useMemo(() => {
 		const uuidEx = uuid.split("/")
@@ -140,7 +140,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				)}
 				{uuid === "shared-in" && (
 					<>
-						<PhoneIncoming
+						<FolderInput
 							size={iconSize}
 							className="shrink-0"
 						/>
@@ -149,7 +149,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 				)}
 				{uuid === "shared-out" && (
 					<>
-						<PhoneOutgoing
+						<FolderOutput
 							size={iconSize}
 							className="shrink-0"
 						/>
