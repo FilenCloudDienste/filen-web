@@ -3,10 +3,27 @@ import * as workerProxy from "@/lib/worker/proxy"
 import worker from "@/lib/worker"
 import { directoryUUIDToNameCache } from "@/cache"
 import { IS_DESKTOP } from "@/constants"
+import { type DirDownloadType } from "@filen/sdk/dist/types/api/v3/dir/download"
 
 export const activeDownloads: Record<string, boolean> = {}
 
-export async function download({ selectedItems, name }: { selectedItems: DriveCloudItem[]; name?: string }): Promise<void> {
+export async function download({
+	selectedItems,
+	name,
+	type,
+	linkUUID,
+	linkHasPassword,
+	linkPassword,
+	linkSalt
+}: {
+	selectedItems: DriveCloudItem[]
+	name?: string
+	type?: DirDownloadType
+	linkUUID?: string
+	linkHasPassword?: boolean
+	linkPassword?: string
+	linkSalt?: string
+}): Promise<void> {
 	selectedItems = selectedItems.filter(item => !activeDownloads[item.uuid])
 
 	if (selectedItems.length === 0 || !selectedItems[0]) {
@@ -36,7 +53,12 @@ export async function download({ selectedItems, name }: { selectedItems: DriveCl
 					await window.desktopAPI.downloadDirectory({
 						uuid: selectedItems[0].uuid,
 						to: destination.path,
-						name: destination.name
+						name: destination.name,
+						type,
+						linkUUID,
+						linkHasPassword,
+						linkPassword,
+						linkSalt
 					})
 				} else {
 					await window.desktopAPI.downloadFile({
@@ -49,7 +71,12 @@ export async function download({ selectedItems, name }: { selectedItems: DriveCl
 				await window.desktopAPI.downloadMultipleFilesAndDirectories({
 					items: selectedItems,
 					to: destination.path,
-					name: destination.name
+					name: destination.name,
+					type,
+					linkUUID,
+					linkHasPassword,
+					linkPassword,
+					linkSalt
 				})
 			}
 
@@ -64,7 +91,12 @@ export async function download({ selectedItems, name }: { selectedItems: DriveCl
 			if (selectedItems[0].type === "directory") {
 				await workerProxy.downloadDirectory({
 					uuid: selectedItems[0].uuid,
-					name: selectedItems[0].name
+					name: selectedItems[0].name,
+					type,
+					linkUUID,
+					linkHasPassword,
+					linkPassword,
+					linkSalt
 				})
 			} else {
 				await workerProxy.downloadFile({ item: selectedItems[0] })
@@ -72,7 +104,12 @@ export async function download({ selectedItems, name }: { selectedItems: DriveCl
 		} else {
 			await workerProxy.downloadMultipleFilesAndDirectoriesAsZip({
 				items: selectedItems,
-				name
+				name,
+				type,
+				linkUUID,
+				linkHasPassword,
+				linkPassword,
+				linkSalt
 			})
 		}
 	} finally {

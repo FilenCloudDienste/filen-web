@@ -51,16 +51,19 @@ export type PublicLinkStore = {
 	passwordState: {
 		uuid: string
 		password: string
+		salt: string
 	}
 	setPasswordState: (
 		fn:
 			| {
 					uuid: string
 					password: string
+					salt: string
 			  }
-			| ((prev: { uuid: string; password: string }) => {
+			| ((prev: { uuid: string; password: string; salt: string }) => {
 					uuid: string
 					password: string
+					salt: string
 			  })
 	) => void
 }
@@ -68,7 +71,8 @@ export type PublicLinkStore = {
 export const usePublicLinkStore = create<PublicLinkStore>(set => ({
 	passwordState: {
 		uuid: "",
-		password: ""
+		password: "",
+		salt: ""
 	},
 	setPasswordState(fn) {
 		set(state => ({ passwordState: typeof fn === "function" ? fn(state.passwordState) : fn }))

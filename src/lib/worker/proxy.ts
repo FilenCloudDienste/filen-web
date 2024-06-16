@@ -105,12 +105,37 @@ export async function downloadDirectory({
  *
  * @export
  * @async
- * @param {{ items: DriveCloudItem[], name?: string }} param0
+ * @param {{ items: DriveCloudItem[]; name?: string, type?: DirDownloadType
+ * 	linkUUID?: string
+ * 	linkHasPassword?: boolean
+ * 	linkPassword?: string
+ * 	linkSalt?: string }} param0
  * @param {{}} param0.items
  * @param {string} param0.name
+ * @param {DirDownloadType} param0.type
+ * @param {boolean} param0.linkHasPassword
+ * @param {string} param0.linkPassword
+ * @param {string} param0.linkSalt
+ * @param {string} param0.linkUUID
  * @returns {Promise<void>}
  */
-export async function downloadMultipleFilesAndDirectoriesAsZip({ items, name }: { items: DriveCloudItem[]; name?: string }): Promise<void> {
+export async function downloadMultipleFilesAndDirectoriesAsZip({
+	items,
+	name,
+	type,
+	linkHasPassword,
+	linkPassword,
+	linkSalt,
+	linkUUID
+}: {
+	items: DriveCloudItem[]
+	name?: string
+	type?: DirDownloadType
+	linkUUID?: string
+	linkHasPassword?: boolean
+	linkPassword?: string
+	linkSalt?: string
+}): Promise<void> {
 	const fileHandle = await showSaveFilePicker({
 		suggestedName: name ? name : `Download_${Date.now()}.zip`,
 		_preferPolyfill: !useNative
@@ -122,10 +147,26 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({ items, name }: 
 	}))
 
 	if (!useNative) {
-		return workerLib.downloadMultipleFilesAndDirectoriesAsZip({ items: itemsWithPath, fileHandle })
+		return workerLib.downloadMultipleFilesAndDirectoriesAsZip({
+			items: itemsWithPath,
+			fileHandle,
+			type,
+			linkHasPassword,
+			linkPassword,
+			linkSalt,
+			linkUUID
+		})
 	}
 
-	await worker.downloadMultipleFilesAndDirectoriesAsZip({ items: itemsWithPath, fileHandle })
+	await worker.downloadMultipleFilesAndDirectoriesAsZip({
+		items: itemsWithPath,
+		fileHandle,
+		type,
+		linkHasPassword,
+		linkPassword,
+		linkSalt,
+		linkUUID
+	})
 }
 
 /**

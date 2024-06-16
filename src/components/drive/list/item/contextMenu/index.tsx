@@ -26,7 +26,7 @@ import { useDebouncedCallback } from "use-debounce"
 import { directoryColorToHex } from "@/assets/fileExtensionIcons"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
-import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
+import { useDirectoryPublicLinkStore, usePublicLinkStore } from "@/stores/publicLink.store"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { showInputDialog } from "@/components/dialogs/input"
 import {
@@ -48,6 +48,7 @@ import {
 import useSuccessToast from "@/hooks/useSuccessToast"
 import { selectContacts } from "@/components/dialogs/selectContacts"
 import { MAX_PREVIEW_SIZE } from "@/constants"
+import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 
 const iconSize = 16
 
@@ -65,7 +66,9 @@ export const ContextMenu = memo(
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
 		const { setVirtualURL, setItems: setPublicLinkItems } = useDirectoryPublicLinkStore()
+		const { passwordState: publicLinkPaswordState } = usePublicLinkStore()
 		const successToast = useSuccessToast()
+		const publicLinkURLState = usePublicLinkURLState()
 
 		const isInsidePublicLink = useMemo(() => {
 			return location.includes("/f/") || location.includes("/d/")
@@ -165,11 +168,28 @@ export const ContextMenu = memo(
 			}
 
 			try {
-				await actions.download({ selectedItems })
+				await actions.download({
+					selectedItems,
+					type: location.includes("shared-in") ? "shared" : publicLinkURLState.isPublicLink ? "linked" : "normal",
+					linkHasPassword: publicLinkPaswordState.password.length > 0 && publicLinkPaswordState.salt.length > 0,
+					linkPassword:
+						publicLinkPaswordState.password.length > 0 && publicLinkPaswordState.salt.length > 0
+							? publicLinkPaswordState.password
+							: undefined,
+					linkUUID: publicLinkURLState.uuid,
+					linkSalt: publicLinkPaswordState.salt.length > 0 ? publicLinkPaswordState.salt : undefined
+				})
 			} catch (e) {
 				console.error(e)
 			}
-		}, [selectedItems])
+		}, [
+			selectedItems,
+			location,
+			publicLinkURLState.isPublicLink,
+			publicLinkPaswordState.password,
+			publicLinkURLState.uuid,
+			publicLinkPaswordState.salt
+		])
 
 		const trash = useCallback(async () => {
 			if (selectedItems.length === 0 || driveURLState.sharedIn || driveURLState.publicLink) {

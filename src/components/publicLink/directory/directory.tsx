@@ -78,7 +78,12 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 		try {
 			await downloadAction({
 				selectedItems: items,
-				name: `${info.metadata.name}.zip`
+				name: `${info.metadata.name}.zip`,
+				type: "linked",
+				linkHasPassword: info.hasPassword,
+				linkPassword: typeof password !== "undefined" && info.hasPassword ? password : undefined,
+				linkUUID: urlState.uuid,
+				linkSalt: info.hasPassword ? info.salt : undefined
 			})
 		} catch (e) {
 			console.error(e)
@@ -87,7 +92,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		}
-	}, [items, info.metadata.name, errorToast])
+	}, [items, info.metadata.name, errorToast, info.hasPassword, info.salt, password, urlState.uuid])
 
 	const showSkeletons = useMemo(() => {
 		if (query.isSuccess && query.data.files.length >= 0 && query.data.folders.length >= 0) {

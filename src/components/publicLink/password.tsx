@@ -42,10 +42,11 @@ export const Password = memo(
 
 				setPasswordState({
 					uuid,
-					password: e.target.value
+					password: e.target.value,
+					salt: salt ? salt : ""
 				})
 			},
-			[uuid, setPasswordState]
+			[uuid, setPasswordState, salt]
 		)
 
 		const toggleShowPassword = useCallback(() => {
