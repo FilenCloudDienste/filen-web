@@ -7,11 +7,13 @@ export type NotesStore = {
 	synced: boolean
 	search: string
 	activeTag: string
+	maxSizeReached: boolean
 	setNotes: (fn: Note[] | ((prev: Note[]) => Note[])) => void
 	setSelectedNote: (fn: Note | null | ((prev: Note | null) => Note | null)) => void
 	setSynced: (fn: boolean | ((prev: boolean) => boolean)) => void
 	setSearch: (fn: string | ((prev: string) => string)) => void
 	setActiveTag: (fn: string | ((prev: string) => string)) => void
+	setMaxSizeReached: (fn: boolean | ((prev: boolean) => boolean)) => void
 }
 
 export const useNotesStore = create<NotesStore>(set => ({
@@ -20,6 +22,7 @@ export const useNotesStore = create<NotesStore>(set => ({
 	synced: true,
 	search: "",
 	activeTag: "all",
+	maxSizeReached: false,
 	setNotes(fn) {
 		set(state => ({ notes: typeof fn === "function" ? fn(state.notes) : fn }))
 	},
@@ -34,5 +37,8 @@ export const useNotesStore = create<NotesStore>(set => ({
 	},
 	setActiveTag(fn) {
 		set(state => ({ activeTag: typeof fn === "function" ? fn(state.activeTag) : fn }))
+	},
+	setMaxSizeReached(fn) {
+		set(state => ({ maxSizeReached: typeof fn === "function" ? fn(state.maxSizeReached) : fn }))
 	}
 }))

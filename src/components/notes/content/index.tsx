@@ -10,15 +10,16 @@ import { fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
 import RichTextEditor from "@/components/textEditor/rich"
 import useRouteParent from "@/hooks/useRouteParent"
 import { normalizeChecklistValue } from "../utils"
-import { type SocketEvent } from "@filen/sdk"
+import { type SocketEvent, MAX_NOTE_SIZE } from "@filen/sdk"
 import socket from "@/lib/socket"
 import { useNavigate } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { IS_DESKTOP } from "@/constants"
 import { useTranslation } from "react-i18next"
+import useErrorToast from "@/hooks/useErrorToast"
 
 export const Content = memo(({ note }: { note: Note }) => {
-	const { setSelectedNote, setNotes, setSynced } = useNotesStore()
+	const { setSelectedNote, setNotes, setSynced, setMaxSizeReached } = useNotesStore()
 	const windowSize = useWindowSize()
 	const resizablePanelSizes = useResizablePanelSizes()
 	const [value, setValue] = useState<string>("")
@@ -30,6 +31,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 	const navigate = useNavigate()
 	const { userId } = useSDKConfig()
 	const { t } = useTranslation()
+	const errorToast = useErrorToast()
 
 	const query = useQuery({
 		queryKey: ["fetchNoteContent", note.uuid],
@@ -46,11 +48,22 @@ export const Content = memo(({ note }: { note: Note }) => {
 
 	const editContent = useCallback(
 		async (val: string) => {
+			if (val.length >= MAX_NOTE_SIZE - 64) {
+				setMaxSizeReached(true)
+				setSynced(false)
+
+				errorToast(t("notes.maxSizeReached", { chars: MAX_NOTE_SIZE - 64 }))
+
+				return
+			}
+
 			if (parent !== note.uuid || JSON.stringify(initialValueRef.current) === JSON.stringify(val) || !hasWritePermissions) {
 				setSynced(true)
 
 				return
 			}
+
+			setMaxSizeReached(false)
 
 			try {
 				await worker.editNoteContent({ uuid: note.uuid, type: note.type, content: val })
@@ -64,16 +77,18 @@ export const Content = memo(({ note }: { note: Note }) => {
 				)
 			} catch (e) {
 				console.error(e)
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		},
-		[parent, note.uuid, setSelectedNote, setNotes, note.type, setSynced, hasWritePermissions]
+		[parent, note.uuid, setSelectedNote, setNotes, note.type, setSynced, hasWritePermissions, setMaxSizeReached, errorToast, t]
 	)
 
 	const editContentDebounce = useCallback(
 		(val: string) => {
 			clearTimeout(editContentTimeout.current)
 
-			editContentTimeout.current = setTimeout(() => editContent(val), 3000)
+			editContentTimeout.current = setTimeout(() => editContent(val), 2000)
 		},
 		[editContent]
 	)
@@ -137,9 +152,10 @@ export const Content = memo(({ note }: { note: Note }) => {
 				initialValueRef.current = content
 
 				setSynced(true)
+				setMaxSizeReached(false)
 			}
 		}
-	}, [query.isSuccess, query.data, note.type, setSynced, query.dataUpdatedAt])
+	}, [query.isSuccess, query.data, note.type, setSynced, query.dataUpdatedAt, setMaxSizeReached])
 
 	useEffect(() => {
 		if (lastNoteUUIDRef.current !== note.uuid) {
@@ -177,6 +193,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 				type={note.type}
 				placeholder={t("notes.contentPlaceholder")}
 				readOnly={!hasWritePermissions}
+				maxLength={MAX_NOTE_SIZE - 64}
 			/>
 		)
 	}
@@ -193,6 +210,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 			placeholder={t("notes.contentPlaceholder")}
 			showMarkdownPreview={note.type === "md"}
 			readOnly={!hasWritePermissions}
+			maxLength={MAX_NOTE_SIZE - 64}
 		/>
 	)
 })

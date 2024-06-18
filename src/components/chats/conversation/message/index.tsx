@@ -549,7 +549,7 @@ export const Message = memo(
 														className="cursor-pointer hover:underline"
 														onClick={profile}
 													>
-														{message.senderNickName}
+														{message.senderNickName.length > 0 ? message.senderNickName : message.senderEmail}
 													</p>
 													<Time
 														timestamp={message.sentTimestamp}

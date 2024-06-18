@@ -13,7 +13,8 @@ export const RichTextEditor = memo(
 		onValueChange,
 		placeholder,
 		onBlur,
-		type
+		type,
+		maxLength
 	}: {
 		width: number
 		height: number
@@ -24,6 +25,7 @@ export const RichTextEditor = memo(
 		placeholder?: string
 		onBlur?: () => void
 		type: "rich" | "checklist"
+		maxLength?: number
 	}) => {
 		const [quillRef, setQuillRef] = useState<Quill>()
 		const theme = useTheme()
@@ -34,13 +36,17 @@ export const RichTextEditor = memo(
 					val = normalizeChecklistValue(val)
 				}
 
+				if (maxLength && val.length >= maxLength) {
+					val = val.slice(0, maxLength)
+				}
+
 				setValue(val)
 
 				if (onValueChange) {
 					onValueChange(val)
 				}
 			},
-			[type, onValueChange, setValue]
+			[type, onValueChange, setValue, maxLength]
 		)
 
 		useEffect(() => {

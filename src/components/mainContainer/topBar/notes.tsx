@@ -1,6 +1,6 @@
 import { memo, useCallback } from "react"
 import { useNotesStore } from "@/stores/notes.store"
-import { CheckCircle2, Loader, MoreVertical } from "lucide-react"
+import { CheckCircle2, Loader, MoreVertical, RefreshCwOff } from "lucide-react"
 import { showInputDialog } from "@/components/dialogs/input"
 import worker from "@/lib/worker"
 import ContextMenu from "../innerSideBar/notes/note/contextMenu"
@@ -9,9 +9,12 @@ import useErrorToast from "@/hooks/useErrorToast"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/providers/themeProvider"
 import { useTranslation } from "react-i18next"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { TOOLTIP_POPUP_DELAY } from "@/constants"
+import { MAX_NOTE_SIZE } from "@filen/sdk"
 
 export const Notes = memo(() => {
-	const { selectedNote, setSelectedNote, setNotes, synced } = useNotesStore()
+	const { selectedNote, setSelectedNote, setNotes, synced, maxSizeReached } = useNotesStore()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const { dark } = useTheme()
@@ -79,7 +82,20 @@ export const Notes = memo(() => {
 		<div className="w-full h-12 flex flex-row justify-between border-b select-none">
 			<div className={cn("flex flex-row px-4 items-center gap-3 w-full h-12 z-50", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
 				<div className="flex flex-row">
-					{synced ? <CheckCircle2 className="text-green-500" /> : <Loader className="animate-spin-medium" />}
+					{maxSizeReached ? (
+						<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+							<Tooltip>
+								<TooltipTrigger asChild={true}>
+									<RefreshCwOff className="text-red-500" />
+								</TooltipTrigger>
+								<TooltipContent side="bottom">
+									<p>{t("notes.maxSizeReached", { chars: MAX_NOTE_SIZE - 64 })}</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					) : (
+						<>{synced ? <CheckCircle2 className="text-green-500" /> : <Loader className="animate-spin-medium" />}</>
+					)}
 				</div>
 				<div className="flex flex-row grow">
 					<p

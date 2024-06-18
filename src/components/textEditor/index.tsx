@@ -26,7 +26,8 @@ export const TextEditor = memo(
 		readOnly,
 		placeholder,
 		showMarkdownPreview,
-		onBlur
+		onBlur,
+		maxLength
 	}: {
 		value: string
 		setValue: React.Dispatch<React.SetStateAction<string>>
@@ -41,6 +42,7 @@ export const TextEditor = memo(
 		placeholder?: string
 		showMarkdownPreview?: boolean
 		onBlur?: () => void
+		maxLength?: number
 	}) => {
 		const publicLinkURLState = usePublicLinkURLState()
 		const theme = useTheme()
@@ -56,13 +58,17 @@ export const TextEditor = memo(
 
 		const onChange = useCallback(
 			(val: string) => {
+				if (maxLength && val.length >= maxLength) {
+					val = val.slice(0, maxLength)
+				}
+
 				setValue(val)
 
 				if (onValueChange) {
 					onValueChange(val)
 				}
 			},
-			[onValueChange, setValue]
+			[onValueChange, setValue, maxLength]
 		)
 
 		const editorTheme = useMemo(() => {
