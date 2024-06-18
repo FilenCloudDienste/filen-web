@@ -160,6 +160,9 @@ export const ConfirmDialog = memo(() => {
 								onChange={e => e.preventDefault()}
 								type="text"
 								className="w-full"
+								autoCapitalize="none"
+								autoComplete="none"
+								autoCorrect="none"
 							/>
 							<Button onClick={copyInputField}>
 								<Copy size={18} />

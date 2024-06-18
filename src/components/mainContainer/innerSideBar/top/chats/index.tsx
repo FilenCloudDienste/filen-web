@@ -4,7 +4,7 @@ import { Plus } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { useChatsStore } from "@/stores/chats.store"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 import worker from "@/lib/worker"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
@@ -30,6 +30,10 @@ export const Chats = memo(() => {
 		},
 		[setSearch]
 	)
+
+	const onClear = useCallback(() => {
+		setSearch("")
+	}, [setSearch])
 
 	const createChat = useCallback(async () => {
 		const selectedContacts = await selectContacts()
@@ -135,6 +139,12 @@ export const Chats = memo(() => {
 					placeholder={t("innerSideBar.chats.search")}
 					value={search}
 					onChange={onChange}
+					withClearIcon={true}
+					withSearchIcon={true}
+					onClear={onClear}
+					autoCapitalize="none"
+					autoComplete="none"
+					autoCorrect="none"
 				/>
 			</div>
 		</div>

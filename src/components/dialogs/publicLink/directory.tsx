@@ -7,14 +7,14 @@ import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 import { PUBLIC_LINK_BASE_URL } from "@/constants"
 import { Button } from "@/components/ui/button"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import { useDriveItemsStore } from "@/stores/drive.store"
 import useLocation from "@/hooks/useLocation"
 import eventEmitter from "@/lib/eventEmitter"
-import { Loader, Eye, EyeOff } from "lucide-react"
+import { Loader } from "lucide-react"
 import { type PublicLinkExpiration } from "@filen/sdk"
 import { type DirLinkStatusResponse } from "@filen/sdk/dist/types/api/v3/dir/link/status"
 
@@ -252,27 +252,16 @@ export const Directory = memo(
 						</div>
 						<div className="flex flex-col gap-1">
 							<p className="text-sm text-muted-foreground">{t("dialogs.publicLink.password")}</p>
-							<div className="absolute right-0 mr-[36px] mt-[35px]">
-								{showPassword ? (
-									<EyeOff
-										size={18}
-										onClick={toggleShowPassword}
-										className="cursor-pointer"
-									/>
-								) : (
-									<Eye
-										size={18}
-										onClick={toggleShowPassword}
-										className="cursor-pointer"
-									/>
-								)}
-							</div>
 							<Input
 								value={password}
 								onChange={onPasswordChange}
 								type={showPassword ? "text" : "password"}
 								placeholder={status.password ? new Array(16).join("*") : t("dialogs.publicLink.passwordPlaceholder")}
-								className="pr-12"
+								withPasswordToggleIcon={true}
+								onPasswordToggle={toggleShowPassword}
+								autoCapitalize="none"
+								autoComplete="none"
+								autoCorrect="none"
 							/>
 						</div>
 						<div className="flex flex-row gap-10 items-center justify-between">

@@ -3,8 +3,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/components/
 import eventEmitter from "@/lib/eventEmitter"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Eye, EyeOff } from "lucide-react"
+import Input from "@/components/input"
 import worker from "@/lib/worker"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
@@ -115,77 +114,41 @@ export const ChangePasswordDialog = memo(() => {
 				<div className="flex flex-col gap-3 mb-3">
 					<div className="flex flex-col gap-1">
 						<p className="text-sm text-muted-foreground">{t("dialogs.changePassword.newPassword")}</p>
-						<div className="absolute right-0 mr-[36px] mt-[35px]">
-							{showPassword ? (
-								<EyeOff
-									size={18}
-									onClick={toggleShowPassword}
-									className="cursor-pointer"
-								/>
-							) : (
-								<Eye
-									size={18}
-									onClick={toggleShowPassword}
-									className="cursor-pointer"
-								/>
-							)}
-						</div>
 						<Input
 							type={showPassword ? "text" : "password"}
 							value={inputs.new}
 							onChange={onNewChange}
 							placeholder={t("dialogs.changePassword.newPasswordPlaceholder")}
-							className={cn("pr-12", inputs.notIdentical ? "border-red-500" : undefined)}
+							className={cn(inputs.notIdentical ? "border-red-500" : undefined)}
+							withPasswordToggleIcon={true}
+							onPasswordToggle={toggleShowPassword}
+							required={true}
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
 						<p className="text-sm text-muted-foreground">{t("dialogs.changePassword.confirmNewPassword")}</p>
-						<div className="absolute right-0 mr-[36px] mt-[35px]">
-							{showPassword ? (
-								<EyeOff
-									size={18}
-									onClick={toggleShowPassword}
-									className="cursor-pointer"
-								/>
-							) : (
-								<Eye
-									size={18}
-									onClick={toggleShowPassword}
-									className="cursor-pointer"
-								/>
-							)}
-						</div>
 						<Input
 							type={showPassword ? "text" : "password"}
 							value={inputs.confirm}
 							onChange={onConfirmChange}
 							placeholder={t("dialogs.changePassword.confirmNewPasswordPlaceholder")}
-							className={cn("pr-12", inputs.notIdentical ? "border-red-500" : undefined)}
+							className={cn(inputs.notIdentical ? "border-red-500" : undefined)}
+							withPasswordToggleIcon={true}
+							onPasswordToggle={toggleShowPassword}
+							required={true}
 						/>
 					</div>
 					<div className="flex flex-col gap-1">
 						<p className="text-sm text-muted-foreground">{t("dialogs.changePassword.currentPassword")}</p>
-						<div className="absolute right-0 mr-[36px] mt-[35px]">
-							{showPassword ? (
-								<EyeOff
-									size={18}
-									onClick={toggleShowPassword}
-									className="cursor-pointer"
-								/>
-							) : (
-								<Eye
-									size={18}
-									onClick={toggleShowPassword}
-									className="cursor-pointer"
-								/>
-							)}
-						</div>
 						<Input
 							type={showPassword ? "text" : "password"}
 							value={inputs.password}
 							onChange={onPasswordChange}
 							placeholder={t("dialogs.changePassword.currentPasswordPlaceholder")}
-							className="pr-12"
+							className={cn(inputs.notIdentical ? "border-red-500" : undefined)}
+							withPasswordToggleIcon={true}
+							onPasswordToggle={toggleShowPassword}
+							required={true}
 						/>
 					</div>
 				</div>

@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from "react"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 import { Button } from "@/components/ui/button"
-import { Lock, Loader, Eye, EyeOff } from "lucide-react"
+import { Lock, Loader } from "lucide-react"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import worker from "@/lib/worker"
@@ -9,6 +9,7 @@ import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/lin
 import { type DirLinkInfoDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { usePublicLinkStore } from "@/stores/publicLink.store"
+import { useTranslation } from "react-i18next"
 
 export const Password = memo(
 	({
@@ -28,6 +29,7 @@ export const Password = memo(
 		decryptionKey: string
 		salt?: string
 	}) => {
+		const { t } = useTranslation()
 		const [password, setPassword] = useState<string>("")
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
@@ -108,7 +110,7 @@ export const Password = memo(
 				setPassword("")
 
 				if (((e as unknown as Error).message ?? "").toLowerCase().includes("wrong password")) {
-					errorToast("Wrong password")
+					errorToast(t("publicLink.auth.wrongPassword"))
 				} else {
 					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 				}
@@ -119,7 +121,7 @@ export const Password = memo(
 
 				setLoading(false)
 			}
-		}, [password, onAccess, errorToast, loadingToast, uuid, type, decryptionKey, salt, urlState.embed])
+		}, [password, onAccess, errorToast, loadingToast, uuid, type, decryptionKey, salt, urlState.embed, t])
 
 		const onKeyDown = useCallback(
 			(e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -142,39 +144,27 @@ export const Password = memo(
 								<Lock size={50} />
 							</div>
 							<div className="flex flex-col my-4">
-								<p className="text-center">This link is password protected</p>
-								<p className="text-muted-foreground text-sm text-center">
-									Please enter the password provided by the sender to gain access.
-								</p>
+								<p className="text-center">{t("publicLink.auth.title")}</p>
+								<p className="text-muted-foreground text-sm text-center">{t("publicLink.auth.subTitle")}</p>
 							</div>
 						</>
 					)}
 					<div className="flex flex-col w-full gap-2">
-						<p className="text-muted-foreground text-sm">Password</p>
-						<div className="absolute ml-[290px] mt-[39px]">
-							{showPassword ? (
-								<EyeOff
-									size={18}
-									onClick={toggleShowPassword}
-									className="cursor-pointer"
-								/>
-							) : (
-								<Eye
-									size={18}
-									onClick={toggleShowPassword}
-									className="cursor-pointer"
-								/>
-							)}
-						</div>
 						<Input
 							autoFocus={true}
 							type={showPassword ? "text" : "password"}
 							value={password}
 							onChange={onPasswordChange}
-							className="w-full pr-12"
-							placeholder="Password"
+							className="w-full"
+							placeholder={t("publicLink.auth.passwordPlaceholder")}
 							onKeyDown={onKeyDown}
 							disabled={loading}
+							onPasswordToggle={toggleShowPassword}
+							withPasswordToggleIcon={true}
+							autoCapitalize="none"
+							autoComplete="none"
+							autoCorrect="none"
+							required={true}
 						/>
 					</div>
 					<Button
@@ -188,7 +178,7 @@ export const Password = memo(
 								size={16}
 							/>
 						)}
-						Access
+						{t("publicLink.auth.access")}
 					</Button>
 				</div>
 			</div>

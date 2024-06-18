@@ -1,12 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import AuthContainer from "@/components/authContainer"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 import { Button } from "@/components/ui/button"
 import { useCallback, useState, useMemo } from "react"
 import sdk from "@/lib/sdk"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
-import { Loader, Eye, XCircle, CheckCircle, EyeOff } from "lucide-react"
+import { Loader, XCircle, CheckCircle } from "lucide-react"
 import { setup } from "@/lib/setup"
 import useErrorToast from "@/hooks/useErrorToast"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
@@ -61,6 +61,7 @@ export function Register() {
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
 	const successToast = useSuccessToast()
+	const navigate = useNavigate()
 
 	const passwordStrength = useMemo(() => {
 		return ratePassword(password)
@@ -95,7 +96,7 @@ export function Register() {
 	}, [loadingToast, errorToast, successToast, t])
 
 	const register = useCallback(async () => {
-		if (loading) {
+		if (loading || email.trim().length === 0 || password.length === 0 || confirmPassword.length === 0) {
 			return
 		}
 
@@ -115,7 +116,7 @@ export function Register() {
 
 		try {
 			await setup({
-				email: email,
+				email: email.trim(),
 				password: "anonymous",
 				masterKeys: ["anonymous"],
 				connectToSocket: true,
@@ -151,6 +152,12 @@ export function Register() {
 				}),
 				continueButtonVariant: "default"
 			})
+
+			navigate({
+				to: "/login",
+				replace: true,
+				resetScroll: true
+			})
 		} catch (e) {
 			console.error(e)
 
@@ -162,7 +169,7 @@ export function Register() {
 			setShowPassword(false)
 			setLoading(false)
 		}
-	}, [errorToast, passwordStrength.strength, t, email, password, confirmPassword, loading])
+	}, [errorToast, passwordStrength.strength, t, email, password, confirmPassword, loading, navigate])
 
 	const onKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -190,6 +197,9 @@ export function Register() {
 							value={email}
 							onChange={e => setEmail(e.target.value)}
 							onKeyDown={onKeyDown}
+							autoCapitalize="none"
+							autoComplete="none"
+							autoCorrect="none"
 						/>
 						<div className="w-full flex flex-row">
 							<Input
@@ -200,25 +210,12 @@ export function Register() {
 								value={password}
 								onChange={e => setPassword(e.target.value)}
 								onKeyDown={onKeyDown}
-								className="pr-12"
+								withPasswordToggleIcon={true}
+								onPasswordToggle={() => setShowPassword(prev => !prev)}
+								autoCapitalize="none"
+								autoComplete="none"
+								autoCorrect="none"
 							/>
-							<div className="flex flex-row absolute w-80 sm:w-[420px] h-10 ml-80 sm:ml-[420px]">
-								<div className="flex flex-row items-center h-full w-full ml-[-95px]">
-									{showPassword ? (
-										<EyeOff
-											size={20}
-											className="cursor-pointer"
-											onClick={() => setShowPassword(prev => !prev)}
-										/>
-									) : (
-										<Eye
-											size={20}
-											className="cursor-pointer"
-											onClick={() => setShowPassword(prev => !prev)}
-										/>
-									)}
-								</div>
-							</div>
 						</div>
 						<div className="w-full flex flex-row">
 							<Input
@@ -229,25 +226,12 @@ export function Register() {
 								value={confirmPassword}
 								onChange={e => setConfirmPassword(e.target.value)}
 								onKeyDown={onKeyDown}
-								className="pr-12"
+								withPasswordToggleIcon={true}
+								onPasswordToggle={() => setShowPassword(prev => !prev)}
+								autoCapitalize="none"
+								autoComplete="none"
+								autoCorrect="none"
 							/>
-							<div className="flex flex-row absolute w-80 sm:w-[420px] h-10 ml-80 sm:ml-[420px]">
-								<div className="flex flex-row items-center h-full w-full ml-[-95px]">
-									{showPassword ? (
-										<EyeOff
-											size={20}
-											className="cursor-pointer"
-											onClick={() => setShowPassword(prev => !prev)}
-										/>
-									) : (
-										<Eye
-											size={20}
-											className="cursor-pointer"
-											onClick={() => setShowPassword(prev => !prev)}
-										/>
-									)}
-								</div>
-							</div>
 						</div>
 						{password.length > 0 && (
 							<div className="flex flex-col gap-2 mt-2">

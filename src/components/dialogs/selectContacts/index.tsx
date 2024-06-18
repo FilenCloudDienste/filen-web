@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next"
 import eventEmitter from "@/lib/eventEmitter"
 import { type Contact } from "@filen/sdk/dist/types/api/v3/contacts"
 import List from "./list"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 
 export type SelectContactsResponse = { cancelled: true } | { cancelled: false; contacts: Contact[] }
 
@@ -94,6 +94,10 @@ export const SelectContactsDialog = memo(() => {
 		setSearch(e.target.value)
 	}, [])
 
+	const onInputClear = useCallback(() => {
+		setSearch("")
+	}, [])
+
 	useEffect(() => {
 		const listener = eventEmitter.on("openSelectContactsDialog", ({ id, exclude: e }: { id: string; exclude: number[] }) => {
 			requestId.current = id
@@ -125,6 +129,13 @@ export const SelectContactsDialog = memo(() => {
 						value={search}
 						onChange={onInputChange}
 						placeholder={t("dialogs.selectContacts.title")}
+						withSearchIcon={true}
+						withClearIcon={true}
+						onClear={onInputClear}
+						clearOnEscape={false}
+						autoCapitalize="none"
+						autoComplete="none"
+						autoCorrect="none"
 					/>
 					<List
 						responseContacts={responseContacts}

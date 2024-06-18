@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import AuthContainer from "@/components/authContainer"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 import { Button } from "@/components/ui/button"
 import { useCallback, useState, useMemo } from "react"
 import sdk from "@/lib/sdk"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
-import { Loader, Eye, XCircle, CheckCircle, EyeOff, Info } from "lucide-react"
+import { Loader, XCircle, CheckCircle, Info } from "lucide-react"
 import { setup } from "@/lib/setup"
 import useErrorToast from "@/hooks/useErrorToast"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
@@ -144,7 +144,7 @@ export function Reset() {
 	)
 
 	const reset = useCallback(async () => {
-		if (loading) {
+		if (loading || password.length === 0 || confirmPassword.length === 0) {
 			return
 		}
 
@@ -294,6 +294,9 @@ export function Reset() {
 							value={email}
 							onChange={e => setEmail(e.target.value)}
 							onKeyDown={onKeyDown}
+							autoCapitalize="none"
+							autoComplete="none"
+							autoCorrect="none"
 						/>
 						<div className="w-full flex flex-row gap-2">
 							<input
@@ -338,25 +341,12 @@ export function Reset() {
 								value={password}
 								onChange={e => setPassword(e.target.value)}
 								onKeyDown={onKeyDown}
-								className="pr-12"
+								withPasswordToggleIcon={true}
+								onPasswordToggle={() => setShowPassword(prev => !prev)}
+								autoCapitalize="none"
+								autoComplete="none"
+								autoCorrect="none"
 							/>
-							<div className="flex flex-row absolute w-80 sm:w-[420px] h-10 ml-80 sm:ml-[420px]">
-								<div className="flex flex-row items-center h-full w-full ml-[-95px]">
-									{showPassword ? (
-										<EyeOff
-											size={20}
-											className="cursor-pointer"
-											onClick={() => setShowPassword(prev => !prev)}
-										/>
-									) : (
-										<Eye
-											size={20}
-											className="cursor-pointer"
-											onClick={() => setShowPassword(prev => !prev)}
-										/>
-									)}
-								</div>
-							</div>
 						</div>
 						<div className="w-full flex flex-row">
 							<Input
@@ -367,25 +357,12 @@ export function Reset() {
 								value={confirmPassword}
 								onChange={e => setConfirmPassword(e.target.value)}
 								onKeyDown={onKeyDown}
-								className="pr-12"
+								withPasswordToggleIcon={true}
+								onPasswordToggle={() => setShowPassword(prev => !prev)}
+								autoCapitalize="none"
+								autoComplete="none"
+								autoCorrect="none"
 							/>
-							<div className="flex flex-row absolute w-80 sm:w-[420px] h-10 ml-80 sm:ml-[420px]">
-								<div className="flex flex-row items-center h-full w-full ml-[-95px]">
-									{showPassword ? (
-										<EyeOff
-											size={20}
-											className="cursor-pointer"
-											onClick={() => setShowPassword(prev => !prev)}
-										/>
-									) : (
-										<Eye
-											size={20}
-											className="cursor-pointer"
-											onClick={() => setShowPassword(prev => !prev)}
-										/>
-									)}
-								</div>
-							</div>
 						</div>
 						{password.length > 0 && (
 							<div className="flex flex-col gap-2 mt-2">

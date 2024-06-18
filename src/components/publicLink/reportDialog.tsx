@@ -175,6 +175,10 @@ export const ReportDialog = memo(() => {
 							value={inputs.email}
 							onChange={onEmailChange}
 							placeholder={t("dialogs.report.emailPlaceholder")}
+							required={true}
+							autoCapitalize="none"
+							autoComplete="none"
+							autoCorrect="none"
 						/>
 					</div>
 					<div className="flex flex-col gap-1">

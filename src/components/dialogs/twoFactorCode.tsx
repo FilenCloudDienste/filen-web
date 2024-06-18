@@ -202,6 +202,9 @@ export const TwoFactorCodeDialog = memo(() => {
 									onChange={e => e.preventDefault()}
 									type="text"
 									className="w-[175px]"
+									autoCapitalize="none"
+									autoComplete="none"
+									autoCorrect="none"
 								/>
 								<Button onClick={copyKeyToDisplay}>
 									<Copy size={18} />
@@ -217,6 +220,9 @@ export const TwoFactorCodeDialog = memo(() => {
 								placeholder={t("dialogs.twoFactorCode.recoveryKeyPlaceholder")}
 								type="text"
 								autoFocus={true}
+								autoCapitalize="none"
+								autoComplete="none"
+								autoCorrect="none"
 							/>
 						) : (
 							<InputOTP

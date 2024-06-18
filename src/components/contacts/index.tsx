@@ -4,7 +4,7 @@ import { useQueries } from "@tanstack/react-query"
 import { Virtuoso } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
 import { IS_DESKTOP } from "@/constants"
-import { Input } from "@/components/ui/input"
+import Input from "../input"
 import { Button } from "@/components/ui/button"
 import useLocation from "@/hooks/useLocation"
 import { type Contact as ContactType } from "@filen/sdk/dist/types/api/v3/contacts"
@@ -336,6 +336,12 @@ export const Contacts = memo(() => {
 						value={search}
 						onChange={e => setSearch(e.target.value)}
 						placeholder={t("contacts.search")}
+						withSearchIcon={true}
+						withClearIcon={true}
+						onClear={() => setSearch("")}
+						autoCapitalize="none"
+						autoComplete="none"
+						autoCorrect="none"
 					/>
 					<Button
 						onClick={sendRequest}

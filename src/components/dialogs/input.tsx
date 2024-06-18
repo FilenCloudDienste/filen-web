@@ -167,6 +167,9 @@ export const InputDialog = memo(() => {
 							submit()
 						}
 					}}
+					autoCapitalize="none"
+					autoComplete="none"
+					autoCorrect="none"
 				/>
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={cancel}>{t("dialogs.cancel")}</AlertDialogCancel>

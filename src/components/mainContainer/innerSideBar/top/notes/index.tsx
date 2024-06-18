@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import worker from "@/lib/worker"
 import { useNotesStore } from "@/stores/notes.store"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 import Tags from "./tags"
 import { type NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import { useLocalStorage } from "@uidotdev/usehooks"
@@ -66,6 +66,10 @@ export const Notes = memo(() => {
 		[setSearch]
 	)
 
+	const clearSearch = useCallback(() => {
+		setSearch("")
+	}, [setSearch])
+
 	useEffect(() => {
 		const createNoteListener = eventEmitter.on("createNote", createNote)
 
@@ -102,6 +106,12 @@ export const Notes = memo(() => {
 					placeholder={t("innerSideBar.notes.search")}
 					value={search}
 					onChange={onChange}
+					withSearchIcon={true}
+					withClearIcon={true}
+					onClear={clearSearch}
+					autoCapitalize="none"
+					autoComplete="none"
+					autoCorrect="none"
 				/>
 			</div>
 			<Tags />

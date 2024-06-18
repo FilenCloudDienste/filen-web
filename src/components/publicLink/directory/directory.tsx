@@ -4,7 +4,7 @@ import { useDirectoryLinkContent, usePublicLinkURLState } from "@/hooks/usePubli
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { type DriveSortBy } from "@/components/drive/list/header"
 import { orderItemsByType } from "@/components/drive/utils"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 import Breadcrumbs from "./breadcrumbs"
 import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 import Grid from "./grid"
@@ -152,6 +152,12 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 							placeholder={t("topBar.searchInThisFolder")}
 							value={searchTerm}
 							onChange={e => setSearchTerm(e.target.value)}
+							withSearchIcon={true}
+							withClearIcon={true}
+							onClear={() => setSearchTerm("")}
+							autoCapitalize="none"
+							autoComplete="none"
+							autoCorrect="none"
 						/>
 					</div>
 					{listType[parent] === "grid" ? (

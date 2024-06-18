@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import AuthContainer from "@/components/authContainer"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 import { Button } from "@/components/ui/button"
 import { useCallback, useState } from "react"
 import sdk from "@/lib/sdk"
@@ -8,7 +8,7 @@ import { APIError } from "@filen/sdk"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
-import { Loader, Eye } from "lucide-react"
+import { Loader } from "lucide-react"
 import { setup } from "@/lib/setup"
 import worker from "@/lib/worker"
 import { showInputDialog } from "@/components/dialogs/input"
@@ -63,17 +63,17 @@ export function Login() {
 	}, [loadingToast, errorToast, successToast, t])
 
 	const login = useCallback(async () => {
-		if (loading) {
+		if (loading || email.trim().length === 0 || password.length === 0) {
 			return
 		}
 
 		setLoading(true)
 
 		try {
-			const authInfo = await worker.authInfo({ email })
+			const authInfo = await worker.authInfo({ email: email.trim() })
 
 			await setup({
-				email: email,
+				email: email.trim(),
 				password: "anonymous",
 				masterKeys: ["anonymous"],
 				connectToSocket: true,
@@ -88,7 +88,7 @@ export function Login() {
 			})
 
 			await sdk.login({
-				email,
+				email: email.trim(),
 				password,
 				twoFactorCode
 			})
@@ -168,6 +168,9 @@ export function Login() {
 													login()
 												}
 											}}
+											autoCapitalize="none"
+											autoComplete="none"
+											autoCorrect="none"
 										/>
 										<Button
 											className="w-full mt-4"
@@ -243,6 +246,9 @@ export function Login() {
 											login()
 										}
 									}}
+									autoCapitalize="none"
+									autoComplete="none"
+									autoCorrect="none"
 								/>
 								<div className="w-full flex flex-row">
 									<Input
@@ -252,22 +258,17 @@ export function Login() {
 										placeholder={t("login.placeholders.normal.password")}
 										value={password}
 										onChange={e => setPassword(e.target.value)}
-										className="pr-12"
+										withPasswordToggleIcon={true}
+										onPasswordToggle={() => setShowPassword(prev => !prev)}
 										onKeyDown={e => {
 											if (e.key === "Enter") {
 												login()
 											}
 										}}
+										autoCapitalize="none"
+										autoComplete="none"
+										autoCorrect="none"
 									/>
-									<div className="flex flex-row absolute w-80 sm:w-[420px] h-10 ml-80 sm:ml-[420px]">
-										<div className="flex flex-row items-center h-full w-full ml-[-95px]">
-											<Eye
-												size={20}
-												className="cursor-pointer"
-												onClick={() => setShowPassword(prev => !prev)}
-											/>
-										</div>
-									</div>
 								</div>
 								<Button
 									className="w-full select-none mt-2"

@@ -960,6 +960,14 @@
 				"cta": "10 GB storage for free"
 			},
 			"reportAbuse": "Report abuse"
+		},
+		"auth": {
+			"wrongPassword": "Wrong password",
+			"title": "This link is password protected",
+			"subTitle": "Please enter the password provided by the sender to gain access.",
+			"password": "Password",
+			"passwordPlaceholder": "Password",
+			"access": "Access"
 		}
 	},
 	"notes": {

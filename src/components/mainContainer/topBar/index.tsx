@@ -1,5 +1,5 @@
 import { memo, useCallback, useRef, useEffect } from "react"
-import { Input } from "@/components/ui/input"
+import Input from "@/components/input"
 import { Search, List, Grid3X3 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import Breadcrumbs from "./breadcrumbs"
@@ -53,6 +53,10 @@ export const TopBar = memo(() => {
 		},
 		[setSearchTerm]
 	)
+
+	const onSearchClear = useCallback(() => {
+		setSearchTerm("")
+	}, [setSearchTerm])
 
 	const emptyTrash = useCallback(async () => {
 		if (!location.includes("trash")) {
@@ -136,10 +140,16 @@ export const TopBar = memo(() => {
 					</div>
 					<Input
 						ref={searchInputRef}
-						className="pl-8 text-sm max-w-lg h-9"
+						className="text-sm max-w-lg h-9"
 						placeholder={t("topBar.searchInThisFolder")}
 						value={searchTerm}
 						onChange={onSearchChange}
+						withClearIcon={true}
+						withSearchIcon={true}
+						onClear={onSearchClear}
+						autoCapitalize="none"
+						autoComplete="none"
+						autoCorrect="none"
 					/>
 				</div>
 				{location.includes("trash") ? (
