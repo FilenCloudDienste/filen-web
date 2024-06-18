@@ -1,4 +1,4 @@
-import { useRef, forwardRef, memo, useMemo, useCallback } from "react"
+import { useRef, forwardRef, memo, useMemo, useCallback, Fragment } from "react"
 import { type DriveCloudItem } from ".."
 import { IS_DESKTOP } from "@/constants"
 import useWindowSize from "@/hooks/useWindowSize"
@@ -7,10 +7,12 @@ import ContextMenu from "./contextMenu"
 import { Skeleton } from "@/components/ui/skeleton"
 import Empty from "./empty"
 import { VirtuosoGrid, type VirtuosoGridHandle, type GridComponents } from "react-virtuoso"
+import useCanUpload from "@/hooks/useCanUpload"
 
 export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; showSkeletons: boolean }) => {
 	const windowSize = useWindowSize()
 	const virtuosoRef = useRef<VirtuosoGridHandle>(null)
+	const canUpload = useCanUpload()
 
 	const height = useMemo(() => {
 		return IS_DESKTOP ? windowSize.height - 48 - 24 : windowSize.height - 48
@@ -68,6 +70,14 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 		} as GridComponents
 	}, [])
 
+	const ContextMenuComponent = useMemo(() => {
+		if (canUpload) {
+			return ContextMenu
+		}
+
+		return Fragment
+	}, [canUpload])
+
 	if (showSkeletons) {
 		return <div className="flex flex-row flex-wrap overflow-hidden">{skeletons}</div>
 	}
@@ -88,7 +98,7 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 	}
 
 	return (
-		<ContextMenu>
+		<ContextMenuComponent>
 			<VirtuosoGrid
 				ref={virtuosoRef}
 				totalCount={items.length}
@@ -106,7 +116,7 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 				computeItemKey={getItemKey}
 				itemContent={itemContent}
 			/>
-		</ContextMenu>
+		</ContextMenuComponent>
 	)
 })
 

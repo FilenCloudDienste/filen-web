@@ -2,14 +2,13 @@ import { memo, useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import eventEmitter from "@/lib/eventEmitter"
 import { type DriveCloudItem } from "@/components/drive"
-import worker from "@/lib/worker"
-import { fileNameToPreviewType } from "./utils"
+import { fileNameToPreviewType, ensureTextFileExtension } from "./utils"
 import Text from "./text"
 import PDF from "./pdf"
 import Image from "./image"
 import Video from "./video"
 import DocX from "./docx"
-import { Loader as LoaderIcon, X, Save, ArrowLeft, ArrowRight } from "lucide-react"
+import { Loader as LoaderIcon, X, Save, ArrowLeft, ArrowRight, Eye } from "lucide-react"
 import { showConfirmDialog } from "../confirm"
 import { uploadFile } from "@/lib/worker/worker"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -20,8 +19,10 @@ import { showInputDialog } from "../input"
 import useRouteParent from "@/hooks/useRouteParent"
 import { useDriveSharedStore, useDriveItemsStore } from "@/stores/drive.store"
 import useCanUpload from "@/hooks/useCanUpload"
-import useLocation from "@/hooks/useLocation"
 import Audio from "./audio"
+import { usePublicLinkURLState } from "@/hooks/usePublicLink"
+import useDriveURLState from "@/hooks/useDriveURLState"
+import { readFileAndSanitize } from "@/lib/worker/proxy"
 
 const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
 
@@ -47,15 +48,12 @@ export const PreviewDialog = memo(() => {
 	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore()
 	const [previewType, setPreviewType] = useState<string>("")
 	const canUpload = useCanUpload()
-	const location = useLocation()
 	const { items } = useDriveItemsStore()
-
-	const isInsidePublicLink = useMemo(() => {
-		return location.includes("/f/") || location.includes("/d/")
-	}, [location])
+	const publicLinkURLState = usePublicLinkURLState()
+	const driveURLState = useDriveURLState()
 
 	const nextAndPreviousItems = useMemo(() => {
-		if (!item || didChange || isInsidePublicLink || !open) {
+		if (!item || didChange || publicLinkURLState.isPublicLink || !open) {
 			return {
 				nextItem: null,
 				previousItem: null,
@@ -104,7 +102,7 @@ export const PreviewDialog = memo(() => {
 			nextItemPreviewType: nextItem ? fileNameToPreviewType(nextItem.name) : null,
 			previousItemPreviewType: previousItem ? fileNameToPreviewType(previousItem.name) : null
 		}
-	}, [item, items, didChange, isInsidePublicLink, open])
+	}, [item, items, didChange, publicLinkURLState.isPublicLink, open])
 
 	const canGoToPreviousItem = useMemo(() => {
 		return (
@@ -143,6 +141,22 @@ export const PreviewDialog = memo(() => {
 
 		eventEmitter.emit("openPreviewModal", { item: nextAndPreviousItems.nextItem })
 	}, [nextAndPreviousItems, canGoToNextItem])
+
+	const readOnly = useMemo(() => {
+		if (publicLinkURLState.isPublicLink) {
+			return true
+		}
+
+		if (!canUpload && !driveURLState.links && !driveURLState.sharedOut) {
+			return true
+		}
+
+		if (item && typeof item.parent !== "string") {
+			return true
+		}
+
+		return false
+	}, [canUpload, publicLinkURLState.isPublicLink, driveURLState.links, driveURLState.sharedOut, item])
 
 	const cleanup = useCallback(() => {
 		setTimeout(() => {
@@ -199,7 +213,7 @@ export const PreviewDialog = memo(() => {
 			}
 
 			try {
-				const buffer = await worker.readFile({ item: itm, emitEvents: false })
+				const buffer = await readFileAndSanitize({ item: itm, emitEvents: false })
 
 				if (previewType === "text" || previewType === "docx" || previewType === "md" || previewType === "code") {
 					setBuffers(prev => ({ ...prev, [itm.uuid]: buffer }))
@@ -252,7 +266,7 @@ export const PreviewDialog = memo(() => {
 
 	const onValueChange = useCallback(
 		(value: string) => {
-			if (!canUpload || isInsidePublicLink) {
+			if (readOnly) {
 				return
 			}
 
@@ -260,7 +274,7 @@ export const PreviewDialog = memo(() => {
 
 			setDidChange(true)
 		},
-		[canUpload, isInsidePublicLink]
+		[readOnly]
 	)
 
 	const keyDownListener = useCallback(
@@ -269,7 +283,7 @@ export const PreviewDialog = memo(() => {
 				return
 			}
 
-			if (e.key === "s" && (e.ctrlKey || e.metaKey) && didChange && canUpload && !isInsidePublicLink) {
+			if (e.key === "s" && (e.ctrlKey || e.metaKey) && didChange && !readOnly) {
 				e.preventDefault()
 				e.stopPropagation()
 
@@ -296,11 +310,11 @@ export const PreviewDialog = memo(() => {
 				return
 			}
 		},
-		[open, saveFile, didChange, canUpload, isInsidePublicLink, canGoToPreviousItem, goToPreviousItem, goToNextItem, canGoToNextItem]
+		[open, saveFile, didChange, readOnly, canGoToPreviousItem, goToPreviousItem, goToNextItem, canGoToNextItem]
 	)
 
 	const createTextFile = useCallback(async () => {
-		if (saving || didChange || !canUpload || isInsidePublicLink) {
+		if (saving || didChange || readOnly) {
 			return
 		}
 
@@ -316,8 +330,10 @@ export const PreviewDialog = memo(() => {
 			return
 		}
 
+		const fileName = ensureTextFileExtension(inputResponse.value.trim())
+
 		const newTextFileItem: DriveCloudItem = {
-			name: inputResponse.value.trim(),
+			name: fileName,
 			uuid: uuidv4(),
 			parent: routeParent,
 			size: 1,
@@ -357,8 +373,7 @@ export const PreviewDialog = memo(() => {
 		currentReceiverId,
 		currentSharerEmail,
 		currentSharerId,
-		canUpload,
-		isInsidePublicLink,
+		readOnly,
 		t
 	])
 
@@ -431,6 +446,18 @@ export const PreviewDialog = memo(() => {
 										)}
 									</>
 								)}
+								{readOnly && (
+									<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+										<Tooltip>
+											<TooltipTrigger asChild={true}>
+												<Eye size={20} />
+											</TooltipTrigger>
+											<TooltipContent side="left">
+												<p>{t("dialogs.previewDialog.readOnly")}</p>
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								)}
 								<p className="line-clamp-1 text-ellipsis break-all">{item.name}</p>
 							</div>
 							<X
@@ -438,7 +465,7 @@ export const PreviewDialog = memo(() => {
 								onClick={() => onOpenChange(false)}
 							/>
 						</div>
-						{goToPreviewTypes.includes(previewType) && !isInsidePublicLink && (
+						{goToPreviewTypes.includes(previewType) && !publicLinkURLState.isPublicLink && (
 							<>
 								{canGoToPreviousItem && (
 									<div
@@ -465,6 +492,7 @@ export const PreviewDialog = memo(() => {
 										buffer={buffers[item.uuid]!}
 										item={item}
 										onValueChange={onValueChange}
+										readOnly={readOnly}
 									/>
 								) : (
 									<Loader />

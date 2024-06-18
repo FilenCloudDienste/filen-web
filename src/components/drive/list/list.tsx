@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from "react"
+import { memo, useMemo, useCallback, Fragment } from "react"
 import { IS_DESKTOP } from "@/constants"
 import useWindowSize from "@/hooks/useWindowSize"
 import { Virtuoso } from "react-virtuoso"
@@ -10,11 +10,13 @@ import Header, { type DriveSortBy } from "./header"
 import useRouteParent from "@/hooks/useRouteParent"
 import { Skeleton } from "@/components/ui/skeleton"
 import Empty from "./empty"
+import useCanUpload from "@/hooks/useCanUpload"
 
 export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; showSkeletons: boolean }) => {
 	const windowSize = useWindowSize()
 	const routeParent = useRouteParent()
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
+	const canUpload = useCanUpload()
 
 	const virtuosoHeight = useMemo(() => {
 		return IS_DESKTOP ? windowSize.height - 48 - (showSkeletons ? 0 : 32) - 24 : windowSize.height - 48 - (showSkeletons ? 0 : 32)
@@ -63,10 +65,18 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 		}
 	}, [showSkeletons])
 
+	const ContextMenuComponent = useMemo(() => {
+		if (canUpload) {
+			return ContextMenu
+		}
+
+		return Fragment
+	}, [canUpload])
+
 	return (
 		<>
 			<Header />
-			<ContextMenu>
+			<ContextMenuComponent>
 				<Virtuoso
 					data={items}
 					totalCount={items.length}
@@ -85,7 +95,7 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 						width: "100%"
 					}}
 				/>
-			</ContextMenu>
+			</ContextMenuComponent>
 		</>
 	)
 })

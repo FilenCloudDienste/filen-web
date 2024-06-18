@@ -46,6 +46,7 @@ import { type DirLinkContentDecryptedResponse } from "@filen/sdk/dist/types/api/
 import { type AuthInfoResponse } from "@filen/sdk/dist/types/api/v3/auth/info"
 import { type UserProfileResponse } from "@filen/sdk/dist/types/api/v3/user/profile"
 import { fileNameToThumbnailType } from "@/components/dialogs/previewDialog/utils"
+import DOMPurify from "dompurify"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -53,6 +54,7 @@ let isInitialized = false
 const postMessageToMainProgressThrottle: Record<string, { next: number; storedBytes: number }> = {}
 const pauseSignals: Record<string, PauseSignal> = {}
 const abortControllers: Record<string, AbortController> = {}
+const textEncoder = new TextEncoder()
 
 // We have to throttle the "progress" events of the "download"/"upload" message type. The SDK sends too many events for the IPC to handle properly.
 // It freezes the main process if we don't throttle it.
@@ -753,7 +755,8 @@ export async function uploadDirectory({
 	receiverId = 0,
 	receiverEmail = "",
 	receivers = [],
-	emitEvents = true
+	emitEvents = true,
+	excludeDSStore = true
 }: {
 	files: { file: File; webkitRelativePath: string }[]
 	parent: string
@@ -763,8 +766,17 @@ export async function uploadDirectory({
 	receiverEmail?: string
 	receivers?: CloudItemReceiver[]
 	emitEvents?: boolean
+	excludeDSStore?: boolean
 }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
+
+	if (excludeDSStore) {
+		files = files.filter(file => file.file.name.toLowerCase().trim() !== ".ds_store")
+	}
+
+	if (files.length === 0) {
+		throw new Error("Empty directory.")
+	}
 
 	const directoryId = uuidv4()
 	const items: DriveCloudItem[] = []
@@ -3131,4 +3143,55 @@ export async function didExportMasterKeys(): Promise<void> {
 	await waitForInitialization()
 
 	return await SDK.user().didExportMasterKeys()
+}
+
+export const sanitizeSVG = (file: File): Promise<File> => {
+	return new Promise<File>((resolve, reject) => {
+		if (!DOMPurify.isSupported) {
+			reject(new Error("SVG sanitization not supported"))
+
+			return
+		}
+
+		const reader = new FileReader()
+
+		reader.onload = () => {
+			try {
+				const svgText = reader.result
+
+				if (!svgText) {
+					reject(new Error("sanitizeSVG: empty text"))
+
+					return
+				}
+
+				if (typeof svgText !== "string") {
+					reject(new Error("sanitizeSVG: no text"))
+
+					return
+				}
+
+				const sanitized = DOMPurify.sanitize(svgText)
+
+				if (sanitized.length <= 0) {
+					reject(new Error("sanitizeSVG: sanitization failed"))
+
+					return
+				}
+
+				resolve(
+					new File([textEncoder.encode(sanitized)], file.name, {
+						type: file.type,
+						lastModified: file.lastModified
+					})
+				)
+			} catch (e) {
+				reject(e)
+			}
+		}
+
+		reader.onerror = reject
+
+		reader.readAsText(file)
+	})
 }

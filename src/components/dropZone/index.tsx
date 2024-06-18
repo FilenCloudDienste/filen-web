@@ -100,6 +100,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 					const parentCopy = `${parent}`
 					const isChatsUpload = location.includes("chats")
 					const files = await readLocalDroppedDirectory(e.dataTransfer.items)
+
 					const promises: Promise<DriveCloudItem[]>[] = []
 					const containsDirectories = files.some(file => file.webkitRelativePath.split("/").length >= 2)
 

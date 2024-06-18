@@ -346,7 +346,8 @@
 			"empty": "No previous note versions yet"
 		},
 		"previewDialog": {
-			"save": "Save"
+			"save": "Save",
+			"readOnly": "Read only"
 		},
 		"transparentFullScreenImage": {
 			"openOriginal": "Open original"

@@ -136,3 +136,21 @@ export function fileNameToThumbnailType(name: string) {
 		}
 	}
 }
+
+/**
+ * Ensure that a text file's name includes an editable file extension.
+ *
+ * @export
+ * @param {string} filename
+ * @returns {string}
+ */
+export function ensureTextFileExtension(filename: string): string {
+	const fileExtension = filename.split(".").pop()?.toLowerCase()
+	const previewType = fileNameToPreviewType(filename)
+
+	if (fileExtension && (previewType === "code" || previewType === "text")) {
+		return filename
+	}
+
+	return `${filename}.txt`
+}

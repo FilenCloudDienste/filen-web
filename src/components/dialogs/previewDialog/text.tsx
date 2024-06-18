@@ -3,17 +3,25 @@ import { type DriveCloudItem } from "@/components/drive"
 import { fileNameToPreviewType } from "./utils"
 import useWindowSize from "@/hooks/useWindowSize"
 import TextEditor from "@/components/textEditor"
-import useCanUpload from "@/hooks/useCanUpload"
 import { cn } from "@/lib/utils"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 
 const textDecoder = new TextDecoder()
 
 export const Text = memo(
-	({ buffer, item, onValueChange }: { buffer: Buffer; item: DriveCloudItem; onValueChange?: (value: string) => void }) => {
+	({
+		buffer,
+		item,
+		onValueChange,
+		readOnly
+	}: {
+		buffer: Buffer
+		item: DriveCloudItem
+		onValueChange?: (value: string) => void
+		readOnly: boolean
+	}) => {
 		const [value, setValue] = useState<string>(textDecoder.decode(buffer))
 		const windowSize = useWindowSize()
-		const canUpload = useCanUpload()
 		const publicLinkURLState = usePublicLinkURLState()
 
 		const previewType = useMemo(() => {
@@ -48,7 +56,7 @@ export const Text = memo(
 					showMarkdownPreview={previewType === "md"}
 					onValueChange={onValueChange}
 					autoFocus={true}
-					readOnly={!canUpload || publicLinkURLState.isPublicLink}
+					readOnly={readOnly}
 				/>
 			</div>
 		)

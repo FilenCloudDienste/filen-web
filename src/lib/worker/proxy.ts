@@ -266,3 +266,65 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 		generateThumbnailSemaphore.release()
 	}
 }
+
+/**
+ * Sanitize an SVG file. Needs to run in the main thread.
+ *
+ * @export
+ * @async
+ * @param {File} file
+ * @returns {Promise<File>}
+ */
+export async function sanitizeSVG(file: File): Promise<File> {
+	return await workerLib.sanitizeSVG(file)
+}
+
+/**
+ * Read a file and sanitize it. Needs to run in the main thread.
+ *
+ * @export
+ * @async
+ * @param {{ item: DriveCloudItem; start?: number; end?: number, emitEvents?: boolean }} param0
+ * @param {DriveCloudItem} param0.item
+ * @param {number} param0.start
+ * @param {number} param0.end
+ * @param {boolean} param0.emitEvents
+ * @returns {Promise<Buffer>}
+ */
+export async function readFileAndSanitize({
+	item,
+	start,
+	end,
+	emitEvents
+}: {
+	item: DriveCloudItem
+	start?: number
+	end?: number
+	emitEvents?: boolean
+}): Promise<Buffer> {
+	if (item.type !== "file") {
+		throw new Error("Invalid item type, expected file.")
+	}
+
+	let buffer: Buffer = await worker.readFile({
+		item,
+		emitEvents,
+		start,
+		end
+	})
+
+	if (item.name.endsWith(".svg") || item.mime === "image/svg+xml") {
+		const sanitizedSVG = await sanitizeSVG(
+			new File([buffer], item.name, {
+				type: item.mime,
+				lastModified: item.lastModified
+			})
+		)
+
+		const sanitizedArrayBuffer = await sanitizedSVG.arrayBuffer()
+
+		buffer = Buffer.from(sanitizedArrayBuffer)
+	}
+
+	return buffer
+}
