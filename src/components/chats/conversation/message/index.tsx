@@ -422,7 +422,7 @@ export const Message = memo(
 			return (
 				<>
 					{!prevMessage && (
-						<div className="flex flex-row px-5">
+						<div className="flex flex-row px-5 mt-4">
 							<Header />
 						</div>
 					)}

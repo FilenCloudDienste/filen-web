@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react"
+import { memo, useCallback, useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import { Heart, Plus } from "lucide-react"
@@ -9,6 +9,9 @@ import { showInputDialog } from "@/components/dialogs/input"
 import { useNotesStore } from "@/stores/notes.store"
 import { cn } from "@/lib/utils"
 import ContextMenu from "./contextMenu"
+import eventEmitter from "@/lib/eventEmitter"
+import useErrorToast from "@/hooks/useErrorToast"
+import useLoadingToast from "@/hooks/useLoadingToast"
 
 export const tagClassName =
 	"flex flex-row gap-1 items-center justify-center px-2 py-1 rounded-md bg-muted/35 text-muted-foreground hover:bg-secondary hover:text-primary cursor-pointer h-7 text-sm"
@@ -16,6 +19,8 @@ export const tagClassName =
 export const Tags = memo(() => {
 	const { t } = useTranslation()
 	const { activeTag, setActiveTag } = useNotesStore()
+	const errorToast = useErrorToast()
+	const loadingToast = useLoadingToast()
 
 	const query = useQuery({
 		queryKey: ["listNotesTags"],
@@ -23,26 +28,40 @@ export const Tags = memo(() => {
 	})
 
 	const createTag = useCallback(async () => {
+		const inputResponse = await showInputDialog({
+			title: t("notes.dialogs.createTag.title"),
+			continueButtonText: t("notes.dialogs.createTag.continue"),
+			value: "",
+			autoFocusInput: true,
+			placeholder: t("notes.dialogs.createTag.placeholder"),
+			continueButtonVariant: "default"
+		})
+
+		if (inputResponse.cancelled || ["all", "favorites", "pinned"].includes(inputResponse.value.toLowerCase().trim())) {
+			return
+		}
+
+		const toast = loadingToast()
+
 		try {
-			const inputResponse = await showInputDialog({
-				title: t("notes.dialogs.createTag.title"),
-				continueButtonText: t("notes.dialogs.createTag.continue"),
-				value: "",
-				autoFocusInput: true,
-				placeholder: t("notes.dialogs.createTag.placeholder"),
-				continueButtonVariant: "default"
-			})
-
-			if (inputResponse.cancelled || ["all", "favorites", "pinned"].includes(inputResponse.value.toLowerCase().trim())) {
-				return
-			}
-
 			await worker.createNotesTag({ name: inputResponse.value.trim() })
 			await query.refetch()
 		} catch (e) {
 			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			toast.dismiss()
 		}
-	}, [query, t])
+	}, [query, t, errorToast, loadingToast])
+
+	useEffect(() => {
+		const createNotesTagListener = eventEmitter.on("createNotesTag", createTag)
+
+		return () => {
+			createNotesTagListener.remove()
+		}
+	}, [createTag])
 
 	return (
 		<div className="flex flex-row w-full h-auto p-4 flex-wrap gap-2">

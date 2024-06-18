@@ -79,7 +79,7 @@ export const Container = memo(({ children, loading, hasInfo }: { children: React
 						</div>
 					</div>
 					<Link
-						to={authed ? "/" : "login"}
+						to={authed ? "/" : "/register"}
 						className="shrink-0 w-full mt-8"
 						draggable={false}
 					>

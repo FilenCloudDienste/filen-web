@@ -40,7 +40,8 @@ import {
 	Code,
 	NotepadText,
 	BookMarked,
-	Hash
+	Hash,
+	Plus
 } from "lucide-react"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useSuccessToast from "@/hooks/useSuccessToast"
@@ -542,6 +543,10 @@ export const ContextMenu = memo(
 			}
 		}, [note.uuid, successToast, errorToast, t])
 
+		const createTag = useCallback(() => {
+			eventEmitter.emit("createNotesTag")
+		}, [])
+
 		return (
 			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
@@ -668,6 +673,13 @@ export const ContextMenu = memo(
 											</ContextMenuItem>
 										)
 									})}
+									<ContextMenuItem
+										onClick={createTag}
+										className="gap-3 cursor-pointer"
+									>
+										<Plus size={iconSize} />
+										{t("contextMenus.notes.createTag")}
+									</ContextMenuItem>
 								</ContextMenuSubContent>
 							</ContextMenuSub>
 						</>

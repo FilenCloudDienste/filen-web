@@ -449,6 +449,7 @@
 			"tags": "Tags",
 			"leave": "Leave",
 			"copyId": "Copy ID",
+			"createTag": "Create tag",
 			"types": {
 				"md": "Markdown",
 				"rich": "Richtext",
