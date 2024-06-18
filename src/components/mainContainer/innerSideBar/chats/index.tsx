@@ -20,6 +20,8 @@ import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/convers
 import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/components/ui/skeleton"
 
+const processedMessageUUIDs: Record<string, boolean> = {}
+
 export const Chats = memo(() => {
 	const windowSize = useWindowSize()
 	const { conversations, setConversations, selectedConversation, setSelectedConversation, setConversationsUnread, search } =
@@ -118,7 +120,9 @@ export const Chats = memo(() => {
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
 			try {
-				if (event.type === "chatMessageNew") {
+				if (event.type === "chatMessageNew" && !processedMessageUUIDs[event.data.uuid]) {
+					processedMessageUUIDs[event.data.uuid] = true
+
 					const filteredConversations = conversations.filter(c => c.uuid === event.data.conversation)
 
 					if (filteredConversations.length === 0 || !filteredConversations[0]) {

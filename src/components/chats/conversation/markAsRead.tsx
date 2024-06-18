@@ -104,13 +104,10 @@ export const MarkAsRead = memo(
 				])
 
 				setLastFocus(now)
-				setConversationsUnread(prev => {
-					const newRecord = { ...prev }
-
-					delete newRecord[conversation.uuid]
-
-					return newRecord
-				})
+				setConversationsUnread(prev => ({
+					...prev,
+					[conversation.uuid]: 0
+				}))
 
 				eventEmitter.emit("updateChatsUnreadCount")
 				eventEmitter.emit("scrollChatToBottom")

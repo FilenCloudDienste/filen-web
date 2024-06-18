@@ -54,17 +54,10 @@ export const Chat = memo(
 
 		useEffect(() => {
 			if (query.isSuccess) {
-				setConversationsUnread(prev => {
-					const newRecord = { ...prev }
-
-					if (query.data === 0) {
-						delete newRecord[conversation.uuid]
-					} else {
-						newRecord[conversation.uuid] = query.data
-					}
-
-					return newRecord
-				})
+				setConversationsUnread(prev => ({
+					...prev,
+					[conversation.uuid]: query.data
+				}))
 			}
 		}, [query.isSuccess, query.data, setConversationsUnread, conversation.uuid])
 

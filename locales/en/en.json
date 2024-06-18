@@ -494,6 +494,7 @@
 	"chats": {
 		"newMessagesSince": "{{count}} new messages since {{since}}",
 		"markAsRead": "Mark as read",
+		"maxSizeReached": "Maximum message size is limited to {{chars}} characters",
 		"newMessageSince": "{{count}} new message since {{since}}",
 		"showParticipants": "Show participants",
 		"hideParticipants": "Hide participants",

@@ -248,6 +248,12 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			return
 		}
 
+		if (content.length >= MAX_CHAT_SIZE - 64) {
+			errorToast(t("chats.maxSizeReached", { chars: MAX_CHAT_SIZE - 64 }))
+
+			return
+		}
+
 		const uuid = uuidv4()
 
 		try {
@@ -358,7 +364,8 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		errorToast,
 		hideSuggestions,
 		setSelectedConversation,
-		setConversations
+		setConversations,
+		t
 	])
 
 	const editMessage = useCallback(async (): Promise<void> => {
@@ -369,6 +376,12 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		const content = getEditorText()
 
 		if (content.length === 0) {
+			return
+		}
+
+		if (content.length >= MAX_CHAT_SIZE - 64) {
+			errorToast(t("chats.maxSizeReached", { chars: MAX_CHAT_SIZE - 64 }))
+
 			return
 		}
 
@@ -416,7 +429,8 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		getEditorText,
 		editUUID,
 		errorToast,
-		hideSuggestions
+		hideSuggestions,
+		t
 	])
 
 	const toggleMentionsAndEmojis = useCallback((): void => {
