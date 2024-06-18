@@ -264,6 +264,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 											<TextPreview
 												buffer={buffer}
 												item={item}
+												readOnly={true}
 											/>
 										</>
 									) : (
