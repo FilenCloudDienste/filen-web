@@ -996,7 +996,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 						>
 							<EmojiPicker
 								onEmojiSelect={(e: { shortcodes: string }) => insertEmoji(e.shortcodes)}
-								autoFocus={true}
+								autoFocus={!isMobile}
 								icons="outline"
 								locale="en"
 								theme={theme.theme}
@@ -1148,7 +1148,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 					)}
 					autoCorrect="none"
 					autoCapitalize="none"
-					autoFocus={true}
+					autoFocus={!isMobile}
 					autoComplete="none"
 					spellCheck={false}
 					maxLength={MAX_CHAT_SIZE - 64}

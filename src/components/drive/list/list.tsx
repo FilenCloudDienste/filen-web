@@ -75,7 +75,7 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 
 	return (
 		<>
-			<Header />
+			{items.length > 0 && <Header />}
 			<ContextMenuComponent>
 				<Virtuoso
 					data={items}

@@ -251,7 +251,8 @@
 			"title": "Select",
 			"submit": "Select",
 			"newFolder": "New directory",
-			"empty": "No files or directories uploaded yet"
+			"empty": "No files or directories uploaded yet",
+			"selectRoot": "Select Cloud Drive"
 		},
 		"selectContacts": {
 			"title": "Select contacts",

@@ -5,6 +5,7 @@ import useWindowSize from "@/hooks/useWindowSize"
 import TextEditor from "@/components/textEditor"
 import { cn } from "@/lib/utils"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
+import useIsMobile from "@/hooks/useIsMobile"
 
 const textDecoder = new TextDecoder()
 
@@ -23,6 +24,7 @@ export const Text = memo(
 		const [value, setValue] = useState<string>(textDecoder.decode(buffer))
 		const windowSize = useWindowSize()
 		const publicLinkURLState = usePublicLinkURLState()
+		const isMobile = useIsMobile()
 
 		const previewType = useMemo(() => {
 			return fileNameToPreviewType(item.name)
@@ -55,7 +57,7 @@ export const Text = memo(
 					type={previewType === "code" || previewType === "md" ? "code" : "text"}
 					showMarkdownPreview={previewType === "md"}
 					onValueChange={onValueChange}
-					autoFocus={true}
+					autoFocus={!isMobile}
 					readOnly={readOnly}
 				/>
 			</div>

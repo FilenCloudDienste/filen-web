@@ -19,6 +19,7 @@ import { useDriveItemsStore } from "@/stores/drive.store"
 import useRouteParent from "@/hooks/useRouteParent"
 import { directoryUUIDToNameCache } from "@/cache"
 import { type DriveCloudItem } from "@/components/drive"
+import { Button } from "@/components/ui/button"
 
 export type SelectionType = "file" | "directory" | "all"
 export type SelectDriveItemResponse = { cancelled: true } | { cancelled: false; items: DriveCloudItem[] }
@@ -110,6 +111,37 @@ export const SelectDriveItemDialog = memo(() => {
 
 		setOpen(false)
 	}, [])
+
+	const selectRoot = useCallback(() => {
+		if (didSubmit.current) {
+			return
+		}
+
+		didSubmit.current = true
+
+		eventEmitter.emit("selectDriveItemResponse", {
+			items: {
+				type: "directory",
+				parent: "base",
+				uuid: baseFolderUUID,
+				lastModified: 0,
+				timestamp: 0,
+				name: "Cloud Drive",
+				favorited: false,
+				sharerEmail: "",
+				sharerId: 0,
+				receiverEmail: "",
+				receiverId: 0,
+				receivers: [],
+				color: null,
+				size: 0,
+				selected: false
+			} satisfies DriveCloudItem,
+			id: requestId.current
+		})
+
+		setOpen(false)
+	}, [baseFolderUUID])
 
 	const createDirectory = useCallback(async () => {
 		try {
@@ -207,6 +239,15 @@ export const SelectDriveItemDialog = memo(() => {
 						</p>
 					)}
 					<AlertDialogCancel onClick={cancel}>{t("dialogs.cancel")}</AlertDialogCancel>
+					{(pathname.length === 0 || pathname === baseFolderUUID) &&
+						(selectionType === "directory" || selectionType === "all") && (
+							<Button
+								onClick={selectRoot}
+								variant="secondary"
+							>
+								{t("dialogs.selectDriveItem.selectRoot")}
+							</Button>
+						)}
 					<AlertDialogAction
 						onClick={submit}
 						disabled={responseItems.length === 0}
