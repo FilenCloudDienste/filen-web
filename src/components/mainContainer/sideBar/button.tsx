@@ -14,13 +14,15 @@ import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import { useChatsStore } from "@/stores/chats.store"
 import { useContactsStore } from "@/stores/contacts.store"
+import DarkLogo from "@/assets/img/dark_logo.svg"
+import LightLogo from "@/assets/img/light_logo.svg"
 
 const iconSize = 24
 
 export const Button = memo(({ id }: { id: string }) => {
 	const { baseFolderUUID } = useSDKConfig()
 	const routeParent = useRouteParent()
-	const theme = useTheme()
+	const { dark } = useTheme()
 	const location = useLocation()
 	const { t } = useTranslation()
 	const [lastSelectedNote] = useLocalStorage("lastSelectedNote", "")
@@ -106,8 +108,8 @@ export const Button = memo(({ id }: { id: string }) => {
 						<Link
 							className={cn(
 								"flex flex-row p-[8px] rounded-lg transition-colors items-center justify-center cursor-pointer font-semibold hover:text-primary",
-								showIndicator && (theme.dark ? "bg-secondary text-primary" : "bg-[lightgray] text-primary"),
-								theme.dark && !showIndicator && "text-muted-foreground"
+								showIndicator && (dark ? "bg-secondary text-primary" : "bg-[lightgray] text-primary"),
+								dark && !showIndicator && "text-muted-foreground"
 							)}
 							onClick={onClick}
 							to={link.to}
@@ -118,11 +120,7 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === "mounts" && <HardDrive size={iconSize} />}
 							{id === baseFolderUUID && (
 								<img
-									src={
-										theme.dark
-											? "https://drive.filen.io/static/media/light_logo.9f8ed143e54adb31009008c527f52c95.svg"
-											: "https://drive.filen.io/static/media/dark_logo.41ab3ed5c0117abdb8e47d6bac43d9ae.svg"
-									}
+									src={dark ? LightLogo : DarkLogo}
 									className="w-[22px] h-[22px]"
 									draggable={false}
 								/>

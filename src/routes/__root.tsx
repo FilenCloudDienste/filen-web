@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@/providers/themeProvider"
+import { ThemeProvider, useTheme } from "@/providers/themeProvider"
 import { createRootRoute, Outlet } from "@tanstack/react-router"
 import { memo, useEffect, useState, useRef, useCallback } from "react"
 import { Toaster } from "@/components/ui/toaster"
@@ -27,6 +27,9 @@ import NoteParticipantsDialog from "@/components/dialogs/noteParticipants"
 import { setup as setupApp } from "@/lib/setup"
 import CookieConsent from "@/components/cookieConsent"
 import ProfileDialog from "@/components/dialogs/profile"
+import DarkLogo from "@/assets/img/dark_logo.svg"
+import LightLogo from "@/assets/img/light_logo.svg"
+import useIsMobile from "@/hooks/useIsMobile"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -70,6 +73,21 @@ export const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
 	}
 }
 
+export const Loading = memo(() => {
+	const { dark } = useTheme()
+	const isMobile = useIsMobile()
+
+	return (
+		<div className="flex flex-row w-screen h-[100dvh] items-center justify-center">
+			<img
+				src={dark ? LightLogo : DarkLogo}
+				className={isMobile ? "w-[80px] h-[80px]" : "w-[128px] h-[128px]"}
+				draggable={false}
+			/>
+		</div>
+	)
+})
+
 export const Root = memo(() => {
 	const [ready, setReady] = useState<boolean>(false)
 	const [authed] = useLocalStorage<boolean>("authed", false)
@@ -96,10 +114,6 @@ export const Root = memo(() => {
 		}
 	}, [setup])
 
-	if (!ready || isRestoring) {
-		return null
-	}
-
 	return (
 		<main className="overflow-hidden">
 			<ThemeProvider>
@@ -107,37 +121,43 @@ export const Root = memo(() => {
 					client={persistantQueryClient}
 					persistOptions={persistOptions}
 				>
-					<CookieConsent>
-						{authed ? (
-							<>
-								<DropZone>
-									<DragSelect>
-										<NotificationHandler>
-											<ActivityHandler>
-												<Outlet />
-											</ActivityHandler>
-										</NotificationHandler>
-									</DragSelect>
-								</DropZone>
-								<SelectDriveItemDialog />
-								<SelectContactsDialog />
-								<PublicLinkDialog />
-								<SharedWithDialog />
-								<FileVersionsDialog />
-								<NoteHistoryDialog />
-								<NoteParticipantsDialog />
-							</>
-						) : (
-							<Outlet />
-						)}
-						<Transfers />
-						<PreviewDialog />
-						<InputDialog />
-						<ConfirmDialog />
-						<TransparentFullScreenImageDialog />
-						<TwoFactorCodeDialog />
-						<ProfileDialog />
-					</CookieConsent>
+					{!ready || isRestoring ? (
+						<Loading />
+					) : (
+						<>
+							<CookieConsent>
+								{authed ? (
+									<>
+										<DropZone>
+											<DragSelect>
+												<NotificationHandler>
+													<ActivityHandler>
+														<Outlet />
+													</ActivityHandler>
+												</NotificationHandler>
+											</DragSelect>
+										</DropZone>
+										<SelectDriveItemDialog />
+										<SelectContactsDialog />
+										<PublicLinkDialog />
+										<SharedWithDialog />
+										<FileVersionsDialog />
+										<NoteHistoryDialog />
+										<NoteParticipantsDialog />
+									</>
+								) : (
+									<Outlet />
+								)}
+								<Transfers />
+								<PreviewDialog />
+								<InputDialog />
+								<ConfirmDialog />
+								<TransparentFullScreenImageDialog />
+								<TwoFactorCodeDialog />
+								<ProfileDialog />
+							</CookieConsent>
+						</>
+					)}
 				</PersistQueryClientProvider>
 			</ThemeProvider>
 			<Toaster />

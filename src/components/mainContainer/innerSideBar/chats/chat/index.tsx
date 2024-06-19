@@ -9,6 +9,7 @@ import worker from "@/lib/worker"
 import { useQuery } from "@tanstack/react-query"
 import { getConversationName } from "../utils"
 import ChatAvatar from "@/components/chatAvatar"
+import { useTranslation } from "react-i18next"
 
 export const Chat = memo(
 	({
@@ -25,6 +26,7 @@ export const Chat = memo(
 		routeParent: string
 	}) => {
 		const { conversationsUnread, setConversationsUnread } = useChatsStore()
+		const { t } = useTranslation()
 
 		const query = useQuery({
 			queryKey: ["chatConversationUnreadCount", conversation.uuid],
@@ -39,11 +41,11 @@ export const Chat = memo(
 			const foundSender = conversation.participants.filter(p => p.userId === conversation.lastMessageSender)
 
 			if (foundSender.length !== 1 || !foundSender[0]) {
-				return "UnknownUser"
+				return t("unknownUser")
 			}
 
 			return foundSender[0].nickName.length > 0 ? foundSender[0].nickName : foundSender[0].email
-		}, [conversation.participants, conversation.lastMessageSender])
+		}, [conversation.participants, conversation.lastMessageSender, t])
 
 		const select = useCallback(() => {
 			query.refetch().catch(console.error)

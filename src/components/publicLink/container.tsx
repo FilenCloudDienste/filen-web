@@ -12,6 +12,9 @@ import useWindowSize from "@/hooks/useWindowSize"
 import { useTranslation } from "react-i18next"
 import ReportDialog from "./reportDialog"
 import eventEmitter from "@/lib/eventEmitter"
+import { useTheme } from "@/providers/themeProvider"
+import DarkLogo from "@/assets/img/dark_logo.svg"
+import LightLogo from "@/assets/img/light_logo.svg"
 
 export const Container = memo(({ children, loading, hasInfo }: { children: React.ReactNode; loading: boolean; hasInfo: boolean }) => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
@@ -20,6 +23,7 @@ export const Container = memo(({ children, loading, hasInfo }: { children: React
 	const location = useLocation()
 	const windowSize = useWindowSize()
 	const { t } = useTranslation()
+	const { dark } = useTheme()
 
 	const widths = useMemo(() => {
 		const sideBar = isMobile ? 0 : windowSize.width > 1200 ? 350 : 250
@@ -53,7 +57,7 @@ export const Container = memo(({ children, loading, hasInfo }: { children: React
 							draggable={false}
 						>
 							<img
-								src="https://drive.filen.io/static/media/light_logo.9f8ed143e54adb31009008c527f52c95.svg"
+								src={dark ? LightLogo : DarkLogo}
 								className="w-6 h-6"
 								draggable={false}
 							/>

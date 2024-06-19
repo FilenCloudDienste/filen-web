@@ -563,7 +563,6 @@ export const Message = memo(
 													participants={conversation.participants}
 													failed={didMessageFail}
 													edited={message.edited}
-													t={t}
 												/>
 											</div>
 											{embed}

@@ -99,6 +99,14 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 		}
 	}, [item, errorToast])
 
+	const preview = useCallback(() => {
+		setHidePreview(false)
+	}, [])
+
+	const hidePreviewFn = useCallback(() => {
+		setHidePreview(true)
+	}, [])
+
 	const topBar = useMemo(() => {
 		if (!item || urlState.chatEmbed) {
 			return null
@@ -124,7 +132,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				</div>
 				<div className="flex flex-row gap-2 items-center shrink-0">
 					<Button
-						onClick={() => setHidePreview(true)}
+						onClick={hidePreviewFn}
 						className="items-center gap-2 shrink-0"
 						size="sm"
 						variant="secondary"
@@ -143,7 +151,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				</div>
 			</div>
 		)
-	}, [item, dark, download, isMobile, urlState.chatEmbed])
+	}, [item, dark, download, isMobile, urlState.chatEmbed, hidePreviewFn])
 
 	const loader = useMemo(() => {
 		return (
@@ -152,10 +160,6 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				className="animate-spin-medium"
 			/>
 		)
-	}, [])
-
-	const preview = useCallback(() => {
-		setHidePreview(false)
 	}, [])
 
 	const normal = useMemo(() => {

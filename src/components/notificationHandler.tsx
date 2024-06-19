@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo } from "react"
+import { memo, useCallback, useEffect } from "react"
 import socket from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import { IS_DESKTOP } from "@/constants"
@@ -13,6 +13,8 @@ import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { useTranslation } from "react-i18next"
+import { usePublicLinkURLState } from "@/hooks/usePublicLink"
+import { useContactsStore } from "@/stores/contacts.store"
 
 export const triggeredNotificationUUIDs: Record<string, boolean> = {}
 export const notificationMutex = new Semaphore(1)
@@ -25,23 +27,21 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 	const navigate = useNavigate()
 	const location = useLocation()
 	const windowFocus = useWindowFocus()
-	const { setSelectedConversation } = useChatsStore()
+	const { setSelectedConversation, unread } = useChatsStore()
 	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const { t } = useTranslation()
-
-	const isInsidePublicLink = useMemo(() => {
-		return location.includes("/f/") || location.includes("/d/")
-	}, [location])
+	const publicLinkURLState = usePublicLinkURLState()
+	const { requestsInCount } = useContactsStore()
 
 	const chatConversationsQuery = useQuery({
-		queryKey: ["listChatsConversations", authed, isInsidePublicLink],
-		queryFn: () => (authed && !isInsidePublicLink ? worker.listChatsConversations() : Promise.resolve([]))
+		queryKey: ["listChatsConversations", authed, publicLinkURLState.isPublicLink],
+		queryFn: () => (authed && !publicLinkURLState.isPublicLink ? worker.listChatsConversations() : Promise.resolve([]))
 	})
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
-			if (!authed || isInsidePublicLink) {
+			if (!authed || publicLinkURLState.isPublicLink) {
 				return
 			}
 
@@ -185,10 +185,27 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 			setSelectedConversation,
 			contactNotificationsEnabled,
 			authed,
-			isInsidePublicLink,
+			publicLinkURLState.isPublicLink,
 			t
 		]
 	)
+
+	useEffect(() => {
+		const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
+
+		if (!link) {
+			return
+		}
+
+		const oldHref = link.href
+		const newHref = unread + requestsInCount > 0 ? "./notification-favicon.ico" : "./favicon.ico"
+
+		if (newHref === oldHref) {
+			return
+		}
+
+		link.href = newHref
+	}, [unread, requestsInCount])
 
 	useEffect(() => {
 		socket.addListener("socketEvent", socketEventListener)

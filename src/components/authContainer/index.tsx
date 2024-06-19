@@ -1,9 +1,13 @@
 import { memo } from "react"
 import { Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
+import { useTheme } from "@/providers/themeProvider"
+import DarkLogo from "@/assets/img/dark_logo.svg"
+import LightLogo from "@/assets/img/light_logo.svg"
 
 export const AuthContainer = memo(({ children }: { children: React.ReactNode }) => {
 	const { t } = useTranslation()
+	const { dark } = useTheme()
 
 	return (
 		<div className="flex h-[100dvh] w-screen flex-col overflow-y-auto overflow-x-hidden">
@@ -13,7 +17,7 @@ export const AuthContainer = memo(({ children }: { children: React.ReactNode }) 
 				draggable={false}
 			>
 				<img
-					src="https://drive.filen.io/static/media/light_logo.9f8ed143e54adb31009008c527f52c95.svg"
+					src={dark ? LightLogo : DarkLogo}
 					className="w-7 h-7"
 					draggable={false}
 				/>

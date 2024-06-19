@@ -635,34 +635,38 @@ export const ContextMenu = memo(
 							{t("contextMenus.item.rename")}
 						</ContextMenuItem>
 					)}
-					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.sharedOut && !driveURLState.publicLink && (
-						<>
-							<ContextMenuSub>
-								<ContextMenuSubTrigger
-									className="cursor-pointer gap-3"
-									onClick={e => e.stopPropagation()}
-								>
-									<Move size={iconSize} />
-									{t("contextMenus.item.move")}
-								</ContextMenuSubTrigger>
-								<ContextMenuSubContent>
-									<ContextMenuItem
-										onClick={move}
+					{!driveURLState.sharedIn &&
+						!driveURLState.trash &&
+						!driveURLState.sharedOut &&
+						!driveURLState.publicLink &&
+						!driveURLState.links && (
+							<>
+								<ContextMenuSub>
+									<ContextMenuSubTrigger
 										className="cursor-pointer gap-3"
+										onClick={e => e.stopPropagation()}
 									>
-										{t("contextMenus.item.selectDestination")}
-									</ContextMenuItem>
-									<ContextMenuSeparator />
-									<MoveTree
-										parent={baseFolderUUID}
-										name={t("contextMenus.item.cloudDrive")}
-									/>
-								</ContextMenuSubContent>
-							</ContextMenuSub>
-							{selectedItems.length > 1 && <ContextMenuSeparator />}
-						</>
-					)}
-					{selectedItems.length === 1 && (
+										<Move size={iconSize} />
+										{t("contextMenus.item.move")}
+									</ContextMenuSubTrigger>
+									<ContextMenuSubContent>
+										<ContextMenuItem
+											onClick={move}
+											className="cursor-pointer gap-3"
+										>
+											{t("contextMenus.item.selectDestination")}
+										</ContextMenuItem>
+										<ContextMenuSeparator />
+										<MoveTree
+											parent={baseFolderUUID}
+											name={t("contextMenus.item.cloudDrive")}
+										/>
+									</ContextMenuSubContent>
+								</ContextMenuSub>
+								{selectedItems.length > 1 && <ContextMenuSeparator />}
+							</>
+						)}
+					{selectedItems.length === 1 && !publicLinkURLState.isPublicLink && (
 						<>
 							<ContextMenuSeparator />
 							<ContextMenuItem

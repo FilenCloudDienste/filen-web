@@ -74,6 +74,8 @@ export const Notes = memo(() => {
 		}
 	}, [selectedNote, setSelectedNote, setNotes, loadingToast, errorToast, t])
 
+	const noop = useCallback(() => {}, [])
+
 	if (!selectedNote) {
 		return null
 	}
@@ -108,7 +110,7 @@ export const Notes = memo(() => {
 				<div className="flex flex-row">
 					<ContextMenu
 						note={selectedNote}
-						setHovering={() => {}}
+						setHovering={noop}
 					>
 						<div
 							className="flex flex-row p-1 rounded-md hover:bg-secondary cursor-pointer"

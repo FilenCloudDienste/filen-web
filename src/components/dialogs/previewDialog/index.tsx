@@ -60,6 +60,10 @@ export const PreviewDialog = memo(() => {
 	const location = useLocation()
 
 	const itemsOrdered = useMemo(() => {
+		if (!open) {
+			return driveItems
+		}
+
 		if (location.includes("recents")) {
 			return orderItemsByType({
 				items: driveItems,
@@ -73,17 +77,17 @@ export const PreviewDialog = memo(() => {
 			items: driveItems,
 			type: sortBy ? sortBy : "nameAsc"
 		})
-	}, [driveItems, location, driveSortBy, routeParent])
+	}, [driveItems, location, driveSortBy, routeParent, open])
 
 	const itemsFiltered = useMemo(() => {
-		if (driveSearchTerm.length === 0) {
+		if (driveSearchTerm.length === 0 || !open) {
 			return itemsOrdered
 		}
 
 		const searchTermLowered = driveSearchTerm.trim().toLowerCase()
 
 		return itemsOrdered.filter(item => item.name.toLowerCase().includes(searchTermLowered))
-	}, [itemsOrdered, driveSearchTerm])
+	}, [itemsOrdered, driveSearchTerm, open])
 
 	const nextAndPreviousItems = useMemo(() => {
 		if (!item || didChange || publicLinkURLState.isPublicLink || !open) {
@@ -176,20 +180,17 @@ export const PreviewDialog = memo(() => {
 	}, [nextAndPreviousItems, canGoToNextItem])
 
 	const readOnly = useMemo(() => {
-		if (publicLinkURLState.isPublicLink) {
-			return true
-		}
-
-		if (!canUpload && !driveURLState.links && !driveURLState.sharedOut) {
-			return true
-		}
-
-		if (item && typeof item.parent !== "string") {
+		if (
+			publicLinkURLState.isPublicLink ||
+			(!canUpload && !driveURLState.links && !driveURLState.sharedOut) ||
+			(item && typeof item.parent !== "string") ||
+			["docx", "image", "video", "audio", "pdf"].includes(previewType)
+		) {
 			return true
 		}
 
 		return false
-	}, [canUpload, publicLinkURLState.isPublicLink, driveURLState.links, driveURLState.sharedOut, item])
+	}, [canUpload, publicLinkURLState.isPublicLink, driveURLState.links, driveURLState.sharedOut, item, previewType])
 
 	const cleanup = useCallback(() => {
 		setTimeout(() => {

@@ -9,6 +9,7 @@ import { Emoji } from "emoji-mart"
 import { TooltipContent, Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Copy } from "lucide-react"
 import { validate as validateUUID } from "uuid"
+import { useTranslation } from "react-i18next"
 
 export const MENTION_REGEX = /(@[\w.-]+@[\w.-]+\.\w+|@everyone)/g
 export const customEmojisList = customEmojis.map(emoji => emoji.id)
@@ -57,15 +58,15 @@ export const ReplaceMessageWithComponents = memo(
 		content,
 		participants,
 		failed,
-		edited,
-		t
+		edited
 	}: {
 		content: string
 		participants: ChatConversationParticipant[]
 		failed: boolean
 		edited: boolean
-		t: TFunction<"translation", undefined>
 	}) => {
+		const { t } = useTranslation()
+
 		const copy = useCallback(async (text: string) => {
 			try {
 				await navigator.clipboard.writeText(text)
@@ -101,7 +102,7 @@ export const ReplaceMessageWithComponents = memo(
 									key={key}
 									className="bg-indigo-500 rounded-sm p-[1px] px-1 text-white select-note"
 								>
-									<p>@everyone</p>
+									<p>@{t("everyone")}</p>
 								</div>
 							)
 						}
@@ -112,7 +113,7 @@ export const ReplaceMessageWithComponents = memo(
 									key={key}
 									className="bg-indigo-500 rounded-sm p-[1px] px-1 text-white select-note"
 								>
-									<p>@UnknownUser</p>
+									<p>@{t("unknownUser")}</p>
 								</div>
 							)
 						}
@@ -125,7 +126,7 @@ export const ReplaceMessageWithComponents = memo(
 									key={key}
 									className="bg-indigo-500 rounded-sm p-[1px] px-1 text-white select-note"
 								>
-									<p>@UnknownUser</p>
+									<p>@{t("unknownUser")}</p>
 								</div>
 							)
 						}
@@ -258,7 +259,7 @@ export const ReplaceMessageWithComponents = memo(
 				},
 				input: content
 			})
-		}, [content, participants, copy])
+		}, [content, participants, copy, t])
 
 		return (
 			<div className={cn("flex flex-row flex-wrap gap-1 w-full h-auto", failed && "text-red-500")}>
@@ -299,6 +300,8 @@ export const ReplaceMessageWithComponents = memo(
 
 export const ReplaceMessageWithComponentsInline = memo(
 	({ content, participants }: { content: string; participants: ChatConversationParticipant[] }) => {
+		const { t } = useTranslation()
+
 		const replaced = useMemo(() => {
 			return regexifyString({
 				pattern: messageContentRegex,
@@ -314,7 +317,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 									key={key}
 									className="line-clamp-1 shrink-0"
 								>
-									@everyone
+									@{t("everyone")}
 								</p>
 							)
 						}
@@ -325,7 +328,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 									key={key}
 									className="line-clamp-1 shrink-0"
 								>
-									@UnknownUser
+									@{t("unknownUser")}
 								</p>
 							)
 						}
@@ -338,7 +341,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 									key={key}
 									className="line-clamp-1 shrink-0"
 								>
-									@UnknownUser
+									@{t("unknownUser")}
 								</p>
 							)
 						}
@@ -427,7 +430,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 				},
 				input: content
 			})
-		}, [content, participants])
+		}, [content, participants, t])
 
 		return (
 			<div className="flex flex-row overflow-hidden gap-1 line-clamp-1 text-ellipsis break-all">
