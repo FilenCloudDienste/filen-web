@@ -23,6 +23,11 @@ import Audio from "./audio"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import useDriveURLState from "@/hooks/useDriveURLState"
 import { readFileAndSanitize } from "@/lib/worker/proxy"
+import { useLocalStorage } from "@uidotdev/usehooks"
+import { type DriveSortBy } from "@/components/drive/list/header"
+import { orderItemsByType } from "@/components/drive/utils"
+import useLocation from "@/hooks/useLocation"
+import { Button } from "@/components/ui/button"
 
 const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
 
@@ -48,9 +53,37 @@ export const PreviewDialog = memo(() => {
 	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore()
 	const [previewType, setPreviewType] = useState<string>("")
 	const canUpload = useCanUpload()
-	const { items } = useDriveItemsStore()
+	const { items: driveItems, searchTerm: driveSearchTerm } = useDriveItemsStore()
 	const publicLinkURLState = usePublicLinkURLState()
 	const driveURLState = useDriveURLState()
+	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
+	const location = useLocation()
+
+	const itemsOrdered = useMemo(() => {
+		if (location.includes("recents")) {
+			return orderItemsByType({
+				items: driveItems,
+				type: "uploadDateDesc"
+			})
+		}
+
+		const sortBy = driveSortBy[routeParent]
+
+		return orderItemsByType({
+			items: driveItems,
+			type: sortBy ? sortBy : "nameAsc"
+		})
+	}, [driveItems, location, driveSortBy, routeParent])
+
+	const itemsFiltered = useMemo(() => {
+		if (driveSearchTerm.length === 0) {
+			return itemsOrdered
+		}
+
+		const searchTermLowered = driveSearchTerm.trim().toLowerCase()
+
+		return itemsOrdered.filter(item => item.name.toLowerCase().includes(searchTermLowered))
+	}, [itemsOrdered, driveSearchTerm])
 
 	const nextAndPreviousItems = useMemo(() => {
 		if (!item || didChange || publicLinkURLState.isPublicLink || !open) {
@@ -62,7 +95,7 @@ export const PreviewDialog = memo(() => {
 			}
 		}
 
-		const itemIndex = items.findIndex(i => i.uuid === item.uuid)
+		const itemIndex = itemsFiltered.findIndex(i => i.uuid === item.uuid)
 
 		if (itemIndex === -1) {
 			return {
@@ -76,8 +109,8 @@ export const PreviewDialog = memo(() => {
 		let nextItem: DriveCloudItem | null = null
 		let previousItem: DriveCloudItem | null = null
 
-		for (let i = itemIndex; i <= items.length; i++) {
-			const nItem = items[i]
+		for (let i = itemIndex; i <= itemsFiltered.length; i++) {
+			const nItem = itemsFiltered[i]
 
 			if (nItem && goToPreviewTypes.includes(fileNameToPreviewType(nItem.name)) && i !== itemIndex) {
 				nextItem = nItem
@@ -87,7 +120,7 @@ export const PreviewDialog = memo(() => {
 		}
 
 		for (let i = itemIndex; i >= 0; i--) {
-			const pItem = items[i]
+			const pItem = itemsFiltered[i]
 
 			if (pItem && goToPreviewTypes.includes(fileNameToPreviewType(pItem.name)) && i !== itemIndex) {
 				previousItem = pItem
@@ -102,7 +135,7 @@ export const PreviewDialog = memo(() => {
 			nextItemPreviewType: nextItem ? fileNameToPreviewType(nextItem.name) : null,
 			previousItemPreviewType: previousItem ? fileNameToPreviewType(previousItem.name) : null
 		}
-	}, [item, items, didChange, publicLinkURLState.isPublicLink, open])
+	}, [item, itemsFiltered, didChange, publicLinkURLState.isPublicLink, open])
 
 	const canGoToPreviousItem = useMemo(() => {
 		return (
@@ -446,7 +479,7 @@ export const PreviewDialog = memo(() => {
 										)}
 									</>
 								)}
-								{readOnly && (
+								{readOnly && (previewType === "text" || previewType === "code" || previewType === "md") && (
 									<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 										<Tooltip>
 											<TooltipTrigger asChild={true}>
@@ -468,20 +501,24 @@ export const PreviewDialog = memo(() => {
 						{goToPreviewTypes.includes(previewType) && !publicLinkURLState.isPublicLink && (
 							<>
 								{canGoToPreviousItem && (
-									<div
-										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full bg-secondary cursor-pointer left-4 opacity-75 text-primary"
+									<Button
+										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full left-4 opacity-75 text-primary"
 										onClick={goToPreviousItem}
+										variant="secondary"
+										size="icon"
 									>
-										<ArrowLeft />
-									</div>
+										<ArrowLeft size={18} />
+									</Button>
 								)}
 								{canGoToNextItem && (
-									<div
-										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full bg-secondary cursor-pointer right-4 opacity-75 text-primary"
+									<Button
+										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full right-4 opacity-75 text-primary"
 										onClick={goToNextItem}
+										variant="secondary"
+										size="icon"
 									>
-										<ArrowRight />
-									</div>
+										<ArrowRight size={18} />
+									</Button>
 								)}
 							</>
 						)}

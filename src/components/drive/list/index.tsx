@@ -38,12 +38,18 @@ export const List = memo(() => {
 
 	const itemsOrdered = useMemo(() => {
 		if (location.includes("recents")) {
-			return orderItemsByType({ items, type: "uploadDateDesc" })
+			return orderItemsByType({
+				items,
+				type: "uploadDateDesc"
+			})
 		}
 
 		const sortBy = driveSortBy[parent]
 
-		return orderItemsByType({ items, type: sortBy ? sortBy : "nameAsc" })
+		return orderItemsByType({
+			items,
+			type: sortBy ? sortBy : "nameAsc"
+		})
 	}, [items, location, driveSortBy, parent])
 
 	const itemsFiltered = useMemo(() => {
