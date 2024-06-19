@@ -150,7 +150,10 @@ export const ContextMenu = memo(
 				const itemsToMove = selectedItems.filter(item => item.parent !== parentItem.uuid)
 				const movedUUIDs = itemsToMove.map(item => item.uuid)
 
-				await actions.move({ selectedItems: itemsToMove, parent: parentItem.uuid })
+				await actions.move({
+					selectedItems: itemsToMove,
+					parent: parentItem.uuid
+				})
 
 				setItems(prev => prev.filter(prevItem => !movedUUIDs.includes(prevItem.uuid)))
 			} catch (e) {

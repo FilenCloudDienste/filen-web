@@ -53,7 +53,10 @@ export const MoveTree = memo(({ parent, name }: { parent: string; name: string }
 			try {
 				const itemsToMove = selectedItems.filter(item => item.parent !== parent)
 
-				await moveAction({ selectedItems: itemsToMove, parent })
+				await moveAction({
+					selectedItems: itemsToMove,
+					parent
+				})
 
 				const movedUUIDs = itemsToMove.map(item => item.uuid)
 
