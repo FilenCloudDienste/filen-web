@@ -9,7 +9,7 @@ import {
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { useTranslation } from "react-i18next"
 import useSDKConfig from "@/hooks/useSDKConfig"
-import { Text, Copy, Delete } from "lucide-react"
+import { Text, Copy, Delete, CheckCircle } from "lucide-react"
 import worker from "@/lib/worker"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
@@ -28,10 +28,14 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 	const { userId } = useSDKConfig()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
-	const { setConversations, setSelectedConversation } = useChatsStore()
+	const { setConversations, setSelectedConversation, conversationsUnread } = useChatsStore()
 	const successToast = useSuccessToast()
 	const navigate = useNavigate()
 	const routeParent = useRouteParent()
+
+	const unreadCount = useMemo(() => {
+		return conversationsUnread[conversation.uuid] ? conversationsUnread[conversation.uuid]! : 0
+	}, [conversationsUnread, conversation.uuid])
 
 	const hasWritePermissions = useMemo((): boolean => {
 		return conversation.ownerId === userId
@@ -163,6 +167,10 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		}
 	}, [conversation.uuid, errorToast, loadingToast, setConversations, setSelectedConversation, routeParent, navigate, t])
 
+	const markAsRead = useCallback(() => {
+		eventEmitter.emit("chatMarkAsRead")
+	}, [])
+
 	useEffect(() => {
 		const editConversationNameListener = eventEmitter.on("editConversationName", conversationUUID => {
 			if (conversationUUID !== conversation.uuid) {
@@ -181,6 +189,15 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		<CM>
 			<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
 			<ContextMenuContent className="min-w-48">
+				{unreadCount > 0 && (
+					<ContextMenuItem
+						onClick={markAsRead}
+						className="cursor-pointer gap-3"
+					>
+						<CheckCircle size={iconSize} />
+						{t("chats.markAsRead")}
+					</ContextMenuItem>
+				)}
 				{hasWritePermissions && (
 					<>
 						<ContextMenuItem
