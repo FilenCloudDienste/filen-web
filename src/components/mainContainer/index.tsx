@@ -128,12 +128,18 @@ export const InnerSideBarWrapper = memo(
 			)
 		}
 
-		if (location.includes("settings") || location.includes("chats") || location.includes("contacts") || location.includes("drive")) {
+		if (
+			location.includes("settings") ||
+			location.includes("chats") ||
+			location.includes("contacts") ||
+			location.includes("/drive") ||
+			location.includes("mounts")
+		) {
 			return (
 				<div
 					className={cn(
 						"flex flex-col border-r",
-						location.includes("drive") || location.includes("chats") || location.includes("notes") ? "w-[250px]" : "w-[225px]"
+						location.includes("/drive") || location.includes("chats") || location.includes("notes") ? "w-[250px]" : "w-[225px]"
 					)}
 					id="left-resizable-panel"
 				>
@@ -232,7 +238,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 					order={2}
 					id="right-resizable-panel"
 				>
-					{!location.includes("terminal") && <TopBar />}
+					{!location.includes("terminal") && !location.includes("mounts") && <TopBar />}
 					<div className="flex grow">{children}</div>
 				</ResizablePanel>
 			</ResizablePanelGroup>

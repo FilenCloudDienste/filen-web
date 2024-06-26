@@ -33,7 +33,7 @@ export default function useCanUpload() {
 			!driveURLState.sharedIn &&
 			!driveURLState.sharedOut &&
 			!driveURLState.trash &&
-			location.includes("drive")
+			location.includes("/drive")
 		)
 	}, [driveURLState, location, routeParent])
 

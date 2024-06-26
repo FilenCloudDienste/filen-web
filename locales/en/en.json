@@ -187,7 +187,8 @@
 			"notes": "Notes",
 			"chats": "Chats",
 			"contacts": "Contacts",
-			"syncs": "Syncs"
+			"syncs": "Syncs",
+			"mounts": "Mounts"
 		},
 		"bottom": {
 			"settings": "Settings"
@@ -234,6 +235,11 @@
 			"blocked": "Blocked",
 			"in": "Requests",
 			"out": "Pending"
+		},
+		"mounts": {
+			"virtualDrive": "Virtual Drive",
+			"s3": "S3",
+			"webdav": "WebDAV"
 		}
 	},
 	"sideBar": {
@@ -1063,5 +1069,50 @@
 		"optOut": "Opt-out",
 		"onlyNeeded": "Only needed",
 		"accept": "Accept"
+	},
+	"mounts": {
+		"virtualDrive": {
+			"mountedAt": "Mounted at {{letter}}",
+			"browse": "Browse",
+			"clear": "Clear",
+			"cacheUsed": "{{size}} of {{max}} used",
+			"sections": {
+				"active": {
+					"name": "Active"
+				},
+				"enabled": {
+					"name": "Enabled",
+					"info": "Enable or disable the virtual drive. Refresh your explorer when toggling this option."
+				},
+				"driveLetter": {
+					"name": "Drive letter",
+					"info": "Set the drive letter for the virtual drive. Only available drive letters will show up."
+				},
+				"browse": {
+					"name": "Browse",
+					"info": "Browse the virtual drive using your default explorer."
+				},
+				"cache": {
+					"name": "Cache",
+					"info": "Caching significantly speeds up browsing your virtual drive."
+				},
+				"cacheSize": {
+					"name": "Cache size",
+					"info": "We recommend setting the cache size as high as possible. The client will use your local disk to significantly speed up the virtual drive."
+				}
+			},
+			"dialogs": {
+				"cleanupCache": {
+					"title": "Clear cache",
+					"description": "Are you sure you want to clear the local cache? This will restart the virtual drive and cancel all current operations. Clearing the cache will also significantly slow down initial file loading times.",
+					"continue": "Clear and restart"
+				},
+				"disable": {
+					"title": "Disable",
+					"description": "Are you sure you want to disable the virtual drive? Every active operation on it will be cancelled or will error. Please make sure you are not actively using it anymore.",
+					"continue": "Disable"
+				}
+			}
+		}
 	}
 }

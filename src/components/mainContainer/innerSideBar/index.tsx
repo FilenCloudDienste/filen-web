@@ -24,7 +24,7 @@ export const InnerSideBar = memo(() => {
 			? chatsTopDimensions.height
 			: location.includes("notes")
 				? notesTopDimensions.height
-				: location.includes("drive")
+				: location.includes("/drive")
 					? 48
 					: 24
 
@@ -43,7 +43,7 @@ export const InnerSideBar = memo(() => {
 					height: containerHeight
 				}}
 			>
-				{location.includes("drive") && (
+				{location.includes("/drive") && (
 					<>
 						<Button uuid={baseFolderUUID} />
 						<Divider />
@@ -77,6 +77,13 @@ export const InnerSideBar = memo(() => {
 						<Button uuid="contacts/in" />
 						<Button uuid="contacts/out" />
 						<Button uuid="contacts/blocked" />
+					</>
+				)}
+				{location.includes("mounts") && (
+					<>
+						<Button uuid="mounts/virtual-drive" />
+						<Button uuid="mounts/webdav" />
+						<Button uuid="mounts/s3" />
 					</>
 				)}
 			</div>

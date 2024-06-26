@@ -71,7 +71,7 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 		}
 	}, [createDirectory])
 
-	if (!location.includes("drive") || isMobile) {
+	if (!location.includes("/drive") || isMobile) {
 		return children
 	}
 

@@ -509,7 +509,7 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 	}
 
 	const writer = await fileHandle.createWritable()
-	const stream = await SDK.cloud().downloadFileToReadableStream({
+	const stream = SDK.cloud().downloadFileToReadableStream({
 		uuid: item.uuid,
 		bucket: item.bucket,
 		region: item.region,
@@ -1143,100 +1143,99 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 						return
 					}
 
-					SDK.cloud()
-						.downloadFileToReadableStream({
-							uuid: item.uuid,
-							bucket: item.bucket,
-							region: item.region,
-							version: item.version,
-							chunks: item.chunks,
-							size: item.size,
-							key: item.key,
-							pauseSignal: pauseSignals[directoryId],
-							abortSignal: abortControllers[directoryId]!.signal,
-							onQueued: () => {
-								if (didQueue) {
-									return
-								}
-
-								didQueue = true
-
-								postMessageToMain({
-									type: "download",
-									data: {
-										type: "queued",
-										uuid: directoryId,
-										name: directoryName
+					zipWriter
+						.add(
+							item.path,
+							SDK.cloud().downloadFileToReadableStream({
+								uuid: item.uuid,
+								bucket: item.bucket,
+								region: item.region,
+								version: item.version,
+								chunks: item.chunks,
+								size: item.size,
+								key: item.key,
+								pauseSignal: pauseSignals[directoryId],
+								abortSignal: abortControllers[directoryId]!.signal,
+								onQueued: () => {
+									if (didQueue) {
+										return
 									}
-								})
-							},
-							onStarted: () => {
-								if (didStart) {
-									return
-								}
 
-								didStart = true
+									didQueue = true
 
-								postMessageToMain({
-									type: "download",
-									data: {
-										type: "started",
-										uuid: directoryId,
-										name: directoryName,
-										size: directorySize
+									postMessageToMain({
+										type: "download",
+										data: {
+											type: "queued",
+											uuid: directoryId,
+											name: directoryName
+										}
+									})
+								},
+								onStarted: () => {
+									if (didStart) {
+										return
 									}
-								})
-							},
-							onProgress: transferred => {
-								postMessageToMain({
-									type: "download",
-									data: {
-										type: "progress",
-										uuid: directoryId,
-										name: directoryName,
-										bytes: transferred
+
+									didStart = true
+
+									postMessageToMain({
+										type: "download",
+										data: {
+											type: "started",
+											uuid: directoryId,
+											name: directoryName,
+											size: directorySize
+										}
+									})
+								},
+								onProgress: transferred => {
+									postMessageToMain({
+										type: "download",
+										data: {
+											type: "progress",
+											uuid: directoryId,
+											name: directoryName,
+											bytes: transferred
+										}
+									})
+								},
+								onError: async err => {
+									await zipWriter.close().catch(console.error)
+									await writer.abort(err).catch(console.error)
+
+									if (err instanceof DOMException && err.name === "AbortError") {
+										return
 									}
-								})
-							},
-							onError: async err => {
-								await zipWriter.close().catch(console.error)
-								await writer.abort(err).catch(console.error)
 
-								if (err instanceof DOMException && err.name === "AbortError") {
-									return
-								}
-
-								if (didError) {
-									return
-								}
-
-								didError = true
-
-								postMessageToMain({
-									type: "download",
-									data: {
-										type: "error",
-										uuid: directoryId,
-										name: directoryName,
-										size: directorySize,
-										err
+									if (didError) {
+										return
 									}
-								})
 
-								delete pauseSignals[directoryId]
-								delete abortControllers[directoryId]
+									didError = true
+
+									postMessageToMain({
+										type: "download",
+										data: {
+											type: "error",
+											uuid: directoryId,
+											name: directoryName,
+											size: directorySize,
+											err
+										}
+									})
+
+									delete pauseSignals[directoryId]
+									delete abortControllers[directoryId]
+								}
+							}),
+							{
+								lastModDate: new Date(item.lastModified),
+								lastAccessDate: new Date(item.lastModified),
+								creationDate: new Date(item.lastModified)
 							}
-						})
-						.then(stream => {
-							zipWriter
-								.add(item.path, stream, {
-									lastModDate: new Date(item.lastModified),
-									lastAccessDate: new Date(item.lastModified),
-									creationDate: new Date(item.lastModified)
-								})
-								.then(() => resolve())
-								.catch(reject)
-						})
+						)
+						.then(() => resolve())
 						.catch(reject)
 				})
 			})
@@ -1551,7 +1550,7 @@ export async function readFile({
 		abortControllers[item.uuid] = new AbortController()
 	}
 
-	const stream = await SDK.cloud().downloadFileToReadableStream({
+	const stream = SDK.cloud().downloadFileToReadableStream({
 		uuid: item.uuid,
 		bucket: item.bucket,
 		region: item.region,

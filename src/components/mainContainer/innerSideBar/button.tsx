@@ -30,12 +30,15 @@ import {
 	Send,
 	FolderOutput,
 	FolderInput,
-	Star
+	Star,
+	HardDrive,
+	Globe
 } from "lucide-react"
 import useLocation from "@/hooks/useLocation"
 import { useContactsStore } from "@/stores/contacts.store"
 import useAccount from "@/hooks/useAccount"
 import useIsMobile from "@/hooks/useIsMobile"
+import { TbBucket } from "react-icons/tb"
 
 export const Button = memo(({ uuid }: { uuid: string }) => {
 	const { baseFolderUUID } = useSDKConfig()
@@ -52,9 +55,15 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 		const uuidEx = uuid.split("/")
 
 		return {
-			to: uuid.includes("settings") ? "/settings/$type" : uuid.includes("contacts") ? "/contacts/$type" : "/drive/$",
+			to: uuid.includes("mounts")
+				? "/mounts/$type"
+				: uuid.includes("settings")
+					? "/settings/$type"
+					: uuid.includes("contacts")
+						? "/contacts/$type"
+						: "/drive/$",
 			params:
-				uuid.includes("settings") || uuid.includes("contacts")
+				uuid.includes("settings") || uuid.includes("contacts") || uuid.includes("mounts")
 					? {
 							type: uuidEx[1]
 						}
@@ -302,6 +311,33 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 							className="shrink-0"
 						/>
 						{!isMobile && <p>{t("innerSideBar.settings.plans")}</p>}
+					</>
+				)}
+				{uuid === "mounts/virtual-drive" && (
+					<>
+						<HardDrive
+							size={iconSize}
+							className="shrink-0"
+						/>
+						{!isMobile && <p>{t("innerSideBar.mounts.virtualDrive")}</p>}
+					</>
+				)}
+				{uuid === "mounts/webdav" && (
+					<>
+						<Globe
+							size={iconSize}
+							className="shrink-0"
+						/>
+						{!isMobile && <p>{t("innerSideBar.mounts.webdav")}</p>}
+					</>
+				)}
+				{uuid === "mounts/s3" && (
+					<>
+						<TbBucket
+							size={iconSize}
+							className="shrink-0"
+						/>
+						{!isMobile && <p>{t("innerSideBar.mounts.s3")}</p>}
 					</>
 				)}
 			</Link>

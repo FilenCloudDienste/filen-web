@@ -20,7 +20,7 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 	}, [location])
 
 	const canDisplay = useMemo(() => {
-		return location.includes("drive") || isInsidePublicLink
+		return location.includes("/drive") || isInsidePublicLink
 	}, [location, isInsidePublicLink])
 
 	const setItems = useMemo(() => {

@@ -30,6 +30,7 @@ import ProfileDialog from "@/components/dialogs/profile"
 import DarkLogo from "@/assets/img/dark_logo.svg"
 import LightLogo from "@/assets/img/light_logo.svg"
 import useIsMobile from "@/hooks/useIsMobile"
+import DesktopHandler from "@/components/desktopHandler"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -130,11 +131,13 @@ export const Root = memo(() => {
 									<>
 										<DropZone>
 											<DragSelect>
-												<NotificationHandler>
-													<ActivityHandler>
-														<Outlet />
-													</ActivityHandler>
-												</NotificationHandler>
+												<DesktopHandler>
+													<NotificationHandler>
+														<ActivityHandler>
+															<Outlet />
+														</ActivityHandler>
+													</NotificationHandler>
+												</DesktopHandler>
 											</DragSelect>
 										</DropZone>
 										<SelectDriveItemDialog />

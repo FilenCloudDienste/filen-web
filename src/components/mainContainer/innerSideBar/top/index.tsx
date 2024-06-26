@@ -24,7 +24,7 @@ export const Top = memo(() => {
 				<Link
 					className={cn(
 						"w-full flex flex-row items-center px-4 cursor-pointer",
-						location.includes("drive") ? "border-b h-12" : "h-6 mt-3"
+						location.includes("/drive") ? "border-b h-12" : "h-6 mt-3"
 					)}
 					to={
 						location.includes("settings")
@@ -37,14 +37,18 @@ export const Top = memo(() => {
 										? "/contacts/$type"
 										: location.includes("syncs")
 											? "/syncs"
-											: "/drive/$"
+											: location.includes("mounts")
+												? "/mounts/$type"
+												: "/drive/$"
 					}
 					params={
 						location.includes("settings")
 							? { type: "general" }
-							: location.includes("contacts")
-								? { type: "all" }
-								: { _splat: baseFolderUUID }
+							: location.includes("mounts")
+								? { type: "virtual-drive" }
+								: location.includes("contacts")
+									? { type: "all" }
+									: { _splat: baseFolderUUID }
 					}
 					draggable={false}
 				>
@@ -59,7 +63,9 @@ export const Top = memo(() => {
 										? t("innerSideBar.top.contacts")
 										: location.includes("syncs")
 											? t("innerSideBar.top.syncs")
-											: "Filen"}
+											: location.includes("mounts")
+												? t("innerSideBar.top.mounts")
+												: "Filen"}
 					</p>
 				</Link>
 			)}

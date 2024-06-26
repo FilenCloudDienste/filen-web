@@ -47,9 +47,9 @@ export const Button = memo(({ id }: { id: string }) => {
 				id === baseFolderUUID
 					? "/drive/$"
 					: id === "syncs"
-						? "/drive/$"
+						? "/syncs"
 						: id === "mounts"
-							? "/drive/$"
+							? "/mounts/$type"
 							: id === "notes"
 								? lastSelectedNote.length > 0
 									? "/notes/$uuid"
@@ -74,22 +74,26 @@ export const Button = memo(({ id }: { id: string }) => {
 						? {
 								type: "general"
 							}
-						: id === "contacts"
+						: id === "mounts"
 							? {
-									type: requestsInCount > 0 ? "in" : "all"
+									type: "virtual-drive"
 								}
-							: id === "notes" && lastSelectedNote.length > 0
-								? { uuid: lastSelectedNote }
-								: id === "chats" && lastSelectedChatsConversation.length > 0
-									? { uuid: lastSelectedChatsConversation }
-									: undefined
+							: id === "contacts"
+								? {
+										type: requestsInCount > 0 ? "in" : "all"
+									}
+								: id === "notes" && lastSelectedNote.length > 0
+									? { uuid: lastSelectedNote }
+									: id === "chats" && lastSelectedChatsConversation.length > 0
+										? { uuid: lastSelectedChatsConversation }
+										: undefined
 		}
 	}, [id, baseFolderUUID, lastSelectedNote, lastSelectedChatsConversation, requestsInCount])
 
 	const showIndicator = useMemo(() => {
 		return (
 			routeParent === id ||
-			(id === baseFolderUUID && location.includes("drive")) ||
+			(id === baseFolderUUID && location.includes("/drive")) ||
 			(id === "settings" && location.includes("settings")) ||
 			(id === "notes" && location.includes("notes")) ||
 			(id === "chats" && location.includes("chats")) ||

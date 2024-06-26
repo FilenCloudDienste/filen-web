@@ -11,7 +11,8 @@ export const Section = memo(
 		infoClassName,
 		childrenClassName,
 		subInfo,
-		subInfoClassName
+		subInfoClassName,
+		withBottomBorder = true
 	}: {
 		name: string
 		children: React.ReactNode
@@ -22,10 +23,11 @@ export const Section = memo(
 		childrenClassName?: string
 		subInfo?: string
 		subInfoClassName?: string
+		withBottomBorder?: boolean
 	}) => {
 		return (
 			<div className={cn("flex flex-col gap-3", className)}>
-				<div className="flex flex-row justify-between items-center gap-14 min-h-10">
+				<div className={cn("flex flex-row justify-between items-center gap-14", info || subInfo ? "min-h-10" : "min-h-6")}>
 					<div className="flex flex-col">
 						<p className={cn("line-clamp-1 text-ellipsis break-all", nameClassName)}>{name}</p>
 						{info && <p className={cn("text-sm text-muted-foreground", infoClassName)}>{info}</p>}
@@ -33,7 +35,7 @@ export const Section = memo(
 					</div>
 					<div className={cn("flex flex-row items-center gap-4", childrenClassName)}>{children}</div>
 				</div>
-				<div className="w-full h-[1px] bg-border" />
+				{withBottomBorder && <div className="w-full h-[1px] bg-border" />}
 			</div>
 		)
 	}

@@ -9,7 +9,7 @@ export default function useDriveURLState() {
 
 	const urlState = useMemo(() => {
 		return {
-			drive: location.includes("drive"),
+			drive: location.includes("/drive"),
 			trash: location.includes("trash"),
 			recents: location.includes("recents"),
 			favorites: location.includes("favorites"),
@@ -17,7 +17,9 @@ export default function useDriveURLState() {
 			sharedOut: location.includes("shared-out"),
 			links: location.includes("links"),
 			insideParent: parent.length === 36 && validateUUID(parent),
-			publicLink: location.includes("/d/") || location.includes("/f/")
+			publicLink: location.includes("/d/") || location.includes("/f/"),
+			mounts: location.includes("mounts"),
+			syncs: location.includes("syncs")
 		}
 	}, [location, parent])
 
