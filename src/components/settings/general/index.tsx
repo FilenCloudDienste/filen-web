@@ -10,7 +10,6 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import worker from "@/lib/worker"
 import { useNavigate } from "@tanstack/react-router"
-import { clear as clearLocalForage } from "@/lib/localForage"
 import { IS_DESKTOP } from "@/constants"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { Switch } from "@/components/ui/switch"
@@ -19,6 +18,7 @@ import { type NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import { useQuery } from "@tanstack/react-query"
 import Skeletons from "../skeletons"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
+import { logout } from "@/lib/setup"
 
 export const General = memo(() => {
 	const account = useAccount()
@@ -117,7 +117,7 @@ export const General = memo(() => {
 		[setDefaultNoteType]
 	)
 
-	const logout = useCallback(
+	const logoutFn = useCallback(
 		async (e: React.MouseEvent<HTMLParagraphElement, MouseEvent>) => {
 			if (!e.shiftKey) {
 				if (
@@ -135,9 +135,7 @@ export const General = memo(() => {
 			const toast = loadingToast()
 
 			try {
-				window.localStorage.clear()
-
-				await clearLocalForage()
+				await logout()
 
 				if (IS_DESKTOP) {
 					await window.desktopAPI.restart()
@@ -339,7 +337,7 @@ export const General = memo(() => {
 					>
 						<p
 							className="underline cursor-pointer text-red-500"
-							onClick={logout}
+							onClick={logoutFn}
 						>
 							{t("settings.general.sections.logout.action")}
 						</p>

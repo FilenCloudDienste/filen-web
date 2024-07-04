@@ -18,6 +18,7 @@ import { Route as NotesImport } from './routes/notes'
 import { Route as LoginImport } from './routes/login'
 import { Route as ChatsImport } from './routes/chats'
 import { Route as IndexImport } from './routes/index'
+import { Route as SyncsUuidImport } from './routes/syncs.$uuid'
 import { Route as SettingsTypeImport } from './routes/settings.$type'
 import { Route as ResetTokenImport } from './routes/reset.$token'
 import { Route as NotesUuidImport } from './routes/notes.$uuid'
@@ -63,6 +64,11 @@ const ChatsRoute = ChatsImport.update({
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const SyncsUuidRoute = SyncsUuidImport.update({
+  path: '/$uuid',
+  getParentRoute: () => SyncsRoute,
 } as any)
 
 const SettingsTypeRoute = SettingsTypeImport.update({
@@ -178,6 +184,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsTypeImport
       parentRoute: typeof rootRoute
     }
+    '/syncs/$uuid': {
+      preLoaderRoute: typeof SyncsUuidImport
+      parentRoute: typeof SyncsImport
+    }
   }
 }
 
@@ -189,7 +199,7 @@ export const routeTree = rootRoute.addChildren([
   LoginRoute,
   NotesRoute.addChildren([NotesUuidRoute]),
   RegisterRoute,
-  SyncsRoute,
+  SyncsRoute.addChildren([SyncsUuidRoute]),
   TerminalRoute,
   ContactsTypeRoute,
   DUuidRoute,

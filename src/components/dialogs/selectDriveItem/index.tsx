@@ -21,8 +21,9 @@ import { directoryUUIDToNameCache } from "@/cache"
 import { type DriveCloudItem } from "@/components/drive"
 import { Button } from "@/components/ui/button"
 
+export type ResponseItem = DriveCloudItem & { path: string }
 export type SelectionType = "file" | "directory" | "all"
-export type SelectDriveItemResponse = { cancelled: true } | { cancelled: false; items: DriveCloudItem[] }
+export type SelectDriveItemResponse = { cancelled: true } | { cancelled: false; items: ResponseItem[] }
 
 export async function selectDriveItem({
 	type = "directory",
@@ -34,7 +35,7 @@ export async function selectDriveItem({
 	return await new Promise<SelectDriveItemResponse>(resolve => {
 		const id = Math.random().toString(16).slice(2)
 
-		const listener = eventEmitter.on("selectDriveItemResponse", ({ items, id: i }: { items: DriveCloudItem[]; id: string }) => {
+		const listener = eventEmitter.on("selectDriveItemResponse", ({ items, id: i }: { items: ResponseItem[]; id: string }) => {
 			if (id !== i) {
 				return
 			}
@@ -63,7 +64,7 @@ export const SelectDriveItemDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
 	const { t } = useTranslation()
 	const requestId = useRef<string>("")
-	const [responseItems, setResponseItems] = useState<DriveCloudItem[]>([])
+	const [responseItems, setResponseItems] = useState<ResponseItem[]>([])
 	const didSubmit = useRef<boolean>(false)
 	const [pathname, setPathname] = useState<string>(baseFolderUUID)
 	const { setItems } = useDriveItemsStore()
@@ -120,23 +121,26 @@ export const SelectDriveItemDialog = memo(() => {
 		didSubmit.current = true
 
 		eventEmitter.emit("selectDriveItemResponse", {
-			items: {
-				type: "directory",
-				parent: "base",
-				uuid: baseFolderUUID,
-				lastModified: 0,
-				timestamp: 0,
-				name: "Cloud Drive",
-				favorited: false,
-				sharerEmail: "",
-				sharerId: 0,
-				receiverEmail: "",
-				receiverId: 0,
-				receivers: [],
-				color: null,
-				size: 0,
-				selected: false
-			} satisfies DriveCloudItem,
+			items: [
+				{
+					type: "directory",
+					parent: "base",
+					uuid: baseFolderUUID,
+					lastModified: 0,
+					timestamp: 0,
+					name: "Cloud Drive",
+					favorited: false,
+					sharerEmail: "",
+					sharerId: 0,
+					receiverEmail: "",
+					receiverId: 0,
+					receivers: [],
+					color: null,
+					size: 0,
+					selected: false,
+					path: "/"
+				} satisfies ResponseItem
+			],
 			id: requestId.current
 		})
 
@@ -157,7 +161,10 @@ export const SelectDriveItemDialog = memo(() => {
 				return
 			}
 
-			const item = await worker.createDirectory({ name: inputResponse.value, parent })
+			const item = await worker.createDirectory({
+				name: inputResponse.value,
+				parent
+			})
 
 			directoryUUIDToNameCache.set(item.uuid, inputResponse.value)
 

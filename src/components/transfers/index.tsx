@@ -11,6 +11,7 @@ import throttle from "lodash/throttle"
 import { ArrowDownUp } from "lucide-react"
 import { IS_DESKTOP } from "@/constants"
 import Transfer from "./transfer"
+import { type MainToWindowMessage } from "@filen/desktop/dist/ipc"
 
 export const transferStateSortingPriority: Record<TransferState, number> = {
 	started: 1,
@@ -25,7 +26,8 @@ export const Transfers = memo(() => {
 	const { t } = useTranslation()
 	const windowSize = useWindowSize()
 	const [open, setOpen] = useState<boolean>(false)
-	const { transfers, setTransfers, speed, setProgress, setRemaining, setSpeed, remaining, setFinishedTransfers } = useTransfersStore()
+	const { transfers, setTransfers, speed, setProgress, setRemaining, setSpeed, remaining, setFinishedTransfers, finishedTransfers } =
+		useTransfersStore()
 	const bytesSent = useRef<number>(0)
 	const allBytes = useRef<number>(0)
 	const progressStarted = useRef<number>(-1)
@@ -55,8 +57,10 @@ export const Transfers = memo(() => {
 	)
 
 	const transfersSorted = useMemo(() => {
-		return transfers.sort((a, b) => transferStateSortingPriority[a.state] - transferStateSortingPriority[b.state])
-	}, [transfers])
+		return transfers
+			.sort((a, b) => transferStateSortingPriority[a.state] - transferStateSortingPriority[b.state])
+			.concat(finishedTransfers.sort((a, b) => b.finishedTimestamp - a.finishedTimestamp))
+	}, [transfers, finishedTransfers])
 
 	const ongoingTransfers = useMemo(() => {
 		return transfersSorted.filter(
@@ -117,7 +121,7 @@ export const Transfers = memo(() => {
 	).current
 
 	const handleTransferUpdates = useCallback(
-		(message: WorkerToMainMessage) => {
+		(message: WorkerToMainMessage | MainToWindowMessage) => {
 			if (message.type === "download" || message.type === "upload") {
 				const now = Date.now()
 
@@ -157,7 +161,7 @@ export const Transfers = memo(() => {
 								? {
 										...transfer,
 										state: "started",
-										startedTimestamp: Date.now(),
+										startedTimestamp: now,
 										size: message.data.type === "started" ? message.data.size : 0
 									}
 								: transfer
@@ -176,7 +180,7 @@ export const Transfers = memo(() => {
 								? {
 										...transfer,
 										bytes: transfer.bytes + bytes,
-										progressTimestamp: Date.now()
+										progressTimestamp: now
 									}
 								: transfer
 						)
@@ -194,7 +198,7 @@ export const Transfers = memo(() => {
 							startedTimestamp: 0,
 							queuedTimestamp: now,
 							errorTimestamp: 0,
-							finishedTimestamp: Date.now(),
+							finishedTimestamp: now,
 							progressTimestamp: 0
 						}
 					])
@@ -206,7 +210,13 @@ export const Transfers = memo(() => {
 
 					setTransfers(prev =>
 						prev.map(transfer =>
-							transfer.uuid === message.data.uuid ? { ...transfer, state: "error", errorTimestamp: Date.now() } : transfer
+							transfer.uuid === message.data.uuid
+								? {
+										...transfer,
+										state: "error",
+										errorTimestamp: now
+									}
+								: transfer
 						)
 					)
 				} else if (message.data.type === "stopped") {

@@ -240,6 +240,10 @@
 			"virtualDrive": "Virtual Drive",
 			"s3": "S3",
 			"webdav": "WebDAV"
+		},
+		"syncs": {
+			"empty": "No syncs yet",
+			"emptyCreate": "Create one"
 		}
 	},
 	"sideBar": {
@@ -386,6 +390,31 @@
 			"block": "Block",
 			"remove": "Remove from contacts",
 			"unblock": "Unblock"
+		},
+		"createSync": {
+			"cancel": "Cancel",
+			"create": "Create",
+			"name": "Sync name",
+			"localPath": "Local path",
+			"remotePath": "Cloud path",
+			"select": "Select",
+			"syncMode": "Sync mode",
+			"title": "Create sync",
+			"mode": {
+				"twoWay": "Two way",
+				"localToCloud": "Local to cloud",
+				"localBackup": "Local backup",
+				"cloudToLocal": "Cloud to local",
+				"cloudBackup": "Cloud backup",
+				"twoWayInfo": "Mirror every action in both directions",
+				"localToCloudInfo": "Mirror every action done locally to the cloud but never act on cloud changes",
+				"localBackupInfo": "Only upload data to the cloud, never delete anything or act on cloud changes",
+				"cloudToLocalInfo": "Mirror every action done in the cloud locally but never act on local changes",
+				"cloudBackupInfo": "Only download data from the cloud, never delete anything or act on local changes"
+			},
+			"errors": {
+				"localPathNotWritable": "The local path you have selected is not writable. Please make sure the client can access it properly."
+			}
 		}
 	},
 	"contextMenus": {
@@ -1112,7 +1141,119 @@
 					"description": "Are you sure you want to disable the virtual drive? Every active operation on it will be cancelled or will error. Please make sure you are not actively using it anymore.",
 					"continue": "Disable"
 				}
+			},
+			"errors": {
+				"invalidMountPoint": "Invalid mount point."
 			}
+		},
+		"webdav": {
+			"copyConnect": "Copy",
+			"sections": {
+				"active": {
+					"name": "Active"
+				},
+				"enabled": {
+					"name": "Enabled",
+					"info": "Enable or disable the WebDAV server."
+				},
+				"protocol": {
+					"name": "HTTP Protocol",
+					"info": "Change the HTTP Protocol."
+				},
+				"hostname": {
+					"name": "Hostname",
+					"info": "Change the hostname the server should listen on."
+				},
+				"port": {
+					"name": "Port",
+					"info": "Change the port the server should listen on."
+				},
+				"authMode": {
+					"name": "Authentication mode",
+					"info": "Change the authentication mode."
+				},
+				"username": {
+					"name": "Username",
+					"info": "Change the HTTP authentication username. This is should not be your Filen email or nickname."
+				},
+				"password": {
+					"name": "Password",
+					"info": "Change the HTTP authentication password. This is should not be your Filen password."
+				},
+				"proxyMode": {
+					"name": "Proxy mode",
+					"info": "Enable the proxy mode."
+				},
+				"connect": {
+					"name": "Connect",
+					"info": "Copy the WebDAV URL."
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "Disable",
+					"description": "Are you sure you want to disable the WebDAV server? Every active operation on it will be cancelled or will error. Please make sure you are not actively using it anymore.",
+					"continue": "Disable"
+				}
+			},
+			"errors": {
+				"invalidPort": "Invalid port. Accepted range: {{range}}.",
+				"invalidHostname": "Invalid hostname."
+			}
+		},
+		"s3": {
+			"copyConnect": "Copy",
+			"sections": {
+				"active": {
+					"name": "Active"
+				},
+				"enabled": {
+					"name": "Enabled",
+					"info": "Enable or disable the S3 server."
+				},
+				"protocol": {
+					"name": "HTTP Protocol",
+					"info": "Change the HTTP Protocol."
+				},
+				"hostname": {
+					"name": "Hostname",
+					"info": "Change the hostname the server should listen on."
+				},
+				"port": {
+					"name": "Port",
+					"info": "Change the port the server should listen on."
+				},
+				"accessKeyId": {
+					"name": "AccessKeyId",
+					"info": "Change the AccessKeyId. This is should not be your Filen email or nickname."
+				},
+				"secretKeyId": {
+					"name": "SecretKeyId",
+					"info": "Change the SecretKeyId. This is should not be your Filen password."
+				},
+				"connect": {
+					"name": "Connect",
+					"info": "Copy the WebDAV URL."
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "Disable",
+					"description": "Are you sure you want to disable the S3 server? Every active operation on it will be cancelled or will error. Please make sure you are not actively using it anymore.",
+					"continue": "Disable"
+				}
+			},
+			"errors": {
+				"invalidPort": "Invalid port. Accepted range: {{range}}.",
+				"invalidHostname": "Invalid hostname."
+			}
+		}
+	},
+	"syncs": {
+		"empty": {
+			"title": "No syncs setup yet",
+			"description": "You can sync your local directories with the cloud or cloud directories with your device",
+			"create": "Create"
 		}
 	}
 }

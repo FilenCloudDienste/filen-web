@@ -4,14 +4,14 @@ import worker from "@/lib/worker"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import useLocation from "@/hooks/useLocation"
 import useMountedEffect from "@/hooks/useMountedEffect"
-import { clear as clearLocalForage } from "@/lib/localForage"
 import { useNavigate } from "@tanstack/react-router"
 import useErrorToast from "@/hooks/useErrorToast"
 import { IS_DESKTOP } from "@/constants"
 import socket from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
+import { logout } from "@/lib/setup"
 
-export const ActivityHandler = memo(({ children }: { children: React.ReactNode }) => {
+export const ActivityHandler = memo(() => {
 	const windowFocus = useWindowFocus()
 	const nextLastActiveDesktopUpdate = useRef<number>(-1)
 	const isUpdatingLastActiveDesktop = useRef<boolean>(false)
@@ -48,15 +48,13 @@ export const ActivityHandler = memo(({ children }: { children: React.ReactNode }
 		}
 	}, [windowFocus, isInsidePublicLink, authed])
 
-	const logout = useCallback(async () => {
+	const logoutFn = useCallback(async () => {
 		if (!authed) {
 			return
 		}
 
 		try {
-			window.localStorage.clear()
-
-			await clearLocalForage()
+			await logout()
 
 			if (IS_DESKTOP) {
 				await window.desktopAPI.restart()
@@ -82,23 +80,23 @@ export const ActivityHandler = memo(({ children }: { children: React.ReactNode }
 		try {
 			await worker.fetchAccount()
 
-			setTimeout(loggedOutCheck, 60000)
+			setTimeout(loggedOutCheck, 15000)
 		} catch (e) {
 			console.error(e)
 
 			if (e instanceof Error && e.message.toLowerCase().includes("api") && e.message.toLowerCase().includes("key")) {
-				logout()
+				logoutFn()
 			}
 		}
-	}, [authed, logout])
+	}, [authed, logoutFn])
 
 	const socketEventListener = useCallback(
 		(event: SocketEvent) => {
 			if (event.type === "passwordChanged") {
-				logout()
+				logoutFn()
 			}
 		},
-		[logout]
+		[logoutFn]
 	)
 
 	useEffect(() => {
@@ -117,7 +115,7 @@ export const ActivityHandler = memo(({ children }: { children: React.ReactNode }
 		loggedOutCheck()
 	})
 
-	return children
+	return null
 })
 
 export default ActivityHandler

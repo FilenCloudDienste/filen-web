@@ -3,14 +3,16 @@ import { type DriveCloudItem } from "@/components/drive"
 import FolderIcon from "@/assets/fileExtensionIcons/svg/folder.svg?react"
 import { ChevronRight } from "lucide-react"
 import { formatBytes } from "@/utils"
-import { directorySizeCache, thumbnailURLObjectCache } from "@/cache"
+import { directorySizeCache, thumbnailURLObjectCache, directoryUUIDToNameCache } from "@/cache"
 import worker from "@/lib/worker"
 import { setItem } from "@/lib/localForage"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import { fileNameToSVGIcon } from "@/assets/fileExtensionIcons"
 import { cn } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/checkbox"
-import { type SelectionType } from ".."
+import { type SelectionType, type ResponseItem } from ".."
+import pathModule from "path"
+import useSDKConfig from "@/hooks/useSDKConfig"
 
 export const ListItem = memo(
 	({
@@ -19,15 +21,18 @@ export const ListItem = memo(
 		responseItems,
 		setResponseItems,
 		selectMultiple,
-		selectionType
+		selectionType,
+		pathname
 	}: {
 		item: DriveCloudItem
 		setPathname: React.Dispatch<React.SetStateAction<string>>
-		responseItems: DriveCloudItem[]
-		setResponseItems: React.Dispatch<React.SetStateAction<DriveCloudItem[]>>
+		responseItems: ResponseItem[]
+		setResponseItems: React.Dispatch<React.SetStateAction<ResponseItem[]>>
 		selectionType: SelectionType
 		selectMultiple: boolean
+		pathname: string
 	}) => {
+		const { baseFolderUUID } = useSDKConfig()
 		const [size, setSize] = useState<number>(
 			item.type === "directory" && directorySizeCache.has(item.uuid) ? (directorySizeCache.get(item.uuid) as number) : item.size
 		)
@@ -66,6 +71,21 @@ export const ListItem = memo(
 			return responseItems.some(i => i.uuid === item.uuid)
 		}, [responseItems, item.uuid])
 
+		const currentPath = useMemo(() => {
+			const ex = pathname.split("/")
+			let built = ""
+
+			for (const part of ex) {
+				if (part.length === 0) {
+					continue
+				}
+
+				built += part === baseFolderUUID ? "/" : directoryUUIDToNameCache.get(part) ?? ""
+			}
+
+			return built
+		}, [pathname, baseFolderUUID])
+
 		const selectItem = useCallback(
 			(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 				e.preventDefault()
@@ -79,13 +99,24 @@ export const ListItem = memo(
 					}
 
 					if (!selectMultiple) {
-						setResponseItems([item])
+						setResponseItems([
+							{
+								...item,
+								path: pathModule.join(currentPath, item.name)
+							}
+						])
 					} else {
-						setResponseItems(prev => [...prev.filter(i => i.uuid !== item.uuid), item])
+						setResponseItems(prev => [
+							...prev.filter(i => i.uuid !== item.uuid),
+							{
+								...item,
+								path: pathModule.join(currentPath, item.name)
+							}
+						])
 					}
 				}
 			},
-			[item, isSelected, setResponseItems, canSelect, selectMultiple]
+			[item, isSelected, setResponseItems, canSelect, selectMultiple, currentPath]
 		)
 
 		const navigateToDirectory = useCallback(

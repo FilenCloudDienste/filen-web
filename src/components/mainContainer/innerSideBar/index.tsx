@@ -11,6 +11,7 @@ import Top from "./top"
 import Chats from "./chats"
 import useElementDimensions from "@/hooks/useElementDimensions"
 import Bottom from "./bottom"
+import Syncs from "./syncs"
 
 export const InnerSideBar = memo(() => {
 	const { baseFolderUUID } = useSDKConfig()
@@ -55,7 +56,7 @@ export const InnerSideBar = memo(() => {
 						<Button uuid="links" />
 					</>
 				)}
-				{location.includes("settings") && (
+				{location.includes("/settings") && (
 					<>
 						<Button uuid="settings/general" />
 						<Button uuid="settings/account" />
@@ -67,9 +68,9 @@ export const InnerSideBar = memo(() => {
 						<Button uuid="settings/invite" />
 					</>
 				)}
-				{location.includes("notes") && <Notes />}
-				{location.includes("chats") && <Chats />}
-				{location.includes("contacts") && (
+				{location.includes("/notes") && <Notes />}
+				{location.includes("/chats") && <Chats />}
+				{location.includes("/contacts") && (
 					<>
 						<Button uuid="contacts/online" />
 						<Button uuid="contacts/all" />
@@ -79,13 +80,14 @@ export const InnerSideBar = memo(() => {
 						<Button uuid="contacts/blocked" />
 					</>
 				)}
-				{location.includes("mounts") && (
+				{location.includes("/mounts") && (
 					<>
 						<Button uuid="mounts/virtual-drive" />
 						<Button uuid="mounts/webdav" />
 						<Button uuid="mounts/s3" />
 					</>
 				)}
+				{location.includes("/syncs") && <Syncs />}
 			</div>
 			<Bottom />
 		</div>

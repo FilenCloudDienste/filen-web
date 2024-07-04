@@ -29,7 +29,9 @@ export function orderItemsByType({
 				return a.type === "directory" ? -1 : 1
 			}
 
-			return a.name.localeCompare(b.name, "en", { numeric: true })
+			return a.name.localeCompare(b.name, "en", {
+				numeric: true
+			})
 		})
 	} else if (type === "sizeAsc") {
 		return items.sort((a, b) => {
@@ -40,38 +42,36 @@ export function orderItemsByType({
 			return a.size - b.size
 		})
 	} else if (type === "dateAsc") {
-		return items
-			.map(item => ({
-				...item,
-				lastModified: parseInt(`${item.lastModified}${parseNumbersFromString(item.uuid)}`)
-			}))
-			.sort((a, b) => {
-				if (a.type !== b.type) {
-					return a.type === "directory" ? -1 : 1
-				}
+		return items.sort((a, b) => {
+			if (a.type !== b.type) {
+				return a.type === "directory" ? -1 : 1
+			}
 
-				return a.lastModified - b.lastModified
-			})
+			return (
+				parseFloat(`${a.timestamp}.${parseNumbersFromString(a.uuid)}`) -
+				parseFloat(`${b.timestamp}.${parseNumbersFromString(b.uuid)}`)
+			)
+		})
 	} else if (type === "dateDesc") {
-		return items
-			.map(item => ({
-				...item,
-				lastModified: parseInt(`${item.lastModified}${parseNumbersFromString(item.uuid)}`)
-			}))
-			.sort((a, b) => {
-				if (a.type !== b.type) {
-					return a.type === "directory" ? -1 : 1
-				}
+		return items.sort((a, b) => {
+			if (a.type !== b.type) {
+				return a.type === "directory" ? -1 : 1
+			}
 
-				return b.lastModified - a.lastModified
-			})
+			return (
+				parseFloat(`${b.timestamp}.${parseNumbersFromString(b.uuid)}`) -
+				parseFloat(`${a.timestamp}.${parseNumbersFromString(a.uuid)}`)
+			)
+		})
 	} else if (type === "typeAsc") {
 		return items.sort((a, b) => {
 			if (a.type !== b.type) {
 				return a.type === "directory" ? -1 : 1
 			}
 
-			return a.name.localeCompare(b.name, "en", { numeric: true })
+			return a.name.localeCompare(b.name, "en", {
+				numeric: true
+			})
 		})
 	} else if (type === "nameDesc") {
 		return items.sort((a, b) => {
@@ -79,7 +79,9 @@ export function orderItemsByType({
 				return a.type === "directory" ? -1 : 1
 			}
 
-			return b.name.localeCompare(a.name, "en", { numeric: true })
+			return b.name.localeCompare(a.name, "en", {
+				numeric: true
+			})
 		})
 	} else if (type === "sizeDesc") {
 		return items.sort((a, b) => {
@@ -95,26 +97,26 @@ export function orderItemsByType({
 				return a.type === "directory" ? -1 : 1
 			}
 
-			return b.name.localeCompare(a.name, "en", { numeric: true })
+			return b.name.localeCompare(a.name, "en", {
+				numeric: true
+			})
 		})
 	} else if (type === "lastModifiedAsc") {
-		return items
-			.map(item => ({
-				...item,
-				lastModified: parseInt(`${item.lastModified}${parseNumbersFromString(item.uuid)}`)
-			}))
-			.sort((a, b) => {
-				if (a.type !== b.type) {
-					return a.type === "directory" ? -1 : 1
-				}
+		return items.sort((a, b) => {
+			if (a.type !== b.type) {
+				return a.type === "directory" ? -1 : 1
+			}
 
-				return a.lastModified - b.lastModified
-			})
+			return (
+				parseFloat(`${a.lastModified}.${parseNumbersFromString(a.uuid)}`) -
+				parseFloat(`${b.lastModified}.${parseNumbersFromString(b.uuid)}`)
+			)
+		})
 	} else if (type === "lastModifiedDesc") {
 		return items
 			.map(item => ({
 				...item,
-				lastModified: parseInt(`${item.lastModified}${parseNumbersFromString(item.uuid)}`)
+				lastModified: parseFloat(`${item.lastModified}.${parseNumbersFromString(item.uuid)}`)
 			}))
 			.sort((a, b) => {
 				if (a.type !== b.type) {
@@ -124,31 +126,27 @@ export function orderItemsByType({
 				return b.lastModified - a.lastModified
 			})
 	} else if (type === "uploadDateAsc") {
-		return items
-			.map(item => ({
-				...item,
-				timestamp: parseInt(`${item.timestamp}${parseNumbersFromString(item.uuid)}`)
-			}))
-			.sort((a, b) => {
-				if (a.type !== b.type) {
-					return a.type === "directory" ? -1 : 1
-				}
+		return items.sort((a, b) => {
+			if (a.type !== b.type) {
+				return a.type === "directory" ? -1 : 1
+			}
 
-				return a.timestamp - b.timestamp
-			})
+			return (
+				parseFloat(`${a.timestamp}.${parseNumbersFromString(a.uuid)}`) -
+				parseFloat(`${b.timestamp}.${parseNumbersFromString(b.uuid)}`)
+			)
+		})
 	} else if (type === "uploadDateDesc") {
-		return items
-			.map(item => ({
-				...item,
-				timestamp: parseInt(`${item.timestamp}${parseNumbersFromString(item.uuid)}`)
-			}))
-			.sort((a, b) => {
-				if (a.type !== b.type) {
-					return a.type === "directory" ? -1 : 1
-				}
+		return items.sort((a, b) => {
+			if (a.type !== b.type) {
+				return a.type === "directory" ? -1 : 1
+			}
 
-				return b.timestamp - a.timestamp
-			})
+			return (
+				parseFloat(`${b.timestamp}.${parseNumbersFromString(b.uuid)}`) -
+				parseFloat(`${a.timestamp}.${parseNumbersFromString(a.uuid)}`)
+			)
+		})
 	}
 
 	return items.sort((a, b) => {

@@ -113,7 +113,13 @@ export const TopBar = memo(() => {
 		}
 	}, [keyDownListener])
 
-	if (location.includes("settings") || location === "/notes" || location.includes("chats") || location.includes("contacts")) {
+	if (
+		location.includes("/settings") ||
+		location === "/notes" ||
+		location.includes("/chats") ||
+		location.includes("/contacts") ||
+		location.includes("/syncs")
+	) {
 		return null
 	}
 

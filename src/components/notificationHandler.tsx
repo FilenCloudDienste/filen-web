@@ -20,7 +20,7 @@ export const triggeredNotificationUUIDs: Record<string, boolean> = {}
 export const notificationMutex = new Semaphore(1)
 export const notificationIcon = ""
 
-export const NotificationHandler = memo(({ children }: { children: React.ReactNode }) => {
+export const NotificationHandler = memo(() => {
 	const [chatNotificationsEnabled] = useLocalStorage<boolean>("chatNotificationsEnabled", false)
 	const [contactNotificationsEnabled] = useLocalStorage<boolean>("contactNotificationsEnabled", false)
 	const { userId } = useSDKConfig()
@@ -191,6 +191,10 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 	)
 
 	useEffect(() => {
+		if (IS_DESKTOP) {
+			return
+		}
+
 		const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
 
 		if (!link) {
@@ -215,7 +219,7 @@ export const NotificationHandler = memo(({ children }: { children: React.ReactNo
 		}
 	}, [socketEventListener])
 
-	return children
+	return null
 })
 
 export default NotificationHandler

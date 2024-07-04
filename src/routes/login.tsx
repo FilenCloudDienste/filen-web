@@ -4,17 +4,18 @@ import Input from "@/components/input"
 import { Button } from "@/components/ui/button"
 import { useCallback, useState } from "react"
 import sdk from "@/lib/sdk"
-import { APIError } from "@filen/sdk"
+import { APIError, type FilenSDKConfig } from "@filen/sdk"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
 import { Loader } from "lucide-react"
-import { setup } from "@/lib/setup"
+import { setup, DEFAULT_DESKTOP_CONFIG } from "@/lib/setup"
 import worker from "@/lib/worker"
 import { showInputDialog } from "@/components/dialogs/input"
 import useErrorToast from "@/hooks/useErrorToast"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
+import { type FilenDesktopConfig } from "@filen/desktop/dist/types"
 
 export const Route = createFileRoute("/login")({
 	component: Login
@@ -93,19 +94,31 @@ export function Login() {
 				twoFactorCode
 			})
 
-			await setup({
-				...sdk.config
-			})
-
-			localStorage.setItem(
+			window.localStorage.setItem(
 				"sdkConfig",
 				JSON.stringify({
 					...sdk.config,
 					password: "redacted"
-				})
+				} satisfies FilenSDKConfig)
 			)
 
-			localStorage.setItem("authed", "true")
+			window.localStorage.setItem(
+				"desktopConfig",
+				JSON.stringify({
+					...DEFAULT_DESKTOP_CONFIG,
+					sdkConfig: {
+						...sdk.config,
+						password: "redacted"
+					} satisfies FilenSDKConfig
+				} satisfies FilenDesktopConfig)
+			)
+
+			await setup({
+				...sdk.config,
+				password: "redacted"
+			})
+
+			window.localStorage.setItem("authed", "true")
 
 			navigate({
 				to: "/drive/$",

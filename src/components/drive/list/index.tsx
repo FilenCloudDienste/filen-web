@@ -13,6 +13,7 @@ import socket from "@/lib/socket"
 import { convertTimestampToMs } from "@/utils"
 import { type DriveSortBy } from "./header"
 import eventEmitter from "@/lib/eventEmitter"
+import { directoryUUIDToNameCache } from "@/cache"
 
 export const List = memo(() => {
 	const { items, setItems, searchTerm } = useDriveItemsStore()
@@ -37,6 +38,12 @@ export const List = memo(() => {
 	})
 
 	const itemsOrdered = useMemo(() => {
+		for (const item of items) {
+			if (item.type === "directory") {
+				directoryUUIDToNameCache.set(item.uuid, item.name)
+			}
+		}
+
 		if (location.includes("recents")) {
 			return orderItemsByType({
 				items,

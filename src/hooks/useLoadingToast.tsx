@@ -14,10 +14,12 @@ export default function useLoadingToast() {
 	const show = useCallback(() => {
 		return toast({
 			description: (
-				<Loader
-					className="animate-spin-medium"
-					size={18}
-				/>
+				<div className="flex flex-row items-center justify-center w-full h-auto">
+					<Loader
+						className="animate-spin-medium"
+						size={18}
+					/>
+				</div>
 			),
 			variant: "default",
 			duration: Infinity

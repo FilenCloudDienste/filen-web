@@ -1020,7 +1020,7 @@ export async function directorySize({
 
 	await setItem("directorySize:" + uuid, fetched)
 
-	return fetched
+	return fetched.size
 }
 
 export async function downloadMultipleFilesAndDirectoriesAsZip({

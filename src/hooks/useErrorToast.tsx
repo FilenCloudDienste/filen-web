@@ -16,8 +16,11 @@ export default function useErrorToast() {
 			const t = toast({
 				description: (
 					<div className="flex flex-row items-center gap-2">
-						<Ban size={18} />
-						<p className="line-clamp-1 text-ellipsis break-all">{reason}</p>
+						<Ban
+							size={18}
+							className="shrink-0"
+						/>
+						<p>{reason}</p>
 					</div>
 				),
 				variant: "destructive"

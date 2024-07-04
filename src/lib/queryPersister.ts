@@ -1,5 +1,5 @@
 import { getItem, setItem, removeItem } from "@/lib/localForage"
-import { PersistedClient, Persister } from "@tanstack/react-query-persist-client"
+import { type PersistedClient, type Persister } from "@tanstack/react-query-persist-client"
 
 /**
  * Persist all queries in IndexedDB.
@@ -9,7 +9,7 @@ import { PersistedClient, Persister } from "@tanstack/react-query-persist-client
  * @param {IDBValidKey} [idbValidKey="reactQuery"]
  * @returns {Persister}
  */
-export function createIDBPersister(idbValidKey: IDBValidKey = "reactQuery") {
+export function createIDBPersister(idbValidKey: IDBValidKey = "reactQuery"): Persister {
 	return {
 		persistClient: async (client: PersistedClient) => {
 			await setItem(idbValidKey as string, client)

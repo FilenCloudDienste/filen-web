@@ -119,7 +119,7 @@ export const InnerSideBarWrapper = memo(
 				<div
 					className={cn(
 						"flex flex-col border-r",
-						location.includes("chats") || location.includes("notes") ? "w-[150px]" : "w-[68px]"
+						location.includes("/chats") || location.includes("/notes") ? "w-[150px]" : "w-[68px]"
 					)}
 					id="left-resizable-panel"
 				>
@@ -129,17 +129,20 @@ export const InnerSideBarWrapper = memo(
 		}
 
 		if (
-			location.includes("settings") ||
-			location.includes("chats") ||
-			location.includes("contacts") ||
+			location.includes("/settings") ||
+			location.includes("/chats") ||
+			location.includes("/contacts") ||
 			location.includes("/drive") ||
-			location.includes("mounts")
+			location.includes("/mounts") ||
+			location.includes("/syncs")
 		) {
 			return (
 				<div
 					className={cn(
 						"flex flex-col border-r",
-						location.includes("/drive") || location.includes("chats") || location.includes("notes") ? "w-[250px]" : "w-[225px]"
+						location.includes("/drive") || location.includes("/chats") || location.includes("/notes")
+							? "w-[250px]"
+							: "w-[225px]"
 					)}
 					id="left-resizable-panel"
 				>
@@ -173,7 +176,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 	const { dark } = useTheme()
 	const windowSize = useWindowSize()
 	const [resizablePanelSizes, setResizablePanelSizes] = useLocalStorage<(number | undefined | null)[]>(
-		location.includes("notes") ? "mainContainerResizablePanelSizes:notes" : "mainContainerResizablePanelSizes",
+		location.includes("/notes") ? "mainContainerResizablePanelSizes:notes" : "mainContainerResizablePanelSizes",
 		[undefined, undefined]
 	)
 
@@ -223,9 +226,9 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={updatePanelSizes}
-				className={cn(dark ? "bg-muted/40" : "bg-background", IS_DESKTOP && "rounded-tl-[10px]")}
+				className={cn(dark ? "bg-muted/40" : "bg-background", IS_DESKTOP && "rounded-tl-md")}
 			>
-				{!location.includes("terminal") && (
+				{!location.includes("/terminal") && (
 					<InnerSideBarWrapper
 						defaultSize={panelSizes.left.value}
 						minSize={panelSizes.left.minSize}
@@ -238,7 +241,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 					order={2}
 					id="right-resizable-panel"
 				>
-					{!location.includes("terminal") && !location.includes("mounts") && <TopBar />}
+					{!location.includes("/terminal") && !location.includes("/mounts") && <TopBar />}
 					<div className="flex grow">{children}</div>
 				</ResizablePanel>
 			</ResizablePanelGroup>

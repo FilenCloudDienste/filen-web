@@ -5,7 +5,7 @@ import worker from "@/lib/worker"
 import ListItem from "./listItem"
 import eventEmitter from "@/lib/eventEmitter"
 import { orderItemsByType } from "@/components/drive/utils"
-import { type SelectionType } from ".."
+import { type SelectionType, type ResponseItem } from ".."
 import { type DriveCloudItem } from "@/components/drive"
 import { Loader } from "lucide-react"
 import { useTranslation } from "react-i18next"
@@ -23,8 +23,8 @@ export const List = memo(
 		setPathname: React.Dispatch<React.SetStateAction<string>>
 		selectionType: SelectionType
 		selectMultiple: boolean
-		responseItems: DriveCloudItem[]
-		setResponseItems: React.Dispatch<React.SetStateAction<DriveCloudItem[]>>
+		responseItems: ResponseItem[]
+		setResponseItems: React.Dispatch<React.SetStateAction<ResponseItem[]>>
 	}) => {
 		const { t } = useTranslation()
 		const lastPathname = useRef<string>("")
@@ -65,10 +65,11 @@ export const List = memo(
 						responseItems={responseItems}
 						selectMultiple={selectMultiple}
 						selectionType={selectionType}
+						pathname={pathname}
 					/>
 				)
 			},
-			[setPathname, setResponseItems, responseItems, selectMultiple, selectionType]
+			[setPathname, setResponseItems, responseItems, selectMultiple, selectionType, pathname]
 		)
 
 		useEffect(() => {
