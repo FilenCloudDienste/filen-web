@@ -2,7 +2,7 @@ import { create } from "zustand"
 import { type SyncPair, type TransferData, type CycleState, type IPCTaskError } from "@filen/sync/dist/types"
 import { type LocalTreeIgnored } from "@filen/sync/dist/lib/filesystems/local"
 import { type RemoteTreeIgnored } from "@filen/sync/dist/lib/filesystems/remote"
-import { type SerializedError } from "@filen/sync/dist/types"
+import { type SerializedError } from "@filen/sync/dist/utils"
 
 export type TransferState = "started" | "queued" | "finished" | "error" | "stopped" | "paused"
 
