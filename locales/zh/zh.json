@@ -240,6 +240,10 @@
 			"virtualDrive": "虚拟磁盘",
 			"s3": "S3",
 			"webdav": "WebDAV"
+		},
+		"syncs": {
+			"empty": "暂无同步",
+			"emptyCreate": "创建一个"
 		}
 	},
 	"sideBar": {
