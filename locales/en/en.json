@@ -415,6 +415,19 @@
 			"errors": {
 				"localPathNotWritable": "The local path you have selected is not writable. Please make sure the client can access it properly."
 			}
+		},
+		"info": {
+			"title": "Info",
+			"close": "Close",
+			"directoryType": "Directory",
+			"size": "Size",
+			"type": "Type",
+			"name": "Name",
+			"location": "Location",
+			"modified": "Modified",
+			"uploaded": "Uploaded",
+			"files": "Files",
+			"directories": "Directories"
 		}
 	},
 	"contextMenus": {
@@ -439,6 +452,7 @@
 			"color": "Color",
 			"deletePermanently": "Delete permanently",
 			"copyId": "Copy ID",
+			"info": "Info",
 			"dialogs": {
 				"trash": {
 					"title": "Trash",

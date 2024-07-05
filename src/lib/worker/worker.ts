@@ -147,13 +147,20 @@ export async function setMessageHandler(callback: (message: WorkerToMainMessage)
 export async function encryptMetadata({ metadata, key, derive }: { metadata: string; key?: string; derive?: boolean }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.crypto().encrypt().metadata({ metadata, key, derive })
+	return await SDK.crypto().encrypt().metadata({
+		metadata,
+		key,
+		derive
+	})
 }
 
 export async function decryptMetadata({ metadata, key }: { metadata: string; key: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.crypto().decrypt().metadata({ metadata, key })
+	return await SDK.crypto().decrypt().metadata({
+		metadata,
+		key
+	})
 }
 
 export async function getDirectorySizeFromCacheOrFetch({
@@ -166,16 +173,21 @@ export async function getDirectorySizeFromCacheOrFetch({
 	sharerId?: number
 	receiverId?: number
 	trash?: boolean
-}): Promise<number> {
+}): Promise<DirectorySizeResult> {
 	await waitForInitialization()
 
-	const cache = await getItem<number | null>("directorySize:" + uuid)
+	const cache = await getItem<DirectorySizeResult | null>("directorySize:" + uuid)
 
 	if (cache) {
 		return cache
 	}
 
-	const fetched = await directorySize({ uuid, sharerId, receiverId, trash })
+	const fetched = await directorySize({
+		uuid,
+		sharerId,
+		receiverId,
+		trash
+	})
 
 	return fetched
 }
@@ -189,12 +201,16 @@ export async function listDirectory({ uuid, onlyDirectories }: { uuid: string; o
 			item =>
 				new Promise<DriveCloudItem>((resolve, reject) => {
 					;(item.type === "directory"
-						? getDirectorySizeFromCacheOrFetch({
-								uuid: item.uuid,
-								sharerId: 0,
-								receiverId: 0,
-								trash: false
-							})
+						? new Promise<number>((resolve, reject) =>
+								getDirectorySizeFromCacheOrFetch({
+									uuid: item.uuid,
+									sharerId: 0,
+									receiverId: 0,
+									trash: false
+								})
+									.then(result => resolve(result.size))
+									.catch(reject)
+							)
 						: Promise.resolve(item.size)
 					)
 						.then(size => {
@@ -230,12 +246,16 @@ export async function listDirectorySharedIn({ uuid }: { uuid: string }): Promise
 			item =>
 				new Promise<DriveCloudItem>((resolve, reject) => {
 					;(item.type === "directory"
-						? getDirectorySizeFromCacheOrFetch({
-								uuid: item.uuid,
-								sharerId: item.sharerId ?? 0,
-								receiverId: item.receiverId ?? 0,
-								trash: false
-							})
+						? new Promise<number>((resolve, reject) =>
+								getDirectorySizeFromCacheOrFetch({
+									uuid: item.uuid,
+									sharerId: item.sharerId ?? 0,
+									receiverId: item.receiverId ?? 0,
+									trash: false
+								})
+									.then(result => resolve(result.size))
+									.catch(reject)
+							)
 						: Promise.resolve(item.size)
 					)
 						.then(size => {
@@ -278,18 +298,25 @@ export async function listDirectorySharedIn({ uuid }: { uuid: string }): Promise
 export async function listDirectorySharedOut({ uuid, receiverId }: { uuid: string; receiverId?: number }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const items = await SDK.cloud().listDirectorySharedOut({ uuid, receiverId })
+	const items = await SDK.cloud().listDirectorySharedOut({
+		uuid,
+		receiverId
+	})
 	const driveItems: DriveCloudItem[] = await promiseAllChunked(
 		items.map(
 			item =>
 				new Promise<DriveCloudItem>((resolve, reject) => {
 					;(item.type === "directory"
-						? getDirectorySizeFromCacheOrFetch({
-								uuid: item.uuid,
-								sharerId: item.sharerId ?? 0,
-								receiverId: item.receiverId ?? 0,
-								trash: false
-							})
+						? new Promise<number>((resolve, reject) =>
+								getDirectorySizeFromCacheOrFetch({
+									uuid: item.uuid,
+									sharerId: item.sharerId ?? 0,
+									receiverId: item.receiverId ?? 0,
+									trash: false
+								})
+									.then(result => resolve(result.size))
+									.catch(reject)
+							)
 						: Promise.resolve(item.size)
 					)
 						.then(size => {
@@ -338,12 +365,16 @@ export async function listFavorites(): Promise<DriveCloudItem[]> {
 			item =>
 				new Promise<DriveCloudItem>((resolve, reject) => {
 					;(item.type === "directory"
-						? getDirectorySizeFromCacheOrFetch({
-								uuid: item.uuid,
-								sharerId: 0,
-								receiverId: 0,
-								trash: false
-							})
+						? new Promise<number>((resolve, reject) =>
+								getDirectorySizeFromCacheOrFetch({
+									uuid: item.uuid,
+									sharerId: 0,
+									receiverId: 0,
+									trash: false
+								})
+									.then(result => resolve(result.size))
+									.catch(reject)
+							)
 						: Promise.resolve(item.size)
 					)
 						.then(size => {
@@ -379,12 +410,16 @@ export async function listPublicLinks(): Promise<DriveCloudItem[]> {
 			item =>
 				new Promise<DriveCloudItem>((resolve, reject) => {
 					;(item.type === "directory"
-						? getDirectorySizeFromCacheOrFetch({
-								uuid: item.uuid,
-								sharerId: 0,
-								receiverId: 0,
-								trash: false
-							})
+						? new Promise<number>((resolve, reject) =>
+								getDirectorySizeFromCacheOrFetch({
+									uuid: item.uuid,
+									sharerId: 0,
+									receiverId: 0,
+									trash: false
+								})
+									.then(result => resolve(result.size))
+									.catch(reject)
+							)
 						: Promise.resolve(item.size)
 					)
 						.then(size => {
@@ -420,12 +455,16 @@ export async function listRecents(): Promise<DriveCloudItem[]> {
 			item =>
 				new Promise<DriveCloudItem>((resolve, reject) => {
 					;(item.type === "directory"
-						? getDirectorySizeFromCacheOrFetch({
-								uuid: item.uuid,
-								sharerId: 0,
-								receiverId: 0,
-								trash: false
-							})
+						? new Promise<number>((resolve, reject) =>
+								getDirectorySizeFromCacheOrFetch({
+									uuid: item.uuid,
+									sharerId: 0,
+									receiverId: 0,
+									trash: false
+								})
+									.then(result => resolve(result.size))
+									.catch(reject)
+							)
 						: Promise.resolve(item.size)
 					)
 						.then(size => {
@@ -461,12 +500,16 @@ export async function listTrash(): Promise<DriveCloudItem[]> {
 			item =>
 				new Promise<DriveCloudItem>((resolve, reject) => {
 					;(item.type === "directory"
-						? getDirectorySizeFromCacheOrFetch({
-								uuid: item.uuid,
-								sharerId: 0,
-								receiverId: 0,
-								trash: true
-							})
+						? new Promise<number>((resolve, reject) =>
+								getDirectorySizeFromCacheOrFetch({
+									uuid: item.uuid,
+									sharerId: 0,
+									receiverId: 0,
+									trash: true
+								})
+									.then(result => resolve(result.size))
+									.catch(reject)
+							)
 						: Promise.resolve(item.size)
 					)
 						.then(size => {
@@ -588,7 +631,7 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 		}
 	})
 
-	stream.pipeTo(writer)
+	stream.pipeTo(writer).catch(console.error)
 }
 
 export async function uploadFile({
@@ -732,7 +775,7 @@ export async function uploadFile({
 					receivers: [],
 					size: item.size
 				}
-			})
+			}).catch(console.error)
 		}
 	})
 
@@ -976,7 +1019,13 @@ export async function uploadDirectory({
 	}
 }
 
-const directorySizeRateLimit: Record<string, number> = {}
+export const directorySizeRateLimit: Record<string, number> = {}
+
+export type DirectorySizeResult = {
+	size: number
+	folders: number
+	files: number
+}
 
 export async function directorySize({
 	uuid,
@@ -990,14 +1039,14 @@ export async function directorySize({
 	receiverId?: number
 	trash?: boolean
 	linkUUID?: string
-}): Promise<number> {
+}): Promise<DirectorySizeResult> {
 	await waitForInitialization()
 
-	const rateLimitKey = `${uuid}:${sharerId ?? 0}:${receiverId ?? 0}:${trash ?? false}`
+	const rateLimitKey = `${uuid}:${sharerId ?? 0}:${receiverId ?? 0}:${trash ?? false}:${linkUUID ?? ""}`
 	const now = Date.now()
 
 	if (directorySizeRateLimit[rateLimitKey] && now < directorySizeRateLimit[rateLimitKey]!) {
-		const cache = await getItem<number | null>("directorySize:" + uuid)
+		const cache = await getItem<DirectorySizeResult | null>("directorySize:" + uuid)
 
 		if (cache) {
 			return cache
@@ -1020,7 +1069,7 @@ export async function directorySize({
 
 	await setItem("directorySize:" + uuid, fetched)
 
-	return fetched.size
+	return fetched
 }
 
 export async function downloadMultipleFilesAndDirectoriesAsZip({
@@ -1303,7 +1352,15 @@ export async function getDirectoryTree({
 }) {
 	await waitForInitialization()
 
-	return await SDK.cloud().getDirectoryTree({ uuid, type, linkUUID, linkHasPassword, linkPassword, linkSalt, skipCache })
+	return await SDK.cloud().getDirectoryTree({
+		uuid,
+		type,
+		linkUUID,
+		linkHasPassword,
+		linkPassword,
+		linkSalt,
+		skipCache
+	})
 }
 
 export async function downloadDirectory({
@@ -1938,7 +1995,10 @@ export async function renameItem({ item, name }: { item: DriveCloudItem; name: s
 					} satisfies FileMetadata,
 					name
 				})
-			: SDK.cloud().renameDirectory({ uuid: item.uuid, name }))
+			: SDK.cloud().renameDirectory({
+					uuid: item.uuid,
+					name
+				}))
 
 	if (item.type === "directory") {
 		await setItem(`directoryUUIDToName:${item.uuid}`, name)
@@ -1964,7 +2024,10 @@ export async function createDirectory({
 }): Promise<DriveCloudItem> {
 	await waitForInitialization()
 
-	const uuid = await SDK.cloud().createDirectory({ name, parent })
+	const uuid = await SDK.cloud().createDirectory({
+		name,
+		parent
+	})
 
 	await setItem(`directoryUUIDToName:${uuid}`, name)
 
@@ -2025,7 +2088,12 @@ export async function shareItemsToUser({
 			})),
 		email: receiverEmail,
 		onProgress: done => {
-			postMessageToMain({ type: "shareProgress", done, total: items.length, requestUUID })
+			postMessageToMain({
+				type: "shareProgress",
+				done,
+				total: items.length,
+				requestUUID
+			})
 		}
 	})
 }
@@ -2051,13 +2119,20 @@ export async function fetchNoteContent({ uuid }: { uuid: string }): Promise<{
 export async function editNoteTitle({ uuid, title }: { uuid: string; title: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().editTitle({ uuid, title })
+	return await SDK.notes().editTitle({
+		uuid,
+		title
+	})
 }
 
 export async function editNoteContent({ uuid, content, type }: { uuid: string; content: string; type: NoteType }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().edit({ uuid, content, type })
+	return await SDK.notes().edit({
+		uuid,
+		content,
+		type
+	})
 }
 
 export async function createNote(): Promise<{ uuid: string; title: string }> {
@@ -2085,13 +2160,19 @@ export async function deleteNote({ uuid }: { uuid: string }): Promise<void> {
 export async function pinNote({ uuid, pin }: { uuid: string; pin: boolean }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().pin({ uuid, pin })
+	return await SDK.notes().pin({
+		uuid,
+		pin
+	})
 }
 
 export async function favoriteNote({ uuid, favorite }: { uuid: string; favorite: boolean }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().favorite({ uuid, favorite })
+	return await SDK.notes().favorite({
+		uuid,
+		favorite
+	})
 }
 
 export async function duplicateNote({ uuid }: { uuid: string }): Promise<string> {
@@ -2115,7 +2196,10 @@ export async function createNotesTag({ name }: { name: string }): Promise<string
 export async function changeNoteType({ uuid, type }: { uuid: string; type: NoteType }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().changeType({ uuid, newType: type })
+	return await SDK.notes().changeType({
+		uuid,
+		newType: type
+	})
 }
 
 export async function restoreNote({ uuid }: { uuid: string }): Promise<void> {
@@ -2133,7 +2217,10 @@ export async function archiveNote({ uuid }: { uuid: string }): Promise<void> {
 export async function favoriteNotesTag({ uuid, favorite }: { uuid: string; favorite: boolean }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().tagFavorite({ uuid, favorite })
+	return await SDK.notes().tagFavorite({
+		uuid,
+		favorite
+	})
 }
 
 export async function deleteNotesTag({ uuid }: { uuid: string }): Promise<void> {
@@ -2145,19 +2232,28 @@ export async function deleteNotesTag({ uuid }: { uuid: string }): Promise<void> 
 export async function renameNotesTag({ uuid, name }: { uuid: string; name: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().renameTag({ uuid, name })
+	return await SDK.notes().renameTag({
+		uuid,
+		name
+	})
 }
 
 export async function tagNote({ uuid, tag }: { uuid: string; tag: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().tag({ uuid, tag })
+	return await SDK.notes().tag({
+		uuid,
+		tag
+	})
 }
 
 export async function untagNote({ uuid, tag }: { uuid: string; tag: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().untag({ uuid, tag })
+	return await SDK.notes().untag({
+		uuid,
+		tag
+	})
 }
 
 export async function listChatsConversations(): Promise<ChatConversation[]> {
@@ -2169,7 +2265,10 @@ export async function listChatsConversations(): Promise<ChatConversation[]> {
 export async function fetchChatsConversationsMessages({ uuid, timestamp }: { uuid: string; timestamp?: number }): Promise<ChatMessage[]> {
 	await waitForInitialization()
 
-	return await SDK.chats().messages({ conversation: uuid, timestamp: timestamp ? timestamp : Date.now() + 3600000 })
+	return await SDK.chats().messages({
+		conversation: uuid,
+		timestamp: timestamp ? timestamp : Date.now() + 3600000
+	})
 }
 
 export async function sendChatMessage({
@@ -2185,13 +2284,21 @@ export async function sendChatMessage({
 }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.chats().sendMessage({ conversation, message, replyTo, uuid })
+	return await SDK.chats().sendMessage({
+		conversation,
+		message,
+		replyTo,
+		uuid
+	})
 }
 
 export async function sendChatTyping({ conversation, type }: { conversation: string; type: ChatTypingType }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().sendTyping({ conversation, type })
+	return await SDK.chats().sendTyping({
+		conversation,
+		type
+	})
 }
 
 export async function chatKey({ conversation }: { conversation: string }): Promise<string> {
@@ -2207,7 +2314,10 @@ export async function noteKey({ uuid }: { uuid: string }): Promise<string> {
 export async function decryptChatMessage({ message, key }: { message: string; key: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.crypto().decrypt().chatMessage({ message, key })
+	return await SDK.crypto().decrypt().chatMessage({
+		message,
+		key
+	})
 }
 
 export async function chatLastFocus(): Promise<ChatLastFocusValues[]> {
@@ -2239,13 +2349,20 @@ export async function chatEditMessage({
 }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().editMessage({ uuid, conversation, message })
+	return await SDK.chats().editMessage({
+		uuid,
+		conversation,
+		message
+	})
 }
 
 export async function chatEditConversationName({ conversation, name }: { conversation: string; name: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().editConversationName({ conversation, name })
+	return await SDK.chats().editConversationName({
+		conversation,
+		name
+	})
 }
 
 export async function deleteChatConversation({ conversation }: { conversation: string }): Promise<void> {
@@ -2257,7 +2374,10 @@ export async function deleteChatConversation({ conversation }: { conversation: s
 export async function chatRemoveParticipant({ conversation, userId }: { conversation: string; userId: number }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().removeParticipant({ conversation, userId })
+	return await SDK.chats().removeParticipant({
+		conversation,
+		userId
+	})
 }
 
 export async function decryptFileMetadata({ metadata }: { metadata: string }): Promise<FileMetadata> {
@@ -2275,7 +2395,10 @@ export async function decryptFolderMetadata({ metadata }: { metadata: string }):
 export async function changeDirectoryColor({ color, uuid }: { color: string; uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().changeDirectoryColor({ uuid, color })
+	return await SDK.cloud().changeDirectoryColor({
+		uuid,
+		color
+	})
 }
 
 export async function chatConversationOnline({ conversation }: { conversation: string }): Promise<ChatConversationsOnlineUser[]> {
@@ -2389,7 +2512,10 @@ export async function fetchUserAccount(): Promise<UserAccountResponse> {
 export async function chatConversationAddParticipant({ conversation, contact }: { conversation: string; contact: Contact }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().addParticipant({ conversation, contact })
+	return await SDK.chats().addParticipant({
+		conversation,
+		contact
+	})
 }
 
 export async function corsHead(url: string): Promise<Record<string, string>> {
@@ -2647,14 +2773,22 @@ export async function emptyTrash(): Promise<void> {
 export async function uploadFilesToChatUploads({ files }: { files: File[] }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const base = await listDirectory({ uuid: SDK.config.baseFolderUUID!, onlyDirectories: true })
+	const base = await listDirectory({
+		uuid: SDK.config.baseFolderUUID!,
+		onlyDirectories: true
+	})
 	let parentUUID = ""
 	const baseFiltered = base.filter(item => item.type === "directory" && item.name.toLowerCase() === "chat uploads")
 
 	if (baseFiltered.length === 1 && baseFiltered[0]) {
 		parentUUID = baseFiltered[0].uuid
 	} else {
-		parentUUID = (await createDirectory({ name: "Chat Uploads", parent: SDK.config.baseFolderUUID! })).uuid
+		parentUUID = (
+			await createDirectory({
+				name: "Chat Uploads",
+				parent: SDK.config.baseFolderUUID!
+			})
+		).uuid
 	}
 
 	const now = Date.now()
@@ -2673,7 +2807,10 @@ export async function uploadFilesToChatUploads({ files }: { files: File[] }): Pr
 export async function enablePublicLink({ type, uuid }: { type: "file" | "directory"; uuid: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.cloud().enablePublicLink({ type, uuid })
+	return await SDK.cloud().enablePublicLink({
+		type,
+		uuid
+	})
 }
 
 export async function editPublicLink({
@@ -2693,7 +2830,14 @@ export async function editPublicLink({
 }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().editPublicLink({ type, itemUUID, linkUUID, password, enableDownload, expiration })
+	return await SDK.cloud().editPublicLink({
+		type,
+		itemUUID,
+		linkUUID,
+		password,
+		enableDownload,
+		expiration
+	})
 }
 
 export async function disablePublicLink({
@@ -2708,14 +2852,24 @@ export async function disablePublicLink({
 	await waitForInitialization()
 
 	if (type === "directory") {
-		return await SDK.cloud().disablePublicLink({ type, itemUUID })
+		return await SDK.cloud().disablePublicLink({
+			type,
+			itemUUID
+		})
 	}
 
-	return await SDK.cloud().disablePublicLink({ type, itemUUID, linkUUID })
+	return await SDK.cloud().disablePublicLink({
+		type,
+		itemUUID,
+		linkUUID
+	})
 }
 
 export async function filePublicLinkStatus({ uuid }: { uuid: string }): Promise<FileLinkStatusResponse> {
-	return await SDK.cloud().publicLinkStatus({ type: "file", uuid })
+	return await SDK.cloud().publicLinkStatus({
+		type: "file",
+		uuid
+	})
 }
 
 export async function directoryPublicLinkStatus({ uuid }: { uuid: string }): Promise<{
@@ -2729,7 +2883,10 @@ export async function directoryPublicLinkStatus({ uuid }: { uuid: string }): Pro
 }> {
 	await waitForInitialization()
 
-	const status = await SDK.cloud().publicLinkStatus({ type: "directory", uuid })
+	const status = await SDK.cloud().publicLinkStatus({
+		type: "directory",
+		uuid
+	})
 
 	return {
 		exists: status.exists,
@@ -2745,13 +2902,18 @@ export async function directoryPublicLinkStatus({ uuid }: { uuid: string }): Pro
 export async function decryptDirectoryLinkKey({ key }: { key: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.crypto().decrypt().folderLinkKey({ metadata: key })
+	return await SDK.crypto().decrypt().folderLinkKey({
+		metadata: key
+	})
 }
 
 export async function stopSharingItem({ uuid, receiverId }: { uuid: string; receiverId: number }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().stopSharingItem({ uuid, receiverId })
+	return await SDK.cloud().stopSharingItem({
+		uuid,
+		receiverId
+	})
 }
 
 export async function removeSharedItem({ uuid }: { uuid: string }): Promise<void> {
@@ -2769,13 +2931,19 @@ export async function appearOffline({ enabled }: { enabled: boolean }): Promise<
 export async function changeEmail({ email, password }: { email: string; password: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().changeEmail({ email, password })
+	return await SDK.user().changeEmail({
+		email,
+		password
+	})
 }
 
 export async function changePassword({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().changePassword({ currentPassword, newPassword })
+	return await SDK.user().changePassword({
+		currentPassword,
+		newPassword
+	})
 }
 
 export async function changeNickname({ nickname }: { nickname: string }): Promise<void> {
@@ -2927,7 +3095,10 @@ export async function cdnConfig(): Promise<CDNConfig> {
 export async function createSubscription({ planId, paymentMethod }: { planId: number; paymentMethod: PaymentMethods }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.user().createSubscription({ planId, paymentMethod })
+	return await SDK.user().createSubscription({
+		planId,
+		paymentMethod
+	})
 }
 
 export async function fileVersions({ uuid }: { uuid: string }): Promise<FileVersionsResponse> {
@@ -2939,7 +3110,10 @@ export async function fileVersions({ uuid }: { uuid: string }): Promise<FileVers
 export async function restoreFileVersion({ uuid, currentUUID }: { uuid: string; currentUUID: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().restoreFileVersion({ uuid, currentUUID })
+	return await SDK.cloud().restoreFileVersion({
+		uuid,
+		currentUUID
+	})
 }
 
 export async function deleteFilePermanently({ uuid }: { uuid: string }): Promise<void> {
@@ -2959,13 +3133,19 @@ export async function noteHistory({ uuid }: { uuid: string }): Promise<NoteHisto
 export async function restoreNoteHistory({ uuid, id }: { uuid: string; id: number }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().restoreHistory({ uuid, id })
+	return await SDK.notes().restoreHistory({
+		uuid,
+		id
+	})
 }
 
 export async function removeNoteParticipant({ uuid, userId }: { uuid: string; userId: number }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().removeParticipant({ uuid, userId })
+	return await SDK.notes().removeParticipant({
+		uuid,
+		userId
+	})
 }
 
 export async function userPublicKey({ email }: { email: string }): Promise<string> {
@@ -2987,7 +3167,12 @@ export async function addNoteParticipant({
 }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().addParticipant({ uuid, contactUUID, permissionsWrite, publicKey })
+	return await SDK.notes().addParticipant({
+		uuid,
+		contactUUID,
+		permissionsWrite,
+		publicKey
+	})
 }
 
 export async function noteParticipantPermissions({
@@ -3001,7 +3186,11 @@ export async function noteParticipantPermissions({
 }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().participantPermissions({ uuid, permissionsWrite, userId })
+	return await SDK.notes().participantPermissions({
+		uuid,
+		permissionsWrite,
+		userId
+	})
 }
 
 export async function pausePauseSignal({ id }: { id: string }): Promise<void> {
@@ -3046,7 +3235,10 @@ export async function filePublicLinkHasPassword({ uuid }: { uuid: string }): Pro
 export async function directoryPublicLinkInfo({ uuid, key }: { uuid: string; key: string }): Promise<DirLinkInfoDecryptedResponse> {
 	await waitForInitialization()
 
-	return await SDK.cloud().directoryPublicLinkInfo({ uuid, key })
+	return await SDK.cloud().directoryPublicLinkInfo({
+		uuid,
+		key
+	})
 }
 
 export async function filePublicLinkInfo({
@@ -3062,7 +3254,12 @@ export async function filePublicLinkInfo({
 }): Promise<Omit<FileLinkInfoResponse, "size"> & { size: number }> {
 	await waitForInitialization()
 
-	return await SDK.cloud().filePublicLinkInfo({ uuid, password, key, salt })
+	return await SDK.cloud().filePublicLinkInfo({
+		uuid,
+		password,
+		key,
+		salt
+	})
 }
 
 export async function directoryPublicLinkContent({
@@ -3080,7 +3277,13 @@ export async function directoryPublicLinkContent({
 }): Promise<DirLinkContentDecryptedResponse & { directorySize: Record<string, number> }> {
 	await waitForInitialization()
 
-	const content = await SDK.cloud().directoryPublicLinkContent({ uuid, parent, password, salt, key })
+	const content = await SDK.cloud().directoryPublicLinkContent({
+		uuid,
+		parent,
+		password,
+		salt,
+		key
+	})
 
 	return {
 		...content,
@@ -3089,8 +3292,14 @@ export async function directoryPublicLinkContent({
 				content.folders.map(
 					folder =>
 						new Promise<[string, number]>((resolve, reject) => {
-							directorySize({ uuid: folder.uuid, receiverId: 0, trash: false, sharerId: 0, linkUUID: uuid })
-								.then(size => {
+							directorySize({
+								uuid: folder.uuid,
+								receiverId: 0,
+								trash: false,
+								sharerId: 0,
+								linkUUID: uuid
+							})
+								.then(({ size }) => {
 									resolve([folder.uuid, size])
 								})
 								.catch(reject)

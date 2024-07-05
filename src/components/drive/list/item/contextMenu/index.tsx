@@ -43,7 +43,8 @@ import {
 	PaintBucket,
 	RotateCcw,
 	Delete,
-	Copy
+	Copy,
+	Info
 } from "lucide-react"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import { selectContacts } from "@/components/dialogs/selectContacts"
@@ -521,6 +522,10 @@ export const ContextMenu = memo(
 			[setItems, item.uuid]
 		)
 
+		const info = useCallback(() => {
+			eventEmitter.emit("openInfoDialog", item)
+		}, [item])
+
 		useEffect(() => {
 			window.addEventListener("keydown", keyDownListener)
 
@@ -542,7 +547,7 @@ export const ContextMenu = memo(
 							{t("contextMenus.item.preview")}
 						</ContextMenuItem>
 					)}
-					{selectedItems.length === 1 && item.type === "directory" && (
+					{selectedItems.length === 1 && item.type === "directory" && !driveURLState.trash && (
 						<>
 							<ContextMenuItem
 								onClick={openDirectory}
@@ -561,7 +566,7 @@ export const ContextMenu = memo(
 						<Download size={iconSize} />
 						{t("contextMenus.item.download")}
 					</ContextMenuItem>
-					{!driveURLState.publicLink && !driveURLState.sharedIn && <ContextMenuSeparator />}
+					{!driveURLState.publicLink && !driveURLState.sharedIn && !driveURLState.trash && <ContextMenuSeparator />}
 					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
 						<ContextMenuItem
 							onClick={publicLink}
@@ -607,6 +612,13 @@ export const ContextMenu = memo(
 							>
 								<Heart size={iconSize} />
 								{item.favorited ? t("contextMenus.item.unfavorite") : t("contextMenus.item.favorite")}
+							</ContextMenuItem>
+							<ContextMenuItem
+								onClick={info}
+								className="cursor-pointer gap-3"
+							>
+								<Info size={iconSize} />
+								{t("contextMenus.item.info")}
 							</ContextMenuItem>
 							{item.type === "directory" && (
 								<ContextMenuSub>
@@ -679,7 +691,7 @@ export const ContextMenu = memo(
 								<Copy size={iconSize} />
 								{t("contextMenus.chats.copyId")}
 							</ContextMenuItem>
-							<ContextMenuSeparator />
+							{!driveURLState.sharedIn && <ContextMenuSeparator />}
 						</>
 					)}
 					{driveURLState.trash && !driveURLState.publicLink && (

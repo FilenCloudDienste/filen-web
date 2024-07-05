@@ -1,7 +1,8 @@
 import { keys, getItem, removeItem } from "@/lib/localForage"
 import { type MessageDisplayType } from "./components/chats/conversation/message/utils"
+import { type DirectorySizeResult } from "@/lib/worker/worker"
 
-export const directorySizeCache = new Map<string, number>()
+export const directorySizeCache = new Map<string, DirectorySizeResult>()
 export const directoryUUIDToNameCache = new Map<string, string>()
 export const thumbnailURLObjectCache = new Map<string, string>()
 export const chatDisplayMessageAsCache = new Map<string, Record<string, MessageDisplayType>>()
@@ -43,7 +44,7 @@ export async function warmupCacheFromDb(): Promise<void> {
 					continue
 				}
 
-				const result = await getItem<number>(dbKey)
+				const result = await getItem<DirectorySizeResult>(dbKey)
 
 				directorySizeCache.set(ex[1], result!)
 			}

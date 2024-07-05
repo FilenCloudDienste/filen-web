@@ -265,9 +265,9 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 				linkUUID: isInsidePublicLink ? publicLinkURLState.uuid : undefined
 			})
 
-			directorySizeCache.set(item.uuid, directorySize)
+			directorySizeCache.set(item.uuid, directorySize.size)
 
-			setSize(directorySize)
+			setSize(directorySize.size)
 
 			await setItem("directorySize:" + item.uuid, directorySize)
 		} catch (e) {

@@ -33,6 +33,7 @@ import useIsMobile from "@/hooks/useIsMobile"
 import DesktopHandler from "@/components/desktopHandler"
 import CreateSyncDialog from "@/components/dialogs/createSync"
 import DesktopListener from "@/components/desktopListener"
+import InfoDialog from "@/components/dialogs/infoDialog"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -148,9 +149,14 @@ export const Root = memo(() => {
 										<NotificationHandler />
 										<ActivityHandler />
 										<DesktopListener />
+										<InfoDialog />
 									</>
 								) : (
-									<Outlet />
+									<DropZone>
+										<DragSelect>
+											<Outlet />
+										</DragSelect>
+									</DropZone>
 								)}
 								<Transfers />
 								<PreviewDialog />
