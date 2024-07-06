@@ -390,6 +390,44 @@
 			"block": "拉黑",
 			"remove": "从联系人中删除",
 			"unblock": "取消拉黑"
+		},
+		"createSync": {
+			"cancel": "取消",
+			"create": "创建",
+			"name": "同步名称",
+			"localPath": "本地路径",
+			"remotePath": "云端路径",
+			"select": "选择",
+			"syncMode": "同步模式",
+			"title": "创建同步",
+			"mode": {
+				"twoWay": "双向",
+				"localToCloud": "本地到云端",
+				"localBackup": "本地备份",
+				"cloudToLocal": "云端到本地",
+				"cloudBackup": "云端备份",
+				"twoWayInfo": "双向镜像每个操作",
+				"localToCloudInfo": "将本地执行的每项操作都镜像到云端，但永远不会对云端的变化进行操作",
+				"localBackupInfo": "仅将数据上传到云端，永远不会删除任何内容或根据云端的更改进行操作",
+				"cloudToLocalInfo": "在本地镜像云端中完成的每个操作，但永远不会对本地更改进行操作",
+				"cloudBackupInfo": "仅从云端下载数据，永远不会删除任何内容或对本地更改进行操作"
+			},
+			"errors": {
+				"localPathNotWritable": "您选择的本地路径不可写。请确保客户端可以正常访问它。"
+			}
+		},
+		"info": {
+			"title": "详情",
+			"close": "关闭",
+			"directoryType": "目录",
+			"size": "大小",
+			"type": "类型",
+			"name": "名称",
+			"location": "位置",
+			"modified": "修改日期",
+			"uploaded": "已上传",
+			"files": "文件",
+			"directories": "目录"
 		}
 	},
 	"contextMenus": {
@@ -414,6 +452,7 @@
 			"color": "颜色",
 	        "deletePermanently": "永久删除",
 			"copyId": "复制 ID",
+			"info": "详情",
 			"dialogs": {
 				"trash": {
 					"title": "回收",
