@@ -1,7 +1,7 @@
 {
 	"name": "@filen/web",
 	"private": false,
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"type": "module",
 	"description": "Filen Web App",
 	"scripts": {
@@ -22,9 +22,9 @@
 		"@alptugidin/react-circular-progress-bar": "^1.1.2",
 		"@emoji-mart/data": "^1.1.2",
 		"@emoji-mart/react": "^1.1.1",
-		"@filen/desktop": "^0.1.22",
+		"@filen/desktop": "^0.1.23",
 		"@filen/sdk": "^0.1.134",
-		"@filen/sync": "^0.1.4",
+		"@filen/sync": "^0.1.5",
 		"@million/lint": "^1.0.0-rc.7",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
 		"@radix-ui/react-avatar": "^1.0.4",

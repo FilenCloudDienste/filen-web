@@ -23,7 +23,6 @@ export const DesktopListener = memo(() => {
 					message.type === "cycleApplyingStateDone" ||
 					message.type === "cycleApplyingStateStarted" ||
 					message.type === "cycleError" ||
-					message.type === "cycleFinished" ||
 					message.type === "cycleGettingTreesDone" ||
 					message.type === "cycleGettingTreesStarted" ||
 					message.type === "cycleLocalSmokeTestFailed" ||
@@ -180,13 +179,15 @@ export const DesktopListener = memo(() => {
 					} else {
 						setTransferEvents(prev => ({
 							...prev,
-							[message.syncPair.uuid]: (prev[message.syncPair.uuid]
+							[message.syncPair.uuid]: prev[message.syncPair.uuid]
 								? [
 										{
 											...message.data,
 											timestamp: Date.now()
 										},
-										...prev[message.syncPair.uuid]!
+										...(prev[message.syncPair.uuid]!.length >= 1000
+											? prev[message.syncPair.uuid]!.slice(0, 999)
+											: prev[message.syncPair.uuid]!)
 									]
 								: [
 										{
@@ -194,10 +195,9 @@ export const DesktopListener = memo(() => {
 											timestamp: Date.now()
 										}
 									]
-							).slice(0, 1000)
 						}))
 					}
-				} else if (message.type === "doneTasks") {
+				} else if (message.type === "taskErrors") {
 					if (message.data.errors.length > 0) {
 						setTaskErrors(prev => ({
 							...prev,

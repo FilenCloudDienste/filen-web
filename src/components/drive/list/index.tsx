@@ -34,7 +34,10 @@ export const List = memo(() => {
 					? worker.listDirectorySharedIn({ uuid: parent })
 					: location.includes("shared-out")
 						? worker.listDirectorySharedOut({ uuid: parent, receiverId: currentReceiverId })
-						: worker.listDirectory({ uuid: parent })
+						: worker.listDirectory({ uuid: parent }),
+		refetchOnMount: !location.includes("trash"),
+		refetchOnWindowFocus: !location.includes("trash"),
+		refetchOnReconnect: !location.includes("trash")
 	})
 
 	const itemsOrdered = useMemo(() => {
