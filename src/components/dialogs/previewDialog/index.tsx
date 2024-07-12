@@ -483,7 +483,7 @@ export const PreviewDialog = memo(() => {
 															}}
 														/>
 													</TooltipTrigger>
-													<TooltipContent side="left">
+													<TooltipContent side="bottom">
 														<p>{t("dialogs.previewDialog.save")}</p>
 													</TooltipContent>
 												</Tooltip>
@@ -495,9 +495,15 @@ export const PreviewDialog = memo(() => {
 									<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 										<Tooltip>
 											<TooltipTrigger asChild={true}>
-												<Eye size={20} />
+												<Eye
+													size={20}
+													style={{
+														// @ts-expect-error not typed
+														WebkitAppRegion: "no-drag"
+													}}
+												/>
 											</TooltipTrigger>
-											<TooltipContent side="left">
+											<TooltipContent side="bottom">
 												<p>{t("dialogs.previewDialog.readOnly")}</p>
 											</TooltipContent>
 										</Tooltip>

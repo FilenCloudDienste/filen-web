@@ -97,7 +97,7 @@ export const CreateSyncDialog = memo(() => {
 			name: createState.name,
 			mode: createState.mode,
 			excludeDotFiles: true,
-			paused: true
+			paused: false
 		}
 
 		setDesktopConfig(prev => ({

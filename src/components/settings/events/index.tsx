@@ -134,7 +134,13 @@ export const Events = memo(() => {
 	}, [query.isSuccess, query.data, query.dataUpdatedAt])
 
 	return (
-		<div className="flex flex-col w-full h-full p-4">
+		<div
+			className="flex flex-col w-full h-full p-4"
+			style={{
+				// @ts-expect-error not typed
+				WebkitAppRegion: "drag"
+			}}
+		>
 			<Virtuoso
 				data={eventsSorted}
 				totalCount={eventsSorted.length}
@@ -148,7 +154,9 @@ export const Events = memo(() => {
 					overflowX: "hidden",
 					overflowY: "auto",
 					height: virtuosoHeight + "px",
-					width: "100%"
+					width: "100%",
+					// @ts-expect-error not typed
+					WebkitAppRegion: "no-drag"
 				}}
 			/>
 		</div>

@@ -13,8 +13,7 @@ import { useTranslation } from "react-i18next"
 import ReportDialog from "./reportDialog"
 import eventEmitter from "@/lib/eventEmitter"
 import { useTheme } from "@/providers/themeProvider"
-import DarkLogo from "@/assets/img/dark_logo.svg"
-import LightLogo from "@/assets/img/light_logo.svg"
+import LogoSVG from "@/assets/logo"
 
 export const Container = memo(({ children, loading, hasInfo }: { children: React.ReactNode; loading: boolean; hasInfo: boolean }) => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
@@ -56,11 +55,9 @@ export const Container = memo(({ children, loading, hasInfo }: { children: React
 							className="flex shrink-0 flex-row items-center gap-2"
 							draggable={false}
 						>
-							<img
-								src={dark ? LightLogo : DarkLogo}
-								className="w-6 h-6"
-								draggable={false}
-							/>
+							<div className="w-6 h-6">
+								<LogoSVG color={dark ? "white" : "black"} />
+							</div>
 							<p className="font-medium text-2xl">Filen</p>
 						</Link>
 					</div>

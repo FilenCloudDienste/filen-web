@@ -223,7 +223,13 @@ export const S3 = memo(() => {
 				}}
 			>
 				<div className="flex flex-col gap-4">
-					<Section name={t("mounts.s3.sections.active.name")}>
+					<Section
+						name={t("mounts.s3.sections.active.name")}
+						style={{
+							// @ts-expect-error not typed
+							WebkitAppRegion: "drag"
+						}}
+					>
 						{enabling ? (
 							<Loader className="animate-spin-medium" />
 						) : isOnlineQuery.data.online ? (

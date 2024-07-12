@@ -101,8 +101,8 @@ export const SideBar = memo(() => {
 	return (
 		<div
 			className={cn(
-				"flex flex-col h-full gap-2.5 select-none items-center overflow-hidden dragselect-start-allowed",
-				!IS_DESKTOP && "border-r py-3",
+				"flex flex-col h-full gap-2.5 select-none items-center overflow-hidden dragselect-start-allowed border-r",
+				!IS_DESKTOP && "py-3",
 				IS_DESKTOP && IS_APPLE_DEVICE && "pt-9"
 			)}
 			style={{

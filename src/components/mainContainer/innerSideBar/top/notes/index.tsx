@@ -42,6 +42,7 @@ export const Notes = memo(() => {
 				return
 			}
 
+			setSearch("")
 			setSelectedNote(newNote[0])
 
 			navigate({
@@ -57,7 +58,7 @@ export const Notes = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [navigate, setNotes, setSelectedNote, defaultNoteType, loadingToast, errorToast])
+	}, [navigate, setNotes, setSelectedNote, defaultNoteType, loadingToast, errorToast, setSearch])
 
 	const onChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {

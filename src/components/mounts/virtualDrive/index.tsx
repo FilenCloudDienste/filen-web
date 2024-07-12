@@ -75,7 +75,7 @@ export const VirtualDrive = memo(() => {
 			return
 		}
 
-		setEnabling(true)
+		let mountPoint: string | null = null
 
 		try {
 			const selectDirectoryResult = await window.desktopAPI.selectDirectory(false)
@@ -84,6 +84,22 @@ export const VirtualDrive = memo(() => {
 				return
 			}
 
+			mountPoint = selectDirectoryResult.paths[0]!
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+			return
+		}
+
+		if (!mountPoint) {
+			return
+		}
+
+		setEnabling(true)
+
+		try {
 			if (
 				window.desktopAPI.platform() !== "win32" &&
 				!(await window.desktopAPI.verifyUnixMountPath(desktopConfig.virtualDriveConfig.mountPoint))
@@ -107,7 +123,7 @@ export const VirtualDrive = memo(() => {
 				...prev,
 				virtualDriveConfig: {
 					...prev.virtualDriveConfig,
-					mountPoint: selectDirectoryResult.paths[0]!
+					mountPoint
 				}
 			}))
 		} catch (e) {
@@ -388,7 +404,13 @@ export const VirtualDrive = memo(() => {
 				}}
 			>
 				<div className="flex flex-col gap-4">
-					<Section name={t("mounts.virtualDrive.sections.active.name")}>
+					<Section
+						name={t("mounts.virtualDrive.sections.active.name")}
+						style={{
+							// @ts-expect-error not typed
+							WebkitAppRegion: "drag"
+						}}
+					>
 						{enabling ? (
 							<Loader className="animate-spin-medium" />
 						) : isMountedQuery.data.mounted ? (
@@ -459,7 +481,9 @@ export const VirtualDrive = memo(() => {
 									size="sm"
 									onClick={changeMountPoint}
 									disabled={enabling || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-								></Button>
+								>
+									{t("mounts.virtualDrive.sections.mountPoint.change")}
+								</Button>
 							</div>
 						</Section>
 					)}

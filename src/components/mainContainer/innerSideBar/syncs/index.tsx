@@ -11,6 +11,9 @@ import eventEmitter from "@/lib/eventEmitter"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
 import { useSyncsStore } from "@/stores/syncs.store"
 import { type SyncPair } from "@filen/sync/dist/types"
+import useElementDimensions from "@/hooks/useElementDimensions"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
+import { SearchIcon } from "lucide-react"
 
 export const Syncs = memo(() => {
 	const [desktopConfig] = useDesktopConfig()
@@ -19,13 +22,29 @@ export const Syncs = memo(() => {
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const [, setLastSelectedSync] = useLocalStorage("lastSelectedSync", "")
 	const routeParent = useRouteParent()
-	const { selectedSync, setSelectedSync } = useSyncsStore()
+	const { selectedSync, setSelectedSync, search } = useSyncsStore()
 	const lastAutoScrollSyncUUIDRef = useRef<string>("")
 	const navigate = useNavigate()
+	const topDimensions = useElementDimensions("inner-sidebar-top-syncs")
+
+	const virtuosoHeight = useMemo(() => {
+		return windowSize.height - topDimensions.height - DESKTOP_TOPBAR_HEIGHT
+	}, [windowSize.height, topDimensions.height])
 
 	const syncsSorted = useMemo(() => {
-		return desktopConfig.syncConfig.syncPairs
-	}, [desktopConfig.syncConfig.syncPairs])
+		if (search.length === 0) {
+			return desktopConfig.syncConfig.syncPairs
+		}
+
+		const searchTerm = search.toLowerCase().trim()
+
+		return desktopConfig.syncConfig.syncPairs.filter(
+			pair =>
+				pair.name.toLowerCase().trim().includes(searchTerm) ||
+				pair.localPath.toLowerCase().trim().includes(searchTerm) ||
+				pair.remotePath.toLowerCase().trim().includes(searchTerm)
+		)
+	}, [desktopConfig.syncConfig.syncPairs, search])
 
 	const create = useCallback(() => {
 		eventEmitter.emit("openCreateSyncDialog")
@@ -42,18 +61,38 @@ export const Syncs = memo(() => {
 			EmptyPlaceholder: () => {
 				return (
 					<div className="flex flex-col items-center justify-center p-4 w-full h-full">
-						<p className="text-muted-foreground">{t("innerSideBar.syncs.empty")}</p>
-						<p
-							className="text-blue-500 hover:underline cursor-pointer text-sm"
-							onClick={create}
-						>
-							{t("innerSideBar.syncs.emptyCreate")}
-						</p>
+						{search.length > 0 ? (
+							<>
+								<SearchIcon
+									className="text-muted-foreground"
+									size={32}
+								/>
+								<p className="text-muted-foreground max-w-[100%] line-clamp-2 text-ellipsis break-all mt-2 text-center">
+									{t("innerSideBar.syncs.nothingFound", { search })}
+								</p>
+								<p
+									className="text-blue-500 hover:underline cursor-pointer text-sm"
+									onClick={create}
+								>
+									{t("innerSideBar.syncs.emptyCreate")}
+								</p>
+							</>
+						) : (
+							<>
+								<p className="text-muted-foreground">{t("innerSideBar.syncs.empty")}</p>
+								<p
+									className="text-blue-500 hover:underline cursor-pointer text-sm"
+									onClick={create}
+								>
+									{t("innerSideBar.syncs.emptyCreate")}
+								</p>
+							</>
+						)}
 					</div>
 				)
 			}
 		}
-	}, [t, create])
+	}, [t, create, search])
 
 	useEffect(() => {
 		if (
@@ -110,7 +149,7 @@ export const Syncs = memo(() => {
 			ref={virtuosoRef}
 			data={syncsSorted}
 			totalCount={syncsSorted.length}
-			height={windowSize.height - 85}
+			height={virtuosoHeight}
 			width="100%"
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
@@ -118,7 +157,7 @@ export const Syncs = memo(() => {
 			style={{
 				overflowX: "hidden",
 				overflowY: "auto",
-				height: windowSize.height - 85 + "px",
+				height: virtuosoHeight + "px",
 				width: "100%"
 			}}
 		/>

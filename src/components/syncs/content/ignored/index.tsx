@@ -6,6 +6,9 @@ import useWindowSize from "@/hooks/useWindowSize"
 import Ignore from "./ignore"
 import { type LocalTreeIgnoredReason } from "@filen/sync/dist/lib/filesystems/local"
 import { type RemoteTreeIgnoredReason } from "@filen/sync/dist/lib/filesystems/remote"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
+import { RefreshCwOff } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export type IgnoreType = {
 	localPath: string
@@ -17,9 +20,10 @@ export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
 	const { localIgnored, remoteIgnored } = useSyncsStore()
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const windowSize = useWindowSize()
+	const { t } = useTranslation()
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - 88
+		return windowSize.height - 64 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
 	const ignored = useMemo(() => {
@@ -54,6 +58,22 @@ export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
 		return <Ignore ignore={ignore} />
 	}, [])
 
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div className="w-full h-full flex flex-col items-center justify-center gap-2">
+						<RefreshCwOff
+							size={72}
+							className="text-muted-foreground"
+						/>
+						<p className="text-muted-foreground">{t("syncs.nothingIgnored")}</p>
+					</div>
+				)
+			}
+		}
+	}, [t])
+
 	return (
 		<Virtuoso
 			ref={virtuosoRef}
@@ -63,6 +83,7 @@ export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
 			width="100%"
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
+			components={components}
 			style={{
 				overflowX: "hidden",
 				overflowY: "auto",

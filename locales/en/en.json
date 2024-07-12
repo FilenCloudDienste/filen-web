@@ -243,7 +243,10 @@
 		},
 		"syncs": {
 			"empty": "No syncs yet",
-			"emptyCreate": "Create one"
+			"emptyCreate": "Create one",
+			"nothingFound": "Nothing found for \"{{search}}\"",
+			"createSync": "Create sync",
+			"search": "Search..."
 		}
 	},
 	"sideBar": {
@@ -526,6 +529,11 @@
 			"leave": "Leave",
 			"delete": "Delete",
 			"copyId": "Copy ID"
+		},
+		"syncs": {
+			"delete": "Delete",
+			"pause": "Pause",
+			"resume": "Resume"
 		}
 	},
 	"transfers": {
@@ -1127,6 +1135,11 @@
 					"name": "Enabled",
 					"info": "Enable or disable the virtual drive. Refresh your explorer when toggling this option."
 				},
+				"mountPoint": {
+					"name": "Mount point",
+					"info": "Set the mount point to a local directory. The local directory needs to be empty and readale/writable.",
+					"change": "Change"
+				},
 				"driveLetter": {
 					"name": "Drive letter",
 					"info": "Set the drive letter for the virtual drive. Only available drive letters will show up."
@@ -1264,10 +1277,37 @@
 		}
 	},
 	"syncs": {
+		"events": "Events",
+		"ignored": "Ignored",
+		"issues": "Issues",
+		"settingsTitle": "Settings",
+		"noEventsYet": "No events yet",
+		"nothingIgnored": "No files or directories ignored",
+		"noIssues": "No issues",
 		"empty": {
 			"title": "No syncs setup yet",
 			"description": "You can sync your local directories with the cloud or cloud directories with your device",
 			"create": "Create"
+		},
+		"settings": {
+			"sections": {
+				"delete": {
+					"name": "Delete",
+					"info": "Delete the sync",
+					"delete": "Delete"
+				},
+				"pause": {
+					"name": "Pause",
+					"info": "Pause the sync"
+				}
+			}
+		},
+		"dialogs": {
+			"delete": {
+				"title": "Delete sync",
+				"description": "Are you sure you want to delete this sync?",
+				"continue": "Delete"
+			}
 		}
 	}
 }

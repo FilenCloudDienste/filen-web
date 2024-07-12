@@ -207,7 +207,13 @@ export const General = memo(() => {
 					width: settingsContainerSize.width
 				}}
 			>
-				<div className="flex flex-col gap-3 bg-background border p-4 rounded-md">
+				<div
+					className="flex flex-col gap-3 bg-background border p-4 rounded-md"
+					style={{
+						// @ts-expect-error not typed
+						WebkitAppRegion: "drag"
+					}}
+				>
 					<div className="flex flex-row items-center justify-between">
 						<p>{t("settings.general.storageUsed")}</p>
 						<p>

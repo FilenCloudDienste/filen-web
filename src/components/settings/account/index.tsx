@@ -374,6 +374,10 @@ export const Account = memo(() => {
 						<Section
 							name={t("settings.account.sections.avatar.name")}
 							info={t("settings.account.sections.avatar.info")}
+							style={{
+								// @ts-expect-error not typed
+								WebkitAppRegion: "drag"
+							}}
 						>
 							<Avatar
 								src={account.account.avatarURL}

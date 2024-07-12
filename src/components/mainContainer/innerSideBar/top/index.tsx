@@ -7,6 +7,7 @@ import Notes from "./notes"
 import Chats from "./chats"
 import { cn } from "@/lib/utils"
 import useIsMobile from "@/hooks/useIsMobile"
+import Syncs from "./syncs"
 
 export const Top = memo(() => {
 	const { baseFolderUUID } = useSDKConfig()
@@ -16,10 +17,12 @@ export const Top = memo(() => {
 
 	return (
 		<>
-			{location.includes("chats") ? (
+			{location.includes("/chats") ? (
 				<Chats />
-			) : location.includes("notes") ? (
+			) : location.includes("/notes") ? (
 				<Notes />
+			) : location.includes("/syncs") ? (
+				<Syncs />
 			) : (
 				<div
 					className={cn("w-full flex flex-row items-center px-4", location.includes("/drive") ? "border-b h-12" : "h-6 mt-3")}

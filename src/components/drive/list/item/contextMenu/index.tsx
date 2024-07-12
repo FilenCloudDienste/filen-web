@@ -428,7 +428,12 @@ export const ContextMenu = memo(
 			const toast = loadingToast()
 
 			try {
-				await actions.changeColor({ uuid: selectedItems[0].uuid, color })
+				await actions.changeColor({
+					uuid: selectedItems[0].uuid,
+					color
+				})
+
+				eventEmitter.emit("refetchDriveSideBarTree", selectedItems[0].parent)
 
 				setItems(prev =>
 					prev.map(prevItem => (selectedItems[0] && prevItem.uuid === selectedItems[0].uuid ? { ...prevItem, color } : prevItem))

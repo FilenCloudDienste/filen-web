@@ -87,6 +87,7 @@ export const Chats = memo(() => {
 			setConversations(prev => [...prev, convo])
 			setSelectedConversation(convo)
 			setLastSelectedChatsConversation(convo.uuid)
+			setSearch("")
 
 			navigate({
 				to: "/chats/$uuid",
@@ -101,7 +102,7 @@ export const Chats = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [errorToast, loadingToast, navigate, userId, setSelectedConversation, setConversations, setLastSelectedChatsConversation])
+	}, [errorToast, loadingToast, navigate, userId, setSelectedConversation, setConversations, setLastSelectedChatsConversation, setSearch])
 
 	useEffect(() => {
 		const createChatListener = eventEmitter.on("createChat", createChat)

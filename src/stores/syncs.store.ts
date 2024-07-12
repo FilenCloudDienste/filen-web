@@ -37,6 +37,7 @@ export type SyncsStore = {
 	localIgnored: Record<string, LocalTreeIgnored[]>
 	errors: Record<string, GeneralError[]>
 	taskErrors: Record<string, IPCTaskError[]>
+	search: string
 	setSelectedSync: (fn: SyncPair | null | ((prev: SyncPair | null) => SyncPair | null)) => void
 	setTransferEvents: (
 		fn:
@@ -53,6 +54,7 @@ export type SyncsStore = {
 	) => void
 	setErrors: (fn: Record<string, GeneralError[]> | ((prev: Record<string, GeneralError[]>) => Record<string, GeneralError[]>)) => void
 	setTaskErrors: (fn: Record<string, IPCTaskError[]> | ((prev: Record<string, IPCTaskError[]>) => Record<string, IPCTaskError[]>)) => void
+	setSearch: (fn: string | ((prev: string) => string)) => void
 }
 
 export const useSyncsStore = create<SyncsStore>(set => ({
@@ -64,6 +66,7 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	localIgnored: {},
 	errors: {},
 	taskErrors: {},
+	search: "",
 	setSelectedSync(fn) {
 		set(state => ({ selectedSync: typeof fn === "function" ? fn(state.selectedSync) : fn }))
 	},
@@ -87,5 +90,8 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	},
 	setTaskErrors(fn) {
 		set(state => ({ taskErrors: typeof fn === "function" ? fn(state.taskErrors) : fn }))
+	},
+	setSearch(fn) {
+		set(state => ({ search: typeof fn === "function" ? fn(state.search) : fn }))
 	}
 }))

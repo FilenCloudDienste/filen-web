@@ -330,7 +330,7 @@ export const Contacts = memo(() => {
 					width: contactsContainerSize.width
 				}}
 			>
-				<div className="flex flex-row gap-2 p-4 items-center">
+				<div className="flex flex-row gap-2 p-4 items-center w-full">
 					<Input
 						className="grow"
 						value={search}

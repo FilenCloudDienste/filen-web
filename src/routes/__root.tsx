@@ -27,8 +27,7 @@ import NoteParticipantsDialog from "@/components/dialogs/noteParticipants"
 import { setup as setupApp } from "@/lib/setup"
 import CookieConsent from "@/components/cookieConsent"
 import ProfileDialog from "@/components/dialogs/profile"
-import DarkLogo from "@/assets/img/dark_logo.svg"
-import LightLogo from "@/assets/img/light_logo.svg"
+import LogoSVG from "@/assets/logo"
 import useIsMobile from "@/hooks/useIsMobile"
 import DesktopHandler from "@/components/desktopHandler"
 import CreateSyncDialog from "@/components/dialogs/createSync"
@@ -83,11 +82,9 @@ export const Loading = memo(() => {
 
 	return (
 		<div className="flex flex-row w-screen h-[100dvh] items-center justify-center">
-			<img
-				src={dark ? LightLogo : DarkLogo}
-				className={isMobile ? "w-[80px] h-[80px]" : "w-[128px] h-[128px]"}
-				draggable={false}
-			/>
+			<div className={isMobile ? "w-[80px] h-[80px]" : "w-[128px] h-[128px]"}>
+				<LogoSVG color={dark ? "white" : "black"} />
+			</div>
 		</div>
 	)
 })

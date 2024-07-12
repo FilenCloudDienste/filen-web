@@ -14,8 +14,7 @@ import { cn } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import { useChatsStore } from "@/stores/chats.store"
 import { useContactsStore } from "@/stores/contacts.store"
-import DarkLogo from "@/assets/img/dark_logo.svg"
-import LightLogo from "@/assets/img/light_logo.svg"
+import LogoSVG from "@/assets/logo"
 
 const iconSize = IS_DESKTOP && IS_APPLE_DEVICE ? 26 : 24
 
@@ -105,7 +104,12 @@ export const Button = memo(({ id }: { id: string }) => {
 	}, [id, routeParent, location, baseFolderUUID])
 
 	return (
-		<div className={cn("flex flex-row justify-center items-center w-full", IS_DESKTOP ? "pl-[1px]" : "")}>
+		<div
+			className={cn(
+				"flex flex-row justify-center items-center w-full",
+				IS_DESKTOP ? (IS_APPLE_DEVICE ? "pl-[4px]" : "pl-[1px]") : ""
+			)}
+		>
 			<TooltipProvider delayDuration={100}>
 				<Tooltip>
 					<TooltipTrigger asChild={true}>
@@ -123,14 +127,14 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === "syncs" && <RefreshCcw size={iconSize} />}
 							{id === "mounts" && <HardDrive size={iconSize} />}
 							{id === baseFolderUUID && (
-								<img
-									src={dark ? LightLogo : DarkLogo}
+								<div
 									style={{
 										width: iconSize - 1,
 										height: iconSize - 1
 									}}
-									draggable={false}
-								/>
+								>
+									<LogoSVG color={dark ? "white" : "black"} />
+								</div>
 							)}
 							{id === "notes" && <Notebook size={iconSize} />}
 							{id === "chats" &&

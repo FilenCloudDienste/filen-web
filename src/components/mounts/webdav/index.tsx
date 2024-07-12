@@ -360,7 +360,13 @@ export const WebDAV = memo(() => {
 				}}
 			>
 				<div className="flex flex-col gap-4">
-					<Section name={t("mounts.webdav.sections.active.name")}>
+					<Section
+						name={t("mounts.webdav.sections.active.name")}
+						style={{
+							// @ts-expect-error not typed
+							WebkitAppRegion: "drag"
+						}}
+					>
 						{enabling ? (
 							<Loader className="animate-spin-medium" />
 						) : isOnlineQuery.data.online ? (

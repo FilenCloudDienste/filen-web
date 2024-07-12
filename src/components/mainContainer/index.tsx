@@ -58,14 +58,14 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 					}}
 				>
 					<div
-						className="flex flex-row items-center px-3"
+						className="flex flex-row items-center justify-center px-3"
 						style={{
-							width: SIDEBAR_WIDTH
+							width: SIDEBAR_WIDTH - 2
 						}}
 					>
 						<p className="text-sm text-muted-foreground">Filen</p>
 					</div>
-					<div className="flex flex-row w-full justify-end">
+					<div className="flex flex-row w-full justify-end bg-muted/40 border-b border-l">
 						<div
 							className={cn(
 								"w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:text-primary",
@@ -233,7 +233,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={updatePanelSizes}
-				className={cn(dark ? "bg-muted/40" : "bg-background", IS_DESKTOP && !IS_APPLE_DEVICE && "rounded-tl-md")}
+				className={cn(dark ? "bg-muted/40" : "bg-background")}
 			>
 				{!location.includes("/terminal") && (
 					<InnerSideBarWrapper

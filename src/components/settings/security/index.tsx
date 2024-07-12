@@ -174,6 +174,10 @@ export const Security = memo(() => {
 					<Section
 						name={t("settings.security.sections.password.name")}
 						info={t("settings.security.sections.password.info")}
+						style={{
+							// @ts-expect-error not typed
+							WebkitAppRegion: "drag"
+						}}
 					>
 						<p
 							className="underline cursor-pointer"

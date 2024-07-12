@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react"
+import { memo, useMemo, useEffect } from "react"
 import worker from "@/lib/worker"
 import { useQuery } from "@tanstack/react-query"
 import { useLocalStorage } from "@uidotdev/usehooks"
@@ -7,6 +7,7 @@ import useRouteParent from "@/hooks/useRouteParent"
 import { Link } from "@tanstack/react-router"
 import { ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { orderItemsByType } from "@/components/drive/utils"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: number; pathname: string }) => {
 	const [sideBarTreeOpen, setSideBarTreeOpen] = useLocalStorage<Record<string, boolean>>("sideBarTreeOpen", {})
@@ -14,7 +15,11 @@ export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: 
 
 	const query = useQuery({
 		queryKey: ["listDirectoryOnlyDirectories", parent],
-		queryFn: () => worker.listDirectory({ uuid: parent, onlyDirectories: true })
+		queryFn: () =>
+			worker.listDirectory({
+				uuid: parent,
+				onlyDirectories: true
+			})
 	})
 
 	const itemsSorted = useMemo(() => {
@@ -24,6 +29,18 @@ export const Tree = memo(({ parent, depth, pathname }: { parent: string; depth: 
 
 		return orderItemsByType({ items: query.data, type: "nameAsc" })
 	}, [query.isSuccess, query.data])
+
+	useEffect(() => {
+		const refetchDriveSideBarTreeListener = eventEmitter.on("refetchDriveSideBarTree", p => {
+			if (parent === p) {
+				query.refetch().catch(console.error)
+			}
+		})
+
+		return () => {
+			refetchDriveSideBarTreeListener.remove()
+		}
+	}, [query, parent])
 
 	if (!query.isSuccess || !sideBarTreeOpen[parent] || itemsSorted.length === 0) {
 		return null

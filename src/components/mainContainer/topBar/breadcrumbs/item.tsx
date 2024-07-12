@@ -107,7 +107,7 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 			}}
 		>
 			<p
-				className="text-primary cursor-pointer select-none"
+				className="text-primary cursor-pointer select-none hover:underline"
 				onClick={onClick}
 			>
 				{path === baseFolderUUID ? t("topBar.breadcrumb.cloudDrive") : name}

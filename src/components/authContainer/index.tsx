@@ -2,8 +2,7 @@ import { memo } from "react"
 import { Link } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "@/providers/themeProvider"
-import DarkLogo from "@/assets/img/dark_logo.svg"
-import LightLogo from "@/assets/img/light_logo.svg"
+import LogoSVG from "@/assets/logo"
 
 export const AuthContainer = memo(({ children }: { children: React.ReactNode }) => {
 	const { t } = useTranslation()
@@ -16,11 +15,9 @@ export const AuthContainer = memo(({ children }: { children: React.ReactNode }) 
 				className="flex shrink-0 flex-row justify-center py-10 sm:justify-start sm:pl-20 items-center gap-2"
 				draggable={false}
 			>
-				<img
-					src={dark ? LightLogo : DarkLogo}
-					className="w-7 h-7"
-					draggable={false}
-				/>
+				<div className="w-7 h-7">
+					<LogoSVG color={dark ? "white" : "black"} />
+				</div>
 				<p className="font-medium text-2xl">Filen</p>
 			</Link>
 			<div className="flex h-full flex-col items-center justify-center">

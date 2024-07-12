@@ -1,5 +1,5 @@
 import { memo, useMemo, useCallback, Fragment } from "react"
-import { IS_DESKTOP } from "@/constants"
+import { IS_DESKTOP, DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import useWindowSize from "@/hooks/useWindowSize"
 import { Virtuoso } from "react-virtuoso"
 import ListItem from "./item"
@@ -19,7 +19,9 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 	const canUpload = useCanUpload()
 
 	const virtuosoHeight = useMemo(() => {
-		return IS_DESKTOP ? windowSize.height - 48 - (showSkeletons ? 0 : 32) - 24 : windowSize.height - 48 - (showSkeletons ? 0 : 32)
+		return IS_DESKTOP
+			? windowSize.height - 48 - (showSkeletons ? 0 : 32) - DESKTOP_TOPBAR_HEIGHT
+			: windowSize.height - 48 - (showSkeletons ? 0 : 32)
 	}, [windowSize.height, showSkeletons])
 
 	const getItemKey = useCallback(
