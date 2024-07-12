@@ -8,7 +8,7 @@ import { Virtuoso, type VirtuosoHandle } from "react-virtuoso"
 import { useChatsStore } from "@/stores/chats.store"
 import Message, { Header } from "./message"
 import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
-import { IS_DESKTOP } from "@/constants"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import socket from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import MarkAsRead from "./markAsRead"
@@ -32,8 +32,8 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 
 	const virtuosoHeight = useMemo(() => {
 		return inputContainerDimensions.height > 0
-			? windowSize.height - inputContainerDimensions.height - 48 - (IS_DESKTOP ? 24 : 0)
-			: windowSize.height - 82 - 48 - (IS_DESKTOP ? 24 : 0)
+			? windowSize.height - inputContainerDimensions.height - 48 - DESKTOP_TOPBAR_HEIGHT
+			: windowSize.height - 82 - 48 - DESKTOP_TOPBAR_HEIGHT
 	}, [inputContainerDimensions.height, windowSize.height])
 
 	const messagesSorted = useMemo(() => {

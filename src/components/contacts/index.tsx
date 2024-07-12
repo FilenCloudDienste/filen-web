@@ -3,7 +3,7 @@ import worker from "@/lib/worker"
 import { useQueries } from "@tanstack/react-query"
 import { Virtuoso } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
-import { IS_DESKTOP } from "@/constants"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import Input from "../input"
 import { Button } from "@/components/ui/button"
 import useLocation from "@/hooks/useLocation"
@@ -44,7 +44,7 @@ export const Contacts = memo(() => {
 	const isMobile = useIsMobile()
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - 72 - 44 - (IS_DESKTOP ? 24 : 0)
+		return windowSize.height - 72 - 44 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
 	const [allQuery, requestsInQuery, requestsOutQuery, blockedQuery, chatsQuery] = useQueries({

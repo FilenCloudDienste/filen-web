@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import eventEmitter from "@/lib/eventEmitter"
 import Content from "./content"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 
 export const Syncs = memo(() => {
 	const [desktopConfig] = useDesktopConfig()
@@ -18,7 +19,12 @@ export const Syncs = memo(() => {
 	}, [])
 
 	return (
-		<div className={cn("w-full h-[calc(100dvh-24px)] flex flex-col", !selectedSync && "items-center justify-center")}>
+		<div
+			className={cn("w-full flex flex-col", !selectedSync && "items-center justify-center")}
+			style={{
+				height: "calc(100dvh - " + DESKTOP_TOPBAR_HEIGHT + "px)"
+			}}
+		>
 			{selectedSync ? (
 				<Content sync={selectedSync} />
 			) : desktopConfig.syncConfig.syncPairs.length === 0 ? (

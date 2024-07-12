@@ -14,7 +14,7 @@ import { type SocketEvent, MAX_NOTE_SIZE } from "@filen/sdk"
 import socket from "@/lib/socket"
 import { useNavigate } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
-import { IS_DESKTOP } from "@/constants"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
 
@@ -189,7 +189,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 				setValue={setValue}
 				onValueChange={onValueChange}
 				width={resizablePanelSizes.right.width}
-				height={windowSize.height - 48 - (IS_DESKTOP ? 24 : 0)}
+				height={windowSize.height - 48 - DESKTOP_TOPBAR_HEIGHT}
 				type={note.type}
 				placeholder={t("notes.contentPlaceholder")}
 				readOnly={!hasWritePermissions}
@@ -205,7 +205,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 			value={value}
 			setValue={setValue}
 			onValueChange={onValueChange}
-			height={windowSize.height - 48 - (IS_DESKTOP ? 24 : 0)}
+			height={windowSize.height - 48 - DESKTOP_TOPBAR_HEIGHT}
 			type={editorType === "code" || editorType === "md" || note.type === "md" || note.type === "code" ? "code" : "text"}
 			placeholder={t("notes.contentPlaceholder")}
 			showMarkdownPreview={note.type === "md"}

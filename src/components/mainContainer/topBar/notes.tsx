@@ -81,9 +81,21 @@ export const Notes = memo(() => {
 	}
 
 	return (
-		<div className="w-full h-12 flex flex-row justify-between border-b select-none">
+		<div
+			className="w-full h-12 flex flex-row justify-between border-b select-none"
+			style={{
+				// @ts-expect-error not typed
+				WebkitAppRegion: "drag"
+			}}
+		>
 			<div className={cn("flex flex-row px-4 items-center gap-3 w-full h-12 z-50", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
-				<div className="flex flex-row">
+				<div
+					className="flex flex-row"
+					style={{
+						// @ts-expect-error not typed
+						WebkitAppRegion: "no-drag"
+					}}
+				>
 					{maxSizeReached ? (
 						<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 							<Tooltip>
@@ -103,6 +115,10 @@ export const Notes = memo(() => {
 					<p
 						className="line-clamp-1 text-ellipsis break-all cursor-text"
 						onClick={rename}
+						style={{
+							// @ts-expect-error not typed
+							WebkitAppRegion: "no-drag"
+						}}
 					>
 						{selectedNote.title}
 					</p>
@@ -115,6 +131,10 @@ export const Notes = memo(() => {
 						<div
 							className="flex flex-row p-1 rounded-md hover:bg-secondary cursor-pointer"
 							onClick={triggerMoreIconContextMenu}
+							style={{
+								// @ts-expect-error not typed
+								WebkitAppRegion: "no-drag"
+							}}
 						>
 							<MoreVertical
 								onClick={triggerMoreIconContextMenu}

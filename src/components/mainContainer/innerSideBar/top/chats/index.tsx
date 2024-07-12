@@ -116,14 +116,24 @@ export const Chats = memo(() => {
 			className="h-auto w-full flex flex-col"
 			id="inner-sidebar-top-chats"
 		>
-			<div className="h-12 w-full flex flex-row items-center px-4 justify-between">
-				<p>{t("innerSideBar.top.chats")}</p>
+			<div
+				className="h-12 w-full flex flex-row items-center px-4 justify-between"
+				style={{
+					// @ts-expect-error not typed
+					WebkitAppRegion: "drag"
+				}}
+			>
+				<p className="line-clamp-1 text-ellipsis break-all">{t("innerSideBar.top.chats")}</p>
 				<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 					<Tooltip>
 						<TooltipTrigger asChild={true}>
 							<div
 								className="hover:bg-secondary rounded-md p-1 cursor-pointer"
 								onClick={createChat}
+								style={{
+									// @ts-expect-error not typed
+									WebkitAppRegion: "no-drag"
+								}}
 							>
 								<Plus />
 							</div>

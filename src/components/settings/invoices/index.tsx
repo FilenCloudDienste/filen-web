@@ -1,7 +1,7 @@
 import { memo, useMemo, useCallback } from "react"
 import useAccount from "@/hooks/useAccount"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { IS_DESKTOP } from "@/constants"
+import { DESKTOP_TOPBAR_HEIGHT, IS_DESKTOP } from "@/constants"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "react-i18next"
 import { simpleDate, convertTimestampToMs } from "@/utils"
@@ -79,7 +79,12 @@ export const Invoices = memo(() => {
 	}
 
 	return (
-		<div className={cn("flex flex-col w-full overflow-y-auto", IS_DESKTOP ? "h-[calc(100dvh-24px)]" : "h-[100dvh]")}>
+		<div
+			className="flex flex-col w-full overflow-y-auto"
+			style={{
+				height: "calc(100dvh - " + DESKTOP_TOPBAR_HEIGHT + "px)"
+			}}
+		>
 			<div className="flex flex-col w-full">
 				{invoicesSorted.length === 0 && account ? (
 					<div

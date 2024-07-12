@@ -115,10 +115,18 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 				"w-full h-12 flex flex-row px-4 border-b items-center gap-2 justify-between shrink-0 z-50 select-none",
 				dark ? "bg-[#151518]" : "bg-[#FFFFFF]"
 			)}
+			style={{
+				// @ts-expect-error not typed
+				WebkitAppRegion: "drag"
+			}}
 		>
 			<div
 				className={cn("flex flex-row gap-2 items-center", hasWritePermissions ? "cursor-pointer" : "cursor-default")}
 				onClick={editConversationName}
+				style={{
+					// @ts-expect-error not typed
+					WebkitAppRegion: "no-drag"
+				}}
 			>
 				<ChatAvatar
 					size={24}
@@ -134,6 +142,10 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 							<div
 								className="hover:bg-secondary rounded-md p-1 cursor-pointer"
 								onClick={toggleParticipantsContainer}
+								style={{
+									// @ts-expect-error not typed
+									WebkitAppRegion: "no-drag"
+								}}
 							>
 								{conversationParticipantsContainerOpen ? <ChevronRight /> : <ChevronLeft />}
 							</div>
@@ -150,6 +162,10 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 							<div
 								className="hover:bg-secondary rounded-md p-1 cursor-pointer"
 								onClick={addParticipant}
+								style={{
+									// @ts-expect-error not typed
+									WebkitAppRegion: "no-drag"
+								}}
 							>
 								<UserRoundPlus />
 							</div>

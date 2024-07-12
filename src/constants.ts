@@ -32,3 +32,5 @@ export const IS_INSIDE_PUBLIC_LINK_ON_LOAD =
 	typeof window !== "undefined" ? window.location.href.includes("/f/") || window.location.href.includes("/d/") : false
 export const MAX_PREVIEW_SIZE = 256 * MiB
 export const VALID_LOCAL_PORT_RANGE = [1024, 65535]
+export const SIDEBAR_WIDTH = IS_DESKTOP && IS_APPLE_DEVICE ? 76 : 64
+export const DESKTOP_TOPBAR_HEIGHT = IS_DESKTOP ? (IS_APPLE_DEVICE ? 0 : 24) : 0

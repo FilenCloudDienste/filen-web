@@ -6,7 +6,7 @@ import useRouteParent from "@/hooks/useRouteParent"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useTheme } from "@/providers/themeProvider"
 import { useTranslation } from "react-i18next"
-import { IS_DESKTOP } from "@/constants"
+import { IS_DESKTOP, IS_APPLE_DEVICE } from "@/constants"
 import eventEmitter from "@/lib/eventEmitter"
 import TransfersProgress from "./transfersProgress"
 import { useLocalStorage } from "@uidotdev/usehooks"
@@ -17,7 +17,7 @@ import { useContactsStore } from "@/stores/contacts.store"
 import DarkLogo from "@/assets/img/dark_logo.svg"
 import LightLogo from "@/assets/img/light_logo.svg"
 
-const iconSize = 24
+const iconSize = IS_DESKTOP && IS_APPLE_DEVICE ? 26 : 24
 
 export const Button = memo(({ id }: { id: string }) => {
 	const { baseFolderUUID } = useSDKConfig()
@@ -125,7 +125,10 @@ export const Button = memo(({ id }: { id: string }) => {
 							{id === baseFolderUUID && (
 								<img
 									src={dark ? LightLogo : DarkLogo}
-									className="w-[22px] h-[22px]"
+									style={{
+										width: iconSize - 1,
+										height: iconSize - 1
+									}}
 									draggable={false}
 								/>
 							)}

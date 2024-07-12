@@ -24,8 +24,20 @@ export const Content = memo(({ sync }: { sync: SyncPair }) => {
 				defaultValue="events"
 				className="h-[calc(100dvh-88px)] w-full"
 			>
-				<div className="flex flex-row items-center justify-between gap-4">
-					<TabsList className="mx-4 mt-4">
+				<div
+					className="flex flex-row items-center justify-between gap-4"
+					style={{
+						// @ts-expect-error not typed
+						WebkitAppRegion: "drag"
+					}}
+				>
+					<TabsList
+						className="mx-4 mt-4"
+						style={{
+							// @ts-expect-error not typed
+							WebkitAppRegion: "no-drag"
+						}}
+					>
 						<TabsTrigger value="events">Events</TabsTrigger>
 						<TabsTrigger
 							value="ignored"
@@ -47,7 +59,7 @@ export const Content = memo(({ sync }: { sync: SyncPair }) => {
 				</TabsContent>
 				<TabsContent
 					value="ignored"
-					className="w-full h-full flex flex-col gap-1"
+					className="w-full h-full"
 				>
 					<Ignored sync={sync} />
 				</TabsContent>

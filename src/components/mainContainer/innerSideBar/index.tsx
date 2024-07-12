@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import Button from "./button"
-import { IS_DESKTOP } from "@/constants"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import useWindowSize from "@/hooks/useWindowSize"
 import Divider from "./divider"
 import Notes from "./notes"
@@ -29,7 +29,7 @@ export const InnerSideBar = memo(() => {
 					? 48
 					: 24
 
-		return windowSize.height - (IS_DESKTOP ? 24 : 0) - 48 - topHeight
+		return windowSize.height - DESKTOP_TOPBAR_HEIGHT - 48 - topHeight
 	}, [location, chatsTopDimensions.height, notesTopDimensions.height, windowSize.height])
 
 	return (

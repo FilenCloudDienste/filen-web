@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useCallback } from "react"
 import Button from "./button"
 import useSDKConfig from "@/hooks/useSDKConfig"
-import { IS_DESKTOP } from "@/constants"
+import { IS_DESKTOP, SIDEBAR_WIDTH, IS_APPLE_DEVICE } from "@/constants"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import { useChatsStore } from "@/stores/chats.store"
@@ -101,9 +101,13 @@ export const SideBar = memo(() => {
 	return (
 		<div
 			className={cn(
-				"w-full flex flex-col h-full gap-3 py-3 select-none items-center overflow-hidden dragselect-start-allowed",
-				!IS_DESKTOP && "border-r"
+				"flex flex-col h-full gap-2.5 select-none items-center overflow-hidden dragselect-start-allowed",
+				!IS_DESKTOP && "border-r py-3",
+				IS_DESKTOP && IS_APPLE_DEVICE && "pt-9"
 			)}
+			style={{
+				width: SIDEBAR_WIDTH
+			}}
 		>
 			<Button id={baseFolderUUID} />
 			<Button id="transfers" />

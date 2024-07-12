@@ -99,7 +99,13 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 	}
 
 	return (
-		<div className="flex flex-row gap-1 items-center select-none">
+		<div
+			className="flex flex-row gap-1 items-center select-none"
+			style={{
+				// @ts-expect-error not typed
+				WebkitAppRegion: "no-drag"
+			}}
+		>
 			<p
 				className="text-primary cursor-pointer select-none"
 				onClick={onClick}

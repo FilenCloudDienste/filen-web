@@ -1,5 +1,6 @@
 import { memo, useRef, useEffect } from "react"
 import { Terminal as XTerminal } from "@xterm/xterm"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 
 export const Terminal = memo(() => {
 	const containerRef = useRef<HTMLDivElement>(null)
@@ -24,7 +25,12 @@ export const Terminal = memo(() => {
 	}, [])
 
 	return (
-		<div className="flex flex-col w-full h-[calc(100dvh-24px)] bg-black">
+		<div
+			className="flex flex-col w-full bg-black"
+			style={{
+				height: "calc(100dvh - " + DESKTOP_TOPBAR_HEIGHT + "px)"
+			}}
+		>
 			<div
 				ref={containerRef}
 				className="w-full h-full p-3"

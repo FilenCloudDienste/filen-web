@@ -83,7 +83,13 @@ export const Notes = memo(() => {
 			className="h-auto w-full flex flex-col"
 			id="inner-sidebar-top-notes"
 		>
-			<div className="h-12 w-full flex flex-row items-center px-4 justify-between">
+			<div
+				className="h-12 w-full flex flex-row items-center px-4 justify-between"
+				style={{
+					// @ts-expect-error not typed
+					WebkitAppRegion: "drag"
+				}}
+			>
 				<p>{t("innerSideBar.top.notes")}</p>
 				<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 					<Tooltip>
@@ -91,6 +97,10 @@ export const Notes = memo(() => {
 							<div
 								className="hover:bg-secondary rounded-md p-1 cursor-pointer"
 								onClick={createNote}
+								style={{
+									// @ts-expect-error not typed
+									WebkitAppRegion: "no-drag"
+								}}
 							>
 								<Plus />
 							</div>

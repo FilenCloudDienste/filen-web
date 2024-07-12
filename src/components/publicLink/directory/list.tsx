@@ -4,7 +4,7 @@ import { type DriveCloudItem } from "@/components/drive"
 import useWindowSize from "@/hooks/useWindowSize"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { type DriveSortBy } from "@/components/drive/list/header"
-import { IS_DESKTOP } from "@/constants"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import ListItem from "@/components/drive/list/item"
 import { Skeleton } from "@/components/ui/skeleton"
 import Empty from "@/components/drive/list/empty"
@@ -29,7 +29,7 @@ export const List = memo(({ items, parent, showSkeletons }: { items: DriveCloudI
 	}, [])
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - 48 - 40 - (IS_DESKTOP ? 24 : 0)
+		return windowSize.height - 48 - 40 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
 	const components = useMemo(() => {

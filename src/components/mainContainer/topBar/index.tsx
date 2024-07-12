@@ -126,9 +126,21 @@ export const TopBar = memo(() => {
 	return location.includes("notes") ? (
 		<Notes />
 	) : (
-		<div className="w-full h-12 flex flex-row justify-between border-b select-none dragselect-start-allowed">
+		<div
+			className="w-full h-12 flex flex-row justify-between border-b select-none"
+			style={{
+				// @ts-expect-error not typed
+				WebkitAppRegion: "drag"
+			}}
+		>
 			{!isMobile && <Breadcrumbs />}
-			<div className="flex flex-row justify-end items-center gap-3 z-10 px-3">
+			<div
+				className="flex flex-row justify-end items-center gap-3 z-10 px-3"
+				style={{
+					// @ts-expect-error not typed
+					WebkitAppRegion: "no-drag"
+				}}
+			>
 				<div
 					className={cn(
 						"flex flex-row h-full items-center",

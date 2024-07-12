@@ -10,7 +10,7 @@ import { useNavigate } from "@tanstack/react-router"
 import useRouteParent from "@/hooks/useRouteParent"
 import Chat from "./chat"
 import useSDKConfig from "@/hooks/useSDKConfig"
-import { IS_DESKTOP } from "@/constants"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import useElementDimensions from "@/hooks/useElementDimensions"
 import { type SocketEvent } from "@filen/sdk"
 import socket from "@/lib/socket"
@@ -54,7 +54,7 @@ export const Chats = memo(() => {
 	}, [conversations, userId, search])
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - topDimensions.height - 48 - (IS_DESKTOP ? 24 : 0)
+		return windowSize.height - topDimensions.height - 48 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height, topDimensions.height])
 
 	const getItemKey = useCallback((_: number, conversation: ChatConversation) => conversation.uuid, [])

@@ -12,7 +12,7 @@ import { Loader as LoaderIcon, X, Save, ArrowLeft, ArrowRight, Eye } from "lucid
 import { showConfirmDialog } from "../confirm"
 import { uploadFile } from "@/lib/worker/worker"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { TOOLTIP_POPUP_DELAY } from "@/constants"
+import { TOOLTIP_POPUP_DELAY, IS_APPLE_DEVICE, IS_DESKTOP } from "@/constants"
 import { useTranslation } from "react-i18next"
 import { v4 as uuidv4 } from "uuid"
 import { showInputDialog } from "../input"
@@ -27,6 +27,7 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import { type DriveSortBy } from "@/components/drive/list/header"
 import { orderItemsByType } from "@/components/drive/utils"
 import useLocation from "@/hooks/useLocation"
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
 const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
@@ -453,8 +454,14 @@ export const PreviewDialog = memo(() => {
 			<DialogContent className="fullscreen-dialog no-close-button outline-none focus:outline-none active:outline-none hover:outline-none select-none">
 				{item && (
 					<div className="absolute w-screen h-[100dvh] flex flex-col">
-						<div className="flex flex-row border-b h-[49px] bg-secondary w-full items-center justify-between px-4 z-50 gap-10 -mt-[1px]">
-							<div className="flex flex-row items-center gap-2 grow">
+						<div
+							className="flex flex-row border-b h-[49px] bg-secondary w-full items-center justify-between px-4 z-50 gap-10 -mt-[1px]"
+							style={{
+								// @ts-expect-error not typed
+								WebkitAppRegion: "drag"
+							}}
+						>
+							<div className={cn("flex flex-row items-center gap-2 grow", IS_APPLE_DEVICE && IS_DESKTOP && "pl-16")}>
 								{didChange && (
 									<>
 										{saving ? (
@@ -470,6 +477,10 @@ export const PreviewDialog = memo(() => {
 															onClick={saveFile}
 															size={20}
 															className="cursor-pointer"
+															style={{
+																// @ts-expect-error not typed
+																WebkitAppRegion: "no-drag"
+															}}
 														/>
 													</TooltipTrigger>
 													<TooltipContent side="left">
@@ -497,6 +508,10 @@ export const PreviewDialog = memo(() => {
 							<X
 								className="h-4 w-4 opacity-70 hover:opacity-100 cursor-pointer"
 								onClick={() => onOpenChange(false)}
+								style={{
+									// @ts-expect-error not typed
+									WebkitAppRegion: "no-drag"
+								}}
 							/>
 						</div>
 						{goToPreviewTypes.includes(previewType) && !publicLinkURLState.isPublicLink && (

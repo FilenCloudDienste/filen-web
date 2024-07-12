@@ -3,7 +3,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import SideBar from "./sideBar"
 import InnerSideBar from "./innerSideBar"
 import TopBar from "./topBar"
-import { IS_DESKTOP, IS_APPLE_DEVICE } from "@/constants"
+import { IS_DESKTOP, IS_APPLE_DEVICE, DESKTOP_TOPBAR_HEIGHT, SIDEBAR_WIDTH } from "@/constants"
 import { cn, pixelsToPercentage, percentageToPixels } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import { useLocalStorage } from "@uidotdev/usehooks"
@@ -46,63 +46,72 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 		[t]
 	)
 
-	if (IS_DESKTOP) {
+	if (IS_DESKTOP && !IS_APPLE_DEVICE) {
 		return (
 			<div className={cn("w-screen h-[100dvh] flex flex-col", !dark && "bg-secondary")}>
 				<div
-					className="flex flex-row w-full h-[24px] z-0 select-none"
+					className="flex flex-row w-full z-0 select-none"
 					style={{
 						// @ts-expect-error not typed
-						WebkitAppRegion: "drag"
+						WebkitAppRegion: "drag",
+						height: DESKTOP_TOPBAR_HEIGHT
 					}}
 				>
-					{!IS_APPLE_DEVICE && (
-						<>
-							<div className="w-[64px] flex flex-row items-center px-3">
-								<p className="text-sm text-muted-foreground">Filen</p>
-							</div>
-							<div className="flex flex-row w-full justify-end">
-								<div
-									className={cn(
-										"w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:text-primary",
-										dark ? "hover:bg-secondary" : "hover:bg-[lightgray]"
-									)}
-									style={{
-										// @ts-expect-error not typed
-										WebkitAppRegion: "no-drag"
-									}}
-									onClick={minimizeWindow}
-								>
-									<Minus size={15} />
-								</div>
-								<div
-									className={cn(
-										"w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:text-primary",
-										dark ? "hover:bg-secondary" : "hover:bg-[lightgray]"
-									)}
-									style={{
-										// @ts-expect-error not typed
-										WebkitAppRegion: "no-drag"
-									}}
-									onClick={maximizeWindow}
-								>
-									<Maximize size={13} />
-								</div>
-								<div
-									className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-red-600 hover:text-white"
-									style={{
-										// @ts-expect-error not typed
-										WebkitAppRegion: "no-drag"
-									}}
-									onClick={closeWindow}
-								>
-									<X size={15} />
-								</div>
-							</div>
-						</>
-					)}
+					<div
+						className="flex flex-row items-center px-3"
+						style={{
+							width: SIDEBAR_WIDTH
+						}}
+					>
+						<p className="text-sm text-muted-foreground">Filen</p>
+					</div>
+					<div className="flex flex-row w-full justify-end">
+						<div
+							className={cn(
+								"w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:text-primary",
+								dark ? "hover:bg-secondary" : "hover:bg-[lightgray]"
+							)}
+							style={{
+								// @ts-expect-error not typed
+								WebkitAppRegion: "no-drag"
+							}}
+							onClick={minimizeWindow}
+						>
+							<Minus size={15} />
+						</div>
+						<div
+							className={cn(
+								"w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:text-primary",
+								dark ? "hover:bg-secondary" : "hover:bg-[lightgray]"
+							)}
+							style={{
+								// @ts-expect-error not typed
+								WebkitAppRegion: "no-drag"
+							}}
+							onClick={maximizeWindow}
+						>
+							<Maximize size={13} />
+						</div>
+						<div
+							className="w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:bg-red-600 hover:text-white"
+							style={{
+								// @ts-expect-error not typed
+								WebkitAppRegion: "no-drag"
+							}}
+							onClick={closeWindow}
+						>
+							<X size={15} />
+						</div>
+					</div>
 				</div>
-				<div className="flex flex-row w-full h-[calc(100dvh-24px)]">{children}</div>
+				<div
+					className="flex flex-row w-full"
+					style={{
+						height: "calc(100dvh - " + DESKTOP_TOPBAR_HEIGHT + "px)"
+					}}
+				>
+					{children}
+				</div>
 			</div>
 		)
 	}
@@ -181,7 +190,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 	)
 
 	const panelContainerWidth = useMemo(() => {
-		return windowSize.width - 64
+		return windowSize.width - SIDEBAR_WIDTH
 	}, [windowSize.width])
 
 	const panelSizes = useMemo(() => {
@@ -220,13 +229,11 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 
 	return (
 		<Wrapper>
-			<div className="w-[64px] h-full">
-				<SideBar />
-			</div>
+			<SideBar />
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={updatePanelSizes}
-				className={cn(dark ? "bg-muted/40" : "bg-background", IS_DESKTOP && "rounded-tl-md")}
+				className={cn(dark ? "bg-muted/40" : "bg-background", IS_DESKTOP && !IS_APPLE_DEVICE && "rounded-tl-md")}
 			>
 				{!location.includes("/terminal") && (
 					<InnerSideBarWrapper

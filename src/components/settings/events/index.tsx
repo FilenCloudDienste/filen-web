@@ -3,7 +3,7 @@ import worker from "@/lib/worker"
 import { useQuery } from "@tanstack/react-query"
 import { Virtuoso } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
-import { IS_DESKTOP } from "@/constants"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import useAccount from "@/hooks/useAccount"
 import Event from "./event"
 import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
@@ -28,7 +28,7 @@ export const Events = memo(() => {
 	})
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - 16 - (IS_DESKTOP ? 24 : 0)
+		return windowSize.height - 16 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
 	const showSkeletons = useMemo(() => {

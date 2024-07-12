@@ -1,6 +1,6 @@
 import { useRef, forwardRef, memo, useMemo, useCallback, Fragment } from "react"
 import { type DriveCloudItem } from ".."
-import { IS_DESKTOP } from "@/constants"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import useWindowSize from "@/hooks/useWindowSize"
 import ListItem from "./item"
 import ContextMenu from "./contextMenu"
@@ -15,7 +15,7 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 	const canUpload = useCanUpload()
 
 	const height = useMemo(() => {
-		return IS_DESKTOP ? windowSize.height - 48 - 24 : windowSize.height - 48
+		return windowSize.height - 48 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
 	const skeletons = useMemo(() => {
