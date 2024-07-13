@@ -243,7 +243,10 @@
 		},
 		"syncs": {
 			"empty": "暂无同步",
-			"emptyCreate": "创建一个"
+			"emptyCreate": "创建一个",
+			"nothingFound": "未找到与 \"{{search}}\" 相符的内容",
+			"createSync": "创建同步",
+			"search": "搜索..."
 		}
 	},
 	"sideBar": {
@@ -526,6 +529,11 @@
 			"leave": "离开",
 			"delete": "删除",
 			"copyId": "复制 ID"
+		},
+		"syncs": {
+			"delete": "删除",
+			"pause": "暂停",
+			"resume": "恢复"
 		}
 	},
 	"transfers": {
@@ -1127,6 +1135,11 @@
 					"name": "已启用",
 					"info": "启用或禁用虚拟磁盘。切换此选项时刷新您的资源管理器。"
 				},
+			         "mountPoint": {
+					"name": "挂载点",
+					"info": "将挂载点设置为本地目录。本地目录需要为空且可读写。",
+					"change": "更改"
+				},
 				"driveLetter": {
 					"name": "盘符",
 					"info": "设置虚拟磁盘的盘符。仅会显示可用的盘符。"
@@ -1155,6 +1168,145 @@
 					"description": "您确定要禁用虚拟磁盘吗？它上面的所有活动操作都将被取消或都会出错。请确保您不再主动使用它。",
 					"continue": "禁用"
 				}
+			},
+			"errors": {
+				"invalidMountPoint": "无效的挂载点。"
+			}
+		},
+		"webdav": {
+			"copyConnect": "复制",
+			"sections": {
+				"active": {
+					"name": "激活"
+				},
+				"enabled": {
+					"name": "已启用",
+					"info": "启用或禁用 WebDAV 服务器。"
+				},
+				"protocol": {
+					"name": "HTTP 协议",
+					"info": "更改 HTTP 协议。"
+				},
+				"hostname": {
+					"name": "主机名称",
+					"info": "更改服务器应该监听的主机名。"
+				},
+				"port": {
+					"name": "端口",
+					"info": "更改服务器应该监听的端口。"
+				},
+				"authMode": {
+					"name": "认证方式",
+					"info": "更改认证方式。"
+				},
+				"username": {
+					"name": "用户名",
+					"info": "更改 HTTP 身份认证用户名。这不应是您的 Filen 电子邮件或昵称。"
+				},
+				"password": {
+					"name": "密码",
+					"info": "更改 HTTP 身份认证码。这不应该是您的 Filen 密码。"
+				},
+				"proxyMode": {
+					"name": "代理模式",
+					"info": "启用代理模式。"
+				},
+				"connect": {
+					"name": "连接",
+					"info": "复制 WebDAV URL。"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "禁用",
+					"description": "您确定要禁用 WebDAV 服务器吗？该服务器上的所有活动操作都将被取消或出错。请确保您不再主动使用该服务器。",
+					"continue": "禁用"
+				}
+			},
+			"errors": {
+				"invalidPort": "端口无效。接受的范围：{{range}}。",
+				"invalidHostname": "主机名称无效。"
+			}
+		},
+		"s3": {
+			"copyConnect": "复制",
+			"sections": {
+				"active": {
+					"name": "激活"
+				},
+				"enabled": {
+					"name": "已启用",
+					"info": "启用或禁用 S3 服务器。"
+				},
+				"protocol": {
+					"name": "HTTP 协议",
+					"info": "更改 HTTP 协议。"
+				},
+				"hostname": {
+					"name": "主机名称",
+					"info": "更改服务器应该监听的主机名。"
+				},
+				"port": {
+					"name": "端口",
+					"info": "更改服务器应该监听的端口。"
+				},
+				"accessKeyId": {
+					"name": "AccessKeyId",
+					"info": "更改 AccessKeyId。这不应该是您的 Filen 电子邮件或昵称。"
+				},
+				"secretKeyId": {
+					"name": "SecretKeyId",
+					"info": "更改 SecretKeyId。这不应该是您的 Filen 密码。"
+				},
+				"connect": {
+					"name": "连接",
+					"info": "复制 WebDAV URL。"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "禁用",
+					"description": "您确定要禁用 S3 服务器吗？该服务器上的所有活动操作都将被取消或出错。请确保您不再主动使用它。",
+					"continue": "禁用"
+				}
+			},
+			"errors": {
+				"invalidPort": "端口无效。接受的范围：{{range}}。",
+				"invalidHostname": "主机名称无效。"
+			}
+		}
+	},
+	"syncs": {
+		"events": "事件",
+		"ignored": "已忽略",
+		"issues": "问题",
+		"settingsTitle": "设置",
+		"noEventsYet": "暂无事件",
+		"nothingIgnored": "未忽略任何文件或目录",
+		"noIssues": "暂无问题",
+		"empty": {
+			"title": "尚未设置同步",
+			"description": "您可以将本地目录与云同步，或将云目录与设备同步",
+			"create": "创建"
+		},
+		"settings": {
+			"sections": {
+				"delete": {
+					"name": "删除",
+					"info": "删除同步",
+					"delete": "删除"
+				},
+				"pause": {
+					"name": "暂停",
+					"info": "暂停同步"
+				}
+			}
+		},
+		"dialogs": {
+			"delete": {
+				"title": "删除同步",
+				"description": "您确定要删除此同步吗？",
+				"continue": "删除"
 			}
 		}
 	}
