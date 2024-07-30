@@ -101,10 +101,7 @@ export const VirtualDrive = memo(() => {
 		setEnablingVirtualDrive(true)
 
 		try {
-			if (
-				window.desktopAPI.platform() !== "win32" &&
-				!(await window.desktopAPI.verifyUnixMountPath(desktopConfig.virtualDriveConfig.mountPoint))
-			) {
+			if (window.desktopAPI.platform() !== "win32" && !(await window.desktopAPI.verifyUnixMountPath(mountPoint))) {
 				errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
 
 				return
@@ -124,7 +121,7 @@ export const VirtualDrive = memo(() => {
 				...prev,
 				virtualDriveConfig: {
 					...prev.virtualDriveConfig,
-					mountPoint
+					mountPoint: mountPoint!
 				}
 			}))
 		} catch (e) {
