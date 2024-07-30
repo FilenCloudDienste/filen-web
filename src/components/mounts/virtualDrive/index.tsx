@@ -139,16 +139,7 @@ export const VirtualDrive = memo(() => {
 		} finally {
 			setEnablingVirtualDrive(false)
 		}
-	}, [
-		enablingVirtualDrive,
-		setEnablingVirtualDrive,
-		errorToast,
-		desktopConfig.virtualDriveConfig.mountPoint,
-		setDesktopConfig,
-		isMountedQuery,
-		availableDrivesQuery,
-		t
-	])
+	}, [enablingVirtualDrive, setEnablingVirtualDrive, errorToast, setDesktopConfig, isMountedQuery, availableDrivesQuery, t])
 
 	const onDriveLetterChange = useCallback(
 		async (letter: string) => {
