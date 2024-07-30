@@ -455,7 +455,7 @@ export const PreviewDialog = memo(() => {
 				{item && (
 					<div className="absolute w-screen h-[100dvh] flex flex-col">
 						<div
-							className="flex flex-row h-12 bg-secondary w-full items-center justify-between px-4 z-50 gap-10"
+							className="flex flex-row h-[49px] -mt-[1px] bg-secondary w-full items-center justify-between px-4 z-50 gap-10"
 							style={{
 								// @ts-expect-error not typed
 								WebkitAppRegion: "drag"
