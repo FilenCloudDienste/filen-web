@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from "react"
-import { RefreshCcw, HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings, MessageCircleMore, Terminal } from "lucide-react"
+import { HardDrive, Notebook, MessageCircle, Contact, ArrowDownUp, Settings, MessageCircleMore, Terminal } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
@@ -15,6 +15,7 @@ import useLocation from "@/hooks/useLocation"
 import { useChatsStore } from "@/stores/chats.store"
 import { useContactsStore } from "@/stores/contacts.store"
 import LogoSVG from "@/assets/logo"
+import SyncIndicator from "./syncIndicator"
 
 const iconSize = IS_DESKTOP && IS_APPLE_DEVICE ? 26 : 24
 
@@ -124,7 +125,7 @@ export const Button = memo(({ id }: { id: string }) => {
 							params={link.params}
 							draggable={false}
 						>
-							{id === "syncs" && <RefreshCcw size={iconSize} />}
+							{id === "syncs" && <SyncIndicator iconSize={iconSize} />}
 							{id === "mounts" && <HardDrive size={iconSize} />}
 							{id === baseFolderUUID && (
 								<div

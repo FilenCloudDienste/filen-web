@@ -2,7 +2,10 @@ import { useToast, type ToasterToast } from "@/components/ui/use-toast"
 import { Ban } from "lucide-react"
 import { useCallback } from "react"
 
-export type UseErrorToast = (reason: string) => {
+export type UseErrorToast = (
+	reason: string,
+	duration: number
+) => {
 	id: string
 	dismiss: () => void
 	update: (props: ToasterToast) => void

@@ -192,23 +192,23 @@ export const NotificationHandler = memo(() => {
 
 	useEffect(() => {
 		if (IS_DESKTOP) {
-			return
+			window.desktopAPI.updateNotificationCount(unread + requestsInCount).catch(console.error)
+		} else {
+			const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
+
+			if (!link) {
+				return
+			}
+
+			const oldHref = link.href
+			const newHref = unread + requestsInCount > 0 ? "./notification-favicon.ico" : "./favicon.ico"
+
+			if (newHref === oldHref) {
+				return
+			}
+
+			link.href = newHref
 		}
-
-		const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
-
-		if (!link) {
-			return
-		}
-
-		const oldHref = link.href
-		const newHref = unread + requestsInCount > 0 ? "./notification-favicon.ico" : "./favicon.ico"
-
-		if (newHref === oldHref) {
-			return
-		}
-
-		link.href = newHref
 	}, [unread, requestsInCount])
 
 	useEffect(() => {

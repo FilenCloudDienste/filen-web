@@ -86,9 +86,9 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 				linkSalt: info.hasPassword ? info.salt : undefined
 			})
 		} catch (e) {
-			console.error(e)
+			if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
+				console.error(e)
 
-			if (!(e as unknown as Error).toString().includes("abort")) {
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		}

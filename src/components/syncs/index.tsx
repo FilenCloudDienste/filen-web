@@ -1,7 +1,7 @@
 import { memo, useCallback } from "react"
 import { useSyncsStore } from "@/stores/syncs.store"
 import { cn } from "@/lib/utils"
-import { RefreshCcw, Plus } from "lucide-react"
+import { RefreshCw, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "react-i18next"
 import eventEmitter from "@/lib/eventEmitter"
@@ -30,7 +30,7 @@ export const Syncs = memo(() => {
 			) : desktopConfig.syncConfig.syncPairs.length === 0 ? (
 				<div className="flex flex-row items-center justify-center w-full h-full select-none">
 					<div className="flex flex-col p-4 justify-center items-center">
-						<RefreshCcw
+						<RefreshCw
 							width={128}
 							height={128}
 							className="text-muted-foreground"

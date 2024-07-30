@@ -31,6 +31,8 @@ export const General = memo(() => {
 	const [contactNotificationsEnabled, setContactNotificationsEnabled] = useLocalStorage<boolean>("contactNotificationsEnabled", false)
 	const [defaultNoteType, setDefaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
 	const settingsContainerSize = useSettingsContainerSize()
+	const [autoLaunchEnabled, setAutoLaunchEnabled] = useLocalStorage<boolean>("autoLaunchEnabled", false)
+	const [closeToTrayEnabled, setCloseToTrayEnabled] = useLocalStorage<boolean>("closeToTrayEnabled", false)
 
 	const thumbnailCacheQuery = useQuery({
 		queryKey: ["workerCalculateThumbnailCacheUsage"],
@@ -195,6 +197,25 @@ export const General = memo(() => {
 		[loadingToast, errorToast, thumbnailCacheQuery, t]
 	)
 
+	const toggleAutoLaunch = useCallback(
+		async (enabled: boolean) => {
+			const toast = loadingToast()
+
+			try {
+				await window.desktopAPI.toggleAutoLaunch(enabled)
+
+				setAutoLaunchEnabled(enabled)
+			} catch (e) {
+				console.error(e)
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			} finally {
+				toast.dismiss()
+			}
+		},
+		[loadingToast, errorToast, setAutoLaunchEnabled]
+	)
+
 	if (!account) {
 		return <Skeletons />
 	}
@@ -273,9 +294,33 @@ export const General = memo(() => {
 					</Section>
 					{IS_DESKTOP && (
 						<>
+							{window.desktopAPI.platform() !== "linux" && (
+								<>
+									<Section
+										name={t("settings.general.sections.autoLaunch.name")}
+										info={t("settings.general.sections.autoLaunch.info")}
+										className="mt-10"
+									>
+										<Switch
+											checked={autoLaunchEnabled}
+											onCheckedChange={toggleAutoLaunch}
+										/>
+									</Section>
+									<Section
+										name={t("settings.general.sections.closeToTray.name")}
+										info={t("settings.general.sections.closeToTray.info")}
+									>
+										<Switch
+											checked={closeToTrayEnabled}
+											onCheckedChange={setCloseToTrayEnabled}
+										/>
+									</Section>
+								</>
+							)}
 							<Section
 								name={t("settings.general.sections.chatNotifications.name")}
 								info={t("settings.general.sections.chatNotifications.info")}
+								className="mt-10"
 							>
 								<Switch
 									checked={chatNotificationsEnabled}

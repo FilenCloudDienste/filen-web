@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useEffect, useMemo } from "react"
+import { memo, useCallback, useEffect, useMemo } from "react"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Section from "@/components/settings/section"
@@ -15,6 +15,7 @@ import { formatBytes } from "@/utils"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { generateCacheSteps } from "./utils"
 import Input from "@/components/input"
+import { useMountsStore } from "@/stores/mounts.store"
 
 export async function isVirtualDriveMounted(): Promise<{ mounted: boolean }> {
 	const [mounted, active] = await Promise.all([window.desktopAPI.isVirtualDriveMounted(), window.desktopAPI.isVirtualDriveActive()])
@@ -27,7 +28,7 @@ export async function isVirtualDriveMounted(): Promise<{ mounted: boolean }> {
 export const VirtualDrive = memo(() => {
 	const { t } = useTranslation()
 	const settingsContainerSize = useSettingsContainerSize()
-	const [enabling, setEnabling] = useState<boolean>(false)
+	const { enablingVirtualDrive, setEnablingVirtualDrive } = useMountsStore()
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const errorToast = useErrorToast()
 
@@ -71,7 +72,7 @@ export const VirtualDrive = memo(() => {
 	}, [availableDrivesQuery.isSuccess, availableDrivesQuery.data, desktopConfig.virtualDriveConfig.mountPoint])
 
 	const changeMountPoint = useCallback(async () => {
-		if (enabling) {
+		if (enablingVirtualDrive) {
 			return
 		}
 
@@ -97,7 +98,7 @@ export const VirtualDrive = memo(() => {
 			return
 		}
 
-		setEnabling(true)
+		setEnablingVirtualDrive(true)
 
 		try {
 			if (
@@ -139,17 +140,26 @@ export const VirtualDrive = memo(() => {
 				}
 			}))
 		} finally {
-			setEnabling(false)
+			setEnablingVirtualDrive(false)
 		}
-	}, [enabling, errorToast, desktopConfig.virtualDriveConfig.mountPoint, setDesktopConfig, isMountedQuery, availableDrivesQuery, t])
+	}, [
+		enablingVirtualDrive,
+		setEnablingVirtualDrive,
+		errorToast,
+		desktopConfig.virtualDriveConfig.mountPoint,
+		setDesktopConfig,
+		isMountedQuery,
+		availableDrivesQuery,
+		t
+	])
 
 	const onDriveLetterChange = useCallback(
 		async (letter: string) => {
-			if (enabling) {
+			if (enablingVirtualDrive) {
 				return
 			}
 
-			setEnabling(true)
+			setEnablingVirtualDrive(true)
 
 			try {
 				if ((await isVirtualDriveMounted()).mounted) {
@@ -182,15 +192,15 @@ export const VirtualDrive = memo(() => {
 					}
 				}))
 			} finally {
-				setEnabling(false)
+				setEnablingVirtualDrive(false)
 			}
 		},
-		[enabling, errorToast, setDesktopConfig, isMountedQuery, availableDrivesQuery]
+		[enablingVirtualDrive, setEnablingVirtualDrive, errorToast, setDesktopConfig, isMountedQuery, availableDrivesQuery]
 	)
 
 	const onCheckedChange = useCallback(
 		async (checked: boolean) => {
-			if (enabling) {
+			if (enablingVirtualDrive) {
 				return
 			}
 
@@ -206,7 +216,7 @@ export const VirtualDrive = memo(() => {
 				return
 			}
 
-			setEnabling(true)
+			setEnablingVirtualDrive(true)
 
 			try {
 				if (
@@ -250,19 +260,28 @@ export const VirtualDrive = memo(() => {
 					}
 				}))
 			} finally {
-				setEnabling(false)
+				setEnablingVirtualDrive(false)
 			}
 		},
-		[setDesktopConfig, enabling, errorToast, isMountedQuery, availableDrivesQuery, t, desktopConfig.virtualDriveConfig.mountPoint]
+		[
+			setDesktopConfig,
+			enablingVirtualDrive,
+			setEnablingVirtualDrive,
+			errorToast,
+			isMountedQuery,
+			availableDrivesQuery,
+			t,
+			desktopConfig.virtualDriveConfig.mountPoint
+		]
 	)
 
 	const onCacheChange = useCallback(
 		async (size: string) => {
-			if (enabling) {
+			if (enablingVirtualDrive) {
 				return
 			}
 
-			setEnabling(true)
+			setEnablingVirtualDrive(true)
 
 			try {
 				if (
@@ -304,11 +323,12 @@ export const VirtualDrive = memo(() => {
 					}
 				}))
 			} finally {
-				setEnabling(false)
+				setEnablingVirtualDrive(false)
 			}
 		},
 		[
-			enabling,
+			enablingVirtualDrive,
+			setEnablingVirtualDrive,
 			errorToast,
 			desktopConfig.virtualDriveConfig.mountPoint,
 			setDesktopConfig,
@@ -338,7 +358,7 @@ export const VirtualDrive = memo(() => {
 	}, [desktopConfig.virtualDriveConfig.mountPoint, desktopConfig.virtualDriveConfig.enabled, errorToast])
 
 	const cleanupCache = useCallback(async () => {
-		if (enabling) {
+		if (enablingVirtualDrive) {
 			return
 		}
 
@@ -353,7 +373,7 @@ export const VirtualDrive = memo(() => {
 			return
 		}
 
-		setEnabling(true)
+		setEnablingVirtualDrive(true)
 
 		try {
 			await window.desktopAPI.stopVirtualDrive()
@@ -377,9 +397,18 @@ export const VirtualDrive = memo(() => {
 				}
 			}))
 		} finally {
-			setEnabling(false)
+			setEnablingVirtualDrive(false)
 		}
-	}, [errorToast, cacheSizeQuery, t, isMountedQuery, availableDrivesQuery, enabling, setDesktopConfig])
+	}, [
+		errorToast,
+		cacheSizeQuery,
+		t,
+		isMountedQuery,
+		availableDrivesQuery,
+		enablingVirtualDrive,
+		setEnablingVirtualDrive,
+		setDesktopConfig
+	])
 
 	useEffect(() => {
 		const refetchVirtualDriveListener = eventEmitter.on("refetchVirtualDrive", () => {
@@ -411,7 +440,7 @@ export const VirtualDrive = memo(() => {
 							WebkitAppRegion: "drag"
 						}}
 					>
-						{enabling ? (
+						{enablingVirtualDrive ? (
 							<Loader className="animate-spin-medium" />
 						) : isMountedQuery.data.mounted ? (
 							<div className="flex flex-row gap-3">
@@ -427,7 +456,7 @@ export const VirtualDrive = memo(() => {
 						className="mt-10"
 					>
 						<Switch
-							disabled={enabling}
+							disabled={enablingVirtualDrive}
 							checked={isMountedQuery.isSuccess && isMountedQuery.data.mounted}
 							onCheckedChange={onCheckedChange}
 						/>
@@ -440,7 +469,7 @@ export const VirtualDrive = memo(() => {
 							<Select
 								onValueChange={onDriveLetterChange}
 								value={desktopConfig.virtualDriveConfig.mountPoint}
-								disabled={enabling || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+								disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 							>
 								<SelectTrigger className="min-w-[120px]">
 									<SelectValue placeholder={desktopConfig.virtualDriveConfig.mountPoint} />
@@ -480,7 +509,7 @@ export const VirtualDrive = memo(() => {
 								<Button
 									size="sm"
 									onClick={changeMountPoint}
-									disabled={enabling || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 								>
 									{t("mounts.virtualDrive.sections.mountPoint.change")}
 								</Button>
@@ -504,7 +533,7 @@ export const VirtualDrive = memo(() => {
 										onClick={cleanupCache}
 										size="sm"
 										variant="destructive"
-										disabled={enabling || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+										disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 									>
 										{t("mounts.virtualDrive.clear")}
 									</Button>
@@ -521,7 +550,7 @@ export const VirtualDrive = memo(() => {
 						<Select
 							onValueChange={onCacheChange}
 							value={desktopConfig.virtualDriveConfig.cacheSizeInGi.toString()}
-							disabled={enabling || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+							disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 						>
 							<SelectTrigger className="min-w-[120px]">
 								<SelectValue placeholder={`${desktopConfig.virtualDriveConfig.cacheSizeInGi} GB`} />
@@ -540,7 +569,7 @@ export const VirtualDrive = memo(() => {
 							</SelectContent>
 						</Select>
 					</Section>
-					{!enabling && isMountedQuery.data.mounted && (
+					{!enablingVirtualDrive && isMountedQuery.data.mounted && (
 						<Section
 							name={t("mounts.virtualDrive.sections.browse.name")}
 							info={t("mounts.virtualDrive.sections.browse.info")}

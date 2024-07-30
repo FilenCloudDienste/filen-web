@@ -23,7 +23,7 @@ export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
 	const { t } = useTranslation()
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - 64 - DESKTOP_TOPBAR_HEIGHT
+		return windowSize.height - 64 - 12 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
 	const ignored = useMemo(() => {
@@ -84,6 +84,7 @@ export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
 			components={components}
+			defaultItemHeight={51}
 			style={{
 				overflowX: "hidden",
 				overflowY: "auto",

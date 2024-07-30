@@ -45,7 +45,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 	const itemContent = useCallback(
 		(_: number, history: NoteHistory) => {
 			return (
-				<div className="flex flex-row p-4 py-1 w-full">
+				<div className="flex flex-row p-4 py-0 mt-1 w-full">
 					<div
 						className={cn(
 							"flex flex-row items-center hover:bg-secondary p-2 w-full rounded-md cursor-pointer gap-2",
@@ -146,7 +146,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 
 	return (
 		<div className="flex flex-col w-full h-[calc(100dvh-48px)]">
-			<div className="flex flex-row">
+			<div className="flex flex-row w-full h-full">
 				<div className="flex flex-col w-[300px] border-r h-full">
 					<Virtuoso
 						data={historySorted}
@@ -166,30 +166,32 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 				<div className="flex flex-col grow w-[calc(100vw-300px)] h-full">
 					{selectedHistory && (
 						<>
-							{selectedHistory.type === "rich" || selectedHistory.type === "checklist" ? (
-								<RichTextEditor
-									key={selectedHistory.id + ":" + selectedHistory.type}
-									value={selectedHistory.content}
-									setValue={noop}
-									onValueChange={noop}
-									width={windowSize.width - 300}
-									height={windowSize.height - 48 - 12 - (selectedHistory.type === "rich" ? 9 : 0)}
-									type={selectedHistory.type}
-									readOnly={true}
-								/>
-							) : (
-								<TextEditor
-									key={selectedHistory.id + ":" + selectedHistory.type}
-									fileName={selectedHistory.type === "md" ? "note.md" : note.title}
-									value={selectedHistory.content}
-									setValue={noop}
-									onValueChange={noop}
-									height={windowSize.height - 48 - 56}
-									type={selectedHistory.type === "md" || selectedHistory.type === "code" ? "code" : "text"}
-									readOnly={true}
-									showMarkdownPreview={selectedHistory.type === "md"}
-								/>
-							)}
+							<div className="flex flex-row w-full h-[calc(100dvh-48px-56px)]">
+								{selectedHistory.type === "rich" || selectedHistory.type === "checklist" ? (
+									<RichTextEditor
+										key={selectedHistory.id + ":" + selectedHistory.type}
+										value={selectedHistory.content}
+										setValue={noop}
+										onValueChange={noop}
+										width={windowSize.width - 300}
+										height={windowSize.height - 48 - 12 - (selectedHistory.type === "rich" ? 9 : 0)}
+										type={selectedHistory.type}
+										readOnly={true}
+									/>
+								) : (
+									<TextEditor
+										key={selectedHistory.id + ":" + selectedHistory.type}
+										fileName={selectedHistory.type === "md" ? "note.md" : note.title}
+										value={selectedHistory.content}
+										setValue={noop}
+										onValueChange={noop}
+										height={windowSize.height - 48 - 52}
+										type={selectedHistory.type === "md" || selectedHistory.type === "code" ? "code" : "text"}
+										readOnly={true}
+										showMarkdownPreview={selectedHistory.type === "md"}
+									/>
+								)}
+							</div>
 							<div className="flex flex-row border-t justify-end items-center px-4 h-14 gap-2">
 								<Button
 									size="sm"

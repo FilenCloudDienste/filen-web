@@ -5,12 +5,15 @@ import { getItem } from "@/lib/localForage"
 import { useNavigate } from "@tanstack/react-router"
 import { useTranslation } from "react-i18next"
 import { directoryUUIDToNameCache } from "@/cache"
+import useRouteParent from "@/hooks/useRouteParent"
+import { cn } from "@/lib/utils"
 
 export const Item = memo(({ path, index, pathname }: { path: string; index: number; pathname: string }) => {
 	const { baseFolderUUID } = useSDKConfig()
 	const navigate = useNavigate()
 	const { t } = useTranslation()
 	const [name, setName] = useState<string>(directoryUUIDToNameCache.has(path) ? (directoryUUIDToNameCache.get(path) as string) : "")
+	const routeParent = useRouteParent()
 
 	const navigateToPath = useCallback(() => {
 		let builtPathname = ""
@@ -107,12 +110,20 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 			}}
 		>
 			<p
-				className="text-primary cursor-pointer select-none hover:underline"
+				className={cn(
+					"cursor-pointer select-none hover:text-primary",
+					routeParent === path ? "text-primary" : "text-muted-foreground"
+				)}
 				onClick={onClick}
 			>
 				{path === baseFolderUUID ? t("topBar.breadcrumb.cloudDrive") : name}
 			</p>
-			{index < pathname.split("/").length - 1 && <ChevronRight size={18} />}
+			{index < pathname.split("/").length - 1 && (
+				<ChevronRight
+					size={18}
+					className="text-muted-foreground"
+				/>
+			)}
 		</div>
 	)
 })

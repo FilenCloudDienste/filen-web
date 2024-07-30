@@ -15,7 +15,7 @@ export const Events = memo(({ sync }: { sync: SyncPair }) => {
 	const { t } = useTranslation()
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - 64 - DESKTOP_TOPBAR_HEIGHT
+		return windowSize.height - 64 - 13 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
 	const state = useMemo(() => {
@@ -56,6 +56,7 @@ export const Events = memo(({ sync }: { sync: SyncPair }) => {
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
 			components={components}
+			defaultItemHeight={51}
 			style={{
 				overflowX: "hidden",
 				overflowY: "auto",

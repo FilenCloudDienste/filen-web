@@ -17,13 +17,34 @@ import useIsMobile from "@/hooks/useIsMobile"
 export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 	const { t } = useTranslation()
 	const { dark } = useTheme()
+	const [closeToTrayEnabled] = useLocalStorage<boolean>("closeToTrayEnabled", false)
 
-	const minimizeWindow = useCallback(() => {
-		window.desktopAPI.minimizeWindow().catch(console.error)
-	}, [])
+	const minimizeWindow = useCallback(async () => {
+		try {
+			if (closeToTrayEnabled) {
+				await window.desktopAPI.hideWindow()
 
-	const maximizeWindow = useCallback(() => {
-		window.desktopAPI.maximizeWindow().catch(console.error)
+				return
+			}
+
+			await window.desktopAPI.minimizeWindow()
+		} catch (e) {
+			console.error(e)
+		}
+	}, [closeToTrayEnabled])
+
+	const maximizeWindow = useCallback(async () => {
+		try {
+			if (await window.desktopAPI.isWindowMaximized()) {
+				await window.desktopAPI.unmaximizeWindow()
+
+				return
+			}
+
+			await window.desktopAPI.maximizeWindow()
+		} catch (e) {
+			console.error(e)
+		}
 	}, [])
 
 	const closeWindow = useCallback(
@@ -63,9 +84,16 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 							width: SIDEBAR_WIDTH - 2
 						}}
 					>
-						<p className="text-sm text-muted-foreground">Filen</p>
+						<p
+							className="text-muted-foreground"
+							style={{
+								fontSize: 14
+							}}
+						>
+							Filen
+						</p>
 					</div>
-					<div className="flex flex-row w-full justify-end bg-muted/40 border-b border-l">
+					<div className="flex flex-row w-full justify-end">
 						<div
 							className={cn(
 								"w-auto px-2 z-10 cursor-pointer text-muted-foreground h-full flex flex-row items-center justify-center hover:text-primary",
@@ -233,7 +261,10 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={updatePanelSizes}
-				className={cn(dark ? "bg-muted/40" : "bg-background")}
+				className={cn(
+					dark ? "bg-muted/40" : "bg-background",
+					IS_DESKTOP && !IS_APPLE_DEVICE ? "rounded-tl-md border-l border-t" : "border-l"
+				)}
 			>
 				{!location.includes("/terminal") && (
 					<InnerSideBarWrapper

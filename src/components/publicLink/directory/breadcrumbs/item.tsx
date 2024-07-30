@@ -25,7 +25,7 @@ export const Item = memo(({ uuid, info, ex, index }: { info: DirLinkInfoDecrypte
 	return (
 		<li className="flex flex-row gap-1 items-center select-none truncate">
 			<p
-				className="text-primary cursor-pointer select-none truncate hover:underline"
+				className="text-primary cursor-pointer select-none truncate hover:text-primary"
 				onClick={navigateToPath}
 			>
 				{uuid === info.parent

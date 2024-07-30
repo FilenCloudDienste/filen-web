@@ -403,6 +403,8 @@
 			"select": "Select",
 			"syncMode": "Sync mode",
 			"title": "Create sync",
+			"paused": "Paused",
+			"excludeDotFiles": "Exclude dot files (recommended)",
 			"mode": {
 				"twoWay": "Two way",
 				"localToCloud": "Local to cloud",
@@ -539,7 +541,7 @@
 	"transfers": {
 		"title": "Transfers",
 		"remaining": "About {{time}} remaining",
-		"noActiveTransfers": "No active transfers",
+		"noActiveTransfers": "No transfers yet",
 		"state": {
 			"finished": "Finished",
 			"queued": "Queued",
@@ -766,6 +768,14 @@
 					"name": "Logout",
 					"info": "Logout",
 					"action": "Logout"
+				},
+				"closeToTray": {
+					"name": "Close to tray",
+					"info": "Hide Filen in the tray instead of minimizing the window"
+				},
+				"autoLaunch": {
+					"name": "Autostart",
+					"info": "Start Filen automatically on system start"
 				}
 			}
 		},
@@ -901,7 +911,7 @@
 				},
 				"personalInformation": {
 					"name": "Personal information",
-					"info": "Edit your personal information. Will be used for invoicing and is not public",
+					"info": "Edit your personal information. Only for business customers. Will be used for invoicing and is not public.",
 					"action": "Edit"
 				},
 				"fileVersioning": {
@@ -1133,28 +1143,28 @@
 				},
 				"enabled": {
 					"name": "Enabled",
-					"info": "Enable or disable the virtual drive. Refresh your explorer when toggling this option."
+					"info": "Enable or disable the virtual drive. Refresh your explorer when toggling this option"
 				},
 				"mountPoint": {
 					"name": "Mount point",
-					"info": "Set the mount point to a local directory. The local directory needs to be empty and readale/writable.",
+					"info": "Set the mount point to a local directory. The local directory needs to be empty and readale/writable",
 					"change": "Change"
 				},
 				"driveLetter": {
 					"name": "Drive letter",
-					"info": "Set the drive letter for the virtual drive. Only available drive letters will show up."
+					"info": "Set the drive letter for the virtual drive. Only available drive letters will show up"
 				},
 				"browse": {
 					"name": "Browse",
-					"info": "Browse the virtual drive using your default explorer."
+					"info": "Browse the virtual drive using your default explorer"
 				},
 				"cache": {
 					"name": "Cache",
-					"info": "Caching significantly speeds up browsing your virtual drive."
+					"info": "Caching significantly speeds up browsing your virtual drive"
 				},
 				"cacheSize": {
 					"name": "Cache size",
-					"info": "We recommend setting the cache size as high as possible. The client will use your local disk to significantly speed up the virtual drive."
+					"info": "We recommend setting the cache size as high as possible. The client will use your local disk to significantly speed up the virtual drive"
 				}
 			},
 			"dialogs": {
@@ -1181,39 +1191,39 @@
 				},
 				"enabled": {
 					"name": "Enabled",
-					"info": "Enable or disable the WebDAV server."
+					"info": "Enable or disable the WebDAV server"
 				},
 				"protocol": {
 					"name": "HTTP Protocol",
-					"info": "Change the HTTP Protocol."
+					"info": "Change the HTTP Protocol"
 				},
 				"hostname": {
 					"name": "Hostname",
-					"info": "Change the hostname the server should listen on."
+					"info": "Change the hostname the server should listen on"
 				},
 				"port": {
 					"name": "Port",
-					"info": "Change the port the server should listen on."
+					"info": "Change the port the server should listen on"
 				},
 				"authMode": {
 					"name": "Authentication mode",
-					"info": "Change the authentication mode."
+					"info": "Change the authentication mode"
 				},
 				"username": {
 					"name": "Username",
-					"info": "Change the HTTP authentication username. This is should not be your Filen email or nickname."
+					"info": "Change the HTTP authentication username. This is should not be your Filen email or nickname"
 				},
 				"password": {
 					"name": "Password",
-					"info": "Change the HTTP authentication password. This is should not be your Filen password."
+					"info": "Change the HTTP authentication password. This is should not be your Filen password"
 				},
 				"proxyMode": {
 					"name": "Proxy mode",
-					"info": "Enable the proxy mode."
+					"info": "Enable the proxy mode"
 				},
 				"connect": {
 					"name": "Connect",
-					"info": "Copy the WebDAV URL."
+					"info": "Copy the WebDAV URL"
 				}
 			},
 			"dialogs": {
@@ -1236,31 +1246,31 @@
 				},
 				"enabled": {
 					"name": "Enabled",
-					"info": "Enable or disable the S3 server."
+					"info": "Enable or disable the S3 server"
 				},
 				"protocol": {
 					"name": "HTTP Protocol",
-					"info": "Change the HTTP Protocol."
+					"info": "Change the HTTP Protocol"
 				},
 				"hostname": {
 					"name": "Hostname",
-					"info": "Change the hostname the server should listen on."
+					"info": "Change the hostname the server should listen on"
 				},
 				"port": {
 					"name": "Port",
-					"info": "Change the port the server should listen on."
+					"info": "Change the port the server should listen on"
 				},
 				"accessKeyId": {
 					"name": "AccessKeyId",
-					"info": "Change the AccessKeyId. This is should not be your Filen email or nickname."
+					"info": "Change the AccessKeyId. This is should not be your Filen email or nickname"
 				},
 				"secretKeyId": {
 					"name": "SecretKeyId",
-					"info": "Change the SecretKeyId. This is should not be your Filen password."
+					"info": "Change the SecretKeyId. This is should not be your Filen password"
 				},
 				"connect": {
 					"name": "Connect",
-					"info": "Copy the WebDAV URL."
+					"info": "Copy the WebDAV URL"
 				}
 			},
 			"dialogs": {
@@ -1277,10 +1287,12 @@
 		}
 	},
 	"syncs": {
-		"events": "Events",
-		"ignored": "Ignored",
-		"issues": "Issues",
+		"eventsTitle": "Events",
+		"ignoredTitle": "Ignored",
+		"issuesTitle": "Issues",
 		"settingsTitle": "Settings",
+		"transfersTitle": "Transfers",
+		"noTransfers": "No active transfers",
 		"noEventsYet": "No events yet",
 		"nothingIgnored": "No files or directories ignored",
 		"noIssues": "No issues",
@@ -1288,6 +1300,20 @@
 			"title": "No syncs setup yet",
 			"description": "You can sync your local directories with the cloud or cloud directories with your device",
 			"create": "Create"
+		},
+		"events": {
+			"createLocalDirectory": "{{name}} created locally",
+			"renameLocalDirectory": "{{name}} renamed locally",
+			"deleteLocalDirectory": "{{name}} deleted locally",
+			"createRemoteDirectory": "{{name}} created in the cloud",
+			"renameRemoteDirectory": "{{name}} renamed in the cloud",
+			"deleteRemoteDirectory": "{{name}} deleted from the cloud",
+			"deleteLocalFile": "{{name}} deleted locally",
+			"deleteRemoteFile": "{{name}} deleted from the cloud",
+			"download": "{{name}} downloaded from the cloud",
+			"upload": "{{name}} uploaded to the cloud",
+			"renameLocalFile": "{{name}} renamed locally",
+			"renameRemoteFile": "{{name}} renamed in the cloud"
 		},
 		"settings": {
 			"sections": {
@@ -1299,6 +1325,24 @@
 				"pause": {
 					"name": "Pause",
 					"info": "Pause the sync"
+				},
+				"mode": {
+					"name": "Sync mode",
+					"info": "Change the sync mode"
+				},
+				"forceSync": {
+					"name": "Force sync",
+					"info": "Reset the internal cache and force re-scanning of the local and cloud directory",
+					"forceSync": "Force sync"
+				},
+				"excludeDotFiles": {
+					"name": "Exclude dot files",
+					"info": "Toggle dot file/path exclusion (recommended)"
+				},
+				"filenIgnore": {
+					"name": ".filenignore",
+					"info": "Edit an ignore file for local or cloud exclusions. Works just like a .gitignore file",
+					"edit": "Edit"
 				}
 			}
 		},
@@ -1307,6 +1351,22 @@
 				"title": "Delete sync",
 				"description": "Are you sure you want to delete this sync?",
 				"continue": "Delete"
+			},
+			"filenIgnore": {
+				"title": ".filenignore",
+				"save": "Save"
+			}
+		},
+		"ignored": {
+			"types": {
+				"dotFile": "Dot file",
+				"defaultIgnore": "Ignored by default",
+				"empty": "Empty"
+			},
+			"reasons": {
+				"dotFile": "File or directory is inside a dot path",
+				"defaultIgnore": "File or directory is inside a path that is ignored by default",
+				"empty": "File is empty"
 			}
 		}
 	}

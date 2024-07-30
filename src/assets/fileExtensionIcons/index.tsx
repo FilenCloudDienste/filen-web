@@ -243,7 +243,8 @@ export const ColoredFolderSVGIcon = memo(
 						height: height ? height : "1em",
 						verticalAlign: "middle",
 						fill: "currentcolor",
-						overflow: "hidden"
+						overflow: "hidden",
+						flexShrink: 0
 					}}
 					className="dragselect-start-disallowed"
 					viewBox="0 0 1228 1024"

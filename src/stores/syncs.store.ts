@@ -38,7 +38,13 @@ export type SyncsStore = {
 	errors: Record<string, GeneralError[]>
 	taskErrors: Record<string, IPCTaskError[]>
 	search: string
+	changing: boolean
+	remainingReadable: Record<string, string>
+	remaining: Record<string, number>
+	speed: Record<string, number>
+	progress: Record<string, number>
 	setSelectedSync: (fn: SyncPair | null | ((prev: SyncPair | null) => SyncPair | null)) => void
+	setChanging: (fn: boolean | ((prev: boolean) => boolean)) => void
 	setTransferEvents: (
 		fn:
 			| Record<string, TransferDataWithTimestamp[]>
@@ -55,18 +61,58 @@ export type SyncsStore = {
 	setErrors: (fn: Record<string, GeneralError[]> | ((prev: Record<string, GeneralError[]>) => Record<string, GeneralError[]>)) => void
 	setTaskErrors: (fn: Record<string, IPCTaskError[]> | ((prev: Record<string, IPCTaskError[]>) => Record<string, IPCTaskError[]>)) => void
 	setSearch: (fn: string | ((prev: string) => string)) => void
+	setRemainingReadable: (fn: Record<string, string> | ((prev: Record<string, string>) => Record<string, string>)) => void
+	setRemaining: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
+	setSpeed: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
+	setProgress: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 }
 
 export const useSyncsStore = create<SyncsStore>(set => ({
 	selectedSync: null,
 	transferEvents: {},
 	cycleState: {},
-	transfers: {},
+	transfers: {
+		/*"8e9b6c9b-50c2-4bad-9388-4194388c4597": [
+			{
+				type: "download",
+				localPath: "C:\\Users\\dwynr\\lol.txt",
+				relativePath: "/lol.txt",
+				state: "started",
+				bytes: 1,
+				name: "lol.txt",
+				size: 5,
+				startedTimestamp: 0,
+				finishedTimestamp: 0,
+				queuedTimestamp: 0,
+				errorTimestamp: 0,
+				progressTimestamp: 0
+			},
+			{
+				type: "download",
+				localPath: "C:\\Users\\dwynr\\lol.txt",
+				relativePath: "/lol.txt",
+				state: "started",
+				bytes: 3,
+				name: "lol.txt",
+				size: 5,
+				startedTimestamp: 0,
+				finishedTimestamp: 0,
+				queuedTimestamp: 0,
+				errorTimestamp: 0,
+				progressTimestamp: 0
+			}
+		]*/
+	},
 	remoteIgnored: {},
 	localIgnored: {},
 	errors: {},
 	taskErrors: {},
 	search: "",
+	changing: false,
+	remainingReadable: {},
+	speed: {},
+	progress: {},
+	remaining: {},
 	setSelectedSync(fn) {
 		set(state => ({ selectedSync: typeof fn === "function" ? fn(state.selectedSync) : fn }))
 	},
@@ -93,5 +139,20 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	},
 	setSearch(fn) {
 		set(state => ({ search: typeof fn === "function" ? fn(state.search) : fn }))
+	},
+	setChanging(fn) {
+		set(state => ({ changing: typeof fn === "function" ? fn(state.changing) : fn }))
+	},
+	setRemainingReadable(fn) {
+		set(state => ({ remainingReadable: typeof fn === "function" ? fn(state.remainingReadable) : fn }))
+	},
+	setProgress(fn) {
+		set(state => ({ progress: typeof fn === "function" ? fn(state.progress) : fn }))
+	},
+	setRemaining(fn) {
+		set(state => ({ remaining: typeof fn === "function" ? fn(state.remaining) : fn }))
+	},
+	setSpeed(fn) {
+		set(state => ({ speed: typeof fn === "function" ? fn(state.speed) : fn }))
 	}
 }))

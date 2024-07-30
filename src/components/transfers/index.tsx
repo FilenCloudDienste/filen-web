@@ -8,10 +8,13 @@ import { useTransfersStore, type TransferState, type Transfer as TransferType } 
 import { Virtuoso } from "react-virtuoso"
 import { calcSpeed, calcTimeLeft, getTimeRemaining, bpsToReadable } from "./utils"
 import throttle from "lodash/throttle"
-import { ArrowDownUp } from "lucide-react"
+import { ArrowDownUp, Play, Pause, XCircle } from "lucide-react"
 import { IS_DESKTOP } from "@/constants"
 import Transfer from "./transfer"
 import { type MainToWindowMessage } from "@filen/desktop/dist/ipc"
+import worker from "@/lib/worker"
+import useErrorToast from "@/hooks/useErrorToast"
+import { Button } from "../ui/button"
 
 export const transferStateSortingPriority: Record<TransferState, number> = {
 	started: 1,
@@ -32,6 +35,9 @@ export const Transfers = memo(() => {
 	const allBytes = useRef<number>(0)
 	const progressStarted = useRef<number>(-1)
 	const [remainingReadable, setRemainingReadable] = useState<string>("")
+	const [paused, setPaused] = useState<boolean>(false)
+	const isTogglingPauseOrAbort = useRef<boolean>(false)
+	const errorToast = useErrorToast()
 
 	const onDragOver = useCallback(
 		(e: React.DragEvent<HTMLDivElement>) => {
@@ -172,8 +178,6 @@ export const Transfers = memo(() => {
 				} else if (message.data.type === "progress") {
 					const bytes = message.data.bytes
 
-					bytesSent.current += bytes
-
 					setTransfers(prev =>
 						prev.map(transfer =>
 							transfer.uuid === message.data.uuid
@@ -185,6 +189,8 @@ export const Transfers = memo(() => {
 								: transfer
 						)
 					)
+
+					bytesSent.current += bytes
 				} else if (message.data.type === "finished") {
 					setFinishedTransfers(prev => [
 						...prev,
@@ -202,12 +208,9 @@ export const Transfers = memo(() => {
 							progressTimestamp: 0
 						}
 					])
+
 					setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
 				} else if (message.data.type === "error") {
-					if (allBytes.current >= message.data.size) {
-						allBytes.current -= message.data.size
-					}
-
 					setTransfers(prev =>
 						prev.map(transfer =>
 							transfer.uuid === message.data.uuid
@@ -219,12 +222,16 @@ export const Transfers = memo(() => {
 								: transfer
 						)
 					)
-				} else if (message.data.type === "stopped") {
+
 					if (allBytes.current >= message.data.size) {
 						allBytes.current -= message.data.size
 					}
-
+				} else if (message.data.type === "stopped") {
 					setTransfers(prev => prev.filter(transfer => transfer.uuid !== message.data.uuid))
+
+					if (allBytes.current >= message.data.size) {
+						allBytes.current -= message.data.size
+					}
 				}
 
 				updateInfo()
@@ -233,8 +240,106 @@ export const Transfers = memo(() => {
 		[setFinishedTransfers, setTransfers, updateInfo]
 	)
 
+	const abort = useCallback(async () => {
+		if (isTogglingPauseOrAbort.current) {
+			return
+		}
+
+		isTogglingPauseOrAbort.current = true
+
+		try {
+			await Promise.all(
+				transfers.map(async transfer => {
+					const progressNormalized = parseInt(((transfer.bytes / transfer.size) * 100).toFixed(0))
+
+					if (transfer.state === "stopped" || transfer.state === "error" || progressNormalized >= 95) {
+						return
+					}
+
+					if (transfer.type === "download" && IS_DESKTOP) {
+						await window.desktopAPI.abortAbortSignal({ id: transfer.uuid })
+					} else {
+						await worker.abortAbortSignal({ id: transfer.uuid })
+					}
+
+					setTransfers(prev => prev.filter(t => t.uuid !== transfer.uuid))
+				})
+			)
+
+			setPaused(false)
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			isTogglingPauseOrAbort.current = false
+		}
+	}, [errorToast, transfers, setTransfers])
+
+	const togglePause = useCallback(async () => {
+		if (isTogglingPauseOrAbort.current) {
+			return
+		}
+
+		isTogglingPauseOrAbort.current = true
+
+		try {
+			if (paused) {
+				await Promise.all(
+					transfers.map(async transfer => {
+						if (transfer.state === "stopped" || transfer.state === "error" || transfer.state === "finished") {
+							return
+						}
+
+						if (transfer.type === "download" && IS_DESKTOP) {
+							await window.desktopAPI.resumePauseSignal({ id: transfer.uuid })
+						} else {
+							await worker.resumePauseSignal({ id: transfer.uuid })
+						}
+
+						setTransfers(prev => prev.map(t => (t.uuid === transfer.uuid ? { ...t, state: "started" } : t)))
+					})
+				)
+
+				setPaused(false)
+			} else {
+				await Promise.all(
+					transfers.map(async transfer => {
+						const progressNormalized = parseInt(((transfer.bytes / transfer.size) * 100).toFixed(0))
+
+						if (
+							transfer.state === "stopped" ||
+							transfer.state === "error" ||
+							transfer.state === "finished" ||
+							transfer.state === "paused" ||
+							progressNormalized >= 95
+						) {
+							return
+						}
+
+						if (transfer.type === "download" && IS_DESKTOP) {
+							await window.desktopAPI.pausePauseSignal({ id: transfer.uuid })
+						} else {
+							await worker.pausePauseSignal({ id: transfer.uuid })
+						}
+
+						setTransfers(prev => prev.map(t => (t.uuid === transfer.uuid ? { ...t, state: "paused" } : t)))
+					})
+				)
+
+				setPaused(true)
+			}
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			isTogglingPauseOrAbort.current = false
+		}
+	}, [paused, errorToast, transfers, setTransfers])
+
 	useEffect(() => {
-		if (ongoingTransfers.length === 0) {
+		if (ongoingTransfers.length <= 0) {
 			bytesSent.current = 0
 			progressStarted.current = -1
 			allBytes.current = 0
@@ -242,6 +347,7 @@ export const Transfers = memo(() => {
 			setRemaining(0)
 			setSpeed(0)
 			setProgress(0)
+			setPaused(false)
 		}
 	}, [ongoingTransfers, setRemaining, setSpeed, setProgress])
 
@@ -291,6 +397,7 @@ export const Transfers = memo(() => {
 					computeItemKey={getItemKey}
 					itemContent={itemContent}
 					onDragOver={onDragOver}
+					defaultItemHeight={78}
 					components={{
 						EmptyPlaceholder: () => {
 							return (
@@ -313,12 +420,41 @@ export const Transfers = memo(() => {
 						width: "100%"
 					}}
 				/>
-				<div className="flex flex-row justify-between items-center gap-4 h-12 text-muted-foreground">
-					{remaining > 0 && speed > 0 && (
-						<>
-							<p>{remainingReadable}</p>
-							<p>{bpsToReadable(speed)}</p>
-						</>
+				<div className="flex flex-row items-center gap-3 h-12 text-muted-foreground justify-end text-sm">
+					{remaining > 0 && remainingReadable.length > 0 && (
+						<p className="line-clamp-1 text-ellipsis break-all">{remainingReadable}</p>
+					)}
+					{speed > 0 && <p className="line-clamp-1 text-ellipsis break-all">{bpsToReadable(speed)}</p>}
+					{ongoingTransfers.length > 0 && (
+						<div className="flex flex-row items-center">
+							{paused ? (
+								<Button
+									variant="ghost"
+									size="icon"
+									onClick={togglePause}
+								>
+									<Play size={16} />
+								</Button>
+							) : (
+								<Button
+									variant="ghost"
+									size="icon"
+									onClick={togglePause}
+								>
+									<Pause size={16} />
+								</Button>
+							)}
+							<Button
+								variant="ghost"
+								size="icon"
+								onClick={abort}
+							>
+								<XCircle
+									size={16}
+									className="text-red-500"
+								/>
+							</Button>
+						</div>
 					)}
 				</div>
 			</SheetContent>

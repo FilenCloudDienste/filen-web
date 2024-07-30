@@ -7,6 +7,7 @@ import { Semaphore } from "@/lib/semaphore"
 import { isVirtualDriveMounted } from "./mounts/virtualDrive"
 import { isWebDAVOnline } from "./mounts/webdav"
 import { isS3Online } from "./mounts/s3"
+import { useMountsStore } from "@/stores/mounts.store"
 
 export const updateDesktopConfigMutex = new Semaphore(1)
 
@@ -14,6 +15,7 @@ export const DesktopHandler = memo(() => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const lastDesktopConfigRef = useRef<string>("")
+	const { setEnablingS3, setEnablingVirtualDrive, setEnablingWebDAV } = useMountsStore()
 
 	const currentDesktopConfigStringified = useMemo(() => {
 		return JSON.stringify(desktopConfig)
@@ -23,6 +25,8 @@ export const DesktopHandler = memo(() => {
 		if (!authed) {
 			return
 		}
+
+		setEnablingVirtualDrive(true)
 
 		try {
 			await window.desktopAPI.restartVirtualDrive()
@@ -38,13 +42,17 @@ export const DesktopHandler = memo(() => {
 					enabled: false
 				}
 			}))
+		} finally {
+			setEnablingVirtualDrive(false)
 		}
-	}, [setDesktopConfig, authed])
+	}, [setDesktopConfig, authed, setEnablingVirtualDrive])
 
 	const startWebDAV = useCallback(async () => {
 		if (!authed) {
 			return
 		}
+
+		setEnablingWebDAV(true)
 
 		try {
 			await window.desktopAPI.restartWebDAVServer()
@@ -60,13 +68,17 @@ export const DesktopHandler = memo(() => {
 					enabled: false
 				}
 			}))
+		} finally {
+			setEnablingWebDAV(false)
 		}
-	}, [setDesktopConfig, authed])
+	}, [setDesktopConfig, authed, setEnablingWebDAV])
 
 	const startS3 = useCallback(async () => {
 		if (!authed) {
 			return
 		}
+
+		setEnablingS3(true)
 
 		try {
 			await window.desktopAPI.restartS3Server()
@@ -82,8 +94,10 @@ export const DesktopHandler = memo(() => {
 					enabled: false
 				}
 			}))
+		} finally {
+			setEnablingS3(false)
 		}
-	}, [setDesktopConfig, authed])
+	}, [setDesktopConfig, authed, setEnablingS3])
 
 	useEffect(() => {
 		;(async () => {
@@ -98,25 +112,13 @@ export const DesktopHandler = memo(() => {
 			await updateDesktopConfigMutex.acquire()
 
 			try {
-				const [isSyncActive, { mounted: virtualDriveMounted }, { online: webdavOnline }, { online: s3Online }] = await Promise.all([
-					window.desktopAPI.isSyncActive(),
+				const [{ mounted: virtualDriveMounted }, { online: webdavOnline }, { online: s3Online }] = await Promise.all([
 					isVirtualDriveMounted(),
 					isWebDAVOnline(),
 					isS3Online()
 				])
 
 				await Promise.all([
-					isSyncActive
-						? window.desktopAPI.forwardSyncMessage({
-								type: "updateSyncPairs",
-								data: {
-									pairs: desktopConfig.syncConfig.syncPairs,
-									resetCache: false
-								}
-							})
-						: desktopConfig.syncConfig.syncPairs.length > 0
-							? window.desktopAPI.restartSync()
-							: Promise.resolve(),
 					desktopConfig.virtualDriveConfig.enabled && !virtualDriveMounted ? startVirtualDrive() : Promise.resolve(),
 					desktopConfig.webdavConfig.enabled && !webdavOnline ? startWebDAV() : Promise.resolve(),
 					desktopConfig.s3Config.enabled && !s3Online ? startS3() : Promise.resolve()

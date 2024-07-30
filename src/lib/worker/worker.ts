@@ -51,67 +51,12 @@ import DOMPurify from "dompurify"
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
 let isInitialized = false
-const postMessageToMainProgressThrottle: Record<string, { next: number; storedBytes: number }> = {}
 const pauseSignals: Record<string, PauseSignal> = {}
 const abortControllers: Record<string, AbortController> = {}
 const textEncoder = new TextEncoder()
 
-// We have to throttle the "progress" events of the "download"/"upload" message type. The SDK sends too many events for the IPC to handle properly.
-// It freezes the main process if we don't throttle it.
-function throttlePostMessageToMain(message: WorkerToMainMessage, callback: (message: WorkerToMainMessage) => void) {
-	const now = Date.now()
-	let key = ""
-
-	if (message.type === "download" || message.type === "upload") {
-		if (message.data.type === "progress") {
-			key = `${message.type}:${message.data.uuid}:${message.data.name}:${message.data.type}`
-
-			if (!postMessageToMainProgressThrottle[key]) {
-				postMessageToMainProgressThrottle[key] = {
-					next: 0,
-					storedBytes: 0
-				}
-			}
-
-			postMessageToMainProgressThrottle[key]!.storedBytes += message.data.bytes
-
-			if (postMessageToMainProgressThrottle[key]!.next > now) {
-				return
-			}
-
-			message = {
-				...message,
-				data: {
-					...message.data,
-					bytes: postMessageToMainProgressThrottle[key]!.storedBytes
-				}
-			}
-		}
-	}
-
-	callback(message)
-
-	if (key.length > 0 && postMessageToMainProgressThrottle[key] && (message.type === "download" || message.type === "upload")) {
-		postMessageToMainProgressThrottle[key]!.storedBytes = 0
-		postMessageToMainProgressThrottle[key]!.next = now + 100
-
-		if (
-			message.data.type === "error" ||
-			message.data.type === "queued" ||
-			message.data.type === "stopped" ||
-			message.data.type === "finished"
-		) {
-			delete postMessageToMainProgressThrottle[key]
-		}
-	}
-}
-
 // We setup an eventEmitter first here in case we are running in the main thread.
-let postMessageToMain: (message: WorkerToMainMessage) => void = message => {
-	throttlePostMessageToMain(message, msg => {
-		eventEmitter.emit("workerMessage", msg)
-	})
-}
+let postMessageToMain: (message: WorkerToMainMessage) => void = message => eventEmitter.emit("workerMessage", message)
 
 export async function waitForInitialization(): Promise<void> {
 	// Only check for init if we are running inside a WebWorker.
@@ -139,7 +84,7 @@ export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
 }
 
 export async function setMessageHandler(callback: (message: WorkerToMainMessage) => void): Promise<void> {
-	postMessageToMain = message => throttlePostMessageToMain(message, callback)
+	postMessageToMain = callback
 
 	return
 }
@@ -658,7 +603,7 @@ export async function uploadFile({
 	await waitForInitialization()
 
 	const fileName = name ? name : file.name
-	const fileId = `${fileName}:${file.size}:${file.type}:${file.lastModified}:${file.webkitRelativePath}`
+	const fileId = uuidv4()
 
 	if (!pauseSignals[fileId]) {
 		pauseSignals[fileId] = new PauseSignal()
@@ -2778,7 +2723,7 @@ export async function uploadFilesToChatUploads({ files }: { files: File[] }): Pr
 		onlyDirectories: true
 	})
 	let parentUUID = ""
-	const baseFiltered = base.filter(item => item.type === "directory" && item.name.toLowerCase() === "chat uploads")
+	const baseFiltered = base.filter(item => item.type === "directory" && item.name.toLowerCase().trim() === "chat uploads")
 
 	if (baseFiltered.length === 1 && baseFiltered[0]) {
 		parentUUID = baseFiltered[0].uuid

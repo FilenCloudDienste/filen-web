@@ -14,6 +14,8 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import { validate as validateUUID } from "uuid"
 import pathModule from "path"
 import { type DirectorySizeResult } from "@/lib/worker/worker"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { TOOLTIP_POPUP_DELAY } from "@/constants"
 
 export const Content = memo(({ item }: { item: DriveCloudItem }) => {
 	const [size, setSize] = useState<number>(item.size)
@@ -89,7 +91,7 @@ export const Content = memo(({ item }: { item: DriveCloudItem }) => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<div className="flex flex-col items-center justify-center gap-2">
+			<div className="flex flex-col items-center justify-center gap-4">
 				{item.type === "directory" ? (
 					<ColoredFolderSVGIcon
 						width="8rem"
@@ -107,45 +109,54 @@ export const Content = memo(({ item }: { item: DriveCloudItem }) => {
 			</div>
 			<div className="flex flex-row h-[1px] bg-border my-3" />
 			<div className="flex flex-row items-center gap-3">
-				<div className="flex flex-col gap-0.5 w-1/2">
+				<div className="flex flex-col gap-0.5 w-[49%]">
 					<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("dialogs.info.name")}</p>
 					<p className="line-clamp-1 text-ellipsis break-all">{item.name}</p>
 				</div>
-				<div className="flex flex-col gap-0.5">
+				<div className="flex flex-col gap-0.5 w-[49%]">
 					<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("dialogs.info.size")}</p>
 					<p className="line-clamp-1 text-ellipsis break-all">{formatBytes(size)}</p>
 				</div>
 			</div>
 			{item.type === "directory" && (
 				<div className="flex flex-row items-center gap-3">
-					<div className="flex flex-col gap-0.5 w-1/2">
+					<div className="flex flex-col gap-0.5 w-[49%]">
 						<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("dialogs.info.directories")}</p>
 						<p className="line-clamp-1 text-ellipsis break-all">{dirSize.folders}</p>
 					</div>
-					<div className="flex flex-col gap-0.5">
+					<div className="flex flex-col gap-0.5 w-[49%]">
 						<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("dialogs.info.files")}</p>
 						<p className="line-clamp-1 text-ellipsis break-all">{dirSize.files}</p>
 					</div>
 				</div>
 			)}
 			<div className="flex flex-row items-center gap-3">
-				<div className="flex flex-col gap-0.5 w-1/2">
+				<div className="flex flex-col gap-0.5 w-[49%]">
 					<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("dialogs.info.type")}</p>
 					<p className="line-clamp-1 text-ellipsis break-all">
 						{item.type === "file" ? item.mime : t("dialogs.info.directoryType")}
 					</p>
 				</div>
-				<div className="flex flex-col gap-0.5">
+				<div className="flex flex-col gap-0.5 w-[49%]">
 					<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("dialogs.info.location")}</p>
-					<p className="line-clamp-1 text-ellipsis break-all">{itemLocation}</p>
+					<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+						<Tooltip>
+							<TooltipTrigger asChild={true}>
+								<p className="line-clamp-1 text-ellipsis break-all">{itemLocation}</p>
+							</TooltipTrigger>
+							<TooltipContent className="max-w-[calc(100vw/2)]">
+								<p>{itemLocation}</p>
+							</TooltipContent>
+						</Tooltip>
+					</TooltipProvider>
 				</div>
 			</div>
 			<div className="flex flex-row items-center gap-3">
-				<div className="flex flex-col gap-0.5 w-1/2">
+				<div className="flex flex-col gap-0.5 w-[49%]">
 					<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("dialogs.info.modified")}</p>
 					<p className="line-clamp-1 text-ellipsis break-all">{simpleDate(item.lastModified)}</p>
 				</div>
-				<div className="flex flex-col gap-0.5">
+				<div className="flex flex-col gap-0.5 w-[49%]">
 					<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("dialogs.info.uploaded")}</p>
 					<p className="line-clamp-1 text-ellipsis break-all">{simpleDate(item.timestamp)}</p>
 				</div>

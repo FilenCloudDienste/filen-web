@@ -1,13 +1,15 @@
 import { memo } from "react"
 import { type SyncPair } from "@filen/sync/dist/types"
-import { RefreshCcw } from "lucide-react"
+import { RefreshCw } from "lucide-react"
 import { Link } from "@tanstack/react-router"
 import useRouteParent from "@/hooks/useRouteParent"
 import { cn } from "@/lib/utils"
 import ContextMenu from "./contextMenu"
+import useIsSyncActive from "@/hooks/useIsSyncActive"
 
 export const Sync = memo(({ sync }: { sync: SyncPair }) => {
 	const routeParent = useRouteParent()
+	const isSyncActive = useIsSyncActive(sync.uuid)
 
 	return (
 		<div className="flex flex-col mb-0.5 px-3">
@@ -23,7 +25,10 @@ export const Sync = memo(({ sync }: { sync: SyncPair }) => {
 						routeParent === sync.uuid ? "bg-secondary" : "bg-transparent"
 					)}
 				>
-					<RefreshCcw size={20} />
+					<RefreshCw
+						size={20}
+						className={isSyncActive ? "animate-spin-medium" : undefined}
+					/>
 					<p>{sync.name}</p>
 				</Link>
 			</ContextMenu>

@@ -184,7 +184,11 @@ export const ContextMenu = memo(
 					linkSalt: publicLinkPaswordState.salt.length > 0 ? publicLinkPaswordState.salt : undefined
 				})
 			} catch (e) {
-				console.error(e)
+				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
+					console.error(e)
+
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				}
 			}
 		}, [
 			selectedItems,
@@ -192,7 +196,8 @@ export const ContextMenu = memo(
 			publicLinkURLState.isPublicLink,
 			publicLinkPaswordState.password,
 			publicLinkURLState.uuid,
-			publicLinkPaswordState.salt
+			publicLinkPaswordState.salt,
+			errorToast
 		])
 
 		const trash = useCallback(async () => {

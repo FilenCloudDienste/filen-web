@@ -70,9 +70,11 @@ export const Drive = memo(() => {
 			try {
 				await promiseAllChunked(promises)
 			} catch (e) {
-				console.error(e)
+				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
+					console.error(e)
 
-				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				}
 			} finally {
 				e.target.value = ""
 			}
@@ -122,9 +124,11 @@ export const Drive = memo(() => {
 					])
 				}
 			} catch (e) {
-				console.error(e)
+				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
+					console.error(e)
 
-				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				}
 			} finally {
 				e.target.value = ""
 			}

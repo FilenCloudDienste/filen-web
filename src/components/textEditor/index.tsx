@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from "react"
+import { memo, useMemo, useCallback, useEffect, useRef } from "react"
 import * as themes from "./theme"
 import { useTheme } from "@/providers/themeProvider"
 import { loadLanguage } from "./langs"
@@ -7,7 +7,7 @@ import { color } from "@uiw/codemirror-extensions-color"
 import { type Root, type Element, type RootContent } from "hast"
 import { ResizablePanelGroup, ResizableHandle, ResizablePanel } from "../ui/resizable"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import CodeMirror, { EditorView } from "@uiw/react-codemirror"
+import CodeMirror, { EditorView, type ReactCodeMirrorRef } from "@uiw/react-codemirror"
 import MarkdownPreview from "@uiw/react-markdown-preview"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import useLocation from "@/hooks/useLocation"
@@ -44,6 +44,7 @@ export const TextEditor = memo(
 		onBlur?: () => void
 		maxLength?: number
 	}) => {
+		const codeMirrorRef = useRef<ReactCodeMirrorRef>(null)
 		const publicLinkURLState = usePublicLinkURLState()
 		const theme = useTheme()
 		const location = useLocation()
@@ -135,6 +136,18 @@ export const TextEditor = memo(
 					]
 		}, [type, langExtension])
 
+		const onCreateEditor = useCallback((view: EditorView) => {
+			view.dispatch({
+				scrollIntoView: true
+			})
+		}, [])
+
+		useEffect(() => {
+			codeMirrorRef.current?.view?.dispatch({
+				scrollIntoView: true
+			})
+		}, [])
+
 		return (
 			<div className="flex flex-row w-full h-full">
 				<ResizablePanelGroup
@@ -149,6 +162,7 @@ export const TextEditor = memo(
 						className={type === "code" ? "font-mono" : undefined}
 					>
 						<CodeMirror
+							ref={codeMirrorRef}
 							value={value}
 							onChange={onChange}
 							height={height + "px"}
@@ -165,6 +179,7 @@ export const TextEditor = memo(
 							readOnly={readOnly}
 							placeholder={placeholder}
 							onBlur={onBlur}
+							onCreateEditor={onCreateEditor}
 							basicSetup={{
 								lineNumbers: type === "code",
 								searchKeymap: type === "code",
@@ -172,7 +187,8 @@ export const TextEditor = memo(
 								highlightActiveLine: type === "code",
 								highlightActiveLineGutter: type === "code",
 								foldGutter: type === "code",
-								foldKeymap: type === "code"
+								foldKeymap: type === "code",
+								syntaxHighlighting: type === "code"
 							}}
 							style={{
 								height,

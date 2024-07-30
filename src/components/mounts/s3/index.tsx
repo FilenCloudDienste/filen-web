@@ -16,6 +16,7 @@ import { isPortValidLocally, isValidIPv4 } from "../utils"
 import eventEmitter from "@/lib/eventEmitter"
 import { Button } from "@/components/ui/button"
 import useSuccessToast from "@/hooks/useSuccessToast"
+import { useMountsStore } from "@/stores/mounts.store"
 
 export async function isS3Online(): Promise<{ online: boolean }> {
 	const [online, active] = await Promise.all([window.desktopAPI.isS3Online(), window.desktopAPI.isS3Active()])
@@ -27,7 +28,6 @@ export async function isS3Online(): Promise<{ online: boolean }> {
 
 export const S3 = memo(() => {
 	const settingsContainerSize = useSettingsContainerSize()
-	const [enabling, setEnabling] = useState<boolean>(false)
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
@@ -36,6 +36,7 @@ export const S3 = memo(() => {
 	const [accessKeyId, setAccessKeyId] = useState<string>(desktopConfig.s3Config.accessKeyId)
 	const [secretKeyId, setSecretKeyId] = useState<string>(desktopConfig.s3Config.accessKeyId)
 	const successToast = useSuccessToast()
+	const { enablingS3, setEnablingS3 } = useMountsStore()
 
 	const isOnlineQuery = useQuery({
 		queryKey: ["isS3Online"],
@@ -44,7 +45,7 @@ export const S3 = memo(() => {
 
 	const onCheckedChange = useCallback(
 		async (checked: boolean) => {
-			if (enabling) {
+			if (enablingS3) {
 				return
 			}
 
@@ -72,7 +73,7 @@ export const S3 = memo(() => {
 				return
 			}
 
-			setEnabling(true)
+			setEnablingS3(true)
 
 			try {
 				if (checked) {
@@ -115,15 +116,15 @@ export const S3 = memo(() => {
 					}
 				}))
 			} finally {
-				setEnabling(false)
+				setEnablingS3(false)
 			}
 		},
-		[t, enabling, setDesktopConfig, isOnlineQuery, errorToast, accessKeyId, secretKeyId, port, hostname]
+		[t, setEnablingS3, enablingS3, setDesktopConfig, isOnlineQuery, errorToast, accessKeyId, secretKeyId, port, hostname]
 	)
 
 	const onProtocolChange = useCallback(
 		async (protocol: "http" | "https") => {
-			if (enabling) {
+			if (enablingS3) {
 				return
 			}
 
@@ -139,7 +140,7 @@ export const S3 = memo(() => {
 				return
 			}
 
-			setEnabling(true)
+			setEnablingS3(true)
 
 			try {
 				if ((await isS3Online()).online) {
@@ -180,10 +181,10 @@ export const S3 = memo(() => {
 					}
 				}))
 			} finally {
-				setEnabling(false)
+				setEnablingS3(false)
 			}
 		},
-		[errorToast, enabling, isOnlineQuery, setDesktopConfig, accessKeyId, secretKeyId, port, t, hostname]
+		[errorToast, setEnablingS3, enablingS3, isOnlineQuery, setDesktopConfig, accessKeyId, secretKeyId, port, t, hostname]
 	)
 
 	const copyConnect = useCallback(async () => {
@@ -230,7 +231,7 @@ export const S3 = memo(() => {
 							WebkitAppRegion: "drag"
 						}}
 					>
-						{enabling ? (
+						{enablingS3 ? (
 							<Loader className="animate-spin-medium" />
 						) : isOnlineQuery.data.online ? (
 							<div className="flex flex-row gap-3">
@@ -246,7 +247,7 @@ export const S3 = memo(() => {
 						className="mt-10"
 					>
 						<Switch
-							disabled={enabling}
+							disabled={enablingS3}
 							checked={isOnlineQuery.isSuccess && isOnlineQuery.data.online}
 							onCheckedChange={onCheckedChange}
 						/>
@@ -258,7 +259,7 @@ export const S3 = memo(() => {
 						<Select
 							onValueChange={onProtocolChange}
 							value={desktopConfig.s3Config.https ? "https" : "http"}
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingS3 || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 						>
 							<SelectTrigger className="min-w-[90px]">
 								<SelectValue placeholder={desktopConfig.s3Config.https ? "https" : "http"} />
@@ -278,7 +279,7 @@ export const S3 = memo(() => {
 							type="text"
 							onChange={e => setHostname(e.target.value.trim())}
 							className="w-[130px]"
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingS3 || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
 							autoComplete="none"
 							autoCorrect="none"
@@ -293,7 +294,7 @@ export const S3 = memo(() => {
 							type="number"
 							onChange={e => setPort(parseInt(e.target.value.trim()))}
 							className="w-[80px]"
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingS3 || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
 							autoComplete="none"
 							autoCorrect="none"
@@ -312,7 +313,7 @@ export const S3 = memo(() => {
 								setAccessKeyId(access.length === 0 ? "admin" : access)
 							}}
 							className="w-[200px]"
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingS3 || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
 							autoComplete="none"
 							autoCorrect="none"
@@ -333,7 +334,7 @@ export const S3 = memo(() => {
 								setSecretKeyId(secret.length === 0 ? "admin" : secret)
 							}}
 							className="w-[200px]"
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingS3 || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
 							autoComplete="none"
 							autoCorrect="none"
@@ -341,7 +342,7 @@ export const S3 = memo(() => {
 							maxLength={32}
 						/>
 					</Section>
-					{!enabling && isOnlineQuery.isSuccess && isOnlineQuery.data.online && (
+					{!enablingS3 && isOnlineQuery.isSuccess && isOnlineQuery.data.online && (
 						<Section
 							name={t("mounts.s3.sections.connect.name")}
 							info={t("mounts.s3.sections.connect.info")}

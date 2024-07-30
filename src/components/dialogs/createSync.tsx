@@ -22,6 +22,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 import { validate as validateUUID, v4 as uuidv4 } from "uuid"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
 import { type SyncMode } from "@filen/sync/dist/types"
+import { Switch } from "../ui/switch"
 
 export const CreateSyncDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
@@ -32,12 +33,16 @@ export const CreateSyncDialog = memo(() => {
 		remotePath: string
 		remoteUUID: string
 		mode: SyncMode
+		paused: boolean
+		excludeDotFiles: boolean
 	}>({
 		name: "",
 		localPath: "",
 		remotePath: "",
 		remoteUUID: "",
-		mode: "twoWay"
+		mode: "twoWay",
+		paused: true,
+		excludeDotFiles: true
 	})
 	const errorToast = useErrorToast()
 	const [, setDesktopConfig] = useDesktopConfig()
@@ -96,8 +101,8 @@ export const CreateSyncDialog = memo(() => {
 			localPath: createState.localPath,
 			name: createState.name,
 			mode: createState.mode,
-			excludeDotFiles: true,
-			paused: false
+			excludeDotFiles: createState.excludeDotFiles,
+			paused: createState.paused
 		}
 
 		setDesktopConfig(prev => ({
@@ -113,7 +118,9 @@ export const CreateSyncDialog = memo(() => {
 			localPath: "",
 			remotePath: "",
 			remoteUUID: "",
-			mode: "twoWay"
+			mode: "twoWay",
+			paused: true,
+			excludeDotFiles: true
 		})
 
 		close()
@@ -184,6 +191,20 @@ export const CreateSyncDialog = memo(() => {
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		}
 	}, [errorToast, t])
+
+	const onPausedChange = useCallback((paused: boolean) => {
+		setCreateState(prev => ({
+			...prev,
+			paused
+		}))
+	}, [])
+
+	const onExcludeDotFilesChange = useCallback((excludeDotFiles: boolean) => {
+		setCreateState(prev => ({
+			...prev,
+			excludeDotFiles
+		}))
+	}, [])
 
 	useEffect(() => {
 		const listener = eventEmitter.on("openCreateSyncDialog", () => {
@@ -268,7 +289,7 @@ export const CreateSyncDialog = memo(() => {
 									<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 										<Tooltip>
 											<TooltipTrigger asChild={true}>
-												<Info className="cursor-pointer hover:text-primary" />
+												<Info className="hover:text-primary text-muted-foreground" />
 											</TooltipTrigger>
 											<TooltipContent>
 												<div className="flex flex-col gap-3 max-w-96">
@@ -304,6 +325,24 @@ export const CreateSyncDialog = memo(() => {
 											</TooltipContent>
 										</Tooltip>
 									</TooltipProvider>
+								</div>
+							</div>
+							<div className="flex flex-row gap-4 items-center justify-between mt-2">
+								<p className="text-muted-foreground">{t("dialogs.createSync.paused")}</p>
+								<div className="flex flex-row gap-1 items-center">
+									<Switch
+										checked={createState.paused}
+										onCheckedChange={onPausedChange}
+									/>
+								</div>
+							</div>
+							<div className="flex flex-row gap-4 items-center justify-between mt-2">
+								<p className="text-muted-foreground">{t("dialogs.createSync.excludeDotFiles")}</p>
+								<div className="flex flex-row gap-1 items-center">
+									<Switch
+										checked={createState.excludeDotFiles}
+										onCheckedChange={onExcludeDotFilesChange}
+									/>
 								</div>
 							</div>
 						</div>

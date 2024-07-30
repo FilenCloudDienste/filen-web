@@ -16,6 +16,7 @@ import { isPortValidLocally, isValidIPv4 } from "../utils"
 import eventEmitter from "@/lib/eventEmitter"
 import { Button } from "@/components/ui/button"
 import useSuccessToast from "@/hooks/useSuccessToast"
+import { useMountsStore } from "@/stores/mounts.store"
 
 export async function isWebDAVOnline(): Promise<{ online: boolean }> {
 	const [online, active] = await Promise.all([window.desktopAPI.isWebDAVOnline(), window.desktopAPI.isWebDAVActive()])
@@ -27,7 +28,7 @@ export async function isWebDAVOnline(): Promise<{ online: boolean }> {
 
 export const WebDAV = memo(() => {
 	const settingsContainerSize = useSettingsContainerSize()
-	const [enabling, setEnabling] = useState<boolean>(false)
+	const { enablingWebDAV, setEnablingWebDAV } = useMountsStore()
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
@@ -44,7 +45,7 @@ export const WebDAV = memo(() => {
 
 	const onCheckedChange = useCallback(
 		async (checked: boolean) => {
-			if (enabling) {
+			if (enablingWebDAV) {
 				return
 			}
 
@@ -72,7 +73,7 @@ export const WebDAV = memo(() => {
 				return
 			}
 
-			setEnabling(true)
+			setEnablingWebDAV(true)
 
 			try {
 				if (checked) {
@@ -115,15 +116,15 @@ export const WebDAV = memo(() => {
 					}
 				}))
 			} finally {
-				setEnabling(false)
+				setEnablingWebDAV(false)
 			}
 		},
-		[t, enabling, isOnlineQuery, errorToast, setDesktopConfig, username, password, port, hostname]
+		[t, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, errorToast, setDesktopConfig, username, password, port, hostname]
 	)
 
 	const onAuthModeChange = useCallback(
 		async (mode: "basic" | "digest") => {
-			if (enabling) {
+			if (enablingWebDAV) {
 				return
 			}
 
@@ -139,7 +140,7 @@ export const WebDAV = memo(() => {
 				return
 			}
 
-			setEnabling(true)
+			setEnablingWebDAV(true)
 
 			try {
 				if ((await isWebDAVOnline()).online) {
@@ -180,15 +181,15 @@ export const WebDAV = memo(() => {
 					}
 				}))
 			} finally {
-				setEnabling(false)
+				setEnablingWebDAV(false)
 			}
 		},
-		[errorToast, enabling, isOnlineQuery, setDesktopConfig, port, username, password, t, hostname]
+		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig, port, username, password, t, hostname]
 	)
 
 	const onProtocolChange = useCallback(
 		async (protocol: "http" | "https") => {
-			if (enabling) {
+			if (enablingWebDAV) {
 				return
 			}
 
@@ -204,7 +205,7 @@ export const WebDAV = memo(() => {
 				return
 			}
 
-			setEnabling(true)
+			setEnablingWebDAV(true)
 
 			try {
 				if ((await isWebDAVOnline()).online) {
@@ -245,15 +246,15 @@ export const WebDAV = memo(() => {
 					}
 				}))
 			} finally {
-				setEnabling(false)
+				setEnablingWebDAV(false)
 			}
 		},
-		[errorToast, enabling, isOnlineQuery, setDesktopConfig, username, password, port, t, hostname]
+		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig, username, password, port, t, hostname]
 	)
 
 	const onProxyModeChange = useCallback(
 		async (checked: boolean) => {
-			if (enabling) {
+			if (enablingWebDAV) {
 				return
 			}
 
@@ -269,7 +270,7 @@ export const WebDAV = memo(() => {
 				return
 			}
 
-			setEnabling(true)
+			setEnablingWebDAV(true)
 
 			try {
 				if ((await isWebDAVOnline()).online) {
@@ -310,10 +311,10 @@ export const WebDAV = memo(() => {
 					}
 				}))
 			} finally {
-				setEnabling(false)
+				setEnablingWebDAV(false)
 			}
 		},
-		[errorToast, enabling, isOnlineQuery, setDesktopConfig, username, password, port, t, hostname]
+		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig, username, password, port, t, hostname]
 	)
 
 	const copyConnect = useCallback(async () => {
@@ -367,7 +368,7 @@ export const WebDAV = memo(() => {
 							WebkitAppRegion: "drag"
 						}}
 					>
-						{enabling ? (
+						{enablingWebDAV ? (
 							<Loader className="animate-spin-medium" />
 						) : isOnlineQuery.data.online ? (
 							<div className="flex flex-row gap-3">
@@ -383,7 +384,7 @@ export const WebDAV = memo(() => {
 						className="mt-10"
 					>
 						<Switch
-							disabled={enabling}
+							disabled={enablingWebDAV}
 							checked={isOnlineQuery.isSuccess && isOnlineQuery.data.online}
 							onCheckedChange={onCheckedChange}
 						/>
@@ -395,7 +396,7 @@ export const WebDAV = memo(() => {
 						<Select
 							onValueChange={onProtocolChange}
 							value={desktopConfig.webdavConfig.https ? "https" : "http"}
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 						>
 							<SelectTrigger className="min-w-[90px]">
 								<SelectValue placeholder={desktopConfig.webdavConfig.https ? "https" : "http"} />
@@ -415,7 +416,7 @@ export const WebDAV = memo(() => {
 							type="text"
 							onChange={e => setHostname(e.target.value.trim())}
 							className="w-[130px]"
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
 							autoComplete="none"
 							autoCorrect="none"
@@ -430,7 +431,7 @@ export const WebDAV = memo(() => {
 							type="number"
 							onChange={e => setPort(parseInt(e.target.value.trim()))}
 							className="w-[80px]"
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
 							autoComplete="none"
 							autoCorrect="none"
@@ -443,7 +444,7 @@ export const WebDAV = memo(() => {
 						<Select
 							onValueChange={onAuthModeChange}
 							value={desktopConfig.webdavConfig.authMode}
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 						>
 							<SelectTrigger className="min-w-[90px]">
 								<SelectValue placeholder={desktopConfig.webdavConfig.authMode} />
@@ -467,7 +468,7 @@ export const WebDAV = memo(() => {
 								setUsername(user.length === 0 ? "admin" : user)
 							}}
 							className="w-[200px]"
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
 							autoComplete="none"
 							autoCorrect="none"
@@ -488,7 +489,7 @@ export const WebDAV = memo(() => {
 								setPassword(pass.length === 0 ? "admin" : pass)
 							}}
 							className="w-[200px]"
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
 							autoComplete="none"
 							autoCorrect="none"
@@ -501,12 +502,12 @@ export const WebDAV = memo(() => {
 						info={t("mounts.webdav.sections.proxyMode.info")}
 					>
 						<Switch
-							disabled={enabling || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
+							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							checked={desktopConfig.webdavConfig.proxyMode}
 							onCheckedChange={onProxyModeChange}
 						/>
 					</Section>
-					{!enabling && isOnlineQuery.isSuccess && isOnlineQuery.data.online && (
+					{!enablingWebDAV && isOnlineQuery.isSuccess && isOnlineQuery.data.online && (
 						<Section
 							name={t("mounts.webdav.sections.connect.name")}
 							info={t("mounts.webdav.sections.connect.info")}

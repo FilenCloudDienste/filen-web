@@ -6,6 +6,10 @@ import { cn } from "@/lib/utils"
 import { type TFunction } from "i18next"
 import worker from "@/lib/worker"
 import { IS_DESKTOP } from "@/constants"
+import { fileNameToSVGIcon } from "@/assets/fileExtensionIcons"
+import { formatBytes } from "@/utils"
+import { Button } from "../ui/button"
+import { Play, Pause, XCircle } from "lucide-react"
 
 export const Transfer = memo(
 	({
@@ -80,6 +84,88 @@ export const Transfer = memo(
 				console.error(e)
 			}
 		}, [transfer.uuid, transfer.state, setTransfers, progressNormalized, transfer.type])
+
+		return (
+			<div className="flex flex-col w-full gap-4 pb-4">
+				<div className="flex flex-row items-center w-full gap-4 justify-between">
+					<div className="flex flex-row items-center gap-4">
+						<div className="flex flex-row items-center">
+							<div className="bg-secondary rounded-md flex items-center justify-center aspect-square w-10">
+								<img
+									src={fileNameToSVGIcon(transfer.name)}
+									className="w-[24px] h-[24px] shrink-0 object-cover"
+									draggable={false}
+								/>
+							</div>
+						</div>
+						<div className="flex flex-col">
+							<p className="line-clamp-1 text-ellipsis break-all">{transfer.name}</p>
+							<p className="line-clamp-1 text-ellipsis break-all text-xs text-muted-foreground">
+								{formatBytes(transfer.size)}
+							</p>
+						</div>
+					</div>
+					<div className="flex flex-row gap-1 shrink-0">
+						{transfer.state === "error" || transfer.state === "queued" ? (
+							<Badge variant={transfer.state === "error" ? "destructive" : "secondary"}>
+								{t("transfers.state." + transfer.state)}
+							</Badge>
+						) : (
+							<>
+								{progressNormalized < 95 && (
+									<>
+										{transfer.state === "paused" ? (
+											<Button
+												variant="ghost"
+												size="icon"
+												onClick={resume}
+											>
+												<Play size={16} />
+											</Button>
+										) : (
+											<Button
+												variant="ghost"
+												size="icon"
+												onClick={pause}
+											>
+												<Pause size={16} />
+											</Button>
+										)}
+										<Button
+											variant="ghost"
+											size="icon"
+											onClick={abort}
+										>
+											<XCircle
+												size={16}
+												className="text-red-500"
+											/>
+										</Button>
+									</>
+								)}
+							</>
+						)}
+					</div>
+				</div>
+				<Progress
+					value={
+						["error", "queued"].includes(transfer.state)
+							? 0
+							: transfer.state === "finished"
+								? 100
+								: progressNormalized >= 99
+									? 99
+									: progressNormalized
+					}
+					color="green"
+					className={cn(
+						"w-full h-[6px]",
+						transfer.state === "finished" ? "progress-finished" : "",
+						transfer.state === "error" ? "progress-error" : ""
+					)}
+				/>
+			</div>
+		)
 
 		return (
 			<div className="flex flex-col gap-2 mb-3">

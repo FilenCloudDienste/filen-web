@@ -1,13 +1,13 @@
 import { memo, useMemo, useRef, useCallback } from "react"
 import { type SyncPair } from "@filen/sync/dist/types"
-import { useSyncsStore, type GeneralError } from "@/stores/syncs.store"
+import { useSyncsStore, type Transfer as TransferType } from "@/stores/syncs.store"
 import { Virtuoso, type VirtuosoHandle } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
-import Issue from "./issue"
+import Transfer from "./transfer"
 import { type LocalTreeIgnoredReason } from "@filen/sync/dist/lib/filesystems/local"
 import { type RemoteTreeIgnoredReason } from "@filen/sync/dist/lib/filesystems/remote"
 import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
-import { Smile } from "lucide-react"
+import { ArrowDownUp } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 export type IgnoreType = {
@@ -16,8 +16,8 @@ export type IgnoreType = {
 	reason: LocalTreeIgnoredReason | RemoteTreeIgnoredReason
 }
 
-export const Issues = memo(({ sync }: { sync: SyncPair }) => {
-	const { errors: syncErrors } = useSyncsStore()
+export const Transfers = memo(({ sync }: { sync: SyncPair }) => {
+	const { transfers: syncTransfers } = useSyncsStore()
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const windowSize = useWindowSize()
 	const { t } = useTranslation()
@@ -26,14 +26,14 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 		return windowSize.height - 64 - 12 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
-	const errors = useMemo(() => {
-		return syncErrors[sync.uuid] ? syncErrors[sync.uuid]! : []
-	}, [sync.uuid, syncErrors])
+	const transfers = useMemo(() => {
+		return syncTransfers[sync.uuid] ? syncTransfers[sync.uuid]! : []
+	}, [sync.uuid, syncTransfers])
 
-	const getItemKey = useCallback((index: number) => index, [])
+	const getItemKey = useCallback((_: number, transfer: TransferType) => `${transfer.localPath}:${transfer.relativePath}`, [])
 
-	const itemContent = useCallback((_: number, error: GeneralError) => {
-		return <Issue error={error} />
+	const itemContent = useCallback((_: number, transfer: TransferType) => {
+		return <Transfer transfer={transfer} />
 	}, [])
 
 	const components = useMemo(() => {
@@ -41,11 +41,11 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 			EmptyPlaceholder: () => {
 				return (
 					<div className="w-full h-full flex flex-col items-center justify-center gap-2">
-						<Smile
+						<ArrowDownUp
 							size={72}
 							className="text-muted-foreground"
 						/>
-						<p className="text-muted-foreground">{t("syncs.noIssues")}</p>
+						<p className="text-muted-foreground">{t("syncs.noTransfers")}</p>
 					</div>
 				)
 			}
@@ -55,14 +55,14 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 	return (
 		<Virtuoso
 			ref={virtuosoRef}
-			data={errors}
-			totalCount={errors.length}
+			data={transfers}
+			totalCount={transfers.length}
 			height={virtuosoHeight}
 			width="100%"
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
 			components={components}
-			defaultItemHeight={51}
+			defaultItemHeight={78}
 			style={{
 				overflowX: "hidden",
 				overflowY: "auto",
@@ -73,4 +73,4 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 	)
 })
 
-export default Issues
+export default Transfers

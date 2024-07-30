@@ -455,7 +455,7 @@ export const PreviewDialog = memo(() => {
 				{item && (
 					<div className="absolute w-screen h-[100dvh] flex flex-col">
 						<div
-							className="flex flex-row border-b h-[49px] bg-secondary w-full items-center justify-between px-4 z-50 gap-10 -mt-[1px]"
+							className="flex flex-row h-12 bg-secondary w-full items-center justify-between px-4 z-50 gap-10"
 							style={{
 								// @ts-expect-error not typed
 								WebkitAppRegion: "drag"
@@ -520,58 +520,68 @@ export const PreviewDialog = memo(() => {
 								}}
 							/>
 						</div>
-						{goToPreviewTypes.includes(previewType) && !publicLinkURLState.isPublicLink && (
-							<>
-								{canGoToPreviousItem && (
-									<Button
-										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full left-4 opacity-75 text-primary"
-										onClick={goToPreviousItem}
-										variant="secondary"
-										size="icon"
-									>
-										<ArrowLeft size={18} />
-									</Button>
-								)}
-								{canGoToNextItem && (
-									<Button
-										className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full right-4 opacity-75 text-primary"
-										onClick={goToNextItem}
-										variant="secondary"
-										size="icon"
-									>
-										<ArrowRight size={18} />
-									</Button>
-								)}
-							</>
-						)}
-						{(previewType === "text" || previewType === "code" || previewType === "md") && (
-							<>
-								{buffers[item.uuid] ? (
-									<Text
-										buffer={buffers[item.uuid]!}
-										item={item}
-										onValueChange={onValueChange}
-										readOnly={readOnly}
-									/>
-								) : (
-									<Loader />
-								)}
-							</>
-						)}
-						{previewType === "docx" && <>{buffers[item.uuid] ? <DocX buffer={buffers[item.uuid]!} /> : <Loader />}</>}
-						{previewType === "pdf" && <>{urlObjects[item.uuid] ? <PDF urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>}
-						{previewType === "image" && (
-							<Image
-								urlObject={urlObjects[item.uuid]}
-								item={item}
-							/>
-						)}
-						{previewType === "video" && (
-							<>{urlObjects[item.uuid] ? <Video urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
-						)}
-						{previewType === "audio" && (
-							<>{urlObjects[item.uuid] ? <Audio urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
-						)}
+						<div
+							className="flex flex-col w-full h-[calc(100dvh-48px)]"
+							style={{
+								// @ts-expect-error not typed
+								WebkitAppRegion: "no-drag"
+							}}
+						>
+							{goToPreviewTypes.includes(previewType) && !publicLinkURLState.isPublicLink && (
+								<>
+									{canGoToPreviousItem && (
+										<Button
+											className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full left-4 opacity-75 text-primary"
+											onClick={goToPreviousItem}
+											variant="secondary"
+											size="icon"
+										>
+											<ArrowLeft size={18} />
+										</Button>
+									)}
+									{canGoToNextItem && (
+										<Button
+											className="w-[40px] h-[40px] absolute flex flex-row items-center justify-center z-50 top-[50%] rounded-full right-4 opacity-75 text-primary"
+											onClick={goToNextItem}
+											variant="secondary"
+											size="icon"
+										>
+											<ArrowRight size={18} />
+										</Button>
+									)}
+								</>
+							)}
+							{(previewType === "text" || previewType === "code" || previewType === "md") && (
+								<>
+									{buffers[item.uuid] ? (
+										<Text
+											buffer={buffers[item.uuid]!}
+											item={item}
+											onValueChange={onValueChange}
+											readOnly={readOnly}
+										/>
+									) : (
+										<Loader />
+									)}
+								</>
+							)}
+							{previewType === "docx" && <>{buffers[item.uuid] ? <DocX buffer={buffers[item.uuid]!} /> : <Loader />}</>}
+							{previewType === "pdf" && (
+								<>{urlObjects[item.uuid] ? <PDF urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
+							)}
+							{previewType === "image" && (
+								<Image
+									urlObject={urlObjects[item.uuid]}
+									item={item}
+								/>
+							)}
+							{previewType === "video" && (
+								<>{urlObjects[item.uuid] ? <Video urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
+							)}
+							{previewType === "audio" && (
+								<>{urlObjects[item.uuid] ? <Audio urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
+							)}
+						</div>
 					</div>
 				)}
 			</DialogContent>

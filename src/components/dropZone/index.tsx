@@ -231,9 +231,11 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 					}
 				}
 			} catch (e) {
-				console.error(e)
+				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
+					console.error(e)
 
-				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				}
 			} finally {
 				if (toast) {
 					toast.dismiss()
