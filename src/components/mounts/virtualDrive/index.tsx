@@ -558,7 +558,7 @@ export const VirtualDrive = memo(() => {
 							</SelectContent>
 						</Select>
 					</Section>
-					{!enablingVirtualDrive && isMountedQuery.data.mounted && (
+					{!enablingVirtualDrive && isMountedQuery.data.mounted && window.desktopAPI.platform() === "win32" && (
 						<Section
 							name={t("mounts.virtualDrive.sections.browse.name")}
 							info={t("mounts.virtualDrive.sections.browse.info")}
