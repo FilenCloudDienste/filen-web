@@ -1185,7 +1185,8 @@
 				}
 			},
 			"errors": {
-				"invalidMountPoint": "Invalid mount point."
+				"invalidMountPoint": "Invalid mount point.",
+				"mountPointNotEmpty": "Mount point needs to be an empty directory."
 			}
 		},
 		"webdav": {
