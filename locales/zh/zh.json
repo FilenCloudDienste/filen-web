@@ -403,6 +403,8 @@
 			"select": "选择",
 			"syncMode": "同步模式",
 			"title": "创建同步",
+			"paused": "已暂停",
+			"excludeDotFiles": "排除点文件（推荐）",
 			"mode": {
 				"twoWay": "双向",
 				"localToCloud": "本地到云端",
@@ -539,7 +541,7 @@
 	"transfers": {
 		"title": "传输",
 		"remaining": "大约剩余 {{time}}",
-		"noActiveTransfers": "没有进行中的传输",
+		"noActiveTransfers": "暂无传输",
 		"state": {
 			"finished": "已完成",
 			"queued": "已入列",
@@ -766,6 +768,14 @@
 					"name": "退出登录",
 					"info": "退出登录",
 					"action": "退出登录"
+				},
+				"closeToTray": {
+					"name": "关闭到托盘",
+					"info": "将 Filen 隐藏在托盘中，而不是最小化窗口"
+				},
+				"autoLaunch": {
+					"name": "自动启动",
+					"info": "系统启动时自动启动 Filen"
 				}
 			}
 		},
@@ -901,7 +911,7 @@
 				},
 				"personalInformation": {
 					"name": "个人信息",
-					"info": "编辑您的个人信息。这将用于开具发票，不对外公开",
+					"info": "编辑您的个人信息。仅供企业客户使用。将用于开具发票，不对外公开",
 					"action": "编辑"
 				},
 				"fileVersioning": {
@@ -1133,28 +1143,28 @@
 				},
 				"enabled": {
 					"name": "已启用",
-					"info": "启用或禁用虚拟磁盘。切换此选项时刷新您的资源管理器。"
+					"info": "启用或禁用虚拟磁盘。切换此选项时刷新您的资源管理器"
 				},
 			         "mountPoint": {
 					"name": "挂载点",
-					"info": "将挂载点设置为本地目录。本地目录需要为空且可读写。",
+					"info": "将挂载点设置为本地目录。本地目录需要为空且可读写",
 					"change": "更改"
 				},
 				"driveLetter": {
 					"name": "盘符",
-					"info": "设置虚拟磁盘的盘符。仅会显示可用的盘符。"
+					"info": "设置虚拟磁盘的盘符。仅会显示可用的盘符"
 				},
 				"browse": {
 					"name": "浏览",
-					"info": "使用默认资源管理器浏览虚拟磁盘。"
+					"info": "使用默认资源管理器浏览虚拟磁盘"
 				},
 				"cache": {
 					"name": "缓存",
-					"info": "缓存显著加快了浏览虚拟驱动器的速度。"
+					"info": "缓存显著加快了浏览虚拟驱动器的速度"
 				},
 				"cacheSize": {
 					"name": "缓存大小",
-					"info": "我们建议将缓存大小设置得尽可能大。客户端将使用您的本地磁盘来显著加快虚拟磁盘的速度。"
+					"info": "我们建议将缓存大小设置得尽可能大。客户端将使用您的本地磁盘来显著加快虚拟磁盘的速度"
 				}
 			},
 			"dialogs": {
@@ -1181,31 +1191,31 @@
 				},
 				"enabled": {
 					"name": "已启用",
-					"info": "启用或禁用 WebDAV 服务器。"
+					"info": "启用或禁用 WebDAV 服务器"
 				},
 				"protocol": {
 					"name": "HTTP 协议",
-					"info": "更改 HTTP 协议。"
+					"info": "更改 HTTP 协议"
 				},
 				"hostname": {
 					"name": "主机名称",
-					"info": "更改服务器应该监听的主机名。"
+					"info": "更改服务器应该监听的主机名"
 				},
 				"port": {
 					"name": "端口",
-					"info": "更改服务器应该监听的端口。"
+					"info": "更改服务器应该监听的端口"
 				},
 				"authMode": {
 					"name": "认证方式",
-					"info": "更改认证方式。"
+					"info": "更改认证方式"
 				},
 				"username": {
 					"name": "用户名",
-					"info": "更改 HTTP 身份认证用户名。这不应是您的 Filen 电子邮件或昵称。"
+					"info": "更改 HTTP 身份认证用户名。这不应是您的 Filen 电子邮件或昵称"
 				},
 				"password": {
 					"name": "密码",
-					"info": "更改 HTTP 身份认证码。这不应该是您的 Filen 密码。"
+					"info": "更改 HTTP 身份认证码。这不应该是您的 Filen 密码"
 				},
 				"proxyMode": {
 					"name": "代理模式",
@@ -1213,7 +1223,7 @@
 				},
 				"connect": {
 					"name": "连接",
-					"info": "复制 WebDAV URL。"
+					"info": "复制 WebDAV URL"
 				}
 			},
 			"dialogs": {
@@ -1236,31 +1246,31 @@
 				},
 				"enabled": {
 					"name": "已启用",
-					"info": "启用或禁用 S3 服务器。"
+					"info": "启用或禁用 S3 服务器"
 				},
 				"protocol": {
 					"name": "HTTP 协议",
-					"info": "更改 HTTP 协议。"
+					"info": "更改 HTTP 协议"
 				},
 				"hostname": {
 					"name": "主机名称",
-					"info": "更改服务器应该监听的主机名。"
+					"info": "更改服务器应该监听的主机名"
 				},
 				"port": {
 					"name": "端口",
-					"info": "更改服务器应该监听的端口。"
+					"info": "更改服务器应该监听的端口"
 				},
 				"accessKeyId": {
 					"name": "AccessKeyId",
-					"info": "更改 AccessKeyId。这不应该是您的 Filen 电子邮件或昵称。"
+					"info": "更改 AccessKeyId。这不应该是您的 Filen 电子邮件或昵称"
 				},
 				"secretKeyId": {
 					"name": "SecretKeyId",
-					"info": "更改 SecretKeyId。这不应该是您的 Filen 密码。"
+					"info": "更改 SecretKeyId。这不应该是您的 Filen 密码"
 				},
 				"connect": {
 					"name": "连接",
-					"info": "复制 WebDAV URL。"
+					"info": "复制 WebDAV URL"
 				}
 			},
 			"dialogs": {
@@ -1277,10 +1287,12 @@
 		}
 	},
 	"syncs": {
-		"events": "事件",
-		"ignored": "已忽略",
-		"issues": "问题",
+		"eventsTitle": "事件",
+		"ignoredTitle": "已忽略",
+		"issuesTitle": "问题",
 		"settingsTitle": "设置",
+		"transfersTitle": "传输",
+		"noTransfers": "暂无活跃的传输",
 		"noEventsYet": "暂无事件",
 		"nothingIgnored": "未忽略任何文件或目录",
 		"noIssues": "暂无问题",
@@ -1288,6 +1300,20 @@
 			"title": "尚未设置同步",
 			"description": "您可以将本地目录与云同步，或将云目录与设备同步",
 			"create": "创建"
+		},
+		"events": {
+			"createLocalDirectory": "{{name}} 已在本地创建",
+			"renameLocalDirectory": "{{name}} 已在本地重命名",
+			"deleteLocalDirectory": "{{name}} 已从本地删除",
+			"createRemoteDirectory": "{{name}} 已在云端创建",
+			"renameRemoteDirectory": "{{name}} 已在云端重命名",
+			"deleteRemoteDirectory": "{{name}} 已从云端删除",
+			"deleteLocalFile": "{{name}} 已从本地删除",
+			"deleteRemoteFile": "{{name}} 已从云端删除",
+			"download": "{{name}} 已从云端下载",
+			"upload": "{{name}} 已上传至云端",
+			"renameLocalFile": "{{name}} 已在本地重命名",
+			"renameRemoteFile": "{{name}} 已在云端重命名"
 		},
 		"settings": {
 			"sections": {
@@ -1299,6 +1325,24 @@
 				"pause": {
 					"name": "暂停",
 					"info": "暂停同步"
+				},
+				"mode": {
+					"name": "同步模式",
+					"info": "更改同步模式"
+				},
+				"forceSync": {
+					"name": "强制同步",
+					"info": "重置内部缓存并强制重新扫描本地和云目录",
+					"forceSync": "强制同步"
+				},
+				"excludeDotFiles": {
+					"name": "排除点文件",
+					"info": "切换点文件/路径排除（推荐）"
+				},
+				"filenIgnore": {
+					"name": ".filenignore",
+					"info": "编辑忽略文件以排除本地或云。工作原理与 .gitignore 文件相同",
+					"edit": "编辑"
 				}
 			}
 		},
@@ -1307,6 +1351,22 @@
 				"title": "删除同步",
 				"description": "您确定要删除此同步吗？",
 				"continue": "删除"
+			},
+			"filenIgnore": {
+				"title": ".filenignore",
+				"save": "保存"
+			}
+		},
+		"ignored": {
+			"types": {
+				"dotFile": "点文件",
+				"defaultIgnore": "默认忽略",
+				"empty": "清空"
+			},
+			"reasons": {
+				"dotFile": "文件或目录位于点路径内",
+				"defaultIgnore": "文件或目录位于默认忽略的路径内",
+				"empty": "文件为空"
 			}
 		}
 	}
