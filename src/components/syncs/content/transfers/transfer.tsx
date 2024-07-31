@@ -36,7 +36,11 @@ export const Transfer = memo(({ transfer }: { transfer: TransferType }) => {
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
-						<p className="line-clamp-1 text-ellipsis break-all text-xs text-muted-foreground">{formatBytes(transfer.size)}</p>
+						{transfer.size > 0 && (
+							<p className="line-clamp-1 text-ellipsis break-all text-xs text-muted-foreground">
+								{formatBytes(transfer.size)}
+							</p>
+						)}
 					</div>
 				</div>
 			</div>

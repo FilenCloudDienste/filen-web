@@ -9,6 +9,7 @@ import { type RemoteTreeIgnoredReason } from "@filen/sync/dist/lib/filesystems/r
 import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import { ArrowDownUp } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { transferStateSortingPriority } from "@/components/transfers"
 
 export type IgnoreType = {
 	localPath: string
@@ -27,10 +28,15 @@ export const Transfers = memo(({ sync }: { sync: SyncPair }) => {
 	}, [windowSize.height])
 
 	const transfers = useMemo(() => {
-		return syncTransfers[sync.uuid] ? syncTransfers[sync.uuid]! : []
+		return syncTransfers[sync.uuid]
+			? syncTransfers[sync.uuid]!.sort((a, b) => transferStateSortingPriority[a.state] - transferStateSortingPriority[b.state])
+			: []
 	}, [sync.uuid, syncTransfers])
 
-	const getItemKey = useCallback((_: number, transfer: TransferType) => `${transfer.localPath}:${transfer.relativePath}`, [])
+	const getItemKey = useCallback(
+		(_: number, transfer: TransferType) => `${transfer.type}:${transfer.name}:${transfer.localPath}:${transfer.relativePath}`,
+		[]
+	)
 
 	const itemContent = useCallback((_: number, transfer: TransferType) => {
 		return <Transfer transfer={transfer} />

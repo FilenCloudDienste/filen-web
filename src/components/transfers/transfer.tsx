@@ -100,9 +100,11 @@ export const Transfer = memo(
 						</div>
 						<div className="flex flex-col">
 							<p className="line-clamp-1 text-ellipsis break-all">{transfer.name}</p>
-							<p className="line-clamp-1 text-ellipsis break-all text-xs text-muted-foreground">
-								{formatBytes(transfer.size)}
-							</p>
+							{transfer.size > 0 && (
+								<p className="line-clamp-1 text-ellipsis break-all text-xs text-muted-foreground">
+									{formatBytes(transfer.size)}
+								</p>
+							)}
 						</div>
 					</div>
 					<div className="flex flex-row gap-1 shrink-0">
