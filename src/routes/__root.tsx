@@ -81,7 +81,13 @@ export const Loading = memo(() => {
 	const isMobile = useIsMobile()
 
 	return (
-		<div className="flex flex-row w-screen h-[100dvh] items-center justify-center">
+		<div
+			className="flex flex-row w-screen h-[100dvh] items-center justify-center"
+			style={{
+				// @ts-expect-error not typed
+				WebkitAppRegion: "drag"
+			}}
+		>
 			<div className={isMobile ? "w-[80px] h-[80px]" : "w-[128px] h-[128px]"}>
 				<LogoSVG color={dark ? "white" : "black"} />
 			</div>

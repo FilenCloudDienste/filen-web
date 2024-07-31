@@ -77,7 +77,7 @@ export const Subscriptions = memo(() => {
 				height: "calc(100dvh - " + DESKTOP_TOPBAR_HEIGHT + "px)"
 			}}
 		>
-			<div className="flex flex-col w-full p-4">
+			<div className="flex flex-col w-full">
 				{subscriptionsSorted.length === 0 && account ? (
 					<div
 						className={cn(
@@ -92,49 +92,51 @@ export const Subscriptions = memo(() => {
 						<p>{t("settings.subscriptions.noSubscriptions")}</p>
 					</div>
 				) : (
-					subscriptionsSorted.map(subscription => (
-						<div
-							key={subscription.id}
-							className="flex flex-col bg-background border rounded-lg max-w-[600px] mb-4"
-						>
-							<div className="flex flex-row p-4 pb-0">
-								<p className="text-lg">{subscription.planName}</p>
-							</div>
-							<div className="flex flex-row rounded-md p-4 gap-10">
-								<div className="flex flex-col gap-1">
-									<p>{subscription.planCost}€</p>
-									<p className="text-muted-foreground text-sm">
-										{t("settings.subscriptions.info", {
-											storage: formatBytes(subscription.storage)
-										})}
-									</p>
-									<a
-										className="text-sm underline mt-3"
-										target="_blank"
-										href="https://filen.io/pricing"
-									>
-										{t("settings.subscriptions.moreInfo")}
-									</a>
+					<div className="flex flex-col w-full p-4">
+						{subscriptionsSorted.map(subscription => (
+							<div
+								key={subscription.id}
+								className="flex flex-col bg-background border rounded-lg max-w-[600px] mb-4"
+							>
+								<div className="flex flex-row p-4 pb-0">
+									<p className="text-lg">{subscription.planName}</p>
 								</div>
-								<div className="flex flex-col gap-1 shrink-0">
-									<p>{t("settings.subscriptions.paymentMethod")}</p>
-									<p className="text-muted-foreground">
-										{subscription.gateway.includes("paypal")
-											? "Paypal"
-											: subscription.gateway.includes("stripe")
-												? "Stripe"
-												: "Crypto"}
-									</p>
-									<p
-										className="text-sm underline mt-3 cursor-pointer"
-										onClick={() => cancel(subscription.id)}
-									>
-										{t("settings.subscriptions.cancel")}
-									</p>
+								<div className="flex flex-row rounded-md p-4 gap-10">
+									<div className="flex flex-col gap-1">
+										<p>{subscription.planCost}€</p>
+										<p className="text-muted-foreground text-sm">
+											{t("settings.subscriptions.info", {
+												storage: formatBytes(subscription.storage)
+											})}
+										</p>
+										<a
+											className="text-sm underline mt-3"
+											target="_blank"
+											href="https://filen.io/pricing"
+										>
+											{t("settings.subscriptions.moreInfo")}
+										</a>
+									</div>
+									<div className="flex flex-col gap-1 shrink-0">
+										<p>{t("settings.subscriptions.paymentMethod")}</p>
+										<p className="text-muted-foreground">
+											{subscription.gateway.includes("paypal")
+												? "Paypal"
+												: subscription.gateway.includes("stripe")
+													? "Stripe"
+													: "Crypto"}
+										</p>
+										<p
+											className="text-sm underline mt-3 cursor-pointer"
+											onClick={() => cancel(subscription.id)}
+										>
+											{t("settings.subscriptions.cancel")}
+										</p>
+									</div>
 								</div>
 							</div>
-						</div>
-					))
+						))}
+					</div>
 				)}
 			</div>
 		</div>

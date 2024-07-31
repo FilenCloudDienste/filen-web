@@ -747,6 +747,10 @@
 					"name": "Chat notifications",
 					"info": "Enable or disable chat notifications"
 				},
+				"notificationSound": {
+					"name": "Notification sound",
+					"info": "Enable or disable notification sound"
+				},
 				"contactNotifications": {
 					"name": "Contact notifications",
 					"info": "Enable or disable contact notifications"
@@ -783,7 +787,8 @@
 			"copy": "Copy",
 			"title": "Receive up to 30 GB of storage by inviting others",
 			"description": "For every friend you invite to Filen you receive {{yourEarnings}} - and your friend also receives {{otherEarnings}}. It's that easy.",
-			"earned": "{{earned}} of {{max}}"
+			"earned": "{{earned}} of {{max}}",
+			"storageEarned": "Storage earned"
 		},
 		"events": {
 			"empty": "No events yet",
@@ -1147,7 +1152,7 @@
 				},
 				"mountPoint": {
 					"name": "Mount point",
-					"info": "Set the mount point to a local directory. The local directory needs to be empty and readale/writable",
+					"info": "Set the mount point to a local directory. The local directory needs to be empty and readable and writable",
 					"change": "Change"
 				},
 				"driveLetter": {

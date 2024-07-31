@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import Section from "../section"
 import { formatBytes } from "@/utils"
 import Skeletons from "../skeletons"
+import { Copy } from "lucide-react"
 
 export const Invite = memo(() => {
 	const account = useAccount()
@@ -45,15 +46,20 @@ export const Invite = memo(() => {
 						otherEarnings: formatBytes(account.account.refStorage)
 					})}
 				</p>
-				<div className="flex flex-row gap-1 mt-6">
+				<div className="flex flex-row gap-1 mt-6 items-center">
 					<Input
 						value={`https://filen.io/r/${account.account.refId}`}
 						onChange={e => e.preventDefault()}
 					/>
-					<Button onClick={copyLink}>{t("settings.invite.copy")}</Button>
+					<Button
+						onClick={copyLink}
+						size="sm"
+					>
+						<Copy size={18} />
+					</Button>
 				</div>
 				<Section
-					name="Storage earned"
+					name={t("settings.invite.storageEarned")}
 					className="mt-6"
 				>
 					<p>

@@ -5,7 +5,7 @@ import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 import { useTranslation } from "react-i18next"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
 import { useQuery } from "@tanstack/react-query"
-import { Loader, CheckCircle, XCircle } from "lucide-react"
+import { Loader, CheckCircle, XCircle, Copy } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import useErrorToast from "@/hooks/useErrorToast"
@@ -531,7 +531,7 @@ export const WebDAV = memo(() => {
 									size="sm"
 									onClick={copyConnect}
 								>
-									{t("mounts.webdav.copyConnect")}
+									<Copy size={18} />
 								</Button>
 							</div>
 						</Section>

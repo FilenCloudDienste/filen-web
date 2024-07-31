@@ -18,7 +18,7 @@ import { useContactsStore } from "@/stores/contacts.store"
 
 export const triggeredNotificationUUIDs: Record<string, boolean> = {}
 export const notificationMutex = new Semaphore(1)
-export const notificationIcon = ""
+export const notificationAudio = new Audio("/sounds/notification.mp3")
 
 export const NotificationHandler = memo(() => {
 	const [chatNotificationsEnabled] = useLocalStorage<boolean>("chatNotificationsEnabled", false)
@@ -33,6 +33,7 @@ export const NotificationHandler = memo(() => {
 	const { t } = useTranslation()
 	const publicLinkURLState = usePublicLinkURLState()
 	const { requestsInCount } = useContactsStore()
+	const [notificationSoundEnabled] = useLocalStorage<boolean>("notificationSoundEnabled", false)
 
 	const chatConversationsQuery = useQuery({
 		queryKey: ["listChatsConversations", authed, publicLinkURLState.isPublicLink],
@@ -84,11 +85,26 @@ export const NotificationHandler = memo(() => {
 						return
 					}
 
-					const notification = new window.Notification(t("notifications.chat"), {
-						body: `${event.data.senderNickName.length > 0 ? event.data.senderNickName : event.data.senderEmail}: ${messageDecrypted}`,
-						silent: true,
-						icon: notificationIcon
-					})
+					const notification = new window.Notification(
+						event.data.senderNickName.length > 0 ? event.data.senderNickName : event.data.senderEmail,
+						{
+							body: messageDecrypted,
+							silent: true,
+							icon: event.data.senderAvatar && event.data.senderAvatar.startsWith("https://") ? event.data.senderAvatar : ""
+						}
+					)
+
+					notification.addEventListener(
+						"show",
+						() => {
+							if (notificationSoundEnabled) {
+								notificationAudio.play()
+							}
+						},
+						{
+							once: true
+						}
+					)
 
 					notification.addEventListener(
 						"click",
@@ -137,8 +153,20 @@ export const NotificationHandler = memo(() => {
 							name: (event.data.senderNickName ?? "").length > 0 ? event.data.senderNickName : event.data.senderEmail
 						}),
 						silent: true,
-						icon: notificationIcon
+						icon: event.data.senderAvatar && event.data.senderAvatar.startsWith("https://") ? event.data.senderAvatar : ""
 					})
+
+					notification.addEventListener(
+						"show",
+						() => {
+							if (notificationSoundEnabled) {
+								notificationAudio.play()
+							}
+						},
+						{
+							once: true
+						}
+					)
 
 					notification.addEventListener(
 						"click",
@@ -186,7 +214,8 @@ export const NotificationHandler = memo(() => {
 			contactNotificationsEnabled,
 			authed,
 			publicLinkURLState.isPublicLink,
-			t
+			t,
+			notificationSoundEnabled
 		]
 	)
 

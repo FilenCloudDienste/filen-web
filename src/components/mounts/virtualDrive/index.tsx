@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Section from "@/components/settings/section"
 import { useTranslation } from "react-i18next"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
-import { CheckCircle, XCircle, Loader } from "lucide-react"
+import { CheckCircle, XCircle, Loader, Edit } from "lucide-react"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
 import useErrorToast from "@/hooks/useErrorToast"
 import { useQuery } from "@tanstack/react-query"
@@ -489,17 +489,18 @@ export const VirtualDrive = memo(() => {
 										e.preventDefault()
 										e.target.blur()
 									}}
-									className="min-w-[150px]"
+									className="min-w-[250px]"
 									autoCapitalize="none"
 									autoComplete="none"
 									autoCorrect="none"
+									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 								/>
 								<Button
 									size="sm"
 									onClick={changeMountPoint}
 									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 								>
-									{t("mounts.virtualDrive.sections.mountPoint.change")}
+									<Edit size={18} />
 								</Button>
 							</div>
 						</Section>

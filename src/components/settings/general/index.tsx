@@ -33,6 +33,7 @@ export const General = memo(() => {
 	const settingsContainerSize = useSettingsContainerSize()
 	const [autoLaunchEnabled, setAutoLaunchEnabled] = useLocalStorage<boolean>("autoLaunchEnabled", false)
 	const [closeToTrayEnabled, setCloseToTrayEnabled] = useLocalStorage<boolean>("closeToTrayEnabled", false)
+	const [notificationSoundEnabled, setNotificationSoundEnabled] = useLocalStorage<boolean>("notificationSoundEnabled", false)
 
 	const thumbnailCacheQuery = useQuery({
 		queryKey: ["workerCalculateThumbnailCacheUsage"],
@@ -306,15 +307,17 @@ export const General = memo(() => {
 											onCheckedChange={toggleAutoLaunch}
 										/>
 									</Section>
-									<Section
-										name={t("settings.general.sections.closeToTray.name")}
-										info={t("settings.general.sections.closeToTray.info")}
-									>
-										<Switch
-											checked={closeToTrayEnabled}
-											onCheckedChange={setCloseToTrayEnabled}
-										/>
-									</Section>
+									{window.desktopAPI.platform() !== "darwin" && (
+										<Section
+											name={t("settings.general.sections.closeToTray.name")}
+											info={t("settings.general.sections.closeToTray.info")}
+										>
+											<Switch
+												checked={closeToTrayEnabled}
+												onCheckedChange={setCloseToTrayEnabled}
+											/>
+										</Section>
+									)}
 								</>
 							)}
 							<Section
@@ -334,6 +337,15 @@ export const General = memo(() => {
 								<Switch
 									checked={contactNotificationsEnabled}
 									onCheckedChange={setContactNotificationsEnabled}
+								/>
+							</Section>
+							<Section
+								name={t("settings.general.sections.notificationSound.name")}
+								info={t("settings.general.sections.notificationSound.info")}
+							>
+								<Switch
+									checked={notificationSoundEnabled}
+									onCheckedChange={setNotificationSoundEnabled}
 								/>
 							</Section>
 						</>
