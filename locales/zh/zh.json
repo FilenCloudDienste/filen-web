@@ -747,6 +747,11 @@
 					"name": "聊天通知",
 					"info": "启用或禁用聊天通知"
 				},
+
+				"notificationSound": {
+					"name": "通知声音",
+					"info": "启用或禁用通知声音"
+				},
 				"contactNotifications": {
 					"name": "联系人通知",
 					"info": "启用或禁用联系人通知"
@@ -783,7 +788,8 @@
 			"copy": "复制",
 			"title": "邀请其他人即可获得最多 30 GB 的存储空间",
 			"description": "您每邀请一位朋友，您都会收到 {{yourEarnings}} - 而您的朋友也会收到 {{otherEarnings}} 。就是这么简单。",
-			"earned": "{{earned}} / {{max}}"
+			"earned": "{{earned}} / {{max}}",
+			"storageEarned": "已获得的存储"
 		},
 		"events": {
 			"empty": "暂无事件",
@@ -1180,7 +1186,8 @@
 				}
 			},
 			"errors": {
-				"invalidMountPoint": "无效的挂载点。"
+				"invalidMountPoint": "无效的挂载点",
+				"mountPointNotEmpty": "挂载点需要是一个空目录。"
 			}
 		},
 		"webdav": {
