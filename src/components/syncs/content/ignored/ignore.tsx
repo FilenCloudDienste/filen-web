@@ -51,7 +51,11 @@ export const Ignore = memo(({ ignore }: { ignore: IgnoreType }) => {
 						</div>
 					</div>
 					<div className="flex flex-col">
-						<p className="line-clamp-1 text-ellipsis break-all">{ignore.localPath}</p>
+						<p className="line-clamp-1 text-ellipsis break-all">
+							{ignore.reason === "permissions" || ignore.reason === "symlink" || ignore.reason === "empty"
+								? ignore.localPath
+								: ignore.relativePath}
+						</p>
 						<p className="line-clamp-6 text-ellipsis break-all text-muted-foreground text-xs">{reason}</p>
 					</div>
 				</div>
