@@ -774,8 +774,8 @@
 					"info": "退出登录",
 					"action": "退出登录"
 				},
-				"closeToTray": {
-					"name": "关闭到托盘",
+				"minimizeToTray": {
+					"name": "最小化到托盘",
 					"info": "将 Filen 隐藏在托盘中，而不是最小化窗口"
 				},
 				"autoLaunch": {
