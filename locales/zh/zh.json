@@ -747,7 +747,6 @@
 					"name": "聊天通知",
 					"info": "启用或禁用聊天通知"
 				},
-
 				"notificationSound": {
 					"name": "通知声音",
 					"info": "启用或禁用通知声音"
