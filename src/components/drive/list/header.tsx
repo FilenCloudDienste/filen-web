@@ -15,7 +15,7 @@ export const Header = memo(() => {
 	const [driveSortBy, setDriveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 	const routeParent = useRouteParent()
 	const { t } = useTranslation()
-	const { items } = useDriveItemsStore()
+	const items = useDriveItemsStore(useCallback(state => state.items, []))
 	const driveListColumnSize = useDriveListColumnSize()
 
 	const name = useCallback(() => {

@@ -58,6 +58,15 @@ export const List = memo(
 			[exclude, setResponseContacts, responseContacts]
 		)
 
+		const style = useMemo((): React.CSSProperties => {
+			return {
+				overflowX: "hidden",
+				overflowY: "auto",
+				height: 384 + "px",
+				width: "100%"
+			}
+		}, [])
+
 		if (!query.isSuccess) {
 			return (
 				<div className="flex flex-col w-full h-[384px] items-center justify-center">
@@ -83,12 +92,7 @@ export const List = memo(
 					width="100%"
 					computeItemKey={getItemKey}
 					itemContent={itemContent}
-					style={{
-						overflowX: "hidden",
-						overflowY: "auto",
-						height: 384 + "px",
-						width: "100%"
-					}}
+					style={style}
 				/>
 			</div>
 		)

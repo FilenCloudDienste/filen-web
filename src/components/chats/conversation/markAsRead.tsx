@@ -30,7 +30,7 @@ export const MarkAsRead = memo(
 		const [markingAsRead, setMarkingAsRead] = useState<boolean>(false)
 		const { userId } = useSDKConfig()
 		const { t } = useTranslation()
-		const { setConversationsUnread } = useChatsStore()
+		const setConversationsUnread = useChatsStore(useCallback(state => state.setConversationsUnread, []))
 		const routeParent = useRouteParent()
 
 		const { show, count, since } = useMemo(() => {

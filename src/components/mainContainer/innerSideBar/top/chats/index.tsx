@@ -17,7 +17,17 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 
 export const Chats = memo(() => {
 	const { t } = useTranslation()
-	const { search, setSearch, setConversations, setSelectedConversation } = useChatsStore()
+	const { search, setSearch, setConversations, setSelectedConversation } = useChatsStore(
+		useCallback(
+			state => ({
+				search: state.search,
+				setSearch: state.setSearch,
+				setConversations: state.setConversations,
+				setSelectedConversation: state.setSelectedConversation
+			}),
+			[]
+		)
+	)
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const navigate = useNavigate()

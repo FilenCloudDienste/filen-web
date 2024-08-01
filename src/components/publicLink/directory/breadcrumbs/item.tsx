@@ -5,7 +5,15 @@ import { directoryUUIDToNameCache } from "@/cache"
 import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 
 export const Item = memo(({ uuid, info, ex, index }: { info: DirLinkInfoDecryptedResponse; uuid: string; ex: string[]; index: number }) => {
-	const { setVirtualURL, virtualURL } = useDirectoryPublicLinkStore()
+	const { setVirtualURL, virtualURL } = useDirectoryPublicLinkStore(
+		useCallback(
+			state => ({
+				setVirtualURL: state.setVirtualURL,
+				virtualURL: state.virtualURL
+			}),
+			[]
+		)
+	)
 
 	const navigateToPath = useCallback(() => {
 		let builtPathname = ""

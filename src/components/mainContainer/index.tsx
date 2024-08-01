@@ -17,11 +17,11 @@ import useIsMobile from "@/hooks/useIsMobile"
 export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 	const { t } = useTranslation()
 	const { dark } = useTheme()
-	const [closeToTrayEnabled] = useLocalStorage<boolean>("closeToTrayEnabled", false)
+	const [minimizeToTrayEnabled] = useLocalStorage<boolean>("minimizeToTrayEnabled", false)
 
 	const minimizeWindow = useCallback(async () => {
 		try {
-			if (closeToTrayEnabled) {
+			if (minimizeToTrayEnabled) {
 				await window.desktopAPI.hideWindow()
 
 				return
@@ -31,7 +31,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 		} catch (e) {
 			console.error(e)
 		}
-	}, [closeToTrayEnabled])
+	}, [minimizeToTrayEnabled])
 
 	const maximizeWindow = useCallback(async () => {
 		try {

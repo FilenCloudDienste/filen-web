@@ -30,7 +30,22 @@ export const Transfers = memo(() => {
 	const windowSize = useWindowSize()
 	const [open, setOpen] = useState<boolean>(false)
 	const { transfers, setTransfers, speed, setProgress, setRemaining, setSpeed, remaining, setFinishedTransfers, finishedTransfers } =
-		useTransfersStore()
+		useTransfersStore(
+			useCallback(
+				state => ({
+					transfers: state.transfers,
+					setTransfers: state.setTransfers,
+					speed: state.speed,
+					setProgress: state.setProgress,
+					setRemaining: state.setRemaining,
+					setSpeed: state.setSpeed,
+					remaining: state.remaining,
+					setFinishedTransfers: state.setFinishedTransfers,
+					finishedTransfers: state.finishedTransfers
+				}),
+				[]
+			)
+		)
 	const bytesSent = useRef<number>(0)
 	const allBytes = useRef<number>(0)
 	const progressStarted = useRef<number>(-1)
@@ -80,18 +95,9 @@ export const Transfers = memo(() => {
 
 	const getItemKey = useCallback((_: number, transfer: TransferType) => transfer.uuid, [])
 
-	const itemContent = useCallback(
-		(_: number, transfer: TransferType) => {
-			return (
-				<Transfer
-					transfer={transfer}
-					setTransfers={setTransfers}
-					t={t}
-				/>
-			)
-		},
-		[t, setTransfers]
-	)
+	const itemContent = useCallback((_: number, transfer: TransferType) => {
+		return <Transfer transfer={transfer} />
+	}, [])
 
 	const updateInfo = useRef(
 		throttle(() => {
@@ -123,7 +129,7 @@ export const Transfers = memo(() => {
 						(remainingReadable.seconds > 0 ? remainingReadable.seconds + "s " : "")
 				})
 			)
-		}, 100)
+		}, 250)
 	).current
 
 	const handleTransferUpdates = useCallback(
@@ -338,6 +344,33 @@ export const Transfers = memo(() => {
 		}
 	}, [paused, errorToast, transfers, setTransfers])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
+	const components = useMemo(() => {
+		return {
+			EmptyPlaceholder: () => {
+				return (
+					<div
+						className="w-full flex flex-col items-center justify-center text-muted-foreground gap-2"
+						style={{
+							height: virtuosoHeight
+						}}
+					>
+						<ArrowDownUp size={60} />
+						<p>{t("transfers.noActiveTransfers")}</p>
+					</div>
+				)
+			}
+		}
+	}, [virtuosoHeight, t])
+
 	useEffect(() => {
 		if (ongoingTransfers.length <= 0) {
 			bytesSent.current = 0
@@ -398,27 +431,9 @@ export const Transfers = memo(() => {
 					itemContent={itemContent}
 					onDragOver={onDragOver}
 					defaultItemHeight={78}
-					components={{
-						EmptyPlaceholder: () => {
-							return (
-								<div
-									className="w-full flex flex-col items-center justify-center text-muted-foreground gap-2"
-									style={{
-										height: virtuosoHeight
-									}}
-								>
-									<ArrowDownUp size={60} />
-									<p>{t("transfers.noActiveTransfers")}</p>
-								</div>
-							)
-						}
-					}}
-					style={{
-						overflowX: "hidden",
-						overflowY: "auto",
-						height: virtuosoHeight + "px",
-						width: "100%"
-					}}
+					components={components}
+					overscan={0}
+					style={style}
 				/>
 				<div className="flex flex-row items-center gap-3 h-12 text-muted-foreground justify-end text-sm">
 					{remaining > 0 && remainingReadable.length > 0 && (

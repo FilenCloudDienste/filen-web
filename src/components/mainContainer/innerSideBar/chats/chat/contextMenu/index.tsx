@@ -28,7 +28,16 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 	const { userId } = useSDKConfig()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
-	const { setConversations, setSelectedConversation, conversationsUnread } = useChatsStore()
+	const { setConversations, setSelectedConversation, conversationsUnread } = useChatsStore(
+		useCallback(
+			state => ({
+				setConversations: state.setConversations,
+				setSelectedConversation: state.setSelectedConversation,
+				conversationsUnread: state.conversationsUnread
+			}),
+			[]
+		)
+	)
 	const successToast = useSuccessToast()
 	const navigate = useNavigate()
 	const routeParent = useRouteParent()

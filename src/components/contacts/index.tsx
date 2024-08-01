@@ -322,6 +322,15 @@ export const Contacts = memo(() => {
 		}
 	}, [showSkeletons])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
 	return (
 		<div className="flex flex-col w-full h-full select-none">
 			<div
@@ -391,12 +400,7 @@ export const Contacts = memo(() => {
 							computeItemKey={getItemKeyRequestsIn}
 							itemContent={itemContentRequestsIn}
 							components={components}
-							style={{
-								overflowX: "hidden",
-								overflowY: "auto",
-								height: virtuosoHeight + "px",
-								width: "100%"
-							}}
+							style={style}
 						/>
 					) : location.includes("contacts/out") ? (
 						<Virtuoso
@@ -407,12 +411,7 @@ export const Contacts = memo(() => {
 							computeItemKey={getItemKeyRequestsOut}
 							itemContent={itemContentRequestsOut}
 							components={components}
-							style={{
-								overflowX: "hidden",
-								overflowY: "auto",
-								height: virtuosoHeight + "px",
-								width: "100%"
-							}}
+							style={style}
 						/>
 					) : location.includes("contacts/blocked") ? (
 						<Virtuoso
@@ -423,12 +422,7 @@ export const Contacts = memo(() => {
 							computeItemKey={getItemKeyBlocked}
 							itemContent={itemContentBlocked}
 							components={components}
-							style={{
-								overflowX: "hidden",
-								overflowY: "auto",
-								height: virtuosoHeight + "px",
-								width: "100%"
-							}}
+							style={style}
 						/>
 					) : (
 						<Virtuoso
@@ -439,12 +433,7 @@ export const Contacts = memo(() => {
 							computeItemKey={getItemKeyContacts}
 							itemContent={itemContentContacts}
 							components={components}
-							style={{
-								overflowX: "hidden",
-								overflowY: "auto",
-								height: virtuosoHeight + "px",
-								width: "100%"
-							}}
+							style={style}
 						/>
 					)}
 				</div>

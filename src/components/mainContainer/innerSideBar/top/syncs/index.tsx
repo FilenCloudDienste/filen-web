@@ -9,9 +9,9 @@ import eventEmitter from "@/lib/eventEmitter"
 
 export const Syncs = memo(() => {
 	const { t } = useTranslation()
-	const { search, setSearch } = useSyncsStore()
+	const { search, setSearch } = useSyncsStore(useCallback(state => ({ search: state.search, setSearch: state.setSearch }), []))
 
-	const createNote = useCallback(async () => {
+	const createNote = useCallback(() => {
 		eventEmitter.emit("openCreateSyncDialog")
 	}, [])
 

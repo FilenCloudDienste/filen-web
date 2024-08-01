@@ -11,8 +11,18 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 	const [endPos, setEndPos] = useState<DragSelectPosition>({ x: 0, y: 0 })
 	const dragAreaRef = useRef<HTMLDivElement>(null)
 	const containerRef = useRef<HTMLDivElement>(null)
-	const { setItems: setDriveItems, items: driveItems } = useDriveItemsStore()
-	const { setItems: setPublicLinkItems, items: publicLinkItems } = useDirectoryPublicLinkStore()
+	const { setDriveItems, driveItems } = useDriveItemsStore(
+		useCallback(state => ({ setDriveItems: state.setItems, driveItems: state.items }), [])
+	)
+	const { setPublicLinkItems, publicLinkItems } = useDirectoryPublicLinkStore(
+		useCallback(
+			state => ({
+				setPublicLinkItems: state.setItems,
+				publicLinkItems: state.items
+			}),
+			[]
+		)
+	)
 	const location = useLocation()
 
 	const isInsidePublicLink = useMemo(() => {

@@ -1,9 +1,9 @@
-import { memo } from "react"
+import { memo, useCallback } from "react"
 import { Flat as FlatCircularProgress } from "@alptugidin/react-circular-progress-bar"
 import { useTransfersStore } from "@/stores/transfers.store"
 
 export const TransfersProgress = memo(() => {
-	const { progress } = useTransfersStore()
+	const progress = useTransfersStore(useCallback(state => state.progress, []))
 
 	if (progress <= 0) {
 		return null

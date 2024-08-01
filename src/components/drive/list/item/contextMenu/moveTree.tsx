@@ -10,7 +10,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 
 export const MoveTree = memo(({ parent, name }: { parent: string; name: string }) => {
-	const { items, setItems } = useDriveItemsStore()
+	const { items, setItems } = useDriveItemsStore(useCallback(state => ({ items: state.items, setItems: state.setItems }), []))
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
 

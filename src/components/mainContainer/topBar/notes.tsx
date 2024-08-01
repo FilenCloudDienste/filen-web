@@ -14,7 +14,18 @@ import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import { MAX_NOTE_SIZE } from "@filen/sdk"
 
 export const Notes = memo(() => {
-	const { selectedNote, setSelectedNote, setNotes, synced, maxSizeReached } = useNotesStore()
+	const { selectedNote, setSelectedNote, setNotes, synced, maxSizeReached } = useNotesStore(
+		useCallback(
+			state => ({
+				selectedNote: state.selectedNote,
+				setSelectedNote: state.setSelectedNote,
+				setNotes: state.setNotes,
+				synced: state.synced,
+				maxSizeReached: state.maxSizeReached
+			}),
+			[]
+		)
+	)
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const { dark } = useTheme()

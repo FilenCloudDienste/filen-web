@@ -21,7 +21,12 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	const windowSize = useWindowSize()
 	const inputContainerDimensions = useElementDimensions("chat-input-container")
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
-	const { messages, setMessages } = useChatsStore()
+	const { messagesSorted, setMessages } = useChatsStore(
+		useCallback(
+			state => ({ messagesSorted: state.messages.sort((a, b) => a.sentTimestamp - b.sentTimestamp), setMessages: state.setMessages }),
+			[]
+		)
+	)
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const [isScrolling, setIsScrolling] = useState<boolean>(false)
 	const isFetchingPreviousMessagesRef = useRef<boolean>(false)
@@ -35,10 +40,6 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 			? windowSize.height - inputContainerDimensions.height - 48 - DESKTOP_TOPBAR_HEIGHT
 			: windowSize.height - 82 - 48 - DESKTOP_TOPBAR_HEIGHT
 	}, [inputContainerDimensions.height, windowSize.height])
-
-	const messagesSorted = useMemo(() => {
-		return messages.sort((a, b) => a.sentTimestamp - b.sentTimestamp)
-	}, [messages])
 
 	const query = useQuery({
 		queryKey: ["fetchChatsConversationsMessages", conversation.uuid],
@@ -118,14 +119,14 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 				<Message
 					conversation={conversation}
 					message={message}
-					prevMessage={messages[index - 1]}
-					nextMessage={messages[index + 1]}
+					prevMessage={messagesSorted[index - 1]}
+					nextMessage={messagesSorted[index + 1]}
 					isScrolling={isScrolling}
 					lastFocus={lastFocus > 0 ? lastFocus : lastFocusQueryNumber}
 				/>
 			)
 		},
-		[conversation, messages, isScrolling, lastFocus, lastFocusQueryNumber]
+		[conversation, messagesSorted, isScrolling, lastFocus, lastFocusQueryNumber]
 	)
 
 	const scrollChatToBottom = useCallback(
@@ -327,6 +328,15 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 		setLastFocus(filtered[0].lastFocus)
 	}, [lastFocusQuery.isSuccess, lastFocusQuery.data, conversation.uuid])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
 	return (
 		<Fragment>
 			<MarkAsRead
@@ -353,12 +363,7 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 				startReached={startReached}
 				components={components}
 				overscan={windowSize.height}
-				style={{
-					overflowX: "hidden",
-					overflowY: "auto",
-					height: virtuosoHeight + "px",
-					width: "100%"
-				}}
+				style={style}
 			/>
 		</Fragment>
 	)

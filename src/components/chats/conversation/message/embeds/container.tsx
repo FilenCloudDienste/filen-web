@@ -29,7 +29,7 @@ export const Container = memo(
 		const [hovering, setHovering] = useState<boolean>(false)
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
-		const { setMessages } = useChatsStore()
+		const setMessages = useChatsStore(useCallback(state => state.setMessages, []))
 
 		const onMouseEnter = useCallback(() => {
 			setHovering(true)

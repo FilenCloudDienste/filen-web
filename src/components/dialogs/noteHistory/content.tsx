@@ -120,6 +120,15 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 		}
 	}, [loadingToast, errorToast, note.uuid, selectedHistory, setOpen, restoring])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: windowSize.height - 48 + "px",
+			width: "100%"
+		}
+	}, [windowSize.height])
+
 	useEffect(() => {
 		if (selectedHistory || historySorted.length === 0 || !historySorted[0]) {
 			return
@@ -155,12 +164,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 						width="100%"
 						computeItemKey={getItemKey}
 						itemContent={itemContent}
-						style={{
-							overflowX: "hidden",
-							overflowY: "auto",
-							height: windowSize.height - 48 + "px",
-							width: "100%"
-						}}
+						style={style}
 					/>
 				</div>
 				<div className="flex flex-col grow w-[calc(100vw-300px)] h-full">

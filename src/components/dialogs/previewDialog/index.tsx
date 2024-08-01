@@ -51,10 +51,23 @@ export const PreviewDialog = memo(() => {
 	const [saving, setSaving] = useState<boolean>(false)
 	const { t } = useTranslation()
 	const routeParent = useRouteParent()
-	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore()
+	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore(
+		useCallback(
+			state => ({
+				currentReceiverEmail: state.currentReceiverEmail,
+				currentReceiverId: state.currentReceiverId,
+				currentReceivers: state.currentReceivers,
+				currentSharerEmail: state.currentSharerEmail,
+				currentSharerId: state.currentSharerId
+			}),
+			[]
+		)
+	)
 	const [previewType, setPreviewType] = useState<string>("")
 	const canUpload = useCanUpload()
-	const { items: driveItems, searchTerm: driveSearchTerm } = useDriveItemsStore()
+	const { driveItems, driveSearchTerm } = useDriveItemsStore(
+		useCallback(state => ({ driveItems: state.items, driveSearchTerm: state.searchTerm }), [])
+	)
 	const publicLinkURLState = usePublicLinkURLState()
 	const driveURLState = useDriveURLState()
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})

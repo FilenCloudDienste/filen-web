@@ -13,9 +13,9 @@ import { cn } from "@/lib/utils"
 
 export const SideBar = memo(() => {
 	const { userId, baseFolderUUID } = useSDKConfig()
-	const { setUnread } = useChatsStore()
+	const setUnread = useChatsStore(useCallback(state => state.setUnread, []))
 	const unreadQueryLastUpdateRef = useRef<number>(-1)
-	const { setRequestsInCount } = useContactsStore()
+	const setRequestsInCount = useContactsStore(useCallback(state => state.setRequestsInCount, []))
 	const contactsRequestInCountQueryLastUpdateRef = useRef<number>(-1)
 
 	const chatsUnreadCountQuery = useQuery({

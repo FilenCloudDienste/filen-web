@@ -153,7 +153,18 @@ export const Message = memo(
 		isScrolling: boolean
 		lastFocus: number
 	}) => {
-		const { failedMessages, setReplyMessage, setEditUUID, editUUID, replyMessage } = useChatsStore()
+		const { failedMessages, setReplyMessage, setEditUUID, editUUID, replyMessage } = useChatsStore(
+			useCallback(
+				state => ({
+					failedMessages: state.failedMessages,
+					setReplyMessage: state.setReplyMessage,
+					setEditUUID: state.setEditUUID,
+					editUUID: state.editUUID,
+					replyMessage: state.replyMessage
+				}),
+				[]
+			)
+		)
 		const { t } = useTranslation()
 		const { userId } = useSDKConfig()
 		const [hovering, setHovering] = useState<boolean>(false)

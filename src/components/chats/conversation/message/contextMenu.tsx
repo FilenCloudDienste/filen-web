@@ -35,7 +35,16 @@ export const ContextMenu = memo(
 		const loadingToast = useLoadingToast()
 		const successToast = useSuccessToast()
 		const errorToast = useErrorToast()
-		const { setMessages, setEditUUID, setReplyMessage } = useChatsStore()
+		const { setMessages, setEditUUID, setReplyMessage } = useChatsStore(
+			useCallback(
+				state => ({
+					setMessages: state.setMessages,
+					setEditUUID: state.setEditUUID,
+					setReplyMessage: state.setReplyMessage
+				}),
+				[]
+			)
+		)
 
 		const onOpenChange = useCallback(
 			(open: boolean) => {

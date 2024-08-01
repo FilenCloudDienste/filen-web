@@ -34,7 +34,15 @@ export const Contact = memo(
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
 		const { t } = useTranslation()
-		const { setConversations, setSelectedConversation } = useChatsStore()
+		const { setConversations, setSelectedConversation } = useChatsStore(
+			useCallback(
+				state => ({
+					setConversations: state.setConversations,
+					setSelectedConversation: state.setSelectedConversation
+				}),
+				[]
+			)
+		)
 		const isCreatingChat = useRef<boolean>(false)
 		const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
 

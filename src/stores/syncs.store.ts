@@ -3,23 +3,7 @@ import { type SyncPair, type TransferData, type CycleState, type IPCTaskError } 
 import { type LocalTreeIgnored } from "@filen/sync/dist/lib/filesystems/local"
 import { type RemoteTreeIgnored } from "@filen/sync/dist/lib/filesystems/remote"
 import { type SerializedError } from "@filen/sync/dist/utils"
-
-export type TransferState = "started" | "queued" | "finished" | "error" | "stopped" | "paused"
-
-export type Transfer = {
-	type: "upload" | "download"
-	localPath: string
-	relativePath: string
-	state: TransferState
-	bytes: number
-	name: string
-	size: number
-	startedTimestamp: number
-	finishedTimestamp: number
-	queuedTimestamp: number
-	errorTimestamp: number
-	progressTimestamp: number
-}
+import { type Delta } from "@filen/sync/dist/lib/deltas"
 
 export type TransferDataWithTimestamp = TransferData & { timestamp: number }
 
@@ -32,7 +16,6 @@ export type SyncsStore = {
 	selectedSync: SyncPair | null
 	transferEvents: Record<string, TransferDataWithTimestamp[]>
 	cycleState: Record<string, CycleState>
-	transfers: Record<string, Transfer[]>
 	remoteIgnored: Record<string, RemoteTreeIgnored[]>
 	localIgnored: Record<string, LocalTreeIgnored[]>
 	errors: Record<string, GeneralError[]>
@@ -43,6 +26,9 @@ export type SyncsStore = {
 	remaining: Record<string, number>
 	speed: Record<string, number>
 	progress: Record<string, number>
+	deltas: Record<string, Delta[]>
+	tasksCount: Record<string, number>
+	tasksSize: Record<string, number>
 	setSelectedSync: (fn: SyncPair | null | ((prev: SyncPair | null) => SyncPair | null)) => void
 	setChanging: (fn: boolean | ((prev: boolean) => boolean)) => void
 	setTransferEvents: (
@@ -51,7 +37,6 @@ export type SyncsStore = {
 			| ((prev: Record<string, TransferDataWithTimestamp[]>) => Record<string, TransferDataWithTimestamp[]>)
 	) => void
 	setCycleState: (fn: Record<string, CycleState> | ((prev: Record<string, CycleState>) => Record<string, CycleState>)) => void
-	setTransfers: (fn: Record<string, Transfer[]> | ((prev: Record<string, Transfer[]>) => Record<string, Transfer[]>)) => void
 	setRemoteIgnored: (
 		fn: Record<string, RemoteTreeIgnored[]> | ((prev: Record<string, RemoteTreeIgnored[]>) => Record<string, RemoteTreeIgnored[]>)
 	) => void
@@ -65,44 +50,15 @@ export type SyncsStore = {
 	setRemaining: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 	setSpeed: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 	setProgress: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
+	setDeltas: (fn: Record<string, Delta[]> | ((prev: Record<string, Delta[]>) => Record<string, Delta[]>)) => void
+	setTasksCount: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
+	setTasksSize: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 }
 
 export const useSyncsStore = create<SyncsStore>(set => ({
 	selectedSync: null,
 	transferEvents: {},
 	cycleState: {},
-	transfers: {
-		/*"8e9b6c9b-50c2-4bad-9388-4194388c4597": [
-			{
-				type: "download",
-				localPath: "C:\\Users\\dwynr\\lol.txt",
-				relativePath: "/lol.txt",
-				state: "started",
-				bytes: 1,
-				name: "lol.txt",
-				size: 5,
-				startedTimestamp: 0,
-				finishedTimestamp: 0,
-				queuedTimestamp: 0,
-				errorTimestamp: 0,
-				progressTimestamp: 0
-			},
-			{
-				type: "download",
-				localPath: "C:\\Users\\dwynr\\lol.txt",
-				relativePath: "/lol.txt",
-				state: "started",
-				bytes: 3,
-				name: "lol.txt",
-				size: 5,
-				startedTimestamp: 0,
-				finishedTimestamp: 0,
-				queuedTimestamp: 0,
-				errorTimestamp: 0,
-				progressTimestamp: 0
-			}
-		]*/
-	},
 	remoteIgnored: {},
 	localIgnored: {},
 	errors: {},
@@ -113,6 +69,9 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	speed: {},
 	progress: {},
 	remaining: {},
+	deltas: {},
+	tasksCount: {},
+	tasksSize: {},
 	setSelectedSync(fn) {
 		set(state => ({ selectedSync: typeof fn === "function" ? fn(state.selectedSync) : fn }))
 	},
@@ -121,9 +80,6 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	},
 	setCycleState(fn) {
 		set(state => ({ cycleState: typeof fn === "function" ? fn(state.cycleState) : fn }))
-	},
-	setTransfers(fn) {
-		set(state => ({ transfers: typeof fn === "function" ? fn(state.transfers) : fn }))
 	},
 	setRemoteIgnored(fn) {
 		set(state => ({ remoteIgnored: typeof fn === "function" ? fn(state.remoteIgnored) : fn }))
@@ -154,5 +110,14 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	},
 	setSpeed(fn) {
 		set(state => ({ speed: typeof fn === "function" ? fn(state.speed) : fn }))
+	},
+	setDeltas(fn) {
+		set(state => ({ deltas: typeof fn === "function" ? fn(state.deltas) : fn }))
+	},
+	setTasksCount(fn) {
+		set(state => ({ tasksCount: typeof fn === "function" ? fn(state.tasksCount) : fn }))
+	},
+	setTasksSize(fn) {
+		set(state => ({ tasksSize: typeof fn === "function" ? fn(state.tasksSize) : fn }))
 	}
 }))

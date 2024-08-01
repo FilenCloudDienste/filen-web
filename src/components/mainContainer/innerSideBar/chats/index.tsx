@@ -25,7 +25,19 @@ const processedMessageUUIDs: Record<string, boolean> = {}
 export const Chats = memo(() => {
 	const windowSize = useWindowSize()
 	const { conversations, setConversations, selectedConversation, setSelectedConversation, setConversationsUnread, search } =
-		useChatsStore()
+		useChatsStore(
+			useCallback(
+				state => ({
+					conversations: state.conversations,
+					setConversations: state.setConversations,
+					selectedConversation: state.selectedConversation,
+					setSelectedConversation: state.setSelectedConversation,
+					setConversationsUnread: state.setConversationsUnread,
+					search: state.search
+				}),
+				[]
+			)
+		)
 	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
 	const navigate = useNavigate()
 	const routeParent = useRouteParent()
@@ -289,6 +301,15 @@ export const Chats = memo(() => {
 		]
 	)
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
 	useEffect(() => {
 		if (
 			validateUUID(routeParent) &&
@@ -387,12 +408,7 @@ export const Chats = memo(() => {
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
 			components={components}
-			style={{
-				overflowX: "hidden",
-				overflowY: "auto",
-				height: virtuosoHeight + "px",
-				width: "100%"
-			}}
+			style={style}
 		/>
 	)
 })

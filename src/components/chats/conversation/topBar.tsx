@@ -27,7 +27,15 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 		true
 	)
 	const { dark } = useTheme()
-	const { setConversations, setSelectedConversation } = useChatsStore()
+	const { setConversations, setSelectedConversation } = useChatsStore(
+		useCallback(
+			state => ({
+				setConversations: state.setConversations,
+				setSelectedConversation: state.setSelectedConversation
+			}),
+			[]
+		)
+	)
 
 	const hasWritePermissions = useMemo(() => {
 		return userId === conversation.ownerId

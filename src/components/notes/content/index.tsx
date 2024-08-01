@@ -19,7 +19,17 @@ import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
 
 export const Content = memo(({ note }: { note: Note }) => {
-	const { setSelectedNote, setNotes, setSynced, setMaxSizeReached } = useNotesStore()
+	const { setSelectedNote, setNotes, setSynced, setMaxSizeReached } = useNotesStore(
+		useCallback(
+			state => ({
+				setSelectedNote: state.setSelectedNote,
+				setNotes: state.setNotes,
+				setSynced: state.setSynced,
+				setMaxSizeReached: state.setMaxSizeReached
+			}),
+			[]
+		)
+	)
 	const windowSize = useWindowSize()
 	const resizablePanelSizes = useResizablePanelSizes()
 	const [value, setValue] = useState<string>("")

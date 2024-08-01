@@ -773,8 +773,8 @@
 					"info": "Logout",
 					"action": "Logout"
 				},
-				"closeToTray": {
-					"name": "Close to tray",
+				"minimizeToTray": {
+					"name": "Minimize to tray",
 					"info": "Hide Filen in the tray instead of minimizing the window"
 				},
 				"autoLaunch": {
@@ -1302,6 +1302,10 @@
 		"noEventsYet": "No events yet",
 		"nothingIgnored": "No files or directories ignored",
 		"noIssues": "No issues",
+		"info": {
+			"progress": "Synchronizing {{items}} items ({{total}}) at {{speed}}, about {{remaining}} remaining",
+			"upToDate": "Everything synced"
+		},
 		"empty": {
 			"title": "No syncs setup yet",
 			"description": "You can sync your local directories with the cloud or cloud directories with your device",

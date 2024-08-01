@@ -38,7 +38,7 @@ export const Directory = memo(
 		const [status, setStatus] = useState<DirLinkStatusResponse | null>(null)
 		const successToast = useSuccessToast()
 		const location = useLocation()
-		const { setItems } = useDriveItemsStore()
+		const setItems = useDriveItemsStore(useCallback(state => state.setItems, []))
 		const [password, setPassword] = useState<string>("")
 		const [expiration, setExpiration] = useState<PublicLinkExpiration>("never")
 		const [showPassword, setShowPassword] = useState<boolean>(false)

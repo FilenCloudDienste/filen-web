@@ -14,10 +14,42 @@ export type IgnoreType = {
 	localPath: string
 	relativePath: string
 	reason: LocalTreeIgnoredReason | RemoteTreeIgnoredReason
+	type: "remote" | "local"
 }
 
 export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
-	const { localIgnored, remoteIgnored } = useSyncsStore()
+	const ignored = useSyncsStore(
+		useCallback(
+			state => {
+				const filtered = {
+					localIgnored: state.localIgnored[sync.uuid] ? state.localIgnored[sync.uuid]! : [],
+					remoteIgnored: state.remoteIgnored[sync.uuid] ? state.remoteIgnored[sync.uuid]! : []
+				}
+				const ignored: IgnoreType[] = []
+
+				for (const ignore of filtered.localIgnored) {
+					ignored.push({
+						localPath: ignore.localPath,
+						relativePath: ignore.relativePath,
+						reason: ignore.reason,
+						type: "local"
+					})
+				}
+
+				for (const ignore of filtered.remoteIgnored) {
+					ignored.push({
+						localPath: ignore.localPath,
+						relativePath: ignore.relativePath,
+						reason: ignore.reason,
+						type: "remote"
+					})
+				}
+
+				return ignored
+			},
+			[sync.uuid]
+		)
+	)
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const windowSize = useWindowSize()
 	const { t } = useTranslation()
@@ -26,33 +58,7 @@ export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
 		return windowSize.height - 64 - 12 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
-	const ignored = useMemo(() => {
-		const state = {
-			localIgnored: localIgnored[sync.uuid] ? localIgnored[sync.uuid]! : [],
-			remoteIgnored: remoteIgnored[sync.uuid] ? remoteIgnored[sync.uuid]! : []
-		}
-		const ignored: IgnoreType[] = []
-
-		for (const ignore of state.localIgnored) {
-			ignored.push({
-				localPath: ignore.localPath,
-				relativePath: ignore.relativePath,
-				reason: ignore.reason
-			})
-		}
-
-		for (const ignore of state.remoteIgnored) {
-			ignored.push({
-				localPath: ignore.localPath,
-				relativePath: ignore.relativePath,
-				reason: ignore.reason
-			})
-		}
-
-		return ignored
-	}, [sync.uuid, localIgnored, remoteIgnored])
-
-	const getItemKey = useCallback((_: number, ignore: IgnoreType) => `${ignore.localPath}:${ignore.relativePath}:${ignore.reason}`, [])
+	const getItemKey = useCallback((_: number, ignore: IgnoreType) => `${ignore.localPath}:${ignore.reason}`, [])
 
 	const itemContent = useCallback((_: number, ignore: IgnoreType) => {
 		return <Ignore ignore={ignore} />
@@ -74,6 +80,15 @@ export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
 		}
 	}, [t])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
 	return (
 		<Virtuoso
 			ref={virtuosoRef}
@@ -84,13 +99,9 @@ export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
 			components={components}
-			defaultItemHeight={51}
-			style={{
-				overflowX: "hidden",
-				overflowY: "auto",
-				height: virtuosoHeight + "px",
-				width: "100%"
-			}}
+			defaultItemHeight={65}
+			overscan={0}
+			style={style}
 		/>
 	)
 })

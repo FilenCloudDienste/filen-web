@@ -27,8 +27,8 @@ export const Button = memo(({ id }: { id: string }) => {
 	const { t } = useTranslation()
 	const [lastSelectedNote] = useLocalStorage("lastSelectedNote", "")
 	const [lastSelectedChatsConversation] = useLocalStorage("lastSelectedChatsConversation", "")
-	const { unread } = useChatsStore()
-	const { requestsInCount } = useContactsStore()
+	const unread = useChatsStore(useCallback(state => state.unread, []))
+	const requestsInCount = useContactsStore(useCallback(state => state.requestsInCount, []))
 
 	const onClick = useCallback(
 		(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {

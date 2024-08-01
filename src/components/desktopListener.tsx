@@ -1,18 +1,16 @@
-import { memo, useEffect, useRef } from "react"
+import { memo, useEffect, useRef, useCallback } from "react"
 import { IS_DESKTOP } from "@/constants"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { useSyncsStore, type Transfer, type GeneralError } from "@/stores/syncs.store"
-import pathModule from "path"
+import { useSyncsStore, type GeneralError } from "@/stores/syncs.store"
 import throttle from "lodash/throttle"
 import { calcTimeLeft, calcSpeed, getTimeRemaining } from "./transfers/utils"
-import { useTranslation } from "react-i18next"
+import { type MainToWindowMessage } from "@filen/desktop/dist/ipc"
 
 export const DesktopListener = memo(() => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const {
 		setTransferEvents,
 		setCycleState,
-		setTransfers,
 		setErrors,
 		setTaskErrors,
 		setLocalIgnored,
@@ -21,31 +19,53 @@ export const DesktopListener = memo(() => {
 		setProgress,
 		setRemaining,
 		setSpeed,
-		transfers
-	} = useSyncsStore()
-	const bytesSent = useRef<Record<string, number>>({}).current
-	const allBytes = useRef<Record<string, number>>({}).current
-	const progressStarted = useRef<Record<string, number>>({}).current
-	const { t } = useTranslation()
+		setTasksCount,
+		setTasksSize
+	} = useSyncsStore(
+		useCallback(
+			state => ({
+				setTransferEvents: state.setTransferEvents,
+				setCycleState: state.setCycleState,
+				setErrors: state.setErrors,
+				setTaskErrors: state.setTaskErrors,
+				setLocalIgnored: state.setLocalIgnored,
+				setRemoteIgnored: state.setRemoteIgnored,
+				setRemainingReadable: state.setRemainingReadable,
+				setProgress: state.setProgress,
+				setRemaining: state.setRemaining,
+				setSpeed: state.setSpeed,
+				setTasksCount: state.setTasksCount,
+				setTasksSize: state.setTasksSize
+			}),
+			[]
+		)
+	)
+	const bytesSent = useRef<Record<string, number>>({})
+	const allBytes = useRef<Record<string, number>>({})
+	const progressStarted = useRef<Record<string, number>>({})
 
 	const updateProgress = useRef(
 		throttle((syncUUID: string) => {
-			if (!bytesSent[syncUUID]) {
-				bytesSent[syncUUID] = 0
+			if (!bytesSent.current[syncUUID]) {
+				bytesSent.current[syncUUID] = 0
 			}
 
-			if (!allBytes[syncUUID]) {
-				allBytes[syncUUID] = 0
+			if (!allBytes.current[syncUUID]) {
+				allBytes.current[syncUUID] = 0
 			}
 
-			if (!progressStarted[syncUUID]) {
-				progressStarted[syncUUID] = -1
+			if (!progressStarted.current[syncUUID]) {
+				progressStarted.current[syncUUID] = -1
 			}
 
 			const now = Date.now()
-			const transferRemaining = calcTimeLeft(bytesSent[syncUUID]!, allBytes[syncUUID]!, progressStarted[syncUUID]!)
-			const transferPercent = (bytesSent[syncUUID]! / allBytes[syncUUID]!) * 100
-			const transferSpeed = calcSpeed(now, progressStarted[syncUUID]!, bytesSent[syncUUID]!)
+			const transferRemaining = calcTimeLeft(
+				bytesSent.current[syncUUID]!,
+				allBytes.current[syncUUID]!,
+				progressStarted.current[syncUUID]!
+			)
+			const transferPercent = (bytesSent.current[syncUUID]! / allBytes.current[syncUUID]!) * 100
+			const transferSpeed = calcSpeed(now, progressStarted.current[syncUUID]!, bytesSent.current[syncUUID]!)
 
 			setRemaining(prev => ({
 				...prev,
@@ -74,110 +94,151 @@ export const DesktopListener = memo(() => {
 
 			setRemainingReadable(prev => ({
 				...prev,
-				[syncUUID]: t("transfers.remaining", {
-					time:
-						(remainingReadable.days > 0 ? remainingReadable.days + "d " : "") +
-						(remainingReadable.hours > 0 ? remainingReadable.hours + "h " : "") +
-						(remainingReadable.minutes > 0 ? remainingReadable.minutes + "m " : "") +
-						(remainingReadable.seconds > 0 ? remainingReadable.seconds + "s " : "")
-				})
+				[syncUUID]:
+					(remainingReadable.days > 0 ? remainingReadable.days + "d " : "") +
+					(remainingReadable.hours > 0 ? remainingReadable.hours + "h " : "") +
+					(remainingReadable.minutes > 0 ? remainingReadable.minutes + "m " : "") +
+					(remainingReadable.seconds > 0 ? remainingReadable.seconds + "s " : "")
 			}))
-		}, 100)
+		}, 250)
 	).current
 
-	useEffect(() => {
-		for (const syncUUID in transfers) {
-			const ongoingTransfers = transfers[syncUUID]!.filter(
-				transfer => transfer.state === "queued" || transfer.state === "started" || transfer.state === "paused"
-			)
-
-			if (ongoingTransfers.length <= 0) {
-				bytesSent[syncUUID] = 0
-				progressStarted[syncUUID] = -1
-				allBytes[syncUUID] = 0
-
-				setRemaining(prev => ({
-					...prev,
-					[syncUUID]: 0
-				}))
-
-				setSpeed(prev => ({
-					...prev,
-					[syncUUID]: 0
-				}))
-
-				setProgress(prev => ({
-					...prev,
-					[syncUUID]: 0
-				}))
+	const messageHandler = useCallback(
+		(msg: MainToWindowMessage) => {
+			if (msg.type !== "sync") {
+				return
 			}
-		}
-	}, [transfers, setSpeed, setRemaining, setProgress, allBytes, bytesSent, progressStarted])
 
-	useEffect(() => {
-		let syncMessageListener: ReturnType<typeof window.desktopAPI.onMainToWindowMessage> | null = null
+			const { message } = msg
 
-		if (IS_DESKTOP && authed) {
-			syncMessageListener = window.desktopAPI.onMainToWindowMessage(msg => {
-				if (msg.type !== "sync") {
-					return
+			if (
+				message.type === "cycleApplyingStateDone" ||
+				message.type === "cycleApplyingStateStarted" ||
+				message.type === "cycleError" ||
+				message.type === "cycleGettingTreesDone" ||
+				message.type === "cycleGettingTreesStarted" ||
+				message.type === "cycleLocalSmokeTestFailed" ||
+				message.type === "cycleNoChanges" ||
+				message.type === "cyclePaused" ||
+				message.type === "cycleProcessingDeltasDone" ||
+				message.type === "cycleProcessingDeltasStarted" ||
+				message.type === "cycleProcessingTasksDone" ||
+				message.type === "cycleProcessingTasksStarted" ||
+				message.type === "cycleRemoteSmokeTestFailed" ||
+				message.type === "cycleRestarting" ||
+				message.type === "cycleSavingStateDone" ||
+				message.type === "cycleSavingStateStarted" ||
+				message.type === "cycleStarted" ||
+				message.type === "cycleSuccess" ||
+				message.type === "cycleWaitingForLocalDirectoryChangesDone" ||
+				message.type === "cycleWaitingForLocalDirectoryChangesStarted" ||
+				message.type === "cycleAcquiringLockDone" ||
+				message.type === "cycleAcquiringLockStarted" ||
+				message.type === "cycleReleasingLockDone" ||
+				message.type === "cycleExited" ||
+				message.type === "cycleReleasingLockStarted"
+			) {
+				if (message.type === "cycleError") {
+					setErrors(prev => ({
+						...prev,
+						[message.syncPair.uuid]: prev[message.syncPair.uuid]
+							? [
+									{
+										type: "cycle",
+										error: message.data.error
+									},
+									...prev[message.syncPair.uuid]!
+								]
+							: [
+									{
+										type: "cycle",
+										error: message.data.error
+									}
+								]
+					}))
 				}
 
-				const { message } = msg
+				setCycleState(prev => ({
+					...prev,
+					[message.syncPair.uuid]: message.type
+				}))
 
-				if (
-					message.type === "cycleApplyingStateDone" ||
-					message.type === "cycleApplyingStateStarted" ||
-					message.type === "cycleError" ||
-					message.type === "cycleGettingTreesDone" ||
-					message.type === "cycleGettingTreesStarted" ||
-					message.type === "cycleLocalSmokeTestFailed" ||
-					message.type === "cycleNoChanges" ||
-					message.type === "cyclePaused" ||
-					message.type === "cycleProcessingDeltasDone" ||
-					message.type === "cycleProcessingDeltasStarted" ||
-					message.type === "cycleProcessingTasksDone" ||
-					message.type === "cycleProcessingTasksStarted" ||
-					message.type === "cycleRemoteSmokeTestFailed" ||
-					message.type === "cycleRestarting" ||
-					message.type === "cycleSavingStateDone" ||
-					message.type === "cycleSavingStateStarted" ||
-					message.type === "cycleStarted" ||
-					message.type === "cycleSuccess" ||
-					message.type === "cycleWaitingForLocalDirectoryChangesDone" ||
-					message.type === "cycleWaitingForLocalDirectoryChangesStarted" ||
-					message.type === "cycleAcquiringLockDone" ||
-					message.type === "cycleAcquiringLockStarted" ||
-					message.type === "cycleReleasingLockDone" ||
-					message.type === "cycleExited" ||
-					message.type === "cycleReleasingLockStarted"
-				) {
-					if (message.type === "cycleError") {
-						setErrors(prev => ({
-							...prev,
-							[message.syncPair.uuid]: prev[message.syncPair.uuid]
-								? [
-										{
-											type: "cycle",
-											error: message.data.error
-										},
-										...prev[message.syncPair.uuid]!
-									]
-								: [
-										{
-											type: "cycle",
-											error: message.data.error
-										}
-									]
-						}))
-					}
+				if (message.type === "cycleProcessingTasksDone") {
+					bytesSent.current[message.syncPair.uuid] = 0
+					progressStarted.current[message.syncPair.uuid] = -1
+					allBytes.current[message.syncPair.uuid] = 0
 
-					setCycleState(prev => ({
+					setRemaining(prev => ({
 						...prev,
-						[message.syncPair.uuid]: message.type
+						[message.syncPair.uuid]: 0
 					}))
-				} else if (message.type === "transfer") {
-					if (message.data.type === "error") {
+
+					setSpeed(prev => ({
+						...prev,
+						[message.syncPair.uuid]: 0
+					}))
+
+					setProgress(prev => ({
+						...prev,
+						[message.syncPair.uuid]: 0
+					}))
+
+					setRemainingReadable(prev => ({
+						...prev,
+						[message.syncPair.uuid]: "1s"
+					}))
+
+					setTasksCount(prev => ({
+						...prev,
+						[message.syncPair.uuid]: 0
+					}))
+
+					setTasksSize(prev => ({
+						...prev,
+						[message.syncPair.uuid]: 0
+					}))
+				}
+			} else if (message.type === "transfer") {
+				if (message.data.of === "download" || message.data.of === "upload") {
+					if (message.data.type === "queued") {
+						if (!progressStarted.current[message.syncPair.uuid]) {
+							progressStarted.current[message.syncPair.uuid] = -1
+						}
+
+						const now = Date.now()
+
+						if (progressStarted.current[message.syncPair.uuid] === -1) {
+							progressStarted.current[message.syncPair.uuid] = now
+						} else {
+							if (now < progressStarted.current[message.syncPair.uuid]!) {
+								progressStarted.current[message.syncPair.uuid] = now
+							}
+						}
+					} else if (message.data.type === "started") {
+						const { data } = message
+
+						if (!allBytes.current[message.syncPair.uuid]) {
+							allBytes.current[message.syncPair.uuid] = -1
+						}
+
+						allBytes.current[message.syncPair.uuid]! += data.size
+					} else if (message.data.type === "progress") {
+						const { data } = message
+
+						if (!bytesSent.current[message.syncPair.uuid]) {
+							bytesSent.current[message.syncPair.uuid] = -1
+						}
+
+						bytesSent.current[message.syncPair.uuid]! += data.bytes
+					} else if (message.data.type === "error") {
+						if (!allBytes.current[message.syncPair.uuid]) {
+							allBytes.current[message.syncPair.uuid] = -1
+						}
+
+						if (allBytes.current[message.syncPair.uuid]! >= message.data.size) {
+							allBytes.current[message.syncPair.uuid]! -= message.data.size
+						}
+
 						const error = message.data.error
 
 						setErrors(prev => ({
@@ -199,123 +260,28 @@ export const DesktopListener = memo(() => {
 						}))
 					}
 
-					if (message.data.of === "download" || message.data.of === "upload") {
-						const now = Date.now()
+					updateProgress(message.syncPair.uuid)
+				} else {
+					if (message.data.type === "error") {
+						const error = message.data.error
 
-						if (message.data.type === "queued") {
-							const transfer: Transfer = {
-								type: message.data.of,
-								localPath: message.data.localPath,
-								relativePath: message.data.relativePath,
-								state: "queued",
-								bytes: 0,
-								name: pathModule.posix.basename(message.data.relativePath),
-								size: 0,
-								startedTimestamp: 0,
-								finishedTimestamp: 0,
-								queuedTimestamp: now,
-								errorTimestamp: 0,
-								progressTimestamp: 0
-							}
-
-							setTransfers(prev => ({
-								...prev,
-								[message.syncPair.uuid]: prev[message.syncPair.uuid]
-									? [transfer, ...prev[message.syncPair.uuid]!]
-									: [transfer]
-							}))
-
-							if (!progressStarted[message.syncPair.uuid]) {
-								progressStarted[message.syncPair.uuid] = -1
-							}
-
-							if (progressStarted[message.syncPair.uuid] === -1) {
-								progressStarted[message.syncPair.uuid] = now
-							} else {
-								if (now < progressStarted[message.syncPair.uuid]!) {
-									progressStarted[message.syncPair.uuid] = now
-								}
-							}
-						} else if (message.data.type === "started") {
-							const { data } = message
-
-							setTransfers(prev => ({
-								...prev,
-								[message.syncPair.uuid]: prev[message.syncPair.uuid]
-									? prev[message.syncPair.uuid]!.map(transfer =>
-											transfer.localPath === data.localPath
-												? {
-														...transfer,
-														state: "started",
-														startedTimestamp: now,
-														size: data.size
-													}
-												: transfer
-										)
-									: []
-							}))
-
-							if (!allBytes[message.syncPair.uuid]) {
-								allBytes[message.syncPair.uuid] = -1
-							}
-
-							allBytes[message.syncPair.uuid]! += data.size
-						} else if (message.data.type === "progress") {
-							const { data } = message
-
-							setTransfers(prev => ({
-								...prev,
-								[message.syncPair.uuid]: prev[message.syncPair.uuid]
-									? prev[message.syncPair.uuid]!.map(transfer =>
-											transfer.localPath === data.localPath
-												? {
-														...transfer,
-														bytes: transfer.bytes + data.bytes,
-														progressTimestamp: now
-													}
-												: transfer
-										)
-									: []
-							}))
-
-							if (!bytesSent[message.syncPair.uuid]) {
-								bytesSent[message.syncPair.uuid] = -1
-							}
-
-							bytesSent[message.syncPair.uuid]! += data.bytes
-						} else if (message.data.type === "finished") {
-							setTransfers(prev => ({
-								...prev,
-								[message.syncPair.uuid]: prev[message.syncPair.uuid]
-									? prev[message.syncPair.uuid]!.filter(transfer => transfer.localPath !== message.data.localPath)
-									: []
-							}))
-						} else if (message.data.type === "error") {
-							setTransfers(prev => ({
-								...prev,
-								[message.syncPair.uuid]: prev[message.syncPair.uuid]
-									? prev[message.syncPair.uuid]!.map(transfer =>
-											transfer.localPath === message.data.localPath
-												? {
-														...transfer,
-														state: "error",
-														errorTimestamp: now
-													}
-												: transfer
-										)
-									: []
-							}))
-
-							if (!allBytes[message.syncPair.uuid]) {
-								allBytes[message.syncPair.uuid] = -1
-							}
-
-							if (allBytes[message.syncPair.uuid]! >= message.data.size) {
-								allBytes[message.syncPair.uuid]! -= message.data.size
-							}
-						}
-
-						updateProgress(message.syncPair.uuid)
+						setErrors(prev => ({
+							...prev,
+							[message.syncPair.uuid]: prev[message.syncPair.uuid]
+								? [
+										{
+											type: "transfer",
+											error
+										},
+										...prev[message.syncPair.uuid]!
+									]
+								: [
+										{
+											type: "transfer",
+											error
+										}
+									]
+						}))
 					} else {
 						setTransferEvents(prev => ({
 							...prev,
@@ -337,72 +303,100 @@ export const DesktopListener = memo(() => {
 									]
 						}))
 					}
-				} else if (message.type === "taskErrors") {
-					if (message.data.errors.length > 0) {
-						setTaskErrors(prev => ({
-							...prev,
-							[message.syncPair.uuid]: message.data.errors
-						}))
-					}
-				} else if (message.type === "error") {
-					setErrors(prev => ({
-						...prev,
-						["general"]: prev["general"]
-							? [
-									{
-										type: "general",
-										error: message.data.error
-									},
-									...prev["general"]!
-								]
-							: [
-									{
-										type: "general",
-										error: message.data.error
-									}
-								]
-					}))
-				} else if (message.type === "localTreeErrors") {
-					const errors: GeneralError[] = message.data.errors.map(err => ({
-						error: err.error,
-						type: "localTree"
-					}))
 
-					setErrors(prev => ({
+					setTasksCount(prev => ({
 						...prev,
-						[message.syncPair.uuid]: prev[message.syncPair.uuid] ? [...errors, ...prev[message.syncPair.uuid]!] : errors
-					}))
-				} else if (message.type === "remoteTreeIgnored") {
-					setRemoteIgnored(prev => ({
-						...prev,
-						[message.syncPair.uuid]: message.data.ignored
-					}))
-				} else if (message.type === "localTreeIgnored") {
-					setLocalIgnored(prev => ({
-						...prev,
-						[message.syncPair.uuid]: message.data.ignored
+						[message.syncPair.uuid]: prev[message.syncPair.uuid] ? prev[message.syncPair.uuid]! - 1 : 0
 					}))
 				}
-			})
+			} else if (message.type === "taskErrors") {
+				if (message.data.errors.length > 0) {
+					setTaskErrors(prev => ({
+						...prev,
+						[message.syncPair.uuid]: message.data.errors
+					}))
+				}
+			} else if (message.type === "error") {
+				setErrors(prev => ({
+					...prev,
+					["general"]: prev["general"]
+						? [
+								{
+									type: "general",
+									error: message.data.error
+								},
+								...prev["general"]!
+							]
+						: [
+								{
+									type: "general",
+									error: message.data.error
+								}
+							]
+				}))
+			} else if (message.type === "localTreeErrors") {
+				const errors: GeneralError[] = message.data.errors.map(err => ({
+					error: err.error,
+					type: "localTree"
+				}))
+
+				setErrors(prev => ({
+					...prev,
+					[message.syncPair.uuid]: prev[message.syncPair.uuid] ? [...errors, ...prev[message.syncPair.uuid]!] : errors
+				}))
+			} else if (message.type === "remoteTreeIgnored") {
+				setRemoteIgnored(prev => ({
+					...prev,
+					[message.syncPair.uuid]: message.data.ignored
+				}))
+			} else if (message.type === "localTreeIgnored") {
+				setLocalIgnored(prev => ({
+					...prev,
+					[message.syncPair.uuid]: message.data.ignored
+				}))
+			} else if (message.type === "deltas") {
+				setTasksCount(prev => ({
+					...prev,
+					[message.syncPair.uuid]: message.data.deltas.length
+				}))
+
+				setTasksSize(prev => ({
+					...prev,
+					[message.syncPair.uuid]: message.data.deltas.reduce(
+						(prev, delta) => prev + (delta.type === "uploadFile" || delta.type === "downloadFile" ? delta.size : 0),
+						0
+					)
+				}))
+			}
+		},
+		[
+			setCycleState,
+			setErrors,
+			setLocalIgnored,
+			setRemoteIgnored,
+			setTaskErrors,
+			setTransferEvents,
+			updateProgress,
+			setProgress,
+			setRemaining,
+			setRemainingReadable,
+			setSpeed,
+			setTasksCount,
+			setTasksSize
+		]
+	)
+
+	useEffect(() => {
+		let syncMessageListener: ReturnType<typeof window.desktopAPI.onMainToWindowMessage> | null = null
+
+		if (IS_DESKTOP && authed) {
+			syncMessageListener = window.desktopAPI.onMainToWindowMessage(messageHandler)
 		}
 
 		return () => {
 			syncMessageListener?.remove()
 		}
-	}, [
-		setTransferEvents,
-		setCycleState,
-		setTransfers,
-		authed,
-		setErrors,
-		setTaskErrors,
-		setLocalIgnored,
-		setRemoteIgnored,
-		updateProgress,
-		allBytes,
-		progressStarted,
-		bytesSent
-	])
+	}, [messageHandler, authed])
 
 	return null
 })

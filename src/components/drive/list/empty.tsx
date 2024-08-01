@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react"
+import { memo, useMemo, useCallback } from "react"
 import useDriveURLState from "@/hooks/useDriveURLState"
 import { ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { useTranslation } from "react-i18next"
@@ -13,9 +13,9 @@ export const Empty = memo(() => {
 	const urlState = useDriveURLState()
 	const { t } = useTranslation()
 	const canUpload = useCanUpload()
-	const { searchTerm } = useDriveItemsStore()
+	const searchTerm = useDriveItemsStore(useCallback(state => state.searchTerm, []))
 	const publicLinkURLState = usePublicLinkURLState()
-	const { searchTerm: publicLinkSearchTerm } = useDirectoryPublicLinkStore()
+	const publicLinkSearchTerm = useDirectoryPublicLinkStore(useCallback(state => state.searchTerm, []))
 
 	const state = useMemo(() => {
 		if (searchTerm.length > 0 || publicLinkSearchTerm.length > 0) {

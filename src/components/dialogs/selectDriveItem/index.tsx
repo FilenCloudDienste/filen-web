@@ -67,7 +67,7 @@ export const SelectDriveItemDialog = memo(() => {
 	const [responseItems, setResponseItems] = useState<ResponseItem[]>([])
 	const didSubmit = useRef<boolean>(false)
 	const [pathname, setPathname] = useState<string>(baseFolderUUID)
-	const { setItems } = useDriveItemsStore()
+	const setItems = useDriveItemsStore(useCallback(state => state.setItems, []))
 	const routeParent = useRouteParent()
 	const [selectionType, setSelectionType] = useState<SelectionType>("directory")
 	const [selectMultiple, setSelectMultiple] = useState<boolean>(false)

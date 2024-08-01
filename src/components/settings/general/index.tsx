@@ -32,7 +32,7 @@ export const General = memo(() => {
 	const [defaultNoteType, setDefaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
 	const settingsContainerSize = useSettingsContainerSize()
 	const [autoLaunchEnabled, setAutoLaunchEnabled] = useLocalStorage<boolean>("autoLaunchEnabled", false)
-	const [closeToTrayEnabled, setCloseToTrayEnabled] = useLocalStorage<boolean>("closeToTrayEnabled", false)
+	const [minimizeToTrayEnabled, setMinimizeToTrayEnabled] = useLocalStorage<boolean>("minimizeToTrayEnabled", false)
 	const [notificationSoundEnabled, setNotificationSoundEnabled] = useLocalStorage<boolean>("notificationSoundEnabled", false)
 
 	const thumbnailCacheQuery = useQuery({
@@ -309,12 +309,12 @@ export const General = memo(() => {
 									</Section>
 									{window.desktopAPI.platform() !== "darwin" && (
 										<Section
-											name={t("settings.general.sections.closeToTray.name")}
-											info={t("settings.general.sections.closeToTray.info")}
+											name={t("settings.general.sections.minimizeToTray.name")}
+											info={t("settings.general.sections.minimizeToTray.info")}
 										>
 											<Switch
-												checked={closeToTrayEnabled}
-												onCheckedChange={setCloseToTrayEnabled}
+												checked={minimizeToTrayEnabled}
+												onCheckedChange={setMinimizeToTrayEnabled}
 											/>
 										</Section>
 									)}

@@ -121,6 +121,17 @@ export const Events = memo(() => {
 		}
 	}, [showSkeletons, t])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%",
+			// @ts-expect-error not typed
+			WebkitAppRegion: "no-drag"
+		}
+	}, [virtuosoHeight])
+
 	useEffect(() => {
 		if (query.isSuccess && query.dataUpdatedAt !== queryUpdatedAtRef.current) {
 			queryUpdatedAtRef.current = query.dataUpdatedAt
@@ -150,14 +161,7 @@ export const Events = memo(() => {
 				itemContent={itemContent}
 				endReached={fetchMore}
 				components={components}
-				style={{
-					overflowX: "hidden",
-					overflowY: "auto",
-					height: virtuosoHeight + "px",
-					width: "100%",
-					// @ts-expect-error not typed
-					WebkitAppRegion: "no-drag"
-				}}
+				style={style}
 			/>
 		</div>
 	)

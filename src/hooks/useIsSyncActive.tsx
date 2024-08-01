@@ -1,8 +1,8 @@
 import { useSyncsStore } from "@/stores/syncs.store"
-import { useMemo } from "react"
+import { useMemo, useCallback } from "react"
 
 export default function useIsSyncActive(uuid?: string): boolean {
-	const { cycleState } = useSyncsStore()
+	const cycleState = useSyncsStore(useCallback(state => state.cycleState, []))
 
 	const state = useMemo(() => {
 		if (!uuid) {

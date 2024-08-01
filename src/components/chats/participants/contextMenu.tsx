@@ -33,7 +33,15 @@ export const ContextMenu = memo(
 		const { userId } = useSDKConfig()
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
-		const { setConversations, setSelectedConversation } = useChatsStore()
+		const { setConversations, setSelectedConversation } = useChatsStore(
+			useCallback(
+				state => ({
+					setConversations: state.setConversations,
+					setSelectedConversation: state.setSelectedConversation
+				}),
+				[]
+			)
+		)
 
 		const hasWritePermissions = useMemo((): boolean => {
 			return conversation.ownerId === userId

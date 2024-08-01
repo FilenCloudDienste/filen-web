@@ -31,7 +31,17 @@ import useIsMobile from "@/hooks/useIsMobile"
 
 export const TopBar = memo(() => {
 	const { t } = useTranslation()
-	const { searchTerm, setSearchTerm, setItems, items } = useDriveItemsStore()
+	const { searchTerm, setSearchTerm, setItems, items } = useDriveItemsStore(
+		useCallback(
+			state => ({
+				searchTerm: state.searchTerm,
+				setSearchTerm: state.setSearchTerm,
+				setItems: state.setItems,
+				items: state.items
+			}),
+			[]
+		)
+	)
 	const parent = useRouteParent()
 	const [listType, setListType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
 	const location = useLocation()

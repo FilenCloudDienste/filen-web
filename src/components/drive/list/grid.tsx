@@ -78,6 +78,15 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 		return Fragment
 	}, [canUpload])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: height + "px",
+			width: "100%"
+		}
+	}, [height])
+
 	if (showSkeletons) {
 		return <div className="flex flex-row flex-wrap overflow-hidden">{skeletons}</div>
 	}
@@ -106,12 +115,7 @@ export const Grid = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 				height={height}
 				id="virtuoso-drive-list"
 				data={items}
-				style={{
-					overflowX: "hidden",
-					overflowY: "auto",
-					height: height + "px",
-					width: "100%"
-				}}
+				style={style}
 				components={components}
 				computeItemKey={getItemKey}
 				itemContent={itemContent}

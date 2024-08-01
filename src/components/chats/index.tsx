@@ -17,17 +17,23 @@ import { sortAndFilterConversations } from "../mainContainer/innerSideBar/chats/
 
 export const Chats = memo(() => {
 	const isMobile = useIsMobile()
-	const { selectedConversation, setReplyMessage, setEditUUID, conversations } = useChatsStore()
+	const { userId } = useSDKConfig()
+	const { selectedConversation, setReplyMessage, setEditUUID, conversationSorted } = useChatsStore(
+		useCallback(
+			state => ({
+				selectedConversation: state.selectedConversation,
+				setReplyMessage: state.setReplyMessage,
+				setEditUUID: state.setEditUUID,
+				conversationSorted: sortAndFilterConversations(state.conversations, "", userId)
+			}),
+			[userId]
+		)
+	)
 	const [conversationParticipantsContainerOpen] = useLocalStorage<boolean>(
 		`conversationParticipantsContainerOpen:${selectedConversation?.uuid}`,
 		true
 	)
 	const { t } = useTranslation()
-	const { userId } = useSDKConfig()
-
-	const conversationSorted = useMemo(() => {
-		return sortAndFilterConversations(conversations, "", userId)
-	}, [conversations, userId])
 
 	const showParticipants = useMemo(() => {
 		if ((selectedConversation && selectedConversation.participants.length <= 2) || isMobile) {

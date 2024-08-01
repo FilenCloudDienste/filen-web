@@ -39,14 +39,38 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 		setCurrentReceiverEmail,
 		setCurrentReceivers,
 		setCurrentSharerEmail
-	} = useDriveSharedStore()
+	} = useDriveSharedStore(
+		useCallback(
+			state => ({
+				currentReceiverId: state.currentReceiverId,
+				currentSharerId: state.currentSharerId,
+				setCurrentReceiverId: state.setCurrentReceiverId,
+				setCurrentSharerId: state.setCurrentSharerId,
+				setCurrentReceiverEmail: state.setCurrentReceiverEmail,
+				setCurrentReceivers: state.setCurrentReceivers,
+				setCurrentSharerEmail: state.setCurrentSharerEmail
+			}),
+			[]
+		)
+	)
 	const navigate = useNavigate()
 	const location = useLocation()
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
-	const { setItems: setDriveItems, items: driveItems } = useDriveItemsStore()
-	const { setItems: setPublicLinkItems, items: publicLinkItems, setVirtualURL } = useDirectoryPublicLinkStore()
+	const { setDriveItems, driveItems } = useDriveItemsStore(
+		useCallback(state => ({ setDriveItems: state.setItems, driveItems: state.items }), [])
+	)
+	const { setPublicLinkItems, publicLinkItems, setVirtualURL } = useDirectoryPublicLinkStore(
+		useCallback(
+			state => ({
+				setPublicLinkItems: state.setItems,
+				publicLinkItems: state.items,
+				setVirtualURL: state.setVirtualURL
+			}),
+			[]
+		)
+	)
 	const [hovering, setHovering] = useState<boolean>(false)
 	const [size, setSize] = useState<number>(
 		item.type === "directory" && directorySizeCache.has(item.uuid) ? directorySizeCache.get(item.uuid)!.size : item.size

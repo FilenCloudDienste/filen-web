@@ -5,24 +5,140 @@ import { Virtuoso, type VirtuosoHandle } from "react-virtuoso"
 import useWindowSize from "@/hooks/useWindowSize"
 import Event from "./event"
 import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
-import { CalendarClock } from "lucide-react"
+import { CalendarClock, RefreshCw, CheckCircle, PauseCircle, XCircle, Pause, Play } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { formatBytes } from "@/utils"
+import { bpsToReadable } from "@/components/transfers/utils"
+import { Button } from "@/components/ui/button"
+import eventEmitter from "@/lib/eventEmitter"
+
+export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: boolean }) => {
+	const { speed, remainingReadable, tasksCount, tasksSize, cycleState, taskErrors } = useSyncsStore(
+		useCallback(
+			state => ({
+				speed: state.speed[syncUUID] ? state.speed[syncUUID]! : 0,
+				remainingReadable: state.remainingReadable[syncUUID] ? state.remainingReadable[syncUUID]! : 0,
+				tasksCount: state.tasksCount[syncUUID] ? state.tasksCount[syncUUID]! : 0,
+				tasksSize: state.tasksSize[syncUUID] ? state.tasksSize[syncUUID]! : 0,
+				cycleState: state.cycleState[syncUUID] ? state.cycleState[syncUUID]! : "cycleRestarting",
+				taskErrors: state.taskErrors[syncUUID] ? state.taskErrors[syncUUID]!.length : 0
+			}),
+			[syncUUID]
+		)
+	)
+	const { t } = useTranslation()
+
+	const togglePause = useCallback(() => {
+		eventEmitter.emit("toggleSyncPause", syncUUID)
+	}, [syncUUID])
+
+	return (
+		<div className="flex flex-row w-full px-4 pb-4">
+			<div className="flex flex-row items-center h-10 bg-secondary rounded-sm w-full px-4 gap-4 justify-between">
+				<div className="flex flex-row items-center gap-2 text-muted-foreground text-sm">
+					{taskErrors > 0 ? (
+						<>
+							<XCircle
+								className="text-red-500"
+								size={16}
+							/>
+							<p>{t("syncs.info.taskErrors", { count: taskErrors })}</p>
+							<p className="text-blue-500 hover:underline cursor-pointer">{t("syncs.info.taskErrorsResolve")}</p>
+						</>
+					) : paused ? (
+						<>
+							<PauseCircle
+								className="text-primary"
+								size={16}
+							/>
+							<p>{t("syncs.info.paused")}</p>
+						</>
+					) : (
+						<>
+							{cycleState === "cycleProcessingDeltasStarted" ? (
+								<>
+									<RefreshCw
+										className="animate-spin-medium text-primary"
+										size={16}
+									/>
+									<p>{t("syncs.info.processingDeltas")}</p>
+								</>
+							) : cycleState === "cycleProcessingTasksStarted" ? (
+								<>
+									<RefreshCw
+										className="animate-spin-medium text-primary"
+										size={16}
+									/>
+									<p>
+										{tasksCount > 0 && tasksSize > 0
+											? t("syncs.info.progress", {
+													items: tasksCount,
+													speed: bpsToReadable(speed),
+													remaining: remainingReadable,
+													total: formatBytes(tasksSize)
+												})
+											: t("syncs.info.syncingChanges")}
+									</p>
+								</>
+							) : cycleState === "cycleApplyingStateStarted" || cycleState === "cycleSavingStateStarted" ? (
+								<>
+									<RefreshCw
+										className="animate-spin-medium text-primary"
+										size={16}
+									/>
+									<p>{t("syncs.info.savingState")}</p>
+								</>
+							) : (
+								<>
+									<CheckCircle
+										className="text-green-500"
+										size={16}
+									/>
+									<p>{t("syncs.info.upToDate")}</p>
+								</>
+							)}
+						</>
+					)}
+				</div>
+				{taskErrors === 0 && cycleState === "cycleProcessingTasksStarted" && (
+					<div className="flex flex-row items-center gap-2">
+						{paused ? (
+							<Button
+								size="icon"
+								variant="default"
+								className="h-7 w-7"
+								onClick={togglePause}
+							>
+								<Play size={16} />
+							</Button>
+						) : (
+							<Button
+								size="icon"
+								variant="destructive"
+								className="h-7 w-7"
+								onClick={togglePause}
+							>
+								<Pause size={16} />
+							</Button>
+						)}
+					</div>
+				)}
+			</div>
+		</div>
+	)
+})
 
 export const Events = memo(({ sync }: { sync: SyncPair }) => {
-	const { transferEvents } = useSyncsStore()
+	const events = useSyncsStore(
+		useCallback(state => (state.transferEvents[sync.uuid] ? state.transferEvents[sync.uuid]! : []), [sync.uuid])
+	)
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const windowSize = useWindowSize()
 	const { t } = useTranslation()
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - 64 - 13 - DESKTOP_TOPBAR_HEIGHT
+		return windowSize.height - 64 - 13 - 40 - 16 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
-
-	const state = useMemo(() => {
-		return {
-			transferEvents: transferEvents[sync.uuid] ? transferEvents[sync.uuid]! : []
-		}
-	}, [sync.uuid, transferEvents])
 
 	const getItemKey = useCallback((_: number, event: TransferDataWithTimestamp) => `${event.localPath}:${event.timestamp}`, [])
 
@@ -30,7 +146,7 @@ export const Events = memo(({ sync }: { sync: SyncPair }) => {
 		return <Event event={event} />
 	}, [])
 
-	const components = useMemo(() => {
+	const virtuosoComponents = useMemo(() => {
 		return {
 			EmptyPlaceholder: () => {
 				return (
@@ -46,24 +162,35 @@ export const Events = memo(({ sync }: { sync: SyncPair }) => {
 		}
 	}, [t])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
 	return (
-		<Virtuoso
-			ref={virtuosoRef}
-			data={state.transferEvents}
-			totalCount={state.transferEvents.length}
-			height={virtuosoHeight}
-			width="100%"
-			computeItemKey={getItemKey}
-			itemContent={itemContent}
-			components={components}
-			defaultItemHeight={51}
-			style={{
-				overflowX: "hidden",
-				overflowY: "auto",
-				height: virtuosoHeight + "px",
-				width: "100%"
-			}}
-		/>
+		<div className="flex flex-col">
+			<Virtuoso
+				ref={virtuosoRef}
+				data={events}
+				totalCount={events.length}
+				height={virtuosoHeight}
+				width="100%"
+				computeItemKey={getItemKey}
+				itemContent={itemContent}
+				components={virtuosoComponents}
+				defaultItemHeight={65}
+				overscan={0}
+				style={style}
+			/>
+			<SyncInfo
+				syncUUID={sync.uuid}
+				paused={sync.paused}
+			/>
+		</div>
 	)
 })
 

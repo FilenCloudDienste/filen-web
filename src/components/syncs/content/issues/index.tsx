@@ -17,7 +17,7 @@ export type IgnoreType = {
 }
 
 export const Issues = memo(({ sync }: { sync: SyncPair }) => {
-	const { errors: syncErrors } = useSyncsStore()
+	const errors = useSyncsStore(useCallback(state => (state.errors[sync.uuid] ? state.errors[sync.uuid]! : []), [sync.uuid]))
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const windowSize = useWindowSize()
 	const { t } = useTranslation()
@@ -25,10 +25,6 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 	const virtuosoHeight = useMemo(() => {
 		return windowSize.height - 64 - 12 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
-
-	const errors = useMemo(() => {
-		return syncErrors[sync.uuid] ? syncErrors[sync.uuid]! : []
-	}, [sync.uuid, syncErrors])
 
 	const getItemKey = useCallback((index: number) => index, [])
 
@@ -52,6 +48,15 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 		}
 	}, [t])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
 	return (
 		<Virtuoso
 			ref={virtuosoRef}
@@ -63,12 +68,8 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 			itemContent={itemContent}
 			components={components}
 			defaultItemHeight={51}
-			style={{
-				overflowX: "hidden",
-				overflowY: "auto",
-				height: virtuosoHeight + "px",
-				width: "100%"
-			}}
+			overscan={0}
+			style={style}
 		/>
 	)
 })

@@ -25,7 +25,19 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const [listType, setListType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
-	const { searchTerm, setItems, setSearchTerm, items, virtualURL, setVirtualURL } = useDirectoryPublicLinkStore()
+	const { searchTerm, setItems, setSearchTerm, items, virtualURL, setVirtualURL } = useDirectoryPublicLinkStore(
+		useCallback(
+			state => ({
+				searchTerm: state.searchTerm,
+				setItems: state.setItems,
+				setSearchTerm: state.setSearchTerm,
+				items: state.items,
+				virtualURL: state.virtualURL,
+				setVirtualURL: state.setVirtualURL
+			}),
+			[]
+		)
+	)
 	const { t } = useTranslation()
 	const { dark } = useTheme()
 	const errorToast = useErrorToast()

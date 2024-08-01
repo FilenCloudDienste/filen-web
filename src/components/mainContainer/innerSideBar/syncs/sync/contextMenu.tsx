@@ -23,7 +23,15 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 	const { t } = useTranslation()
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const navigate = useNavigate()
-	const { setSelectedSync, setChanging } = useSyncsStore()
+	const { setSelectedSync, setChanging } = useSyncsStore(
+		useCallback(
+			state => ({
+				setSelectedSync: state.setSelectedSync,
+				setChanging: state.setChanging
+			}),
+			[]
+		)
+	)
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
 
@@ -52,6 +60,15 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 				uuid: sync.uuid
 			})
 
+			setSelectedSync(prev =>
+				prev && prev.uuid === sync.uuid
+					? {
+							...prev,
+							paused
+						}
+					: prev
+			)
+
 			setDesktopConfig(prev => ({
 				...prev,
 				syncConfig: {
@@ -68,7 +85,7 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 
 			toast.dismiss()
 		}
-	}, [syncConfig, sync.uuid, setDesktopConfig, setChanging, errorToast, loadingToast])
+	}, [syncConfig, sync.uuid, setDesktopConfig, setChanging, errorToast, loadingToast, setSelectedSync])
 
 	const deleteSync = useCallback(async () => {
 		if (

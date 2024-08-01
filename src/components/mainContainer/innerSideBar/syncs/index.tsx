@@ -22,7 +22,16 @@ export const Syncs = memo(() => {
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const [, setLastSelectedSync] = useLocalStorage("lastSelectedSync", "")
 	const routeParent = useRouteParent()
-	const { selectedSync, setSelectedSync, search } = useSyncsStore()
+	const { selectedSync, setSelectedSync, search } = useSyncsStore(
+		useCallback(
+			state => ({
+				selectedSync: state.selectedSync,
+				setSelectedSync: state.setSelectedSync,
+				search: state.search
+			}),
+			[]
+		)
+	)
 	const lastAutoScrollSyncUUIDRef = useRef<string>("")
 	const navigate = useNavigate()
 	const topDimensions = useElementDimensions("inner-sidebar-top-syncs")
@@ -94,6 +103,15 @@ export const Syncs = memo(() => {
 		}
 	}, [t, create, search])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
 	useEffect(() => {
 		if (
 			validateUUID(routeParent) &&
@@ -154,12 +172,7 @@ export const Syncs = memo(() => {
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
 			components={components}
-			style={{
-				overflowX: "hidden",
-				overflowY: "auto",
-				height: virtuosoHeight + "px",
-				width: "100%"
-			}}
+			style={style}
 		/>
 	)
 })

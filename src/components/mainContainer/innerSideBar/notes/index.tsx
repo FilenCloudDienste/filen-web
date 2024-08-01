@@ -20,7 +20,19 @@ import eventEmitter from "@/lib/eventEmitter"
 
 export const Notes = memo(() => {
 	const windowSize = useWindowSize()
-	const { notes, setNotes, setSelectedNote, selectedNote, search, activeTag } = useNotesStore()
+	const { notes, setNotes, setSelectedNote, selectedNote, search, activeTag } = useNotesStore(
+		useCallback(
+			state => ({
+				notes: state.notes,
+				setNotes: state.setNotes,
+				setSelectedNote: state.setSelectedNote,
+				selectedNote: state.selectedNote,
+				search: state.search,
+				activeTag: state.activeTag
+			}),
+			[]
+		)
+	)
 	const [, setLastSelectedNote] = useLocalStorage("lastSelectedNote", "")
 	const navigate = useNavigate()
 	const routeParent = useRouteParent()
@@ -106,6 +118,15 @@ export const Notes = memo(() => {
 			}
 		}
 	}, [showSkeletons, t, create])
+
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: windowSize.height - 95 + "px",
+			width: "100%"
+		}
+	}, [windowSize.height])
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {
@@ -233,12 +254,7 @@ export const Notes = memo(() => {
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
 			components={components}
-			style={{
-				overflowX: "hidden",
-				overflowY: "auto",
-				height: windowSize.height - 95 + "px",
-				width: "100%"
-			}}
+			style={style}
 		/>
 	)
 })

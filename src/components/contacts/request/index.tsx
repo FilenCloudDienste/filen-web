@@ -11,7 +11,7 @@ import { useContactsStore } from "@/stores/contacts.store"
 export const Request = memo(({ request, refetch, type }: { request: ContactRequest; refetch: () => Promise<void>; type: "in" | "out" }) => {
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
-	const { setRequestsInCount } = useContactsStore()
+	const setRequestsInCount = useContactsStore(useCallback(state => state.setRequestsInCount, []))
 
 	const accept = useCallback(async () => {
 		const toast = loadingToast()

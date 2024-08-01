@@ -18,7 +18,9 @@ export const tagClassName =
 
 export const Tags = memo(() => {
 	const { t } = useTranslation()
-	const { activeTag, setActiveTag } = useNotesStore()
+	const { activeTag, setActiveTag } = useNotesStore(
+		useCallback(state => ({ activeTag: state.activeTag, setActiveTag: state.setActiveTag }), [])
+	)
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
 

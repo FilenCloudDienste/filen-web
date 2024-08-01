@@ -17,8 +17,16 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 	const parent = useRouteParent()
 	const [showModal, setShowModal] = useState<boolean>(false)
 	const { t } = useTranslation()
-	const { setItems } = useDriveItemsStore()
-	const { currentReceiverId, currentSharerId, currentReceiverEmail, currentReceivers, currentSharerEmail } = useDriveSharedStore()
+	const setItems = useDriveItemsStore(useCallback(state => state.setItems, []))
+	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore(
+		state => ({
+			currentReceiverEmail: state.currentReceiverEmail,
+			currentReceiverId: state.currentReceiverId,
+			currentReceivers: state.currentReceivers,
+			currentSharerEmail: state.currentSharerEmail,
+			currentSharerId: state.currentSharerId
+		})
+	)
 	const location = useLocation()
 	const canUpload = useCanUpload()
 	const errorToast = useErrorToast()

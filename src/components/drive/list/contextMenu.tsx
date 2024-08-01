@@ -22,7 +22,7 @@ import useIsMobile from "@/hooks/useIsMobile"
 const iconSize = 16
 
 export const ContextMenu = memo(({ children }: { children: React.ReactNode }) => {
-	const { setItems } = useDriveItemsStore()
+	const setItems = useDriveItemsStore(useCallback(state => state.setItems, []))
 	const location = useLocation()
 	const { t } = useTranslation()
 	const parent = useRouteParent()

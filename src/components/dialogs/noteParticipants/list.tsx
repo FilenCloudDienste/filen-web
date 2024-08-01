@@ -27,6 +27,15 @@ export const List = memo(({ note, setNote }: { note: Note; setNote: React.Dispat
 		[setNote, note, userId]
 	)
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: 384 + "px",
+			width: "100%"
+		}
+	}, [])
+
 	return (
 		<Virtuoso
 			data={participantsSorted}
@@ -35,12 +44,7 @@ export const List = memo(({ note, setNote }: { note: Note; setNote: React.Dispat
 			width="100%"
 			computeItemKey={getItemKey}
 			itemContent={itemContent}
-			style={{
-				overflowX: "hidden",
-				overflowY: "auto",
-				height: 384 + "px",
-				width: "100%"
-			}}
+			style={style}
 		/>
 	)
 })

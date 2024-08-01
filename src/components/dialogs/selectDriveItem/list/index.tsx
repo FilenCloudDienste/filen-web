@@ -72,6 +72,15 @@ export const List = memo(
 			[setPathname, setResponseItems, responseItems, selectMultiple, selectionType, pathname]
 		)
 
+		const style = useMemo((): React.CSSProperties => {
+			return {
+				overflowX: "hidden",
+				overflowY: "auto",
+				height: 384 + "px",
+				width: "100%"
+			}
+		}, [])
+
 		useEffect(() => {
 			// We have to manually refetch the query because the component does not remount, only the location pathname changes.
 			if (lastPathname.current !== pathname && query.isSuccess) {
@@ -119,12 +128,7 @@ export const List = memo(
 				width="100%"
 				computeItemKey={getItemKey}
 				itemContent={itemContent}
-				style={{
-					overflowX: "hidden",
-					overflowY: "auto",
-					height: 384 + "px",
-					width: "100%"
-				}}
+				style={style}
 			/>
 		)
 	}

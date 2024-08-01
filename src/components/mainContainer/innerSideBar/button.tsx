@@ -46,7 +46,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 	const [sideBarTreeOpen, setSideBarTreeOpen] = useLocalStorage<Record<string, boolean>>("sideBarTreeOpen", {})
 	const { t } = useTranslation()
 	const location = useLocation()
-	const { requestsInCount } = useContactsStore()
+	const requestsInCount = useContactsStore(useCallback(state => state.requestsInCount, []))
 	const account = useAccount(false)
 	const isMobile = useIsMobile()
 	const iconSize = useRef<number>(isMobile ? 20 : 19).current

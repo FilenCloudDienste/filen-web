@@ -28,7 +28,15 @@ export async function isVirtualDriveMounted(): Promise<{ mounted: boolean }> {
 export const VirtualDrive = memo(() => {
 	const { t } = useTranslation()
 	const settingsContainerSize = useSettingsContainerSize()
-	const { enablingVirtualDrive, setEnablingVirtualDrive } = useMountsStore()
+	const { enablingVirtualDrive, setEnablingVirtualDrive } = useMountsStore(
+		useCallback(
+			state => ({
+				enablingVirtualDrive: state.enablingVirtualDrive,
+				setEnablingVirtualDrive: state.setEnablingVirtualDrive
+			}),
+			[]
+		)
+	)
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const errorToast = useErrorToast()
 

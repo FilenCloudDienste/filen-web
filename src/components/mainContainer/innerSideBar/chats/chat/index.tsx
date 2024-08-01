@@ -25,7 +25,15 @@ export const Chat = memo(
 		userId: number
 		routeParent: string
 	}) => {
-		const { conversationsUnread, setConversationsUnread } = useChatsStore()
+		const { conversationsUnread, setConversationsUnread } = useChatsStore(
+			useCallback(
+				state => ({
+					conversationsUnread: state.conversationsUnread,
+					setConversationsUnread: state.setConversationsUnread
+				}),
+				[]
+			)
+		)
 		const { t } = useTranslation()
 
 		const query = useQuery({

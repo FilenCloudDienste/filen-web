@@ -8,6 +8,7 @@ import i18nextLoader from "vite-plugin-i18next-loader"
 import svgr from "vite-plugin-svgr"
 import topLevelAwait from "vite-plugin-top-level-await"
 import million from "million/compiler"
+import checker from "vite-plugin-checker"
 
 const now = Date.now()
 
@@ -24,7 +25,22 @@ export default defineConfig({
 			promiseExportName: "__tla",
 			promiseImportName: i => `__tla_${i}`
 		}),
-		react(),
+		react({
+			babel: {
+				plugins: [
+					[
+						"babel-plugin-react-compiler",
+						{
+							runtimeModule: "@/compiler.js"
+						}
+					]
+				]
+			},
+			jsxImportSource: "@welldone-software/why-did-you-render"
+		}),
+		checker({
+			typescript: true
+		}),
 		million.vite({
 			auto: true,
 			filter: {

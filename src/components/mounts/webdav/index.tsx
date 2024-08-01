@@ -28,7 +28,15 @@ export async function isWebDAVOnline(): Promise<{ online: boolean }> {
 
 export const WebDAV = memo(() => {
 	const settingsContainerSize = useSettingsContainerSize()
-	const { enablingWebDAV, setEnablingWebDAV } = useMountsStore()
+	const { enablingWebDAV, setEnablingWebDAV } = useMountsStore(
+		useCallback(
+			state => ({
+				enablingWebDAV: state.enablingWebDAV,
+				setEnablingWebDAV: state.setEnablingWebDAV
+			}),
+			[]
+		)
+	)
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()

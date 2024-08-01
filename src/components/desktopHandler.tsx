@@ -15,7 +15,16 @@ export const DesktopHandler = memo(() => {
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const lastDesktopConfigRef = useRef<string>("")
-	const { setEnablingS3, setEnablingVirtualDrive, setEnablingWebDAV } = useMountsStore()
+	const { setEnablingS3, setEnablingVirtualDrive, setEnablingWebDAV } = useMountsStore(
+		useCallback(
+			state => ({
+				setEnablingS3: state.setEnablingS3,
+				setEnablingVirtualDrive: state.setEnablingVirtualDrive,
+				setEnablingWebDAV: state.setEnablingWebDAV
+			}),
+			[]
+		)
+	)
 
 	const currentDesktopConfigStringified = useMemo(() => {
 		return JSON.stringify(desktopConfig)

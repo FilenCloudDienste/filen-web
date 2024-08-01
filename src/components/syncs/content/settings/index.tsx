@@ -17,19 +17,24 @@ import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 
 export const Settings = memo(({ sync }: { sync: SyncPair }) => {
-	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
+	const [, setDesktopConfig] = useDesktopConfig()
 	const { t } = useTranslation()
 	const settingsContainerSize = useSettingsContainerSize()
-	const { changing, setChanging } = useSyncsStore()
+	const { changing, setChanging, setSelectedSync } = useSyncsStore(
+		useCallback(
+			state => ({
+				changing: state.changing,
+				setChanging: state.setChanging,
+				setSelectedSync: state.setSelectedSync
+			}),
+			[]
+		)
+	)
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
 
-	const syncConfig = useMemo(() => {
-		return desktopConfig.syncConfig.syncPairs.filter(pair => pair.uuid === sync.uuid)[0] ?? null
-	}, [sync.uuid, desktopConfig])
-
 	const modeToString = useMemo(() => {
-		switch (syncConfig?.mode) {
+		switch (sync.mode) {
 			case "twoWay": {
 				return t("dialogs.createSync.mode.twoWay")
 			}
@@ -54,7 +59,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 				return t("dialogs.createSync.mode.twoWay")
 			}
 		}
-	}, [syncConfig, t])
+	}, [sync.mode, t])
 
 	const togglePause = useCallback(() => {
 		eventEmitter.emit("toggleSyncPause", sync.uuid)
@@ -80,6 +85,15 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 					uuid: sync.uuid
 				})
 
+				setSelectedSync(prev =>
+					prev && prev.uuid === sync.uuid
+						? {
+								...prev,
+								excludeDotFiles
+							}
+						: prev
+				)
+
 				setDesktopConfig(prev => ({
 					...prev,
 					syncConfig: {
@@ -97,7 +111,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 				toast.dismiss()
 			}
 		},
-		[setDesktopConfig, sync.uuid, setChanging, errorToast, loadingToast]
+		[setDesktopConfig, sync.uuid, setChanging, errorToast, loadingToast, setSelectedSync]
 	)
 
 	const onModeChange = useCallback(
@@ -116,6 +130,15 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 					uuid: sync.uuid
 				})
 
+				setSelectedSync(prev =>
+					prev && prev.uuid === sync.uuid
+						? {
+								...prev,
+								mode
+							}
+						: prev
+				)
+
 				setDesktopConfig(prev => ({
 					...prev,
 					syncConfig: {
@@ -133,7 +156,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 				toast.dismiss()
 			}
 		},
-		[setDesktopConfig, sync.uuid, loadingToast, setChanging, errorToast]
+		[setDesktopConfig, sync.uuid, loadingToast, setChanging, errorToast, setSelectedSync]
 	)
 
 	const forceSync = useCallback(async () => {
@@ -153,22 +176,14 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	}, [sync.uuid])
 
 	const openLocalPath = useCallback(async () => {
-		if (!syncConfig) {
-			return
-		}
-
 		try {
-			await window.desktopAPI.openLocalPath(syncConfig.localPath)
+			await window.desktopAPI.openLocalPath(sync.localPath)
 		} catch (e) {
 			console.error(e)
 
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		}
-	}, [syncConfig, errorToast])
-
-	if (!syncConfig) {
-		return null
-	}
+	}, [sync.localPath, errorToast])
 
 	return (
 		<>
@@ -189,11 +204,11 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 												className="line-clamp-1 text-ellipsis break-before-all cursor-pointer"
 												onClick={openLocalPath}
 											>
-												{syncConfig.localPath}
+												{sync.localPath}
 											</p>
 										</TooltipTrigger>
 										<TooltipContent className="max-w-[calc(100vw/2)]">
-											<p>{syncConfig.localPath}</p>
+											<p>{sync.localPath}</p>
 										</TooltipContent>
 									</Tooltip>
 								</TooltipProvider>
@@ -203,24 +218,24 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 									<Tooltip>
 										<TooltipTrigger asChild={true}>
 											<div className="flex flex-row gap-0.5 text-muted-foreground hover:text-primary">
-												{syncConfig.mode === "twoWay" ? (
+												{sync.mode === "twoWay" ? (
 													<ChevronsLeftRight size={20} />
-												) : syncConfig.mode === "cloudBackup" ? (
+												) : sync.mode === "cloudBackup" ? (
 													<>
 														<ChevronLeft size={20} />
 														<Archive size={18} />
 													</>
-												) : syncConfig.mode === "localBackup" ? (
+												) : sync.mode === "localBackup" ? (
 													<>
 														<Archive size={18} />
 														<ChevronRight size={20} />
 													</>
-												) : syncConfig.mode === "localToCloud" ? (
+												) : sync.mode === "localToCloud" ? (
 													<>
 														<PcCase size={18} />
 														<ChevronRight size={20} />
 													</>
-												) : syncConfig.mode === "cloudToLocal" ? (
+												) : sync.mode === "cloudToLocal" ? (
 													<>
 														<ChevronLeft size={20} />
 														<Cloud size={18} />
@@ -240,10 +255,10 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 								<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 									<Tooltip>
 										<TooltipTrigger asChild={true}>
-											<p className="line-clamp-1 text-ellipsis break-before-all">{syncConfig.remotePath}</p>
+											<p className="line-clamp-1 text-ellipsis break-before-all">{sync.remotePath}</p>
 										</TooltipTrigger>
 										<TooltipContent className="max-w-[calc(100vw/2)]">
-											<p>{syncConfig.remotePath}</p>
+											<p>{sync.remotePath}</p>
 										</TooltipContent>
 									</Tooltip>
 								</TooltipProvider>
@@ -255,7 +270,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 							className="mt-10"
 						>
 							<Switch
-								checked={syncConfig.paused}
+								checked={sync.paused}
 								onCheckedChange={togglePause}
 								disabled={changing}
 							/>
@@ -318,7 +333,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 							info={t("syncs.settings.sections.excludeDotFiles.info")}
 						>
 							<Switch
-								checked={syncConfig.excludeDotFiles}
+								checked={sync.excludeDotFiles}
 								onCheckedChange={toggleExcludeDotFiles}
 								disabled={changing}
 							/>

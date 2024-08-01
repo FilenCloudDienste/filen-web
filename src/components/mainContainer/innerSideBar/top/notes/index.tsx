@@ -17,7 +17,17 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 export const Notes = memo(() => {
 	const { t } = useTranslation()
 	const navigate = useNavigate()
-	const { setNotes, search, setSearch, setSelectedNote } = useNotesStore()
+	const { setNotes, search, setSearch, setSelectedNote } = useNotesStore(
+		useCallback(
+			state => ({
+				setNotes: state.setNotes,
+				search: state.search,
+				setSearch: state.setSearch,
+				setSelectedNote: state.setSelectedNote
+			}),
+			[]
+		)
+	)
 	const [defaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()

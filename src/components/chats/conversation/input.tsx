@@ -58,7 +58,22 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 		messages,
 		setSelectedConversation,
 		setConversations
-	} = useChatsStore()
+	} = useChatsStore(
+		useCallback(
+			state => ({
+				setMessages: state.setMessages,
+				setFailedMessages: state.setFailedMessages,
+				setEditUUID: state.setEditUUID,
+				setReplyMessage: state.setReplyMessage,
+				replyMessage: state.replyMessage,
+				editUUID: state.editUUID,
+				messages: state.messages,
+				setSelectedConversation: state.setSelectedConversation,
+				setConversations: state.setConversations
+			}),
+			[]
+		)
+	)
 	const { userId } = useSDKConfig()
 	const { t } = useTranslation()
 	const typingEventTimeout = useRef<ReturnType<typeof setTimeout>>()

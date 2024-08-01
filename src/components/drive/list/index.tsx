@@ -16,12 +16,29 @@ import eventEmitter from "@/lib/eventEmitter"
 import { directoryUUIDToNameCache } from "@/cache"
 
 export const List = memo(() => {
-	const { items, setItems, searchTerm } = useDriveItemsStore()
+	const { items, setItems, searchTerm } = useDriveItemsStore(
+		useCallback(
+			state => ({
+				items: state.items,
+				setItems: state.setItems,
+				searchTerm: state.searchTerm
+			}),
+			[]
+		)
+	)
 	const parent = useRouteParent()
 	const location = useLocation()
 	const lastPathname = useRef<string>("")
 	const [listType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
-	const { currentReceiverId, currentReceiverEmail, currentSharerEmail, currentSharerId, currentReceivers } = useDriveSharedStore()
+	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore(
+		state => ({
+			currentReceiverEmail: state.currentReceiverEmail,
+			currentReceiverId: state.currentReceiverId,
+			currentReceivers: state.currentReceivers,
+			currentSharerEmail: state.currentSharerEmail,
+			currentSharerId: state.currentSharerId
+		})
+	)
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 

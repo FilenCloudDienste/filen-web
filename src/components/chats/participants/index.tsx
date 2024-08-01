@@ -22,7 +22,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 export const Participants = memo(({ conversation }: { conversation: ChatConversation }) => {
 	const { t } = useTranslation()
 	const windowSize = useWindowSize()
-	const { setConversations, setSelectedConversation } = useChatsStore()
+	const { setConversations, setSelectedConversation } = useChatsStore(
+		useCallback(
+			state => ({
+				setConversations: state.setConversations,
+				setSelectedConversation: state.setSelectedConversation
+			}),
+			[]
+		)
+	)
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
 	const { userId } = useSDKConfig()
@@ -172,6 +180,15 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 		}
 	}, [socketEventListener])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: windowSize.height - 48 + "px",
+			width: "100%"
+		}
+	}, [windowSize.height])
+
 	return (
 		<div className="w-full h-full flex flex-col">
 			<div className="w-full h-12 flex flex-row items-center justify-between px-4">
@@ -203,12 +220,7 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 					computeItemKey={getItemKey}
 					itemContent={itemContent}
 					components={components}
-					style={{
-						overflowX: "hidden",
-						overflowY: "auto",
-						height: windowSize.height - 48 + "px",
-						width: "100%"
-					}}
+					style={style}
 				/>
 			</div>
 		</div>

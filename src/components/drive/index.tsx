@@ -20,8 +20,18 @@ export type DriveCloudItem = Prettify<
 
 export const Drive = memo(() => {
 	const parent = useRouteParent()
-	const { setItems, searchTerm } = useDriveItemsStore()
-	const { currentReceiverId, currentSharerId, currentReceiverEmail, currentReceivers, currentSharerEmail } = useDriveSharedStore()
+	const { setItems, searchTerm } = useDriveItemsStore(
+		useCallback(state => ({ setItems: state.setItems, searchTerm: state.searchTerm }), [])
+	)
+	const { currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId } = useDriveSharedStore(
+		state => ({
+			currentReceiverEmail: state.currentReceiverEmail,
+			currentReceiverId: state.currentReceiverId,
+			currentReceivers: state.currentReceivers,
+			currentSharerEmail: state.currentSharerEmail,
+			currentSharerId: state.currentSharerId
+		})
+	)
 	const errorToast = useErrorToast()
 
 	const uploadFiles = useCallback(

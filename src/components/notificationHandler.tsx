@@ -27,12 +27,20 @@ export const NotificationHandler = memo(() => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const windowFocus = useWindowFocus()
-	const { setSelectedConversation, unread } = useChatsStore()
+	const { setSelectedConversation, unread } = useChatsStore(
+		useCallback(
+			state => ({
+				setSelectedConversation: state.setSelectedConversation,
+				unread: state.unread
+			}),
+			[]
+		)
+	)
 	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
 	const [authed] = useLocalStorage<boolean>("authed", false)
 	const { t } = useTranslation()
 	const publicLinkURLState = usePublicLinkURLState()
-	const { requestsInCount } = useContactsStore()
+	const requestsInCount = useContactsStore(useCallback(state => state.requestsInCount, []))
 	const [notificationSoundEnabled] = useLocalStorage<boolean>("notificationSoundEnabled", false)
 
 	const chatConversationsQuery = useQuery({

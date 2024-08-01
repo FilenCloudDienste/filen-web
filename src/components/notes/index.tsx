@@ -8,7 +8,7 @@ import { Button } from "../ui/button"
 import eventEmitter from "@/lib/eventEmitter"
 
 export const Notes = memo(() => {
-	const { selectedNote, notes } = useNotesStore()
+	const { selectedNote, notes } = useNotesStore(useCallback(state => ({ selectedNote: state.selectedNote, notes: state.notes }), []))
 	const { t } = useTranslation()
 
 	const create = useCallback(() => {

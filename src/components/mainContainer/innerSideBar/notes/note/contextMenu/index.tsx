@@ -59,7 +59,17 @@ export const ContextMenu = memo(
 		setHovering: React.Dispatch<React.SetStateAction<boolean>>
 	}) => {
 		const { t } = useTranslation()
-		const { setNotes, setSelectedNote, selectedNote, notes } = useNotesStore()
+		const { setNotes, setSelectedNote, selectedNote, notes } = useNotesStore(
+			useCallback(
+				state => ({
+					setNotes: state.setNotes,
+					setSelectedNote: state.setSelectedNote,
+					selectedNote: state.selectedNote,
+					notes: state.notes
+				}),
+				[]
+			)
+		)
 		const navigate = useNavigate()
 		const errorToast = useErrorToast()
 		const loadingToast = useLoadingToast()

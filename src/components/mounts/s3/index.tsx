@@ -36,7 +36,9 @@ export const S3 = memo(() => {
 	const [accessKeyId, setAccessKeyId] = useState<string>(desktopConfig.s3Config.accessKeyId)
 	const [secretKeyId, setSecretKeyId] = useState<string>(desktopConfig.s3Config.accessKeyId)
 	const successToast = useSuccessToast()
-	const { enablingS3, setEnablingS3 } = useMountsStore()
+	const { enablingS3, setEnablingS3 } = useMountsStore(
+		useCallback(state => ({ enablingS3: state.enablingS3, setEnablingS3: state.setEnablingS3 }), [])
+	)
 
 	const isOnlineQuery = useQuery({
 		queryKey: ["isS3Online"],

@@ -60,6 +60,15 @@ export const List = memo(({ items, parent, showSkeletons }: { items: DriveCloudI
 		}
 	}, [showSkeletons])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
 	return (
 		<Virtuoso
 			data={items}
@@ -72,12 +81,7 @@ export const List = memo(({ items, parent, showSkeletons }: { items: DriveCloudI
 			itemContent={itemContent}
 			components={components}
 			id="virtuoso-drive-list"
-			style={{
-				overflowX: "hidden",
-				overflowY: "auto",
-				height: virtuosoHeight + "px",
-				width: "100%"
-			}}
+			style={style}
 		/>
 	)
 })

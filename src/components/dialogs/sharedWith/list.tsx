@@ -34,6 +34,15 @@ export const List = memo(
 			[setItem, item, setOpen]
 		)
 
+		const style = useMemo((): React.CSSProperties => {
+			return {
+				overflowX: "hidden",
+				overflowY: "auto",
+				height: 384 + "px",
+				width: "100%"
+			}
+		}, [])
+
 		return (
 			<Virtuoso
 				data={receiversSorted}
@@ -42,12 +51,7 @@ export const List = memo(
 				width="100%"
 				computeItemKey={getItemKey}
 				itemContent={itemContent}
-				style={{
-					overflowX: "hidden",
-					overflowY: "auto",
-					height: 384 + "px",
-					width: "100%"
-				}}
+				style={style}
 			/>
 		)
 	}

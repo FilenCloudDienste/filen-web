@@ -24,7 +24,15 @@ export const Content = memo(({ item }: { item: DriveCloudItem }) => {
 	).current
 	const { t } = useTranslation()
 	const location = useLocation()
-	const { currentReceiverId, currentSharerId } = useDriveSharedStore()
+	const { currentReceiverId, currentSharerId } = useDriveSharedStore(
+		useCallback(
+			state => ({
+				currentReceiverId: state.currentReceiverId,
+				currentSharerId: state.currentSharerId
+			}),
+			[]
+		)
+	)
 	const publicLinkURLState = usePublicLinkURLState()
 	const { baseFolderUUID } = useSDKConfig()
 	const [dirSize, setDirSize] = useState<DirectorySizeResult>(

@@ -11,12 +11,14 @@ import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 
 export const Syncs = memo(() => {
 	const [desktopConfig] = useDesktopConfig()
-	const { selectedSync } = useSyncsStore()
+	const selectedSync = useSyncsStore(useCallback(state => state.selectedSync, []))
 	const { t } = useTranslation()
 
 	const create = useCallback(() => {
 		eventEmitter.emit("openCreateSyncDialog")
 	}, [])
+
+	console.log("rendering syncs")
 
 	return (
 		<div

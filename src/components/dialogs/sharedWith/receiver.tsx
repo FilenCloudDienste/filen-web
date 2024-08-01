@@ -27,7 +27,7 @@ export const Receiver = memo(
 		const { t } = useTranslation()
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
-		const { setItems } = useDriveItemsStore()
+		const setItems = useDriveItemsStore(useCallback(state => state.setItems, []))
 		const location = useLocation()
 
 		const remove = useCallback(

@@ -55,18 +55,37 @@ const iconSize = 16
 
 export const ContextMenu = memo(
 	({ item, children, items }: { item: DriveCloudItem; children: React.ReactNode; items: DriveCloudItem[] }) => {
-		const { setItems: setDriveItems } = useDriveItemsStore()
+		const setDriveItems = useDriveItemsStore(useCallback(state => state.setItems, []))
 		const { t } = useTranslation()
 		const { baseFolderUUID } = useSDKConfig()
 		const driveURLState = useDriveURLState()
 		const navigate = useNavigate()
-		const { setCurrentReceiverEmail, setCurrentReceiverId, setCurrentReceivers, setCurrentSharerEmail, setCurrentSharerId } =
-			useDriveSharedStore()
+		const { setCurrentReceiverId, setCurrentSharerId, setCurrentReceiverEmail, setCurrentReceivers, setCurrentSharerEmail } =
+			useDriveSharedStore(
+				useCallback(
+					state => ({
+						setCurrentReceiverId: state.setCurrentReceiverId,
+						setCurrentSharerId: state.setCurrentSharerId,
+						setCurrentReceiverEmail: state.setCurrentReceiverEmail,
+						setCurrentReceivers: state.setCurrentReceivers,
+						setCurrentSharerEmail: state.setCurrentSharerEmail
+					}),
+					[]
+				)
+			)
 		const location = useLocation()
 		const [directoryColor, setDirectoryColor] = useState<string>(directoryColorToHex(item.type === "directory" ? item.color : null))
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
-		const { setVirtualURL, setItems: setPublicLinkItems } = useDirectoryPublicLinkStore()
+		const { setPublicLinkItems, setVirtualURL } = useDirectoryPublicLinkStore(
+			useCallback(
+				state => ({
+					setPublicLinkItems: state.setItems,
+					setVirtualURL: state.setVirtualURL
+				}),
+				[]
+			)
+		)
 		const { passwordState: publicLinkPaswordState } = usePublicLinkStore()
 		const successToast = useSuccessToast()
 		const publicLinkURLState = usePublicLinkURLState()

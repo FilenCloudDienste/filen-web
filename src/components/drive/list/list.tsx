@@ -75,6 +75,15 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 		return Fragment
 	}, [canUpload])
 
+	const style = useMemo((): React.CSSProperties => {
+		return {
+			overflowX: "hidden",
+			overflowY: "auto",
+			height: virtuosoHeight + "px",
+			width: "100%"
+		}
+	}, [virtuosoHeight])
+
 	return (
 		<>
 			{items.length > 0 && <Header />}
@@ -90,12 +99,7 @@ export const List = memo(({ items, showSkeletons }: { items: DriveCloudItem[]; s
 					itemContent={itemContent}
 					components={components}
 					id="virtuoso-drive-list"
-					style={{
-						overflowX: "hidden",
-						overflowY: "auto",
-						height: virtuosoHeight + "px",
-						width: "100%"
-					}}
+					style={style}
 				/>
 			</ContextMenuComponent>
 		</>
