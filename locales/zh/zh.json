@@ -1303,7 +1303,7 @@
 		"nothingIgnored": "未忽略任何文件或目录",
 		"noIssues": "暂无问题",
 		"info": {
-			"progress": "正在以 {{speed}} 同步 {{items}} 项，共 ({{total}} 项，剩余约 {{remaining}} 项",
+			"progress": "正在以 {{speed}} 同步 {{items}} 项，共 ({{total}} 项，大约剩余 {{remaining}} ",
 			"upToDate": "均已同步"
 		},
 		"empty": {
