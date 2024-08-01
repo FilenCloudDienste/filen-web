@@ -11,13 +11,14 @@ module.exports = {
 	],
 	ignorePatterns: ["dist", ".eslintrc.cjs"],
 	parser: "@typescript-eslint/parser",
-	//plugins: ["react-refresh"],
+	plugins: ["eslint-plugin-react-compiler"],
 	rules: {
 		//"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 		eqeqeq: 2,
 		quotes: ["error", "double"],
 		"no-mixed-spaces-and-tabs": 0,
 		"no-duplicate-imports": "error",
-		"no-extra-semi": 0
+		"no-extra-semi": 0,
+		"react-compiler/react-compiler": "error"
 	}
 }

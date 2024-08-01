@@ -12,7 +12,6 @@ export const DesktopListener = memo(() => {
 		setTransferEvents,
 		setCycleState,
 		setErrors,
-		setTaskErrors,
 		setLocalIgnored,
 		setRemoteIgnored,
 		setRemainingReadable,
@@ -20,14 +19,14 @@ export const DesktopListener = memo(() => {
 		setRemaining,
 		setSpeed,
 		setTasksCount,
-		setTasksSize
+		setTasksSize,
+		setTasksBytes
 	} = useSyncsStore(
 		useCallback(
 			state => ({
 				setTransferEvents: state.setTransferEvents,
 				setCycleState: state.setCycleState,
 				setErrors: state.setErrors,
-				setTaskErrors: state.setTaskErrors,
 				setLocalIgnored: state.setLocalIgnored,
 				setRemoteIgnored: state.setRemoteIgnored,
 				setRemainingReadable: state.setRemainingReadable,
@@ -35,7 +34,8 @@ export const DesktopListener = memo(() => {
 				setRemaining: state.setRemaining,
 				setSpeed: state.setSpeed,
 				setTasksCount: state.setTasksCount,
-				setTasksSize: state.setTasksSize
+				setTasksSize: state.setTasksSize,
+				setTasksBytes: state.setTasksBytes
 			}),
 			[]
 		)
@@ -197,6 +197,11 @@ export const DesktopListener = memo(() => {
 						...prev,
 						[message.syncPair.uuid]: 0
 					}))
+
+					setTasksBytes(prev => ({
+						...prev,
+						[message.syncPair.uuid]: 0
+					}))
 				}
 			} else if (message.type === "transfer") {
 				if (message.data.of === "download" || message.data.of === "upload") {
@@ -230,16 +235,21 @@ export const DesktopListener = memo(() => {
 						}
 
 						bytesSent.current[message.syncPair.uuid]! += data.bytes
+
+						setTasksBytes(prev => ({
+							...prev,
+							[message.syncPair.uuid]: prev[message.syncPair.uuid] ? prev[message.syncPair.uuid]! + data.bytes : data.bytes
+						}))
 					} else if (message.data.type === "error") {
+						const { error, size } = message.data
+
 						if (!allBytes.current[message.syncPair.uuid]) {
 							allBytes.current[message.syncPair.uuid] = -1
 						}
 
-						if (allBytes.current[message.syncPair.uuid]! >= message.data.size) {
-							allBytes.current[message.syncPair.uuid]! -= message.data.size
+						if (allBytes.current[message.syncPair.uuid]! >= size) {
+							allBytes.current[message.syncPair.uuid]! -= size
 						}
-
-						const error = message.data.error
 
 						setErrors(prev => ({
 							...prev,
@@ -257,6 +267,11 @@ export const DesktopListener = memo(() => {
 											error
 										}
 									]
+						}))
+
+						setTasksBytes(prev => ({
+							...prev,
+							[message.syncPair.uuid]: prev[message.syncPair.uuid] ? prev[message.syncPair.uuid]! - size : 0
 						}))
 					}
 
@@ -311,9 +326,14 @@ export const DesktopListener = memo(() => {
 				}
 			} else if (message.type === "taskErrors") {
 				if (message.data.errors.length > 0) {
-					setTaskErrors(prev => ({
+					const errors: GeneralError[] = message.data.errors.map(err => ({
+						error: err.error,
+						type: "task"
+					}))
+
+					setErrors(prev => ({
 						...prev,
-						[message.syncPair.uuid]: message.data.errors
+						[message.syncPair.uuid]: prev[message.syncPair.uuid] ? [...errors, ...prev[message.syncPair.uuid]!] : errors
 					}))
 				}
 			} else if (message.type === "error") {
@@ -374,7 +394,6 @@ export const DesktopListener = memo(() => {
 			setErrors,
 			setLocalIgnored,
 			setRemoteIgnored,
-			setTaskErrors,
 			setTransferEvents,
 			updateProgress,
 			setProgress,
@@ -382,7 +401,8 @@ export const DesktopListener = memo(() => {
 			setRemainingReadable,
 			setSpeed,
 			setTasksCount,
-			setTasksSize
+			setTasksSize,
+			setTasksBytes
 		]
 	)
 

@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from "react"
+import { memo, useCallback, useMemo, useState } from "react"
 import { type SyncPair, type SyncMode } from "@filen/sync/dist/types"
 import Section from "@/components/settings/section"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
 import { Switch } from "@/components/ui/switch"
 import eventEmitter from "@/lib/eventEmitter"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Info, ChevronsLeftRight, Cloud, ChevronLeft, ChevronRight, Archive, PcCase } from "lucide-react"
+import { Info, ChevronsLeftRight, Cloud, ChevronLeft, ChevronRight, Archive, PcCase, RefreshCw } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
@@ -32,6 +32,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	)
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
+	const [isForcingSync, setIsForcingSync] = useState<boolean>(false)
 
 	const modeToString = useMemo(() => {
 		switch (sync.mode) {
@@ -160,6 +161,12 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	)
 
 	const forceSync = useCallback(async () => {
+		if (isForcingSync) {
+			return
+		}
+
+		setIsForcingSync(true)
+
 		try {
 			await window.desktopAPI.syncResetCache({
 				uuid: sync.uuid
@@ -168,8 +175,12 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 			console.error(e)
 
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			setTimeout(() => {
+				setIsForcingSync(false)
+			}, 1000)
 		}
-	}, [errorToast, sync.uuid])
+	}, [errorToast, sync.uuid, isForcingSync])
 
 	const editIgnore = useCallback(() => {
 		eventEmitter.emit("openFilenIgnoreDialog", sync.uuid)
@@ -357,8 +368,16 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 								variant="secondary"
 								onClick={forceSync}
 								size="sm"
+								disabled={isForcingSync}
 							>
-								{t("syncs.settings.sections.forceSync.forceSync")}
+								{isForcingSync ? (
+									<RefreshCw
+										size={18}
+										className="animate-spin-medium"
+									/>
+								) : (
+									t("syncs.settings.sections.forceSync.forceSync")
+								)}
 							</Button>
 						</Section>
 						<Section

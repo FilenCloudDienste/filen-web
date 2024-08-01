@@ -9,6 +9,7 @@ import { type RemoteTreeIgnoredReason } from "@filen/sync/dist/lib/filesystems/r
 import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import { Smile } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import SyncInfo from "../syncInfo"
 
 export type IgnoreType = {
 	localPath: string
@@ -23,7 +24,7 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 	const { t } = useTranslation()
 
 	const virtuosoHeight = useMemo(() => {
-		return windowSize.height - 64 - 12 - DESKTOP_TOPBAR_HEIGHT
+		return windowSize.height - 64 - 13 - 40 - 16 - DESKTOP_TOPBAR_HEIGHT
 	}, [windowSize.height])
 
 	const getItemKey = useCallback((index: number) => index, [])
@@ -58,19 +59,25 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 	}, [virtuosoHeight])
 
 	return (
-		<Virtuoso
-			ref={virtuosoRef}
-			data={errors}
-			totalCount={errors.length}
-			height={virtuosoHeight}
-			width="100%"
-			computeItemKey={getItemKey}
-			itemContent={itemContent}
-			components={components}
-			defaultItemHeight={51}
-			overscan={0}
-			style={style}
-		/>
+		<div className="flex flex-col">
+			<Virtuoso
+				ref={virtuosoRef}
+				data={errors}
+				totalCount={errors.length}
+				height={virtuosoHeight}
+				width="100%"
+				computeItemKey={getItemKey}
+				itemContent={itemContent}
+				components={components}
+				defaultItemHeight={109}
+				overscan={0}
+				style={style}
+			/>
+			<SyncInfo
+				syncUUID={sync.uuid}
+				paused={sync.paused}
+			/>
+		</div>
 	)
 })
 

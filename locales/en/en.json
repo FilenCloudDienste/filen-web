@@ -1304,7 +1304,13 @@
 		"noIssues": "No issues",
 		"info": {
 			"progress": "Synchronizing {{items}} items ({{total}}) at {{speed}}, about {{remaining}} remaining",
-			"upToDate": "Everything synced"
+			"upToDate": "Everything synced",
+			"errors": "{{count}} synchronization errors",
+			"errorsResolve": "Resolve",
+			"paused": "Sync is paused",
+			"processingDeltas": "Processing deltas",
+			"syncingChanges": "Synchronizing changes",
+			"savingState": "Saving state"
 		},
 		"empty": {
 			"title": "No syncs setup yet",
@@ -1362,6 +1368,11 @@
 				"description": "Are you sure you want to delete this sync?",
 				"continue": "Delete"
 			},
+			"resetErrors": {
+				"title": "Resolve errors",
+				"description": "Are you sure you want to mark all errors as resolved and continue syncing? Please make sure all errors are resolved.",
+				"continue": "Resolve"
+			},
 			"filenIgnore": {
 				"title": ".filenignore",
 				"save": "Save"
@@ -1376,7 +1387,51 @@
 			"reasons": {
 				"dotFile": "File or directory is inside a dot path",
 				"defaultIgnore": "File or directory is inside a path that is ignored by default",
-				"empty": "File is empty"
+				"empty": "File is empty",
+				"invalidPath": "File or directory is inside an invalid path",
+				"symlink": "File or directory is a symlink. The client does not follow symlinks to prevent infinite sync loops.",
+				"duplicate": "File or directory path exists twice",
+				"filenIgnore": "File or directory ignored by .filenignore",
+				"invalidType": "Item is not a file or directory",
+				"nameLength": "File or directory name too long",
+				"pathLength": "File or directory path too long",
+				"permissions": "Insufficient permissions"
+			}
+		},
+		"issues": {
+			"types": {
+				"title": {
+					"permission": "Permissions",
+					"io": "I/O",
+					"noSpace": "Not enough space",
+					"openFiles": "Open files limit",
+					"fileOrDirExists": "File or directory exists",
+					"fileOrDirNotFound": "File or directory not found",
+					"isFile": "File",
+					"isDir": "Directory",
+					"notDir": "Not a directory",
+					"badConnection": "Connection",
+					"fileOrDirTemporarilyUnavailable": "File or directory temporarily unavailable",
+					"unknown": "Unknown error",
+					"dirNotEmpty": "Directory not empty",
+					"fileOrDirNameTooLong": "File or directory name/path too long"
+				},
+				"info": {
+					"permission": "Please ensure the client has all needed permissions to access the local sync directory.",
+					"io": "Please ensure your local sync directory and underlying storage media works. The client is not able to properly access it.",
+					"noSpace": "You do not have enough local storage space left.",
+					"openFiles": "The client has hit the limit of open files. Please increase the limit.",
+					"fileOrDirExists": "The file or directory already exists. This is most likely a temporary issue, try restarting the client.",
+					"fileOrDirNotFound": "File or directory not found. This is most likely a temporary issue, try restarting the client.",
+					"isFile": "This is most likely a temporary issue, try restarting the client.",
+					"isDir": "This is most likely a temporary issue, try restarting the client.",
+					"notDir": "This is most likely a temporary issue, try restarting the client.",
+					"badConnection": "Please ensure you are connected to the internet and can access Filen without issues.",
+					"fileOrDirTemporarilyUnavailable": "This is most likely a temporary issue, try restarting the client.",
+					"unknown": "Unknown error, try restarting the client.",
+					"dirNotEmpty": "The directory is not empty. This is most likely a temporary issue, try restarting the client.",
+					"fileOrDirNameTooLong": "File or directory name/path too long for your local filesystem."
+				}
 			}
 		}
 	}

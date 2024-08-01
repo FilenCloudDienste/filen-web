@@ -1,14 +1,13 @@
 import { create } from "zustand"
-import { type SyncPair, type TransferData, type CycleState, type IPCTaskError } from "@filen/sync/dist/types"
+import { type SyncPair, type TransferData, type CycleState } from "@filen/sync/dist/types"
 import { type LocalTreeIgnored } from "@filen/sync/dist/lib/filesystems/local"
 import { type RemoteTreeIgnored } from "@filen/sync/dist/lib/filesystems/remote"
 import { type SerializedError } from "@filen/sync/dist/utils"
-import { type Delta } from "@filen/sync/dist/lib/deltas"
 
 export type TransferDataWithTimestamp = TransferData & { timestamp: number }
 
 export type GeneralError = {
-	type: "cycle" | "general" | "localTree" | "transfer"
+	type: "cycle" | "general" | "localTree" | "transfer" | "task"
 	error: SerializedError
 }
 
@@ -19,16 +18,15 @@ export type SyncsStore = {
 	remoteIgnored: Record<string, RemoteTreeIgnored[]>
 	localIgnored: Record<string, LocalTreeIgnored[]>
 	errors: Record<string, GeneralError[]>
-	taskErrors: Record<string, IPCTaskError[]>
 	search: string
 	changing: boolean
 	remainingReadable: Record<string, string>
 	remaining: Record<string, number>
 	speed: Record<string, number>
 	progress: Record<string, number>
-	deltas: Record<string, Delta[]>
 	tasksCount: Record<string, number>
 	tasksSize: Record<string, number>
+	tasksBytes: Record<string, number>
 	setSelectedSync: (fn: SyncPair | null | ((prev: SyncPair | null) => SyncPair | null)) => void
 	setChanging: (fn: boolean | ((prev: boolean) => boolean)) => void
 	setTransferEvents: (
@@ -44,15 +42,14 @@ export type SyncsStore = {
 		fn: Record<string, LocalTreeIgnored[]> | ((prev: Record<string, LocalTreeIgnored[]>) => Record<string, LocalTreeIgnored[]>)
 	) => void
 	setErrors: (fn: Record<string, GeneralError[]> | ((prev: Record<string, GeneralError[]>) => Record<string, GeneralError[]>)) => void
-	setTaskErrors: (fn: Record<string, IPCTaskError[]> | ((prev: Record<string, IPCTaskError[]>) => Record<string, IPCTaskError[]>)) => void
 	setSearch: (fn: string | ((prev: string) => string)) => void
 	setRemainingReadable: (fn: Record<string, string> | ((prev: Record<string, string>) => Record<string, string>)) => void
 	setRemaining: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 	setSpeed: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 	setProgress: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
-	setDeltas: (fn: Record<string, Delta[]> | ((prev: Record<string, Delta[]>) => Record<string, Delta[]>)) => void
 	setTasksCount: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 	setTasksSize: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
+	setTasksBytes: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 }
 
 export const useSyncsStore = create<SyncsStore>(set => ({
@@ -62,7 +59,6 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	remoteIgnored: {},
 	localIgnored: {},
 	errors: {},
-	taskErrors: {},
 	search: "",
 	changing: false,
 	remainingReadable: {},
@@ -72,6 +68,7 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	deltas: {},
 	tasksCount: {},
 	tasksSize: {},
+	tasksBytes: {},
 	setSelectedSync(fn) {
 		set(state => ({ selectedSync: typeof fn === "function" ? fn(state.selectedSync) : fn }))
 	},
@@ -89,9 +86,6 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	},
 	setErrors(fn) {
 		set(state => ({ errors: typeof fn === "function" ? fn(state.errors) : fn }))
-	},
-	setTaskErrors(fn) {
-		set(state => ({ taskErrors: typeof fn === "function" ? fn(state.taskErrors) : fn }))
 	},
 	setSearch(fn) {
 		set(state => ({ search: typeof fn === "function" ? fn(state.search) : fn }))
@@ -111,13 +105,13 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	setSpeed(fn) {
 		set(state => ({ speed: typeof fn === "function" ? fn(state.speed) : fn }))
 	},
-	setDeltas(fn) {
-		set(state => ({ deltas: typeof fn === "function" ? fn(state.deltas) : fn }))
-	},
 	setTasksCount(fn) {
 		set(state => ({ tasksCount: typeof fn === "function" ? fn(state.tasksCount) : fn }))
 	},
 	setTasksSize(fn) {
 		set(state => ({ tasksSize: typeof fn === "function" ? fn(state.tasksSize) : fn }))
+	},
+	setTasksBytes(fn) {
+		set(state => ({ tasksBytes: typeof fn === "function" ? fn(state.tasksBytes) : fn }))
 	}
 }))

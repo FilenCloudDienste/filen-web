@@ -40,6 +40,7 @@ export const Bottom = memo(() => {
 							<div className="flex flex-col gap-1.5 w-full justify-center">
 								<Progress
 									value={(account.account.storage / account.account.maxStorage) * 100}
+									max={100}
 									className="h-1.5"
 								/>
 								<p className="text-muted-foreground text-xs line-clamp-1 text-ellipsis break-all">

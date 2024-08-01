@@ -245,7 +245,10 @@ export const General = memo(() => {
 							})}
 						</p>
 					</div>
-					<Progress value={(account.account.storage / account.account.maxStorage) * 100} />
+					<Progress
+						value={(account.account.storage / account.account.maxStorage) * 100}
+						max={100}
+					/>
 					<div className="flex flex-row items-center gap-6">
 						<div className="flex flex-row items-center gap-2">
 							<div className="w-4 h-4 rounded-sm bg-primary shrink-0" />

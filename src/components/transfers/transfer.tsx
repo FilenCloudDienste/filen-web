@@ -21,6 +21,7 @@ export const TransferProgress = memo(({ state, bytes, size }: { state: TransferS
 			value={
 				["error", "queued"].includes(state) ? 0 : state === "finished" ? 100 : progressNormalized >= 99 ? 99 : progressNormalized
 			}
+			max={100}
 			color="green"
 			className={cn("w-full h-[6px]", state === "finished" ? "progress-finished" : "", state === "error" ? "progress-error" : "")}
 		/>
