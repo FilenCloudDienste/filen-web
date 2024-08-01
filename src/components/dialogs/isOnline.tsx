@@ -1,12 +1,13 @@
-import { memo, useState, useEffect, useCallback } from "react"
+import { memo, useState, useEffect, useCallback, useRef } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useTranslation } from "react-i18next"
 import worker from "@/lib/worker"
 import { Unplug } from "lucide-react"
 
 export const IsOnlineDialog = memo(() => {
-	const [open, setOpen] = useState<boolean>(false)
+	const [open, setOpen] = useState<boolean>(!window.navigator.onLine)
 	const { t } = useTranslation()
+	const isPinging = useRef<boolean>(false)
 
 	const onEscapeKeyDown = useCallback((e: KeyboardEvent) => {
 		e.preventDefault()
@@ -14,7 +15,19 @@ export const IsOnlineDialog = memo(() => {
 	}, [])
 
 	const ping = useCallback(async () => {
+		if (isPinging.current) {
+			return
+		}
+
+		isPinging.current = true
+
 		try {
+			if (!window.navigator.onLine) {
+				setOpen(true)
+
+				return
+			}
+
 			const isOnline = await worker.pingAPI()
 
 			setOpen(!isOnline)
@@ -22,6 +35,8 @@ export const IsOnlineDialog = memo(() => {
 			console.error(e)
 
 			setOpen(true)
+		} finally {
+			isPinging.current = false
 		}
 	}, [])
 
@@ -30,8 +45,18 @@ export const IsOnlineDialog = memo(() => {
 
 		const interval = setInterval(ping, 15000)
 
+		const navigatorListener = () => {
+			ping()
+		}
+
+		window.addEventListener("online", navigatorListener)
+		window.addEventListener("offline", navigatorListener)
+
 		return () => {
 			clearInterval(interval)
+
+			window.removeEventListener("online", navigatorListener)
+			window.removeEventListener("offline", navigatorListener)
 		}
 	}, [ping])
 
