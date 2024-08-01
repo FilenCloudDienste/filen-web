@@ -1434,5 +1434,10 @@
 				}
 			}
 		}
+	},
+	"isOnline": {
+		"title": "Did someone unplug the cable?",
+		"info": "We're having trouble connecting you to our platform, please check your internet connection.",
+		"infoSub": "Please contact us if your internet works."
 	}
 }

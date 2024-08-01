@@ -3348,3 +3348,27 @@ export const sanitizeSVG = (file: File): Promise<File> => {
 		reader.readAsText(file)
 	})
 }
+
+export async function pingAPI(): Promise<boolean> {
+	const abortController = new AbortController()
+
+	const timeout = setTimeout(() => {
+		abortController.abort()
+	}, 10000)
+
+	try {
+		const response = await axios({
+			url: "https://gateway.filen.io",
+			timeout: 10000,
+			method: "HEAD",
+			validateStatus: () => true,
+			signal: abortController.signal
+		})
+
+		return response.status === 200
+	} catch {
+		return false
+	} finally {
+		clearTimeout(timeout)
+	}
+}

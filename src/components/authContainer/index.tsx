@@ -9,21 +9,43 @@ export const AuthContainer = memo(({ children }: { children: React.ReactNode }) 
 	const { dark } = useTheme()
 
 	return (
-		<div className="flex h-[100dvh] w-screen flex-col overflow-y-auto overflow-x-hidden">
+		<div
+			className="flex h-[100dvh] w-screen flex-col overflow-y-auto overflow-x-hidden"
+			style={{
+				// @ts-expect-error not typed
+				WebkitAppRegion: "drag"
+			}}
+		>
 			<Link
 				to="/login"
 				className="flex shrink-0 flex-row justify-center py-10 sm:justify-start sm:pl-20 items-center gap-2"
 				draggable={false}
+				style={{
+					// @ts-expect-error not typed
+					WebkitAppRegion: "no-drag"
+				}}
 			>
 				<div className="w-7 h-7">
 					<LogoSVG color={dark ? "white" : "black"} />
 				</div>
 				<p className="font-medium text-2xl">Filen</p>
 			</Link>
-			<div className="flex h-full flex-col items-center justify-center">
+			<div
+				className="flex h-full flex-col items-center justify-center"
+				style={{
+					// @ts-expect-error not typed
+					WebkitAppRegion: "no-drag"
+				}}
+			>
 				<div className="flex flex-col p-8 w-80 sm:w-[420px]">{children}</div>
 			</div>
-			<div className="flex shrink-0 flex-row justify-center items-center py-10 gap-5">
+			<div
+				className="flex shrink-0 flex-row justify-center items-center py-10 gap-5"
+				style={{
+					// @ts-expect-error not typed
+					WebkitAppRegion: "no-drag"
+				}}
+			>
 				<a
 					href="https://filen.io/terms"
 					className="underline text-muted-foreground text-sm select-none"

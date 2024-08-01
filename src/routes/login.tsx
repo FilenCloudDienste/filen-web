@@ -152,7 +152,13 @@ export function Login() {
 	return (
 		<RequireUnauthed>
 			<AuthContainer>
-				<div className="flex flex-col gap-6">
+				<div
+					className="flex flex-col gap-6"
+					style={{
+						// @ts-expect-error not typed
+						WebkitAppRegion: "no-drag"
+					}}
+				>
 					<div className="flex flex-col gap-2">
 						<h1 className="text-2xl font-semibold">{t("login.header")}</h1>
 						<p className="text-muted-foreground text-sm">

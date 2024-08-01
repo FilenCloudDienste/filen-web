@@ -33,6 +33,7 @@ import DesktopHandler from "@/components/desktopHandler"
 import CreateSyncDialog from "@/components/dialogs/createSync"
 import DesktopListener from "@/components/desktopListener"
 import InfoDialog from "@/components/dialogs/infoDialog"
+import IsOnlineDialog from "@/components/dialogs/isOnline"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -171,6 +172,7 @@ export const Root = memo(() => {
 							</CookieConsent>
 						</>
 					)}
+					<IsOnlineDialog />
 				</PersistQueryClientProvider>
 			</ThemeProvider>
 			<Toaster />
