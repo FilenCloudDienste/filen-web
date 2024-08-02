@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
 import { Switch } from "@/components/ui/switch"
 import eventEmitter from "@/lib/eventEmitter"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Info, ChevronsLeftRight, Cloud, ChevronLeft, ChevronRight, Archive, PcCase, RefreshCw } from "lucide-react"
+import { Info, ChevronsLeftRight, Cloud, ChevronLeft, ChevronRight, Archive, PcCase, RefreshCw, Edit } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOLTIP_POPUP_DELAY } from "@/constants"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
@@ -15,6 +15,7 @@ import { useSyncsStore } from "@/stores/syncs.store"
 import { Button } from "@/components/ui/button"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
+import useIsSyncActive from "@/hooks/useIsSyncActive"
 
 export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	const [, setDesktopConfig] = useDesktopConfig()
@@ -33,6 +34,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
 	const [isForcingSync, setIsForcingSync] = useState<boolean>(false)
+	const isSyncActive = useIsSyncActive(sync.uuid)
 
 	const modeToString = useMemo(() => {
 		switch (sync.mode) {
@@ -72,6 +74,10 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 
 	const toggleExcludeDotFiles = useCallback(
 		async (excludeDotFiles: boolean) => {
+			if (isSyncActive) {
+				return
+			}
+
 			setChanging(true)
 
 			const toast = loadingToast()
@@ -112,11 +118,15 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 				toast.dismiss()
 			}
 		},
-		[setDesktopConfig, sync.uuid, setChanging, errorToast, loadingToast, setSelectedSync]
+		[setDesktopConfig, sync.uuid, setChanging, errorToast, loadingToast, setSelectedSync, isSyncActive]
 	)
 
 	const onModeChange = useCallback(
 		async (mode: SyncMode) => {
+			if (isSyncActive) {
+				return
+			}
+
 			setChanging(true)
 
 			const toast = loadingToast()
@@ -157,11 +167,11 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 				toast.dismiss()
 			}
 		},
-		[setDesktopConfig, sync.uuid, loadingToast, setChanging, errorToast, setSelectedSync]
+		[setDesktopConfig, sync.uuid, loadingToast, setChanging, errorToast, setSelectedSync, isSyncActive]
 	)
 
 	const forceSync = useCallback(async () => {
-		if (isForcingSync) {
+		if (isForcingSync || isSyncActive) {
 			return
 		}
 
@@ -180,11 +190,15 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 				setIsForcingSync(false)
 			}, 1000)
 		}
-	}, [errorToast, sync.uuid, isForcingSync])
+	}, [errorToast, sync.uuid, isForcingSync, isSyncActive])
 
 	const editIgnore = useCallback(() => {
+		if (isSyncActive) {
+			return
+		}
+
 		eventEmitter.emit("openFilenIgnoreDialog", sync.uuid)
-	}, [sync.uuid])
+	}, [sync.uuid, isSyncActive])
 
 	const openLocalPath = useCallback(async () => {
 		try {
@@ -293,7 +307,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 							<div className="flex flex-row gap-3 items-center">
 								<Select
 									onValueChange={onModeChange}
-									disabled={changing}
+									disabled={changing || isSyncActive}
 								>
 									<SelectTrigger className="w-full">
 										<SelectValue placeholder={modeToString} />
@@ -346,19 +360,21 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 							<Switch
 								checked={sync.excludeDotFiles}
 								onCheckedChange={toggleExcludeDotFiles}
-								disabled={changing}
+								disabled={changing || isSyncActive}
 							/>
 						</Section>
 						<Section
 							name={t("syncs.settings.sections.filenIgnore.name")}
 							info={t("syncs.settings.sections.filenIgnore.info")}
 						>
-							<p
-								className="text-blue-500 underline cursor-pointer"
+							<Button
 								onClick={editIgnore}
+								variant="secondary"
+								size="sm"
+								disabled={changing || isSyncActive}
 							>
-								{t("syncs.settings.sections.filenIgnore.edit")}
-							</p>
+								<Edit size={18} />
+							</Button>
 						</Section>
 						<Section
 							name={t("syncs.settings.sections.forceSync.name")}
@@ -368,7 +384,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 								variant="secondary"
 								onClick={forceSync}
 								size="sm"
-								disabled={isForcingSync}
+								disabled={isForcingSync || changing || isSyncActive}
 							>
 								{isForcingSync ? (
 									<RefreshCw
@@ -388,7 +404,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 							<Button
 								variant="destructive"
 								onClick={deleteSync}
-								disabled={changing}
+								disabled={changing || isForcingSync || isSyncActive}
 								size="sm"
 							>
 								{t("syncs.settings.sections.delete.delete")}
