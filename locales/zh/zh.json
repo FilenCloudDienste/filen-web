@@ -1304,7 +1304,13 @@
 		"noIssues": "暂无问题",
 		"info": {
 			"progress": "正在以 {{speed}} 同步 {{items}} 项，共 ({{total}} 项，大约剩余 {{remaining}} ",
-			"upToDate": "均已同步"
+			"upToDate": "均已同步",
+			"errors": "{{count}} 个同步错误",
+			"errorsResolve": "解决",
+			"paused": "同步已暂停",
+			"processingDeltas": "处理增量",
+			"syncingChanges": "同步更改",
+			"savingState": "保存状态"
 		},
 		"empty": {
 			"title": "尚未设置同步",
@@ -1362,6 +1368,11 @@
 				"description": "您确定要删除此同步吗？",
 				"continue": "删除"
 			},
+			"resetErrors": {
+				"title": "解决错误",
+				"description": "您确定要将所有错误标记为已解决并继续同步吗？请确保所有错误都已被解决。",
+				"continue": "解决"
+			},
 			"filenIgnore": {
 				"title": ".filenignore",
 				"save": "保存"
@@ -1376,8 +1387,57 @@
 			"reasons": {
 				"dotFile": "文件或目录位于点路径内",
 				"defaultIgnore": "文件或目录位于默认忽略的路径内",
-				"empty": "文件为空"
+				"empty": "文件为空",
+				"invalidPath": "文件或目录位于无效路径内",
+				"symlink": "文件或目录是符号链接。客户端不会跟踪符号链接，以防止无限同步循环。",
+				"duplicate": "文件或目录路径出现两次",
+				"filenIgnore": ".filenignore 忽略的文件或目录",
+				"invalidType": "项目不是文件或目录",
+				"nameLength": "文件或目录名太长",
+				"pathLength": "文件或目录路径太长",
+				"permissions": "权限不足"
+			}
+		},
+		"issues": {
+			"types": {
+				"title": {
+					"permission": "权限",
+					"io": "输入/输出",
+					"noSpace": "没有足够的空间",
+					"openFiles": "打开文件限制",
+					"fileOrDirExists": "文件或目录存在",
+					"fileOrDirNotFound": "找不到文件或目录",
+					"isFile": "文件",
+					"isDir": "目录",
+					"notDir": "不是目录",
+					"badConnection": "连接",
+					"fileOrDirTemporarilyUnavailable": "文件或目录暂时不可用",
+					"unknown": "未知错误",
+					"dirNotEmpty": "目录不为空",
+					"fileOrDirNameTooLong": "文件或目录名称/路径太长"
+				},
+				"info": {
+					"permission": "请确保客户端具有访问本地同步目录所需的所有权限。",
+					"io": "请确保您的本地同步目录和底层存储媒体正常工作。客户端目前无法正确访问它。",
+					"noSpace": "您的本地存储空间不足。",
+					"openFiles": "客户端已达到打开文件数的限制。请增加限制。",
+					"fileOrDirExists": "该文件或目录已存在。这很可能是暂时的问题，请尝试重新启动客户端。",
+					"fileOrDirNotFound": "未找到文件或目录。这很可能是暂时问题，请尝试重新启动客户端。",
+					"isFile": "这很可能是一个暂时的问题，请尝试重新启动客户端。",
+					"isDir": "这很可能是一个暂时的问题，请尝试重新启动客户端。",
+					"notDir": "这很可能是一个暂时的问题，请尝试重新启动客户端。",
+					"badConnection": "请确保您已连接到互联网并且可以顺利访问 Filen。",
+					"fileOrDirTemporarilyUnavailable": "这很可能是一个暂时的问题，请尝试重新启动客户端。",
+					"unknown": "未知错误，请尝试重新启动客户端。",
+					"dirNotEmpty": "目录不为空。这很可能是暂时的问题，请尝试重新启动客户端。",
+					"fileOrDirNameTooLong": "文件或目录名称/路径对于您的本地文件系统来说太长。"
+				}
 			}
 		}
+	},
+	"isOnline": {
+		"title": "有人拔掉了网线吗？",
+		"info": "我们在将您连接到我们的平台时遇到问题，请检查您的互联网连接。",
+		"infoSub": "如果您的互联网可以正常使用，请联系我们。"
 	}
 }
