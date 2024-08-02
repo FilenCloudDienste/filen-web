@@ -40,7 +40,7 @@ export const SyncInfoProgress = memo(({ syncUUID }: { syncUUID: string }) => {
 })
 
 export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: boolean }) => {
-	const { speed, remainingReadable, tasksCount, tasksSize, cycleState, setErrors, errors } = useSyncsStore(
+	const { speed, remainingReadable, tasksCount, tasksSize, cycleState, setErrors, taskErrors } = useSyncsStore(
 		useCallback(
 			state => ({
 				speed: state.speed[syncUUID] ? state.speed[syncUUID]! : 0,
@@ -48,7 +48,7 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 				tasksCount: state.tasksCount[syncUUID] ? state.tasksCount[syncUUID]! : 0,
 				tasksSize: state.tasksSize[syncUUID] ? state.tasksSize[syncUUID]! : 0,
 				cycleState: state.cycleState[syncUUID] ? state.cycleState[syncUUID]! : "cycleRestarting",
-				errors: state.errors[syncUUID] ? state.errors[syncUUID]!.length : 0,
+				taskErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "task").length : 0,
 				setErrors: state.setErrors
 			}),
 			[syncUUID]
@@ -103,13 +103,13 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 			<div className="flex flex-col h-10 bg-secondary rounded-sm w-full">
 				<div className="flex flex-row h-full w-full items-center px-4 justify-between gap-4">
 					<div className="flex flex-row h-full w-full items-center gap-2 text-sm">
-						{errors > 0 ? (
+						{taskErrors > 0 ? (
 							<>
 								<XCircle
 									className="text-red-500"
 									size={16}
 								/>
-								<p>{t("syncs.info.errors", { count: errors })}</p>
+								<p>{t("syncs.info.errors", { count: taskErrors })}</p>
 								<p
 									className="text-blue-500 hover:underline cursor-pointer"
 									onClick={resetErrors}
@@ -172,7 +172,7 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 							</>
 						)}
 					</div>
-					{errors === 0 && cycleState === "cycleProcessingTasksStarted" && (
+					{taskErrors === 0 && cycleState === "cycleProcessingTasksStarted" && (
 						<div className="flex flex-row items-center gap-2">
 							{paused ? (
 								<Button
