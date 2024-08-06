@@ -187,7 +187,7 @@ export const ReportDialog = memo(() => {
 							<SelectTrigger className="w-full">
 								<SelectValue placeholder={reasonToString} />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-[200px]">
 								<SelectItem value="dmca">{t("dialogs.report.reasons.dmca")}</SelectItem>
 								<SelectItem value="stolen">{t("dialogs.report.reasons.stolen")}</SelectItem>
 								<SelectItem value="malware">{t("dialogs.report.reasons.malware")}</SelectItem>

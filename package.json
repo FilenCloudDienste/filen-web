@@ -1,7 +1,7 @@
 {
 	"name": "@filen/web",
 	"private": false,
-	"version": "0.1.13",
+	"version": "0.1.14",
 	"type": "module",
 	"description": "Filen Web & Desktop app",
 	"scripts": {
@@ -13,7 +13,8 @@
 		"lint": "cross-env NODE_OPTIONS=--max_old_space_size=16834 eslint . --ext ts,tsx,js,jsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite preview",
 		"serve": "cross-env NODE_OPTIONS=--max_old_space_size=16834 serve -s dist/",
-		"i18n:scan": "tsx ./i18nScanner.ts"
+		"i18n:scan": "tsx ./i18nScanner.ts",
+		"install:filen": "npm install @filen/desktop@latest @filen/sdk@latest @filen/sync@latest"
 	},
 	"engines": {
 		"node": ">=18"
@@ -22,9 +23,9 @@
 		"@alptugidin/react-circular-progress-bar": "^1.1.2",
 		"@emoji-mart/data": "^1.1.2",
 		"@emoji-mart/react": "^1.1.1",
-		"@filen/desktop": "^0.1.29",
-		"@filen/sdk": "^0.1.136",
-		"@filen/sync": "^0.1.15",
+		"@filen/desktop": "^3.0.2",
+		"@filen/sdk": "^0.1.139",
+		"@filen/sync": "^0.1.28",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
 		"@radix-ui/react-avatar": "^1.0.4",
 		"@radix-ui/react-checkbox": "^1.0.4",

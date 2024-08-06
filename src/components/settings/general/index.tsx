@@ -287,7 +287,7 @@ export const General = memo(() => {
 							<SelectTrigger className="w-[180px]">
 								<SelectValue placeholder={noteTypeToString} />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-[200px]">
 								<SelectItem value="text">{t("settings.general.noteType.text")}</SelectItem>
 								<SelectItem value="rich">{t("settings.general.noteType.rich")}</SelectItem>
 								<SelectItem value="checklist">{t("settings.general.noteType.checklist")}</SelectItem>
@@ -298,7 +298,7 @@ export const General = memo(() => {
 					</Section>
 					{IS_DESKTOP && (
 						<>
-							{window.desktopAPI.platform() !== "linux" && (
+							{window.desktopAPI.osPlatform() !== "linux" && (
 								<>
 									<Section
 										name={t("settings.general.sections.autoLaunch.name")}
@@ -310,7 +310,7 @@ export const General = memo(() => {
 											onCheckedChange={toggleAutoLaunch}
 										/>
 									</Section>
-									{window.desktopAPI.platform() !== "darwin" && (
+									{window.desktopAPI.osPlatform() !== "darwin" && (
 										<Section
 											name={t("settings.general.sections.minimizeToTray.name")}
 											info={t("settings.general.sections.minimizeToTray.info")}
@@ -362,7 +362,7 @@ export const General = memo(() => {
 							<SelectTrigger className="w-[180px]">
 								<SelectValue placeholder={themeToString} />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-[200px]">
 								<SelectItem value="light">{t("settings.general.light")}</SelectItem>
 								<SelectItem value="dark">{t("settings.general.dark")}</SelectItem>
 								<SelectItem value="system">{t("settings.general.system")}</SelectItem>
@@ -377,7 +377,7 @@ export const General = memo(() => {
 							<SelectTrigger className="w-[180px]">
 								<SelectValue placeholder={i18nLangToString} />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-[200px]">
 								<SelectItem value="en-US">English</SelectItem>
 								<SelectItem value="de-DE">Deutsch</SelectItem>
 							</SelectContent>

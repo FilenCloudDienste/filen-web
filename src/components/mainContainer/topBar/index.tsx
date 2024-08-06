@@ -1,6 +1,6 @@
 import { memo, useCallback, useRef, useEffect } from "react"
 import Input from "@/components/input"
-import { Search, List, Grid3X3 } from "lucide-react"
+import { Search, List, Grid3X3, Folder, Text, Upload } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import Breadcrumbs from "./breadcrumbs"
 import { useDriveItemsStore } from "@/stores/drive.store"
@@ -199,28 +199,32 @@ export const TopBar = memo(() => {
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
 							<DropdownMenuItem
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 								onClick={() => eventEmitter.emit("createFolderTrigger")}
 							>
+								<Folder size={16} />
 								{t("contextMenus.drive.newFolder")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 								onClick={() => eventEmitter.emit("createTextFile")}
 							>
+								<Text size={16} />
 								{t("contextMenus.drive.newTextFile")}
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 								onClick={() => document.getElementById("folder-input")?.click()}
 							>
+								<Upload size={16} />
 								{t("contextMenus.drive.uploadFolders")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
-								className="cursor-pointer"
+								className="cursor-pointer gap-3"
 								onClick={() => document.getElementById("file-input")?.click()}
 							>
+								<Upload size={16} />
 								{t("contextMenus.drive.uploadFiles")}
 							</DropdownMenuItem>
 						</DropdownMenuContent>

@@ -11,6 +11,7 @@ export const Content = memo(({ sync }: { sync: SyncPair }) => {
 	return (
 		<div className="flex flex-row w-full h-full select-none">
 			<Tabs
+				key={sync.uuid}
 				defaultValue="events"
 				className="h-[calc(100dvh-88px)] w-full"
 			>

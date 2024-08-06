@@ -16,6 +16,7 @@ import { useNavigate } from "@tanstack/react-router"
 import eventEmitter from "@/lib/eventEmitter"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
+import useIsSyncActive from "@/hooks/useIsSyncActive"
 
 const iconSize = 16
 
@@ -23,24 +24,54 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 	const { t } = useTranslation()
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const navigate = useNavigate()
-	const { setSelectedSync, setChanging } = useSyncsStore(
+	const {
+		setSelectedSync,
+		setChanging,
+		changing,
+		setCycleState,
+		setLocalIgnored,
+		setErrors,
+		setProgress,
+		setRemaining,
+		setRemainingReadable,
+		setRemoteIgnored,
+		setSpeed,
+		setTasksBytes,
+		setTasksCount,
+		setTasksSize,
+		setTransferEvents
+	} = useSyncsStore(
 		useCallback(
 			state => ({
 				setSelectedSync: state.setSelectedSync,
-				setChanging: state.setChanging
+				setChanging: state.setChanging,
+				changing: state.changing,
+				setCycleState: state.setCycleState,
+				setLocalIgnored: state.setLocalIgnored,
+				setErrors: state.setErrors,
+				setProgress: state.setProgress,
+				setRemaining: state.setRemaining,
+				setRemoteIgnored: state.setRemoteIgnored,
+				setRemainingReadable: state.setRemainingReadable,
+				setSpeed: state.setSpeed,
+				setTasksBytes: state.setTasksBytes,
+				setTasksCount: state.setTasksCount,
+				setTasksSize: state.setTasksSize,
+				setTransferEvents: state.setTransferEvents
 			}),
 			[]
 		)
 	)
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
+	const isSyncActive = useIsSyncActive(sync.uuid)
 
 	const syncConfig = useMemo(() => {
 		return desktopConfig.syncConfig.syncPairs.filter(pair => pair.uuid === sync.uuid)[0] ?? null
 	}, [sync.uuid, desktopConfig])
 
 	const togglePause = useCallback(async () => {
-		if (!syncConfig) {
+		if (!syncConfig || changing) {
 			return
 		}
 
@@ -85,9 +116,13 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 
 			toast.dismiss()
 		}
-	}, [syncConfig, sync.uuid, setDesktopConfig, setChanging, errorToast, loadingToast, setSelectedSync])
+	}, [syncConfig, sync.uuid, setDesktopConfig, setChanging, errorToast, loadingToast, setSelectedSync, changing])
 
 	const deleteSync = useCallback(async () => {
+		if (changing || isSyncActive) {
+			return
+		}
+
 		if (
 			!(await showConfirmDialog({
 				title: t("syncs.dialogs.delete.title"),
@@ -117,6 +152,57 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 					syncPairs: prev.syncConfig.syncPairs.filter(pair => pair.uuid !== sync.uuid)
 				}
 			}))
+			setCycleState(prev => ({
+				...prev,
+				[sync.uuid]: {
+					state: "cycleExited",
+					timestamp: Date.now()
+				}
+			}))
+			setLocalIgnored(prev => ({
+				...prev,
+				[sync.uuid]: []
+			}))
+			setRemoteIgnored(prev => ({
+				...prev,
+				[sync.uuid]: []
+			}))
+			setProgress(prev => ({
+				...prev,
+				[sync.uuid]: 0
+			}))
+			setSpeed(prev => ({
+				...prev,
+				[sync.uuid]: 0
+			}))
+			setRemaining(prev => ({
+				...prev,
+				[sync.uuid]: 0
+			}))
+			setRemainingReadable(prev => ({
+				...prev,
+				[sync.uuid]: ""
+			}))
+			setErrors(prev => ({
+				...prev,
+				[sync.uuid]: []
+			}))
+			setTasksBytes(prev => ({
+				...prev,
+				[sync.uuid]: 0
+			}))
+			setTasksSize(prev => ({
+				...prev,
+				[sync.uuid]: 0
+			}))
+			setTasksCount(prev => ({
+				...prev,
+				[sync.uuid]: 0
+			}))
+			setTransferEvents(prev => ({
+				...prev,
+				[sync.uuid]: []
+			}))
 
 			navigate({
 				to: "/syncs",
@@ -132,7 +218,30 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 
 			toast.dismiss()
 		}
-	}, [setDesktopConfig, sync.uuid, navigate, t, setSelectedSync, setChanging, errorToast, loadingToast])
+	}, [
+		setDesktopConfig,
+		sync.uuid,
+		navigate,
+		t,
+		setSelectedSync,
+		setChanging,
+		errorToast,
+		loadingToast,
+		changing,
+		isSyncActive,
+		setProgress,
+		setSpeed,
+		setRemaining,
+		setRemainingReadable,
+		setTasksBytes,
+		setTasksCount,
+		setTasksSize,
+		setTransferEvents,
+		setCycleState,
+		setRemoteIgnored,
+		setLocalIgnored,
+		setErrors
+	])
 
 	useEffect(() => {
 		const deleteSyncListener = eventEmitter.on("deleteSync", (uuid: string) => {
@@ -168,6 +277,7 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 				<ContextMenuItem
 					className="cursor-pointer gap-3"
 					onClick={togglePause}
+					disabled={changing}
 				>
 					{syncConfig.paused ? (
 						<>
@@ -185,6 +295,7 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 				<ContextMenuItem
 					className="cursor-pointer gap-3 text-red-500"
 					onClick={deleteSync}
+					disabled={changing || isSyncActive}
 				>
 					<Delete size={iconSize} />
 					{t("contextMenus.syncs.delete")}

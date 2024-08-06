@@ -1,13 +1,12 @@
 import { memo, useState, useCallback, useRef, useMemo } from "react"
 import { type DriveCloudItem } from "@/components/drive"
-import FolderIcon from "@/assets/fileExtensionIcons/svg/folder.svg?react"
 import { ChevronRight } from "lucide-react"
 import { formatBytes } from "@/utils"
 import { directorySizeCache, thumbnailURLObjectCache, directoryUUIDToNameCache } from "@/cache"
 import worker from "@/lib/worker"
 import { setItem } from "@/lib/localForage"
 import useMountedEffect from "@/hooks/useMountedEffect"
-import { fileNameToSVGIcon } from "@/assets/fileExtensionIcons"
+import { fileNameToSVGIcon, ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { cn } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/checkbox"
 import { type SelectionType, type ResponseItem } from ".."
@@ -155,13 +154,10 @@ export const ListItem = memo(
 						className="mr-1 shrink-0"
 					/>
 					{item.type === "directory" ? (
-						<FolderIcon
-							className={cn("shrink-0", !canSelect && "opacity-50")}
-							style={{
-								width: 28,
-								height: 28,
-								flexShrink: 0
-							}}
+						<ColoredFolderSVGIcon
+							width="28px"
+							height="28px"
+							color={item.color}
 						/>
 					) : (
 						<img

@@ -47,7 +47,7 @@ export const VirtualDrive = memo(() => {
 
 	const availableDrivesQuery = useQuery({
 		queryKey: ["getAvailableDrives"],
-		queryFn: () => (window.desktopAPI.platform() === "win32" ? window.desktopAPI.getAvailableDrives() : Promise.resolve([]))
+		queryFn: () => (window.desktopAPI.osPlatform() === "win32" ? window.desktopAPI.getAvailableDrives() : Promise.resolve([]))
 	})
 
 	const cacheSizeQuery = useQuery({
@@ -69,7 +69,7 @@ export const VirtualDrive = memo(() => {
 	}, [availableCacheSizeQuery.isSuccess, availableCacheSizeQuery.data])
 
 	const availableDrives = useMemo(() => {
-		if (!availableDrivesQuery.isSuccess || window.desktopAPI.platform() !== "win32") {
+		if (!availableDrivesQuery.isSuccess || window.desktopAPI.osPlatform() !== "win32") {
 			return []
 		}
 
@@ -109,13 +109,13 @@ export const VirtualDrive = memo(() => {
 		setEnablingVirtualDrive(true)
 
 		try {
-			if (window.desktopAPI.platform() !== "win32" && !(await window.desktopAPI.isUnixMountPointValid(mountPoint))) {
+			if (window.desktopAPI.osPlatform() !== "win32" && !(await window.desktopAPI.isUnixMountPointValid(mountPoint))) {
 				errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
 
 				return
 			}
 
-			if (window.desktopAPI.platform() !== "win32" && !(await window.desktopAPI.isUnixMountPointEmpty(mountPoint))) {
+			if (window.desktopAPI.osPlatform() !== "win32" && !(await window.desktopAPI.isUnixMountPointEmpty(mountPoint))) {
 				errorToast(t("mounts.virtualDrive.errors.mountPointNotEmpty"))
 
 				return
@@ -222,7 +222,7 @@ export const VirtualDrive = memo(() => {
 
 			try {
 				if (
-					window.desktopAPI.platform() !== "win32" &&
+					window.desktopAPI.osPlatform() !== "win32" &&
 					!(await window.desktopAPI.isUnixMountPointValid(desktopConfig.virtualDriveConfig.mountPoint))
 				) {
 					errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
@@ -231,7 +231,7 @@ export const VirtualDrive = memo(() => {
 				}
 
 				if (
-					window.desktopAPI.platform() !== "win32" &&
+					window.desktopAPI.osPlatform() !== "win32" &&
 					!(await window.desktopAPI.isUnixMountPointEmpty(desktopConfig.virtualDriveConfig.mountPoint))
 				) {
 					errorToast(t("mounts.virtualDrive.errors.mountPointNotEmpty"))
@@ -296,7 +296,7 @@ export const VirtualDrive = memo(() => {
 
 			try {
 				if (
-					window.desktopAPI.platform() !== "win32" &&
+					window.desktopAPI.osPlatform() !== "win32" &&
 					!(await window.desktopAPI.isUnixMountPointValid(desktopConfig.virtualDriveConfig.mountPoint))
 				) {
 					errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
@@ -305,7 +305,7 @@ export const VirtualDrive = memo(() => {
 				}
 
 				if (
-					window.desktopAPI.platform() !== "win32" &&
+					window.desktopAPI.osPlatform() !== "win32" &&
 					!(await window.desktopAPI.isUnixMountPointEmpty(desktopConfig.virtualDriveConfig.mountPoint))
 				) {
 					errorToast(t("mounts.virtualDrive.errors.mountPointNotEmpty"))
@@ -481,7 +481,7 @@ export const VirtualDrive = memo(() => {
 							onCheckedChange={onCheckedChange}
 						/>
 					</Section>
-					{window.desktopAPI.platform() === "win32" ? (
+					{window.desktopAPI.osPlatform() === "win32" ? (
 						<Section
 							name={t("mounts.virtualDrive.sections.driveLetter.name")}
 							info={t("mounts.virtualDrive.sections.driveLetter.info")}
@@ -494,7 +494,7 @@ export const VirtualDrive = memo(() => {
 								<SelectTrigger className="min-w-[120px]">
 									<SelectValue placeholder={desktopConfig.virtualDriveConfig.mountPoint} />
 								</SelectTrigger>
-								<SelectContent>
+								<SelectContent className="max-h-[200px]">
 									{availableDrives.map(letter => {
 										return (
 											<SelectItem
@@ -576,7 +576,7 @@ export const VirtualDrive = memo(() => {
 							<SelectTrigger className="min-w-[120px]">
 								<SelectValue placeholder={`${desktopConfig.virtualDriveConfig.cacheSizeInGi} GB`} />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-[200px]">
 								{cacheSteps.map(size => {
 									return (
 										<SelectItem
@@ -590,7 +590,7 @@ export const VirtualDrive = memo(() => {
 							</SelectContent>
 						</Select>
 					</Section>
-					{!enablingVirtualDrive && isMountedQuery.data.mounted && window.desktopAPI.platform() === "win32" && (
+					{!enablingVirtualDrive && isMountedQuery.data.mounted && window.desktopAPI.osPlatform() === "win32" && (
 						<Section
 							name={t("mounts.virtualDrive.sections.browse.name")}
 							info={t("mounts.virtualDrive.sections.browse.info")}

@@ -76,12 +76,16 @@ export const Content = memo(({ note }: { note: Note }) => {
 			setMaxSizeReached(false)
 
 			try {
-				await worker.editNoteContent({ uuid: note.uuid, type: note.type, content: val })
+				await worker.editNoteContent({
+					uuid: note.uuid,
+					type: note.type,
+					content: val
+				})
 
 				initialValueRef.current = val
 
 				setSynced(true)
-				setSelectedNote(prev => (prev ? { ...prev, editedTimestamp: Date.now() } : prev))
+				setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, editedTimestamp: Date.now() } : prev))
 				setNotes(prev =>
 					prev.map(prevNote => (prevNote.uuid === note.uuid ? { ...prevNote, editedTimestamp: Date.now() } : prevNote))
 				)

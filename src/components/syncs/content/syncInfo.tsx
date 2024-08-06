@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
+import { type CycleState } from "@filen/sync/dist/types"
 
 export const SyncInfoProgress = memo(({ syncUUID }: { syncUUID: string }) => {
 	const { tasksSize, tasksBytes } = useSyncsStore(
@@ -40,16 +41,19 @@ export const SyncInfoProgress = memo(({ syncUUID }: { syncUUID: string }) => {
 })
 
 export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: boolean }) => {
-	const { speed, remainingReadable, tasksCount, tasksSize, cycleState, setErrors, taskErrors } = useSyncsStore(
+	const { speed, remainingReadable, tasksCount, tasksSize, cycleState, setErrors, taskErrors, localTreeErrors } = useSyncsStore(
 		useCallback(
 			state => ({
 				speed: state.speed[syncUUID] ? state.speed[syncUUID]! : 0,
 				remainingReadable: state.remainingReadable[syncUUID] ? state.remainingReadable[syncUUID]! : 0,
 				tasksCount: state.tasksCount[syncUUID] ? state.tasksCount[syncUUID]! : 0,
 				tasksSize: state.tasksSize[syncUUID] ? state.tasksSize[syncUUID]! : 0,
-				cycleState: state.cycleState[syncUUID] ? state.cycleState[syncUUID]! : "cycleRestarting",
+				cycleState: state.cycleState[syncUUID]
+					? state.cycleState[syncUUID]!
+					: { state: "cycleRestarting" as CycleState, timestamp: Date.now() },
 				taskErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "task").length : 0,
-				setErrors: state.setErrors
+				setErrors: state.setErrors,
+				localTreeErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "localTree").length : 0
 			}),
 			[syncUUID]
 		)
@@ -63,6 +67,10 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 	}, [syncUUID])
 
 	const resetErrors = useCallback(async () => {
+		if (localTreeErrors + taskErrors === 0) {
+			return
+		}
+
 		if (
 			!(await showConfirmDialog({
 				title: t("syncs.dialogs.resetErrors.title"),
@@ -77,9 +85,14 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 		const toast = loadingToast()
 
 		try {
-			await window.desktopAPI.syncResetTaskErrors({
-				uuid: syncUUID
-			})
+			await Promise.all([
+				window.desktopAPI.syncResetTaskErrors({
+					uuid: syncUUID
+				}),
+				window.desktopAPI.syncResetLocalTreeErrors({
+					uuid: syncUUID
+				})
+			])
 
 			await window.desktopAPI.syncResetCache({
 				uuid: syncUUID
@@ -96,20 +109,20 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 		} finally {
 			toast.dismiss()
 		}
-	}, [syncUUID, errorToast, loadingToast, t, setErrors])
+	}, [syncUUID, errorToast, loadingToast, t, setErrors, localTreeErrors, taskErrors])
 
 	return (
 		<div className="flex flex-row w-full px-4 pb-4">
 			<div className="flex flex-col h-10 bg-secondary rounded-sm w-full">
 				<div className="flex flex-row h-full w-full items-center px-4 justify-between gap-4">
 					<div className="flex flex-row h-full w-full items-center gap-2 text-sm">
-						{taskErrors > 0 ? (
+						{taskErrors + localTreeErrors > 0 ? (
 							<>
 								<XCircle
 									className="text-red-500"
 									size={16}
 								/>
-								<p>{t("syncs.info.errors", { count: taskErrors })}</p>
+								<p>{t("syncs.info.errors", { count: taskErrors + localTreeErrors })}</p>
 								<p
 									className="text-blue-500 hover:underline cursor-pointer"
 									onClick={resetErrors}
@@ -127,7 +140,7 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 							</>
 						) : (
 							<>
-								{cycleState === "cycleProcessingDeltasStarted" ? (
+								{cycleState.state === "cycleProcessingDeltasStarted" ? (
 									<>
 										<RefreshCw
 											className="animate-spin-medium text-primary"
@@ -135,7 +148,15 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 										/>
 										<p>{t("syncs.info.processingDeltas")}</p>
 									</>
-								) : cycleState === "cycleProcessingTasksStarted" ? (
+								) : cycleState.state === "cycleWaitingForLocalDirectoryChangesStarted" ? (
+									<>
+										<RefreshCw
+											className="animate-spin-medium text-primary"
+											size={16}
+										/>
+										<p>{t("syncs.info.waitingForLocalDirectoryChanges")}</p>
+									</>
+								) : cycleState.state === "cycleProcessingTasksStarted" ? (
 									<>
 										<RefreshCw
 											className="animate-spin-medium text-primary"
@@ -152,7 +173,7 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 												: t("syncs.info.syncingChanges")}
 										</p>
 									</>
-								) : cycleState === "cycleApplyingStateStarted" || cycleState === "cycleSavingStateStarted" ? (
+								) : cycleState.state === "cycleApplyingStateStarted" || cycleState.state === "cycleSavingStateStarted" ? (
 									<>
 										<RefreshCw
 											className="animate-spin-medium text-primary"
@@ -172,7 +193,7 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 							</>
 						)}
 					</div>
-					{taskErrors === 0 && cycleState === "cycleProcessingTasksStarted" && (
+					{taskErrors + localTreeErrors === 0 && cycleState.state === "cycleProcessingTasksStarted" && (
 						<div className="flex flex-row items-center gap-2">
 							{paused ? (
 								<Button

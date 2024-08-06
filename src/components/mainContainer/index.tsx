@@ -69,7 +69,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 
 	if (IS_DESKTOP && !IS_APPLE_DEVICE) {
 		return (
-			<div className={cn("w-screen h-[100dvh] flex flex-col", !dark && "bg-secondary")}>
+			<div className={cn("w-screen h-[100dvh] flex flex-col border", !dark && "bg-secondary")}>
 				<div
 					className="flex flex-row w-full z-0 select-none"
 					style={{
@@ -144,7 +144,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 		)
 	}
 
-	return <div className={cn("w-screen h-[100dvh] flex flex-row", !dark && "bg-secondary")}>{children}</div>
+	return <div className={cn("w-screen h-[100dvh] flex flex-row border", !dark && "bg-secondary")}>{children}</div>
 })
 
 export const InnerSideBarWrapper = memo(

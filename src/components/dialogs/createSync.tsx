@@ -20,9 +20,32 @@ import { TOOLTIP_POPUP_DELAY, IS_DESKTOP } from "@/constants"
 import { selectDriveItem } from "./selectDriveItem"
 import useErrorToast from "@/hooks/useErrorToast"
 import { validate as validateUUID, v4 as uuidv4 } from "uuid"
-import useDesktopConfig from "@/hooks/useDesktopConfig"
-import { type SyncMode } from "@filen/sync/dist/types"
+import useDesktopConfig, { getDesktopConfig } from "@/hooks/useDesktopConfig"
+import { type SyncMode, type SyncPair } from "@filen/sync/dist/types"
 import { Switch } from "../ui/switch"
+import useLoadingToast from "@/hooks/useLoadingToast"
+
+export function isSyncPathAlreadyInConfig(type: "local" | "remote", path: string): boolean {
+	const desktopConfig = getDesktopConfig()
+	const configuredPaths =
+		type === "local"
+			? desktopConfig.syncConfig.syncPairs.map(pair => pair.localPath)
+			: desktopConfig.syncConfig.syncPairs.map(pair => pair.remotePath)
+
+	for (const configuredPath of configuredPaths) {
+		if (path.startsWith(configuredPath) || configuredPath.startsWith(path)) {
+			return true
+		}
+	}
+
+	return false
+}
+
+export function doesSyncNameExist(name: string): boolean {
+	const desktopConfig = getDesktopConfig()
+
+	return desktopConfig.syncConfig.syncPairs.some(pair => pair.name.trim() === name.trim())
+}
 
 export const CreateSyncDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
@@ -35,6 +58,7 @@ export const CreateSyncDialog = memo(() => {
 		mode: SyncMode
 		paused: boolean
 		excludeDotFiles: boolean
+		localTrashDisabled: boolean
 	}>({
 		name: "",
 		localPath: "",
@@ -42,10 +66,12 @@ export const CreateSyncDialog = memo(() => {
 		remoteUUID: "",
 		mode: "twoWay",
 		paused: true,
-		excludeDotFiles: true
+		excludeDotFiles: true,
+		localTrashDisabled: false
 	})
 	const errorToast = useErrorToast()
 	const [, setDesktopConfig] = useDesktopConfig()
+	const loadingToast = useLoadingToast()
 
 	const modeToString = useMemo(() => {
 		switch (createState.mode) {
@@ -83,48 +109,96 @@ export const CreateSyncDialog = memo(() => {
 		setOpen(false)
 	}, [])
 
-	const create = useCallback(() => {
-		if (
-			createState.localPath.length === 0 ||
-			createState.name.length === 0 ||
-			createState.remotePath.length === 0 ||
-			createState.remoteUUID.length === 0 ||
-			!validateUUID(createState.remoteUUID)
-		) {
-			return
-		}
+	const create = useCallback(
+		async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+			e.preventDefault()
+			e.stopPropagation()
 
-		const syncPair = {
-			uuid: uuidv4(),
-			remoteParentUUID: createState.remoteUUID,
-			remotePath: createState.remotePath,
-			localPath: createState.localPath,
-			name: createState.name,
-			mode: createState.mode,
-			excludeDotFiles: createState.excludeDotFiles,
-			paused: createState.paused
-		}
-
-		setDesktopConfig(prev => ({
-			...prev,
-			syncConfig: {
-				...prev.syncConfig,
-				syncPairs: [...prev.syncConfig.syncPairs, syncPair]
+			if (
+				createState.localPath.length === 0 ||
+				createState.name.length === 0 ||
+				createState.remotePath.length === 0 ||
+				createState.remoteUUID.length === 0 ||
+				!validateUUID(createState.remoteUUID)
+			) {
+				return
 			}
-		}))
 
-		setCreateState({
-			name: "",
-			localPath: "",
-			remotePath: "",
-			remoteUUID: "",
-			mode: "twoWay",
-			paused: true,
-			excludeDotFiles: true
-		})
+			const toast = loadingToast()
 
-		close()
-	}, [createState, close, setDesktopConfig])
+			try {
+				if (doesSyncNameExist(createState.name)) {
+					errorToast(t("dialogs.createSync.errors.syncNameAlreadyExists", { name: createState.name.trim() }))
+
+					return
+				}
+
+				if (isSyncPathAlreadyInConfig("local", createState.localPath)) {
+					errorToast(t("dialogs.createSync.errors.localPathAlreadyConfigured"))
+
+					return
+				}
+
+				if (!(await window.desktopAPI.isAllowedToSyncDirectory(createState.localPath))) {
+					errorToast(t("dialogs.createSync.errors.invalidLocalPath"))
+
+					return
+				}
+
+				if (!(await window.desktopAPI.isPathWritable(createState.localPath))) {
+					errorToast(t("dialogs.createSync.errors.localPathNotWritable"))
+
+					return
+				}
+
+				if (isSyncPathAlreadyInConfig("remote", createState.remotePath)) {
+					errorToast(t("dialogs.createSync.errors.remotePathAlreadyConfigured"))
+
+					return
+				}
+
+				const syncPair: SyncPair = {
+					uuid: uuidv4(),
+					remoteParentUUID: createState.remoteUUID,
+					remotePath: createState.remotePath,
+					localPath: createState.localPath,
+					name: createState.name.trim(),
+					mode: createState.mode,
+					excludeDotFiles: createState.excludeDotFiles,
+					paused: createState.paused,
+					localTrashDisabled: createState.localTrashDisabled
+				}
+
+				setDesktopConfig(prev => ({
+					...prev,
+					syncConfig: {
+						...prev.syncConfig,
+						syncPairs: [...prev.syncConfig.syncPairs, syncPair]
+					}
+				}))
+
+				setCreateState({
+					name: "",
+					localPath: "",
+					remotePath: "",
+					remoteUUID: "",
+					mode: "twoWay",
+					paused: true,
+					excludeDotFiles: true,
+					localTrashDisabled: false
+				})
+
+				close()
+			} catch (e) {
+				console.error(e)
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			} finally {
+				toast.dismiss()
+			}
+		},
+		[createState, close, setDesktopConfig, t, errorToast, loadingToast]
+	)
 
 	const onModeChange = useCallback((mode: SyncMode) => {
 		setCreateState(prev => ({
@@ -137,6 +211,13 @@ export const CreateSyncDialog = memo(() => {
 		setCreateState(prev => ({
 			...prev,
 			name: e.target.value.trim()
+		}))
+	}, [])
+
+	const onLocalTrashDisabledChange = useCallback((disabled: boolean) => {
+		setCreateState(prev => ({
+			...prev,
+			localTrashDisabled: disabled
 		}))
 	}, [])
 
@@ -175,12 +256,6 @@ export const CreateSyncDialog = memo(() => {
 				return
 			}
 
-			if (!(await window.desktopAPI.isPathWritable(response.paths[0]))) {
-				errorToast(t("dialogs.createSync.errors.localPathNotWritable"))
-
-				return
-			}
-
 			setCreateState(prev => ({
 				...prev,
 				localPath: response.paths[0]!
@@ -190,7 +265,7 @@ export const CreateSyncDialog = memo(() => {
 
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		}
-	}, [errorToast, t])
+	}, [errorToast])
 
 	const onPausedChange = useCallback((paused: boolean) => {
 		setCreateState(prev => ({
@@ -278,7 +353,7 @@ export const CreateSyncDialog = memo(() => {
 										<SelectTrigger className="w-full">
 											<SelectValue placeholder={modeToString} />
 										</SelectTrigger>
-										<SelectContent>
+										<SelectContent className="max-h-[200px]">
 											<SelectItem value="twoWay">{t("dialogs.createSync.mode.twoWay")}</SelectItem>
 											<SelectItem value="localToCloud">{t("dialogs.createSync.mode.localToCloud")}</SelectItem>
 											<SelectItem value="localBackup">{t("dialogs.createSync.mode.localBackup")}</SelectItem>
@@ -336,12 +411,21 @@ export const CreateSyncDialog = memo(() => {
 									/>
 								</div>
 							</div>
-							<div className="flex flex-row gap-4 items-center justify-between mt-2">
+							<div className="flex flex-row gap-4 items-center justify-between">
 								<p className="text-muted-foreground">{t("dialogs.createSync.excludeDotFiles")}</p>
 								<div className="flex flex-row gap-1 items-center">
 									<Switch
 										checked={createState.excludeDotFiles}
 										onCheckedChange={onExcludeDotFilesChange}
+									/>
+								</div>
+							</div>
+							<div className="flex flex-row gap-4 items-center justify-between">
+								<p className="text-muted-foreground">{t("dialogs.createSync.disableLocalTrash")}</p>
+								<div className="flex flex-row gap-1 items-center">
+									<Switch
+										checked={createState.localTrashDisabled}
+										onCheckedChange={onLocalTrashDisabledChange}
 									/>
 								</div>
 							</div>

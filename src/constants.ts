@@ -4,6 +4,16 @@ export const IS_DESKTOP = typeof window !== "undefined" && typeof window.desktop
 export const TOOLTIP_POPUP_DELAY = 200
 export const UAParserResult = new UAParser().getResult()
 export const IS_APPLE_DEVICE = UAParserResult.device.vendor?.toLowerCase().includes("apple")
+export const IS_WINDOWS_10 =
+	typeof window !== "undefined" && typeof window.navigator !== "undefined"
+		? window.navigator.userAgent.includes("Windows NT 10.0")
+		: false
+export const IS_WINDOWS_11 =
+	typeof window !== "undefined" && typeof window.navigator !== "undefined"
+		? window.navigator.userAgent.includes("Windows NT 11.0")
+		: false
+export const IS_LINUX =
+	typeof window !== "undefined" && typeof window.navigator !== "undefined" ? window.navigator.userAgent.includes("Linux") : false
 export const CTRL_KEY_TEXT = IS_APPLE_DEVICE ? "⌘" : "Ctrl"
 export const THUMBNAIL_VERSION = 1
 export const THUMBNAIL_QUALITY = 0.4
@@ -34,3 +44,6 @@ export const MAX_PREVIEW_SIZE = 256 * MiB
 export const VALID_LOCAL_PORT_RANGE = [1024, 65535]
 export const SIDEBAR_WIDTH = IS_DESKTOP && IS_APPLE_DEVICE ? 77 : 64
 export const DESKTOP_TOPBAR_HEIGHT = IS_DESKTOP ? (IS_APPLE_DEVICE ? 0 : 24) : 0
+export const SDK_CONFIG_VERSION = 1
+export const DESKTOP_CONFIG_VERSION = 1
+export const AUTHED_VERSION = 1

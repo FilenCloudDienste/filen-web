@@ -15,6 +15,7 @@ import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/convers
 import { useTranslation } from "react-i18next"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { useContactsStore } from "@/stores/contacts.store"
+import useIsAuthed from "@/hooks/useIsAuthed"
 
 export const triggeredNotificationUUIDs: Record<string, boolean> = {}
 export const notificationMutex = new Semaphore(1)
@@ -37,7 +38,7 @@ export const NotificationHandler = memo(() => {
 		)
 	)
 	const [, setLastSelectedChatsConversation] = useLocalStorage<string>("lastSelectedChatsConversation", "")
-	const [authed] = useLocalStorage<boolean>("authed", false)
+	const [authed] = useIsAuthed()
 	const { t } = useTranslation()
 	const publicLinkURLState = usePublicLinkURLState()
 	const requestsInCount = useContactsStore(useCallback(state => state.requestsInCount, []))

@@ -1,13 +1,14 @@
 import { memo, useEffect, useRef, useCallback } from "react"
 import { IS_DESKTOP } from "@/constants"
-import { useLocalStorage } from "@uidotdev/usehooks"
+import useIsAuthed from "@/hooks/useIsAuthed"
 import { useSyncsStore, type GeneralError } from "@/stores/syncs.store"
 import throttle from "lodash/throttle"
 import { calcTimeLeft, calcSpeed, getTimeRemaining } from "./transfers/utils"
 import { type MainToWindowMessage } from "@filen/desktop/dist/ipc"
+import useDesktopConfig from "@/hooks/useDesktopConfig"
 
 export const DesktopListener = memo(() => {
-	const [authed] = useLocalStorage<boolean>("authed", false)
+	const [authed] = useIsAuthed()
 	const {
 		setTransferEvents,
 		setCycleState,
@@ -42,7 +43,10 @@ export const DesktopListener = memo(() => {
 	)
 	const bytesSent = useRef<Record<string, number>>({})
 	const allBytes = useRef<Record<string, number>>({})
+	const tasksCount = useRef<Record<string, number>>({})
 	const progressStarted = useRef<Record<string, number>>({})
+	const [desktopConfig] = useDesktopConfig()
+	const syncPairsUUIDsRef = useRef<string[]>(desktopConfig.syncConfig.syncPairs.map(pair => pair.uuid))
 
 	const updateProgress = useRef(
 		throttle((syncUUID: string) => {
@@ -59,11 +63,18 @@ export const DesktopListener = memo(() => {
 			}
 
 			const now = Date.now()
-			const transferRemaining = calcTimeLeft(
+			let transferRemaining = calcTimeLeft(
 				bytesSent.current[syncUUID]!,
 				allBytes.current[syncUUID]!,
 				progressStarted.current[syncUUID]!
 			)
+			const syncTasksCount = tasksCount.current[syncUUID] ? tasksCount.current[syncUUID]! : 0
+
+			if (syncTasksCount > 0) {
+				// Quick "hack" to better calculate remaining time when a lot of small files are being transferred (not really accurate, needs better solution)
+				transferRemaining = transferRemaining + Math.floor(syncTasksCount / 2)
+			}
+
 			const transferPercent = (bytesSent.current[syncUUID]! / allBytes.current[syncUUID]!) * 100
 			const transferSpeed = calcSpeed(now, progressStarted.current[syncUUID]!, bytesSent.current[syncUUID]!)
 
@@ -138,6 +149,10 @@ export const DesktopListener = memo(() => {
 				message.type === "cycleExited" ||
 				message.type === "cycleReleasingLockStarted"
 			) {
+				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
+					return
+				}
+
 				if (message.type === "cycleError") {
 					setErrors(prev => ({
 						...prev,
@@ -160,7 +175,10 @@ export const DesktopListener = memo(() => {
 
 				setCycleState(prev => ({
 					...prev,
-					[message.syncPair.uuid]: message.type
+					[message.syncPair.uuid]: {
+						state: message.type,
+						timestamp: Date.now()
+					}
 				}))
 
 				if (message.type === "cycleProcessingTasksDone") {
@@ -193,6 +211,8 @@ export const DesktopListener = memo(() => {
 						[message.syncPair.uuid]: 0
 					}))
 
+					tasksCount.current[message.syncPair.uuid] = 0
+
 					setTasksSize(prev => ({
 						...prev,
 						[message.syncPair.uuid]: 0
@@ -204,6 +224,10 @@ export const DesktopListener = memo(() => {
 					}))
 				}
 			} else if (message.type === "transfer") {
+				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
+					return
+				}
+
 				if (message.data.of === "download" || message.data.of === "upload") {
 					if (message.data.type === "queued") {
 						if (!progressStarted.current[message.syncPair.uuid]) {
@@ -241,7 +265,7 @@ export const DesktopListener = memo(() => {
 							[message.syncPair.uuid]: prev[message.syncPair.uuid] ? prev[message.syncPair.uuid]! + data.bytes : data.bytes
 						}))
 					} else if (message.data.type === "error") {
-						const { error, size } = message.data
+						const { size } = message.data
 
 						if (!allBytes.current[message.syncPair.uuid]) {
 							allBytes.current[message.syncPair.uuid] = -1
@@ -251,7 +275,7 @@ export const DesktopListener = memo(() => {
 							allBytes.current[message.syncPair.uuid]! -= size
 						}
 
-						setErrors(prev => ({
+						/*setErrors(prev => ({
 							...prev,
 							[message.syncPair.uuid]: prev[message.syncPair.uuid]
 								? [
@@ -267,7 +291,7 @@ export const DesktopListener = memo(() => {
 											error
 										}
 									]
-						}))
+						}))*/
 
 						setTasksBytes(prev => ({
 							...prev,
@@ -319,12 +343,22 @@ export const DesktopListener = memo(() => {
 						}))
 					}
 
-					setTasksCount(prev => ({
-						...prev,
-						[message.syncPair.uuid]: prev[message.syncPair.uuid] ? prev[message.syncPair.uuid]! - 1 : 0
-					}))
+					setTasksCount(prev => {
+						const count = prev[message.syncPair.uuid] ? prev[message.syncPair.uuid]! - 1 : 0
+
+						tasksCount.current[message.syncPair.uuid] = count
+
+						return {
+							...prev,
+							[message.syncPair.uuid]: count
+						}
+					})
 				}
 			} else if (message.type === "taskErrors") {
+				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
+					return
+				}
+
 				if (message.data.errors.length > 0) {
 					const errors: GeneralError[] = message.data.errors.map(err => ({
 						error: err.error,
@@ -355,6 +389,10 @@ export const DesktopListener = memo(() => {
 							]
 				}))
 			} else if (message.type === "localTreeErrors") {
+				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
+					return
+				}
+
 				const errors: GeneralError[] = message.data.errors.map(err => ({
 					error: err.error,
 					type: "localTree"
@@ -365,20 +403,34 @@ export const DesktopListener = memo(() => {
 					[message.syncPair.uuid]: prev[message.syncPair.uuid] ? [...errors, ...prev[message.syncPair.uuid]!] : errors
 				}))
 			} else if (message.type === "remoteTreeIgnored") {
+				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
+					return
+				}
+
 				setRemoteIgnored(prev => ({
 					...prev,
 					[message.syncPair.uuid]: message.data.ignored
 				}))
 			} else if (message.type === "localTreeIgnored") {
+				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
+					return
+				}
+
 				setLocalIgnored(prev => ({
 					...prev,
 					[message.syncPair.uuid]: message.data.ignored
 				}))
 			} else if (message.type === "deltas") {
+				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
+					return
+				}
+
 				setTasksCount(prev => ({
 					...prev,
 					[message.syncPair.uuid]: message.data.deltas.length
 				}))
+
+				tasksCount.current[message.syncPair.uuid] = message.data.deltas.length
 
 				setTasksSize(prev => ({
 					...prev,
@@ -405,6 +457,10 @@ export const DesktopListener = memo(() => {
 			setTasksBytes
 		]
 	)
+
+	useEffect(() => {
+		syncPairsUUIDsRef.current = desktopConfig.syncConfig.syncPairs.map(pair => pair.uuid)
+	}, [desktopConfig.syncConfig.syncPairs])
 
 	useEffect(() => {
 		let syncMessageListener: ReturnType<typeof window.desktopAPI.onMainToWindowMessage> | null = null

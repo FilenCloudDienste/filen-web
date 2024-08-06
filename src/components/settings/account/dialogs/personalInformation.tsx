@@ -431,7 +431,7 @@ export const ChangePersonalInformationDialog = memo(({ account }: { account: Use
 										placeholder={inputs.country.length > 0 ? inputs.country : t("dialogs.personalInformation.country")}
 									/>
 								</SelectTrigger>
-								<SelectContent>
+								<SelectContent className="max-h-[200px]">
 									{countries.map(country => {
 										return (
 											<SelectItem

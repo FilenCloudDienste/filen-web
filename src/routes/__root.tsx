@@ -4,7 +4,7 @@ import { memo, useEffect, useState, useRef, useCallback } from "react"
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClient, focusManager, useIsRestoring } from "@tanstack/react-query"
 import { PersistQueryClientProvider, type PersistQueryClientOptions } from "@tanstack/react-query-persist-client"
-import { useLocalStorage } from "@uidotdev/usehooks"
+import useIsAuthed from "@/hooks/useIsAuthed"
 import createIDBPersister from "@/lib/queryPersister"
 import DragSelect from "@/components/dragSelect"
 import DropZone from "@/components/dropZone"
@@ -34,6 +34,7 @@ import CreateSyncDialog from "@/components/dialogs/createSync"
 import DesktopListener from "@/components/desktopListener"
 import InfoDialog from "@/components/dialogs/infoDialog"
 import IsOnlineDialog from "@/components/dialogs/isOnline"
+import Page404 from "@/components/404"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -98,7 +99,7 @@ export const Loading = memo(() => {
 
 export const Root = memo(() => {
 	const [ready, setReady] = useState<boolean>(false)
-	const [authed] = useLocalStorage<boolean>("authed", false)
+	const [authed] = useIsAuthed()
 	const initRef = useRef<boolean>(false)
 	const isRestoring = useIsRestoring()
 
@@ -182,5 +183,5 @@ export const Root = memo(() => {
 
 export const Route = createRootRoute({
 	component: Root,
-	notFoundComponent: () => <div>404</div>
+	notFoundComponent: Page404
 })

@@ -29,9 +29,17 @@ export const Issues = memo(({ sync }: { sync: SyncPair }) => {
 
 	const getItemKey = useCallback((index: number) => index, [])
 
-	const itemContent = useCallback((_: number, error: GeneralError) => {
-		return <Issue error={error} />
-	}, [])
+	const itemContent = useCallback(
+		(_: number, error: GeneralError) => {
+			return (
+				<Issue
+					error={error}
+					syncUUID={sync.uuid}
+				/>
+			)
+		},
+		[sync.uuid]
+	)
 
 	const components = useMemo(() => {
 		return {

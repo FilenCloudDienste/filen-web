@@ -1,10 +1,10 @@
 import { memo, useEffect } from "react"
-import { useLocalStorage } from "@uidotdev/usehooks"
+import useIsAuthed from "@/hooks/useIsAuthed"
 import { useNavigate } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 
 export const RequireUnauthed = memo(({ children }: { children: React.ReactNode }) => {
-	const [authed] = useLocalStorage<boolean>("authed", false)
+	const [authed] = useIsAuthed()
 	const navigate = useNavigate()
 	const { baseFolderUUID } = useSDKConfig()
 

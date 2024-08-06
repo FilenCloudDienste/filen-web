@@ -14,7 +14,7 @@ export type GeneralError = {
 export type SyncsStore = {
 	selectedSync: SyncPair | null
 	transferEvents: Record<string, TransferDataWithTimestamp[]>
-	cycleState: Record<string, CycleState>
+	cycleState: Record<string, { state: CycleState; timestamp: number }>
 	remoteIgnored: Record<string, RemoteTreeIgnored[]>
 	localIgnored: Record<string, LocalTreeIgnored[]>
 	errors: Record<string, GeneralError[]>
@@ -34,7 +34,11 @@ export type SyncsStore = {
 			| Record<string, TransferDataWithTimestamp[]>
 			| ((prev: Record<string, TransferDataWithTimestamp[]>) => Record<string, TransferDataWithTimestamp[]>)
 	) => void
-	setCycleState: (fn: Record<string, CycleState> | ((prev: Record<string, CycleState>) => Record<string, CycleState>)) => void
+	setCycleState: (
+		fn:
+			| Record<string, { state: CycleState; timestamp: number }>
+			| ((prev: Record<string, { state: CycleState; timestamp: number }>) => Record<string, { state: CycleState; timestamp: number }>)
+	) => void
 	setRemoteIgnored: (
 		fn: Record<string, RemoteTreeIgnored[]> | ((prev: Record<string, RemoteTreeIgnored[]>) => Record<string, RemoteTreeIgnored[]>)
 	) => void

@@ -409,7 +409,7 @@ export const WebDAV = memo(() => {
 							<SelectTrigger className="min-w-[90px]">
 								<SelectValue placeholder={desktopConfig.webdavConfig.https ? "https" : "http"} />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-[200px]">
 								<SelectItem value="http">HTTP</SelectItem>
 								<SelectItem value="https">HTTPS</SelectItem>
 							</SelectContent>
@@ -457,7 +457,7 @@ export const WebDAV = memo(() => {
 							<SelectTrigger className="min-w-[90px]">
 								<SelectValue placeholder={desktopConfig.webdavConfig.authMode} />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-[200px]">
 								<SelectItem value="basic">Basic</SelectItem>
 								<SelectItem value="digest">Digest</SelectItem>
 							</SelectContent>

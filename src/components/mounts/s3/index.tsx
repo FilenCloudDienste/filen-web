@@ -266,7 +266,7 @@ export const S3 = memo(() => {
 							<SelectTrigger className="min-w-[90px]">
 								<SelectValue placeholder={desktopConfig.s3Config.https ? "https" : "http"} />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-[200px]">
 								<SelectItem value="http">HTTP</SelectItem>
 								<SelectItem value="https">HTTPS</SelectItem>
 							</SelectContent>

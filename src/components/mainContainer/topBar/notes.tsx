@@ -111,7 +111,10 @@ export const Notes = memo(() => {
 						<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 							<Tooltip>
 								<TooltipTrigger asChild={true}>
-									<RefreshCwOff className="text-red-500" />
+									<RefreshCwOff
+										className="text-red-500"
+										size={20}
+									/>
 								</TooltipTrigger>
 								<TooltipContent side="bottom">
 									<p>{t("notes.maxSizeReached", { chars: MAX_NOTE_SIZE - 64 })}</p>
@@ -119,7 +122,19 @@ export const Notes = memo(() => {
 							</Tooltip>
 						</TooltipProvider>
 					) : (
-						<>{synced ? <CheckCircle2 className="text-green-500" /> : <Loader className="animate-spin-medium" />}</>
+						<>
+							{synced ? (
+								<CheckCircle2
+									className="text-green-500"
+									size={20}
+								/>
+							) : (
+								<Loader
+									className="animate-spin-medium"
+									size={20}
+								/>
+							)}
+						</>
 					)}
 				</div>
 				<div className="flex flex-row grow">

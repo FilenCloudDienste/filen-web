@@ -102,7 +102,13 @@ export const Transfers = memo(() => {
 	const updateInfo = useRef(
 		throttle(() => {
 			const now = Date.now()
-			const transferRemaining = calcTimeLeft(bytesSent.current, allBytes.current, progressStarted.current)
+			let transferRemaining = calcTimeLeft(bytesSent.current, allBytes.current, progressStarted.current)
+
+			if (ongoingTransfers.length > 0) {
+				// Quick "hack" to better calculate remaining time when a lot of small files are being transferred (not really accurate, needs better solution)
+				transferRemaining = transferRemaining + Math.floor(ongoingTransfers.length / 2)
+			}
+
 			const transferPercent = (bytesSent.current / allBytes.current) * 100
 			const transferSpeed = calcSpeed(now, progressStarted.current, bytesSent.current)
 

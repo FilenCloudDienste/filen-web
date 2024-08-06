@@ -9,6 +9,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "react-i18next"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
+import { v4 as uuidv4 } from "uuid"
 
 export const Editor = memo(
 	({
@@ -63,7 +64,7 @@ export const FilenIgnoreDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
 	const [syncUUID, setSyncUUID] = useState<string>("")
 	const [content, setContent] = useState<string>("")
-	const lastContentRef = useRef<string>("")
+	const lastContentRef = useRef<string>(uuidv4())
 	const errorToast = useErrorToast()
 	const [didChange, setDidChange] = useState<boolean>(false)
 	const { t } = useTranslation()
@@ -74,7 +75,14 @@ export const FilenIgnoreDialog = memo(() => {
 	}, [])
 
 	const updateContent = useCallback(async () => {
+		if (saving) {
+			return
+		}
+
 		if (JSON.stringify(content) === JSON.stringify(lastContentRef.current) || syncUUID.length === 0 || !didChange) {
+			setDidChange(false)
+			setSaving(false)
+
 			return
 		}
 
@@ -94,7 +102,7 @@ export const FilenIgnoreDialog = memo(() => {
 
 			setDidChange(false)
 		} catch (e) {
-			lastContentRef.current = ""
+			lastContentRef.current = uuidv4()
 
 			console.error(e)
 
@@ -102,7 +110,7 @@ export const FilenIgnoreDialog = memo(() => {
 		} finally {
 			setSaving(false)
 		}
-	}, [errorToast, syncUUID, didChange, content])
+	}, [errorToast, syncUUID, didChange, content, saving])
 
 	const close = useCallback(async () => {
 		if (didChange) {
@@ -122,7 +130,7 @@ export const FilenIgnoreDialog = memo(() => {
 		setDidChange(false)
 		setContent("")
 
-		lastContentRef.current = ""
+		lastContentRef.current = uuidv4()
 	}, [didChange, t])
 
 	useEffect(() => {

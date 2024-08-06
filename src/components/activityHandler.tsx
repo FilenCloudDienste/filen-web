@@ -1,7 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useMemo } from "react"
 import useWindowFocus from "@/hooks/useWindowFocus"
 import worker from "@/lib/worker"
-import { useLocalStorage } from "@uidotdev/usehooks"
 import useLocation from "@/hooks/useLocation"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import { useNavigate } from "@tanstack/react-router"
@@ -10,13 +9,14 @@ import { IS_DESKTOP } from "@/constants"
 import socket from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import { logout } from "@/lib/setup"
+import useIsAuthed from "@/hooks/useIsAuthed"
 
 export const ActivityHandler = memo(() => {
 	const windowFocus = useWindowFocus()
 	const nextLastActiveDesktopUpdate = useRef<number>(-1)
 	const isUpdatingLastActiveDesktop = useRef<boolean>(false)
 	const location = useLocation()
-	const [authed] = useLocalStorage<boolean>("authed", false)
+	const [authed] = useIsAuthed()
 	const errorToast = useErrorToast()
 	const navigate = useNavigate()
 

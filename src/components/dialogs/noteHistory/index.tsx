@@ -44,14 +44,18 @@ export const NoteHistoryDialog = memo(() => {
 							<p className={cn("line-clamp-1 text-ellipsis break-all", IS_APPLE_DEVICE && IS_DESKTOP && "pl-16")}>
 								{note.title}
 							</p>
-							<X
-								className="h-4 w-4 opacity-70 hover:opacity-100 cursor-pointer"
-								onClick={close}
+							<div
+								className="flex flex-row items-center justify-end h-12 w-12"
 								style={{
 									// @ts-expect-error not typed
 									WebkitAppRegion: "no-drag"
 								}}
-							/>
+							>
+								<X
+									className="h-4 w-4 opacity-70 hover:opacity-100 cursor-pointer"
+									onClick={close}
+								/>
+							</div>
 						</div>
 						<Content
 							key={note.uuid}

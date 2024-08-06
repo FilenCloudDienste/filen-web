@@ -218,7 +218,7 @@ export const File = memo(
 								<SelectTrigger>
 									<SelectValue placeholder={status.expirationText} />
 								</SelectTrigger>
-								<SelectContent>
+								<SelectContent className="max-h-[200px]">
 									<SelectItem value="1h">1h</SelectItem>
 									<SelectItem value="6h">6h</SelectItem>
 									<SelectItem value="1d">1d</SelectItem>

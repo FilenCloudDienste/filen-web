@@ -1,6 +1,6 @@
 import { memo, useMemo, useCallback } from "react"
 import { Link } from "@tanstack/react-router"
-import { useLocalStorage } from "@uidotdev/usehooks"
+import useIsAuthed from "@/hooks/useIsAuthed"
 import useIsMobile from "@/hooks/useIsMobile"
 import { IS_DESKTOP } from "@/constants"
 import { Loader, Shield, Lock, EyeOff, AlertCircle } from "lucide-react"
@@ -16,7 +16,7 @@ import { useTheme } from "@/providers/themeProvider"
 import LogoSVG from "@/assets/logo"
 
 export const Container = memo(({ children, loading, hasInfo }: { children: React.ReactNode; loading: boolean; hasInfo: boolean }) => {
-	const [authed] = useLocalStorage<boolean>("authed", false)
+	const [authed] = useIsAuthed()
 	const isMobile = useIsMobile()
 	const urlState = usePublicLinkURLState()
 	const location = useLocation()

@@ -45,16 +45,13 @@ export const List = memo(() => {
 	const query = useQuery({
 		queryKey: ["listDirectory", parent, currentReceiverId],
 		queryFn: () =>
-			location.includes("favorites")
+			location.includes("/favorites")
 				? worker.listFavorites()
-				: location.includes("shared-in")
+				: location.includes("/shared-in")
 					? worker.listDirectorySharedIn({ uuid: parent })
-					: location.includes("shared-out")
+					: location.includes("/shared-out")
 						? worker.listDirectorySharedOut({ uuid: parent, receiverId: currentReceiverId })
-						: worker.listDirectory({ uuid: parent }),
-		refetchOnMount: !location.includes("trash"),
-		refetchOnWindowFocus: !location.includes("trash"),
-		refetchOnReconnect: !location.includes("trash")
+						: worker.listDirectory({ uuid: parent })
 	})
 
 	const itemsOrdered = useMemo(() => {
@@ -64,7 +61,7 @@ export const List = memo(() => {
 			}
 		}
 
-		if (location.includes("recents")) {
+		if (location.includes("/recents")) {
 			return orderItemsByType({
 				items,
 				type: "uploadDateDesc"
@@ -110,13 +107,11 @@ export const List = memo(() => {
 				) {
 					setItems(prev => prev.filter(i => i.uuid !== event.data.uuid))
 				} else if (event.type === "trashEmpty") {
-					if (!location.includes("trash")) {
+					if (!location.includes("/trash")) {
 						return
 					}
 
 					setItems([])
-
-					await query.refetch()
 				} else if (event.type === "fileNew") {
 					if (event.data.parent !== parent) {
 						return
@@ -192,7 +187,7 @@ export const List = memo(() => {
 
 					setItems(prev => prev.map(item => (item.uuid === event.data.uuid ? { ...item, name: metadata.name } : item)))
 				} else if (event.type === "fileRestore") {
-					if (location.includes("trash")) {
+					if (location.includes("/trash")) {
 						setItems(prev => prev.filter(i => i.uuid !== event.data.uuid))
 					}
 
@@ -231,7 +226,7 @@ export const List = memo(() => {
 						}
 					])
 				} else if (event.type === "folderRestore") {
-					if (location.includes("trash")) {
+					if (location.includes("/trash")) {
 						setItems(prev => prev.filter(i => i.uuid !== event.data.uuid))
 					}
 
@@ -308,7 +303,7 @@ export const List = memo(() => {
 				console.error(e)
 			}
 		},
-		[setItems, location, query, parent, currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId]
+		[setItems, location, parent, currentReceiverEmail, currentReceiverId, currentReceivers, currentSharerEmail, currentSharerId]
 	)
 
 	useEffect(() => {

@@ -16,6 +16,8 @@ import useErrorToast from "@/hooks/useErrorToast"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import { type FilenDesktopConfig } from "@filen/desktop/dist/types"
+import { DESKTOP_CONFIG_VERSION, SDK_CONFIG_VERSION } from "@/constants"
+import { localStorageKey as authedLocalStorageKey } from "@/hooks/useIsAuthed"
 
 export const Route = createFileRoute("/login")({
 	component: Login
@@ -95,7 +97,7 @@ export function Login() {
 			})
 
 			window.localStorage.setItem(
-				"sdkConfig",
+				`sdkConfig:${SDK_CONFIG_VERSION}`,
 				JSON.stringify({
 					...sdk.config,
 					password: "redacted"
@@ -103,7 +105,7 @@ export function Login() {
 			)
 
 			window.localStorage.setItem(
-				"desktopConfig",
+				`desktopConfig:${DESKTOP_CONFIG_VERSION}`,
 				JSON.stringify({
 					...DEFAULT_DESKTOP_CONFIG,
 					sdkConfig: {
@@ -118,7 +120,7 @@ export function Login() {
 				password: "redacted"
 			})
 
-			window.localStorage.setItem("authed", "true")
+			window.localStorage.setItem(authedLocalStorageKey, "true")
 
 			navigate({
 				to: "/drive/$",

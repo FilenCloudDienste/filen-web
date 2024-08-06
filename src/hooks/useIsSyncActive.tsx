@@ -14,20 +14,20 @@ export default function useIsSyncActive(uuid?: string): boolean {
 
 			return keys.some(
 				syncUUID =>
-					cycleState[syncUUID] === "cycleApplyingStateStarted" ||
-					cycleState[syncUUID] === "cycleProcessingTasksStarted" ||
-					cycleState[syncUUID] === "cycleProcessingDeltasStarted" ||
-					cycleState[syncUUID] === "cycleWaitingForLocalDirectoryChangesStarted" ||
-					cycleState[syncUUID] === "cycleSavingStateStarted"
+					cycleState[syncUUID]!.state === "cycleProcessingTasksStarted" ||
+					cycleState[syncUUID]!.state === "cycleProcessingDeltasStarted" ||
+					cycleState[syncUUID]!.state === "cycleWaitingForLocalDirectoryChangesStarted" ||
+					cycleState[syncUUID]!.state === "cycleProcessingDeltasDone" ||
+					cycleState[syncUUID]!.state === "cycleProcessingTasksDone"
 			)
 		}
 
 		return cycleState[uuid]
-			? cycleState[uuid] === "cycleApplyingStateStarted" ||
-					cycleState[uuid] === "cycleProcessingTasksStarted" ||
-					cycleState[uuid] === "cycleProcessingDeltasStarted" ||
-					cycleState[uuid] === "cycleWaitingForLocalDirectoryChangesStarted" ||
-					cycleState[uuid] === "cycleSavingStateStarted"
+			? cycleState[uuid]!.state === "cycleProcessingTasksStarted" ||
+					cycleState[uuid]!.state === "cycleProcessingDeltasStarted" ||
+					cycleState[uuid]!.state === "cycleWaitingForLocalDirectoryChangesStarted" ||
+					cycleState[uuid]!.state === "cycleProcessingDeltasDone" ||
+					cycleState[uuid]!.state === "cycleProcessingTasksDone"
 			: false
 	}, [cycleState, uuid])
 

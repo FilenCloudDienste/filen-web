@@ -2,10 +2,12 @@ import { setItem } from "./localForage"
 import sdk from "./sdk"
 import worker from "./worker"
 import { type FilenSDKConfig } from "@filen/sdk"
-import { IS_DESKTOP } from "@/constants"
+import { IS_DESKTOP, DESKTOP_CONFIG_VERSION, SDK_CONFIG_VERSION } from "@/constants"
 import { registerFSAServiceWorker } from "./serviceWorker"
 import { type FilenDesktopConfig } from "@filen/desktop/dist/types"
 import { clear as clearLocalForage } from "@/lib/localForage"
+import { connect as socketConnect } from "@/lib/socket"
+import { localStorageKey as authedLocalStorageKey } from "@/hooks/useIsAuthed"
 
 export const DEFAULT_SDK_CONFIG: FilenSDKConfig = {
 	email: "anonymous",
@@ -44,7 +46,7 @@ export const DEFAULT_DESKTOP_CONFIG: FilenDesktopConfig = {
 	},
 	virtualDriveConfig: {
 		enabled: false,
-		mountPoint: IS_DESKTOP ? (window.desktopAPI.platform() === "win32" ? "X:" : "/tmp/filen") : "X:",
+		mountPoint: IS_DESKTOP ? (window.desktopAPI.osPlatform() === "win32" ? "X:" : "/tmp/filen") : "X:",
 		cacheSizeInGi: 10,
 		localDirPath: ""
 	},
@@ -63,11 +65,13 @@ export const DEFAULT_DESKTOP_CONFIG: FilenDesktopConfig = {
  * @returns {Promise<void>}
  */
 export async function setup(config?: FilenSDKConfig): Promise<void> {
-	const authed = window.localStorage.getItem("authed") ? window.localStorage.getItem("authed") === "true" : false
-	const sdkConfig = JSON.parse(window.localStorage.getItem("sdkConfig") ?? JSON.stringify(DEFAULT_SDK_CONFIG))
+	const authed = window.localStorage.getItem(authedLocalStorageKey)
+		? window.localStorage.getItem(authedLocalStorageKey) === "true"
+		: false
+	const sdkConfig = JSON.parse(window.localStorage.getItem(`sdkConfig:${SDK_CONFIG_VERSION}`) ?? JSON.stringify(DEFAULT_SDK_CONFIG))
 	const initConfig = config ? config : authed ? sdkConfig : DEFAULT_SDK_CONFIG
 	const desktopConfig = JSON.parse(
-		window.localStorage.getItem("desktopConfig") ??
+		window.localStorage.getItem(`desktopConfig:${DESKTOP_CONFIG_VERSION}`) ??
 			JSON.stringify({
 				...DEFAULT_DESKTOP_CONFIG,
 				sdkConfig: initConfig
@@ -86,12 +90,17 @@ export async function setup(config?: FilenSDKConfig): Promise<void> {
 
 			return
 		}
+
+		await socketConnect()
 	}
 
-	window.localStorage.setItem("sdkConfig", JSON.stringify(initConfig))
-	window.localStorage.setItem("desktopConfig", JSON.stringify(desktopConfig))
+	window.localStorage.setItem(`sdkConfig:${SDK_CONFIG_VERSION}`, JSON.stringify(initConfig))
+	window.localStorage.setItem(`desktopConfig:${DESKTOP_CONFIG_VERSION}`, JSON.stringify(desktopConfig))
 
-	await Promise.all([setItem("sdkConfig", initConfig), setItem("desktopConfig", desktopConfig)])
+	await Promise.all([
+		setItem(`sdkConfig:${SDK_CONFIG_VERSION}`, initConfig),
+		setItem(`desktopConfig:${DESKTOP_CONFIG_VERSION}`, desktopConfig)
+	])
 	await Promise.all([worker.initializeSDK(initConfig), IS_DESKTOP ? window.desktopAPI.setConfig(desktopConfig) : Promise.resolve()])
 
 	if (!IS_DESKTOP) {

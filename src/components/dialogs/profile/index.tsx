@@ -11,6 +11,11 @@ export const Profile = memo(() => {
 		setOpen(openState)
 	}, [])
 
+	const preventDefault = useCallback((e: Event) => {
+		e.preventDefault()
+		e.stopPropagation()
+	}, [])
+
 	useEffect(() => {
 		const listener = eventEmitter.on("openProfileDialog", (uid: number) => {
 			setUserId(uid)
@@ -27,7 +32,10 @@ export const Profile = memo(() => {
 			open={open}
 			onOpenChange={onOpenChange}
 		>
-			<DialogContent className="outline-none focus:outline-none active:outline-none hover:outline-none select-none">
+			<DialogContent
+				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
+				onOpenAutoFocus={preventDefault}
+			>
 				{userId && <Content userId={userId} />}
 			</DialogContent>
 		</Dialog>

@@ -248,6 +248,10 @@ export const PreviewDialog = memo(() => {
 		[cleanup, didChange, saving, t]
 	)
 
+	const close = useCallback(() => {
+		onOpenChange(false)
+	}, [onOpenChange])
+
 	const loadFile = useCallback(
 		async ({ itm }: { itm: DriveCloudItem }) => {
 			if (itm.type !== "file") {
@@ -486,15 +490,17 @@ export const PreviewDialog = memo(() => {
 											<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 												<Tooltip>
 													<TooltipTrigger asChild={true}>
-														<Save
+														<Button
+															size="sm"
+															className="h-7 mr-1"
 															onClick={saveFile}
-															size={20}
-															className="cursor-pointer"
 															style={{
 																// @ts-expect-error not typed
 																WebkitAppRegion: "no-drag"
 															}}
-														/>
+														>
+															<Save size={18} />
+														</Button>
 													</TooltipTrigger>
 													<TooltipContent side="bottom">
 														<p>{t("dialogs.previewDialog.save")}</p>
@@ -524,14 +530,18 @@ export const PreviewDialog = memo(() => {
 								)}
 								<p className="line-clamp-1 text-ellipsis break-all">{item.name}</p>
 							</div>
-							<X
-								className="h-4 w-4 opacity-70 hover:opacity-100 cursor-pointer"
-								onClick={() => onOpenChange(false)}
+							<div
+								className="flex flex-row items-center justify-end h-12 w-12"
 								style={{
 									// @ts-expect-error not typed
 									WebkitAppRegion: "no-drag"
 								}}
-							/>
+							>
+								<X
+									className="h-4 w-4 opacity-70 hover:opacity-100 cursor-pointer"
+									onClick={close}
+								/>
+							</div>
 						</div>
 						<div
 							className="flex flex-col w-full h-[calc(100dvh-48px)]"

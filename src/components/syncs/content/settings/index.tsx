@@ -8,7 +8,7 @@ import eventEmitter from "@/lib/eventEmitter"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Info, ChevronsLeftRight, Cloud, ChevronLeft, ChevronRight, Archive, PcCase, RefreshCw, Edit } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { TOOLTIP_POPUP_DELAY } from "@/constants"
+import { TOOLTIP_POPUP_DELAY, DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 import FilenIgnoreDialog from "./dialogs/filenIgnore"
 import { useSyncsStore } from "@/stores/syncs.store"
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useIsSyncActive from "@/hooks/useIsSyncActive"
+import useWindowSize from "@/hooks/useWindowSize"
 
 export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	const [, setDesktopConfig] = useDesktopConfig()
@@ -35,6 +36,11 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	const loadingToast = useLoadingToast()
 	const [isForcingSync, setIsForcingSync] = useState<boolean>(false)
 	const isSyncActive = useIsSyncActive(sync.uuid)
+	const windowSize = useWindowSize()
+
+	const settingsHeight = useMemo(() => {
+		return windowSize.height - 64 - 13 - DESKTOP_TOPBAR_HEIGHT
+	}, [windowSize.height])
 
 	const modeToString = useMemo(() => {
 		switch (sync.mode) {
@@ -72,6 +78,62 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 		eventEmitter.emit("deleteSync", sync.uuid)
 	}, [sync.uuid])
 
+	const toggleLocalTrashDisabled = useCallback(
+		async (enabled: boolean) => {
+			if (isSyncActive) {
+				return
+			}
+
+			setChanging(true)
+
+			const toast = loadingToast()
+
+			try {
+				await window.desktopAPI.syncToggleLocalTrash({
+					uuid: sync.uuid,
+					enabled
+				})
+
+				await window.desktopAPI.syncResetCache({
+					uuid: sync.uuid
+				})
+
+				setSelectedSync(prev =>
+					prev && prev.uuid === sync.uuid
+						? {
+								...prev,
+								localTrashDisabled: enabled
+							}
+						: prev
+				)
+
+				setDesktopConfig(prev => ({
+					...prev,
+					syncConfig: {
+						...prev.syncConfig,
+						syncPairs: prev.syncConfig.syncPairs.map(pair =>
+							pair.uuid === sync.uuid
+								? {
+										...pair,
+										localTrashDisabled: enabled
+									}
+								: pair
+						)
+					}
+				}))
+			} catch (e) {
+				console.error(e)
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			} finally {
+				setChanging(false)
+
+				toast.dismiss()
+			}
+		},
+		[setDesktopConfig, sync.uuid, setChanging, errorToast, loadingToast, setSelectedSync, isSyncActive]
+	)
+
 	const toggleExcludeDotFiles = useCallback(
 		async (excludeDotFiles: boolean) => {
 			if (isSyncActive) {
@@ -105,7 +167,14 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 					...prev,
 					syncConfig: {
 						...prev.syncConfig,
-						syncPairs: prev.syncConfig.syncPairs.map(pair => (pair.uuid === sync.uuid ? { ...pair, excludeDotFiles } : pair))
+						syncPairs: prev.syncConfig.syncPairs.map(pair =>
+							pair.uuid === sync.uuid
+								? {
+										...pair,
+										excludeDotFiles
+									}
+								: pair
+						)
 					}
 				}))
 			} catch (e) {
@@ -212,7 +281,12 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 
 	return (
 		<>
-			<div className="flex flex-col w-full h-[100dvh] overflow-y-auto overflow-x-hidden">
+			<div
+				className="flex flex-col w-full overflow-y-auto overflow-x-hidden"
+				style={{
+					height: settingsHeight
+				}}
+			>
 				<div
 					className="flex flex-col p-6 h-full"
 					style={{
@@ -312,7 +386,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 									<SelectTrigger className="w-full">
 										<SelectValue placeholder={modeToString} />
 									</SelectTrigger>
-									<SelectContent>
+									<SelectContent className="max-h-[200px]">
 										<SelectItem value="twoWay">{t("dialogs.createSync.mode.twoWay")}</SelectItem>
 										<SelectItem value="localToCloud">{t("dialogs.createSync.mode.localToCloud")}</SelectItem>
 										<SelectItem value="localBackup">{t("dialogs.createSync.mode.localBackup")}</SelectItem>
@@ -364,6 +438,16 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 							/>
 						</Section>
 						<Section
+							name={t("syncs.settings.sections.disableLocalTrash.name")}
+							info={t("syncs.settings.sections.disableLocalTrash.info")}
+						>
+							<Switch
+								checked={sync.localTrashDisabled}
+								onCheckedChange={toggleLocalTrashDisabled}
+								disabled={changing || isSyncActive}
+							/>
+						</Section>
+						<Section
 							name={t("syncs.settings.sections.filenIgnore.name")}
 							info={t("syncs.settings.sections.filenIgnore.info")}
 						>
@@ -399,7 +483,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 						<Section
 							name={t("syncs.settings.sections.delete.name")}
 							info={t("syncs.settings.sections.delete.info")}
-							className="mt-10"
+							className="mt-10 mb-20"
 						>
 							<Button
 								variant="destructive"

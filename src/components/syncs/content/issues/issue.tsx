@@ -1,7 +1,9 @@
-import { memo, useMemo } from "react"
-import { type GeneralError } from "@/stores/syncs.store"
-import { XCircle, ArrowUpDown, HardDrive } from "lucide-react"
+import { memo, useMemo, useCallback, useRef } from "react"
+import { type GeneralError, useSyncsStore } from "@/stores/syncs.store"
+import { XCircle, ArrowUpDown, HardDrive, X } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { showConfirmDialog } from "@/components/dialogs/confirm"
+import { Button } from "@/components/ui/button"
 
 export type ErrorType =
 	| "permission"
@@ -63,8 +65,10 @@ export const ERRORS: Record<string, ErrorType> = {
 
 export const ERRORS_ARRAY: string[] = Object.keys(ERRORS)
 
-export const Issue = memo(({ error }: { error: GeneralError }) => {
+export const Issue = memo(({ error, syncUUID }: { error: GeneralError; syncUUID: string }) => {
 	const { t } = useTranslation()
+	const setErrors = useSyncsStore(useCallback(state => state.setErrors, []))
+	const errorStringified = useRef<string>(JSON.stringify(error))
 
 	const parsedErrorType = useMemo((): ErrorType => {
 		const concatted = (error.error.name + " " + error.error.message).toLowerCase()
@@ -78,9 +82,27 @@ export const Issue = memo(({ error }: { error: GeneralError }) => {
 		return "unknown"
 	}, [error.error.message, error.error.name])
 
+	const deleteIssue = useCallback(async () => {
+		if (
+			!(await showConfirmDialog({
+				title: t("syncs.dialogs.deleteIssue.title"),
+				continueButtonText: t("syncs.dialogs.deleteIssue.continue"),
+				description: t("syncs.dialogs.deleteIssue.description"),
+				continueButtonVariant: "destructive"
+			}))
+		) {
+			return
+		}
+
+		setErrors(prev => ({
+			...prev,
+			[syncUUID]: prev[syncUUID] ? prev[syncUUID]!.filter(err => JSON.stringify(err) !== errorStringified.current) : []
+		}))
+	}, [setErrors, syncUUID, t])
+
 	return (
 		<div className="flex flex-row px-4">
-			<div className="flex flex-row border-b w-full p-2.5 py-3 hover:bg-secondary hover:rounded-sm">
+			<div className="flex flex-row border-b w-full p-2.5 py-3 hover:bg-secondary hover:rounded-sm justify-between items-center">
 				<div className="flex flex-row gap-2.5">
 					<div className="flex flex-row">
 						<div className="bg-secondary rounded-md flex items-center justify-center aspect-square w-10 h-10">
@@ -112,6 +134,14 @@ export const Issue = memo(({ error }: { error: GeneralError }) => {
 						</p>
 					</div>
 				</div>
+				<Button
+					size="icon"
+					variant="destructive"
+					className="w-5 h-5"
+					onClick={deleteIssue}
+				>
+					<X size={14} />
+				</Button>
 			</div>
 		</div>
 	)

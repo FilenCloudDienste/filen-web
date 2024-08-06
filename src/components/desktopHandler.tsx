@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useCallback, useMemo } from "react"
 import { IS_DESKTOP } from "@/constants"
 import eventEmitter from "@/lib/eventEmitter"
-import { useLocalStorage } from "@uidotdev/usehooks"
+import useIsAuthed from "@/hooks/useIsAuthed"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
 import { Semaphore } from "@/lib/semaphore"
 import { isVirtualDriveMounted } from "./mounts/virtualDrive"
@@ -12,7 +12,7 @@ import { useMountsStore } from "@/stores/mounts.store"
 export const updateDesktopConfigMutex = new Semaphore(1)
 
 export const DesktopHandler = memo(() => {
-	const [authed] = useLocalStorage<boolean>("authed", false)
+	const [authed] = useIsAuthed()
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const lastDesktopConfigRef = useRef<string>("")
 	const { setEnablingS3, setEnablingVirtualDrive, setEnablingWebDAV } = useMountsStore(
