@@ -26,7 +26,7 @@ export default defineConfig({
 			promiseImportName: i => `__tla_${i}`
 		}),
 		react({
-			babel: {
+			/*babel: {
 				plugins: [
 					[
 						"babel-plugin-react-compiler",
@@ -35,7 +35,7 @@ export default defineConfig({
 						}
 					]
 				]
-			},
+			},*/
 			jsxImportSource: "@welldone-software/why-did-you-render"
 		}),
 		checker({
