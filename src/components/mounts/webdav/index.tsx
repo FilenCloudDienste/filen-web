@@ -347,6 +347,18 @@ export const WebDAV = memo(() => {
 	])
 
 	useEffect(() => {
+		if (isOnlineQuery.isSuccess && !isOnlineQuery.data.online) {
+			setDesktopConfig(prev => ({
+				...prev,
+				webdavConfig: {
+					...prev.webdavConfig,
+					enabled: false
+				}
+			}))
+		}
+	}, [isOnlineQuery.isSuccess, isOnlineQuery.data, setDesktopConfig])
+
+	useEffect(() => {
 		const refetchWebDAVListener = eventEmitter.on("refetchWebDAV", () => {
 			isOnlineQuery.refetch().catch(console.error)
 		})

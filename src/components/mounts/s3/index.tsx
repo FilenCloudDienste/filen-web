@@ -204,6 +204,18 @@ export const S3 = memo(() => {
 	}, [successToast, errorToast, t, desktopConfig.s3Config.https, desktopConfig.s3Config.hostname, desktopConfig.s3Config.port])
 
 	useEffect(() => {
+		if (isOnlineQuery.isSuccess && !isOnlineQuery.data.online) {
+			setDesktopConfig(prev => ({
+				...prev,
+				s3Config: {
+					...prev.s3Config,
+					enabled: false
+				}
+			}))
+		}
+	}, [isOnlineQuery.isSuccess, isOnlineQuery.data, setDesktopConfig])
+
+	useEffect(() => {
 		const refetchS3Listener = eventEmitter.on("refetchS3", () => {
 			isOnlineQuery.refetch().catch(console.error)
 		})
