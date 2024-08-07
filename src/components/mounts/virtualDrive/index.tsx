@@ -431,18 +431,6 @@ export const VirtualDrive = memo(() => {
 	])
 
 	useEffect(() => {
-		if (isMountedQuery.isSuccess && !isMountedQuery.data.mounted) {
-			setDesktopConfig(prev => ({
-				...prev,
-				virtualDriveConfig: {
-					...prev.virtualDriveConfig,
-					enabled: false
-				}
-			}))
-		}
-	}, [isMountedQuery.isSuccess, isMountedQuery.data, setDesktopConfig])
-
-	useEffect(() => {
 		const refetchVirtualDriveListener = eventEmitter.on("refetchVirtualDrive", () => {
 			isMountedQuery.refetch().catch(console.error)
 		})
