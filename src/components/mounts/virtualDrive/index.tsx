@@ -221,25 +221,25 @@ export const VirtualDrive = memo(() => {
 			setEnablingVirtualDrive(true)
 
 			try {
-				if (
-					window.desktopAPI.osPlatform() !== "win32" &&
-					!(await window.desktopAPI.isUnixMountPointValid(desktopConfig.virtualDriveConfig.mountPoint))
-				) {
-					errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
-
-					return
-				}
-
-				if (
-					window.desktopAPI.osPlatform() !== "win32" &&
-					!(await window.desktopAPI.isUnixMountPointEmpty(desktopConfig.virtualDriveConfig.mountPoint))
-				) {
-					errorToast(t("mounts.virtualDrive.errors.mountPointNotEmpty"))
-
-					return
-				}
-
 				if (checked) {
+					if (
+						window.desktopAPI.osPlatform() !== "win32" &&
+						!(await window.desktopAPI.isUnixMountPointValid(desktopConfig.virtualDriveConfig.mountPoint))
+					) {
+						errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
+
+						return
+					}
+
+					if (
+						window.desktopAPI.osPlatform() !== "win32" &&
+						!(await window.desktopAPI.isUnixMountPointEmpty(desktopConfig.virtualDriveConfig.mountPoint))
+					) {
+						errorToast(t("mounts.virtualDrive.errors.mountPointNotEmpty"))
+
+						return
+					}
+
 					await window.desktopAPI.restartVirtualDrive()
 
 					if (!(await isVirtualDriveMounted()).mounted) {
