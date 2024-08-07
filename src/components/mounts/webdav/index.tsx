@@ -386,6 +386,9 @@ export const WebDAV = memo(() => {
 							<XCircle className="text-red-500" />
 						)}
 					</Section>
+					<div className="flex flex-col gap-3">
+						<p className="text-muted-foreground text-sm">{t("mounts.webdav.description")}</p>
+					</div>
 					<Section
 						name={t("mounts.webdav.sections.enabled.name")}
 						info={t("mounts.webdav.sections.enabled.info")}

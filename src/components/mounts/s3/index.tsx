@@ -243,6 +243,9 @@ export const S3 = memo(() => {
 							<XCircle className="text-red-500" />
 						)}
 					</Section>
+					<div className="flex flex-col gap-3">
+						<p className="text-muted-foreground text-sm">{t("mounts.s3.description")}</p>
+					</div>
 					<Section
 						name={t("mounts.s3.sections.enabled.name")}
 						info={t("mounts.s3.sections.enabled.info")}

@@ -224,6 +224,19 @@ export const VirtualDrive = memo(() => {
 				if (checked) {
 					if (
 						window.desktopAPI.osPlatform() !== "win32" &&
+						!(await window.desktopAPI.doesPathStartWithHomeDir(desktopConfig.virtualDriveConfig.mountPoint))
+					) {
+						errorToast(
+							window.desktopAPI.osPlatform() === "linux"
+								? t("mounts.virtualDrive.errors.pathNotInHomeDir")
+								: t("mounts.virtualDrive.errors.pathNotInUserDir")
+						)
+
+						return
+					}
+
+					if (
+						window.desktopAPI.osPlatform() !== "win32" &&
 						!(await window.desktopAPI.isUnixMountPointValid(desktopConfig.virtualDriveConfig.mountPoint))
 					) {
 						errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
@@ -470,6 +483,16 @@ export const VirtualDrive = memo(() => {
 							<XCircle className="text-red-500" />
 						)}
 					</Section>
+					<div className="flex flex-col gap-3">
+						<p className="text-muted-foreground text-sm">
+							{window.desktopAPI.osPlatform() === "win32"
+								? t("mounts.virtualDrive.description")
+								: t("mounts.virtualDrive.unixDescription")}
+						</p>
+						{window.desktopAPI.osPlatform() !== "win32" && (
+							<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.unixSudo")}</p>
+						)}
+					</div>
 					<Section
 						name={t("mounts.virtualDrive.sections.enabled.name")}
 						info={t("mounts.virtualDrive.sections.enabled.info")}

@@ -1154,6 +1154,9 @@
 			"browse": "Browse",
 			"clear": "Clear",
 			"cacheUsed": "{{size}} of {{max}} used",
+			"description": "Mount your cloud drive as a local drive, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",
+			"unixDescription": "Mount your cloud drive inside a local directory, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",
+			"unixSudo": "To mount and unmount the drive the client needs admin rights. Please allow access when you are prompted.",
 			"sections": {
 				"active": {
 					"name": "Active"
@@ -1198,11 +1201,14 @@
 			},
 			"errors": {
 				"invalidMountPoint": "Invalid mount point.",
-				"mountPointNotEmpty": "Mount point needs to be an empty directory."
+				"mountPointNotEmpty": "Mount point needs to be an empty directory.",
+				"pathNotInHomeDir": "Mount point needs to be inside your home directory (/home/<yourUsername>).",
+				"pathNotInUserDir": "Mount point needs to be inside your user directory (/Users/<yourUsername>)."
 			}
 		},
 		"webdav": {
 			"copyConnect": "Copy",
+			"description": "Start a local WebDAV server, providing a standardized protocol to access and manage your cloud drive. This allows compatibility with a wide range of applications and devices that support WebDAV, enhancing your file accessibility and management capabilities.",
 			"sections": {
 				"active": {
 					"name": "Active"
@@ -1258,6 +1264,7 @@
 		},
 		"s3": {
 			"copyConnect": "Copy",
+			"description": "Start a local S3 server, providing a standardized protocol to access and manage your cloud drive. This allows compatibility with a wide range of applications and devices that support S3, enhancing your file accessibility and management capabilities.",
 			"sections": {
 				"active": {
 					"name": "Active"
