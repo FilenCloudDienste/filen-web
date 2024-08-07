@@ -11,7 +11,7 @@ import RichTextEditor from "@/components/textEditor/rich"
 import useRouteParent from "@/hooks/useRouteParent"
 import { normalizeChecklistValue } from "../utils"
 import { type SocketEvent, MAX_NOTE_SIZE } from "@filen/sdk"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import { useNavigate } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
@@ -182,6 +182,8 @@ export const Content = memo(({ note }: { note: Note }) => {
 	}, [note.uuid, query])
 
 	useEffect(() => {
+		const socket = getSocket()
+
 		socket.addListener("socketEvent", socketEventListener)
 		window.addEventListener("keydown", keyDownListener)
 

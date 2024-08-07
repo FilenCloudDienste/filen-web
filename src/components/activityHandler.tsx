@@ -6,7 +6,7 @@ import useMountedEffect from "@/hooks/useMountedEffect"
 import { useNavigate } from "@tanstack/react-router"
 import useErrorToast from "@/hooks/useErrorToast"
 import { IS_DESKTOP } from "@/constants"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import { logout } from "@/lib/setup"
 import useIsAuthed from "@/hooks/useIsAuthed"
@@ -101,6 +101,7 @@ export const ActivityHandler = memo(() => {
 
 	useEffect(() => {
 		const updateLastActiveDesktopInterval = setInterval(update, 1000)
+		const socket = getSocket()
 
 		socket.addListener("socketEvent", socketEventListener)
 

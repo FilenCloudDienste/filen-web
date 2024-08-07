@@ -3,7 +3,7 @@ import AuthContainer from "@/components/authContainer"
 import Input from "@/components/input"
 import { Button } from "@/components/ui/button"
 import { useCallback, useState, useMemo } from "react"
-import sdk from "@/lib/sdk"
+import { getSDK } from "@/lib/sdk"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { Loader, XCircle, CheckCircle } from "lucide-react"
@@ -83,7 +83,7 @@ export function Register() {
 		const toast = loadingToast()
 
 		try {
-			await sdk.api(3).confirmationSend({ email: inputResponse.value.trim() })
+			await getSDK().api(3).confirmationSend({ email: inputResponse.value.trim() })
 
 			successToast(t("register.alerts.confirmationSent", { email: inputResponse.value.trim() }))
 		} catch (e) {
@@ -115,29 +115,32 @@ export function Register() {
 		setLoading(true)
 
 		try {
-			await setup({
-				email: email.trim(),
-				password: "anonymous",
-				masterKeys: ["anonymous"],
-				connectToSocket: true,
-				metadataCache: true,
-				twoFactorCode: undefined,
-				publicKey: "anonymous",
-				privateKey: "anonymous",
-				apiKey: "anonymous",
-				authVersion: 2,
-				baseFolderUUID: "anonymous",
-				userId: 1
-			})
+			await setup(
+				{
+					email: email.trim(),
+					password: "anonymous",
+					masterKeys: ["anonymous"],
+					connectToSocket: true,
+					metadataCache: true,
+					twoFactorCode: undefined,
+					publicKey: "anonymous",
+					privateKey: "anonymous",
+					apiKey: "anonymous",
+					authVersion: 2,
+					baseFolderUUID: "anonymous",
+					userId: 1
+				},
+				false
+			)
 
-			const salt = await sdk.crypto().utils.generateRandomString({ length: 256 })
-			const derived = await sdk.crypto().utils.generatePasswordAndMasterKeyBasedOnAuthVersion({
+			const salt = await getSDK().crypto().utils.generateRandomString({ length: 256 })
+			const derived = await getSDK().crypto().utils.generatePasswordAndMasterKeyBasedOnAuthVersion({
 				rawPassword: password,
 				salt,
 				authVersion: 2
 			})
 
-			await sdk.api(3).register({
+			await getSDK().api(3).register({
 				email,
 				password: derived.derivedPassword,
 				salt,

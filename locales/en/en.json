@@ -438,6 +438,13 @@
 			"uploaded": "Uploaded",
 			"files": "Files",
 			"directories": "Directories"
+		},
+		"desktopUpdate": {
+			"title": "Update available",
+			"info": "A new version ({{version}}) has been downloaded and is ready to be installed. Do you want to update?",
+			"dismiss": "Dismiss",
+			"update": "Update",
+			"installing": "Installing update, please do not interrupt this process!"
 		}
 	},
 	"contextMenus": {

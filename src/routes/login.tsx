@@ -3,7 +3,7 @@ import AuthContainer from "@/components/authContainer"
 import Input from "@/components/input"
 import { Button } from "@/components/ui/button"
 import { useCallback, useState } from "react"
-import sdk from "@/lib/sdk"
+import { getSDK } from "@/lib/sdk"
 import { APIError, type FilenSDKConfig } from "@filen/sdk"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
@@ -53,7 +53,7 @@ export function Login() {
 		const toast = loadingToast()
 
 		try {
-			await sdk.api(3).user().password().forgot({ email: inputResponse.value.trim() })
+			await getSDK().api(3).user().password().forgot({ email: inputResponse.value.trim() })
 
 			successToast(t("login.alerts.forgotPasswordSent", { email: inputResponse.value.trim() }))
 		} catch (e) {
@@ -75,22 +75,25 @@ export function Login() {
 		try {
 			const authInfo = await worker.authInfo({ email: email.trim() })
 
-			await setup({
-				email: email.trim(),
-				password: "anonymous",
-				masterKeys: ["anonymous"],
-				connectToSocket: true,
-				metadataCache: true,
-				twoFactorCode: undefined,
-				publicKey: "anonymous",
-				privateKey: "anonymous",
-				apiKey: "anonymous",
-				authVersion: authInfo.authVersion,
-				baseFolderUUID: "anonymous",
-				userId: 1
-			})
+			await setup(
+				{
+					email: email.trim(),
+					password: "anonymous",
+					masterKeys: ["anonymous"],
+					connectToSocket: true,
+					metadataCache: true,
+					twoFactorCode: undefined,
+					publicKey: "anonymous",
+					privateKey: "anonymous",
+					apiKey: "anonymous",
+					authVersion: authInfo.authVersion,
+					baseFolderUUID: "anonymous",
+					userId: 1
+				},
+				false
+			)
 
-			await sdk.login({
+			await getSDK().login({
 				email: email.trim(),
 				password,
 				twoFactorCode
@@ -99,7 +102,7 @@ export function Login() {
 			window.localStorage.setItem(
 				`sdkConfig:${SDK_CONFIG_VERSION}`,
 				JSON.stringify({
-					...sdk.config,
+					...getSDK().config,
 					password: "redacted"
 				} satisfies FilenSDKConfig)
 			)
@@ -109,16 +112,19 @@ export function Login() {
 				JSON.stringify({
 					...DEFAULT_DESKTOP_CONFIG,
 					sdkConfig: {
-						...sdk.config,
+						...getSDK().config,
 						password: "redacted"
 					} satisfies FilenSDKConfig
 				} satisfies FilenDesktopConfig)
 			)
 
-			await setup({
-				...sdk.config,
-				password: "redacted"
-			})
+			await setup(
+				{
+					...getSDK().config,
+					password: "redacted"
+				},
+				true
+			)
 
 			window.localStorage.setItem(authedLocalStorageKey, "true")
 
@@ -127,7 +133,7 @@ export function Login() {
 				replace: true,
 				resetScroll: true,
 				params: {
-					_splat: sdk.config.baseFolderUUID!
+					_splat: getSDK().config.baseFolderUUID!
 				}
 			})
 		} catch (e) {

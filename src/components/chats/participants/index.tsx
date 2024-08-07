@@ -15,7 +15,7 @@ import { useChatsStore } from "@/stores/chats.store"
 import eventEmitter from "@/lib/eventEmitter"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { Virtuoso } from "react-virtuoso"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -173,6 +173,8 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 	)
 
 	useEffect(() => {
+		const socket = getSocket()
+
 		socket.addListener("socketEvent", socketEventListener)
 
 		return () => {

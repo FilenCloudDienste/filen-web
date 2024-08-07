@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect } from "react"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import { IS_DESKTOP } from "@/constants"
 import { useLocalStorage } from "@uidotdev/usehooks"
@@ -230,7 +230,7 @@ export const NotificationHandler = memo(() => {
 
 	useEffect(() => {
 		if (IS_DESKTOP) {
-			window.desktopAPI.updateNotificationCount(unread + requestsInCount).catch(console.error)
+			window.desktopAPI.updateNotificationCount(authed ? unread + requestsInCount : 0).catch(console.error)
 		} else {
 			const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement
 
@@ -239,7 +239,7 @@ export const NotificationHandler = memo(() => {
 			}
 
 			const oldHref = link.href
-			const newHref = unread + requestsInCount > 0 ? "./notification-favicon.ico" : "./favicon.ico"
+			const newHref = authed && unread + requestsInCount > 0 ? "./notification-favicon.ico" : "./favicon.ico"
 
 			if (newHref === oldHref) {
 				return
@@ -247,9 +247,11 @@ export const NotificationHandler = memo(() => {
 
 			link.href = newHref
 		}
-	}, [unread, requestsInCount])
+	}, [unread, requestsInCount, authed])
 
 	useEffect(() => {
+		const socket = getSocket()
+
 		socket.addListener("socketEvent", socketEventListener)
 
 		return () => {

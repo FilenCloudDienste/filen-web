@@ -9,7 +9,7 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import GridList from "./grid"
 import { orderItemsByType } from "../utils"
 import { type SocketEvent, type FileEncryptionVersion } from "@filen/sdk"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import { convertTimestampToMs } from "@/utils"
 import { type DriveSortBy } from "./header"
 import eventEmitter from "@/lib/eventEmitter"
@@ -324,6 +324,8 @@ export const List = memo(() => {
 	}, [location, query, setItems])
 
 	useEffect(() => {
+		const socket = getSocket()
+
 		socket.addListener("socketEvent", socketEventListener)
 
 		return () => {

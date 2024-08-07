@@ -3,7 +3,7 @@ import AuthContainer from "@/components/authContainer"
 import Input from "@/components/input"
 import { Button } from "@/components/ui/button"
 import { useCallback, useState, useMemo } from "react"
-import sdk from "@/lib/sdk"
+import { getSDK } from "@/lib/sdk"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { Loader, XCircle, CheckCircle, Info } from "lucide-react"
@@ -198,23 +198,26 @@ export function Reset() {
 		setLoading(true)
 
 		try {
-			await setup({
-				email: "anonymous",
-				password: "anonymous",
-				masterKeys: ["anonymous"],
-				connectToSocket: true,
-				metadataCache: true,
-				twoFactorCode: undefined,
-				publicKey: "anonymous",
-				privateKey: "anonymous",
-				apiKey: "anonymous",
-				authVersion: 2,
-				baseFolderUUID: "anonymous",
-				userId: 1
-			})
+			await setup(
+				{
+					email: "anonymous",
+					password: "anonymous",
+					masterKeys: ["anonymous"],
+					connectToSocket: true,
+					metadataCache: true,
+					twoFactorCode: undefined,
+					publicKey: "anonymous",
+					privateKey: "anonymous",
+					apiKey: "anonymous",
+					authVersion: 2,
+					baseFolderUUID: "anonymous",
+					userId: 1
+				},
+				false
+			)
 
-			const salt = await sdk.crypto().utils.generateRandomString({ length: 256 })
-			const derived = await sdk.crypto().utils.generatePasswordAndMasterKeyBasedOnAuthVersion({
+			const salt = await getSDK().crypto().utils.generateRandomString({ length: 256 })
+			const derived = await getSDK().crypto().utils.generatePasswordAndMasterKeyBasedOnAuthVersion({
 				rawPassword: password,
 				salt,
 				authVersion: 2
@@ -231,7 +234,7 @@ export function Reset() {
 				return
 			}
 
-			const newMasterKeysEncrypted = await sdk
+			const newMasterKeysEncrypted = await getSDK()
 				.crypto()
 				.encrypt()
 				.metadata({
@@ -239,7 +242,7 @@ export function Reset() {
 					key: newMasterKeys[newMasterKeys.length - 1]
 				})
 
-			await sdk.api(3).user().password().forgotReset({
+			await getSDK().api(3).user().password().forgotReset({
 				token,
 				password: derived.derivedPassword,
 				salt,

@@ -9,7 +9,7 @@ import { useChatsStore } from "@/stores/chats.store"
 import Message, { Header } from "./message"
 import { type ChatMessage } from "@filen/sdk/dist/types/api/v3/chat/messages"
 import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import MarkAsRead from "./markAsRead"
 import useErrorToast from "@/hooks/useErrorToast"
@@ -291,6 +291,8 @@ export const Messages = memo(({ conversation }: { conversation: ChatConversation
 	}, [query.isSuccess, query.data, query.dataUpdatedAt, setMessages, routeParent])
 
 	useEffect(() => {
+		const socket = getSocket()
+
 		socket.addListener("socketEvent", socketEventListener)
 
 		const scrollChatToBottomListener = eventEmitter.on("scrollChatToBottom", behavior => {

@@ -1,5 +1,5 @@
 import { setItem } from "./localForage"
-import sdk from "./sdk"
+import { reinitSDK, getSDK } from "./sdk"
 import worker from "./worker"
 import { type FilenSDKConfig } from "@filen/sdk"
 import { IS_DESKTOP, DESKTOP_CONFIG_VERSION, SDK_CONFIG_VERSION } from "@/constants"
@@ -64,7 +64,7 @@ export const DEFAULT_DESKTOP_CONFIG: FilenDesktopConfig = {
  * @async
  * @returns {Promise<void>}
  */
-export async function setup(config?: FilenSDKConfig): Promise<void> {
+export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = false): Promise<void> {
 	const authed = window.localStorage.getItem(authedLocalStorageKey)
 		? window.localStorage.getItem(authedLocalStorageKey) === "true"
 		: false
@@ -78,10 +78,12 @@ export async function setup(config?: FilenSDKConfig): Promise<void> {
 			})
 	)
 
-	sdk.init(initConfig)
+	reinitSDK(initConfig)
+
+	getSDK().init(initConfig)
 
 	if (authed) {
-		const isAPIKeyValid = await sdk.user().checkAPIKeyValidity()
+		const isAPIKeyValid = await getSDK().user().checkAPIKeyValidity()
 
 		if (!isAPIKeyValid) {
 			await logout()
@@ -90,6 +92,10 @@ export async function setup(config?: FilenSDKConfig): Promise<void> {
 
 			return
 		}
+	}
+
+	if (authed || connectToSocket) {
+		console.log("Connecting to socket")
 
 		await socketConnect()
 	}
@@ -120,6 +126,8 @@ export async function logout(): Promise<void> {
 	if (IS_DESKTOP) {
 		await Promise.all([window.desktopAPI.stopS3Server(), window.desktopAPI.stopWebDAVServer(), window.desktopAPI.stopVirtualDrive()])
 	}
+
+	window.document.title = "Filen"
 
 	const cookieConsent = window.localStorage.getItem("cookieConsent")
 	const defaultNoteType = window.localStorage.getItem("defaultNoteType")
@@ -156,7 +164,9 @@ export async function logout(): Promise<void> {
 
 	await clearLocalForage()
 
-	sdk.init(DEFAULT_SDK_CONFIG)
+	reinitSDK(DEFAULT_SDK_CONFIG)
+
+	getSDK().init(DEFAULT_SDK_CONFIG)
 
 	await worker.initializeSDK(DEFAULT_SDK_CONFIG)
 }

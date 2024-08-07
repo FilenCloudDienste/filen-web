@@ -2,7 +2,7 @@ import { memo, useState, useCallback, useRef, useEffect, useMemo } from "react"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { useTranslation } from "react-i18next"
 import { type SocketEvent } from "@filen/sdk"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import { MoreHorizontal } from "lucide-react"
 
 export type TypingUser = {
@@ -55,6 +55,8 @@ export const Typing = memo(({ conversation }: { conversation: ChatConversation }
 	)
 
 	useEffect(() => {
+		const socket = getSocket()
+
 		socket.addListener("socketEvent", socketEventListener)
 
 		const typingUsers = typingUsersTimeout.current

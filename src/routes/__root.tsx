@@ -35,6 +35,7 @@ import DesktopListener from "@/components/desktopListener"
 import InfoDialog from "@/components/dialogs/infoDialog"
 import IsOnlineDialog from "@/components/dialogs/isOnline"
 import Page404 from "@/components/404"
+import DesktopUpdateDialog from "@/components/dialogs/desktopUpdate"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -170,6 +171,7 @@ export const Root = memo(() => {
 								<TransparentFullScreenImageDialog />
 								<TwoFactorCodeDialog />
 								<ProfileDialog />
+								<DesktopUpdateDialog />
 							</CookieConsent>
 						</>
 					)}

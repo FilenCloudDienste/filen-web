@@ -7,7 +7,7 @@ import worker from "@/lib/worker"
 import { useChatsStore } from "@/stores/chats.store"
 import { useContactsStore } from "@/stores/contacts.store"
 import { type SocketEvent } from "@filen/sdk"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import eventEmitter from "@/lib/eventEmitter"
 import { cn } from "@/lib/utils"
 
@@ -91,6 +91,8 @@ export const SideBar = memo(() => {
 	}, [chatsUnreadCountQuery, contactsRequestInCountQuery])
 
 	useEffect(() => {
+		const socket = getSocket()
+
 		socket.addListener("socketEvent", socketEventListener)
 
 		return () => {

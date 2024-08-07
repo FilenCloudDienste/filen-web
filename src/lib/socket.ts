@@ -1,9 +1,9 @@
-import SDK from "./sdk"
-import { SDK_CONFIG_VERSION } from "@/constants"
+import { getSDK } from "./sdk"
+import { getSDKConfig } from "@/hooks/useSDKConfig"
 
-let connected = false
-
-export const socket = SDK.socket
+export function getSocket() {
+	return getSDK().socket
+}
 
 /**
  * We need to wait for an API key first before connecting.
@@ -15,21 +15,21 @@ export const socket = SDK.socket
  */
 export async function waitForAPIKey(): Promise<string> {
 	return new Promise<string>(resolve => {
-		const config = window.localStorage.getItem(`sdkConfig:${SDK_CONFIG_VERSION}`)
+		const config = getSDKConfig()
 
-		if (config) {
-			resolve(JSON.parse(config).apiKey)
+		if (config && config.apiKey && config.apiKey.length > 32) {
+			resolve(config.apiKey)
 
 			return
 		}
 
 		const wait = setInterval(() => {
-			const config = window.localStorage.getItem(`sdkConfig:${SDK_CONFIG_VERSION}`)
+			const config = getSDKConfig()
 
-			if (config) {
+			if (config && config.apiKey && config.apiKey.length > 32) {
 				clearInterval(wait)
 
-				resolve(JSON.parse(config).apiKey)
+				resolve(config.apiKey)
 			}
 		}, 1000)
 	})
@@ -43,21 +43,11 @@ export async function waitForAPIKey(): Promise<string> {
  * @returns {Promise<void>}
  */
 export async function connect(): Promise<void> {
-	if (connected) {
-		return
-	}
-
-	connected = true
-
 	try {
 		const apiKey = await waitForAPIKey()
 
-		socket.connect({ apiKey })
+		getSocket().connect({ apiKey })
 	} catch (e) {
 		console.error(e)
-
-		connected = false
 	}
 }
-
-export default socket

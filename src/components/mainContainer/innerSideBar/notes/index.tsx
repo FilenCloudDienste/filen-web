@@ -12,7 +12,7 @@ import { useNavigate } from "@tanstack/react-router"
 import useRouteParent from "@/hooks/useRouteParent"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import { type SocketEvent } from "@filen/sdk"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import { Note as NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useTranslation } from "react-i18next"
@@ -237,6 +237,8 @@ export const Notes = memo(() => {
 	}, [query.isSuccess, query.data, query.dataUpdatedAt, setNotes, setSelectedNote])
 
 	useEffect(() => {
+		const socket = getSocket()
+
 		socket.addListener("socketEvent", socketEventListener)
 
 		return () => {

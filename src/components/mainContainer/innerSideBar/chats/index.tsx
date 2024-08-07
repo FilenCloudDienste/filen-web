@@ -13,7 +13,7 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import useElementDimensions from "@/hooks/useElementDimensions"
 import { type SocketEvent } from "@filen/sdk"
-import socket from "@/lib/socket"
+import { getSocket } from "@/lib/socket"
 import eventEmitter from "@/lib/eventEmitter"
 import { sortAndFilterConversations } from "./utils"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
@@ -382,6 +382,8 @@ export const Chats = memo(() => {
 	}, [query.isSuccess, query.data, query.dataUpdatedAt, setConversations, setSelectedConversation])
 
 	useEffect(() => {
+		const socket = getSocket()
+
 		socket.addListener("socketEvent", socketEventListener)
 
 		return () => {

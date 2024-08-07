@@ -1,4 +1,4 @@
-import SDK from "../sdk"
+import { getSDK } from "../sdk"
 import {
 	type FilenSDKConfig,
 	type FileMetadata,
@@ -76,7 +76,7 @@ export async function waitForInitialization(): Promise<void> {
 }
 
 export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
-	SDK.init(config)
+	getSDK().init(config)
 
 	console.log("Worker SDK initialized")
 
@@ -92,7 +92,7 @@ export async function setMessageHandler(callback: (message: WorkerToMainMessage)
 export async function encryptMetadata({ metadata, key, derive }: { metadata: string; key?: string; derive?: boolean }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.crypto().encrypt().metadata({
+	return await getSDK().crypto().encrypt().metadata({
 		metadata,
 		key,
 		derive
@@ -102,7 +102,7 @@ export async function encryptMetadata({ metadata, key, derive }: { metadata: str
 export async function decryptMetadata({ metadata, key }: { metadata: string; key: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.crypto().decrypt().metadata({
+	return await getSDK().crypto().decrypt().metadata({
 		metadata,
 		key
 	})
@@ -140,7 +140,7 @@ export async function getDirectorySizeFromCacheOrFetch({
 export async function listDirectory({ uuid, onlyDirectories }: { uuid: string; onlyDirectories?: boolean }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const items = await SDK.cloud().listDirectory({ uuid, onlyDirectories })
+	const items = await getSDK().cloud().listDirectory({ uuid, onlyDirectories })
 	const driveItems: DriveCloudItem[] = await promiseAllChunked(
 		items.map(
 			item =>
@@ -185,7 +185,7 @@ export async function listDirectory({ uuid, onlyDirectories }: { uuid: string; o
 export async function listDirectorySharedIn({ uuid }: { uuid: string }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const items = await SDK.cloud().listDirectorySharedIn({ uuid })
+	const items = await getSDK().cloud().listDirectorySharedIn({ uuid })
 	const driveItems: DriveCloudItem[] = await promiseAllChunked(
 		items.map(
 			item =>
@@ -243,7 +243,7 @@ export async function listDirectorySharedIn({ uuid }: { uuid: string }): Promise
 export async function listDirectorySharedOut({ uuid, receiverId }: { uuid: string; receiverId?: number }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const items = await SDK.cloud().listDirectorySharedOut({
+	const items = await getSDK().cloud().listDirectorySharedOut({
 		uuid,
 		receiverId
 	})
@@ -304,7 +304,7 @@ export async function listDirectorySharedOut({ uuid, receiverId }: { uuid: strin
 export async function listFavorites(): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const items = await SDK.cloud().listFavorites()
+	const items = await getSDK().cloud().listFavorites()
 	const driveItems: DriveCloudItem[] = await promiseAllChunked(
 		items.map(
 			item =>
@@ -349,7 +349,7 @@ export async function listFavorites(): Promise<DriveCloudItem[]> {
 export async function listPublicLinks(): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const items = await SDK.cloud().listPublicLinks()
+	const items = await getSDK().cloud().listPublicLinks()
 	const driveItems: DriveCloudItem[] = await promiseAllChunked(
 		items.map(
 			item =>
@@ -394,7 +394,7 @@ export async function listPublicLinks(): Promise<DriveCloudItem[]> {
 export async function listRecents(): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const items = await SDK.cloud().listRecents()
+	const items = await getSDK().cloud().listRecents()
 	const driveItems: DriveCloudItem[] = await promiseAllChunked(
 		items.map(
 			item =>
@@ -439,7 +439,7 @@ export async function listRecents(): Promise<DriveCloudItem[]> {
 export async function listTrash(): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
-	const items = await SDK.cloud().listTrash()
+	const items = await getSDK().cloud().listTrash()
 	const driveItems: DriveCloudItem[] = await promiseAllChunked(
 		items.map(
 			item =>
@@ -497,84 +497,86 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 	}
 
 	const writer = await fileHandle.createWritable()
-	const stream = SDK.cloud().downloadFileToReadableStream({
-		uuid: item.uuid,
-		bucket: item.bucket,
-		region: item.region,
-		version: item.version,
-		size: item.size,
-		chunks: item.chunks,
-		key: item.key,
-		pauseSignal: pauseSignals[item.uuid],
-		abortSignal: abortControllers[item.uuid]!.signal,
-		onQueued: () => {
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "queued",
-					uuid: item.uuid,
-					name: item.name
-				}
-			})
-		},
-		onStarted: () => {
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "started",
-					uuid: item.uuid,
-					name: item.name,
-					size: item.size
-				}
-			})
-		},
-		onProgress: transferred => {
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "progress",
-					uuid: item.uuid,
-					bytes: transferred,
-					name: item.name
-				}
-			})
-		},
-		onFinished: () => {
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "finished",
-					uuid: item.uuid,
-					name: item.name,
-					size: item.size
-				}
-			})
+	const stream = getSDK()
+		.cloud()
+		.downloadFileToReadableStream({
+			uuid: item.uuid,
+			bucket: item.bucket,
+			region: item.region,
+			version: item.version,
+			size: item.size,
+			chunks: item.chunks,
+			key: item.key,
+			pauseSignal: pauseSignals[item.uuid],
+			abortSignal: abortControllers[item.uuid]!.signal,
+			onQueued: () => {
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "queued",
+						uuid: item.uuid,
+						name: item.name
+					}
+				})
+			},
+			onStarted: () => {
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "started",
+						uuid: item.uuid,
+						name: item.name,
+						size: item.size
+					}
+				})
+			},
+			onProgress: transferred => {
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "progress",
+						uuid: item.uuid,
+						bytes: transferred,
+						name: item.name
+					}
+				})
+			},
+			onFinished: () => {
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "finished",
+						uuid: item.uuid,
+						name: item.name,
+						size: item.size
+					}
+				})
 
-			delete pauseSignals[item.uuid]
-			delete abortControllers[item.uuid]
-		},
-		onError: err => {
-			writer.abort(err).catch(console.error)
+				delete pauseSignals[item.uuid]
+				delete abortControllers[item.uuid]
+			},
+			onError: err => {
+				writer.abort(err).catch(console.error)
 
-			if (err instanceof DOMException && err.name === "AbortError") {
-				return
+				if (err instanceof DOMException && err.name === "AbortError") {
+					return
+				}
+
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "error",
+						uuid: item.uuid,
+						err,
+						name: item.name,
+						size: item.size
+					}
+				})
+
+				delete pauseSignals[item.uuid]
+				delete abortControllers[item.uuid]
 			}
-
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "error",
-					uuid: item.uuid,
-					err,
-					name: item.name,
-					size: item.size
-				}
-			})
-
-			delete pauseSignals[item.uuid]
-			delete abortControllers[item.uuid]
-		}
-	})
+		})
 
 	stream.pipeTo(writer).catch(console.error)
 }
@@ -613,116 +615,118 @@ export async function uploadFile({
 		abortControllers[fileId] = new AbortController()
 	}
 
-	const item = await SDK.cloud().uploadWebFile({
-		file,
-		parent,
-		name: fileName,
-		pauseSignal: pauseSignals[fileId],
-		abortSignal: abortControllers[fileId]!.signal,
-		onQueued: () => {
-			if (!emitEvents) {
-				return
-			}
-
-			postMessageToMain({
-				type: "upload",
-				data: {
-					type: "queued",
-					uuid: fileId,
-					name: fileName
+	const item = await getSDK()
+		.cloud()
+		.uploadWebFile({
+			file,
+			parent,
+			name: fileName,
+			pauseSignal: pauseSignals[fileId],
+			abortSignal: abortControllers[fileId]!.signal,
+			onQueued: () => {
+				if (!emitEvents) {
+					return
 				}
-			})
-		},
-		onStarted: () => {
-			if (!emitEvents) {
-				return
-			}
 
-			postMessageToMain({
-				type: "upload",
-				data: {
-					type: "started",
-					uuid: fileId,
-					name: fileName,
-					size: file.size
+				postMessageToMain({
+					type: "upload",
+					data: {
+						type: "queued",
+						uuid: fileId,
+						name: fileName
+					}
+				})
+			},
+			onStarted: () => {
+				if (!emitEvents) {
+					return
 				}
-			})
-		},
-		onProgress: transferred => {
-			if (!emitEvents) {
-				return
-			}
 
-			postMessageToMain({
-				type: "upload",
-				data: {
-					type: "progress",
-					uuid: fileId,
-					bytes: transferred,
-					name: fileName
+				postMessageToMain({
+					type: "upload",
+					data: {
+						type: "started",
+						uuid: fileId,
+						name: fileName,
+						size: file.size
+					}
+				})
+			},
+			onProgress: transferred => {
+				if (!emitEvents) {
+					return
 				}
-			})
-		},
-		onFinished: () => {
-			if (!emitEvents) {
-				return
-			}
 
-			postMessageToMain({
-				type: "upload",
-				data: {
-					type: "finished",
-					uuid: fileId,
-					name: fileName,
-					size: file.size
+				postMessageToMain({
+					type: "upload",
+					data: {
+						type: "progress",
+						uuid: fileId,
+						bytes: transferred,
+						name: fileName
+					}
+				})
+			},
+			onFinished: () => {
+				if (!emitEvents) {
+					return
 				}
-			})
 
-			delete pauseSignals[fileId]
-			delete abortControllers[fileId]
-		},
-		onError: err => {
-			if (!emitEvents) {
-				return
-			}
+				postMessageToMain({
+					type: "upload",
+					data: {
+						type: "finished",
+						uuid: fileId,
+						name: fileName,
+						size: file.size
+					}
+				})
 
-			if (err instanceof DOMException && err.name === "AbortError") {
-				return
-			}
-
-			postMessageToMain({
-				type: "upload",
-				data: {
-					type: "error",
-					uuid: fileId,
-					err,
-					name: fileName,
-					size: file.size
+				delete pauseSignals[fileId]
+				delete abortControllers[fileId]
+			},
+			onError: err => {
+				if (!emitEvents) {
+					return
 				}
-			})
 
-			delete pauseSignals[fileId]
-			delete abortControllers[fileId]
-		},
-		onUploaded: async item => {
-			if (item.type !== "file") {
-				return
-			}
-
-			await generateThumbnailInsideWorker({
-				item: {
-					...item,
-					sharerId: 0,
-					sharerEmail: "",
-					receiverId: 0,
-					receiverEmail: "",
-					selected: false,
-					receivers: [],
-					size: item.size
+				if (err instanceof DOMException && err.name === "AbortError") {
+					return
 				}
-			}).catch(console.error)
-		}
-	})
+
+				postMessageToMain({
+					type: "upload",
+					data: {
+						type: "error",
+						uuid: fileId,
+						err,
+						name: fileName,
+						size: file.size
+					}
+				})
+
+				delete pauseSignals[fileId]
+				delete abortControllers[fileId]
+			},
+			onUploaded: async item => {
+				if (item.type !== "file") {
+					return
+				}
+
+				await generateThumbnailInsideWorker({
+					item: {
+						...item,
+						sharerId: 0,
+						sharerEmail: "",
+						receiverId: 0,
+						receiverEmail: "",
+						selected: false,
+						receivers: [],
+						size: item.size
+					}
+				}).catch(console.error)
+			}
+		})
 
 	return {
 		...item,
@@ -802,125 +806,127 @@ export async function uploadDirectory({
 	}
 
 	try {
-		await SDK.cloud().uploadDirectoryFromWeb({
-			files: files.map(file => file.file) as unknown as FileList,
-			parent,
-			name,
-			pauseSignal: pauseSignals[directoryId],
-			abortSignal: abortControllers[directoryId]!.signal,
-			onQueued: () => {
-				if (didQueue || !emitEvents) {
-					return
-				}
-
-				didQueue = true
-
-				postMessageToMain({
-					type: "upload",
-					data: {
-						type: "queued",
-						uuid: directoryId,
-						name: name!
+		await getSDK()
+			.cloud()
+			.uploadDirectoryFromWeb({
+				files: files.map(file => file.file) as unknown as FileList,
+				parent,
+				name,
+				pauseSignal: pauseSignals[directoryId],
+				abortSignal: abortControllers[directoryId]!.signal,
+				onQueued: () => {
+					if (didQueue || !emitEvents) {
+						return
 					}
-				})
-			},
-			onStarted: () => {
-				if (didStart || !emitEvents) {
-					return
-				}
 
-				didStart = true
+					didQueue = true
 
-				postMessageToMain({
-					type: "upload",
-					data: {
-						type: "started",
-						uuid: directoryId,
-						name: name!,
-						size
-					}
-				})
-			},
-			onProgress: transferred => {
-				if (!emitEvents) {
-					return
-				}
-
-				postMessageToMain({
-					type: "upload",
-					data: {
-						type: "progress",
-						uuid: directoryId,
-						bytes: transferred,
-						name: name!
-					}
-				})
-			},
-			onError: err => {
-				if (err instanceof DOMException && err.name === "AbortError") {
-					return
-				}
-
-				if (didError || !emitEvents) {
-					return
-				}
-
-				didError = true
-
-				postMessageToMain({
-					type: "upload",
-					data: {
-						type: "error",
-						uuid: directoryId,
-						err,
-						name: name!,
-						size
-					}
-				})
-
-				delete pauseSignals[directoryId]
-				delete abortControllers[directoryId]
-			},
-			onDirectoryCreated: item => {
-				setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
-
-				items.push({
-					...item,
-					sharerId,
-					sharerEmail,
-					receiverId,
-					receiverEmail,
-					selected: false,
-					receivers
-				})
-			},
-			onUploaded: async item => {
-				items.push({
-					...item,
-					sharerId,
-					sharerEmail,
-					receiverId,
-					receiverEmail,
-					selected: false,
-					receivers
-				})
-
-				if (item.type === "file") {
-					await generateThumbnailInsideWorker({
-						item: {
-							...item,
-							sharerId: 0,
-							sharerEmail: "",
-							receiverId: 0,
-							receiverEmail: "",
-							selected: false,
-							receivers: [],
-							size: item.size
+					postMessageToMain({
+						type: "upload",
+						data: {
+							type: "queued",
+							uuid: directoryId,
+							name: name!
 						}
 					})
+				},
+				onStarted: () => {
+					if (didStart || !emitEvents) {
+						return
+					}
+
+					didStart = true
+
+					postMessageToMain({
+						type: "upload",
+						data: {
+							type: "started",
+							uuid: directoryId,
+							name: name!,
+							size
+						}
+					})
+				},
+				onProgress: transferred => {
+					if (!emitEvents) {
+						return
+					}
+
+					postMessageToMain({
+						type: "upload",
+						data: {
+							type: "progress",
+							uuid: directoryId,
+							bytes: transferred,
+							name: name!
+						}
+					})
+				},
+				onError: err => {
+					if (err instanceof DOMException && err.name === "AbortError") {
+						return
+					}
+
+					if (didError || !emitEvents) {
+						return
+					}
+
+					didError = true
+
+					postMessageToMain({
+						type: "upload",
+						data: {
+							type: "error",
+							uuid: directoryId,
+							err,
+							name: name!,
+							size
+						}
+					})
+
+					delete pauseSignals[directoryId]
+					delete abortControllers[directoryId]
+				},
+				onDirectoryCreated: item => {
+					setItem(`directoryUUIDToName:${item.uuid}`, item.name).catch(console.error)
+
+					items.push({
+						...item,
+						sharerId,
+						sharerEmail,
+						receiverId,
+						receiverEmail,
+						selected: false,
+						receivers
+					})
+				},
+				onUploaded: async item => {
+					items.push({
+						...item,
+						sharerId,
+						sharerEmail,
+						receiverId,
+						receiverEmail,
+						selected: false,
+						receivers
+					})
+
+					if (item.type === "file") {
+						await generateThumbnailInsideWorker({
+							item: {
+								...item,
+								sharerId: 0,
+								sharerEmail: "",
+								receiverId: 0,
+								receiverEmail: "",
+								selected: false,
+								receivers: [],
+								size: item.size
+							}
+						})
+					}
 				}
-			}
-		})
+			})
 
 		if (emitEvents) {
 			postMessageToMain({
@@ -1001,11 +1007,11 @@ export async function directorySize({
 	directorySizeRateLimit[rateLimitKey] = now + 30000
 
 	const fetched = linkUUID
-		? await SDK.cloud().directorySizePublicLink({
+		? await getSDK().cloud().directorySizePublicLink({
 				uuid,
 				linkUUID
 			})
-		: await SDK.cloud().directorySize({
+		: await getSDK().cloud().directorySize({
 				uuid,
 				sharerId,
 				receiverId,
@@ -1140,89 +1146,91 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 					zipWriter
 						.add(
 							item.path,
-							SDK.cloud().downloadFileToReadableStream({
-								uuid: item.uuid,
-								bucket: item.bucket,
-								region: item.region,
-								version: item.version,
-								chunks: item.chunks,
-								size: item.size,
-								key: item.key,
-								pauseSignal: pauseSignals[directoryId],
-								abortSignal: abortControllers[directoryId]!.signal,
-								onQueued: () => {
-									if (didQueue) {
-										return
-									}
-
-									didQueue = true
-
-									postMessageToMain({
-										type: "download",
-										data: {
-											type: "queued",
-											uuid: directoryId,
-											name: directoryName
+							getSDK()
+								.cloud()
+								.downloadFileToReadableStream({
+									uuid: item.uuid,
+									bucket: item.bucket,
+									region: item.region,
+									version: item.version,
+									chunks: item.chunks,
+									size: item.size,
+									key: item.key,
+									pauseSignal: pauseSignals[directoryId],
+									abortSignal: abortControllers[directoryId]!.signal,
+									onQueued: () => {
+										if (didQueue) {
+											return
 										}
-									})
-								},
-								onStarted: () => {
-									if (didStart) {
-										return
-									}
 
-									didStart = true
+										didQueue = true
 
-									postMessageToMain({
-										type: "download",
-										data: {
-											type: "started",
-											uuid: directoryId,
-											name: directoryName,
-											size: directorySize
+										postMessageToMain({
+											type: "download",
+											data: {
+												type: "queued",
+												uuid: directoryId,
+												name: directoryName
+											}
+										})
+									},
+									onStarted: () => {
+										if (didStart) {
+											return
 										}
-									})
-								},
-								onProgress: transferred => {
-									postMessageToMain({
-										type: "download",
-										data: {
-											type: "progress",
-											uuid: directoryId,
-											name: directoryName,
-											bytes: transferred
+
+										didStart = true
+
+										postMessageToMain({
+											type: "download",
+											data: {
+												type: "started",
+												uuid: directoryId,
+												name: directoryName,
+												size: directorySize
+											}
+										})
+									},
+									onProgress: transferred => {
+										postMessageToMain({
+											type: "download",
+											data: {
+												type: "progress",
+												uuid: directoryId,
+												name: directoryName,
+												bytes: transferred
+											}
+										})
+									},
+									onError: async err => {
+										await zipWriter.close().catch(console.error)
+										await writer.abort(err).catch(console.error)
+
+										if (err instanceof DOMException && err.name === "AbortError") {
+											return
 										}
-									})
-								},
-								onError: async err => {
-									await zipWriter.close().catch(console.error)
-									await writer.abort(err).catch(console.error)
 
-									if (err instanceof DOMException && err.name === "AbortError") {
-										return
-									}
-
-									if (didError) {
-										return
-									}
-
-									didError = true
-
-									postMessageToMain({
-										type: "download",
-										data: {
-											type: "error",
-											uuid: directoryId,
-											name: directoryName,
-											size: directorySize,
-											err
+										if (didError) {
+											return
 										}
-									})
 
-									delete pauseSignals[directoryId]
-									delete abortControllers[directoryId]
-								}
-							}),
+										didError = true
+
+										postMessageToMain({
+											type: "download",
+											data: {
+												type: "error",
+												uuid: directoryId,
+												name: directoryName,
+												size: directorySize,
+												err
+											}
+										})
+
+										delete pauseSignals[directoryId]
+										delete abortControllers[directoryId]
+									}
+								}),
 							{
 								lastModDate: new Date(item.lastModified),
 								lastAccessDate: new Date(item.lastModified),
@@ -1297,7 +1305,7 @@ export async function getDirectoryTree({
 }) {
 	await waitForInitialization()
 
-	return await SDK.cloud().getDirectoryTree({
+	return await getSDK().cloud().getDirectoryTree({
 		uuid,
 		type,
 		linkUUID,
@@ -1429,26 +1437,30 @@ export async function moveItems({ items, parent }: { items: DriveCloudItem[]; pa
 			item.parent === parent
 				? Promise.resolve()
 				: item.type === "file"
-					? SDK.cloud().moveFile({
-							uuid: item.uuid,
-							to: parent,
-							metadata: {
-								name: item.name,
-								key: item.key,
-								hash: item.hash,
-								creation: item.creation,
-								mime: item.mime,
-								lastModified: item.lastModified,
-								size: item.size
-							} satisfies FileMetadata
-						})
-					: SDK.cloud().moveDirectory({
-							uuid: item.uuid,
-							to: parent,
-							metadata: {
-								name: item.name
-							} satisfies FolderMetadata
-						})
+					? getSDK()
+							.cloud()
+							.moveFile({
+								uuid: item.uuid,
+								to: parent,
+								metadata: {
+									name: item.name,
+									key: item.key,
+									hash: item.hash,
+									creation: item.creation,
+									mime: item.mime,
+									lastModified: item.lastModified,
+									size: item.size
+								} satisfies FileMetadata
+							})
+					: getSDK()
+							.cloud()
+							.moveDirectory({
+								uuid: item.uuid,
+								to: parent,
+								metadata: {
+									name: item.name
+								} satisfies FolderMetadata
+							})
 		)
 	)
 }
@@ -1459,10 +1471,10 @@ export async function deleteItemsPermanently({ items }: { items: DriveCloudItem[
 	await promiseAllChunked(
 		items.map(item =>
 			item.type === "file"
-				? SDK.cloud().deleteFile({
+				? getSDK().cloud().deleteFile({
 						uuid: item.uuid
 					})
-				: SDK.cloud().deleteDirectory({
+				: getSDK().cloud().deleteDirectory({
 						uuid: item.uuid
 					})
 		)
@@ -1481,10 +1493,10 @@ export async function trashItems({ items }: { items: DriveCloudItem[] }): Promis
 	await promiseAllChunked(
 		items.map(item =>
 			item.type === "file"
-				? SDK.cloud().trashFile({
+				? getSDK().cloud().trashFile({
 						uuid: item.uuid
 					})
-				: SDK.cloud().trashDirectory({
+				: getSDK().cloud().trashDirectory({
 						uuid: item.uuid
 					})
 		)
@@ -1497,10 +1509,10 @@ export async function restoreItems({ items }: { items: DriveCloudItem[] }): Prom
 	await promiseAllChunked(
 		items.map(item =>
 			item.type === "file"
-				? SDK.cloud().restoreFile({
+				? getSDK().cloud().restoreFile({
 						uuid: item.uuid
 					})
-				: SDK.cloud().restoreDirectory({
+				: getSDK().cloud().restoreDirectory({
 						uuid: item.uuid
 					})
 		)
@@ -1515,11 +1527,11 @@ export async function favoriteItems({ items, favorite }: { items: DriveCloudItem
 			item.favorited === favorite
 				? Promise.resolve()
 				: item.type === "file"
-					? SDK.cloud().favoriteFile({
+					? getSDK().cloud().favoriteFile({
 							uuid: item.uuid,
 							favorite
 						})
-					: SDK.cloud().favoriteDirectory({
+					: getSDK().cloud().favoriteDirectory({
 							uuid: item.uuid,
 							favorite
 						})
@@ -1552,104 +1564,106 @@ export async function readFile({
 		abortControllers[item.uuid] = new AbortController()
 	}
 
-	const stream = SDK.cloud().downloadFileToReadableStream({
-		uuid: item.uuid,
-		bucket: item.bucket,
-		region: item.region,
-		chunks: item.chunks,
-		version: item.version,
-		size: item.size,
-		key: item.key,
-		start,
-		end,
-		pauseSignal: pauseSignals[item.uuid],
-		abortSignal: abortControllers[item.uuid]!.signal,
-		onQueued: () => {
-			if (!emitEvents) {
-				return
-			}
-
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "queued",
-					uuid: item.uuid,
-					name: item.name
+	const stream = getSDK()
+		.cloud()
+		.downloadFileToReadableStream({
+			uuid: item.uuid,
+			bucket: item.bucket,
+			region: item.region,
+			chunks: item.chunks,
+			version: item.version,
+			size: item.size,
+			key: item.key,
+			start,
+			end,
+			pauseSignal: pauseSignals[item.uuid],
+			abortSignal: abortControllers[item.uuid]!.signal,
+			onQueued: () => {
+				if (!emitEvents) {
+					return
 				}
-			})
-		},
-		onStarted: () => {
-			if (!emitEvents) {
-				return
-			}
 
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "started",
-					uuid: item.uuid,
-					name: item.name,
-					size: item.size
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "queued",
+						uuid: item.uuid,
+						name: item.name
+					}
+				})
+			},
+			onStarted: () => {
+				if (!emitEvents) {
+					return
 				}
-			})
-		},
-		onProgress: transferred => {
-			if (!emitEvents) {
-				return
-			}
 
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "progress",
-					uuid: item.uuid,
-					bytes: transferred,
-					name: item.name
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "started",
+						uuid: item.uuid,
+						name: item.name,
+						size: item.size
+					}
+				})
+			},
+			onProgress: transferred => {
+				if (!emitEvents) {
+					return
 				}
-			})
-		},
-		onFinished: () => {
-			if (!emitEvents) {
-				return
-			}
 
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "finished",
-					uuid: item.uuid,
-					name: item.name,
-					size: item.size
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "progress",
+						uuid: item.uuid,
+						bytes: transferred,
+						name: item.name
+					}
+				})
+			},
+			onFinished: () => {
+				if (!emitEvents) {
+					return
 				}
-			})
 
-			delete pauseSignals[item.uuid]
-			delete abortControllers[item.uuid]
-		},
-		onError: err => {
-			if (err instanceof DOMException && err.name === "AbortError") {
-				return
-			}
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "finished",
+						uuid: item.uuid,
+						name: item.name,
+						size: item.size
+					}
+				})
 
-			if (!emitEvents) {
-				return
-			}
-
-			postMessageToMain({
-				type: "download",
-				data: {
-					type: "error",
-					uuid: item.uuid,
-					err,
-					name: item.name,
-					size: item.size
+				delete pauseSignals[item.uuid]
+				delete abortControllers[item.uuid]
+			},
+			onError: err => {
+				if (err instanceof DOMException && err.name === "AbortError") {
+					return
 				}
-			})
 
-			delete pauseSignals[item.uuid]
-			delete abortControllers[item.uuid]
-		}
-	})
+				if (!emitEvents) {
+					return
+				}
+
+				postMessageToMain({
+					type: "download",
+					data: {
+						type: "error",
+						uuid: item.uuid,
+						err,
+						name: item.name,
+						size: item.size
+					}
+				})
+
+				delete pauseSignals[item.uuid]
+				delete abortControllers[item.uuid]
+			}
+		})
 
 	let buffer = Buffer.from([])
 	const reader = stream.getReader()
@@ -1927,20 +1941,22 @@ export async function renameItem({ item, name }: { item: DriveCloudItem; name: s
 	await (item.name.toLowerCase() === name.toLowerCase()
 		? Promise.resolve()
 		: item.type === "file"
-			? SDK.cloud().renameFile({
-					uuid: item.uuid,
-					metadata: {
-						name,
-						size: item.size,
-						key: item.key,
-						mime: item.mime,
-						hash: item.hash,
-						lastModified: item.lastModified,
-						creation: item.creation
-					} satisfies FileMetadata,
-					name
-				})
-			: SDK.cloud().renameDirectory({
+			? getSDK()
+					.cloud()
+					.renameFile({
+						uuid: item.uuid,
+						metadata: {
+							name,
+							size: item.size,
+							key: item.key,
+							mime: item.mime,
+							hash: item.hash,
+							lastModified: item.lastModified,
+							creation: item.creation
+						} satisfies FileMetadata,
+						name
+					})
+			: getSDK().cloud().renameDirectory({
 					uuid: item.uuid,
 					name
 				}))
@@ -1969,7 +1985,7 @@ export async function createDirectory({
 }): Promise<DriveCloudItem> {
 	await waitForInitialization()
 
-	const uuid = await SDK.cloud().createDirectory({
+	const uuid = await getSDK().cloud().createDirectory({
 		name,
 		parent
 	})
@@ -2006,47 +2022,49 @@ export async function shareItemsToUser({
 }): Promise<void> {
 	await waitForInitialization()
 
-	await SDK.cloud().shareItemsToUser({
-		files: items
-			.filter(item => item.type === "file")
-			.map(item => ({
-				uuid: item.uuid,
-				metadata: {
-					name: item.name,
-					key: (item as { key: string }).key,
-					size: item.size,
-					mime: (item as { mime: string }).mime,
-					hash: (item as { hash?: string }).hash,
-					lastModified: item.lastModified,
-					creation: (item as { creation?: number }).creation
-				} satisfies FileMetadata,
-				parent: item.parent
-			})),
-		directories: items
-			.filter(item => item.type === "directory")
-			.map(item => ({
-				uuid: item.uuid,
-				metadata: {
-					name: item.name
-				} satisfies FolderMetadata,
-				parent: item.parent
-			})),
-		email: receiverEmail,
-		onProgress: done => {
-			postMessageToMain({
-				type: "shareProgress",
-				done,
-				total: items.length,
-				requestUUID
-			})
-		}
-	})
+	await getSDK()
+		.cloud()
+		.shareItemsToUser({
+			files: items
+				.filter(item => item.type === "file")
+				.map(item => ({
+					uuid: item.uuid,
+					metadata: {
+						name: item.name,
+						key: (item as { key: string }).key,
+						size: item.size,
+						mime: (item as { mime: string }).mime,
+						hash: (item as { hash?: string }).hash,
+						lastModified: item.lastModified,
+						creation: (item as { creation?: number }).creation
+					} satisfies FileMetadata,
+					parent: item.parent
+				})),
+			directories: items
+				.filter(item => item.type === "directory")
+				.map(item => ({
+					uuid: item.uuid,
+					metadata: {
+						name: item.name
+					} satisfies FolderMetadata,
+					parent: item.parent
+				})),
+			email: receiverEmail,
+			onProgress: done => {
+				postMessageToMain({
+					type: "shareProgress",
+					done,
+					total: items.length,
+					requestUUID
+				})
+			}
+		})
 }
 
 export async function listNotes(): Promise<Note[]> {
 	await waitForInitialization()
 
-	return await SDK.notes().all()
+	return await getSDK().notes().all()
 }
 
 export async function fetchNoteContent({ uuid }: { uuid: string }): Promise<{
@@ -2058,13 +2076,13 @@ export async function fetchNoteContent({ uuid }: { uuid: string }): Promise<{
 }> {
 	await waitForInitialization()
 
-	return await SDK.notes().content({ uuid })
+	return await getSDK().notes().content({ uuid })
 }
 
 export async function editNoteTitle({ uuid, title }: { uuid: string; title: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().editTitle({
+	return await getSDK().notes().editTitle({
 		uuid,
 		title
 	})
@@ -2073,7 +2091,7 @@ export async function editNoteTitle({ uuid, title }: { uuid: string; title: stri
 export async function editNoteContent({ uuid, content, type }: { uuid: string; content: string; type: NoteType }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().edit({
+	return await getSDK().notes().edit({
 		uuid,
 		content,
 		type
@@ -2082,7 +2100,7 @@ export async function editNoteContent({ uuid, content, type }: { uuid: string; c
 
 export async function createNote(): Promise<{ uuid: string; title: string }> {
 	const title = simpleDate(Date.now())
-	const uuid = await SDK.notes().create({ title })
+	const uuid = await getSDK().notes().create({ title })
 
 	return {
 		title,
@@ -2093,19 +2111,19 @@ export async function createNote(): Promise<{ uuid: string; title: string }> {
 export async function trashNote({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().trash({ uuid })
+	return await getSDK().notes().trash({ uuid })
 }
 
 export async function deleteNote({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().delete({ uuid })
+	return await getSDK().notes().delete({ uuid })
 }
 
 export async function pinNote({ uuid, pin }: { uuid: string; pin: boolean }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().pin({
+	return await getSDK().notes().pin({
 		uuid,
 		pin
 	})
@@ -2114,7 +2132,7 @@ export async function pinNote({ uuid, pin }: { uuid: string; pin: boolean }): Pr
 export async function favoriteNote({ uuid, favorite }: { uuid: string; favorite: boolean }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().favorite({
+	return await getSDK().notes().favorite({
 		uuid,
 		favorite
 	})
@@ -2123,25 +2141,25 @@ export async function favoriteNote({ uuid, favorite }: { uuid: string; favorite:
 export async function duplicateNote({ uuid }: { uuid: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.notes().duplicate({ uuid })
+	return await getSDK().notes().duplicate({ uuid })
 }
 
 export async function listNotesTags(): Promise<NoteTag[]> {
 	await waitForInitialization()
 
-	return await SDK.notes().tags()
+	return await getSDK().notes().tags()
 }
 
 export async function createNotesTag({ name }: { name: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.notes().createTag({ name })
+	return await getSDK().notes().createTag({ name })
 }
 
 export async function changeNoteType({ uuid, type }: { uuid: string; type: NoteType }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().changeType({
+	return await getSDK().notes().changeType({
 		uuid,
 		newType: type
 	})
@@ -2150,19 +2168,19 @@ export async function changeNoteType({ uuid, type }: { uuid: string; type: NoteT
 export async function restoreNote({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().restore({ uuid })
+	return await getSDK().notes().restore({ uuid })
 }
 
 export async function archiveNote({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().archive({ uuid })
+	return await getSDK().notes().archive({ uuid })
 }
 
 export async function favoriteNotesTag({ uuid, favorite }: { uuid: string; favorite: boolean }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().tagFavorite({
+	return await getSDK().notes().tagFavorite({
 		uuid,
 		favorite
 	})
@@ -2171,13 +2189,13 @@ export async function favoriteNotesTag({ uuid, favorite }: { uuid: string; favor
 export async function deleteNotesTag({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().deleteTag({ uuid })
+	return await getSDK().notes().deleteTag({ uuid })
 }
 
 export async function renameNotesTag({ uuid, name }: { uuid: string; name: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().renameTag({
+	return await getSDK().notes().renameTag({
 		uuid,
 		name
 	})
@@ -2186,7 +2204,7 @@ export async function renameNotesTag({ uuid, name }: { uuid: string; name: strin
 export async function tagNote({ uuid, tag }: { uuid: string; tag: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().tag({
+	return await getSDK().notes().tag({
 		uuid,
 		tag
 	})
@@ -2195,7 +2213,7 @@ export async function tagNote({ uuid, tag }: { uuid: string; tag: string }): Pro
 export async function untagNote({ uuid, tag }: { uuid: string; tag: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().untag({
+	return await getSDK().notes().untag({
 		uuid,
 		tag
 	})
@@ -2204,16 +2222,18 @@ export async function untagNote({ uuid, tag }: { uuid: string; tag: string }): P
 export async function listChatsConversations(): Promise<ChatConversation[]> {
 	await waitForInitialization()
 
-	return await SDK.chats().conversations()
+	return await getSDK().chats().conversations()
 }
 
 export async function fetchChatsConversationsMessages({ uuid, timestamp }: { uuid: string; timestamp?: number }): Promise<ChatMessage[]> {
 	await waitForInitialization()
 
-	return await SDK.chats().messages({
-		conversation: uuid,
-		timestamp: timestamp ? timestamp : Date.now() + 3600000
-	})
+	return await getSDK()
+		.chats()
+		.messages({
+			conversation: uuid,
+			timestamp: timestamp ? timestamp : Date.now() + 3600000
+		})
 }
 
 export async function sendChatMessage({
@@ -2229,7 +2249,7 @@ export async function sendChatMessage({
 }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.chats().sendMessage({
+	return await getSDK().chats().sendMessage({
 		conversation,
 		message,
 		replyTo,
@@ -2240,7 +2260,7 @@ export async function sendChatMessage({
 export async function sendChatTyping({ conversation, type }: { conversation: string; type: ChatTypingType }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().sendTyping({
+	return await getSDK().chats().sendTyping({
 		conversation,
 		type
 	})
@@ -2249,17 +2269,17 @@ export async function sendChatTyping({ conversation, type }: { conversation: str
 export async function chatKey({ conversation }: { conversation: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.chats().chatKey({ conversation })
+	return await getSDK().chats().chatKey({ conversation })
 }
 
 export async function noteKey({ uuid }: { uuid: string }): Promise<string> {
-	return await SDK.notes().noteKey({ uuid })
+	return await getSDK().notes().noteKey({ uuid })
 }
 
 export async function decryptChatMessage({ message, key }: { message: string; key: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.crypto().decrypt().chatMessage({
+	return await getSDK().crypto().decrypt().chatMessage({
 		message,
 		key
 	})
@@ -2268,19 +2288,19 @@ export async function decryptChatMessage({ message, key }: { message: string; ke
 export async function chatLastFocus(): Promise<ChatLastFocusValues[]> {
 	await waitForInitialization()
 
-	return await SDK.chats().lastFocus()
+	return await getSDK().chats().lastFocus()
 }
 
 export async function chatUpdateLastFocus({ values }: { values: ChatLastFocusValues[] }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().updateLastFocus({ values })
+	return await getSDK().chats().updateLastFocus({ values })
 }
 
 export async function chatDeleteMessage({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().deleteMessage({ uuid })
+	return await getSDK().chats().deleteMessage({ uuid })
 }
 
 export async function chatEditMessage({
@@ -2294,7 +2314,7 @@ export async function chatEditMessage({
 }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().editMessage({
+	return await getSDK().chats().editMessage({
 		uuid,
 		conversation,
 		message
@@ -2304,7 +2324,7 @@ export async function chatEditMessage({
 export async function chatEditConversationName({ conversation, name }: { conversation: string; name: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().editConversationName({
+	return await getSDK().chats().editConversationName({
 		conversation,
 		name
 	})
@@ -2313,13 +2333,13 @@ export async function chatEditConversationName({ conversation, name }: { convers
 export async function deleteChatConversation({ conversation }: { conversation: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().delete({ conversation })
+	return await getSDK().chats().delete({ conversation })
 }
 
 export async function chatRemoveParticipant({ conversation, userId }: { conversation: string; userId: number }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().removeParticipant({
+	return await getSDK().chats().removeParticipant({
 		conversation,
 		userId
 	})
@@ -2328,19 +2348,19 @@ export async function chatRemoveParticipant({ conversation, userId }: { conversa
 export async function decryptFileMetadata({ metadata }: { metadata: string }): Promise<FileMetadata> {
 	await waitForInitialization()
 
-	return await SDK.crypto().decrypt().fileMetadata({ metadata })
+	return await getSDK().crypto().decrypt().fileMetadata({ metadata })
 }
 
 export async function decryptFolderMetadata({ metadata }: { metadata: string }): Promise<FolderMetadata> {
 	await waitForInitialization()
 
-	return await SDK.crypto().decrypt().folderMetadata({ metadata })
+	return await getSDK().crypto().decrypt().folderMetadata({ metadata })
 }
 
 export async function changeDirectoryColor({ color, uuid }: { color: string; uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().changeDirectoryColor({
+	return await getSDK().cloud().changeDirectoryColor({
 		uuid,
 		color
 	})
@@ -2349,115 +2369,115 @@ export async function changeDirectoryColor({ color, uuid }: { color: string; uui
 export async function chatConversationOnline({ conversation }: { conversation: string }): Promise<ChatConversationsOnlineUser[]> {
 	await waitForInitialization()
 
-	return await SDK.chats().conversationOnline({ conversation })
+	return await getSDK().chats().conversationOnline({ conversation })
 }
 
 export async function listContacts(): Promise<Contact[]> {
 	await waitForInitialization()
 
-	return await SDK.contacts().all()
+	return await getSDK().contacts().all()
 }
 
 export async function chatConversationUnreadCount({ conversation }: { conversation: string }): Promise<number> {
 	await waitForInitialization()
 
-	return await SDK.chats().conversationUnreadCount({ conversation })
+	return await getSDK().chats().conversationUnreadCount({ conversation })
 }
 
 export async function chatMarkConversationAsRead({ conversation }: { conversation: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().markConversationAsRead({ conversation })
+	return await getSDK().chats().markConversationAsRead({ conversation })
 }
 
 export async function chatsUnreadCount(): Promise<number> {
 	await waitForInitialization()
 
-	return await SDK.chats().unread()
+	return await getSDK().chats().unread()
 }
 
 export async function listContactsRequestsIn(): Promise<ContactRequest[]> {
 	await waitForInitialization()
 
-	return await SDK.contacts().incomingRequests()
+	return await getSDK().contacts().incomingRequests()
 }
 
 export async function listContactsRequestsOut(): Promise<ContactRequest[]> {
 	await waitForInitialization()
 
-	return await SDK.contacts().outgoingRequests()
+	return await getSDK().contacts().outgoingRequests()
 }
 
 export async function listBlockedContacts(): Promise<BlockedContact[]> {
 	await waitForInitialization()
 
-	return await SDK.contacts().blocked()
+	return await getSDK().contacts().blocked()
 }
 
 export async function removeContact({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.contacts().remove({ uuid })
+	return await getSDK().contacts().remove({ uuid })
 }
 
 export async function blockUser({ email }: { email: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.contacts().block({ email })
+	return await getSDK().contacts().block({ email })
 }
 
 export async function unblockUser({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.contacts().unblock({ uuid })
+	return await getSDK().contacts().unblock({ uuid })
 }
 
 export async function contactsRequestAccept({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.contacts().acceptRequest({ uuid })
+	return await getSDK().contacts().acceptRequest({ uuid })
 }
 
 export async function contactsRequestDeny({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.contacts().denyRequest({ uuid })
+	return await getSDK().contacts().denyRequest({ uuid })
 }
 
 export async function contactsRequestRemove({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.contacts().deleteOutgoingRequest({ uuid })
+	return await getSDK().contacts().deleteOutgoingRequest({ uuid })
 }
 
 export async function contactsRequestSend({ email }: { email: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.contacts().sendRequest({ email })
+	return await getSDK().contacts().sendRequest({ email })
 }
 
 export async function contactsRequestInCount(): Promise<number> {
 	await waitForInitialization()
 
-	return await SDK.contacts().incomingRequestsCount()
+	return await getSDK().contacts().incomingRequestsCount()
 }
 
 export async function createChatConversation({ contacts }: { contacts: Contact[] }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.chats().create({ contacts })
+	return await getSDK().chats().create({ contacts })
 }
 
 export async function fetchUserAccount(): Promise<UserAccountResponse> {
 	await waitForInitialization()
 
-	return await SDK.user().account()
+	return await getSDK().user().account()
 }
 
 export async function chatConversationAddParticipant({ conversation, contact }: { conversation: string; contact: Contact }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().addParticipant({
+	return await getSDK().chats().addParticipant({
 		conversation,
 		contact
 	})
@@ -2652,74 +2672,74 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 export async function chatDisableMessageEmbed({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().disableMessageEmbed({ uuid })
+	return await getSDK().chats().disableMessageEmbed({ uuid })
 }
 
 export async function fetchAccount() {
 	await waitForInitialization()
 
-	return await SDK.user().account()
+	return await getSDK().user().account()
 }
 
 export async function fetchSettings() {
 	await waitForInitialization()
 
-	return await SDK.user().settings()
+	return await getSDK().user().settings()
 }
 
 export async function uploadAvatar({ buffer }: { buffer: Buffer }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().uploadAvatar({ buffer })
+	return await getSDK().user().uploadAvatar({ buffer })
 }
 
 export async function requestAccountData() {
 	await waitForInitialization()
 
-	return await SDK.user().gdpr()
+	return await getSDK().user().gdpr()
 }
 
 export async function deleteAllVersionedFiles(): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().deleteAllVersionedFiles()
+	return await getSDK().user().deleteAllVersionedFiles()
 }
 
 export async function deleteEverything(): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().deleteEverything()
+	return await getSDK().user().deleteEverything()
 }
 
 export async function toggleFileVersioning({ enabled }: { enabled: boolean }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().versioning({ enabled })
+	return await getSDK().user().versioning({ enabled })
 }
 
 export async function toggleLoginAlerts({ enabled }: { enabled: boolean }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().loginAlerts({ enabled })
+	return await getSDK().user().loginAlerts({ enabled })
 }
 
 export async function requestAccountDeletion({ twoFactorCode }: { twoFactorCode?: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().delete({ twoFactorCode })
+	return await getSDK().user().delete({ twoFactorCode })
 }
 
 export async function emptyTrash(): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().emptyTrash()
+	return await getSDK().cloud().emptyTrash()
 }
 
 export async function uploadFilesToChatUploads({ files }: { files: File[] }): Promise<DriveCloudItem[]> {
 	await waitForInitialization()
 
 	const base = await listDirectory({
-		uuid: SDK.config.baseFolderUUID!,
+		uuid: getSDK().config.baseFolderUUID!,
 		onlyDirectories: true
 	})
 	let parentUUID = ""
@@ -2731,7 +2751,7 @@ export async function uploadFilesToChatUploads({ files }: { files: File[] }): Pr
 		parentUUID = (
 			await createDirectory({
 				name: "Chat Uploads",
-				parent: SDK.config.baseFolderUUID!
+				parent: getSDK().config.baseFolderUUID!
 			})
 		).uuid
 	}
@@ -2752,7 +2772,7 @@ export async function uploadFilesToChatUploads({ files }: { files: File[] }): Pr
 export async function enablePublicLink({ type, uuid }: { type: "file" | "directory"; uuid: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.cloud().enablePublicLink({
+	return await getSDK().cloud().enablePublicLink({
 		type,
 		uuid
 	})
@@ -2775,7 +2795,7 @@ export async function editPublicLink({
 }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().editPublicLink({
+	return await getSDK().cloud().editPublicLink({
 		type,
 		itemUUID,
 		linkUUID,
@@ -2797,13 +2817,13 @@ export async function disablePublicLink({
 	await waitForInitialization()
 
 	if (type === "directory") {
-		return await SDK.cloud().disablePublicLink({
+		return await getSDK().cloud().disablePublicLink({
 			type,
 			itemUUID
 		})
 	}
 
-	return await SDK.cloud().disablePublicLink({
+	return await getSDK().cloud().disablePublicLink({
 		type,
 		itemUUID,
 		linkUUID
@@ -2811,7 +2831,7 @@ export async function disablePublicLink({
 }
 
 export async function filePublicLinkStatus({ uuid }: { uuid: string }): Promise<FileLinkStatusResponse> {
-	return await SDK.cloud().publicLinkStatus({
+	return await getSDK().cloud().publicLinkStatus({
 		type: "file",
 		uuid
 	})
@@ -2828,7 +2848,7 @@ export async function directoryPublicLinkStatus({ uuid }: { uuid: string }): Pro
 }> {
 	await waitForInitialization()
 
-	const status = await SDK.cloud().publicLinkStatus({
+	const status = await getSDK().cloud().publicLinkStatus({
 		type: "directory",
 		uuid
 	})
@@ -2847,7 +2867,7 @@ export async function directoryPublicLinkStatus({ uuid }: { uuid: string }): Pro
 export async function decryptDirectoryLinkKey({ key }: { key: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.crypto().decrypt().folderLinkKey({
+	return await getSDK().crypto().decrypt().folderLinkKey({
 		metadata: key
 	})
 }
@@ -2855,7 +2875,7 @@ export async function decryptDirectoryLinkKey({ key }: { key: string }): Promise
 export async function stopSharingItem({ uuid, receiverId }: { uuid: string; receiverId: number }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().stopSharingItem({
+	return await getSDK().cloud().stopSharingItem({
 		uuid,
 		receiverId
 	})
@@ -2864,19 +2884,19 @@ export async function stopSharingItem({ uuid, receiverId }: { uuid: string; rece
 export async function removeSharedItem({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().removeSharedItem({ uuid })
+	return await getSDK().cloud().removeSharedItem({ uuid })
 }
 
 export async function appearOffline({ enabled }: { enabled: boolean }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().appearOffline({ enabled })
+	return await getSDK().user().appearOffline({ enabled })
 }
 
 export async function changeEmail({ email, password }: { email: string; password: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().changeEmail({
+	return await getSDK().user().changeEmail({
 		email,
 		password
 	})
@@ -2885,7 +2905,7 @@ export async function changeEmail({ email, password }: { email: string; password
 export async function changePassword({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().changePassword({
+	return await getSDK().user().changePassword({
 		currentPassword,
 		newPassword
 	})
@@ -2894,7 +2914,7 @@ export async function changePassword({ currentPassword, newPassword }: { current
 export async function changeNickname({ nickname }: { nickname: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().updateNickname({ nickname })
+	return await getSDK().user().updateNickname({ nickname })
 }
 
 export async function updatePersonalInformation({
@@ -2920,7 +2940,7 @@ export async function updatePersonalInformation({
 }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().updatePersonalInformation({
+	return await getSDK().user().updatePersonalInformation({
 		city,
 		companyName,
 		country,
@@ -2936,49 +2956,49 @@ export async function updatePersonalInformation({
 export async function updateDesktopLastActive({ timestamp }: { timestamp: number }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().updateDesktopLastActive({ timestamp })
+	return await getSDK().user().updateDesktopLastActive({ timestamp })
 }
 
 export async function listEvents(params?: { timestamp?: number; filter?: "all" }): Promise<UserEvent[]> {
 	await waitForInitialization()
 
-	return await SDK.user().events(params)
+	return await getSDK().user().events(params)
 }
 
 export async function fetchEvent({ uuid }: { uuid: string }): Promise<UserEvent> {
 	await waitForInitialization()
 
-	return await SDK.user().event({ uuid })
+	return await getSDK().user().event({ uuid })
 }
 
 export async function generateInvoice({ uuid }: { uuid: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.user().generateInvoice({ uuid })
+	return await getSDK().user().generateInvoice({ uuid })
 }
 
 export async function cancelSubscription({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().cancelSubscription({ uuid })
+	return await getSDK().user().cancelSubscription({ uuid })
 }
 
 export async function enableTwoFactorAuthentication({ twoFactorCode }: { twoFactorCode: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.user().enableTwoFactorAuthentication({ twoFactorCode })
+	return await getSDK().user().enableTwoFactorAuthentication({ twoFactorCode })
 }
 
 export async function disableTwoFactorAuthentication({ twoFactorCode }: { twoFactorCode: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().disableTwoFactorAuthentication({ twoFactorCode })
+	return await getSDK().user().disableTwoFactorAuthentication({ twoFactorCode })
 }
 
 export async function leaveChatConversation({ conversation }: { conversation: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.chats().leave({ conversation })
+	return await getSDK().chats().leave({ conversation })
 }
 
 export async function workerCalculateThumbnailCacheUsage(): Promise<number> {
@@ -3040,7 +3060,7 @@ export async function cdnConfig(): Promise<CDNConfig> {
 export async function createSubscription({ planId, paymentMethod }: { planId: number; paymentMethod: PaymentMethods }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.user().createSubscription({
+	return await getSDK().user().createSubscription({
 		planId,
 		paymentMethod
 	})
@@ -3049,13 +3069,13 @@ export async function createSubscription({ planId, paymentMethod }: { planId: nu
 export async function fileVersions({ uuid }: { uuid: string }): Promise<FileVersionsResponse> {
 	await waitForInitialization()
 
-	return await SDK.cloud().fileVersions({ uuid })
+	return await getSDK().cloud().fileVersions({ uuid })
 }
 
 export async function restoreFileVersion({ uuid, currentUUID }: { uuid: string; currentUUID: string }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.cloud().restoreFileVersion({
+	return await getSDK().cloud().restoreFileVersion({
 		uuid,
 		currentUUID
 	})
@@ -3064,7 +3084,7 @@ export async function restoreFileVersion({ uuid, currentUUID }: { uuid: string; 
 export async function deleteFilePermanently({ uuid }: { uuid: string }): Promise<void> {
 	await waitForInitialization()
 
-	await SDK.cloud().deleteFile({
+	await getSDK().cloud().deleteFile({
 		uuid
 	})
 }
@@ -3072,13 +3092,13 @@ export async function deleteFilePermanently({ uuid }: { uuid: string }): Promise
 export async function noteHistory({ uuid }: { uuid: string }): Promise<NoteHistory[]> {
 	await waitForInitialization()
 
-	return await SDK.notes().history({ uuid })
+	return await getSDK().notes().history({ uuid })
 }
 
 export async function restoreNoteHistory({ uuid, id }: { uuid: string; id: number }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().restoreHistory({
+	return await getSDK().notes().restoreHistory({
 		uuid,
 		id
 	})
@@ -3087,7 +3107,7 @@ export async function restoreNoteHistory({ uuid, id }: { uuid: string; id: numbe
 export async function removeNoteParticipant({ uuid, userId }: { uuid: string; userId: number }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().removeParticipant({
+	return await getSDK().notes().removeParticipant({
 		uuid,
 		userId
 	})
@@ -3096,7 +3116,7 @@ export async function removeNoteParticipant({ uuid, userId }: { uuid: string; us
 export async function userPublicKey({ email }: { email: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await SDK.user().publicKey({ email })
+	return await getSDK().user().publicKey({ email })
 }
 
 export async function addNoteParticipant({
@@ -3112,7 +3132,7 @@ export async function addNoteParticipant({
 }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().addParticipant({
+	return await getSDK().notes().addParticipant({
 		uuid,
 		contactUUID,
 		permissionsWrite,
@@ -3131,7 +3151,7 @@ export async function noteParticipantPermissions({
 }): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.notes().participantPermissions({
+	return await getSDK().notes().participantPermissions({
 		uuid,
 		permissionsWrite,
 		userId
@@ -3174,13 +3194,13 @@ export async function abortAbortSignal({ id }: { id: string }): Promise<void> {
 export async function filePublicLinkHasPassword({ uuid }: { uuid: string }): Promise<FileLinkPasswordResponse> {
 	await waitForInitialization()
 
-	return await SDK.cloud().filePublicLinkHasPassword({ uuid })
+	return await getSDK().cloud().filePublicLinkHasPassword({ uuid })
 }
 
 export async function directoryPublicLinkInfo({ uuid, key }: { uuid: string; key: string }): Promise<DirLinkInfoDecryptedResponse> {
 	await waitForInitialization()
 
-	return await SDK.cloud().directoryPublicLinkInfo({
+	return await getSDK().cloud().directoryPublicLinkInfo({
 		uuid,
 		key
 	})
@@ -3199,7 +3219,7 @@ export async function filePublicLinkInfo({
 }): Promise<Omit<FileLinkInfoResponse, "size"> & { size: number }> {
 	await waitForInitialization()
 
-	return await SDK.cloud().filePublicLinkInfo({
+	return await getSDK().cloud().filePublicLinkInfo({
 		uuid,
 		password,
 		key,
@@ -3222,7 +3242,7 @@ export async function directoryPublicLinkContent({
 }): Promise<DirLinkContentDecryptedResponse & { directorySize: Record<string, number> }> {
 	await waitForInitialization()
 
-	const content = await SDK.cloud().directoryPublicLinkContent({
+	const content = await getSDK().cloud().directoryPublicLinkContent({
 		uuid,
 		parent,
 		password,
@@ -3264,13 +3284,13 @@ export async function directoryPublicLinkContent({
 export async function authInfo({ email }: { email: string }): Promise<AuthInfoResponse> {
 	await waitForInitialization()
 
-	return await SDK.api(3).auth().info({ email })
+	return await getSDK().api(3).auth().info({ email })
 }
 
 export async function userProfile({ id }: { id: number }): Promise<UserProfileResponse> {
 	await waitForInitialization()
 
-	return await SDK.api(3).user().profile({ id })
+	return await getSDK().api(3).user().profile({ id })
 }
 
 export async function generateThumbnailInsideWorker({ item }: { item: DriveCloudItem }): Promise<void> {
@@ -3295,7 +3315,7 @@ export async function generateThumbnailInsideWorker({ item }: { item: DriveCloud
 export async function didExportMasterKeys(): Promise<void> {
 	await waitForInitialization()
 
-	return await SDK.user().didExportMasterKeys()
+	return await getSDK().user().didExportMasterKeys()
 }
 
 export const sanitizeSVG = (file: File): Promise<File> => {
