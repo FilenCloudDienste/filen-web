@@ -405,6 +405,7 @@
 			"title": "创建同步",
 			"paused": "已暂停",
 			"excludeDotFiles": "排除点文件（推荐）",
+			"disableLocalTrash": "禁用本地回收站并永久删除项目",
 			"mode": {
 				"twoWay": "双向",
 				"localToCloud": "本地到云端",
@@ -418,7 +419,11 @@
 				"cloudBackupInfo": "仅从云端下载数据，永远不会删除任何内容或对本地更改进行操作"
 			},
 			"errors": {
-				"localPathNotWritable": "您选择的本地路径不可写。请确保客户端可以正常访问它。"
+				"localPathNotWritable": "您选择的本地路径不可写。请确保客户端可以正常访问它。",
+				"invalidLocalPath": "您选择的本地路径无效，无法同步。请选择其他路径。",
+				"remotePathAlreadyConfigured": "您选择的云路径已在其他同步中配置。这可能会导致无限同步循环。",
+				"localPathAlreadyConfigured": "您选择的本地路径已在其他同步中配置。这可能会导致无限同步循环。",
+				"syncNameAlreadyExists": "名称为 \"{{name}}\" 的同步已存在。"
 			}
 		},
 		"info": {
@@ -1308,9 +1313,10 @@
 			"errors": "{{count}} 个同步错误",
 			"errorsResolve": "解决",
 			"paused": "同步已暂停",
-			"processingDeltas": "处理增量",
-			"syncingChanges": "同步更改",
-			"savingState": "保存状态"
+			"processingDeltas": "正在处理增量",
+			"syncingChanges": "正在同步更改",
+			"savingState": "正在保存状态",
+			"waitingForLocalDirectoryChanges": "正在等待本地更改"
 		},
 		"empty": {
 			"title": "尚未设置同步",
@@ -1359,6 +1365,10 @@
 					"name": ".filenignore",
 					"info": "编辑忽略文件以排除本地或云。工作原理与 .gitignore 文件相同",
 					"edit": "编辑"
+				},
+				"disableLocalTrash": {
+					"name": "禁用本地回收站",
+					"info": "启用或禁用本地回收站。禁用后，客户端将永久删除文件或目录，而不是将其移动到本地同步路径内的本地回收站目录中"
 				}
 			}
 		},
@@ -1376,6 +1386,11 @@
 			"filenIgnore": {
 				"title": ".filenignore",
 				"save": "保存"
+			},
+			"deleteIssue": {
+				"title": "删除问题",
+				"description": "您确定要删除此问题吗？请确保您已解决该问题或该问题只是暂时的，否则该问题最终会再次出现。",
+				"continue": "删除"
 			}
 		},
 		"ignored": {
@@ -1439,5 +1454,9 @@
 		"title": "有人拔掉了网线吗？",
 		"info": "我们在将您连接到我们的平台时遇到问题，请检查您的互联网连接。",
 		"infoSub": "如果您的互联网可以正常使用，请联系我们。"
+	},
+	"404": {
+		"info": "哎呀，您要查找的页面不存在。",
+		"btn": "转到首页"
 	}
 }
