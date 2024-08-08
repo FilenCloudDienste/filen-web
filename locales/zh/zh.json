@@ -438,6 +438,13 @@
 			"uploaded": "已上传",
 			"files": "文件",
 			"directories": "目录"
+		},
+		"desktopUpdate": {
+			"title": "有更新可用",
+			"info": "已下载新版本 ({{version}}) 并准备安装。是否要更新？",
+			"dismiss": "忽略",
+			"update": "更新",
+			"installing": "正在安装更新，请不要中断此进程！"
 		}
 	},
 	"contextMenus": {
@@ -1147,6 +1154,9 @@
 			"browse": "浏览",
 			"clear": "清空",
 			"cacheUsed": "{{size}} / {{max}} 已使用",
+			"description": "将您的云盘安装为本地磁盘，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些都在您熟悉的文件资源管理器中完成。",
+			"unixDescription": "将您的云盘安装到本地目录中，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些操作都在您熟悉的文件资源管理器中完成。",
+			"unixSudo": "要安装和卸载磁盘，客户端需要管理员权限。请在系统提示时允许访问。",
 			"sections": {
 				"active": {
 					"name": "激活"
@@ -1170,7 +1180,7 @@
 				},
 				"cache": {
 					"name": "缓存",
-					"info": "缓存显著加快了浏览虚拟驱动器的速度"
+					"info": "缓存显著加快了浏览虚拟磁盘的速度"
 				},
 				"cacheSize": {
 					"name": "缓存大小",
@@ -1191,11 +1201,14 @@
 			},
 			"errors": {
 				"invalidMountPoint": "无效的挂载点",
-				"mountPointNotEmpty": "挂载点需要是一个空目录。"
+				"mountPointNotEmpty": "挂载点需要是一个空目录。",
+				"pathNotInHomeDir": "挂载点需要位于您的主目录 (/home/<yourUsername>) 内。",
+				"pathNotInUserDir": "挂载点需要位于您的用户目录 (/Users/<yourUsername>) 内。"
 			}
 		},
 		"webdav": {
 			"copyConnect": "复制",
+			"description": "启动本地 WebDAV 服务器，提供标准化协议来访问和管理您的云盘。这允许与支持 WebDAV 的各种应用程序和设备兼容，从而增强您的文件可访问性和管理能力。",
 			"sections": {
 				"active": {
 					"name": "激活"
@@ -1251,6 +1264,7 @@
 		},
 		"s3": {
 			"copyConnect": "复制",
+                        "description": "启动本地 S3 服务器，提供标准化协议来访问和管理您的云盘。这可以兼容各种支持 S3 的应用程序和设备，从而增强您的文件可访问性和管理能力。",
 			"sections": {
 				"active": {
 					"name": "激活"
