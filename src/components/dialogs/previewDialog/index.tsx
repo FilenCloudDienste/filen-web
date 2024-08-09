@@ -27,8 +27,9 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import { type DriveSortBy } from "@/components/drive/list/header"
 import { orderItemsByType } from "@/components/drive/utils"
 import useLocation from "@/hooks/useLocation"
-import { cn } from "@/lib/utils"
+import { cn, isValidFileName } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import useErrorToast from "@/hooks/useErrorToast"
 
 const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
 
@@ -72,6 +73,7 @@ export const PreviewDialog = memo(() => {
 	const driveURLState = useDriveURLState()
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 	const location = useLocation()
+	const errorToast = useErrorToast()
 
 	const itemsOrdered = useMemo(() => {
 		if (!open) {
@@ -384,6 +386,10 @@ export const PreviewDialog = memo(() => {
 
 		const fileName = ensureTextFileExtension(inputResponse.value.trim())
 
+		if (!isValidFileName(fileName)) {
+			errorToast(t("drive.dialogs.createTextFile.invalidFileName"))
+		}
+
 		const newTextFileItem: DriveCloudItem = {
 			name: fileName,
 			uuid: uuidv4(),
@@ -426,7 +432,8 @@ export const PreviewDialog = memo(() => {
 		currentSharerEmail,
 		currentSharerId,
 		readOnly,
-		t
+		t,
+		errorToast
 	])
 
 	useEffect(() => {

@@ -424,6 +424,13 @@
 				"remotePathAlreadyConfigured": "The cloud path you have selected is already configured in a different sync. This can lead to infinite sync loops.",
 				"localPathAlreadyConfigured": "The local path you have selected is already configured in a different sync. This can lead to infinite sync loops.",
 				"syncNameAlreadyExists": "A sync with the name \"{{name}}\" already exists."
+			},
+			"warnings": {
+				"localDirectoryBig": {
+					"title": "Warning",
+					"continue": "Continue",
+					"description": "Syncing more than {{count}} items can slow down your system, especially on lower-end devices. If you're on a high-end machine, you may proceed, but we recommend syncing fewer files to avoid potential issues."
+				}
 			}
 		},
 		"info": {
@@ -792,6 +799,11 @@
 				"autoLaunch": {
 					"name": "Autostart",
 					"info": "Start Filen automatically on system start"
+				},
+				"exportDesktopLogs": {
+					"name": "Export logs",
+					"info": "Export all desktop client logs",
+					"action": "Export"
 				}
 			}
 		},
@@ -971,17 +983,21 @@
 			"createTextFile": {
 				"title": "Create text file",
 				"placeholder": "Name",
-				"continue": "Create"
+				"continue": "Create",
+				"invalidFileName": "Invalid file name."
 			},
 			"createDirectory": {
 				"title": "Create directory",
 				"placeholder": "Name",
-				"continue": "Create"
+				"continue": "Create",
+				"invalidDirectoryName": "Invalid directory name."
 			},
 			"rename": {
 				"title": "Rename",
 				"placeholder": "New name",
-				"continue": "Rename"
+				"continue": "Rename",
+				"invalidFileName": "Invalid file name.",
+				"invalidDirectoryName": "Invalid directory name."
 			},
 			"share": {
 				"title": "Share",
@@ -1156,7 +1172,7 @@
 			"cacheUsed": "{{size}} of {{max}} used",
 			"description": "Mount your cloud drive as a local drive, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",
 			"unixDescription": "Mount your cloud drive inside a local directory, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",
-			"unixSudo": "To mount and unmount the drive the client needs admin rights. Please allow access when you are prompted.",
+			"unixSudo": "To mount and unmount your cloud drive the client needs admin rights. Please allow access when you are prompted.",
 			"sections": {
 				"active": {
 					"name": "Active"
@@ -1330,7 +1346,8 @@
 			"processingDeltas": "Processing deltas",
 			"syncingChanges": "Synchronizing changes",
 			"savingState": "Saving state",
-			"waitingForLocalDirectoryChanges": "Waiting for local changes"
+			"waitingForLocalDirectoryChanges": "Waiting for local changes",
+			"acquiringLock": "Acquiring sync lock"
 		},
 		"empty": {
 			"title": "No syncs setup yet",

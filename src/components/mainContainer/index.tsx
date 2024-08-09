@@ -144,7 +144,7 @@ export const Wrapper = memo(({ children }: { children: React.ReactNode }) => {
 		)
 	}
 
-	return <div className={cn("w-screen h-[100dvh] flex flex-row border", !dark && "bg-secondary")}>{children}</div>
+	return <div className={cn("w-screen h-[100dvh] flex flex-row", !dark && "bg-secondary")}>{children}</div>
 })
 
 export const InnerSideBarWrapper = memo(

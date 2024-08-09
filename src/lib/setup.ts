@@ -169,4 +169,8 @@ export async function logout(): Promise<void> {
 	getSDK().init(DEFAULT_SDK_CONFIG)
 
 	await worker.initializeSDK(DEFAULT_SDK_CONFIG)
+
+	if (IS_DESKTOP) {
+		await window.desktopAPI.restartWorker()
+	}
 }

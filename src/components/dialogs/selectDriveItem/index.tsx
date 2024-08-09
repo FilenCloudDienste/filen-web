@@ -20,6 +20,8 @@ import useRouteParent from "@/hooks/useRouteParent"
 import { directoryUUIDToNameCache } from "@/cache"
 import { type DriveCloudItem } from "@/components/drive"
 import { Button } from "@/components/ui/button"
+import useErrorToast from "@/hooks/useErrorToast"
+import { isValidFileName } from "@/lib/utils"
 
 export type ResponseItem = DriveCloudItem & { path: string }
 export type SelectionType = "file" | "directory" | "all"
@@ -71,6 +73,7 @@ export const SelectDriveItemDialog = memo(() => {
 	const routeParent = useRouteParent()
 	const [selectionType, setSelectionType] = useState<SelectionType>("directory")
 	const [selectMultiple, setSelectMultiple] = useState<boolean>(false)
+	const errorToast = useErrorToast()
 
 	const parent = useMemo(() => {
 		const ex = pathname.split("/")
@@ -161,6 +164,12 @@ export const SelectDriveItemDialog = memo(() => {
 				return
 			}
 
+			if (!isValidFileName(inputResponse.value)) {
+				errorToast(t("drive.dialogs.createDirectory.invalidDirectoryName"))
+
+				return
+			}
+
 			const item = await worker.createDirectory({
 				name: inputResponse.value,
 				parent
@@ -181,7 +190,7 @@ export const SelectDriveItemDialog = memo(() => {
 		} catch (e) {
 			console.error(e)
 		}
-	}, [setItems, parent, routeParent, t])
+	}, [setItems, parent, routeParent, t, errorToast])
 
 	useEffect(() => {
 		const listener = eventEmitter.on(

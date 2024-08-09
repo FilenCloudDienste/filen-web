@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next"
 import { Button } from "../ui/button"
 import Input from "../input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Info } from "lucide-react"
+import { Info, Loader } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { TOOLTIP_POPUP_DELAY, IS_DESKTOP } from "@/constants"
 import { selectDriveItem } from "./selectDriveItem"
@@ -24,6 +24,7 @@ import useDesktopConfig, { getDesktopConfig } from "@/hooks/useDesktopConfig"
 import { type SyncMode, type SyncPair } from "@filen/sync/dist/types"
 import { Switch } from "../ui/switch"
 import useLoadingToast from "@/hooks/useLoadingToast"
+import { showConfirmDialog } from "./confirm"
 
 export function isSyncPathAlreadyInConfig(type: "local" | "remote", path: string): boolean {
 	const desktopConfig = getDesktopConfig()
@@ -45,6 +46,12 @@ export function doesSyncNameExist(name: string): boolean {
 	const desktopConfig = getDesktopConfig()
 
 	return desktopConfig.syncConfig.syncPairs.some(pair => pair.name.trim() === name.trim())
+}
+
+export function tryingToSyncVirtualDrive(path: string): boolean {
+	const desktopConfig = getDesktopConfig()
+
+	return path.startsWith(desktopConfig.virtualDriveConfig.mountPoint)
 }
 
 export const CreateSyncDialog = memo(() => {
@@ -72,6 +79,7 @@ export const CreateSyncDialog = memo(() => {
 	const errorToast = useErrorToast()
 	const [, setDesktopConfig] = useDesktopConfig()
 	const loadingToast = useLoadingToast()
+	const [creating, setCreating] = useState<boolean>(false)
 
 	const modeToString = useMemo(() => {
 		switch (createState.mode) {
@@ -126,6 +134,8 @@ export const CreateSyncDialog = memo(() => {
 
 			const toast = loadingToast()
 
+			setCreating(true)
+
 			try {
 				if (doesSyncNameExist(createState.name)) {
 					errorToast(t("dialogs.createSync.errors.syncNameAlreadyExists", { name: createState.name.trim() }))
@@ -139,7 +149,10 @@ export const CreateSyncDialog = memo(() => {
 					return
 				}
 
-				if (!(await window.desktopAPI.isAllowedToSyncDirectory(createState.localPath))) {
+				if (
+					!(await window.desktopAPI.isAllowedToSyncDirectory(createState.localPath)) ||
+					tryingToSyncVirtualDrive(createState.localPath)
+				) {
 					errorToast(t("dialogs.createSync.errors.invalidLocalPath"))
 
 					return
@@ -155,6 +168,23 @@ export const CreateSyncDialog = memo(() => {
 					errorToast(t("dialogs.createSync.errors.remotePathAlreadyConfigured"))
 
 					return
+				}
+
+				const itemCount = await window.desktopAPI.getLocalDirectoryItemCount(createState.localPath)
+
+				if (itemCount >= 300000) {
+					if (
+						!(await showConfirmDialog({
+							title: t("dialogs.createSync.warnings.localDirectoryBig.title"),
+							continueButtonText: t("dialogs.createSync.warnings.localDirectoryBig.continue"),
+							description: t("dialogs.createSync.warnings.localDirectoryBig.description", {
+								count: itemCount
+							}),
+							continueButtonVariant: "destructive"
+						}))
+					) {
+						return
+					}
 				}
 
 				const syncPair: SyncPair = {
@@ -195,6 +225,8 @@ export const CreateSyncDialog = memo(() => {
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				toast.dismiss()
+
+				setCreating(false)
 			}
 		},
 		[createState, close, setDesktopConfig, t, errorToast, loadingToast]
@@ -310,6 +342,7 @@ export const CreateSyncDialog = memo(() => {
 									placeholder={t("dialogs.createSync.name")}
 									value={createState.name}
 									onChange={onNameChange}
+									autoFocus={true}
 								/>
 							</div>
 							<div className="flex flex-col gap-1">
@@ -433,7 +466,7 @@ export const CreateSyncDialog = memo(() => {
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter className="items-center mt-1">
-					<AlertDialogCancel onClick={close}>{t("dialogs.createSync.cancel")}</AlertDialogCancel>
+					{!creating && <AlertDialogCancel onClick={close}>{t("dialogs.createSync.cancel")}</AlertDialogCancel>}
 					<AlertDialogAction
 						onClick={create}
 						disabled={
@@ -443,7 +476,14 @@ export const CreateSyncDialog = memo(() => {
 							createState.remoteUUID.length === 0
 						}
 					>
-						{t("dialogs.createSync.create")}
+						{creating ? (
+							<Loader
+								size={18}
+								className="animate-spin-medium"
+							/>
+						) : (
+							t("dialogs.createSync.create")
+						)}
 					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>

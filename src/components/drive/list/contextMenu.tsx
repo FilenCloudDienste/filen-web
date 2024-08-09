@@ -18,6 +18,7 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { Folder, Text, Upload } from "lucide-react"
 import useIsMobile from "@/hooks/useIsMobile"
+import { isValidFileName } from "@/lib/utils"
 
 const iconSize = 16
 
@@ -43,10 +44,19 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 			return
 		}
 
+		if (!isValidFileName(inputResponse.value)) {
+			errorToast(t("drive.dialogs.createDirectory.invalidDirectoryName"))
+
+			return
+		}
+
 		const toast = loadingToast()
 
 		try {
-			const item = await worker.createDirectory({ name: inputResponse.value, parent })
+			const item = await worker.createDirectory({
+				name: inputResponse.value,
+				parent
+			})
 
 			directoryUUIDToNameCache.set(item.uuid, inputResponse.value)
 

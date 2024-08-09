@@ -9,6 +9,7 @@ export type TransferDataWithTimestamp = TransferData & { timestamp: number }
 export type GeneralError = {
 	type: "cycle" | "general" | "localTree" | "transfer" | "task"
 	error: SerializedError
+	uuid: string
 }
 
 export type SyncsStore = {

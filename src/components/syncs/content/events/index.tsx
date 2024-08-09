@@ -67,7 +67,7 @@ export const Events = memo(({ sync }: { sync: SyncPair }) => {
 		} catch (e) {
 			console.error(e)
 		}
-	}, 5000)
+	}, 3000)
 
 	const fetchLocallySavedEvents = useCallback(async () => {
 		if (events.length > 0) {

@@ -40,6 +40,11 @@ export const General = memo(() => {
 		queryFn: () => worker.workerCalculateThumbnailCacheUsage()
 	})
 
+	const versionQuery = useQuery({
+		queryKey: ["desktopVersion", IS_DESKTOP],
+		queryFn: () => (IS_DESKTOP ? window.desktopAPI.version() : Promise.resolve(""))
+	})
+
 	const i18nLangToString = useMemo(() => {
 		switch (i18n.language) {
 			case "en":
@@ -217,7 +222,21 @@ export const General = memo(() => {
 		[loadingToast, errorToast, setAutoLaunchEnabled]
 	)
 
-	if (!account) {
+	const exportDesktopLogs = useCallback(async () => {
+		const toast = loadingToast()
+
+		try {
+			await window.desktopAPI.exportLogs()
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			toast.dismiss()
+		}
+	}, [errorToast, loadingToast])
+
+	if (!account || !versionQuery.isSuccess) {
 		return <Skeletons />
 	}
 
@@ -396,6 +415,20 @@ export const General = memo(() => {
 							{t("settings.general.sections.clearThumbnailCache.action")}
 						</p>
 					</Section>
+					{IS_DESKTOP && (
+						<Section
+							name={t("settings.general.sections.exportDesktopLogs.name")}
+							info={t("settings.general.sections.exportDesktopLogs.info")}
+							className="mt-10"
+						>
+							<p
+								className="underline cursor-pointer"
+								onClick={exportDesktopLogs}
+							>
+								{t("settings.general.sections.exportDesktopLogs.action")}
+							</p>
+						</Section>
+					)}
 					<Section
 						name={t("settings.general.sections.logout.name")}
 						info={t("settings.general.sections.logout.info")}
@@ -408,6 +441,11 @@ export const General = memo(() => {
 							{t("settings.general.sections.logout.action")}
 						</p>
 					</Section>
+					{IS_DESKTOP && (
+						<div className="flex flex-row items-center justify-end">
+							<p className="text-muted-foreground text-sm">v{versionQuery.data}</p>
+						</div>
+					)}
 					<div className="w-full h-20" />
 				</div>
 			</div>

@@ -135,3 +135,50 @@ export function pixelsToPercentage(pixelValue: number, containerWidth: number): 
 export function percentageToPixels(percentageValue: number, containerWidth: number): number {
 	return (percentageValue / 100) * containerWidth
 }
+
+export function isValidFileName(fileName: string): boolean {
+	// eslint-disable-next-line no-control-regex
+	const invalidChars = /[<>:"/\\|?*\x00-\x1F]/
+	const reservedWindowsNames = [
+		"CON",
+		"PRN",
+		"AUX",
+		"NUL",
+		"COM1",
+		"COM2",
+		"COM3",
+		"COM4",
+		"COM5",
+		"COM6",
+		"COM7",
+		"COM8",
+		"COM9",
+		"LPT1",
+		"LPT2",
+		"LPT3",
+		"LPT4",
+		"LPT5",
+		"LPT6",
+		"LPT7",
+		"LPT8",
+		"LPT9"
+	]
+
+	if (invalidChars.test(fileName)) {
+		return false
+	}
+
+	if (reservedWindowsNames.includes(fileName.toUpperCase())) {
+		return false
+	}
+
+	if (/[. ]$/.test(fileName)) {
+		return false
+	}
+
+	if (fileName.length === 0 || fileName.length > 255) {
+		return false
+	}
+
+	return true
+}

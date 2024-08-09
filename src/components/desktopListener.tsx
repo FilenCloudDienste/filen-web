@@ -160,14 +160,16 @@ export const DesktopListener = memo(() => {
 							? [
 									{
 										type: "cycle",
-										error: message.data.error
+										error: message.data.error,
+										uuid: message.data.uuid
 									},
-									...prev[message.syncPair.uuid]!
+									...prev[message.syncPair.uuid]!.filter(err => err.uuid !== message.data.uuid)
 								]
 							: [
 									{
 										type: "cycle",
-										error: message.data.error
+										error: message.data.error,
+										uuid: message.data.uuid
 									}
 								]
 					}))
@@ -302,7 +304,7 @@ export const DesktopListener = memo(() => {
 					updateProgress(message.syncPair.uuid)
 				} else {
 					if (message.data.type === "error") {
-						const error = message.data.error
+						const { error, uuid } = message.data
 
 						setErrors(prev => ({
 							...prev,
@@ -310,14 +312,16 @@ export const DesktopListener = memo(() => {
 								? [
 										{
 											type: "transfer",
-											error
+											error,
+											uuid
 										},
-										...prev[message.syncPair.uuid]!
+										...prev[message.syncPair.uuid]!.filter(err => err.uuid !== uuid)
 									]
 								: [
 										{
 											type: "transfer",
-											error
+											error,
+											uuid
 										}
 									]
 						}))
@@ -362,12 +366,16 @@ export const DesktopListener = memo(() => {
 				if (message.data.errors.length > 0) {
 					const errors: GeneralError[] = message.data.errors.map(err => ({
 						error: err.error,
-						type: "task"
+						type: "task",
+						uuid: err.uuid
 					}))
+					const uuids: string[] = errors.map(err => err.uuid)
 
 					setErrors(prev => ({
 						...prev,
-						[message.syncPair.uuid]: prev[message.syncPair.uuid] ? [...errors, ...prev[message.syncPair.uuid]!] : errors
+						[message.syncPair.uuid]: prev[message.syncPair.uuid]
+							? [...errors, ...prev[message.syncPair.uuid]!.filter(err => !uuids.includes(err.uuid))]
+							: errors
 					}))
 				}
 			} else if (message.type === "error") {
@@ -377,14 +385,16 @@ export const DesktopListener = memo(() => {
 						? [
 								{
 									type: "general",
-									error: message.data.error
+									error: message.data.error,
+									uuid: message.data.uuid
 								},
-								...prev["general"]!
+								...prev["general"]!.filter(err => err.uuid !== message.data.uuid)
 							]
 						: [
 								{
 									type: "general",
-									error: message.data.error
+									error: message.data.error,
+									uuid: message.data.uuid
 								}
 							]
 				}))
@@ -395,12 +405,16 @@ export const DesktopListener = memo(() => {
 
 				const errors: GeneralError[] = message.data.errors.map(err => ({
 					error: err.error,
-					type: "localTree"
+					type: "localTree",
+					uuid: err.uuid
 				}))
+				const uuids: string[] = errors.map(err => err.uuid)
 
 				setErrors(prev => ({
 					...prev,
-					[message.syncPair.uuid]: prev[message.syncPair.uuid] ? [...errors, ...prev[message.syncPair.uuid]!] : errors
+					[message.syncPair.uuid]: prev[message.syncPair.uuid]
+						? [...errors, ...prev[message.syncPair.uuid]!.filter(err => !uuids.includes(err.uuid))]
+						: errors
 				}))
 			} else if (message.type === "remoteTreeIgnored") {
 				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {

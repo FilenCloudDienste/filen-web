@@ -50,6 +50,7 @@ import useSuccessToast from "@/hooks/useSuccessToast"
 import { selectContacts } from "@/components/dialogs/selectContacts"
 import { MAX_PREVIEW_SIZE } from "@/constants"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
+import { isValidFileName } from "@/lib/utils"
 
 const iconSize = 16
 
@@ -356,7 +357,15 @@ export const ContextMenu = memo(
 			})
 
 			if (inputResponse.cancelled || inputResponse.value.toLowerCase() === item.name.toLowerCase()) {
-				return item.name
+				return
+			}
+
+			if (!isValidFileName(inputResponse.value)) {
+				errorToast(
+					item.type === "directory" ? t("drive.dialogs.rename.invalidDirectoryName") : t("drive.dialogs.rename.invalidFileName")
+				)
+
+				return
 			}
 
 			const toast = loadingToast()
