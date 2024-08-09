@@ -424,6 +424,13 @@
 				"remotePathAlreadyConfigured": "您选择的云路径已在其他同步中配置。这可能会导致无限同步循环。",
 				"localPathAlreadyConfigured": "您选择的本地路径已在其他同步中配置。这可能会导致无限同步循环。",
 				"syncNameAlreadyExists": "名称为 \"{{name}}\" 的同步已存在。"
+			},
+			"warnings": {
+				"localDirectoryBig": {
+					"title": "警告",
+					"continue": "继续",
+					"description": "同步超过 {{count}} 个项目可能会降低系统速度，尤其是在低端设备上。如果您使用的是高端机器，您可以继续，但我们建议同步较少的文件以避免潜在问题。"
+				}
 			}
 		},
 		"info": {
@@ -792,6 +799,11 @@
 				"autoLaunch": {
 					"name": "自动启动",
 					"info": "系统启动时自动启动 Filen"
+				},
+				"exportDesktopLogs": {
+					"name": "导出日志",
+					"info": "导出所有桌面客户端日志",
+					"action": "导出"
 				}
 			}
 		},
@@ -971,17 +983,21 @@
 			"createTextFile": {
 				"title": "创建文本文件",
 				"placeholder": "名称",
-				"continue": "创建"
+				"continue": "创建",
+				"invalidFileName": "文件名无效。"
 			},
 			"createDirectory": {
 				"title": "创建目录",
 				"placeholder": "名称",
-				"continue": "创建"
+				"continue": "创建",
+				"invalidDirectoryName": "目录名无效。"
 			},
 			"rename": {
 				"title": "重命名",
 				"placeholder": "新名称",
-				"continue": "重命名"
+				"continue": "重命名",
+				"invalidFileName": "文件名无效。",
+				"invalidDirectoryName": "目录名无效。"
 			},
 			"share": {
 				"title": "共享",
@@ -1156,7 +1172,7 @@
 			"cacheUsed": "{{size}} / {{max}} 已使用",
 			"description": "将您的云盘安装为本地磁盘，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些都在您熟悉的文件资源管理器中完成。",
 			"unixDescription": "将您的云盘安装到本地目录中，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些操作都在您熟悉的文件资源管理器中完成。",
-			"unixSudo": "要安装和卸载磁盘，客户端需要管理员权限。请在系统提示时允许访问。",
+			"unixSudo": "要安装和卸载云盘，客户端需要管理员权限。请在出现提示时允许访问。",
 			"sections": {
 				"active": {
 					"name": "激活"
@@ -1330,7 +1346,8 @@
 			"processingDeltas": "正在处理增量",
 			"syncingChanges": "正在同步更改",
 			"savingState": "正在保存状态",
-			"waitingForLocalDirectoryChanges": "正在等待本地更改"
+			"waitingForLocalDirectoryChanges": "正在等待本地更改",
+			"acquiringLock": "获取同步锁"
 		},
 		"empty": {
 			"title": "尚未设置同步",
