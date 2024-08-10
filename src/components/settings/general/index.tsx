@@ -265,7 +265,13 @@ export const General = memo(() => {
 						</p>
 					</div>
 					<Progress
-						value={(account.account.storage / account.account.maxStorage) * 100}
+						value={
+							((account.account.storage >= account.account.maxStorage
+								? account.account.maxStorage
+								: account.account.storage) /
+								account.account.maxStorage) *
+							100
+						}
 						max={100}
 					/>
 					<div className="flex flex-row items-center gap-6">
@@ -273,7 +279,11 @@ export const General = memo(() => {
 							<div className="w-4 h-4 rounded-sm bg-primary shrink-0" />
 							<p>
 								{t("settings.general.files", {
-									size: formatBytes(account.account.storage - account.settings.versionedStorage)
+									size: formatBytes(
+										(account.account.storage >= account.account.maxStorage
+											? account.account.maxStorage
+											: account.account.storage) - account.settings.versionedStorage
+									)
 								})}
 							</p>
 						</div>
@@ -290,7 +300,11 @@ export const General = memo(() => {
 							<p>
 								{t("settings.general.free", {
 									size: formatBytes(
-										account.account.maxStorage - account.account.storage - account.settings.versionedStorage
+										account.account.maxStorage -
+											(account.account.storage >= account.account.maxStorage
+												? account.account.maxStorage
+												: account.account.storage) -
+											account.settings.versionedStorage
 									)
 								})}
 							</p>

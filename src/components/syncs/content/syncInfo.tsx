@@ -156,6 +156,14 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 										/>
 										<p>{t("syncs.info.waitingForLocalDirectoryChanges")}</p>
 									</>
+								) : cycleState.state === "cycleGettingTreesStarted" ? (
+									<>
+										<RefreshCw
+											className="animate-spin-medium text-primary"
+											size={16}
+										/>
+										<p>{t("syncs.info.gettingTrees")}</p>
+									</>
 								) : cycleState.state === "cycleAcquiringLockStarted" ? (
 									<>
 										<RefreshCw

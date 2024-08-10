@@ -1347,7 +1347,8 @@
 			"syncingChanges": "Synchronizing changes",
 			"savingState": "Saving state",
 			"waitingForLocalDirectoryChanges": "Waiting for local changes",
-			"acquiringLock": "Acquiring sync lock"
+			"acquiringLock": "Acquiring sync lock",
+			"gettingTrees": "Reading local and cloud directory"
 		},
 		"empty": {
 			"title": "No syncs setup yet",

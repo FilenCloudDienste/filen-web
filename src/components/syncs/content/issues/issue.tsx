@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback, useRef } from "react"
+import { memo, useMemo, useCallback } from "react"
 import { type GeneralError, useSyncsStore } from "@/stores/syncs.store"
 import { XCircle, ArrowUpDown, HardDrive, X } from "lucide-react"
 import { useTranslation } from "react-i18next"
@@ -68,7 +68,6 @@ export const ERRORS_ARRAY: string[] = Object.keys(ERRORS)
 export const Issue = memo(({ error, syncUUID }: { error: GeneralError; syncUUID: string }) => {
 	const { t } = useTranslation()
 	const setErrors = useSyncsStore(useCallback(state => state.setErrors, []))
-	const errorStringified = useRef<string>(JSON.stringify(error))
 
 	const parsedErrorType = useMemo((): ErrorType => {
 		const concatted = (error.error.name + " " + error.error.message).toLowerCase()
@@ -96,9 +95,9 @@ export const Issue = memo(({ error, syncUUID }: { error: GeneralError; syncUUID:
 
 		setErrors(prev => ({
 			...prev,
-			[syncUUID]: prev[syncUUID] ? prev[syncUUID]!.filter(err => JSON.stringify(err) !== errorStringified.current) : []
+			[syncUUID]: prev[syncUUID] ? prev[syncUUID]!.filter(err => err.uuid !== error.uuid) : []
 		}))
-	}, [setErrors, syncUUID, t])
+	}, [setErrors, syncUUID, t, error.uuid])
 
 	return (
 		<div className="flex flex-row px-4">
