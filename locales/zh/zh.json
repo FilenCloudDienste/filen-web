@@ -1347,7 +1347,8 @@
 			"syncingChanges": "正在同步更改",
 			"savingState": "正在保存状态",
 			"waitingForLocalDirectoryChanges": "正在等待本地更改",
-			"acquiringLock": "获取同步锁"
+			"acquiringLock": "正在获取同步锁",
+			"gettingTrees": "正在读取本地和云端目录"
 		},
 		"empty": {
 			"title": "尚未设置同步",
