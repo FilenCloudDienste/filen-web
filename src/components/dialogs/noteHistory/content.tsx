@@ -170,7 +170,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 				<div className="flex flex-col grow w-[calc(100vw-300px)] h-full">
 					{selectedHistory && (
 						<>
-							<div className="flex flex-row w-full h-[calc(100dvh-48px-56px)]">
+							<div className="flex flex-row w-full h-[calc(100dvh-48px-56px)] z-10">
 								{selectedHistory.type === "rich" || selectedHistory.type === "checklist" ? (
 									<RichTextEditor
 										key={selectedHistory.id + ":" + selectedHistory.type}
@@ -196,7 +196,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 									/>
 								)}
 							</div>
-							<div className="flex flex-row border-t justify-end items-center px-4 h-14 gap-2">
+							<div className="flex flex-row border-t justify-end items-center px-4 h-14 gap-2 z-50">
 								<Button
 									size="sm"
 									variant="outline"

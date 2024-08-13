@@ -312,6 +312,12 @@ export const PreviewDialog = memo(() => {
 			setItem(itm)
 			setDidChange(false)
 		} catch (e) {
+			if (e instanceof Error && e.message.toLowerCase().includes("maximum storage reached")) {
+				eventEmitter.emit("openStorageDialog")
+
+				return
+			}
+
 			console.error(e)
 		} finally {
 			setSaving(false)
@@ -538,16 +544,14 @@ export const PreviewDialog = memo(() => {
 								<p className="line-clamp-1 text-ellipsis break-all">{item.name}</p>
 							</div>
 							<div
-								className="flex flex-row items-center justify-end h-12 w-12"
+								className="flex flex-row items-center justify-end h-12 w-12 opacity-70 hover:opacity-100 cursor-pointer"
+								onClick={close}
 								style={{
 									// @ts-expect-error not typed
 									WebkitAppRegion: "no-drag"
 								}}
 							>
-								<X
-									className="h-4 w-4 opacity-70 hover:opacity-100 cursor-pointer"
-									onClick={close}
-								/>
+								<X size={18} />
 							</div>
 						</div>
 						<div

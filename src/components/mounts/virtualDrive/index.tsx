@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Section from "@/components/settings/section"
 import { useTranslation } from "react-i18next"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
-import { CheckCircle, XCircle, Loader, Edit } from "lucide-react"
+import { CheckCircle, XCircle, Loader, Edit, ArrowRight } from "lucide-react"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
 import useErrorToast from "@/hooks/useErrorToast"
 import { useQuery } from "@tanstack/react-query"
@@ -22,6 +22,24 @@ export async function isVirtualDriveMounted(): Promise<{ mounted: boolean }> {
 
 	return {
 		mounted: mounted && active
+	}
+}
+
+export async function areDependenciesInstalled(): Promise<{ installed: boolean }> {
+	if (window.desktopAPI.osPlatform() === "win32") {
+		return {
+			installed: await window.desktopAPI.isWinFSPInstalled()
+		}
+	}
+
+	if (window.desktopAPI.osPlatform() === "linux") {
+		return {
+			installed: await window.desktopAPI.isFUSEInstalledOnLinux()
+		}
+	}
+
+	return {
+		installed: true
 	}
 }
 
@@ -58,6 +76,11 @@ export const VirtualDrive = memo(() => {
 	const availableCacheSizeQuery = useQuery({
 		queryKey: ["virtualDriveAvailableCache"],
 		queryFn: () => window.desktopAPI.virtualDriveAvailableCache()
+	})
+
+	const dependenciesQuery = useQuery({
+		queryKey: ["virtualDriveDependencies"],
+		queryFn: () => areDependenciesInstalled()
 	})
 
 	const cacheSteps = useMemo(() => {
@@ -443,6 +466,16 @@ export const VirtualDrive = memo(() => {
 		setDesktopConfig
 	])
 
+	const openDependenciesInstructions = useCallback(() => {
+		if (window.desktopAPI.osPlatform() === "win32") {
+			window.open("https://winfsp.dev/rel/", "_blank")
+		}
+
+		if (window.desktopAPI.osPlatform() === "linux") {
+			window.open("https://launchpad.net/ubuntu/+source/fuse3", "_blank")
+		}
+	}, [])
+
 	useEffect(() => {
 		const refetchVirtualDriveListener = eventEmitter.on("refetchVirtualDrive", () => {
 			isMountedQuery.refetch().catch(console.error)
@@ -453,8 +486,29 @@ export const VirtualDrive = memo(() => {
 		}
 	}, [isMountedQuery])
 
-	if (!isMountedQuery.data || !availableDrivesQuery.isSuccess || !availableCacheSizeQuery.isSuccess) {
+	if (!isMountedQuery.data || !availableDrivesQuery.isSuccess || !availableCacheSizeQuery.isSuccess || !dependenciesQuery.isSuccess) {
 		return <Skeletons />
+	}
+
+	if (!dependenciesQuery.data.installed) {
+		return (
+			<div className="flex flex-col items-center justify-center overflow-hidden h-[calc(100dvh-48px)]">
+				<p>{t("mounts.virtualDrive.missingDeps")}</p>
+				<p className="text-muted-foreground text-sm">
+					{window.desktopAPI.osPlatform() === "win32"
+						? t("mounts.virtualDrive.missingDepsWindows")
+						: t("mounts.virtualDrive.missingDepsLinux")}
+				</p>
+				<Button
+					className="mt-4 gap-2 items-center"
+					size="sm"
+					onClick={openDependenciesInstructions}
+				>
+					<ArrowRight size={16} />
+					{t("mounts.virtualDrive.missingDepsInstructions")}
+				</Button>
+			</div>
+		)
 	}
 
 	return (

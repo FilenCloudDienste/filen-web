@@ -186,10 +186,16 @@ export const FilenIgnoreDialog = memo(() => {
 									)}
 								</Button>
 							)}
-							<X
-								className="h-4 w-4 opacity-70 hover:opacity-100 cursor-pointer"
+							<div
+								className="flex flex-row items-center justify-end h-12 w-12 opacity-70 hover:opacity-100 cursor-pointer"
 								onClick={close}
-							/>
+								style={{
+									// @ts-expect-error not typed
+									WebkitAppRegion: "no-drag"
+								}}
+							>
+								<X size={18} />
+							</div>
 						</div>
 					</div>
 					<div className="flex flex-row">

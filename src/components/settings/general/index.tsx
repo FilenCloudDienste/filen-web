@@ -31,7 +31,6 @@ export const General = memo(() => {
 	const [contactNotificationsEnabled, setContactNotificationsEnabled] = useLocalStorage<boolean>("contactNotificationsEnabled", false)
 	const [defaultNoteType, setDefaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
 	const settingsContainerSize = useSettingsContainerSize()
-	const [autoLaunchEnabled, setAutoLaunchEnabled] = useLocalStorage<boolean>("autoLaunchEnabled", false)
 	const [minimizeToTrayEnabled, setMinimizeToTrayEnabled] = useLocalStorage<boolean>("minimizeToTrayEnabled", false)
 	const [notificationSoundEnabled, setNotificationSoundEnabled] = useLocalStorage<boolean>("notificationSoundEnabled", false)
 
@@ -43,6 +42,12 @@ export const General = memo(() => {
 	const versionQuery = useQuery({
 		queryKey: ["desktopVersion", IS_DESKTOP],
 		queryFn: () => (IS_DESKTOP ? window.desktopAPI.version() : Promise.resolve(""))
+	})
+
+	const autoLaunchQuery = useQuery({
+		queryKey: ["getAutoLaunch", IS_DESKTOP],
+		queryFn: () =>
+			IS_DESKTOP && window.desktopAPI.osPlatform() !== "linux" ? window.desktopAPI.getAutoLaunch() : Promise.resolve(null)
 	})
 
 	const i18nLangToString = useMemo(() => {
@@ -209,8 +214,7 @@ export const General = memo(() => {
 
 			try {
 				await window.desktopAPI.toggleAutoLaunch(enabled)
-
-				setAutoLaunchEnabled(enabled)
+				await autoLaunchQuery.refetch()
 			} catch (e) {
 				console.error(e)
 
@@ -219,7 +223,7 @@ export const General = memo(() => {
 				toast.dismiss()
 			}
 		},
-		[loadingToast, errorToast, setAutoLaunchEnabled]
+		[loadingToast, errorToast, autoLaunchQuery]
 	)
 
 	const exportDesktopLogs = useCallback(async () => {
@@ -339,7 +343,9 @@ export const General = memo(() => {
 										className="mt-10"
 									>
 										<Switch
-											checked={autoLaunchEnabled}
+											checked={
+												autoLaunchQuery.isSuccess && autoLaunchQuery.data ? autoLaunchQuery.data.openAtLogin : false
+											}
 											onCheckedChange={toggleAutoLaunch}
 										/>
 									</Section>
@@ -433,7 +439,6 @@ export const General = memo(() => {
 						<Section
 							name={t("settings.general.sections.exportDesktopLogs.name")}
 							info={t("settings.general.sections.exportDesktopLogs.info")}
-							className="mt-10"
 						>
 							<p
 								className="underline cursor-pointer"

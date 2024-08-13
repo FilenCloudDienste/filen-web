@@ -10,6 +10,7 @@ import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { promiseAllChunked, dialogsOpen } from "@/lib/utils"
 import { directoryUUIDToNameCache } from "@/cache"
 import useErrorToast from "@/hooks/useErrorToast"
+import eventEmitter from "@/lib/eventEmitter"
 
 export type DriveCloudItem = Prettify<
 	CloudItem &
@@ -80,6 +81,12 @@ export const Drive = memo(() => {
 			try {
 				await promiseAllChunked(promises)
 			} catch (e) {
+				if (e instanceof Error && e.message.toLowerCase().includes("maximum storage reached")) {
+					eventEmitter.emit("openStorageDialog")
+
+					return
+				}
+
 				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
 					console.error(e)
 
@@ -134,6 +141,12 @@ export const Drive = memo(() => {
 					])
 				}
 			} catch (e) {
+				if (e instanceof Error && e.message.toLowerCase().includes("maximum storage reached")) {
+					eventEmitter.emit("openStorageDialog")
+
+					return
+				}
+
 				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
 					console.error(e)
 

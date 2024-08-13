@@ -1,24 +1,17 @@
-import { Skeleton } from "../ui/skeleton"
 import { memo } from "react"
-import useIsMobile from "@/hooks/useIsMobile"
 import { cn } from "@/lib/utils"
+import { Loader } from "lucide-react"
+import { IS_DESKTOP } from "@/constants"
 
 export const Skeletons = memo(() => {
-	const isMobile = useIsMobile()
-
 	return (
-		<div className={cn("flex flex-col p-6 h-full overflow-hidden", isMobile ? "w-full" : "w-4/6")}>
-			{new Array(50).fill(1).map((_, index) => {
-				return (
-					<div
-						key={index}
-						className="flex flex-col gap-3 mb-10"
-					>
-						<Skeleton className="w-full h-[57px] rounded-md" />
-						<Skeleton className="w-full h-[57px] rounded-md" />
-					</div>
-				)
-			})}
+		<div
+			className={cn(
+				"flex flex-row items-center justify-center overflow-hidden",
+				IS_DESKTOP ? "h-[calc(100dvh-48px)]" : "h-[calc(100dvh-32px)]"
+			)}
+		>
+			<Loader className="animate-spin-medium" />
 		</div>
 	)
 })

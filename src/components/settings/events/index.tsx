@@ -8,7 +8,7 @@ import useAccount from "@/hooks/useAccount"
 import Event from "./event"
 import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
 import useErrorToast from "@/hooks/useErrorToast"
-import { Skeleton } from "@/components/ui/skeleton"
+import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
 
 export const Events = memo(() => {
@@ -100,16 +100,7 @@ export const Events = memo(() => {
 				return (
 					<div className="flex flex-col w-full h-full overflow-hidden py-3">
 						{showSkeletons ? (
-							new Array(100).fill(1).map((_, index) => {
-								return (
-									<div
-										key={index}
-										className="flex flex-row gap-4 px-4 mb-2 w-full"
-									>
-										<Skeleton className="h-[50px] w-full grow" />
-									</div>
-								)
-							})
+							<Skeletons />
 						) : (
 							<div className="flex flex-row items-center justify-center p-4 w-full h-full">
 								<p className="text-muted-foreground">{t("settings.events.empty")}</p>

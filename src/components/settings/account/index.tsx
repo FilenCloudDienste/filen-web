@@ -292,6 +292,12 @@ export const Account = memo(() => {
 				await worker.uploadAvatar({ buffer: transfer(buffer, [buffer.buffer]) })
 				await account.refetch()
 			} catch (e) {
+				if (e instanceof Error && e.message.toLowerCase().includes("maximum storage reached")) {
+					eventEmitter.emit("openStorageDialog")
+
+					return
+				}
+
 				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
 					console.error(e)
 
@@ -399,7 +405,7 @@ export const Account = memo(() => {
 						>
 							<p className="text-muted-foreground">{formatBytes(usage.versioned)}</p>
 							<p
-								className="underline cursor-pointer"
+								className="underline cursor-pointer text-red-500"
 								onClick={deleteVersioned}
 							>
 								{t("settings.account.sections.versionedFiles.action")}
@@ -411,7 +417,7 @@ export const Account = memo(() => {
 						>
 							<p className="text-muted-foreground">{formatBytes(usage.all)}</p>
 							<p
-								className="underline cursor-pointer"
+								className="underline cursor-pointer text-red-500"
 								onClick={deleteAll}
 							>
 								{t("settings.account.sections.all.action")}

@@ -9,7 +9,8 @@ import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import { showSaveFilePicker } from "native-file-system-adapter"
 import worker from "@/lib/worker"
-import { CheckCircle, Wallet, Loader } from "lucide-react"
+import { CheckCircle, Wallet } from "lucide-react"
+import Skeletons from "../skeletons"
 
 export const Invoices = memo(() => {
 	const account = useAccount()
@@ -66,16 +67,7 @@ export const Invoices = memo(() => {
 	)
 
 	if (!account) {
-		return (
-			<div
-				className={cn(
-					"flex flex-col w-full items-center justify-center gap-2",
-					IS_DESKTOP ? "h-[calc(100dvh-48px)]" : "h-[calc(100dvh-32px)]"
-				)}
-			>
-				<Loader className="animate-spin-medium" />
-			</div>
-		)
+		return <Skeletons />
 	}
 
 	return (

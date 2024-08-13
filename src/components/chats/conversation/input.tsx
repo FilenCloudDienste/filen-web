@@ -856,6 +856,12 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 				eventEmitter.emit("attachFilesToChat", filesWithLinkUUIDs)
 			} catch (e) {
+				if (e instanceof Error && e.message.toLowerCase().includes("maximum storage reached")) {
+					eventEmitter.emit("openStorageDialog")
+
+					return
+				}
+
 				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
 					console.error(e)
 

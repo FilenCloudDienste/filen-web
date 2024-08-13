@@ -452,6 +452,12 @@
 			"dismiss": "Dismiss",
 			"update": "Update",
 			"installing": "Installing update, please do not interrupt this process!"
+		},
+		"storage": {
+			"title": "Not enough storage",
+			"info": "You do not have enough storage available. In order to upload more files you need to buy a plan. All plans stack in terms of storage. You can subscribe to as many plans as you want.",
+			"dismiss": "Dismiss",
+			"upgrade": "Upgrade"
 		}
 	},
 	"contextMenus": {
@@ -1169,6 +1175,10 @@
 			"mountedAt": "Mounted at {{letter}}",
 			"browse": "Browse",
 			"clear": "Clear",
+			"missingDeps": "Missing dependencies",
+			"missingDepsWindows": "To use the virtual drive you need to have WinFSP installed on your system.",
+			"missingDepsLinux": "To use the virtual drive you need to have FUSE3 installed on your system.",
+			"missingDepsInstructions": "Installation instructions",
 			"cacheUsed": "{{size}} of {{max}} used",
 			"description": "Mount your cloud drive as a local drive, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",
 			"unixDescription": "Mount your cloud drive inside a local directory, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",

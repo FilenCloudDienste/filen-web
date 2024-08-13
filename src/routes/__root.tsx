@@ -36,6 +36,7 @@ import InfoDialog from "@/components/dialogs/infoDialog"
 import IsOnlineDialog from "@/components/dialogs/isOnline"
 import Page404 from "@/components/404"
 import DesktopUpdateDialog from "@/components/dialogs/desktopUpdate"
+import StorageDialog from "@/components/dialogs/storage"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -156,6 +157,7 @@ export const Root = memo(() => {
 										<ActivityHandler />
 										<DesktopListener />
 										<InfoDialog />
+										<StorageDialog />
 									</>
 								) : (
 									<DropZone>
