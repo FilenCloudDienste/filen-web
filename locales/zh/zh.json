@@ -452,6 +452,12 @@
 			"dismiss": "忽略",
 			"update": "更新",
 			"installing": "正在安装更新，请不要中断此进程！"
+		},
+		"storage": {
+			"title": "存储空间不足",
+			"info": "您没有足够的可用存储空间。为了上传更多文件，您需要购买一个计划。所有计划的存储量都可以叠加。您可以订购任意多个计划。",
+			"dismiss": "忽略",
+			"upgrade": "升级"
 		}
 	},
 	"contextMenus": {
@@ -1169,6 +1175,10 @@
 			"mountedAt": "挂载于 {{letter}}",
 			"browse": "浏览",
 			"clear": "清空",
+			"missingDeps": "缺少依赖项",
+			"missingDepsWindows": "要使用虚拟磁盘，您需要在系统上安装 WinFSP。",
+			"missingDepsLinux": "要使用虚拟磁盘，您需要在系统上安装 FUSE3。",
+			"missingDepsInstructions": "安装说明",
 			"cacheUsed": "{{size}} / {{max}} 已使用",
 			"description": "将您的云盘安装为本地磁盘，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些都在您熟悉的文件资源管理器中完成。",
 			"unixDescription": "将您的云盘安装到本地目录中，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些操作都在您熟悉的文件资源管理器中完成。",
