@@ -15,12 +15,30 @@
 
 The package is still a work in progress. DO NOT USE IT IN PRODUCTION YET. Class names, function names, types, definitions, constants etc. are subject to change until we release a fully tested and stable version.
 
-### Installation
+### Installation and building
 
-1. Install using NPM
+1. Clone repository
 
 ```sh
-npm install @filen/web@latest
+git clone https://github.com/FilenCloudDienste/filen-web filen-web
+```
+
+2. Update dependencies
+
+```sh
+cd filen-web && npm install
+```
+
+3. Running a development build
+
+```sh
+npm run dev
+```
+
+4. Build
+
+```sh
+npm run build
 ```
 
 ## License
