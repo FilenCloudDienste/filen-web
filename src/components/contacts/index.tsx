@@ -21,7 +21,7 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import { type BlockedContact } from "@filen/sdk/dist/types/api/v3/contacts/blocked"
 import { type ContactRequest } from "@filen/sdk/dist/types/api/v3/contacts/requests/in"
 import { Skeleton } from "../ui/skeleton"
-import { Plus } from "lucide-react"
+import { Plus, SearchIcon } from "lucide-react"
 import useContactsContainerSize from "@/hooks/useContactsContainerSize"
 import { sortAndFilterConversations } from "../mainContainer/innerSideBar/chats/utils"
 import useIsMobile from "@/hooks/useIsMobile"
@@ -304,23 +304,30 @@ export const Contacts = memo(() => {
 			EmptyPlaceholder: () => {
 				return (
 					<div className="flex flex-col w-full h-full overflow-hidden">
-						{showSkeletons
-							? new Array(100).fill(1).map((_, index) => {
-									return (
-										<div
-											key={index}
-											className="flex flex-row w-full h-auto mb-2"
-										>
-											<Skeleton className="w-full h-[68px] rounded-md" />
-										</div>
-									)
-								})
-							: null}
+						{showSkeletons ? (
+							new Array(100).fill(1).map((_, index) => {
+								return (
+									<div
+										key={index}
+										className="flex flex-row w-full h-auto mb-2"
+									>
+										<Skeleton className="w-full h-[68px] rounded-md" />
+									</div>
+								)
+							})
+						) : search.length > 0 ? (
+							<div className="flex flex-col items-center justify-center w-full h-full gap-2 -mt-6">
+								<SearchIcon size={32} />
+								<p className="text-muted-foreground line-clamp-2 text-ellipsis break-all max-w-96 text-center">
+									{t("contacts.emptySearch", { search })}
+								</p>
+							</div>
+						) : null}
 					</div>
 				)
 			}
 		}
-	}, [showSkeletons])
+	}, [showSkeletons, search, t])
 
 	const style = useMemo((): React.CSSProperties => {
 		return {

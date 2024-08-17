@@ -172,7 +172,7 @@ export const CreateSyncDialog = memo(() => {
 
 				const itemCount = await window.desktopAPI.getLocalDirectoryItemCount(createState.localPath)
 
-				if (itemCount >= 300000) {
+				if (itemCount >= 100000) {
 					if (
 						!(await showConfirmDialog({
 							title: t("dialogs.createSync.warnings.localDirectoryBig.title"),

@@ -203,13 +203,15 @@
 			"createNote": "Create note",
 			"createTag": "Create tag",
 			"empty": "No notes yet",
-			"emptyCreate": "Create one"
+			"emptyCreate": "Create one",
+			"emptySearch": "Nothing found for \"{{search}}\""
 		},
 		"chats": {
 			"empty": "No chats yet",
 			"emptyCreate": "Create one",
 			"search": "Search...",
-			"createChat": "Create chat"
+			"createChat": "Create chat",
+			"emptySearch": "Nothing found for \"{{search}}\""
 		},
 		"recents": "Recents",
 		"cloudDrive": "Cloud Drive",
@@ -246,7 +248,8 @@
 			"emptyCreate": "Create one",
 			"nothingFound": "Nothing found for \"{{search}}\"",
 			"createSync": "Create sync",
-			"search": "Search..."
+			"search": "Search...",
+			"emptySearch": "Nothing found for \"{{search}}\""
 		}
 	},
 	"sideBar": {
@@ -669,6 +672,7 @@
 		"addContact": "Add contact",
 		"search": "Search...",
 		"empty": "No contacts yet",
+		"emptySearch": "Nothing found for \"{{search}}\"",
 		"openChat": "Open chat",
 		"more": "More",
 		"dialogs": {
@@ -1349,6 +1353,7 @@
 		"noIssues": "No issues",
 		"info": {
 			"progress": "Synchronizing {{items}} items ({{total}}) at {{speed}}, about {{remaining}} remaining",
+			"progressNoEstimate": "Synchronizing {{items}} items ({{total}})",
 			"upToDate": "Everything synced",
 			"errors": "{{count}} synchronization errors",
 			"errorsResolve": "Resolve",
@@ -1371,9 +1376,9 @@
 			"deleteLocalDirectory": "{{name}} deleted locally",
 			"createRemoteDirectory": "{{name}} created in the cloud",
 			"renameRemoteDirectory": "{{name}} renamed in the cloud",
-			"deleteRemoteDirectory": "{{name}} deleted from the cloud",
+			"deleteRemoteDirectory": "{{name}} deleted in the cloud",
 			"deleteLocalFile": "{{name}} deleted locally",
-			"deleteRemoteFile": "{{name}} deleted from the cloud",
+			"deleteRemoteFile": "{{name}} deleted in the cloud",
 			"download": "{{name}} downloaded from the cloud",
 			"upload": "{{name}} uploaded to the cloud",
 			"renameLocalFile": "{{name}} renamed locally",

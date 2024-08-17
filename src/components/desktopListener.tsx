@@ -434,24 +434,25 @@ export const DesktopListener = memo(() => {
 					...prev,
 					[message.syncPair.uuid]: message.data.ignored
 				}))
-			} else if (message.type === "deltas") {
+			} else if (message.type === "deltasCount") {
 				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
 					return
 				}
 
 				setTasksCount(prev => ({
 					...prev,
-					[message.syncPair.uuid]: message.data.deltas.length
+					[message.syncPair.uuid]: message.data.count
 				}))
 
-				tasksCount.current[message.syncPair.uuid] = message.data.deltas.length
+				tasksCount.current[message.syncPair.uuid] = message.data.count
+			} else if (message.type === "deltasSize") {
+				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
+					return
+				}
 
 				setTasksSize(prev => ({
 					...prev,
-					[message.syncPair.uuid]: message.data.deltas.reduce(
-						(prev, delta) => prev + (delta.type === "uploadFile" || delta.type === "downloadFile" ? delta.size : 0),
-						0
-					)
+					[message.syncPair.uuid]: message.data.size
 				}))
 			}
 		},

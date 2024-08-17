@@ -58,15 +58,16 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
-	const { setDriveItems, driveItems } = useDriveItemsStore(
-		useCallback(state => ({ setDriveItems: state.setItems, driveItems: state.items }), [])
+	const { setDriveItems, driveItems, setDriveSearch } = useDriveItemsStore(
+		useCallback(state => ({ setDriveItems: state.setItems, driveItems: state.items, setDriveSearch: state.setSearchTerm }), [])
 	)
-	const { setPublicLinkItems, publicLinkItems, setVirtualURL } = useDirectoryPublicLinkStore(
+	const { setPublicLinkItems, publicLinkItems, setVirtualURL, setPublicLinkSearch } = useDirectoryPublicLinkStore(
 		useCallback(
 			state => ({
 				setPublicLinkItems: state.setItems,
 				publicLinkItems: state.items,
-				setVirtualURL: state.setVirtualURL
+				setVirtualURL: state.setVirtualURL,
+				setPublicLinkSearch: state.setSearchTerm
 			}),
 			[]
 		)
@@ -103,6 +104,10 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 		return isInsidePublicLink ? publicLinkItems : driveItems
 	}, [isInsidePublicLink, publicLinkItems, driveItems])
 
+	const setSearch = useMemo(() => {
+		return isInsidePublicLink ? setPublicLinkSearch : setDriveSearch
+	}, [isInsidePublicLink, setPublicLinkSearch, setDriveSearch])
+
 	const onDoubleClick = useCallback(() => {
 		if (item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE > item.size) {
 			eventEmitter.emit("openPreviewModal", { item })
@@ -119,6 +124,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 			setCurrentSharerId(item.sharerId)
 			setCurrentSharerEmail(item.sharerEmail)
 			setCurrentReceivers(item.receivers)
+			setSearch("")
 
 			if (isInsidePublicLink && setVirtualURL) {
 				setVirtualURL(prev => `${prev}/${item.uuid}`)
@@ -145,7 +151,8 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 		previewType,
 		setVirtualURL,
 		isInsidePublicLink,
-		navigating
+		navigating,
+		setSearch
 	])
 
 	const onClick = useCallback(

@@ -180,12 +180,17 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 										/>
 										<p>
 											{tasksCount > 0 && tasksSize > 0
-												? t("syncs.info.progress", {
-														items: tasksCount,
-														speed: bpsToReadable(speed),
-														remaining: remainingReadable,
-														total: formatBytes(tasksSize)
-													})
+												? speed > 0
+													? t("syncs.info.progress", {
+															items: tasksCount,
+															speed: bpsToReadable(speed),
+															remaining: remainingReadable,
+															total: formatBytes(tasksSize)
+														})
+													: t("syncs.info.progressNoEstimate", {
+															items: tasksCount,
+															total: formatBytes(tasksSize)
+														})
 												: t("syncs.info.syncingChanges")}
 										</p>
 									</>

@@ -19,6 +19,7 @@ import { sortAndFilterConversations } from "./utils"
 import { type ChatConversation } from "@filen/sdk/dist/types/api/v3/chat/conversations"
 import { useTranslation } from "react-i18next"
 import { Skeleton } from "@/components/ui/skeleton"
+import { SearchIcon } from "lucide-react"
 
 const processedMessageUUIDs: Record<string, boolean> = {}
 
@@ -113,21 +114,41 @@ export const Chats = memo(() => {
 								)
 							})
 						) : (
-							<div className="flex flex-col items-center justify-center p-4 w-full h-full">
-								<p className="text-muted-foreground">{t("innerSideBar.chats.empty")}</p>
-								<p
-									className="text-blue-500 cursor-pointer hover:underline"
-									onClick={create}
-								>
-									{t("innerSideBar.chats.emptyCreate")}
-								</p>
+							<div className="flex flex-col items-center justify-center p-4 w-full h-full text-center">
+								{search.length > 0 ? (
+									<>
+										<SearchIcon
+											className="text-muted-foreground"
+											size={32}
+										/>
+										<p className="text-muted-foreground max-w-[100%] line-clamp-2 text-ellipsis break-all mt-2 text-center">
+											{t("innerSideBar.chats.emptySearch", { search })}
+										</p>
+										<p
+											className="text-blue-500 hover:underline cursor-pointer text-sm"
+											onClick={create}
+										>
+											{t("innerSideBar.chats.emptyCreate")}
+										</p>
+									</>
+								) : (
+									<>
+										<p className="text-muted-foreground">{t("innerSideBar.chats.empty")}</p>
+										<p
+											className="text-blue-500 cursor-pointer hover:underline"
+											onClick={create}
+										>
+											{t("innerSideBar.chats.emptyCreate")}
+										</p>
+									</>
+								)}
 							</div>
 						)}
 					</div>
 				)
 			}
 		}
-	}, [showSkeletons, t, create])
+	}, [showSkeletons, t, create, search])
 
 	const socketEventListener = useCallback(
 		async (event: SocketEvent) => {

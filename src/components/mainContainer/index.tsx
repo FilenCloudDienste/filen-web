@@ -257,7 +257,7 @@ export const MainContainer = memo(({ children }: { children: React.ReactNode }) 
 
 	return (
 		<Wrapper>
-			<SideBar />
+			<SideBar key="sidebar" />
 			<ResizablePanelGroup
 				direction="horizontal"
 				onLayout={updatePanelSizes}
