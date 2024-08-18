@@ -1187,7 +1187,7 @@
 			"description": "Mount your cloud drive as a local drive, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",
 			"unixDescription": "Mount your cloud drive inside a local directory, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",
 			"unixSudo": "To mount and unmount your cloud drive the client needs admin rights. Please allow access when you are prompted.",
-			"limitations": "It is not recommended to directly install or run applications or program files from the virtual drive.",
+			"limitations": "Installing or running programs on the virtual drive is not supported.",
 			"sections": {
 				"active": {
 					"name": "Active"
