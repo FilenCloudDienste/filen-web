@@ -543,6 +543,7 @@ export const VirtualDrive = memo(() => {
 								? t("mounts.virtualDrive.description")
 								: t("mounts.virtualDrive.unixDescription")}
 						</p>
+						<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.limitations")}</p>
 						{window.desktopAPI.osPlatform() !== "win32" && (
 							<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.unixSudo")}</p>
 						)}
