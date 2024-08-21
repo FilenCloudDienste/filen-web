@@ -3,7 +3,7 @@
   <h3 align="center">Filen Web</h3>
 
   <p align="center">
-    Web app for Filen.
+    Web and Desktop Frontend for Filen.
     <br/>
     <br/>
   </p>
