@@ -103,7 +103,8 @@ export function Login() {
 				`sdkConfig:${SDK_CONFIG_VERSION}`,
 				JSON.stringify({
 					...getSDK().config,
-					password: "redacted"
+					password: "redacted",
+					twoFactorCode: "redacted"
 				} satisfies FilenSDKConfig)
 			)
 
@@ -113,7 +114,8 @@ export function Login() {
 					...DEFAULT_DESKTOP_CONFIG,
 					sdkConfig: {
 						...getSDK().config,
-						password: "redacted"
+						password: "redacted",
+						twoFactorCode: "redacted"
 					} satisfies FilenSDKConfig
 				} satisfies FilenDesktopConfig)
 			)
@@ -121,7 +123,8 @@ export function Login() {
 			await setup(
 				{
 					...getSDK().config,
-					password: "redacted"
+					password: "redacted",
+					twoFactorCode: "redacted"
 				},
 				true
 			)
