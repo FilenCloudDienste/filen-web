@@ -469,6 +469,7 @@
 			"download": "Download",
 			"publicLink": "Public link",
 			"share": "Share",
+			"shareProgress": "{{done}} items shared",
 			"versions": "Versions",
 			"favorite": "Favorite",
 			"unfavorite": "Unfavorite",

@@ -24,7 +24,7 @@ import useLocation from "@/hooks/useLocation"
 import { HexColorPicker } from "react-colorful"
 import { useDebouncedCallback } from "use-debounce"
 import { directoryColorToHex } from "@/assets/fileExtensionIcons"
-import useLoadingToast from "@/hooks/useLoadingToast"
+import useLoadingToast, { LoadingToastContent } from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { useDirectoryPublicLinkStore, usePublicLinkStore } from "@/stores/publicLink.store"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
@@ -51,6 +51,8 @@ import { selectContacts } from "@/components/dialogs/selectContacts"
 import { MAX_PREVIEW_SIZE } from "@/constants"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { isValidFileName } from "@/lib/utils"
+import { v4 as uuidv4 } from "uuid"
+import { type WorkerToMainMessage } from "@/lib/worker/types"
 
 const iconSize = 16
 
@@ -464,13 +466,26 @@ export const ContextMenu = memo(
 			}
 
 			const toast = loadingToast()
+			const requestUUID = uuidv4()
+
+			const workerMessageListener = eventEmitter.on("workerMessage", (message: WorkerToMainMessage) => {
+				if (message.type === "shareProgress" && message.requestUUID === requestUUID) {
+					toast.update({
+						description: <LoadingToastContent text={t("contextMenus.item.shareProgress", { done: message.done })} />,
+						variant: "default",
+						duration: Infinity,
+						id: toast.id
+					})
+				}
+			})
 
 			try {
 				await Promise.all(
 					contacts.contacts.map(contact =>
 						actions.share({
 							selectedItems,
-							receiverEmail: contact.email
+							receiverEmail: contact.email,
+							requestUUID
 						})
 					)
 				)
@@ -480,8 +495,10 @@ export const ContextMenu = memo(
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
 				toast.dismiss()
+
+				workerMessageListener.remove()
 			}
-		}, [selectedItems, loadingToast, errorToast])
+		}, [selectedItems, loadingToast, errorToast, t])
 
 		const changeColor = useDebouncedCallback(async (color: string) => {
 			if (selectedItems.length !== 1 || !selectedItems[0]) {
