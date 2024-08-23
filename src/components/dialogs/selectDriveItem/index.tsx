@@ -181,6 +181,8 @@ export const SelectDriveItemDialog = memo(() => {
 				uuid: parent
 			})
 
+			eventEmitter.emit("refetchDriveSideBarTree", parent)
+
 			if (routeParent === item.parent) {
 				setItems(prev => [
 					...prev.filter(prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()),

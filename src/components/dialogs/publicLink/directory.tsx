@@ -17,6 +17,7 @@ import eventEmitter from "@/lib/eventEmitter"
 import { Loader } from "lucide-react"
 import { type PublicLinkExpiration } from "@filen/sdk"
 import { type DirLinkStatusResponse } from "@filen/sdk/dist/types/api/v3/dir/link/status"
+import { type WorkerToMainMessage } from "@/lib/worker/types"
 
 export const Directory = memo(
 	({
@@ -44,6 +45,7 @@ export const Directory = memo(
 		const [showPassword, setShowPassword] = useState<boolean>(false)
 		const [decryptedLinkKey, setDecryptedLinkKey] = useState<string>("")
 		const [downloadBtn, setDownloadBtn] = useState<boolean>(true)
+		const [progress, setProgress] = useState<{ done: number; total: number }>({ done: 0, total: 0 })
 
 		const query = useQuery({
 			queryKey: ["directoryPublicLinkStatus", item.uuid],
@@ -91,6 +93,7 @@ export const Directory = memo(
 				} finally {
 					toast.dismiss()
 
+					setProgress({ done: 0, total: 0 })
 					setTimeout(() => setSaving(false), 100)
 				}
 			},
@@ -128,6 +131,7 @@ export const Directory = memo(
 			} finally {
 				toast.dismiss()
 
+				setProgress({ done: 0, total: 0 })
 				setSaving(false)
 			}
 		}, [loadingToast, errorToast, query, item.uuid, status, setSaving, saving, password, expiration, downloadBtn])
@@ -193,6 +197,21 @@ export const Directory = memo(
 		}, [query.isSuccess, query.data, decryptLinkKey, setShowSave])
 
 		useEffect(() => {
+			const workerMessageListener = eventEmitter.on("workerMessage", (message: WorkerToMainMessage) => {
+				if (message.type === "publicLinkProgress" && message.uuid === item.uuid) {
+					setProgress({
+						done: message.done,
+						total: message.total
+					})
+				}
+			})
+
+			return () => {
+				workerMessageListener.remove()
+			}
+		}, [item.uuid])
+
+		useEffect(() => {
 			const savePublicLinkListener = eventEmitter.on("savePublicLink", () => {
 				save()
 			})
@@ -204,8 +223,13 @@ export const Directory = memo(
 
 		if (!status || saving) {
 			return (
-				<div className="flex flex-row py-6 items-center justify-center">
+				<div className="flex flex-col py-6 items-center justify-center gap-2.5">
 					<Loader className="animate-spin-medium" />
+					{progress.total > 0 && (
+						<p className="text-muted-foreground text-sm text-ellipsis line-clamp-1 break-all">
+							{t("dialogs.publicLink.progress", progress)}
+						</p>
+					)}
 				</div>
 			)
 		}

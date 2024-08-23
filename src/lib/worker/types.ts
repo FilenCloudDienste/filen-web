@@ -45,3 +45,9 @@ export type WorkerToMainMessage =
 			total: number
 			requestUUID: string
 	  }
+	| {
+			type: "publicLinkProgress"
+			done: number
+			total: number
+			uuid: string
+	  }

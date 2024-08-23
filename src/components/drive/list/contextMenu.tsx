@@ -64,6 +64,8 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 				...prev.filter(prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()),
 				item
 			])
+
+			eventEmitter.emit("refetchDriveSideBarTree", parent)
 		} catch (e) {
 			console.error(e)
 

@@ -1,8 +1,9 @@
-import { memo, useCallback } from "react"
+import { memo, useCallback, useMemo } from "react"
 import { type DirLinkInfoDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/info"
 import { ChevronRight } from "lucide-react"
 import { directoryUUIDToNameCache } from "@/cache"
 import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
+import { cn } from "@/lib/utils"
 
 export const Item = memo(({ uuid, info, ex, index }: { info: DirLinkInfoDecryptedResponse; uuid: string; ex: string[]; index: number }) => {
 	const { setVirtualURL, virtualURL } = useDirectoryPublicLinkStore(
@@ -14,6 +15,10 @@ export const Item = memo(({ uuid, info, ex, index }: { info: DirLinkInfoDecrypte
 			[]
 		)
 	)
+
+	const currentParent = useMemo(() => {
+		return virtualURL.split("/").at(-1) ?? ""
+	}, [virtualURL])
 
 	const navigateToPath = useCallback(() => {
 		let builtPathname = ""
@@ -33,7 +38,10 @@ export const Item = memo(({ uuid, info, ex, index }: { info: DirLinkInfoDecrypte
 	return (
 		<li className="flex flex-row gap-1 items-center select-none truncate">
 			<p
-				className="text-primary cursor-pointer select-none truncate hover:text-primary"
+				className={cn(
+					"cursor-pointer select-none truncate hover:text-primary",
+					uuid === currentParent ? "text-primary" : "text-muted-foreground"
+				)}
 				onClick={navigateToPath}
 			>
 				{uuid === info.parent

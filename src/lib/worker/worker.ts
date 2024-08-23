@@ -2759,10 +2759,20 @@ export async function uploadFilesToChatUploads({ files }: { files: File[] }): Pr
 export async function enablePublicLink({ type, uuid }: { type: "file" | "directory"; uuid: string }): Promise<string> {
 	await waitForInitialization()
 
-	return await getSDK().cloud().enablePublicLink({
-		type,
-		uuid
-	})
+	return await getSDK()
+		.cloud()
+		.enablePublicLink({
+			type,
+			uuid,
+			onProgress: (done, total) => {
+				postMessageToMain({
+					type: "publicLinkProgress",
+					done,
+					total,
+					uuid
+				})
+			}
+		})
 }
 
 export async function editPublicLink({

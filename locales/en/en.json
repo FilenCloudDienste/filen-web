@@ -288,7 +288,8 @@
 			"copyLink": "Copy",
 			"expiresAfter": "Expires after",
 			"password": "Password (leave empty to disable)",
-			"passwordPlaceholder": "Password"
+			"passwordPlaceholder": "Password",
+			"progress": "{{done}} of {{total}} items added to the public link"
 		},
 		"sharedWith": {
 			"title": "Shared with",

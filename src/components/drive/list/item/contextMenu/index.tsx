@@ -177,6 +177,14 @@ export const ContextMenu = memo(
 				})
 
 				setItems(prev => prev.filter(prevItem => !movedUUIDs.includes(prevItem.uuid)))
+
+				for (const selectedItem of selectedItems) {
+					if (selectedItem.type === "directory") {
+						eventEmitter.emit("refetchDriveSideBarTree", selectedItem.parent)
+					}
+				}
+
+				eventEmitter.emit("refetchDriveSideBarTree", parentItem.uuid)
 			} catch (e) {
 				console.error(e)
 
@@ -257,6 +265,12 @@ export const ContextMenu = memo(
 				}
 
 				setItems(prev => prev.filter(prevItem => !trashedUUIDs.includes(prevItem.uuid)))
+
+				for (const selectedItem of selectedItems) {
+					if (selectedItem.type === "directory") {
+						eventEmitter.emit("refetchDriveSideBarTree", selectedItem.parent)
+					}
+				}
 			} catch (e) {
 				console.error(e)
 
@@ -301,6 +315,12 @@ export const ContextMenu = memo(
 				}
 
 				setItems(prev => prev.filter(prevItem => !deletedUUIDs.includes(prevItem.uuid)))
+
+				for (const selectedItem of selectedItems) {
+					if (selectedItem.type === "directory") {
+						eventEmitter.emit("refetchDriveSideBarTree", selectedItem.parent)
+					}
+				}
 			} catch (e) {
 				console.error(e)
 
@@ -323,6 +343,12 @@ export const ContextMenu = memo(
 				await actions.restore({ selectedItems })
 
 				setItems(prev => prev.filter(prevItem => !restoredUUIDs.includes(prevItem.uuid)))
+
+				for (const selectedItem of selectedItems) {
+					if (selectedItem.type === "directory") {
+						eventEmitter.emit("refetchDriveSideBarTree", selectedItem.parent)
+					}
+				}
 			} catch (e) {
 				console.error(e)
 
@@ -377,6 +403,10 @@ export const ContextMenu = memo(
 				})
 
 				setItems(prev => prev.map(prevItem => (prevItem.uuid === item.uuid ? { ...prevItem, name: newName } : prevItem)))
+
+				if (item.type === "directory") {
+					eventEmitter.emit("refetchDriveSideBarTree", item.parent)
+				}
 			} catch (e) {
 				console.error(e)
 
