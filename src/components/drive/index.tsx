@@ -107,10 +107,13 @@ export const Drive = memo(() => {
 				return
 			}
 
-			const files: { file: File; webkitRelativePath: string }[] = []
+			const files: { file: File; path: string }[] = []
 
 			for (const file of e.target.files) {
-				files.push({ file, webkitRelativePath: file.webkitRelativePath })
+				files.push({
+					file,
+					path: file.webkitRelativePath
+				})
 			}
 
 			const parentCopy = `${parent}`

@@ -750,7 +750,7 @@ export async function uploadDirectory({
 	emitEvents = true,
 	excludeDSStore = true
 }: {
-	files: { file: File; webkitRelativePath: string }[]
+	files: { file: File; path: string }[]
 	parent: string
 	sharerId?: number
 	sharerEmail?: string
@@ -770,7 +770,7 @@ export async function uploadDirectory({
 		throw new Error("Empty directory.")
 	}
 
-	const directoryId = uuidv4()
+	const directoryId = `directory:${uuidv4()}`
 	const items: DriveCloudItem[] = []
 	let size = 0
 	let name: string | null = null
@@ -778,17 +778,11 @@ export async function uploadDirectory({
 	let didStart = false
 	let didError = false
 
-	for (const file of files) {
-		Object.defineProperty(file.file, "webkitRelativePath", {
-			value: file.webkitRelativePath,
-			writable: true
-		})
+	for (let i = 0; i < files.length; i++) {
+		size += files[i]!.file.size
+		const ex = files[i]!.path.split("/")
 
-		size += file.file.size
-
-		const ex = file.webkitRelativePath.split("/")
-
-		if (ex[0] && ex[0].length > 0 && !name) {
+		if (!name && ex[0] && ex[0].length > 0) {
 			name = ex[0].trim()
 		}
 	}
@@ -809,7 +803,7 @@ export async function uploadDirectory({
 		await getSDK()
 			.cloud()
 			.uploadDirectoryFromWeb({
-				files: files.map(file => file.file) as unknown as FileList,
+				files,
 				parent,
 				name,
 				pauseSignal: pauseSignals[directoryId],

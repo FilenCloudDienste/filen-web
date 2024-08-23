@@ -576,7 +576,8 @@
 			"started": "Started",
 			"error": "Error",
 			"stopped": "Stopped",
-			"paused": "Paused"
+			"paused": "Paused",
+			"creatingDirectories": "Creating directories"
 		},
 		"pause": "Pause",
 		"resume": "Resume",

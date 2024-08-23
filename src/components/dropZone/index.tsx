@@ -105,7 +105,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 
 			try {
 				if (e && e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-					const parentCopy = `${parent}`
+					const parentCopy = structuredClone(parent)
 					const isChatsUpload = location.includes("chats")
 					const files = await readLocalDroppedDirectory(e.dataTransfer.items)
 
@@ -117,7 +117,13 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 							throw new Error("Cannot attach directories to a chat.")
 						}
 
-						const directoryGroups: Record<string, { file: File; webkitRelativePath: string }[]> = {}
+						const directoryGroups: Record<
+							string,
+							{
+								file: File
+								path: string
+							}[]
+						> = {}
 
 						for (const file of files) {
 							const ex = file.webkitRelativePath.split("/")
@@ -127,7 +133,10 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 								directoryGroups[dirname] = []
 							}
 
-							directoryGroups[dirname]!.push({ file, webkitRelativePath: file.webkitRelativePath })
+							directoryGroups[dirname]!.push({
+								file,
+								path: file.webkitRelativePath
+							})
 						}
 
 						for (const basename in directoryGroups) {

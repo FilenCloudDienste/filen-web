@@ -31,6 +31,14 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 	const [hidePreview, setHidePreview] = useState<boolean>(false)
 	const isMobile = useIsMobile()
 
+	const downloadEnabled = useMemo(() => {
+		if (!filePublicLinkInfo.status) {
+			return false
+		}
+
+		return filePublicLinkInfo.info.downloadBtn
+	}, [filePublicLinkInfo])
+
 	const item = useMemo(() => {
 		if (!filePublicLinkInfo.status) {
 			return null
@@ -140,18 +148,20 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 						<EyeOff size={16} />
 						{!isMobile && "Hide preview"}
 					</Button>
-					<Button
-						onClick={download}
-						className="items-center gap-2 shrink-0"
-						size="sm"
-					>
-						<Download size={16} />
-						{!isMobile && "Download"}
-					</Button>
+					{downloadEnabled && (
+						<Button
+							onClick={download}
+							className="items-center gap-2 shrink-0"
+							size="sm"
+						>
+							<Download size={16} />
+							{!isMobile && "Download"}
+						</Button>
+					)}
 				</div>
 			</div>
 		)
-	}, [item, dark, download, isMobile, urlState.chatEmbed, hidePreviewFn])
+	}, [item, dark, download, isMobile, urlState.chatEmbed, hidePreviewFn, downloadEnabled])
 
 	const loader = useMemo(() => {
 		return (
@@ -191,18 +201,20 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 							Preview
 						</Button>
 					)}
-					<Button
-						onClick={download}
-						className="items-center gap-2"
-						size={urlState.embed || urlState.chatEmbed ? "sm" : "default"}
-					>
-						<Download size={16} />
-						Download
-					</Button>
+					{downloadEnabled && (
+						<Button
+							onClick={download}
+							className="items-center gap-2"
+							size={urlState.embed || urlState.chatEmbed ? "sm" : "default"}
+						>
+							<Download size={16} />
+							Download
+						</Button>
+					)}
 				</div>
 			</div>
 		)
-	}, [item, preview, download, previewType, urlState.embed, urlState.chatEmbed])
+	}, [item, preview, download, previewType, urlState.embed, urlState.chatEmbed, downloadEnabled])
 
 	const loadFile = useCallback(async () => {
 		if (!item || item.type !== "file" || didLoadItemRef.current || !canLoadItem) {

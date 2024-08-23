@@ -3,16 +3,26 @@ import { Flat as FlatCircularProgress } from "@alptugidin/react-circular-progres
 import { useTransfersStore } from "@/stores/transfers.store"
 
 export const TransfersProgress = memo(() => {
-	const progress = useTransfersStore(useCallback(state => state.progress, []))
+	const { progress, ongoingTransfers } = useTransfersStore(
+		useCallback(
+			state => ({
+				progress: state.progress,
+				ongoingTransfers: state.transfers.filter(
+					transfer => transfer.state === "queued" || transfer.state === "started" || transfer.state === "paused"
+				).length
+			}),
+			[]
+		)
+	)
 
-	if (progress <= 0) {
+	if (progress <= 0 && ongoingTransfers <= 0) {
 		return null
 	}
 
 	return (
 		<div className="absolute w-[44px] h-[44px] text-blue-500">
 			<FlatCircularProgress
-				progress={progress}
+				progress={progress <= 0 ? 0.1 : progress}
 				showValue={false}
 				sx={{
 					strokeColor: "rgb(59 130 246 / var(--tw-text-opacity))",

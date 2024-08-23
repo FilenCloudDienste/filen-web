@@ -6,10 +6,10 @@ import { cn } from "@/lib/utils"
 import { useTranslation } from "react-i18next"
 import worker from "@/lib/worker"
 import { IS_DESKTOP } from "@/constants"
-import { fileNameToSVGIcon } from "@/assets/fileExtensionIcons"
+import { fileNameToSVGIcon, ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
 import { formatBytes } from "@/utils"
 import { Button } from "../ui/button"
-import { Play, Pause, XCircle } from "lucide-react"
+import { Play, Pause, XCircle, Loader } from "lucide-react"
 
 export const TransferProgress = memo(({ state, bytes, size }: { state: TransferState; bytes: number; size: number }) => {
 	const progressNormalized = useMemo(() => {
@@ -34,13 +34,15 @@ export const TransferActions = memo(
 		bytes,
 		size,
 		type,
-		uuid
+		uuid,
+		isDirectory
 	}: {
 		state: TransferState
 		bytes: number
 		size: number
 		type: "upload" | "download"
 		uuid: string
+		isDirectory: boolean
 	}) => {
 		const { t } = useTranslation()
 		const setTransfers = useTransfersStore(useCallback(state => state.setTransfers, []))
@@ -107,6 +109,23 @@ export const TransferActions = memo(
 			<div className="flex flex-row gap-1 shrink-0">
 				{state === "error" || state === "queued" ? (
 					<Badge variant={state === "error" ? "destructive" : "secondary"}>{t("transfers.state." + state)}</Badge>
+				) : progressNormalized <= 0 ? (
+					<>
+						{isDirectory ? (
+							<Badge
+								variant="secondary"
+								className="items-center gap-2"
+							>
+								<Loader
+									className="animate-spin-medium"
+									size={14}
+								/>
+								{t("transfers.state.creatingDirectories")}
+							</Badge>
+						) : (
+							<Badge variant="secondary">{t("transfers.state.queued")}</Badge>
+						)}
+					</>
 				) : (
 					<>
 						{progressNormalized < 95 && (
@@ -147,7 +166,7 @@ export const TransferActions = memo(
 	}
 )
 
-export const TransferInfo = memo(({ name, size }: { name: string; size: number }) => {
+export const TransferInfo = memo(({ name, size, isDirectory }: { name: string; size: number; isDirectory: boolean }) => {
 	const formattedSize = useMemo(() => {
 		return formatBytes(size)
 	}, [size])
@@ -156,11 +175,18 @@ export const TransferInfo = memo(({ name, size }: { name: string; size: number }
 		<div className="flex flex-row items-center gap-4">
 			<div className="flex flex-row items-center">
 				<div className="bg-secondary rounded-md flex items-center justify-center aspect-square w-10">
-					<img
-						src={fileNameToSVGIcon(name)}
-						className="w-[24px] h-[24px] shrink-0 object-cover"
-						draggable={false}
-					/>
+					{isDirectory ? (
+						<ColoredFolderSVGIcon
+							width={24}
+							height={24}
+						/>
+					) : (
+						<img
+							src={fileNameToSVGIcon(name)}
+							className="w-[24px] h-[24px] shrink-0 object-cover"
+							draggable={false}
+						/>
+					)}
 				</div>
 			</div>
 			<div className="flex flex-col">
@@ -178,6 +204,7 @@ export const Transfer = memo(({ transfer }: { transfer: TransferType }) => {
 				<TransferInfo
 					name={transfer.name}
 					size={transfer.size}
+					isDirectory={transfer.uuid.startsWith("directory:")}
 				/>
 				<TransferActions
 					size={transfer.size}
@@ -185,6 +212,7 @@ export const Transfer = memo(({ transfer }: { transfer: TransferType }) => {
 					bytes={transfer.bytes}
 					type={transfer.type}
 					uuid={transfer.uuid}
+					isDirectory={transfer.uuid.startsWith("directory:")}
 				/>
 			</div>
 			<TransferProgress
