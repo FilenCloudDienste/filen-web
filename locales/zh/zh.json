@@ -288,7 +288,8 @@
 			"copyLink": "复制",
 			"expiresAfter": "过期于",
 			"password": "密码（留空表示禁用）",
-			"passwordPlaceholder": "密码"
+			"passwordPlaceholder": "密码",
+                        "progress": "已将 {{done}} / {{total}} 个项目添加到公开链接"
 		},
 		"sharedWith": {
 			"title": "共享给",
@@ -468,6 +469,7 @@
 			"download": "下载",
 			"publicLink": "公开链接",
 			"share": "共享",
+			"shareProgress": "已共享 {{done}} 个项目",
 			"versions": "版本",
 			"favorite": "收藏",
 			"unfavorite": "取消收藏",
@@ -576,7 +578,8 @@
 			"started": "已开始",
 			"error": "出错啦",
 			"stopped": "已停止",
-			"paused": "已暂停"
+			"paused": "已暂停",
+			"creatingDirectories": "正在创建目录"
 		},
 		"pause": "暂停",
 		"resume": "开始",
