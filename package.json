@@ -17,7 +17,7 @@
 		"install:filen": "npm install @filen/desktop@latest @filen/sdk@latest @filen/sync@latest"
 	},
 	"engines": {
-		"node": ">=18"
+		"node": ">=20"
 	},
 	"dependencies": {
 		"@alptugidin/react-circular-progress-bar": "^1.1.2",
