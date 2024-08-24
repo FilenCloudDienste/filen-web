@@ -183,6 +183,55 @@ export function isValidFileName(fileName: string): boolean {
 	return true
 }
 
+export function sanitizeFileName(filename: string, replacement: string = "_"): string {
+	const illegalCharsWindows = /[<>:"/\\|?*]/g
+	const illegalCharsUnix = /\//g
+	const reservedNamesWindows: Set<string> = new Set([
+		"CON",
+		"PRN",
+		"AUX",
+		"NUL",
+		"COM1",
+		"COM2",
+		"COM3",
+		"COM4",
+		"COM5",
+		"COM6",
+		"COM7",
+		"COM8",
+		"COM9",
+		"LPT1",
+		"LPT2",
+		"LPT3",
+		"LPT4",
+		"LPT5",
+		"LPT6",
+		"LPT7",
+		"LPT8",
+		"LPT9"
+	])
+
+	let sanitizedFilename = filename.replace(illegalCharsWindows, replacement)
+
+	sanitizedFilename = sanitizedFilename.replace(illegalCharsUnix, replacement)
+	sanitizedFilename = sanitizedFilename.replace(/[. ]+$/, "")
+
+	if (reservedNamesWindows.has(sanitizedFilename.toUpperCase())) {
+		sanitizedFilename += replacement
+	}
+
+	const maxLength = 255
+	if (sanitizedFilename.length > maxLength) {
+		sanitizedFilename = sanitizedFilename.substring(0, maxLength)
+	}
+
+	if (!sanitizedFilename) {
+		return "file"
+	}
+
+	return sanitizedFilename
+}
+
 /**
  * Extract every possible directory path from a path.
  * @date 2/19/2024 - 6:02:06 AM
@@ -215,4 +264,10 @@ export function getEveryPossibleDirectoryPath(path: string): string[] {
 	}
 
 	return paths
+}
+
+export function isValidHexColor(value: string, length: number = 6): boolean {
+	const hexColorPattern = length >= 6 ? /^#([0-9A-Fa-f]{6})$/ : /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/
+
+	return hexColorPattern.test(value)
 }

@@ -63,18 +63,36 @@ export const Notes = memo(() => {
 			continueButtonVariant: "default"
 		})
 
-		if (inputResponse.cancelled) {
+		if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {
 			return
 		}
 
 		const toast = loadingToast()
 
 		try {
-			await worker.editNoteTitle({ uuid: selectedNote.uuid, title: inputResponse.value })
+			await worker.editNoteTitle({
+				uuid: selectedNote.uuid,
+				title: inputResponse.value.trim()
+			})
 
-			setSelectedNote(prev => (prev ? { ...prev, title: inputResponse.value } : prev))
+			setSelectedNote(prev =>
+				prev
+					? {
+							...prev,
+							title: inputResponse.value.trim()
+						}
+					: prev
+			)
+
 			setNotes(prev =>
-				prev.map(prevNote => (prevNote.uuid === selectedNote.uuid ? { ...prevNote, title: inputResponse.value } : prevNote))
+				prev.map(prevNote =>
+					prevNote.uuid === selectedNote.uuid
+						? {
+								...prevNote,
+								title: inputResponse.value.trim()
+							}
+						: prevNote
+				)
 			)
 		} catch (e) {
 			console.error(e)

@@ -76,7 +76,7 @@ export function Register() {
 			placeholder: t("register.dialogs.confirmationSend.placeholder")
 		})
 
-		if (inputResponse.cancelled) {
+		if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {
 			return
 		}
 

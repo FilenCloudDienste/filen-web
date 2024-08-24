@@ -15,7 +15,7 @@ import { showConfirmDialog } from "@/components/dialogs/confirm"
 import worker from "@/lib/worker"
 import { useNotesStore } from "@/stores/notes.store"
 import { useNavigate } from "@tanstack/react-router"
-import { cn } from "@/lib/utils"
+import { cn, sanitizeFileName } from "@/lib/utils"
 import { useQuery } from "@tanstack/react-query"
 import { showSaveFilePicker } from "native-file-system-adapter"
 import striptags from "striptags"
@@ -359,11 +359,15 @@ export const ContextMenu = memo(
 				const toast = loadingToast()
 
 				try {
-					await worker.tagNote({ uuid: note.uuid, tag: tag.uuid })
+					await worker.tagNote({
+						uuid: note.uuid,
+						tag: tag.uuid
+					})
 
 					setNotes(prev =>
 						prev.map(prevNote => (prevNote.uuid === note.uuid ? { ...prevNote, tags: [...prevNote.tags, tag] } : prevNote))
 					)
+
 					setSelectedNote(prev => (prev && prev.uuid === note.uuid ? { ...prev, tags: [...prev.tags, tag] } : prev))
 				} catch (e) {
 					console.error(e)
@@ -437,14 +441,18 @@ export const ContextMenu = memo(
 				}
 
 				const fileHandle = await showSaveFilePicker({
-					suggestedName: `${note.title}.txt`
+					suggestedName: `${sanitizeFileName(note.title)}.txt`
 				})
 
 				const writer = await fileHandle.createWritable()
 
 				await writer.write(content)
 
-				writer.close()
+				try {
+					await writer.close()
+				} catch {
+					// Noop
+				}
 			} catch (e) {
 				console.error(e)
 
@@ -507,7 +515,7 @@ export const ContextMenu = memo(
 										}
 
 										zipWriter
-											.add(`${n.title}.txt`, new Response(content).body!, {
+											.add(`${sanitizeFileName(n.title)}.txt`, new Response(content).body!, {
 												lastModDate: new Date(),
 												lastAccessDate: new Date(),
 												creationDate: new Date()
@@ -521,7 +529,12 @@ export const ContextMenu = memo(
 				)
 
 				await zipWriter.close()
-				await writer.close()
+
+				try {
+					await writer.close()
+				} catch {
+					// Noop
+				}
 			} catch (e) {
 				console.error(e)
 
@@ -554,8 +567,8 @@ export const ContextMenu = memo(
 		}, [note.uuid, successToast, errorToast, t])
 
 		const createTag = useCallback(() => {
-			eventEmitter.emit("createNotesTag")
-		}, [])
+			eventEmitter.emit("createNotesTag", note.uuid)
+		}, [note.uuid])
 
 		return (
 			<CM onOpenChange={onOpenChange}>

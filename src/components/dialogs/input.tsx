@@ -137,7 +137,9 @@ export const InputDialog = memo(() => {
 			if (p.autoFocusInput) {
 				setTimeout(() => {
 					if (p.value) {
-						if (p.value.includes(".")) {
+						if (p.value === ".txt") {
+							inputRef.current?.setSelectionRange(0, 0)
+						} else if (p.value.includes(".")) {
 							const lastDotIndex = p.value.lastIndexOf(".")
 							const end = lastDotIndex === -1 ? p.value.length : lastDotIndex
 

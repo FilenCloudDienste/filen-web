@@ -44,7 +44,7 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 			return
 		}
 
-		if (!isValidFileName(inputResponse.value)) {
+		if (inputResponse.value.trim().length === 0 || !isValidFileName(inputResponse.value.trim())) {
 			errorToast(t("drive.dialogs.createDirectory.invalidDirectoryName"))
 
 			return
@@ -54,11 +54,11 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 
 		try {
 			const item = await worker.createDirectory({
-				name: inputResponse.value,
+				name: inputResponse.value.trim(),
 				parent
 			})
 
-			directoryUUIDToNameCache.set(item.uuid, inputResponse.value)
+			directoryUUIDToNameCache.set(item.uuid, inputResponse.value.trim())
 
 			setItems(prev => [
 				...prev.filter(prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()),

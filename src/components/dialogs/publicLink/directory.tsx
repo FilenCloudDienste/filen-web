@@ -269,8 +269,8 @@ export const Directory = memo(
 									<SelectItem value="3d">3d</SelectItem>
 									<SelectItem value="7d">7d</SelectItem>
 									<SelectItem value="14d">14d</SelectItem>
-									<SelectItem value="14d">30d</SelectItem>
-									<SelectItem value="14d">never</SelectItem>
+									<SelectItem value="30d">30d</SelectItem>
+									<SelectItem value="never">{t("dialogs.publicLink.expireNever")}</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>

@@ -10,11 +10,11 @@ import { fileNameToThumbnailType } from "@/components/dialogs/previewDialog/util
 import { thumbnailURLObjectCache } from "@/cache"
 import { Semaphore, ISemaphore } from "../semaphore"
 import { getItem } from "@/lib/localForage"
+import { sanitizeFileName } from "../utils"
 
 export const generateThumbnailMutexes: Record<string, ISemaphore> = {}
 export const generateThumbnailSemaphore = new Semaphore(3)
-
-const useNative = ["Blink"].includes(UAParserResult?.engine?.name ?? "Gecko")
+export const useWorkerForDownloads = ["chrome"].includes(UAParserResult?.browser?.name?.toLowerCase().trim() ?? "gecko")
 
 // Setup message handler. The worker sends messages to the main thread.
 worker.setMessageHandler(proxy(event => eventEmitter.emit("workerMessage", event)))
@@ -36,11 +36,10 @@ export async function downloadFile({ item }: { item: DriveCloudItem }): Promise<
 	}
 
 	const fileHandle = await showSaveFilePicker({
-		suggestedName: item.name,
-		_preferPolyfill: !useNative
+		suggestedName: sanitizeFileName(item.name)
 	})
 
-	if (!useNative) {
+	if (!useWorkerForDownloads) {
 		return await workerLib.downloadFile({ item, fileHandle })
 	}
 
@@ -88,11 +87,10 @@ export async function downloadDirectory({
 	linkSalt?: string
 }): Promise<void> {
 	const fileHandle = await showSaveFilePicker({
-		suggestedName: `${name}.zip`,
-		_preferPolyfill: !useNative
+		suggestedName: `${sanitizeFileName(name)}.zip`
 	})
 
-	if (!useNative) {
+	if (!useWorkerForDownloads) {
 		return await workerLib.downloadDirectory({ uuid, type, linkUUID, linkHasPassword, linkPassword, linkSalt, fileHandle })
 	}
 
@@ -137,8 +135,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkSalt?: string
 }): Promise<void> {
 	const fileHandle = await showSaveFilePicker({
-		suggestedName: name ? name : `Download_${Date.now()}.zip`,
-		_preferPolyfill: !useNative
+		suggestedName: name ? sanitizeFileName(name) : `Download_${Date.now()}.zip`
 	})
 
 	const itemsWithPath = items.map(item => ({
@@ -146,7 +143,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 		path: item.name
 	}))
 
-	if (!useNative) {
+	if (!useWorkerForDownloads) {
 		return workerLib.downloadMultipleFilesAndDirectoriesAsZip({
 			items: itemsWithPath,
 			fileHandle,

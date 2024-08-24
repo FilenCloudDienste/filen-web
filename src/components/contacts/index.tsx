@@ -145,7 +145,7 @@ export const Contacts = memo(() => {
 			placeholder: t("contacts.dialogs.sendRequest.placeholder")
 		})
 
-		if (inputResponse.cancelled) {
+		if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {
 			return
 		}
 

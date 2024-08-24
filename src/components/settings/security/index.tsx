@@ -14,7 +14,7 @@ import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
-import { cn } from "@/lib/utils"
+import { cn, sanitizeFileName } from "@/lib/utils"
 import { AlertTriangle } from "lucide-react"
 
 export const Security = memo(() => {
@@ -113,7 +113,7 @@ export const Security = memo(() => {
 
 		try {
 			const fileHandle = await showSaveFilePicker({
-				suggestedName: `${account.account.email}.masterKeys.txt`
+				suggestedName: `${sanitizeFileName(account.account.email)}.masterKeys.txt`
 			})
 			const writer = await fileHandle.createWritable()
 

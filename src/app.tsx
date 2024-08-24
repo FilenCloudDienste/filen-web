@@ -1,12 +1,12 @@
 //import "./wdyr"
 import "hacktimer/HackTimer.silent.min"
-import { StrictMode } from "react"
+import { StrictMode, memo } from "react"
 import ReactDOM from "react-dom/client"
 import { RouterProvider, createRouter, createHashHistory } from "@tanstack/react-router"
 import { routeTree } from "@/routeTree.gen"
 import { Helmet, HelmetProvider } from "react-helmet-async"
 import { helmetCSS } from "./lib/helmet"
-import { setThemeOnPageLoad } from "./providers/themeProvider"
+import { setThemeOnPageLoad, useTheme } from "./providers/themeProvider"
 import "./index.css"
 import "react-quill/dist/quill.snow.css"
 import "./lib/i18n"
@@ -23,7 +23,26 @@ declare module "@tanstack/react-router" {
 	}
 }
 
-const rootElement = document.getElementById("app")
+export const rootElement = document.getElementById("app")
+
+export const HelmetComponent = memo(() => {
+	const { dark } = useTheme()
+
+	return (
+		<Helmet
+			style={[
+				{
+					cssText: helmetCSS()
+				}
+			]}
+		>
+			<meta
+				name="theme-color"
+				content={dark ? "#09090b" : "#f4f4f5"}
+			/>
+		</Helmet>
+	)
+})
 
 if (rootElement && !rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement)
@@ -31,13 +50,7 @@ if (rootElement && !rootElement.innerHTML) {
 	root.render(
 		<StrictMode>
 			<HelmetProvider>
-				<Helmet
-					style={[
-						{
-							cssText: helmetCSS()
-						}
-					]}
-				></Helmet>
+				<HelmetComponent />
 				<RouterProvider router={router} />
 			</HelmetProvider>
 		</StrictMode>

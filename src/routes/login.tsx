@@ -46,7 +46,7 @@ export function Login() {
 			placeholder: t("login.dialogs.forgotPassword.placeholder")
 		})
 
-		if (inputResponse.cancelled) {
+		if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {
 			return
 		}
 

@@ -164,18 +164,18 @@ export const SelectDriveItemDialog = memo(() => {
 				return
 			}
 
-			if (!isValidFileName(inputResponse.value)) {
+			if (inputResponse.value.trim().length === 0 || !isValidFileName(inputResponse.value.trim())) {
 				errorToast(t("drive.dialogs.createDirectory.invalidDirectoryName"))
 
 				return
 			}
 
 			const item = await worker.createDirectory({
-				name: inputResponse.value,
+				name: inputResponse.value.trim(),
 				parent
 			})
 
-			directoryUUIDToNameCache.set(item.uuid, inputResponse.value)
+			directoryUUIDToNameCache.set(item.uuid, inputResponse.value.trim())
 
 			eventEmitter.emit("refetchSelectItemDialogList", {
 				uuid: parent

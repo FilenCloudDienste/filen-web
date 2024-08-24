@@ -258,6 +258,16 @@ export const Notes = memo(() => {
 	}, [query.isSuccess, query.data, query.dataUpdatedAt, setNotes, setSelectedNote])
 
 	useEffect(() => {
+		const noteHistoryRestoredListener = eventEmitter.on("noteHistoryRestored", () => {
+			query.refetch().catch(console.error)
+		})
+
+		return () => {
+			noteHistoryRestoredListener.remove()
+		}
+	}, [query])
+
+	useEffect(() => {
 		const socket = getSocket()
 
 		socket.addListener("socketEvent", socketEventListener)

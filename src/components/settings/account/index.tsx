@@ -18,6 +18,7 @@ import ChangePersonalInformationDialog from "./dialogs/personalInformation"
 import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
+import { sanitizeFileName } from "@/lib/utils"
 
 export const Account = memo(() => {
 	const account = useAccount()
@@ -45,7 +46,7 @@ export const Account = memo(() => {
 
 		try {
 			const fileHandle = await showSaveFilePicker({
-				suggestedName: `${account.account.email}.data.json`
+				suggestedName: `${sanitizeFileName(account.account.email)}.data.json`
 			})
 			const writer = await fileHandle.createWritable()
 
@@ -328,7 +329,7 @@ export const Account = memo(() => {
 			continueButtonVariant: "default"
 		})
 
-		if (inputResponse.cancelled) {
+		if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {
 			return
 		}
 

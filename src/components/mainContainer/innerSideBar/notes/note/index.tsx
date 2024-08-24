@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from "react"
+import { memo, useCallback, useMemo, useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import useRouteParent from "@/hooks/useRouteParent"
 import { Link } from "@tanstack/react-router"
@@ -7,6 +7,7 @@ import { type Note as NoteType } from "@filen/sdk/dist/types/api/v3/notes"
 import ContextMenu from "./contextMenu"
 import { simpleDate } from "@/utils"
 import ChatAvatar from "@/components/chatAvatar"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Note = memo(
 	({
@@ -22,15 +23,34 @@ export const Note = memo(
 	}) => {
 		const routeParent = useRouteParent()
 		const [hovering, setHovering] = useState<boolean>(false)
+		const [deletedTagUUIDs, setDeletedTagUUIDs] = useState<string[]>([])
 
 		const participantsWithoutUser = useMemo(() => {
 			return note.participants.filter(p => p.userId !== userId)
 		}, [note.participants, userId])
 
+		const tags = useMemo(() => {
+			if (deletedTagUUIDs.length === 0) {
+				return note.tags
+			}
+
+			return note.tags.filter(tag => !deletedTagUUIDs.includes(tag.uuid))
+		}, [note.tags, deletedTagUUIDs])
+
 		const select = useCallback(() => {
 			setLastSelectedNote(note.uuid)
 			setSelectedNote(note)
 		}, [setSelectedNote, note, setLastSelectedNote])
+
+		useEffect(() => {
+			const notesTagDeletedListener = eventEmitter.on("notesTagDeleted", (uuid: string) => {
+				setDeletedTagUUIDs(prev => [...prev, uuid])
+			})
+
+			return () => {
+				notesTagDeletedListener.remove()
+			}
+		}, [])
 
 		return (
 			<ContextMenu
@@ -82,13 +102,13 @@ export const Note = memo(
 							<p className="line-clamp-1 text-ellipsis break-all">{note.title}</p>
 						</div>
 						<p className="line-clamp-1 text-ellipsis text-muted-foreground text-sm mt-1 break-all">
-							{note.preview ? note.preview : note.title}
+							{note.preview.length > 0 ? note.preview : note.title.length > 0 ? note.title : ""}
 						</p>
 						<p className="line-clamp-1 text-ellipsis text-muted-foreground text-sm mt-1 break-all">
 							{simpleDate(note.editedTimestamp)}
 						</p>
 						<div className="flex flex-row gap-2 flex-wrap w-full h-auto mt-2">
-							{note.tags.map(tag => {
+							{tags.map(tag => {
 								return (
 									<div
 										key={tag.uuid}

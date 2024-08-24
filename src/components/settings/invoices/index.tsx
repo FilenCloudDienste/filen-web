@@ -2,7 +2,7 @@ import { memo, useMemo, useCallback } from "react"
 import useAccount from "@/hooks/useAccount"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DESKTOP_TOPBAR_HEIGHT, IS_DESKTOP } from "@/constants"
-import { cn } from "@/lib/utils"
+import { cn, sanitizeFileName } from "@/lib/utils"
 import { useTranslation } from "react-i18next"
 import { simpleDate, convertTimestampToMs } from "@/utils"
 import useErrorToast from "@/hooks/useErrorToast"
@@ -34,7 +34,7 @@ export const Invoices = memo(() => {
 
 			try {
 				const fileHandle = await showSaveFilePicker({
-					suggestedName: `Invoice_${uuid}.pdf`
+					suggestedName: `${sanitizeFileName(`Invoice_${uuid}`)}.pdf`
 				})
 				const writer = await fileHandle.createWritable()
 

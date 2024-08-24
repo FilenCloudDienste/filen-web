@@ -19,6 +19,7 @@ import psd from "./svg/psd.svg"
 import cad from "./svg/cad.svg"
 import { memo, useMemo } from "react"
 import { type DirColors } from "@filen/sdk/dist/types/api/v3/dir/color"
+import { isValidHexColor } from "@/lib/utils"
 
 /**
  * Convert file name to premade SVG icon.
@@ -200,7 +201,7 @@ export function directoryColorToHex(color: DirColors | null): string {
 		return "#85BCFF"
 	}
 
-	return (
+	const hexColor = (
 		color === "blue"
 			? "#037AFF"
 			: color === "gray"
@@ -215,6 +216,12 @@ export function directoryColorToHex(color: DirColors | null): string {
 								? color
 								: "#85BCFF"
 	).toLowerCase()
+
+	if (!isValidHexColor(hexColor)) {
+		return "#85BCFF"
+	}
+
+	return hexColor
 }
 
 export const ColoredFolderSVGIcon = memo(

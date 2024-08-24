@@ -17,6 +17,7 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Content = memo(({ note }: { note: Note }) => {
 	const { setSelectedNote, setNotes, setSynced, setMaxSizeReached } = useNotesStore(
@@ -178,6 +179,18 @@ export const Content = memo(({ note }: { note: Note }) => {
 			clearTimeout(editContentTimeout.current)
 
 			query.refetch().catch(console.error)
+		}
+	}, [note.uuid, query])
+
+	useEffect(() => {
+		const noteHistoryRestoredListener = eventEmitter.on("noteHistoryRestored", (uuid: string) => {
+			if (uuid === note.uuid) {
+				query.refetch().catch(console.error)
+			}
+		})
+
+		return () => {
+			noteHistoryRestoredListener.remove()
 		}
 	}, [note.uuid, query])
 

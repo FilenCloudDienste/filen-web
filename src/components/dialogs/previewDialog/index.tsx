@@ -381,7 +381,7 @@ export const PreviewDialog = memo(() => {
 		const inputResponse = await showInputDialog({
 			title: t("drive.dialogs.createTextFile.title"),
 			continueButtonText: t("drive.dialogs.createTextFile.continue"),
-			value: "",
+			value: ".txt",
 			autoFocusInput: true,
 			placeholder: t("drive.dialogs.createTextFile.placeholder")
 		})
@@ -390,10 +390,12 @@ export const PreviewDialog = memo(() => {
 			return
 		}
 
-		const fileName = ensureTextFileExtension(inputResponse.value.trim())
+		const fileName = inputResponse.value.trim().length > 0 ? ensureTextFileExtension(inputResponse.value.trim()) : ".txt"
 
 		if (!isValidFileName(fileName)) {
 			errorToast(t("drive.dialogs.createTextFile.invalidFileName"))
+
+			return
 		}
 
 		const newTextFileItem: DriveCloudItem = {

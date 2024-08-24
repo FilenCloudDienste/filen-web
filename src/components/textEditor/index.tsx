@@ -229,7 +229,6 @@ export const TextEditor = memo(
 										overflowX: "auto"
 									}}
 									rehypeRewrite={rehypeRewrite}
-									skipHtml={true}
 									wrapperElement={{
 										"data-color-mode": theme.dark ? "dark" : "light"
 									}}

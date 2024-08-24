@@ -14,6 +14,7 @@ import { Text, ListChecks, Code, NotepadText, BookMarked, Loader } from "lucide-
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { useTranslation } from "react-i18next"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
 	const windowSize = useWindowSize()
@@ -107,6 +108,8 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 				uuid: note.uuid,
 				id: selectedHistory.id
 			})
+
+			eventEmitter.emit("noteHistoryRestored", note.uuid)
 
 			setOpen(false)
 		} catch (e) {

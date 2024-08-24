@@ -66,11 +66,31 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 		const toast = loadingToast()
 
 		try {
-			await worker.chatEditConversationName({ conversation: conversation.uuid, name: inputResponse.value.trim() })
+			await worker.chatEditConversationName({
+				conversation: conversation.uuid,
+				name: inputResponse.value.trim()
+			})
 
-			setConversations(prev => prev.map(c => (c.uuid === conversation.uuid ? { ...c, name: inputResponse.value.trim() } : c)))
+			setConversations(prev =>
+				prev.map(c =>
+					c.uuid === conversation.uuid
+						? {
+								...c,
+								name: inputResponse.value.trim()
+							}
+						: c
+				)
+			)
+
 			setSelectedConversation(prev =>
-				prev ? (prev.uuid === conversation.uuid ? { ...prev, name: inputResponse.value.trim() } : prev) : prev
+				prev
+					? prev.uuid === conversation.uuid
+						? {
+								...prev,
+								name: inputResponse.value.trim()
+							}
+						: prev
+					: prev
 			)
 		} catch (e) {
 			console.error(e)

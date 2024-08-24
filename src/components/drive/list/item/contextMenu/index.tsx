@@ -50,9 +50,10 @@ import useSuccessToast from "@/hooks/useSuccessToast"
 import { selectContacts } from "@/components/dialogs/selectContacts"
 import { MAX_PREVIEW_SIZE } from "@/constants"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
-import { isValidFileName } from "@/lib/utils"
+import { isValidFileName, isValidHexColor } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
 import { type WorkerToMainMessage } from "@/lib/worker/types"
+import Input from "@/components/input"
 
 const iconSize = 16
 
@@ -384,11 +385,15 @@ export const ContextMenu = memo(
 				continueButtonVariant: "default"
 			})
 
-			if (inputResponse.cancelled || inputResponse.value.toLowerCase() === item.name.toLowerCase()) {
+			if (
+				inputResponse.cancelled ||
+				inputResponse.value.trim().length === 0 ||
+				inputResponse.value.trim().toLowerCase() === item.name.toLowerCase()
+			) {
 				return
 			}
 
-			if (!isValidFileName(inputResponse.value)) {
+			if (!isValidFileName(inputResponse.value.trim())) {
 				errorToast(
 					item.type === "directory" ? t("drive.dialogs.rename.invalidDirectoryName") : t("drive.dialogs.rename.invalidFileName")
 				)
@@ -501,7 +506,7 @@ export const ContextMenu = memo(
 		}, [selectedItems, loadingToast, errorToast, t])
 
 		const changeColor = useDebouncedCallback(async (color: string) => {
-			if (selectedItems.length !== 1 || !selectedItems[0]) {
+			if (selectedItems.length !== 1 || !selectedItems[0] || !isValidHexColor(color)) {
 				return
 			}
 
@@ -516,7 +521,14 @@ export const ContextMenu = memo(
 				eventEmitter.emit("refetchDriveSideBarTree", selectedItems[0].parent)
 
 				setItems(prev =>
-					prev.map(prevItem => (selectedItems[0] && prevItem.uuid === selectedItems[0].uuid ? { ...prevItem, color } : prevItem))
+					prev.map(prevItem =>
+						selectedItems[0] && prevItem.uuid === selectedItems[0].uuid
+							? {
+									...prevItem,
+									color
+								}
+							: prevItem
+					)
 				)
 			} catch (e) {
 				console.error(e)
@@ -526,6 +538,16 @@ export const ContextMenu = memo(
 				toast.dismiss()
 			}
 		}, 500)
+
+		const onColorInputChange = useCallback(
+			async (e: React.ChangeEvent<HTMLInputElement>) => {
+				const newColor = e.target.value.trim()
+
+				setDirectoryColor(newColor)
+				changeColor(newColor)
+			},
+			[changeColor]
+		)
 
 		const onColorPickerChange = useCallback(
 			(newColor: string) => {
@@ -714,11 +736,25 @@ export const ContextMenu = memo(
 										<PaintBucket size={iconSize} />
 										{t("contextMenus.item.color")}
 									</ContextMenuSubTrigger>
-									<ContextMenuSubContent onClick={e => e.stopPropagation()}>
+									<ContextMenuSubContent
+										onClick={e => e.stopPropagation()}
+										className="flex flex-col gap-1"
+									>
 										<HexColorPicker
 											color={directoryColor}
 											onChange={onColorPickerChange}
 											onClick={e => e.stopPropagation()}
+										/>
+										<Input
+											className="w-[200px]"
+											onChange={onColorInputChange}
+											value={directoryColor}
+											placeholder="#000000"
+											autoCapitalize="none"
+											autoComplete="none"
+											autoCorrect="none"
+											autoFocus={false}
+											type="text"
 										/>
 									</ContextMenuSubContent>
 								</ContextMenuSub>

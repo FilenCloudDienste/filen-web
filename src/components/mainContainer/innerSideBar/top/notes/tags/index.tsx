@@ -12,14 +12,23 @@ import ContextMenu from "./contextMenu"
 import eventEmitter from "@/lib/eventEmitter"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
+import { type NoteTag } from "@filen/sdk/dist/types/api/v3/notes"
 
 export const tagClassName =
 	"flex flex-row gap-1 items-center justify-center px-2 py-1 rounded-md bg-muted/35 text-muted-foreground hover:bg-secondary hover:text-primary cursor-pointer h-7 text-sm"
 
 export const Tags = memo(() => {
 	const { t } = useTranslation()
-	const { activeTag, setActiveTag } = useNotesStore(
-		useCallback(state => ({ activeTag: state.activeTag, setActiveTag: state.setActiveTag }), [])
+	const { activeTag, setActiveTag, setNotes, setSelectedNote } = useNotesStore(
+		useCallback(
+			state => ({
+				activeTag: state.activeTag,
+				setActiveTag: state.setActiveTag,
+				setNotes: state.setNotes,
+				setSelectedNote: state.setSelectedNote
+			}),
+			[]
+		)
 	)
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
@@ -29,33 +38,76 @@ export const Tags = memo(() => {
 		queryFn: () => worker.listNotesTags()
 	})
 
-	const createTag = useCallback(async () => {
-		const inputResponse = await showInputDialog({
-			title: t("notes.dialogs.createTag.title"),
-			continueButtonText: t("notes.dialogs.createTag.continue"),
-			value: "",
-			autoFocusInput: true,
-			placeholder: t("notes.dialogs.createTag.placeholder"),
-			continueButtonVariant: "default"
-		})
+	const createTag = useCallback(
+		async (applyToNoteUUID?: string) => {
+			const inputResponse = await showInputDialog({
+				title: t("notes.dialogs.createTag.title"),
+				continueButtonText: t("notes.dialogs.createTag.continue"),
+				value: "",
+				autoFocusInput: true,
+				placeholder: t("notes.dialogs.createTag.placeholder"),
+				continueButtonVariant: "default"
+			})
 
-		if (inputResponse.cancelled || ["all", "favorites", "pinned"].includes(inputResponse.value.toLowerCase().trim())) {
-			return
-		}
+			if (
+				inputResponse.cancelled ||
+				inputResponse.value.trim().length === 0 ||
+				["all", "favorites", "pinned"].includes(inputResponse.value.toLowerCase().trim())
+			) {
+				return
+			}
 
-		const toast = loadingToast()
+			const toast = loadingToast()
 
-		try {
-			await worker.createNotesTag({ name: inputResponse.value.trim() })
-			await query.refetch()
-		} catch (e) {
-			console.error(e)
+			try {
+				const tagUUID = await worker.createNotesTag({ name: inputResponse.value.trim() })
 
-			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-		} finally {
-			toast.dismiss()
-		}
-	}, [query, t, errorToast, loadingToast])
+				await query.refetch()
+
+				if (typeof applyToNoteUUID === "string" && applyToNoteUUID.length > 0) {
+					await worker.tagNote({
+						uuid: applyToNoteUUID,
+						tag: tagUUID
+					})
+
+					const tag: NoteTag = {
+						uuid: tagUUID,
+						name: inputResponse.value.trim(),
+						favorite: false,
+						editedTimestamp: 0,
+						createdTimestamp: Date.now()
+					}
+
+					setNotes(prev =>
+						prev.map(prevNote =>
+							prevNote.uuid === applyToNoteUUID
+								? {
+										...prevNote,
+										tags: [...prevNote.tags, tag]
+									}
+								: prevNote
+						)
+					)
+
+					setSelectedNote(prev =>
+						prev && prev.uuid === applyToNoteUUID
+							? {
+									...prev,
+									tags: [...prev.tags, tag]
+								}
+							: prev
+					)
+				}
+			} catch (e) {
+				console.error(e)
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			} finally {
+				toast.dismiss()
+			}
+		},
+		[query, t, errorToast, loadingToast, setNotes, setSelectedNote]
+	)
 
 	useEffect(() => {
 		const createNotesTagListener = eventEmitter.on("createNotesTag", createTag)
@@ -108,7 +160,7 @@ export const Tags = memo(() => {
 					<TooltipTrigger asChild={true}>
 						<div
 							className={tagClassName}
-							onClick={createTag}
+							onClick={() => createTag()}
 						>
 							<Plus size={18} />
 						</div>

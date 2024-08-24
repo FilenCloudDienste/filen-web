@@ -15,6 +15,7 @@ import { type RefetchOptions, type QueryObserverResult } from "@tanstack/react-q
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import { Delete, Heart, Edit } from "lucide-react"
+import eventEmitter from "@/lib/eventEmitter"
 
 const iconSize = 16
 
@@ -51,6 +52,8 @@ export const ContextMenu = memo(
 			try {
 				await worker.deleteNotesTag({ uuid: tag.uuid })
 				await refetch()
+
+				eventEmitter.emit("notesTagDeleted", tag.uuid)
 			} catch (e) {
 				console.error(e)
 
@@ -107,7 +110,7 @@ export const ContextMenu = memo(
 				continueButtonVariant: "default"
 			})
 
-			if (inputResponse.cancelled) {
+			if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {
 				return
 			}
 

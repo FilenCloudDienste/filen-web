@@ -1,7 +1,7 @@
 import UAParser from "ua-parser-js"
 
 export const IS_DESKTOP = typeof window !== "undefined" && typeof window.desktopAPI !== "undefined"
-export const TOOLTIP_POPUP_DELAY = 200
+export const TOOLTIP_POPUP_DELAY = 250
 export const UAParserResult = new UAParser().getResult()
 export const IS_APPLE_DEVICE = UAParserResult.device.vendor?.toLowerCase().includes("apple")
 export const IS_WINDOWS_10 =
