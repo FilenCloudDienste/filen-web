@@ -289,7 +289,8 @@
 			"expiresAfter": "过期于",
 			"password": "密码（留空表示禁用）",
 			"passwordPlaceholder": "密码",
-                        "progress": "已将 {{done}} / {{total}} 个项目添加到公开链接"
+                        "progress": "已将 {{done}} / {{total}} 个项目添加到公开链接",
+			"expireNever": "永不"
 		},
 		"sharedWith": {
 			"title": "共享给",
