@@ -152,10 +152,10 @@
 	"topbar": {
 		"placeholders": {
 			"normal": {
-				"search": "在此目录中搜索..."
+				"search": "在此文件夹中搜索..."
 			},
 			"example": {
-				"search": "在此目录中搜索..."
+				"search": "在此文件夹中搜索..."
 			}
 		}
 	},
@@ -167,7 +167,7 @@
 		"breadcrumb": {
 			"cloudDrive": "云盘"
 		},
-		"searchInThisFolder": "在此目录中搜索...",
+		"searchInThisFolder": "在此文件夹中搜索...",
 		"breadcrumbs": {
 			"recents": "最近",
 			"cloudDrive": "云盘",
@@ -176,7 +176,7 @@
 			"sharedWithOthers": "与他人共享",
 			"favorites": "收藏",
 			"trash": "回收站",
-			"directory": "目录"
+			"directory": "文件夹"
 	    },
 		"listView": "列表视图",
 		"gridView": "网格视图"
@@ -268,8 +268,8 @@
 		"selectDriveItem": {
 			"title": "选择",
 			"submit": "选择",
-			"newFolder": "新建目录",
-			"empty": "尚未上传任何文件或目录",
+			"newFolder": "新建文件夹",
+			"empty": "尚未上传任何文件或文件夹",
 			"selectRoot": "从云端选择"
 		},
 		"selectContacts": {
@@ -440,7 +440,7 @@
 		"info": {
 			"title": "详情",
 			"close": "关闭",
-			"directoryType": "目录",
+			"directoryType": "文件夹",
 			"size": "大小",
 			"type": "类型",
 			"name": "名称",
@@ -448,7 +448,7 @@
 			"modified": "修改日期",
 			"uploaded": "已上传",
 			"files": "文件",
-			"directories": "目录"
+			"directories": "文件夹"
 		},
 		"desktopUpdate": {
 			"title": "有更新可用",
@@ -513,9 +513,9 @@
 		},
 		"drive": {
 			"uploadFiles": "上传文件",
-			"uploadFolders": "上传目录",
+			"uploadFolders": "上传文件夹",
 			"newTextFile": "新建文本文件",
-			"newFolder": "新建目录",
+			"newFolder": "新建文件夹",
 			},
 		"notes": {
 			"history": "历史",
@@ -579,7 +579,7 @@
 			"error": "出错啦",
 			"stopped": "已停止",
 			"paused": "已暂停",
-			"creatingDirectories": "正在创建目录"
+			"creatingDirectories": "正在创建文件夹"
 		},
 		"pause": "暂停",
 		"resume": "开始",
@@ -709,17 +709,17 @@
 				"continue": "删除"
 			},
 			"deleteAll": {
-				"title": "删除所有文件和目录",
-				"description": "您确定要删除所有文件和目录吗？此操作无法撤消！",
+				"title": "删除所有文件和文件夹",
+				"description": "您确定要删除所有文件和文件夹吗？此操作无法撤消！",
 				"continue": "删除"
 			},
 			"deleteAll2": {
-				"title": "删除所有文件和目录",
+				"title": "删除所有文件和文件夹",
 				"description": "您真的确定吗？此操作无法撤消！",
 				"continue": "删除"
 			},
 			"deleteAll3": {
-				"title": "删除所有文件和目录",
+				"title": "删除所有文件和文件夹",
 				"description": "您 100% 确定吗？此操作无法撤消！",
 				"continue": "删除"
 			},
@@ -849,7 +849,7 @@
 			"folderColorChanged": "{{name}} 的颜色已更改",
 			"login": "已登录",
 			"deleteVersioned": "版本文件已删除",
-			"deleteAll": "所有文件和目录均已删除",
+			"deleteAll": "所有文件和文件夹均已删除",
 			"deleteUnfinished": "未完成的上传已删除",
 			"trashEmptied": "回收站已清空",
 			"requestAccountDeletion": "已请求删除账户",
@@ -858,9 +858,9 @@
 			"codeRedeemed": "代码 {{code}} 已兑换",
 			"emailChanged": "邮件地址已更改为 {{email}}",
 			"passwordChanged": "密码已更改",
-			"removedSharedInItems": "已移除来自 {{email}} 的 {{count}} 个共享项目",
-			"removedSharedOutItems": "已移除 {{count}} 个与 {{email}} 共享的项目",
-			"folderLinkEdited": "目录链接已编辑",
+			"removedSharedInItems": "已删除来自 {{email}} 的 {{count}} 个共享项目",
+			"removedSharedOutItems": "已删除 {{count}} 个与 {{email}} 共享的项目",
+			"folderLinkEdited": "文件夹链接已编辑",
 			"itemFavoriteAdded": "{{name}} 已被添加到收藏",
 			"itemFavoriteRemoved": "{{name}} 已从收藏中移除",
 			"failedLogin": "登录失败",
@@ -937,8 +937,8 @@
 					"action": "删除"
 				},
 				"all": {
-					"name": "所有文件和目录",
-					"info": "删除所有文件和目录",
+					"name": "所有文件和文件夹",
+					"info": "删除所有文件和文件夹",
 					"action": "删除"
 				},
 				"email": {
@@ -1009,8 +1009,8 @@
 				"title": "重命名",
 				"placeholder": "新名称",
 				"continue": "重命名",
-				"invalidFileName": "文件名无效。",
-				"invalidDirectoryName": "目录名无效。"
+				"invalidFileName": "文件名称无效。",
+				"invalidDirectoryName": "文件夹名称无效。"
 			},
 			"share": {
 				"title": "共享",
@@ -1025,16 +1025,16 @@
 				"info": "未找到与 \"{{search}}\" 相符的内容"
 			},
 			"publicLink": {
-				"title": "空目录",
-				"info": "此目录的所有者尚未上传任何文件"
+				"title": "此文件夹为空",
+				"info": "此文件夹的所有者尚未上传任何文件"
 			},
 			"drive": {
-				"title": "尚未上传任何文件或目录",
-				"info": "将文件或目录拖放到此处或点击下方按钮"
+				"title": "尚未上传任何文件或文件夹",
+				"info": "将文件或文件夹拖放到此处或点击下方按钮"
 			},
 			"trash": {
 				"title": "回收站里空空如也",
-				"info": "发送到回收站的文件和目录将显示在此处"
+				"info": "发送到回收站的文件和文件夹将显示在此处"
 			},
 			"recents": {
 				"title": "尚未上传任何文件",
@@ -1042,19 +1042,19 @@
 			},
 			"links": {
 				"title": "尚未创建公开链接",
-				"info": "文件和目录的公开链接将显示在这里"
+				"info": "文件和文件夹的公开链接将显示在这里"
 			},
 			"favorites": {
 				"title": "暂无收藏",
-				"info": "收藏的文件和目录将显示在这里"
+				"info": "收藏的文件和文件夹将显示在这里"
 			},
 			"sharedIn": {
 				"title": "尚未与您共享任何内容",
-				"info": "共享文件和目录将显示在这里"
+				"info": "共享文件和文件夹将显示在这里"
 			},
 			"sharedOut": {
 				"title": "尚未与他人共享任何内容",
-				"info": "共享文件和目录将显示在这里"
+				"info": "共享文件和文件夹将显示在这里"
 			}
 		}
 	},
@@ -1063,8 +1063,8 @@
 		"invalidInfo": "此公开链接已过期或不存在",
 		"back": "返回",
 		"directory": {
-			"downloadWholeDirectory": "下载整个目录",
-			"downloadDirectory": "下载目录"
+			"downloadWholeDirectory": "下载整个文件夹",
+			"downloadDirectory": "下载文件夹"
 		},
 		"sideBar": {
 			"ad": {
@@ -1134,7 +1134,7 @@
 	},
 	"previewDialog": {
 		"unsavedChanges": {
-			"title": "未保存的更改",
+			"title": "更改尚未保存",
 			"description": "您确定要退出而不保存吗？所有更改都将丢失。",
 			"continue": "关闭"
 		}
@@ -1352,10 +1352,10 @@
 		"transfersTitle": "传输",
 		"noTransfers": "暂无活跃的传输",
 		"noEventsYet": "暂无事件",
-		"nothingIgnored": "未忽略任何文件或目录",
+		"nothingIgnored": "未忽略任何文件或文件夹",
 		"noIssues": "暂无问题",
 		"info": {
-			"progress": "正在以 {{speed}} 同步 {{items}} 项，共 ({{total}} 项，大约剩余 {{remaining}} ",
+			"progress": "正在以 {{speed}} 同步 {{items}} / ({{total}} 项，大约剩余 {{remaining}} ",
 			"progressNoEstimate": "正在同步 {{items}} / ({{total}}) 个项目 ",
 			"upToDate": "均已同步",
 			"errors": "{{count}} 个同步错误",
@@ -1366,11 +1366,11 @@
 			"savingState": "正在保存状态",
 			"waitingForLocalDirectoryChanges": "正在等待本地更改",
 			"acquiringLock": "正在获取同步锁",
-			"gettingTrees": "正在读取本地和云端目录"
+			"gettingTrees": "正在读取本地和云端文件夹"
 		},
 		"empty": {
 			"title": "尚未设置同步",
-			"description": "您可以将本地目录与云同步，或将云目录与设备同步",
+			"description": "您可以将本地目录与云同步，或将云文件夹与设备同步",
 			"create": "创建"
 		},
 		"events": {
@@ -1404,7 +1404,7 @@
 				},
 				"forceSync": {
 					"name": "强制同步",
-					"info": "重置内部缓存并强制重新扫描本地和云目录",
+					"info": "重置内部缓存并强制重新扫描本地和云文件夹",
 					"forceSync": "强制同步"
 				},
 				"excludeDotFiles": {
