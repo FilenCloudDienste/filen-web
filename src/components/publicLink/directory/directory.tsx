@@ -95,7 +95,8 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 				linkHasPassword: info.hasPassword,
 				linkPassword: typeof password !== "undefined" && info.hasPassword ? password : undefined,
 				linkUUID: urlState.uuid,
-				linkSalt: info.hasPassword ? info.salt : undefined
+				linkSalt: info.hasPassword ? info.salt : undefined,
+				linkKey: urlState.key
 			})
 		} catch (e) {
 			if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
@@ -104,7 +105,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			}
 		}
-	}, [items, info.metadata.name, errorToast, info.hasPassword, info.salt, password, urlState.uuid])
+	}, [items, info.metadata.name, errorToast, info.hasPassword, info.salt, password, urlState.uuid, urlState.key])
 
 	const showSkeletons = useMemo(() => {
 		if (query.isSuccess && query.data.files.length >= 0 && query.data.folders.length >= 0) {

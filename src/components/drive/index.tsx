@@ -7,7 +7,7 @@ import { type Prettify } from "@/types"
 import worker from "@/lib/worker"
 import useRouteParent from "@/hooks/useRouteParent"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
-import { promiseAllChunked, dialogsOpen } from "@/lib/utils"
+import { promiseAllChunked, dialogsOpen, contextMenusOpen } from "@/lib/utils"
 import { directoryUUIDToNameCache } from "@/cache"
 import useErrorToast from "@/hooks/useErrorToast"
 import eventEmitter from "@/lib/eventEmitter"
@@ -164,7 +164,7 @@ export const Drive = memo(() => {
 
 	const keyDownListener = useCallback(
 		(e: KeyboardEvent) => {
-			if (e.key === "a" && (e.ctrlKey || e.metaKey) && searchTerm.length === 0 && !dialogsOpen()) {
+			if (e.key === "a" && (e.ctrlKey || e.metaKey) && searchTerm.length === 0 && !dialogsOpen() && !contextMenusOpen()) {
 				e.preventDefault()
 				e.stopPropagation()
 

@@ -19,7 +19,15 @@ export const TransferProgress = memo(({ state, bytes, size }: { state: TransferS
 	return (
 		<Progress
 			value={
-				["error", "queued"].includes(state) ? 0 : state === "finished" ? 100 : progressNormalized >= 99 ? 99 : progressNormalized
+				state === "error"
+					? 100
+					: state === "queued"
+						? 0
+						: state === "finished"
+							? 100
+							: progressNormalized >= 99
+								? 99
+								: progressNormalized
 			}
 			max={100}
 			color="green"

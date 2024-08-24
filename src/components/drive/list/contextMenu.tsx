@@ -53,6 +53,15 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 		const toast = loadingToast()
 
 		try {
+			const exists = await worker.directoryExists({
+				name: inputResponse.value.trim(),
+				parent
+			})
+
+			if (exists.exists) {
+				return
+			}
+
 			const item = await worker.createDirectory({
 				name: inputResponse.value.trim(),
 				parent
@@ -76,7 +85,7 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 	}, [setItems, parent, loadingToast, errorToast, t])
 
 	useEffect(() => {
-		const createDirectoryTriggerListener = eventEmitter.on("createFolderTrigger", createDirectory)
+		const createDirectoryTriggerListener = eventEmitter.on("createDirectoryTrigger", createDirectory)
 
 		return () => {
 			createDirectoryTriggerListener.remove()

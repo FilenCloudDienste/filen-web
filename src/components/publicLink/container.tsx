@@ -51,7 +51,7 @@ export const Container = memo(({ children, loading, hasInfo }: { children: React
 				>
 					<div className="absolute top-10 left-10">
 						<Link
-							to={authed ? "/" : "login"}
+							to={authed ? "/" : "/login"}
 							className="flex shrink-0 flex-row items-center gap-2"
 							draggable={false}
 						>

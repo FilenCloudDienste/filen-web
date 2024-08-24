@@ -40,10 +40,16 @@ export async function downloadFile({ item }: { item: DriveCloudItem }): Promise<
 	})
 
 	if (!useWorkerForDownloads) {
-		return await workerLib.downloadFile({ item, fileHandle })
+		return await workerLib.downloadFile({
+			item,
+			fileHandle
+		})
 	}
 
-	await worker.downloadFile({ item, fileHandle })
+	await worker.downloadFile({
+		item,
+		fileHandle
+	})
 }
 
 /**
@@ -76,7 +82,8 @@ export async function downloadDirectory({
 	linkUUID,
 	linkHasPassword,
 	linkPassword,
-	linkSalt
+	linkSalt,
+	linkKey
 }: {
 	uuid: string
 	name: string
@@ -85,16 +92,35 @@ export async function downloadDirectory({
 	linkHasPassword?: boolean
 	linkPassword?: string
 	linkSalt?: string
+	linkKey?: string
 }): Promise<void> {
 	const fileHandle = await showSaveFilePicker({
 		suggestedName: `${sanitizeFileName(name)}.zip`
 	})
 
 	if (!useWorkerForDownloads) {
-		return await workerLib.downloadDirectory({ uuid, type, linkUUID, linkHasPassword, linkPassword, linkSalt, fileHandle })
+		return await workerLib.downloadDirectory({
+			uuid,
+			type,
+			linkUUID,
+			linkHasPassword,
+			linkPassword,
+			linkSalt,
+			linkKey,
+			fileHandle
+		})
 	}
 
-	await worker.downloadDirectory({ uuid, type, linkUUID, linkHasPassword, linkPassword, linkSalt, fileHandle })
+	await worker.downloadDirectory({
+		uuid,
+		type,
+		linkUUID,
+		linkHasPassword,
+		linkPassword,
+		linkSalt,
+		linkKey,
+		fileHandle
+	})
 }
 
 /**
@@ -124,6 +150,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkHasPassword,
 	linkPassword,
 	linkSalt,
+	linkKey,
 	linkUUID
 }: {
 	items: DriveCloudItem[]
@@ -133,6 +160,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkHasPassword?: boolean
 	linkPassword?: string
 	linkSalt?: string
+	linkKey?: string
 }): Promise<void> {
 	const fileHandle = await showSaveFilePicker({
 		suggestedName: name ? sanitizeFileName(name) : `Download_${Date.now()}.zip`
@@ -151,6 +179,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 			linkHasPassword,
 			linkPassword,
 			linkSalt,
+			linkKey,
 			linkUUID
 		})
 	}
@@ -162,6 +191,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 		linkHasPassword,
 		linkPassword,
 		linkSalt,
+		linkKey,
 		linkUUID
 	})
 }

@@ -212,7 +212,8 @@ export const ContextMenu = memo(
 							? publicLinkPaswordState.password
 							: undefined,
 					linkUUID: publicLinkURLState.uuid,
-					linkSalt: publicLinkPaswordState.salt.length > 0 ? publicLinkPaswordState.salt : undefined
+					linkSalt: publicLinkPaswordState.salt.length > 0 ? publicLinkPaswordState.salt : undefined,
+					linkKey: publicLinkURLState.key.length > 0 ? publicLinkURLState.key : undefined
 				})
 			} catch (e) {
 				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
@@ -228,7 +229,8 @@ export const ContextMenu = memo(
 			publicLinkPaswordState.password,
 			publicLinkURLState.uuid,
 			publicLinkPaswordState.salt,
-			errorToast
+			errorToast,
+			publicLinkURLState.key
 		])
 
 		const trash = useCallback(async () => {

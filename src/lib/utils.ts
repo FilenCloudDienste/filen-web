@@ -117,6 +117,18 @@ export function dialogsOpen(): boolean {
 }
 
 /**
+ * Returns true if one or more context menus are open.
+ *
+ * @export
+ * @returns {boolean}
+ */
+export function contextMenusOpen(): boolean {
+	const popovers = document.querySelectorAll("div[data-radix-popper-content-wrapper]")
+
+	return popovers.length > 0
+}
+
+/**
  * Converts pixel values to percentage based on the container width.
  * @param {number} pixelValue - The value in pixels to be converted.
  * @param {number} containerWidth - The total width of the container in pixels.

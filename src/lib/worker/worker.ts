@@ -47,6 +47,7 @@ import { type AuthInfoResponse } from "@filen/sdk/dist/types/api/v3/auth/info"
 import { type UserProfileResponse } from "@filen/sdk/dist/types/api/v3/user/profile"
 import { fileNameToThumbnailType } from "@/components/dialogs/previewDialog/utils"
 import DOMPurify from "dompurify"
+import { type DirExistsResponse } from "@filen/sdk/dist/types/api/v3/dir/exists"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -1025,6 +1026,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkHasPassword,
 	linkPassword,
 	linkSalt,
+	linkKey,
 	dontEmitQueuedEvent,
 	id
 }: {
@@ -1036,6 +1038,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkPassword?: string
 	linkSalt?: string
 	dontEmitQueuedEvent?: boolean
+	linkKey?: string
 	id?: string
 }): Promise<void> {
 	await waitForInitialization()
@@ -1064,7 +1067,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 							linkHasPassword,
 							linkPassword,
 							linkSalt,
-							linkUUID
+							linkUUID,
+							linkKey
 						})
 							.then(tree => {
 								for (const path in tree) {
@@ -1280,6 +1284,7 @@ export async function getDirectoryTree({
 	linkHasPassword,
 	linkPassword,
 	linkSalt,
+	linkKey,
 	skipCache
 }: {
 	uuid: string
@@ -1289,6 +1294,7 @@ export async function getDirectoryTree({
 	linkPassword?: string
 	linkSalt?: string
 	skipCache?: boolean
+	linkKey?: string
 }) {
 	await waitForInitialization()
 
@@ -1299,7 +1305,8 @@ export async function getDirectoryTree({
 		linkHasPassword,
 		linkPassword,
 		linkSalt,
-		skipCache
+		skipCache,
+		linkKey
 	})
 }
 
@@ -1310,6 +1317,7 @@ export async function downloadDirectory({
 	linkHasPassword,
 	linkPassword,
 	linkSalt,
+	linkKey,
 	fileHandle
 }: {
 	uuid: string
@@ -1317,6 +1325,7 @@ export async function downloadDirectory({
 	linkUUID?: string
 	linkHasPassword?: boolean
 	linkPassword?: string
+	linkKey?: string
 	linkSalt?: string
 	fileHandle: FileSystemFileHandle
 }): Promise<void> {
@@ -1344,7 +1353,8 @@ export async function downloadDirectory({
 			linkUUID,
 			linkHasPassword,
 			linkPassword,
-			linkSalt
+			linkSalt,
+			linkKey
 		})
 	} catch (e) {
 		const err = e as unknown as Error
@@ -1411,6 +1421,7 @@ export async function downloadDirectory({
 		linkHasPassword,
 		linkPassword,
 		linkSalt,
+		linkKey,
 		dontEmitQueuedEvent: true,
 		id: directoryId
 	})
@@ -1842,6 +1853,7 @@ export async function generateVideoThumbnail({ item, buffer }: { item: DriveClou
 		video.load()
 	}).finally(() => {
 		globalThis.URL.revokeObjectURL(urlObject)
+
 		video.remove()
 	})
 
@@ -1951,6 +1963,12 @@ export async function renameItem({ item, name }: { item: DriveCloudItem; name: s
 	if (item.type === "directory") {
 		await setItem(`directoryUUIDToName:${item.uuid}`, name)
 	}
+}
+
+export async function directoryExists({ parent, name }: { parent: string; name: string }): Promise<DirExistsResponse> {
+	await waitForInitialization()
+
+	return await getSDK().cloud().directoryExists({ name, parent })
 }
 
 export async function createDirectory({
@@ -2674,10 +2692,12 @@ export async function fetchSettings() {
 	return await getSDK().user().settings()
 }
 
-export async function uploadAvatar({ buffer }: { buffer: Buffer }): Promise<void> {
+export async function uploadAvatar({ arrayBuffer }: { arrayBuffer: ArrayBuffer }): Promise<void> {
 	await waitForInitialization()
 
-	return await getSDK().user().uploadAvatar({ buffer })
+	return await getSDK()
+		.user()
+		.uploadAvatar({ buffer: Buffer.from(arrayBuffer) })
 }
 
 export async function requestAccountData() {

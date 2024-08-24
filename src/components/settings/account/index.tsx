@@ -285,12 +285,18 @@ export const Account = memo(() => {
 				return
 			}
 
+			if (file.size >= 1024 * 1024 * 2) {
+				errorToast(t("settings.account.sections.avatar.invalid"))
+
+				return
+			}
+
 			const toast = loadingToast()
 
 			try {
-				const buffer = Buffer.from(await file.arrayBuffer())
+				const arrayBuffer = await file.arrayBuffer()
 
-				await worker.uploadAvatar({ buffer: transfer(buffer, [buffer.buffer]) })
+				await worker.uploadAvatar({ arrayBuffer: transfer(arrayBuffer, [arrayBuffer]) })
 				await account.refetch()
 			} catch (e) {
 				if (e instanceof Error && e.message.toLowerCase().includes("maximum storage reached")) {
@@ -302,7 +308,8 @@ export const Account = memo(() => {
 				if (e instanceof Error && !e.message.toLowerCase().includes("abort")) {
 					console.error(e)
 
-					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+					//errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+					errorToast(t("settings.account.sections.avatar.invalid"))
 				}
 			} finally {
 				toast.dismiss()
@@ -312,7 +319,7 @@ export const Account = memo(() => {
 				input.value = ""
 			}
 		},
-		[loadingToast, errorToast, account]
+		[loadingToast, errorToast, account, t]
 	)
 
 	const changeNickname = useCallback(async () => {

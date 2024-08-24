@@ -200,7 +200,7 @@ export const TopBar = memo(() => {
 						<DropdownMenuContent>
 							<DropdownMenuItem
 								className="cursor-pointer gap-3"
-								onClick={() => eventEmitter.emit("createFolderTrigger")}
+								onClick={() => eventEmitter.emit("createDirectoryTrigger")}
 							>
 								<Folder size={16} />
 								{t("contextMenus.drive.newFolder")}

@@ -22,6 +22,7 @@ import { type DriveCloudItem } from "@/components/drive"
 import { Button } from "@/components/ui/button"
 import useErrorToast from "@/hooks/useErrorToast"
 import { isValidFileName } from "@/lib/utils"
+import useLoadingToast from "@/hooks/useLoadingToast"
 
 export type ResponseItem = DriveCloudItem & { path: string }
 export type SelectionType = "file" | "directory" | "all"
@@ -74,6 +75,7 @@ export const SelectDriveItemDialog = memo(() => {
 	const [selectionType, setSelectionType] = useState<SelectionType>("directory")
 	const [selectMultiple, setSelectMultiple] = useState<boolean>(false)
 	const errorToast = useErrorToast()
+	const loadingToast = useLoadingToast()
 
 	const parent = useMemo(() => {
 		const ex = pathname.split("/")
@@ -151,22 +153,33 @@ export const SelectDriveItemDialog = memo(() => {
 	}, [baseFolderUUID])
 
 	const createDirectory = useCallback(async () => {
+		const inputResponse = await showInputDialog({
+			title: t("drive.dialogs.createDirectory.title"),
+			continueButtonText: t("drive.dialogs.createDirectory.continue"),
+			value: "",
+			autoFocusInput: true,
+			placeholder: t("drive.dialogs.createDirectory.placeholder")
+		})
+
+		if (inputResponse.cancelled) {
+			return
+		}
+
+		if (inputResponse.value.trim().length === 0 || !isValidFileName(inputResponse.value.trim())) {
+			errorToast(t("drive.dialogs.createDirectory.invalidDirectoryName"))
+
+			return
+		}
+
+		const toast = loadingToast()
+
 		try {
-			const inputResponse = await showInputDialog({
-				title: t("drive.dialogs.createDirectory.title"),
-				continueButtonText: t("drive.dialogs.createDirectory.continue"),
-				value: "",
-				autoFocusInput: true,
-				placeholder: t("drive.dialogs.createDirectory.placeholder")
+			const exists = await worker.directoryExists({
+				name: inputResponse.value.trim(),
+				parent
 			})
 
-			if (inputResponse.cancelled) {
-				return
-			}
-
-			if (inputResponse.value.trim().length === 0 || !isValidFileName(inputResponse.value.trim())) {
-				errorToast(t("drive.dialogs.createDirectory.invalidDirectoryName"))
-
+			if (exists.exists) {
 				return
 			}
 
@@ -191,8 +204,12 @@ export const SelectDriveItemDialog = memo(() => {
 			}
 		} catch (e) {
 			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			toast.dismiss()
 		}
-	}, [setItems, parent, routeParent, t, errorToast])
+	}, [setItems, parent, routeParent, t, errorToast, loadingToast])
 
 	useEffect(() => {
 		const listener = eventEmitter.on(

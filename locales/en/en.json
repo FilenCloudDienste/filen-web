@@ -930,7 +930,8 @@
 				"avatar": {
 					"name": "Avatar",
 					"info": "Your avatar will be visible publicly",
-					"action": "Edit"
+					"action": "Edit",
+					"invalid": "Invalid image. Allowed file types are PNG and JPG, 2MB maximum size."
 				},
 				"versionedFiles": {
 					"name": "Versioned files",

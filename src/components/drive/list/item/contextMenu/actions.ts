@@ -14,7 +14,8 @@ export async function download({
 	linkUUID,
 	linkHasPassword,
 	linkPassword,
-	linkSalt
+	linkSalt,
+	linkKey
 }: {
 	selectedItems: DriveCloudItem[]
 	name?: string
@@ -23,6 +24,7 @@ export async function download({
 	linkHasPassword?: boolean
 	linkPassword?: string
 	linkSalt?: string
+	linkKey?: string
 }): Promise<void> {
 	selectedItems = selectedItems.filter(item => !activeDownloads[item.uuid])
 
@@ -58,7 +60,8 @@ export async function download({
 						linkUUID,
 						linkHasPassword,
 						linkPassword,
-						linkSalt
+						linkSalt,
+						linkKey
 					})
 				} else {
 					await window.desktopAPI.downloadFile({
@@ -76,7 +79,8 @@ export async function download({
 					linkUUID,
 					linkHasPassword,
 					linkPassword,
-					linkSalt
+					linkSalt,
+					linkKey
 				})
 			}
 
@@ -96,7 +100,8 @@ export async function download({
 					linkUUID,
 					linkHasPassword,
 					linkPassword,
-					linkSalt
+					linkSalt,
+					linkKey
 				})
 			} else {
 				await workerProxy.downloadFile({ item: selectedItems[0] })
@@ -109,7 +114,8 @@ export async function download({
 				linkUUID,
 				linkHasPassword,
 				linkPassword,
-				linkSalt
+				linkSalt,
+				linkKey
 			})
 		}
 	} finally {

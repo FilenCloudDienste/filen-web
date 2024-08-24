@@ -443,39 +443,41 @@ export const Transfers = memo(() => {
 				/>
 				<div className="flex flex-row items-center gap-3 h-12 text-muted-foreground justify-end text-sm">
 					{remaining > 0 && remainingReadable.length > 0 && remaining < Infinity && (
-						<p className="line-clamp-1 text-ellipsis break-all">{remainingReadable}</p>
-					)}
-					{speed > 0 && <p className="line-clamp-1 text-ellipsis break-all">{bpsToReadable(speed)}</p>}
-					{ongoingTransfers.length > 0 && remaining > 0 && remaining < Infinity && (
-						<div className="flex flex-row items-center">
-							{paused ? (
-								<Button
-									variant="ghost"
-									size="icon"
-									onClick={togglePause}
-								>
-									<Play size={16} />
-								</Button>
-							) : (
-								<Button
-									variant="ghost"
-									size="icon"
-									onClick={togglePause}
-								>
-									<Pause size={16} />
-								</Button>
+						<>
+							<p className="line-clamp-1 text-ellipsis break-all">{remainingReadable}</p>
+							<p className="line-clamp-1 text-ellipsis break-all">{bpsToReadable(speed)}</p>
+							{ongoingTransfers.length > 0 && (
+								<div className="flex flex-row items-center">
+									{paused ? (
+										<Button
+											variant="ghost"
+											size="icon"
+											onClick={togglePause}
+										>
+											<Play size={16} />
+										</Button>
+									) : (
+										<Button
+											variant="ghost"
+											size="icon"
+											onClick={togglePause}
+										>
+											<Pause size={16} />
+										</Button>
+									)}
+									<Button
+										variant="ghost"
+										size="icon"
+										onClick={abort}
+									>
+										<XCircle
+											size={16}
+											className="text-red-500"
+										/>
+									</Button>
+								</div>
 							)}
-							<Button
-								variant="ghost"
-								size="icon"
-								onClick={abort}
-							>
-								<XCircle
-									size={16}
-									className="text-red-500"
-								/>
-							</Button>
-						</div>
+						</>
 					)}
 				</div>
 			</SheetContent>
