@@ -930,7 +930,8 @@
 				"avatar": {
 					"name": "头像",
 					"info": "您的头像将公开显示",
-					"action": "编辑"
+					"action": "编辑",
+					"invalid": "图像无效。允许的文件类型为 PNG 和 JPG，最大大小为 2MB。"
 				},
 				"versionedFiles": {
 					"name": "版本文件",
