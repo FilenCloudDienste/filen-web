@@ -263,7 +263,7 @@ export const PreviewDialog = memo(() => {
 
 			const previewType = fileNameToPreviewType(itm.name)
 
-			if (previewType === "other" || (!IS_DESKTOP && itm.size >= MAX_PREVIEW_SIZE)) {
+			if (previewType === "other" || itm.size >= MAX_PREVIEW_SIZE) {
 				return
 			}
 

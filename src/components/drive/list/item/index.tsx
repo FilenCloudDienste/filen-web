@@ -109,7 +109,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	}, [isInsidePublicLink, setPublicLinkSearch, setDriveSearch])
 
 	const onDoubleClick = useCallback(() => {
-		if (item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE > item.size) {
+		if (item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE >= item.size) {
 			eventEmitter.emit("openPreviewModal", { item })
 
 			return

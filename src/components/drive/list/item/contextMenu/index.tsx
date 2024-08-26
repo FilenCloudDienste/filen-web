@@ -647,7 +647,7 @@ export const ContextMenu = memo(
 			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
 				<ContextMenuContent className="min-w-48">
-					{selectedItems.length === 1 && item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE > item.size && (
+					{selectedItems.length === 1 && item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE >= item.size && (
 						<ContextMenuItem
 							onClick={preview}
 							className="cursor-pointer gap-3"
