@@ -1,10 +1,11 @@
-import { memo, useMemo } from "react"
+import { memo, useMemo, useCallback } from "react"
 import Avatar from "@/components/avatar"
 import { simpleDate } from "@/utils"
 import { UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
 import { type UserAccountResponse } from "@filen/sdk/dist/types/api/v3/user/account"
 import { useTranslation } from "react-i18next"
 import { fileNameToSVGIcon, ColoredFolderSVGIcon } from "@/assets/fileExtensionIcons"
+import eventEmitter from "@/lib/eventEmitter"
 
 export const Event = memo(({ event, account }: { event: UserEvent; account: UserAccountResponse }) => {
 	const { t } = useTranslation()
@@ -188,8 +189,15 @@ export const Event = memo(({ event, account }: { event: UserEvent; account: User
 		}
 	}, [event, t])
 
+	const open = useCallback(() => {
+		eventEmitter.emit("openEventDialog", event.uuid)
+	}, [event.uuid])
+
 	return (
-		<div className="flex flex-row border-b items-center p-4 py-3 justify-between gap-10 hover:bg-secondary hover:rounded-md w-full">
+		<div
+			className="flex flex-row border-b items-center p-4 py-3 justify-between gap-10 hover:bg-secondary hover:rounded-md w-full cursor-pointer"
+			onClick={open}
+		>
 			<div className="flex flex-row gap-3 items-center">
 				{event.type === "folderColorChanged" ||
 				event.type === "folderLinkEdited" ||

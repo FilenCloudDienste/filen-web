@@ -242,7 +242,7 @@ export const CreateSyncDialog = memo(() => {
 	const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		setCreateState(prev => ({
 			...prev,
-			name: e.target.value.trim()
+			name: e.target.value
 		}))
 	}, [])
 

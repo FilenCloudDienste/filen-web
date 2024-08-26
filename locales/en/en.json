@@ -463,6 +463,9 @@
 			"info": "You do not have enough storage available. In order to upload more files you need to buy a plan. All plans stack in terms of storage. You can subscribe to as many plans as you want.",
 			"dismiss": "Dismiss",
 			"upgrade": "Upgrade"
+		},
+		"event": {
+			"title": "Event"
 		}
 	},
 	"contextMenus": {
@@ -904,7 +907,12 @@
 			"annually": "Annually",
 			"lifetime": "Lifetime",
 			"buyNow": "Buy now",
-			"payInvoice": "Pay invoice"
+			"payInvoice": "Pay invoice",
+			"sale": "Sale",
+			"limited": "Limited availability",
+			"creditCard": "Credit Card",
+			"crypto": "Cryptocurrencies",
+			"legal1": "By purchasing a plan you authorize Filen to automatically charge you each billing period until you cancel. You can cancel anytime via your Account page. No partial refunds."
 		},
 		"security": {
 			"sections": {
@@ -1227,7 +1235,7 @@
 				"cleanupCache": {
 					"title": "Clear cache",
 					"description": "Are you sure you want to clear the local cache? Clearing the cache can significantly slow down initial file loading times.",
-					"continue": "Clear and restart"
+					"continue": "Clear"
 				},
 				"disable": {
 					"title": "Disable",
@@ -1471,7 +1479,7 @@
 				"title": {
 					"permission": "Permissions",
 					"io": "I/O",
-					"noSpace": "Not enough space",
+					"noSpace": "Not enough space or file watchers available",
 					"openFiles": "Open files limit",
 					"fileOrDirExists": "File or directory exists",
 					"fileOrDirNotFound": "File or directory not found",
@@ -1487,7 +1495,7 @@
 				"info": {
 					"permission": "Please ensure the client has all needed permissions to access the local sync directory.",
 					"io": "Please ensure your local sync directory and underlying storage media works. The client is not able to properly access it.",
-					"noSpace": "You do not have enough local storage space left.",
+					"noSpace": "You do not have enough local storage space left, or the system ran out of available file watchers.",
 					"openFiles": "The client has hit the limit of open files. Please increase the limit.",
 					"fileOrDirExists": "The file or directory already exists. This is most likely a temporary issue, try restarting the client.",
 					"fileOrDirNotFound": "File or directory not found. This is most likely a temporary issue, try restarting the client.",
@@ -1511,5 +1519,13 @@
 	"404": {
 		"info": "Oops, the page you are looking for does not exist.",
 		"btn": "Go to Homepage"
+	},
+	"announcements": {
+		"gotIt": "Got it"
+	},
+	"maintenance": {
+		"title": "Filen is currently under maintenance",
+		"info": "We're currently performing some maintenance to make your experience even better. Our platform will be back shortly, fresh and improved.",
+		"infoSub": "Thank you for your patience! We're working hard behind the scenes to bring you new features. Stay tuned!"
 	}
 }

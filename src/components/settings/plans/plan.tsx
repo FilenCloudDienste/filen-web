@@ -9,18 +9,20 @@ import { FaCcStripe, FaBitcoin } from "react-icons/fa6"
 import useErrorToast from "@/hooks/useErrorToast"
 import worker from "@/lib/worker"
 import { type PaymentMethods } from "@filen/sdk/dist/types/api/v3/user/sub/create"
-import { type CDNConfigPlan } from "@/lib/worker/worker"
+import { RemoteConfigPlan } from "@/types"
 import { Loader } from "lucide-react"
+import { useRemoteConfigStore } from "@/stores/remoteConfig.store"
 
-export const Plan = memo(({ plan }: { plan: CDNConfigPlan }) => {
+export const Plan = memo(({ plan }: { plan: RemoteConfigPlan }) => {
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
 	const [isCreatingSubURL, setIsCreatingSubURL] = useState<boolean>(false)
 	const [subURL, setSubURL] = useState<string>("")
+	const config = useRemoteConfigStore(useCallback(state => state.config, []))
 
 	const cryptoAvailable = useMemo(() => {
-		return plan.name.toLowerCase().includes("lifetime")
-	}, [plan.name])
+		return plan.name.toLowerCase().includes("lifetime") || plan.term === "lifetime"
+	}, [plan.name, plan.term])
 
 	const buyPlan = useCallback(
 		async ({ planId, paymentMethod }: { planId: number; paymentMethod: PaymentMethods }) => {
@@ -48,19 +50,37 @@ export const Plan = memo(({ plan }: { plan: CDNConfigPlan }) => {
 		[errorToast, isCreatingSubURL, subURL, cryptoAvailable]
 	)
 
+	if (!config) {
+		return null
+	}
+
 	return (
 		<Card
 			key={plan.id}
-			className="w-[200px]"
+			className="w-auto"
 		>
 			<CardHeader>
-				<CardTitle>{plan.name}</CardTitle>
+				<CardTitle>
+					<p>
+						{plan.name}
+						{!plan.name.toLowerCase().includes("starter") ? " " + plan.term : ""}
+					</p>
+				</CardTitle>
 				<CardDescription>
-					{plan.cost}€ {plan.term}
+					{config.pricing.saleEnabled ? (
+						<div className="flex flex-col">
+							<p className="line-through">{plan.cost}€</p>
+							<p className="text-lg text-primary">{plan.sale}€</p>
+							<p className="text-red-500">🎉 -{Math.round(100 - (plan.sale / plan.cost) * 100)}%</p>
+						</div>
+					) : (
+						<p className="text-lg text-muted-foreground">{plan.cost}€</p>
+					)}
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<p>{formatBytes(plan.storage)}</p>
+				{plan.term === "lifetime" && <p className="text-xs text-muted-foreground">{t("settings.plans.limited")}</p>}
 			</CardContent>
 			<CardFooter>
 				{isCreatingSubURL ? (
@@ -97,7 +117,7 @@ export const Plan = memo(({ plan }: { plan: CDNConfigPlan }) => {
 								}
 							>
 								<FaCcStripe />
-								<p>Credit Card</p>
+								<p>{t("settings.plans.creditCard")}</p>
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								className="flex flex-row gap-3 items-center cursor-pointer"
@@ -122,7 +142,7 @@ export const Plan = memo(({ plan }: { plan: CDNConfigPlan }) => {
 									}
 								>
 									<FaBitcoin />
-									<p>Crypto</p>
+									<p>{t("settings.plans.crypto")}</p>
 								</DropdownMenuItem>
 							)}
 						</DropdownMenuContent>

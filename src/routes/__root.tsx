@@ -37,6 +37,8 @@ import IsOnlineDialog from "@/components/dialogs/isOnline"
 import Page404 from "@/components/404"
 import DesktopUpdateDialog from "@/components/dialogs/desktopUpdate"
 import StorageDialog from "@/components/dialogs/storage"
+import RemoteConfigHandler from "@/components/remoteConfigHandler"
+import MaintenanceDialog from "@/components/dialogs/maintenance"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -178,6 +180,8 @@ export const Root = memo(() => {
 						</>
 					)}
 					<IsOnlineDialog />
+					<RemoteConfigHandler />
+					<MaintenanceDialog />
 				</PersistQueryClientProvider>
 			</ThemeProvider>
 			<Toaster />

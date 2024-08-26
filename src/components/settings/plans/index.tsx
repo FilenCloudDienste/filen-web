@@ -1,21 +1,16 @@
-import { memo, useMemo } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { memo, useMemo, useCallback } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useTranslation } from "react-i18next"
-import worker from "@/lib/worker"
 import Plan from "./plan"
 import Skeletons from "../skeletons"
+import { useRemoteConfigStore } from "@/stores/remoteConfig.store"
 
 export const Plans = memo(() => {
 	const { t } = useTranslation()
-
-	const query = useQuery({
-		queryKey: ["cdnConfig"],
-		queryFn: () => worker.cdnConfig()
-	})
+	const config = useRemoteConfigStore(useCallback(state => state.config, []))
 
 	const plans = useMemo(() => {
-		if (!query.isSuccess) {
+		if (!config) {
 			return {
 				starter: [],
 				monthly: [],
@@ -25,22 +20,22 @@ export const Plans = memo(() => {
 		}
 
 		return {
-			starter: query.data.pricing.plans.filter(plan => plan.name.toLowerCase().includes("starter")),
-			monthly: query.data.pricing.plans.filter(
+			starter: config.pricing.plans.filter(plan => plan.name.toLowerCase().includes("starter")),
+			monthly: config.pricing.plans.filter(
 				plan => plan.term.toLowerCase().includes("monthly") && !plan.name.toLowerCase().includes("starter")
 			),
-			annually: query.data.pricing.plans.filter(
+			annually: config.pricing.plans.filter(
 				plan => plan.term.toLowerCase().includes("annually") && !plan.name.toLowerCase().includes("starter")
 			),
-			lifetime: query.data.pricing.lifetimeEnabled
-				? query.data.pricing.plans.filter(
+			lifetime: config.pricing.lifetimeEnabled
+				? config.pricing.plans.filter(
 						plan => plan.term.toLowerCase().includes("lifetime") && !plan.name.toLowerCase().includes("starter")
 					)
 				: []
 		}
-	}, [query.isSuccess, query.data])
+	}, [config])
 
-	if (!query.isSuccess) {
+	if (!config) {
 		return <Skeletons />
 	}
 
@@ -54,7 +49,7 @@ export const Plans = memo(() => {
 					<TabsTrigger value="starter">{t("settings.plans.starter")}</TabsTrigger>
 					<TabsTrigger value="monthly">{t("settings.plans.monthly")}</TabsTrigger>
 					<TabsTrigger value="annually">{t("settings.plans.annually")}</TabsTrigger>
-					{query.data.pricing.lifetimeEnabled && <TabsTrigger value="lifetime">{t("settings.plans.lifetime")}</TabsTrigger>}
+					{config.pricing.lifetimeEnabled && <TabsTrigger value="lifetime">✨ {t("settings.plans.lifetime")}</TabsTrigger>}
 				</TabsList>
 				{["starter", "monthly", "annually", "lifetime"].map(term => {
 					return (
@@ -80,10 +75,7 @@ export const Plans = memo(() => {
 								})}
 							</div>
 							<div className="flex flex-col mt-10 text-xs text-muted-foreground justify-center items-center">
-								<p className="max-w-[500px] text-center">
-									By purchasing a plan you authorize Filen to automatically charge you each billing period until you
-									cancel. You can cancel anytime via your Account page. No partial refunds.
-								</p>
+								<p className="max-w-[500px] text-center">{t("settings.plans.legal1")}</p>
 								<p>
 									You also automatically agree to our{" "}
 									<a

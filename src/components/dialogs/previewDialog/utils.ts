@@ -1,4 +1,5 @@
 import pathModule from "path"
+import mimeTypes from "mime-types"
 
 /**
  * Convert file name to preview type.
@@ -153,4 +154,30 @@ export function ensureTextFileExtension(filename: string): string {
 	}
 
 	return `${filename}.txt`
+}
+
+export const streamableMimeTypes: string[] = [
+	"video/mp4",
+	// eslint-disable-next-line quotes
+	'video/webm; codecs="vp8, vorbis"',
+	// eslint-disable-next-line quotes
+	'video/webm; codecs="vp9, opus"',
+	// eslint-disable-next-line quotes
+	'video/ogg; codecs="theora, vorbis"',
+	"audio/mpeg",
+	"audio/aac",
+	"audio/wav",
+	// eslint-disable-next-line quotes
+	'audio/ogg; codecs="vorbis"',
+	// eslint-disable-next-line quotes
+	'audio/ogg; codecs="opus"',
+	// eslint-disable-next-line quotes
+	'audio/webm; codecs="opus"',
+	"audio/flac"
+]
+
+export function isFileStreamable(name: string, mime: string): boolean {
+	const mimeType = mime.length > 0 ? mime : mimeTypes.lookup(name) || "application/octet-stream"
+
+	return streamableMimeTypes.includes(mimeType)
 }

@@ -56,6 +56,7 @@ export default function quillStyle() {
             padding: 5px 12px;
             white-space: nowrap;
             font-size: 16px;
+            margin-left: 110px;
             /*font-family: "Inter", sans-serif;*/
         }
 

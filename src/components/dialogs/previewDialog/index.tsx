@@ -2,7 +2,7 @@ import { memo, useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import eventEmitter from "@/lib/eventEmitter"
 import { type DriveCloudItem } from "@/components/drive"
-import { fileNameToPreviewType, ensureTextFileExtension } from "./utils"
+import { fileNameToPreviewType, ensureTextFileExtension, isFileStreamable } from "./utils"
 import Text from "./text"
 import PDF from "./pdf"
 import Image from "./image"
@@ -12,7 +12,7 @@ import { Loader as LoaderIcon, X, Save, ArrowLeft, ArrowRight, Eye } from "lucid
 import { showConfirmDialog } from "../confirm"
 import { uploadFile } from "@/lib/worker/worker"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { TOOLTIP_POPUP_DELAY, IS_APPLE_DEVICE, IS_DESKTOP } from "@/constants"
+import { TOOLTIP_POPUP_DELAY, IS_APPLE_DEVICE, IS_DESKTOP, MAX_PREVIEW_SIZE } from "@/constants"
 import { useTranslation } from "react-i18next"
 import { v4 as uuidv4 } from "uuid"
 import { showInputDialog } from "../input"
@@ -30,6 +30,7 @@ import useLocation from "@/hooks/useLocation"
 import { cn, isValidFileName } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import useErrorToast from "@/hooks/useErrorToast"
+import worker from "@/lib/worker"
 
 const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
 
@@ -214,7 +215,7 @@ export const PreviewDialog = memo(() => {
 				for (const uuid in urlObjects) {
 					const object = urlObjects[uuid]
 
-					if (object) {
+					if (object && !object.startsWith("http://127.0.0.1")) {
 						globalThis.URL.revokeObjectURL(object)
 					}
 				}
@@ -262,17 +263,57 @@ export const PreviewDialog = memo(() => {
 
 			const previewType = fileNameToPreviewType(itm.name)
 
-			if (previewType === "other" || itm.size >= 256 * 1024 * 1024) {
+			if (previewType === "other" || (!IS_DESKTOP && itm.size >= MAX_PREVIEW_SIZE)) {
 				return
 			}
 
 			try {
+				if ((previewType === "audio" || previewType === "video") && IS_DESKTOP && isFileStreamable(itm.name, itm.mime)) {
+					const isDesktopHTTPOnline = await worker.httpHealthCheck({
+						url: "http://127.0.0.1:61034/ping",
+						expectedStatusCode: 200,
+						method: "GET",
+						timeout: 5000
+					})
+
+					if (isDesktopHTTPOnline) {
+						const fileBase64 = Buffer.from(
+							JSON.stringify({
+								name: itm.name,
+								mime: itm.mime,
+								size: itm.size,
+								uuid: itm.uuid,
+								bucket: itm.bucket,
+								key: itm.key,
+								version: itm.version,
+								chunks: itm.chunks,
+								region: itm.region
+							}),
+							"utf-8"
+						).toString("base64")
+
+						setURLObjects(prev => ({
+							...prev,
+							[itm.uuid]: `http://127.0.0.1:61034/stream?file=${encodeURIComponent(fileBase64)}`
+						}))
+
+						return
+					}
+
+					if (itm.size >= MAX_PREVIEW_SIZE) {
+						return
+					}
+				}
+
 				const buffer = await readFileAndSanitize({ item: itm, emitEvents: false })
 
 				if (previewType === "text" || previewType === "docx" || previewType === "md" || previewType === "code") {
 					setBuffers(prev => ({ ...prev, [itm.uuid]: buffer }))
 				} else {
-					setURLObjects(prev => ({ ...prev, [itm.uuid]: globalThis.URL.createObjectURL(new Blob([buffer], { type: itm.mime })) }))
+					setURLObjects(prev => ({
+						...prev,
+						[itm.uuid]: globalThis.URL.createObjectURL(new Blob([buffer], { type: itm.mime }))
+					}))
 				}
 			} catch (e) {
 				console.error(e)

@@ -48,6 +48,7 @@ import { type UserProfileResponse } from "@filen/sdk/dist/types/api/v3/user/prof
 import { fileNameToThumbnailType } from "@/components/dialogs/previewDialog/utils"
 import DOMPurify from "dompurify"
 import { type DirExistsResponse } from "@filen/sdk/dist/types/api/v3/dir/exists"
+import { type RemoteConfig } from "@/types"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -3030,46 +3031,14 @@ export async function workerClearThumbnailCache(): Promise<void> {
 	return clearThumbnailCache()
 }
 
-export type CDNConfig = {
-	maintenance: boolean
-	readOnly: boolean
-	announcements: CDNConfigAnnouncement[]
-	pricing: CDNConfigPricing
-}
-
-export type CDNConfigAnnouncement = {
-	uuid: string
-	title: string
-	message: string
-	active: boolean
-	timestamp: number
-	platforms: string[]
-}
-
-export type CDNConfigPricing = {
-	lifetimeEnabled: boolean
-	saleEnabled: boolean
-	plans: CDNConfigPlan[]
-}
-
-export type CDNConfigPlan = {
-	termType: number
-	id: number
-	name: string
-	cost: number
-	sale: number
-	storage: number
-	popular: boolean
-	term: string
-}
-
-export async function cdnConfig(): Promise<CDNConfig> {
+export async function cdnConfig(): Promise<RemoteConfig> {
 	await waitForInitialization()
 
 	return (
-		await axios.get("https://cdn.filen.io/cfg.json", {
+		await axios.get("https://cdn.filen.io/cfg.test.json?" + Date.now(), {
 			timeout: 60000,
-			responseType: "json"
+			responseType: "json",
+			method: "GET"
 		})
 	).data
 }
@@ -3407,5 +3376,41 @@ export async function pingAPI(): Promise<boolean> {
 		return false
 	} finally {
 		clearTimeout(timeout)
+	}
+}
+
+export async function httpHealthCheck({
+	url,
+	method = "GET",
+	expectedStatusCode = 200,
+	timeout = 5000
+}: {
+	url: string
+	expectedStatusCode?: number
+	method?: "GET" | "POST" | "HEAD"
+	timeout?: number
+}): Promise<boolean> {
+	const abortController = new AbortController()
+
+	const timeouter = setTimeout(() => {
+		abortController.abort()
+	}, timeout)
+
+	try {
+		const response = await axios({
+			url,
+			timeout,
+			method,
+			signal: abortController.signal,
+			validateStatus: () => true
+		})
+
+		clearTimeout(timeouter)
+
+		return response.status === expectedStatusCode
+	} catch (e) {
+		clearTimeout(timeouter)
+
+		return false
 	}
 }

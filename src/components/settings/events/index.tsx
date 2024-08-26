@@ -10,6 +10,7 @@ import { type UserEvent } from "@filen/sdk/dist/types/api/v3/user/events"
 import useErrorToast from "@/hooks/useErrorToast"
 import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
+import EventDialog from "./dialog"
 
 export const Events = memo(() => {
 	const windowSize = useWindowSize()
@@ -154,6 +155,7 @@ export const Events = memo(() => {
 				components={components}
 				style={style}
 			/>
+			<EventDialog />
 		</div>
 	)
 })
