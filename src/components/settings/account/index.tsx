@@ -20,6 +20,8 @@ import { useTranslation } from "react-i18next"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 import { sanitizeFileName } from "@/lib/utils"
 
+export const nickNameRegex: RegExp = /^(?! )[A-Za-z0-9 _-]{3,32}(?<! )$/
+
 export const Account = memo(() => {
 	const account = useAccount()
 	const loadingToast = useLoadingToast()
@@ -338,6 +340,12 @@ export const Account = memo(() => {
 		})
 
 		if (inputResponse.cancelled) {
+			return
+		}
+
+		if (inputResponse.value.trim().length > 0 && !nickNameRegex.test(inputResponse.value.trim())) {
+			errorToast(t("settings.dialogs.nickName.invalid"))
+
 			return
 		}
 

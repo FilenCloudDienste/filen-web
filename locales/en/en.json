@@ -751,7 +751,8 @@
 			"nickName": {
 				"title": "Edit nickname",
 				"placeholder": "New nickname",
-				"continue": "Save"
+				"continue": "Save",
+				"invalid": "Nickname must be between 3 and 32 characters long and alphanumeric."
 			},
 			"twoFactorAuthenticationRecoveryKey": {
 				"title": "Recovery key",
