@@ -1416,7 +1416,7 @@
 			"gettingTrees": "Reading local and cloud directory"
 		},
 		"empty": {
-			"title": "No syncs setup yet",
+			"title": "No syncs set up yet",
 			"description": "You can sync your local directories with the cloud or cloud directories with your device",
 			"create": "Create"
 		},

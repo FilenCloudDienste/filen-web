@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback, useState, useEffect } from "react"
+import { memo, useMemo, useCallback, useState, useEffect, Fragment } from "react"
 import {
 	ContextMenu as CM,
 	ContextMenuContent,
@@ -113,6 +113,10 @@ export const ContextMenu = memo(
 
 			return fileNameToPreviewType(item.name)
 		}, [item])
+
+		const selectedItemsContainUndecryptableItems = useMemo(() => {
+			return selectedItems.some(item => item.name.startsWith("CANNOT_DECRYPT_") && item.name.endsWith(`_${item.uuid}`))
+		}, [selectedItems])
 
 		const openDirectory = useCallback(() => {
 			if (item.type === "directory" && !location.includes("trash")) {
@@ -635,6 +639,373 @@ export const ContextMenu = memo(
 			eventEmitter.emit("openInfoDialog", item)
 		}, [item])
 
+		const contextMenuContent = useMemo((): React.ReactNode => {
+			const groups: Record<string, React.ReactNode[]> = {}
+
+			if (
+				selectedItems.length === 1 &&
+				item.type === "file" &&
+				previewType !== "other" &&
+				MAX_PREVIEW_SIZE >= item.size &&
+				!selectedItemsContainUndecryptableItems
+			) {
+				if (!groups["download"]) {
+					groups["download"] = []
+				}
+
+				groups["download"]!.push(
+					<ContextMenuItem
+						onClick={preview}
+						className="cursor-pointer gap-3"
+					>
+						<Eye size={iconSize} />
+						{t("contextMenus.item.preview")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (selectedItems.length === 1 && item.type === "directory" && !driveURLState.trash) {
+				if (!groups["open"]) {
+					groups["open"] = []
+				}
+
+				groups["open"]!.push(
+					<ContextMenuItem
+						onClick={openDirectory}
+						className="cursor-pointer gap-3"
+					>
+						<Navigation size={iconSize} />
+						{t("contextMenus.item.open")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (!selectedItemsContainUndecryptableItems) {
+				if (!groups["download"]) {
+					groups["download"] = []
+				}
+
+				groups["download"]!.push(
+					<ContextMenuItem
+						onClick={download}
+						className="cursor-pointer gap-3"
+					>
+						<Download size={iconSize} />
+						{t("contextMenus.item.download")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (
+				selectedItems.length === 1 &&
+				!driveURLState.sharedIn &&
+				!driveURLState.trash &&
+				!driveURLState.publicLink &&
+				!selectedItemsContainUndecryptableItems
+			) {
+				if (!groups["share"]) {
+					groups["share"] = []
+				}
+
+				groups["share"]!.push(
+					<ContextMenuItem
+						onClick={publicLink}
+						className="cursor-pointer gap-3"
+					>
+						<Link size={iconSize} />
+						{t("contextMenus.item.publicLink")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && !selectedItemsContainUndecryptableItems) {
+				if (!groups["share"]) {
+					groups["share"] = []
+				}
+
+				groups["share"]!.push(
+					<ContextMenuItem
+						onClick={share}
+						className="cursor-pointer gap-3"
+					>
+						<FolderOutput size={iconSize} />
+						{t("contextMenus.item.share")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (
+				item.type === "file" &&
+				selectedItems.length === 1 &&
+				!driveURLState.sharedIn &&
+				!driveURLState.trash &&
+				!driveURLState.publicLink
+			) {
+				if (!groups["versions"]) {
+					groups["versions"] = []
+				}
+
+				groups["versions"]!.push(
+					<ContextMenuItem
+						onClick={versions}
+						className="cursor-pointer gap-3"
+					>
+						<History size={iconSize} />
+						{t("contextMenus.item.versions")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink) {
+				if (!groups["favoriteInfoColor"]) {
+					groups["favoriteInfoColor"] = []
+				}
+
+				groups["favoriteInfoColor"]!.push(
+					<ContextMenuItem
+						onClick={() => toggleFavorite(!item.favorited)}
+						className="cursor-pointer gap-3"
+					>
+						<Heart size={iconSize} />
+						{item.favorited ? t("contextMenus.item.unfavorite") : t("contextMenus.item.favorite")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && selectedItems.length === 0) {
+				if (!groups["favoriteInfoColor"]) {
+					groups["favoriteInfoColor"] = []
+				}
+
+				groups["favoriteInfoColor"]!.push(
+					<ContextMenuItem
+						onClick={info}
+						className="cursor-pointer gap-3"
+					>
+						<Info size={iconSize} />
+						{t("contextMenus.item.info")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (
+				!driveURLState.sharedIn &&
+				!driveURLState.trash &&
+				!driveURLState.publicLink &&
+				item.type === "directory" &&
+				selectedItems.length === 1
+			) {
+				if (!groups["favoriteInfoColor"]) {
+					groups["favoriteInfoColor"] = []
+				}
+
+				groups["favoriteInfoColor"]!.push(
+					<ContextMenuSub>
+						<ContextMenuSubTrigger
+							className="cursor-pointer gap-3"
+							onClick={e => e.stopPropagation()}
+						>
+							<PaintBucket size={iconSize} />
+							{t("contextMenus.item.color")}
+						</ContextMenuSubTrigger>
+						<ContextMenuSubContent
+							onClick={e => e.stopPropagation()}
+							className="flex flex-col gap-1"
+						>
+							<HexColorPicker
+								color={directoryColor}
+								onChange={onColorPickerChange}
+								onClick={e => e.stopPropagation()}
+							/>
+							<Input
+								className="w-[200px]"
+								onChange={onColorInputChange}
+								value={directoryColor}
+								placeholder="#000000"
+								autoCapitalize="none"
+								autoComplete="none"
+								autoCorrect="none"
+								autoFocus={false}
+								type="text"
+							/>
+						</ContextMenuSubContent>
+					</ContextMenuSub>
+				)
+			}
+
+			if (
+				selectedItems.length === 1 &&
+				!driveURLState.sharedIn &&
+				!driveURLState.trash &&
+				!driveURLState.publicLink &&
+				!selectedItemsContainUndecryptableItems
+			) {
+				if (!groups["renameMove"]) {
+					groups["renameMove"] = []
+				}
+
+				groups["renameMove"]!.push(
+					<ContextMenuItem
+						onClick={rename}
+						className="cursor-pointer gap-3"
+					>
+						<Edit size={iconSize} />
+						{t("contextMenus.item.rename")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (
+				!driveURLState.sharedIn &&
+				!driveURLState.trash &&
+				!driveURLState.sharedOut &&
+				!driveURLState.publicLink &&
+				!driveURLState.links &&
+				!selectedItemsContainUndecryptableItems
+			) {
+				if (!groups["renameMove"]) {
+					groups["renameMove"] = []
+				}
+
+				groups["renameMove"]!.push(
+					<ContextMenuSub>
+						<ContextMenuSubTrigger
+							className="cursor-pointer gap-3"
+							onClick={e => e.stopPropagation()}
+						>
+							<Move size={iconSize} />
+							{t("contextMenus.item.move")}
+						</ContextMenuSubTrigger>
+						<ContextMenuSubContent>
+							<ContextMenuItem
+								onClick={move}
+								className="cursor-pointer gap-3"
+							>
+								{t("contextMenus.item.selectDestination")}
+							</ContextMenuItem>
+							<ContextMenuSeparator />
+							<MoveTree
+								parent={baseFolderUUID}
+								name={t("contextMenus.item.cloudDrive")}
+							/>
+						</ContextMenuSubContent>
+					</ContextMenuSub>
+				)
+			}
+
+			if (selectedItems.length === 1) {
+				if (!groups["copyId"]) {
+					groups["copyId"] = []
+				}
+
+				groups["copyId"]!.push(
+					<ContextMenuItem
+						onClick={copyId}
+						className="cursor-pointer gap-3"
+					>
+						<Copy size={iconSize} />
+						{t("contextMenus.chats.copyId")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (driveURLState.trash && !driveURLState.publicLink && !selectedItemsContainUndecryptableItems) {
+				if (!groups["trash"]) {
+					groups["trash"] = []
+				}
+
+				groups["trash"]!.push(
+					<ContextMenuItem
+						onClick={restore}
+						className="cursor-pointer gap-3"
+					>
+						<RotateCcw size={iconSize} />
+						{t("contextMenus.item.restore")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink) {
+				if (!groups["trash"]) {
+					groups["trash"] = []
+				}
+
+				groups["trash"]!.push(
+					<ContextMenuItem
+						onClick={trash}
+						className="cursor-pointer text-red-500 gap-3"
+					>
+						<Trash size={iconSize} />
+						{t("contextMenus.item.trash")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (driveURLState.trash && !driveURLState.publicLink) {
+				if (!groups["trash"]) {
+					groups["trash"] = []
+				}
+
+				groups["trash"]!.push(
+					<ContextMenuItem
+						onClick={deletePermanently}
+						className="cursor-pointer text-red-500 gap-3"
+					>
+						<Delete size={iconSize} />
+						{t("contextMenus.item.deletePermanently")}
+					</ContextMenuItem>
+				)
+			}
+
+			const groupLength = Object.keys(groups).length
+
+			return (
+				<>
+					{Object.keys(groups).map((groupKey, groupIndex) => {
+						return (
+							<Fragment key={groupKey}>
+								{groups[groupKey]!.map((node, nodeIndex) => {
+									return <Fragment key={nodeIndex}>{node}</Fragment>
+								})}
+								{groupIndex + 1 < groupLength && <ContextMenuSeparator />}
+							</Fragment>
+						)
+					})}
+				</>
+			)
+		}, [
+			selectedItems.length,
+			preview,
+			t,
+			selectedItemsContainUndecryptableItems,
+			item.size,
+			item.type,
+			previewType,
+			openDirectory,
+			driveURLState.trash,
+			download,
+			driveURLState.publicLink,
+			driveURLState.sharedIn,
+			publicLink,
+			share,
+			versions,
+			directoryColor,
+			info,
+			item.favorited,
+			onColorInputChange,
+			onColorPickerChange,
+			toggleFavorite,
+			rename,
+			move,
+			baseFolderUUID,
+			driveURLState.links,
+			driveURLState.sharedOut,
+			copyId,
+			restore,
+			deletePermanently,
+			trash
+		])
+
 		useEffect(() => {
 			window.addEventListener("keydown", keyDownListener)
 
@@ -646,210 +1017,7 @@ export const ContextMenu = memo(
 		return (
 			<CM onOpenChange={onOpenChange}>
 				<ContextMenuTrigger asChild={true}>{children}</ContextMenuTrigger>
-				<ContextMenuContent className="min-w-48">
-					{selectedItems.length === 1 && item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE >= item.size && (
-						<ContextMenuItem
-							onClick={preview}
-							className="cursor-pointer gap-3"
-						>
-							<Eye size={iconSize} />
-							{t("contextMenus.item.preview")}
-						</ContextMenuItem>
-					)}
-					{selectedItems.length === 1 && item.type === "directory" && !driveURLState.trash && (
-						<>
-							<ContextMenuItem
-								onClick={openDirectory}
-								className="cursor-pointer gap-3"
-							>
-								<Navigation size={iconSize} />
-								{t("contextMenus.item.open")}
-							</ContextMenuItem>
-							<ContextMenuSeparator />
-						</>
-					)}
-					<ContextMenuItem
-						onClick={download}
-						className="cursor-pointer gap-3"
-					>
-						<Download size={iconSize} />
-						{t("contextMenus.item.download")}
-					</ContextMenuItem>
-					{!driveURLState.publicLink && !driveURLState.sharedIn && !driveURLState.trash && <ContextMenuSeparator />}
-					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
-						<ContextMenuItem
-							onClick={publicLink}
-							className="cursor-pointer gap-3"
-						>
-							<Link size={iconSize} />
-							{t("contextMenus.item.publicLink")}
-						</ContextMenuItem>
-					)}
-					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
-						<>
-							<ContextMenuItem
-								onClick={share}
-								className="cursor-pointer gap-3"
-							>
-								<FolderOutput size={iconSize} />
-								{t("contextMenus.item.share")}
-							</ContextMenuItem>
-							<ContextMenuSeparator />
-						</>
-					)}
-					{item.type === "file" &&
-						selectedItems.length === 1 &&
-						!driveURLState.sharedIn &&
-						!driveURLState.trash &&
-						!driveURLState.publicLink && (
-							<>
-								<ContextMenuItem
-									onClick={versions}
-									className="cursor-pointer gap-3"
-								>
-									<History size={iconSize} />
-									{t("contextMenus.item.versions")}
-								</ContextMenuItem>
-								<ContextMenuSeparator />
-							</>
-						)}
-					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
-						<>
-							<ContextMenuItem
-								onClick={() => toggleFavorite(!item.favorited)}
-								className="cursor-pointer gap-3"
-							>
-								<Heart size={iconSize} />
-								{item.favorited ? t("contextMenus.item.unfavorite") : t("contextMenus.item.favorite")}
-							</ContextMenuItem>
-							<ContextMenuItem
-								onClick={info}
-								className="cursor-pointer gap-3"
-							>
-								<Info size={iconSize} />
-								{t("contextMenus.item.info")}
-							</ContextMenuItem>
-							{item.type === "directory" && (
-								<ContextMenuSub>
-									<ContextMenuSubTrigger
-										className="cursor-pointer gap-3"
-										onClick={e => e.stopPropagation()}
-									>
-										<PaintBucket size={iconSize} />
-										{t("contextMenus.item.color")}
-									</ContextMenuSubTrigger>
-									<ContextMenuSubContent
-										onClick={e => e.stopPropagation()}
-										className="flex flex-col gap-1"
-									>
-										<HexColorPicker
-											color={directoryColor}
-											onChange={onColorPickerChange}
-											onClick={e => e.stopPropagation()}
-										/>
-										<Input
-											className="w-[200px]"
-											onChange={onColorInputChange}
-											value={directoryColor}
-											placeholder="#000000"
-											autoCapitalize="none"
-											autoComplete="none"
-											autoCorrect="none"
-											autoFocus={false}
-											type="text"
-										/>
-									</ContextMenuSubContent>
-								</ContextMenuSub>
-							)}
-							<ContextMenuSeparator />
-						</>
-					)}
-					{selectedItems.length === 1 && !driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
-						<ContextMenuItem
-							onClick={rename}
-							className="cursor-pointer gap-3"
-						>
-							<Edit size={iconSize} />
-							{t("contextMenus.item.rename")}
-						</ContextMenuItem>
-					)}
-					{!driveURLState.sharedIn &&
-						!driveURLState.trash &&
-						!driveURLState.sharedOut &&
-						!driveURLState.publicLink &&
-						!driveURLState.links && (
-							<>
-								<ContextMenuSub>
-									<ContextMenuSubTrigger
-										className="cursor-pointer gap-3"
-										onClick={e => e.stopPropagation()}
-									>
-										<Move size={iconSize} />
-										{t("contextMenus.item.move")}
-									</ContextMenuSubTrigger>
-									<ContextMenuSubContent>
-										<ContextMenuItem
-											onClick={move}
-											className="cursor-pointer gap-3"
-										>
-											{t("contextMenus.item.selectDestination")}
-										</ContextMenuItem>
-										<ContextMenuSeparator />
-										<MoveTree
-											parent={baseFolderUUID}
-											name={t("contextMenus.item.cloudDrive")}
-										/>
-									</ContextMenuSubContent>
-								</ContextMenuSub>
-								{selectedItems.length > 1 && <ContextMenuSeparator />}
-							</>
-						)}
-					{selectedItems.length === 1 && !publicLinkURLState.isPublicLink && (
-						<>
-							<ContextMenuSeparator />
-							<ContextMenuItem
-								onClick={copyId}
-								className="cursor-pointer gap-3"
-							>
-								<Copy size={iconSize} />
-								{t("contextMenus.chats.copyId")}
-							</ContextMenuItem>
-							{!driveURLState.sharedIn && <ContextMenuSeparator />}
-						</>
-					)}
-					{driveURLState.trash && !driveURLState.publicLink && (
-						<>
-							<ContextMenuItem
-								onClick={restore}
-								className="cursor-pointer gap-3"
-							>
-								<RotateCcw size={iconSize} />
-								{t("contextMenus.item.restore")}
-							</ContextMenuItem>
-						</>
-					)}
-					{!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && (
-						<ContextMenuItem
-							onClick={trash}
-							className="cursor-pointer text-red-500 gap-3"
-						>
-							<Trash size={iconSize} />
-							{t("contextMenus.item.trash")}
-						</ContextMenuItem>
-					)}
-					{driveURLState.trash && !driveURLState.publicLink && (
-						<>
-							<ContextMenuSeparator />
-							<ContextMenuItem
-								onClick={deletePermanently}
-								className="cursor-pointer text-red-500 gap-3"
-							>
-								<Delete size={iconSize} />
-								{t("contextMenus.item.deletePermanently")}
-							</ContextMenuItem>
-						</>
-					)}
-				</ContextMenuContent>
+				<ContextMenuContent className="min-w-48">{contextMenuContent}</ContextMenuContent>
 			</CM>
 		)
 	}
