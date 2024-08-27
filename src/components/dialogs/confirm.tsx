@@ -22,6 +22,7 @@ export type ConfirmDialogProps = {
 	continueButtonVariant?: "destructive" | "default" | "link" | "outline" | "secondary" | "ghost" | null
 	description: string
 	withInputField?: string
+	cancelButtonText?: string
 }
 
 export async function showConfirmDialog({
@@ -29,7 +30,8 @@ export async function showConfirmDialog({
 	continueButtonText,
 	description,
 	continueButtonVariant,
-	withInputField
+	withInputField,
+	cancelButtonText
 }: ConfirmDialogProps): Promise<boolean> {
 	return await new Promise<boolean>(resolve => {
 		const id = Math.random().toString(16).slice(2)
@@ -50,7 +52,8 @@ export async function showConfirmDialog({
 			continueButtonText,
 			continueButtonVariant,
 			description,
-			withInputField
+			withInputField,
+			cancelButtonText
 		})
 	})
 }
@@ -171,7 +174,9 @@ export const ConfirmDialog = memo(() => {
 					)}
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel onClick={cancel}>{t("dialogs.cancel")}</AlertDialogCancel>
+					<AlertDialogCancel onClick={cancel}>
+						{props.cancelButtonText ? props.cancelButtonText : t("dialogs.cancel")}
+					</AlertDialogCancel>
 					<Button
 						onClick={submit}
 						variant={props.continueButtonVariant}

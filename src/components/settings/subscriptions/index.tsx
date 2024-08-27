@@ -36,6 +36,7 @@ export const Subscriptions = memo(() => {
 					title: t("settings.dialogs.cancelSubscription.title"),
 					continueButtonText: t("settings.dialogs.cancelSubscription.continue"),
 					description: t("settings.dialogs.cancelSubscription.description"),
+					cancelButtonText: t("settings.dialogs.cancelSubscription.close"),
 					continueButtonVariant: "destructive"
 				}))
 			) {

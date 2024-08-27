@@ -28,6 +28,8 @@ export function fileNameToPreviewType(name: string) {
 		case ".wmv":
 		case ".mov":
 		case ".avi":
+		case ".mkv":
+		case ".webm":
 		case ".mp4": {
 			return "video"
 		}
@@ -158,22 +160,38 @@ export function ensureTextFileExtension(filename: string): string {
 
 export const streamableMimeTypes: string[] = [
 	"video/mp4",
-	// eslint-disable-next-line quotes
-	'video/webm; codecs="vp8, vorbis"',
-	// eslint-disable-next-line quotes
-	'video/webm; codecs="vp9, opus"',
-	// eslint-disable-next-line quotes
-	'video/ogg; codecs="theora, vorbis"',
+	"video/webm",
+	"video/ogg",
+	"video/x-ms-wmv",
+	"video/x-ms-asf",
+	"video/x-flv",
+	"video/x-matroska",
+	"video/x-mkv",
+	"video/quicktime",
+	"video/x-msvideo",
+	"video/x-mpeg",
+	"video/x-mpeg2",
+	"video/x-mpeg4",
+	"video/x-m4v",
+	"video/x-m4a",
+	"video/x-3gp",
+	"video/x-3gpp",
+	"video/x-3gpp2",
+	"video/x-flv",
 	"audio/mpeg",
-	"audio/aac",
-	"audio/wav",
-	// eslint-disable-next-line quotes
-	'audio/ogg; codecs="vorbis"',
-	// eslint-disable-next-line quotes
-	'audio/ogg; codecs="opus"',
-	// eslint-disable-next-line quotes
-	'audio/webm; codecs="opus"',
-	"audio/flac"
+	"audio/x-mp3",
+	"audio/x-wav",
+	"audio/x-m4a",
+	"audio/x-m4b",
+	"audio/x-m4r",
+	"audio/x-m4p",
+	"audio/x-aac",
+	"audio/x-aiff",
+	"audio/x-au",
+	"audio/x-flac",
+	"audio/x-ogg",
+	"audio/x-vorbis",
+	"audio/x-opus"
 ]
 
 export function isFileStreamable(name: string, mime: string): boolean {

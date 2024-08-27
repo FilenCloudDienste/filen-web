@@ -143,7 +143,7 @@ export const Content = memo(({ note }: { note: Note }) => {
 
 	const keyDownListener = useCallback(
 		(e: KeyboardEvent) => {
-			if (e.key === "s" && (e.ctrlKey || e.metaKey) && value.length > 0 && hasWritePermissions) {
+			if (e.key === "s" && (e.ctrlKey || e.metaKey) && hasWritePermissions) {
 				e.preventDefault()
 				e.stopPropagation()
 

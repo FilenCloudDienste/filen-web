@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react"
+import { memo, useCallback, useMemo } from "react"
 import useAccount from "@/hooks/useAccount"
 import Section from "../section"
 import { Switch } from "@/components/ui/switch"
@@ -14,8 +14,12 @@ import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
-import { cn, sanitizeFileName } from "@/lib/utils"
+import { cn, sanitizeFileName, downloadStringAsFile } from "@/lib/utils"
 import { AlertTriangle } from "lucide-react"
+import { Select, SelectItem, SelectValue, SelectTrigger, SelectContent } from "@/components/ui/select"
+import { useLocalStorage } from "@uidotdev/usehooks"
+import { IS_DESKTOP } from "@/constants"
+import LockPinDialog from "./dialogs/lockPin"
 
 export const Security = memo(() => {
 	const account = useAccount()
@@ -24,6 +28,67 @@ export const Security = memo(() => {
 	const { masterKeys, userId } = useSDKConfig()
 	const { t } = useTranslation()
 	const settingsContainerSize = useSettingsContainerSize()
+	const [lockTimeout, setLockTimeout] = useLocalStorage<number>("lockTimeout", 0)
+
+	const lockTimeoutToString = useMemo(() => {
+		switch (lockTimeout) {
+			case 0: {
+				return t("settings.security.sections.lockTimeout.values.never")
+			}
+
+			case 1: {
+				return t("settings.security.sections.lockTimeout.values.immediately")
+			}
+
+			case 60: {
+				return t("settings.security.sections.lockTimeout.values.oneMinute")
+			}
+
+			case 180: {
+				return t("settings.security.sections.lockTimeout.values.threeMinutes")
+			}
+
+			case 300: {
+				return t("settings.security.sections.lockTimeout.values.fiveMinutes")
+			}
+
+			case 600: {
+				return t("settings.security.sections.lockTimeout.values.tenMinutes")
+			}
+
+			case 900: {
+				return t("settings.security.sections.lockTimeout.values.fifteenMinutes")
+			}
+
+			case 1800: {
+				return t("settings.security.sections.lockTimeout.values.thirtyMinutes")
+			}
+
+			case 3600: {
+				return t("settings.security.sections.lockTimeout.values.oneHour")
+			}
+
+			case 7200: {
+				return t("settings.security.sections.lockTimeout.values.threeHours")
+			}
+
+			case 21600: {
+				return t("settings.security.sections.lockTimeout.values.sixHours")
+			}
+
+			case 43200: {
+				return t("settings.security.sections.lockTimeout.values.twelveHours")
+			}
+
+			case 86400: {
+				return t("settings.security.sections.lockTimeout.values.twentyFourHours")
+			}
+
+			default: {
+				return t("settings.security.sections.lockTimeout.values.never")
+			}
+		}
+	}, [lockTimeout, t])
 
 	const onTwoFactorChange = useCallback(
 		async (checked: boolean) => {
@@ -111,32 +176,36 @@ export const Security = memo(() => {
 			return
 		}
 
+		const fileName = `${sanitizeFileName(account.account.email)}.masterKeys.txt`
+		const base64 = Buffer.from(
+			masterKeys.map(key => "_VALID_FILEN_MASTERKEY_" + key + "@" + userId + "_VALID_FILEN_MASTERKEY_").join("|"),
+			"utf-8"
+		).toString("base64")
+		let didWrite = false
+
 		try {
 			const fileHandle = await showSaveFilePicker({
-				suggestedName: `${sanitizeFileName(account.account.email)}.masterKeys.txt`
+				suggestedName: fileName
 			})
 			const writer = await fileHandle.createWritable()
-
 			const toast = loadingToast()
 
 			try {
-				await writer.write(
-					Buffer.from(
-						masterKeys.map(key => "_VALID_FILEN_MASTERKEY_" + key + "@" + userId + "_VALID_FILEN_MASTERKEY_").join("|"),
-						"utf-8"
-					).toString("base64")
-				)
-
+				await writer.write(base64)
 				await writer.close()
 
-				await worker.didExportMasterKeys()
-
-				eventEmitter.emit("useAccountRefetch")
+				didWrite = true
 			} catch (e) {
 				console.error(e)
 
 				if (!(e as unknown as Error).toString().includes("abort")) {
-					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+					if (!didWrite) {
+						downloadStringAsFile(fileName, base64)
+
+						didWrite = true
+					} else {
+						errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+					}
 				}
 			} finally {
 				toast.dismiss()
@@ -145,17 +214,34 @@ export const Security = memo(() => {
 			console.error(e)
 
 			if (!(e as unknown as Error).toString().includes("abort")) {
-				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				if (!didWrite) {
+					downloadStringAsFile(fileName, base64)
+
+					didWrite = true
+				} else {
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				}
 			}
 		} finally {
-			const input = document.getElementById("avatar-input") as HTMLInputElement
+			await worker.didExportMasterKeys().catch(() => {})
 
-			input.value = ""
+			eventEmitter.emit("useAccountRefetch")
 		}
 	}, [loadingToast, errorToast, account, masterKeys, userId])
 
 	const changePassword = useCallback(() => {
 		eventEmitter.emit("openChangePasswordDialog")
+	}, [])
+
+	const onLockTimeoutChange = useCallback(
+		(timeout: string) => {
+			setLockTimeout(parseInt(timeout))
+		},
+		[setLockTimeout]
+	)
+
+	const openLockPinDialog = useCallback(() => {
+		eventEmitter.emit("openLockPinDialog")
 	}, [])
 
 	if (!account) {
@@ -195,6 +281,57 @@ export const Security = memo(() => {
 							onCheckedChange={onTwoFactorChange}
 						/>
 					</Section>
+					{IS_DESKTOP && (
+						<>
+							<Section
+								name={t("settings.security.sections.lockTimeout.name")}
+								info={t("settings.security.sections.lockTimeout.info")}
+								className="mt-10"
+							>
+								<Select onValueChange={onLockTimeoutChange}>
+									<SelectTrigger className="w-[180px]">
+										<SelectValue placeholder={lockTimeoutToString} />
+									</SelectTrigger>
+									<SelectContent className="max-h-[200px]">
+										<SelectItem value="0">{t("settings.security.sections.lockTimeout.values.never")}</SelectItem>
+										<SelectItem value="60">{t("settings.security.sections.lockTimeout.values.oneMinute")}</SelectItem>
+										<SelectItem value="180">
+											{t("settings.security.sections.lockTimeout.values.threeMinutes")}
+										</SelectItem>
+										<SelectItem value="300">
+											{t("settings.security.sections.lockTimeout.values.fiveMinutes")}
+										</SelectItem>
+										<SelectItem value="600">{t("settings.security.sections.lockTimeout.values.tenMinutes")}</SelectItem>
+										<SelectItem value="1800">
+											{t("settings.security.sections.lockTimeout.values.thirtyMinutes")}
+										</SelectItem>
+										<SelectItem value="3600">{t("settings.security.sections.lockTimeout.values.oneHour")}</SelectItem>
+										<SelectItem value="7200">
+											{t("settings.security.sections.lockTimeout.values.threeHours")}
+										</SelectItem>
+										<SelectItem value="21600">{t("settings.security.sections.lockTimeout.values.sixHours")}</SelectItem>
+										<SelectItem value="43200">
+											{t("settings.security.sections.lockTimeout.values.twelveHours")}
+										</SelectItem>
+										<SelectItem value="86400">
+											{t("settings.security.sections.lockTimeout.values.twentyFourHours")}
+										</SelectItem>
+									</SelectContent>
+								</Select>
+							</Section>
+							<Section
+								name={t("settings.security.sections.lockPin.name")}
+								info={t("settings.security.sections.lockPin.info")}
+							>
+								<p
+									className="underline cursor-pointer"
+									onClick={openLockPinDialog}
+								>
+									{t("settings.security.sections.lockPin.action")}
+								</p>
+							</Section>
+						</>
+					)}
 					<Section
 						name={t("settings.security.sections.exportMasterKeys.name")}
 						info={t("settings.security.sections.exportMasterKeys.info")}
@@ -224,6 +361,7 @@ export const Security = memo(() => {
 				</div>
 			</div>
 			<ChangePasswordDialog />
+			<LockPinDialog />
 		</div>
 	)
 })

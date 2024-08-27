@@ -2,8 +2,7 @@ import { memo, useCallback, useRef } from "react"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import { cn } from "@/lib/utils"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
-import mammoth from "mammoth"
-import "./docx.css"
+import * as docx from "docx-preview"
 
 export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
 	const container = useRef<HTMLDivElement>(null)
@@ -15,16 +14,20 @@ export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
 		}
 
 		try {
-			const result = await mammoth.convertToHtml(
-				{ arrayBuffer: buffer },
-				{ includeDefaultStyleMap: false, includeEmbeddedStyleMap: false }
-			)
-
-			container.current.innerHTML = result.value
-
-			if (result.messages.length > 0) {
-				console.error(result.messages)
-			}
+			await docx.renderAsync(buffer, container.current, container.current, {
+				ignoreHeight: false,
+				ignoreWidth: false,
+				ignoreFonts: false,
+				breakPages: true,
+				debug: import.meta.env.DEV,
+				experimental: true,
+				inWrapper: true,
+				trimXmlDeclaration: true,
+				ignoreLastRenderedPageBreak: true,
+				renderHeaders: true,
+				renderFooters: true,
+				renderFootnotes: true
+			})
 		} catch (e) {
 			console.error(e)
 		}

@@ -31,6 +31,7 @@ export const Video = memo(({ urlObject }: { urlObject: string }) => {
 				autoPlay={!publicLinkURLState.isPublicLink}
 				onVolumeChange={onVolumeChange}
 				src={urlObject}
+				controlsList="nodownload"
 				className={cn(
 					"w-full object-contain",
 					publicLinkURLState.isPublicLink

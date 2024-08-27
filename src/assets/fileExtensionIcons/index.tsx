@@ -82,6 +82,8 @@ export function fileNameToSVGIcon(name: string) {
 		case ".wmv":
 		case ".mov":
 		case ".avi":
+		case ".mkv":
+		case ".webm":
 		case ".mp4": {
 			return video
 		}
@@ -123,8 +125,9 @@ export function fileNameToSVGIcon(name: string) {
 		case ".vue":
 		case ".svelte":
 		case ".vbs":
-		case ".cobol":
 		case ".toml":
+		case ".cobol":
+		case ".h":
 		case ".conf":
 		case ".sh":
 		case ".rs":
@@ -141,6 +144,7 @@ export function fileNameToSVGIcon(name: string) {
 		}
 
 		case ".jar":
+		case ".exe":
 		case ".bin": {
 			return exe
 		}

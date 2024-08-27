@@ -30,6 +30,7 @@ export const Audio = memo(({ urlObject }: { urlObject: string }) => {
 				controls={true}
 				autoPlay={!publicLinkURLState.isPublicLink}
 				onVolumeChange={onVolumeChange}
+				controlsList="nodownload"
 				src={urlObject}
 				className={cn(
 					"w-full object-contain",

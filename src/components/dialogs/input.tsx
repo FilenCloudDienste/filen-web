@@ -21,6 +21,9 @@ export type InputDialogProps = {
 	value: string
 	autoFocusInput: boolean
 	placeholder: string
+	allowEmptyValue?: boolean
+	minLength?: number
+	maxLength?: number
 }
 
 export type ShowInputDialogResponse =
@@ -39,7 +42,10 @@ export async function showInputDialog({
 	continueButtonVariant,
 	value,
 	autoFocusInput,
-	placeholder
+	placeholder,
+	allowEmptyValue = false,
+	minLength,
+	maxLength
 }: InputDialogProps): Promise<ShowInputDialogResponse> {
 	return await new Promise<ShowInputDialogResponse>(resolve => {
 		const id = Math.random().toString(16).slice(2)
@@ -69,7 +75,10 @@ export async function showInputDialog({
 			description,
 			value,
 			autoFocusInput,
-			placeholder
+			placeholder,
+			allowEmptyValue,
+			minLength,
+			maxLength
 		})
 	})
 }
@@ -84,7 +93,10 @@ export const InputDialog = memo(() => {
 		continueButtonVariant: "default",
 		value: "",
 		autoFocusInput: true,
-		placeholder: ""
+		placeholder: "",
+		allowEmptyValue: false,
+		minLength: undefined,
+		maxLength: undefined
 	})
 	const requestId = useRef<string>("")
 	const didSubmit = useRef<boolean>(false)
@@ -92,7 +104,7 @@ export const InputDialog = memo(() => {
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	const submit = useCallback(() => {
-		if (didSubmit.current || value.length === 0) {
+		if (didSubmit.current || (value.length === 0 && !props.allowEmptyValue)) {
 			return
 		}
 
@@ -106,7 +118,7 @@ export const InputDialog = memo(() => {
 
 		setOpen(false)
 		setValue("")
-	}, [value])
+	}, [value, props.allowEmptyValue])
 
 	const cancel = useCallback(() => {
 		if (didSubmit.current) {
@@ -183,6 +195,8 @@ export const InputDialog = memo(() => {
 					autoCapitalize="none"
 					autoComplete="none"
 					autoCorrect="none"
+					minLength={props.minLength}
+					maxLength={props.maxLength}
 				/>
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={cancel}>{t("dialogs.cancel")}</AlertDialogCancel>

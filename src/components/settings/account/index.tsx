@@ -333,10 +333,11 @@ export const Account = memo(() => {
 			value: account.account.nickName,
 			autoFocusInput: true,
 			placeholder: t("settings.dialogs.nickName.placeholder"),
-			continueButtonVariant: "default"
+			continueButtonVariant: "default",
+			allowEmptyValue: true
 		})
 
-		if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {
+		if (inputResponse.cancelled) {
 			return
 		}
 

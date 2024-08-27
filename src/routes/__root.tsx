@@ -39,6 +39,7 @@ import DesktopUpdateDialog from "@/components/dialogs/desktopUpdate"
 import StorageDialog from "@/components/dialogs/storage"
 import RemoteConfigHandler from "@/components/remoteConfigHandler"
 import MaintenanceDialog from "@/components/dialogs/maintenance"
+import LockDialog from "@/components/dialogs/lock"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -160,6 +161,7 @@ export const Root = memo(() => {
 										<DesktopListener />
 										<InfoDialog />
 										<StorageDialog />
+										<LockDialog />
 									</>
 								) : (
 									<DropZone>
