@@ -158,7 +158,10 @@ export const CreateSyncDialog = memo(() => {
 					return
 				}
 
-				if (!(await window.desktopAPI.isPathWritable(createState.localPath))) {
+				if (
+					!(await window.desktopAPI.isPathWritable(createState.localPath)) ||
+					!(await window.desktopAPI.isPathReadable(createState.localPath))
+				) {
 					errorToast(t("dialogs.createSync.errors.localPathNotWritable"))
 
 					return
@@ -168,6 +171,21 @@ export const CreateSyncDialog = memo(() => {
 					errorToast(t("dialogs.createSync.errors.remotePathAlreadyConfigured"))
 
 					return
+				}
+
+				const diskType = await window.desktopAPI.getDiskType(createState.localPath)
+
+				if (diskType && !diskType.isPhysical) {
+					if (
+						!(await showConfirmDialog({
+							title: t("dialogs.createSync.warnings.localDirectoryNotPhysical.title"),
+							continueButtonText: t("dialogs.createSync.warnings.localDirectoryNotPhysical.continue"),
+							description: t("dialogs.createSync.warnings.localDirectoryNotPhysical.description"),
+							continueButtonVariant: "destructive"
+						}))
+					) {
+						return
+					}
 				}
 
 				const itemCount = await window.desktopAPI.getLocalDirectoryItemCount(createState.localPath)

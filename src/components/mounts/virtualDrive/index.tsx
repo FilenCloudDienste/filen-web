@@ -144,14 +144,6 @@ export const VirtualDrive = memo(() => {
 				return
 			}
 
-			if ((await isVirtualDriveMounted()).mounted) {
-				await window.desktopAPI.restartVirtualDrive()
-
-				if (!(await isVirtualDriveMounted()).mounted) {
-					throw new Error("Could not start virtual drive.")
-				}
-			}
-
 			await Promise.all([isMountedQuery.refetch(), availableDrivesQuery.refetch()])
 
 			setDesktopConfig(prev => ({
@@ -187,14 +179,6 @@ export const VirtualDrive = memo(() => {
 			setEnablingVirtualDrive(true)
 
 			try {
-				if ((await isVirtualDriveMounted()).mounted) {
-					await window.desktopAPI.restartVirtualDrive()
-
-					if (!(await isVirtualDriveMounted()).mounted) {
-						throw new Error("Could not start virtual drive.")
-					}
-				}
-
 				await Promise.all([isMountedQuery.refetch(), availableDrivesQuery.refetch()])
 
 				setDesktopConfig(prev => ({
@@ -223,14 +207,14 @@ export const VirtualDrive = memo(() => {
 		[enablingVirtualDrive, setEnablingVirtualDrive, errorToast, setDesktopConfig, isMountedQuery, availableDrivesQuery]
 	)
 
-	const onCheckedChange = useCallback(
-		async (checked: boolean) => {
+	const onEnabledChanged = useCallback(
+		async (enabled: boolean) => {
 			if (enablingVirtualDrive) {
 				return
 			}
 
 			if (
-				!checked &&
+				!enabled &&
 				!(await showConfirmDialog({
 					title: t("mounts.virtualDrive.dialogs.disable.title"),
 					continueButtonText: t("mounts.virtualDrive.dialogs.disable.continue"),
@@ -244,7 +228,7 @@ export const VirtualDrive = memo(() => {
 			setEnablingVirtualDrive(true)
 
 			try {
-				if (checked) {
+				if (enabled) {
 					if (
 						window.desktopAPI.osPlatform() !== "win32" &&
 						!(await window.desktopAPI.doesPathStartWithHomeDir(desktopConfig.virtualDriveConfig.mountPoint))
@@ -291,7 +275,7 @@ export const VirtualDrive = memo(() => {
 					...prev,
 					virtualDriveConfig: {
 						...prev.virtualDriveConfig,
-						enabled: checked
+						enabled
 					}
 				}))
 			} catch (e) {
@@ -331,32 +315,6 @@ export const VirtualDrive = memo(() => {
 			setEnablingVirtualDrive(true)
 
 			try {
-				if (
-					window.desktopAPI.osPlatform() !== "win32" &&
-					!(await window.desktopAPI.isUnixMountPointValid(desktopConfig.virtualDriveConfig.mountPoint))
-				) {
-					errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
-
-					return
-				}
-
-				if (
-					window.desktopAPI.osPlatform() !== "win32" &&
-					!(await window.desktopAPI.isUnixMountPointEmpty(desktopConfig.virtualDriveConfig.mountPoint))
-				) {
-					errorToast(t("mounts.virtualDrive.errors.mountPointNotEmpty"))
-
-					return
-				}
-
-				if ((await isVirtualDriveMounted()).mounted) {
-					await window.desktopAPI.restartVirtualDrive()
-
-					if (!(await isVirtualDriveMounted()).mounted) {
-						throw new Error("Could not start virtual drive.")
-					}
-				}
-
 				await Promise.all([isMountedQuery.refetch(), availableDrivesQuery.refetch(), availableCacheSizeQuery.refetch()])
 
 				setDesktopConfig(prev => ({
@@ -386,12 +344,10 @@ export const VirtualDrive = memo(() => {
 			enablingVirtualDrive,
 			setEnablingVirtualDrive,
 			errorToast,
-			desktopConfig.virtualDriveConfig.mountPoint,
 			setDesktopConfig,
 			isMountedQuery,
 			availableDrivesQuery,
-			availableCacheSizeQuery,
-			t
+			availableCacheSizeQuery
 		]
 	)
 
@@ -432,12 +388,7 @@ export const VirtualDrive = memo(() => {
 		setEnablingVirtualDrive(true)
 
 		try {
-			await window.desktopAPI.stopVirtualDrive()
 			await window.desktopAPI.virtualDriveCleanupCache()
-
-			if ((await isVirtualDriveMounted()).mounted) {
-				await window.desktopAPI.restartVirtualDrive()
-			}
 
 			await Promise.all([cacheSizeQuery.refetch(), isMountedQuery.refetch(), availableDrivesQuery.refetch()])
 		} catch (e) {
@@ -475,6 +426,94 @@ export const VirtualDrive = memo(() => {
 			window.open("https://launchpad.net/ubuntu/+source/fuse3", "_blank")
 		}
 	}, [])
+
+	const changeCachePath = useCallback(async () => {
+		if (enablingVirtualDrive) {
+			return
+		}
+
+		setEnablingVirtualDrive(true)
+
+		try {
+			const path = await window.desktopAPI.selectDirectory(false)
+
+			if (path.cancelled || !path.paths[0]) {
+				return
+			}
+
+			if (!(await window.desktopAPI.isPathReadable(path.paths[0])) || !(await window.desktopAPI.isPathWritable(path.paths[0]))) {
+				errorToast(t("mounts.virtualDrive.errors.cachePathNotReadableWritable"))
+
+				return
+			}
+
+			if (path.paths[0].length > 100) {
+				errorToast(t("mounts.virtualDrive.errors.invalidCachePathLength"))
+
+				return
+			}
+
+			const diskType = await window.desktopAPI.getDiskType(path.paths[0])
+
+			if (!diskType || !diskType.isPhysical) {
+				errorToast(t("mounts.virtualDrive.errors.invalidCachePath"))
+
+				return
+			}
+
+			await Promise.all([
+				isMountedQuery.refetch(),
+				availableDrivesQuery.refetch(),
+				availableCacheSizeQuery.refetch(),
+				cacheSizeQuery.refetch()
+			])
+
+			setDesktopConfig(prev => ({
+				...prev,
+				virtualDriveConfig: {
+					...prev.virtualDriveConfig,
+					cachePath: path.paths[0]!
+				}
+			}))
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+			setDesktopConfig(prev => ({
+				...prev,
+				virtualDriveConfig: {
+					...prev.virtualDriveConfig,
+					enabled: false
+				}
+			}))
+		} finally {
+			setEnablingVirtualDrive(false)
+		}
+	}, [
+		availableCacheSizeQuery,
+		availableDrivesQuery,
+		enablingVirtualDrive,
+		errorToast,
+		isMountedQuery,
+		setDesktopConfig,
+		setEnablingVirtualDrive,
+		t,
+		cacheSizeQuery
+	])
+
+	const onReadOnlyChange = useCallback(
+		(readOnly: boolean) => {
+			setDesktopConfig(prev => ({
+				...prev,
+				virtualDriveConfig: {
+					...prev.virtualDriveConfig,
+					readOnly
+				}
+			}))
+		},
+		[setDesktopConfig]
+	)
 
 	useEffect(() => {
 		const refetchVirtualDriveListener = eventEmitter.on("refetchVirtualDrive", () => {
@@ -556,7 +595,7 @@ export const VirtualDrive = memo(() => {
 						<Switch
 							disabled={enablingVirtualDrive}
 							checked={isMountedQuery.isSuccess && isMountedQuery.data.mounted}
-							onCheckedChange={onCheckedChange}
+							onCheckedChange={onEnabledChanged}
 						/>
 					</Section>
 					{window.desktopAPI.osPlatform() === "win32" ? (
@@ -616,6 +655,16 @@ export const VirtualDrive = memo(() => {
 						</Section>
 					)}
 					<Section
+						name={t("mounts.virtualDrive.sections.readOnly.name")}
+						info={t("mounts.virtualDrive.sections.readOnly.info")}
+					>
+						<Switch
+							disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+							checked={desktopConfig.virtualDriveConfig.readOnly}
+							onCheckedChange={onReadOnlyChange}
+						/>
+					</Section>
+					<Section
 						name={t("mounts.virtualDrive.sections.cache.name")}
 						info={t("mounts.virtualDrive.sections.cache.info")}
 					>
@@ -641,6 +690,35 @@ export const VirtualDrive = memo(() => {
 						) : (
 							<Loader className="text-muted-foreground animate-spin-medium" />
 						)}
+					</Section>
+					<Section
+						name={t("mounts.virtualDrive.sections.cachePath.name")}
+						info={t("mounts.virtualDrive.sections.cachePath.info")}
+					>
+						<div className="flex flex-row gap-1 items-center">
+							{desktopConfig.virtualDriveConfig.cachePath && (
+								<Input
+									value={desktopConfig.virtualDriveConfig.cachePath}
+									type="text"
+									onChange={e => {
+										e.preventDefault()
+										e.target.blur()
+									}}
+									className="min-w-[250px]"
+									autoCapitalize="none"
+									autoComplete="none"
+									autoCorrect="none"
+									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+								/>
+							)}
+							<Button
+								size="sm"
+								onClick={changeCachePath}
+								disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+							>
+								<Edit size={18} />
+							</Button>
+						</div>
 					</Section>
 					<Section
 						name={t("mounts.virtualDrive.sections.cacheSize.name")}

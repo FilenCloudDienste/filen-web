@@ -435,6 +435,11 @@
 					"title": "Warning",
 					"continue": "Continue",
 					"description": "Syncing more than {{count}} items can slow down your system, especially on lower-end devices. If you're on a high-end machine, you may proceed, but we recommend syncing fewer files to avoid potential issues."
+				},
+				"localDirectoryNotPhysical": {
+					"title": "Warning",
+					"continue": "Continue",
+					"description": "The local directory you have selected does not seem to be on a physical disk. This can cause sync issues and unpredictable behaviour. Do you want to continue?"
 				}
 			}
 		},
@@ -1265,6 +1270,14 @@
 				"cacheSize": {
 					"name": "Cache size",
 					"info": "We recommend setting the cache size as high as possible. The client will use your local disk to significantly speed up the virtual drive"
+				},
+				"cachePath": {
+					"name": "Cache path",
+					"info": "Change the cache path of the virtual drive. Must be on an internal disk. Will use the app installation directory if unchanged"
+				},
+				"readOnly": {
+					"name": "Read only",
+					"info": "Mount the virtual drive as read only"
 				}
 			},
 			"dialogs": {
@@ -1283,7 +1296,10 @@
 				"invalidMountPoint": "Invalid mount point.",
 				"mountPointNotEmpty": "Mount point needs to be an empty directory.",
 				"pathNotInHomeDir": "Mount point needs to be inside your home directory (/home/<yourUsername>).",
-				"pathNotInUserDir": "Mount point needs to be inside your user directory (/Users/<yourUsername>)."
+				"pathNotInUserDir": "Mount point needs to be inside your user directory (/Users/<yourUsername>).",
+				"invalidCachePath": "Cache path must be on an internal disk with at least 10 GB of free space.",
+				"cachePathNotReadableWritable": "Cache path is not readable or writable.",
+				"invalidCachePathLength": "Cache path is too long."
 			}
 		},
 		"webdav": {

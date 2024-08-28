@@ -959,20 +959,16 @@ export const ContextMenu = memo(
 
 			const groupLength = Object.keys(groups).length
 
-			return (
-				<>
-					{Object.keys(groups).map((groupKey, groupIndex) => {
-						return (
-							<Fragment key={groupKey}>
-								{groups[groupKey]!.map((node, nodeIndex) => {
-									return <Fragment key={nodeIndex}>{node}</Fragment>
-								})}
-								{groupIndex + 1 < groupLength && <ContextMenuSeparator />}
-							</Fragment>
-						)
-					})}
-				</>
-			)
+			return Object.keys(groups).map((groupKey, groupIndex) => {
+				return (
+					<Fragment key={groupKey}>
+						{groups[groupKey]!.map((node, nodeIndex) => {
+							return <Fragment key={nodeIndex}>{node}</Fragment>
+						})}
+						{groupIndex + 1 < groupLength && <ContextMenuSeparator />}
+					</Fragment>
+				)
+			})
 		}, [
 			selectedItems.length,
 			preview,

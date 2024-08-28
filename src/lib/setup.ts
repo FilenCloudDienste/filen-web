@@ -48,7 +48,9 @@ export const DEFAULT_DESKTOP_CONFIG: FilenDesktopConfig = {
 		enabled: false,
 		mountPoint: IS_DESKTOP ? (window.desktopAPI.osPlatform() === "win32" ? "X:" : "/tmp/filen") : "X:",
 		cacheSizeInGi: 10,
-		localDirPath: ""
+		localDirPath: "",
+		cachePath: undefined,
+		readOnly: false
 	},
 	syncConfig: {
 		enabled: true,
