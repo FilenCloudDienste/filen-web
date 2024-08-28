@@ -471,6 +471,12 @@
 		},
 		"event": {
 			"title": "Event"
+		},
+		"exportReminder": {
+			"title": "Export master keys",
+			"description": "Please export your master keys and store them in a separate safe location. You need your master keys when you reset your password to avoid data loss. You need to export your master keys everytime you change your password.",
+			"continue": "Export",
+			"dismiss": "Dismiss"
 		}
 	},
 	"contextMenus": {
