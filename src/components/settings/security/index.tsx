@@ -223,9 +223,11 @@ export const Security = memo(() => {
 				}
 			}
 		} finally {
-			await worker.didExportMasterKeys().catch(() => {})
+			if (didWrite) {
+				await worker.didExportMasterKeys().catch(() => {})
 
-			eventEmitter.emit("useAccountRefetch")
+				eventEmitter.emit("useAccountRefetch")
+			}
 		}
 	}, [loadingToast, errorToast, account, masterKeys, userId])
 
