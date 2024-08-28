@@ -745,12 +745,14 @@
 			"cancelSubscription": {
 				"title": "取消订阅",
 				"description": "您确定要取消订阅吗？",
-				"continue": "取消订阅"
+				"continue": "取消订阅",
+				"close": "关闭"
 			},
 			"nickName": {
 				"title": "编辑昵称",
 				"placeholder": "新昵称",
-				"continue": "保存"
+				"continue": "保存",
+				"invalid": "昵称长度必须介于 3 到 32 个字符之间，并且包含字母数字。"
 			},
 			"twoFactorAuthenticationRecoveryKey": {
 				"title": "恢复密钥",
@@ -929,7 +931,41 @@
 					"name": "导出主密钥",
 					"info": "导出主密钥，以便在需要重置密码时可以恢复账户。每次更改密码时都需要导出主密钥。",
 					"action": "导出",
-					"subInfo": "请导出您的主密钥并将其存储在单独的安全位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码时都需要导出主密钥。"
+					"subInfo": "请导出您的主密钥并将其存储在单独的安全位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码时都需要导出主密钥。",
+				},
+				"lockTimeout": {
+					"name": "锁定应用",
+					"info": "当您处于不活动状态一段时间后锁定应用。您必须设置 PIN 才能使屏幕锁定正常工作",
+					"values": {
+						"never": "永不",
+						"immediately": "立即",
+						"oneMinute": "1分钟",
+						"threeMinutes": "3分钟",
+						"fiveMinutes": "5分钟",
+						"tenMinutes": "10分钟",
+						"fifteenMinutes": "15分钟",
+						"thirtyMinutes": "30分钟",
+						"oneHour": "1小时",
+						"threeHours": "3小时",
+						"sixHours": "6小时",
+						"twelveHours": "12小时",
+						"twentyFourHours": "24小时"
+					}
+				},
+				"lockPin": {
+					"name": "锁定 PIN",
+					"info": "设置 PIN 码以解锁程序",
+					"action": "更改"
+				}
+			},
+			"dialogs": {
+				"lockPin": {
+					"notMatching": "您输入的 PIN 码不匹配",
+					"enterPin": "输入 PIN 码",
+					"confirmPin": "确认 PIN 码"
+				},
+				"lock": {
+					"wrongPin": "错误的 PIN 码"
 				}
 			}
 		},
@@ -1196,11 +1232,11 @@
 			"missingDepsWindows": "要使用虚拟磁盘，您需要在系统上安装 WinFSP。",
 			"missingDepsLinux": "要使用虚拟磁盘，您需要在系统上安装 FUSE3。",
 			"missingDepsInstructions": "安装说明",
-			"cacheUsed": "{{size}} / {{max}} 已使用",
+			"cacheUsed": "{{size}} 已使用",
 			"description": "将您的云盘安装为本地磁盘，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些都在您熟悉的文件资源管理器中完成。",
 			"unixDescription": "将您的云盘安装到本地目录中，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些操作都在您熟悉的文件资源管理器中完成。",
 			"unixSudo": "要安装和卸载云盘，客户端需要管理员权限。请在提示时允许访问。",
-                        "limitations": "不支持在虚拟磁盘上安装或运行程序。",
+                        "limitations": "不支持在虚拟磁盘上安装、运行或解压程序和压缩包。",
 			"sections": {
 				"active": {
 					"name": "激活"
