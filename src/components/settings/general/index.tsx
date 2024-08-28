@@ -9,7 +9,6 @@ import { useTheme, type Theme } from "@/providers/themeProvider"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import worker from "@/lib/worker"
-import { useNavigate } from "@tanstack/react-router"
 import { IS_DESKTOP } from "@/constants"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { Switch } from "@/components/ui/switch"
@@ -26,7 +25,6 @@ export const General = memo(() => {
 	const theme = useTheme()
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
-	const navigate = useNavigate()
 	const [chatNotificationsEnabled, setChatNotificationsEnabled] = useLocalStorage<boolean>("chatNotificationsEnabled", false)
 	const [contactNotificationsEnabled, setContactNotificationsEnabled] = useLocalStorage<boolean>("contactNotificationsEnabled", false)
 	const [defaultNoteType, setDefaultNoteType] = useLocalStorage<NoteType>("defaultNoteType", "text")
@@ -149,16 +147,6 @@ export const General = memo(() => {
 
 			try {
 				await logout()
-
-				if (IS_DESKTOP) {
-					await window.desktopAPI.restart()
-				} else {
-					navigate({
-						to: "/login",
-						replace: true,
-						resetScroll: true
-					})
-				}
 			} catch (e) {
 				console.error(e)
 
@@ -167,7 +155,7 @@ export const General = memo(() => {
 				toast.dismiss()
 			}
 		},
-		[loadingToast, errorToast, navigate, t]
+		[loadingToast, errorToast, t]
 	)
 
 	const onLanguageChange = useCallback(

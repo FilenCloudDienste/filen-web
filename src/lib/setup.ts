@@ -90,8 +90,6 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
 		if (!isAPIKeyValid) {
 			await logout()
 
-			window.location.href = "/login"
-
 			return
 		}
 	}
@@ -125,12 +123,6 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
  * @returns {Promise<void>}
  */
 export async function logout(): Promise<void> {
-	if (IS_DESKTOP) {
-		await Promise.all([window.desktopAPI.stopS3Server(), window.desktopAPI.stopWebDAVServer(), window.desktopAPI.stopVirtualDrive()])
-	}
-
-	window.document.title = "Filen"
-
 	const cookieConsent = window.localStorage.getItem("cookieConsent")
 	const defaultNoteType = window.localStorage.getItem("defaultNoteType")
 	const videoPlayerVolume = window.localStorage.getItem("videoPlayerVolume")
@@ -166,13 +158,18 @@ export async function logout(): Promise<void> {
 
 	await clearLocalForage()
 
-	reinitSDK(DEFAULT_SDK_CONFIG)
-
-	getSDK().init(DEFAULT_SDK_CONFIG)
-
-	await worker.initializeSDK(DEFAULT_SDK_CONFIG)
-
 	if (IS_DESKTOP) {
-		await window.desktopAPI.restartWorker()
+		await Promise.all([
+			window.desktopAPI.stopS3Server(),
+			window.desktopAPI.stopWebDAVServer(),
+			window.desktopAPI.stopVirtualDrive(),
+			window.desktopAPI.stopSync()
+		])
+
+		await new Promise<void>(resolve => setTimeout(resolve, 1000))
+
+		await window.desktopAPI.restart()
+	} else {
+		window.location.reload()
 	}
 }

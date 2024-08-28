@@ -269,7 +269,12 @@ export const VirtualDrive = memo(() => {
 					await window.desktopAPI.stopVirtualDrive()
 				}
 
-				await Promise.all([isMountedQuery.refetch(), availableDrivesQuery.refetch()])
+				await Promise.all([
+					isMountedQuery.refetch(),
+					availableDrivesQuery.refetch(),
+					cacheSizeQuery.refetch(),
+					availableCacheSizeQuery.refetch()
+				])
 
 				setDesktopConfig(prev => ({
 					...prev,
@@ -302,7 +307,9 @@ export const VirtualDrive = memo(() => {
 			isMountedQuery,
 			availableDrivesQuery,
 			t,
-			desktopConfig.virtualDriveConfig.mountPoint
+			desktopConfig.virtualDriveConfig.mountPoint,
+			cacheSizeQuery,
+			availableCacheSizeQuery
 		]
 	)
 
@@ -455,7 +462,7 @@ export const VirtualDrive = memo(() => {
 
 			const diskType = await window.desktopAPI.getDiskType(path.paths[0])
 
-			if (!diskType || !diskType.isPhysical) {
+			if (diskType && !diskType.isPhysical) {
 				errorToast(t("mounts.virtualDrive.errors.invalidCachePath"))
 
 				return

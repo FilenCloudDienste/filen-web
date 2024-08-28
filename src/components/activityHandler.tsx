@@ -3,9 +3,7 @@ import useWindowFocus from "@/hooks/useWindowFocus"
 import worker from "@/lib/worker"
 import useLocation from "@/hooks/useLocation"
 import useMountedEffect from "@/hooks/useMountedEffect"
-import { useNavigate } from "@tanstack/react-router"
 import useErrorToast from "@/hooks/useErrorToast"
-import { IS_DESKTOP } from "@/constants"
 import { getSocket } from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import { logout } from "@/lib/setup"
@@ -18,7 +16,6 @@ export const ActivityHandler = memo(() => {
 	const location = useLocation()
 	const [authed] = useIsAuthed()
 	const errorToast = useErrorToast()
-	const navigate = useNavigate()
 
 	const isInsidePublicLink = useMemo(() => {
 		return location.includes("/f/") || location.includes("/d/")
@@ -55,22 +52,12 @@ export const ActivityHandler = memo(() => {
 
 		try {
 			await logout()
-
-			if (IS_DESKTOP) {
-				await window.desktopAPI.restart()
-			} else {
-				navigate({
-					to: "/login",
-					replace: true,
-					resetScroll: true
-				})
-			}
 		} catch (e) {
 			console.error(e)
 
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		}
-	}, [errorToast, navigate, authed])
+	}, [errorToast, authed])
 
 	const loggedOutCheck = useCallback(async () => {
 		if (!authed) {
