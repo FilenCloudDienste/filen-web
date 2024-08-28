@@ -448,6 +448,12 @@ export const VirtualDrive = memo(() => {
 				return
 			}
 
+			if (path.paths[0].startsWith(desktopConfig.virtualDriveConfig.mountPoint)) {
+				errorToast(t("mounts.virtualDrive.errors.invalidCachePath"))
+
+				return
+			}
+
 			if (!(await window.desktopAPI.isPathReadable(path.paths[0])) || !(await window.desktopAPI.isPathWritable(path.paths[0]))) {
 				errorToast(t("mounts.virtualDrive.errors.cachePathNotReadableWritable"))
 
@@ -506,7 +512,8 @@ export const VirtualDrive = memo(() => {
 		setDesktopConfig,
 		setEnablingVirtualDrive,
 		t,
-		cacheSizeQuery
+		cacheSizeQuery,
+		desktopConfig.virtualDriveConfig.mountPoint
 	])
 
 	const onReadOnlyChange = useCallback(

@@ -123,6 +123,17 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
  * @returns {Promise<void>}
  */
 export async function logout(): Promise<void> {
+	await clearLocalForage()
+
+	if (IS_DESKTOP) {
+		await Promise.all([
+			window.desktopAPI.stopS3Server(),
+			window.desktopAPI.stopWebDAVServer(),
+			window.desktopAPI.stopVirtualDrive(),
+			window.desktopAPI.stopSync()
+		])
+	}
+
 	const cookieConsent = window.localStorage.getItem("cookieConsent")
 	const defaultNoteType = window.localStorage.getItem("defaultNoteType")
 	const videoPlayerVolume = window.localStorage.getItem("videoPlayerVolume")
@@ -156,18 +167,7 @@ export async function logout(): Promise<void> {
 		window.localStorage.setItem("i18nextLng", i18nextLng)
 	}
 
-	await clearLocalForage()
-
 	if (IS_DESKTOP) {
-		await Promise.all([
-			window.desktopAPI.stopS3Server(),
-			window.desktopAPI.stopWebDAVServer(),
-			window.desktopAPI.stopVirtualDrive(),
-			window.desktopAPI.stopSync()
-		])
-
-		await new Promise<void>(resolve => setTimeout(resolve, 1000))
-
 		await window.desktopAPI.restart()
 	} else {
 		window.location.reload()
