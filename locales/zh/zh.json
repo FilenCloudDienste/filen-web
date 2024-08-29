@@ -435,6 +435,11 @@
 					"title": "警告",
 					"continue": "继续",
 					"description": "同步超过 {{count}} 个项目可能会降低系统速度，尤其是在低端设备上。如果您使用的是高端机器，您可以继续，但我们建议同步较少的文件以避免潜在问题。"
+				},
+				"localDirectoryNotPhysical": {
+					"title": "警告",
+					"continue": "继续",
+					"description": "您选择的本地目录似乎不在物理磁盘上。这可能会导致同步问题和不可预测的行为。要继续吗？"
 				}
 			}
 		},
@@ -466,6 +471,12 @@
 		},
 		"event": {
 			"title": "事件"
+		},
+		"exportReminder": {
+			"title": "导出主密钥",
+			"description": "请导出您的主密钥并将其存储在单独的安全位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码后都需要导出主密钥。",
+			"continue": "导出",
+			"dismiss": "忽略"
 		}
 	},
 	"contextMenus": {
@@ -1265,6 +1276,14 @@
 				"cacheSize": {
 					"name": "缓存大小",
 					"info": "我们建议将缓存大小设置得尽可能大。客户端将使用您的本地磁盘来显著加快虚拟磁盘的速度"
+				},
+				"cachePath": {
+					"name": "缓存路径",
+					"info": "更改虚拟磁盘的缓存路径。必须位于内部磁盘上。如果未更改，将默认使用应用的安装目录"
+				},
+				"readOnly": {
+					"name": "只读",
+					"info": "将虚拟磁盘安装为只读"
 				}
 			},
 			"dialogs": {
@@ -1283,7 +1302,10 @@
 				"invalidMountPoint": "无效的挂载点",
 				"mountPointNotEmpty": "挂载点需要是一个空目录。",
 				"pathNotInHomeDir": "挂载点需要位于您的主目录 (/home/<yourUsername>) 内。",
-				"pathNotInUserDir": "挂载点需要位于您的用户目录 (/Users/<yourUsername>) 内。"
+				"pathNotInUserDir": "挂载点需要位于您的用户目录 (/Users/<yourUsername>) 内。",
+				"invalidCachePath": "缓存路径必须位于具有至少 10 GB 可用空间的内部磁盘上。",
+				"cachePathNotReadableWritable": "缓存路径不可读或不可写。",
+				"invalidCachePathLength": "缓存路径太长。"
 			}
 		},
 		"webdav": {
