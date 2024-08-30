@@ -1,50 +1,60 @@
-import { useEffect, useRef, useCallback, memo } from "react"
+import { useEffect, useCallback, memo } from "react"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import useAccount from "@/hooks/useAccount"
 import { showConfirmDialog } from "./dialogs/confirm"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "@tanstack/react-router"
 import useIsAuthed from "@/hooks/useIsAuthed"
+import { Semaphore } from "@/lib/semaphore"
+
+const mutex = new Semaphore(1)
 
 export const ExportReminder = memo(() => {
 	const account = useAccount()
-	const didRemindRef = useRef<boolean>(false)
 	const [exportReminderFired, setExportReminderFired] = useLocalStorage<boolean>("exportReminderFired", false)
 	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const [authed] = useIsAuthed()
 
 	const remind = useCallback(async () => {
-		if (!account || account.account.didExportMasterKeys || didRemindRef.current || exportReminderFired || !authed) {
-			return
-		}
+		await mutex.acquire()
 
-		didRemindRef.current = true
-
-		setExportReminderFired(true)
-
-		if (
-			!(await showConfirmDialog({
-				title: t("dialogs.exportReminder.title"),
-				continueButtonText: t("dialogs.exportReminder.continue"),
-				description: t("dialogs.exportReminder.description"),
-				continueButtonVariant: "default",
-				cancelButtonText: t("dialogs.exportReminder.dismiss")
-			}))
-		) {
-			return
-		}
-
-		navigate({
-			to: "/settings/$type",
-			params: {
-				type: "security"
+		try {
+			if (!account || account.account.didExportMasterKeys || exportReminderFired || !authed) {
+				return
 			}
-		})
+
+			if (
+				!(await showConfirmDialog({
+					title: t("dialogs.exportReminder.title"),
+					continueButtonText: t("dialogs.exportReminder.continue"),
+					description: t("dialogs.exportReminder.description"),
+					continueButtonVariant: "default",
+					cancelButtonText: t("dialogs.exportReminder.dismiss")
+				}))
+			) {
+				setExportReminderFired(true)
+
+				return
+			}
+
+			setExportReminderFired(true)
+
+			navigate({
+				to: "/settings/$type",
+				params: {
+					type: "security"
+				}
+			})
+		} catch (e) {
+			console.error(e)
+		} finally {
+			mutex.release()
+		}
 	}, [account, t, navigate, exportReminderFired, setExportReminderFired, authed])
 
 	useEffect(() => {
-		if (!account || account.account.didExportMasterKeys || didRemindRef.current || exportReminderFired || !authed) {
+		if (!account || account.account.didExportMasterKeys || exportReminderFired || !authed) {
 			return
 		}
 
