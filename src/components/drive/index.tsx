@@ -7,7 +7,7 @@ import { type Prettify } from "@/types"
 import worker from "@/lib/worker"
 import useRouteParent from "@/hooks/useRouteParent"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
-import { promiseAllChunked, dialogsOpen, contextMenusOpen } from "@/lib/utils"
+import { promiseAllChunked, dialogsOpen, contextMenusOpen, getCurrentParentDirectoryUUID } from "@/lib/utils"
 import { directoryUUIDToNameCache } from "@/cache"
 import useErrorToast from "@/hooks/useErrorToast"
 import eventEmitter from "@/lib/eventEmitter"
@@ -61,7 +61,7 @@ export const Drive = memo(() => {
 								receivers: currentReceivers
 							})
 							.then(item => {
-								if (item.parent === parentCopy) {
+								if (item.parent === getCurrentParentDirectoryUUID()) {
 									setItems(prev => [
 										...prev.filter(
 											prevItem =>
@@ -134,14 +134,14 @@ export const Drive = memo(() => {
 						directoryUUIDToNameCache.set(item.uuid, item.name)
 					}
 
-					if (item.parent !== parentCopy) {
-						continue
+					if (item.parent === getCurrentParentDirectoryUUID()) {
+						setItems(prev => [
+							...prev.filter(
+								prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()
+							),
+							item
+						])
 					}
-
-					setItems(prev => [
-						...prev.filter(prevItem => prevItem.uuid !== item.uuid && prevItem.name.toLowerCase() !== item.name.toLowerCase()),
-						item
-					])
 				}
 			} catch (e) {
 				if (e instanceof Error && e.message.toLowerCase().includes("maximum storage reached")) {

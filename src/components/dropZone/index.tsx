@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogPortal, DialogOverlay }
 import { useTranslation } from "react-i18next"
 import { useDriveItemsStore, useDriveSharedStore } from "@/stores/drive.store"
 import { readLocalDroppedDirectory } from "./utils"
-import { promiseAllChunked } from "@/lib/utils"
+import { promiseAllChunked, getCurrentParentDirectoryUUID } from "@/lib/utils"
 import useLocation from "@/hooks/useLocation"
 import useCanUpload from "@/hooks/useCanUpload"
 import useErrorToast from "@/hooks/useErrorToast"
@@ -160,18 +160,16 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 										})
 										.then(uploadedItems => {
 											for (const item of uploadedItems) {
-												if (item.parent !== parentCopy) {
-													continue
+												if (item.parent === getCurrentParentDirectoryUUID()) {
+													setItems(prev => [
+														...prev.filter(
+															prevItem =>
+																prevItem.uuid !== item.uuid &&
+																prevItem.name.toLowerCase() !== item.name.toLowerCase()
+														),
+														item
+													])
 												}
-
-												setItems(prev => [
-													...prev.filter(
-														prevItem =>
-															prevItem.uuid !== item.uuid &&
-															prevItem.name.toLowerCase() !== item.name.toLowerCase()
-													),
-													item
-												])
 											}
 
 											resolve(uploadedItems)
@@ -198,7 +196,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 												receivers: currentReceivers
 											})
 											.then(item => {
-												if (item.parent === parentCopy) {
+												if (item.parent === getCurrentParentDirectoryUUID()) {
 													setItems(prev => [
 														...prev.filter(
 															prevItem =>

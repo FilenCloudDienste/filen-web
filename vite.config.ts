@@ -71,6 +71,12 @@ export default defineConfig({
 			output: {
 				chunkFileNames() {
 					return `[name].[hash].${now}.js`
+				},
+				entryFileNames() {
+					return `[name].${now}.js`
+				},
+				assetFileNames() {
+					return `assets/[name]-[hash].${now}[extname]`
 				}
 			}
 		}

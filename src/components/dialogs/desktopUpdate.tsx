@@ -64,6 +64,11 @@ export const DesktopUpdateDialog = memo(() => {
 		[desktopUpdateDialogDismissedVersions]
 	)
 
+	const preventDefault = useCallback((e: Event) => {
+		e.preventDefault()
+		e.stopPropagation()
+	}, [])
+
 	useEffect(() => {
 		let listener: ReturnType<typeof window.desktopAPI.onMainToWindowMessage> | null = null
 
@@ -85,6 +90,7 @@ export const DesktopUpdateDialog = memo(() => {
 			<AlertDialogContent
 				onEscapeKeyDown={dismiss}
 				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
+				onOpenAutoFocus={preventDefault}
 			>
 				{!isUpdating && (
 					<AlertDialogHeader>

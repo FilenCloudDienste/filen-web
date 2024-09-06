@@ -119,6 +119,11 @@ export const ConfirmDialog = memo(() => {
 		}
 	}, [props.withInputField, successToast, errorToast, t])
 
+	const preventDefault = useCallback((e: Event) => {
+		e.preventDefault()
+		e.stopPropagation()
+	}, [])
+
 	useEffect(() => {
 		const keyDownListener = (e: KeyboardEvent) => {
 			if (e.key === "Enter" && open) {
@@ -152,6 +157,7 @@ export const ConfirmDialog = memo(() => {
 			<AlertDialogContent
 				onEscapeKeyDown={cancel}
 				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
+				onOpenAutoFocus={preventDefault}
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{props.title}</AlertDialogTitle>

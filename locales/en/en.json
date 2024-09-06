@@ -1278,8 +1278,8 @@
 					"info": "We recommend setting the cache size as high as possible. The client will use your local disk to significantly speed up the virtual drive"
 				},
 				"cachePath": {
-					"name": "Cache path",
-					"info": "Change the cache path of the virtual drive. Must be on an internal disk. Will use the app installation directory if unchanged"
+					"name": "Cache location",
+					"info": "Change the cache location of the virtual drive. Must be on an internal disk. Will use the app installation directory by default if unchanged"
 				},
 				"readOnly": {
 					"name": "Read only",
@@ -1303,9 +1303,16 @@
 				"mountPointNotEmpty": "Mount point needs to be an empty directory.",
 				"pathNotInHomeDir": "Mount point needs to be inside your home directory (/home/<yourUsername>).",
 				"pathNotInUserDir": "Mount point needs to be inside your user directory (/Users/<yourUsername>).",
-				"invalidCachePath": "Cache path must be on an internal disk with at least 10 GB of free space.",
-				"cachePathNotReadableWritable": "Cache path is not readable or writable.",
-				"invalidCachePathLength": "Cache path is too long."
+				"invalidCachePath": "Cache location must be on an internal disk with at least 10 GB of free space.",
+				"cachePathNotReadableWritable": "Cache location is not readable or writable.",
+				"invalidCachePathLength": "Cache location path is too long."
+			},
+			"transfers": {
+				"uploading": "Uploading {{total}} file in the background",
+				"uploadingPlural": "Uploading {{total}} files in the background",
+				"uploadingSpeed": "Uploading {{total}} file in the background at {{speed}}",
+				"uploadingPluralSpeed": "Uploading {{total}} files in the background at {{speed}}",
+				"everythingUploaded": "Everything synced"
 			}
 		},
 		"webdav": {

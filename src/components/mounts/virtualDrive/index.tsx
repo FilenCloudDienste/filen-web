@@ -16,6 +16,7 @@ import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { generateCacheSteps } from "./utils"
 import Input from "@/components/input"
 import { useMountsStore } from "@/stores/mounts.store"
+import Transfers from "./transfers"
 
 export async function isVirtualDriveMounted(): Promise<{ mounted: boolean }> {
 	const [mounted, active] = await Promise.all([window.desktopAPI.isVirtualDriveMounted(), window.desktopAPI.isVirtualDriveActive()])
@@ -34,7 +35,7 @@ export async function areDependenciesInstalled(): Promise<{ installed: boolean }
 
 	if (window.desktopAPI.osPlatform() === "linux") {
 		return {
-			installed: await window.desktopAPI.isFUSEInstalledOnLinux()
+			installed: await window.desktopAPI.isFUSE3InstalledOnLinux()
 		}
 	}
 
@@ -565,218 +566,221 @@ export const VirtualDrive = memo(() => {
 	}
 
 	return (
-		<div className="flex flex-col w-full h-[100dvh] overflow-y-auto overflow-x-hidden">
-			<div
-				className="flex flex-col p-6 h-full"
-				style={{
-					width: settingsContainerSize.width
-				}}
-			>
-				<div className="flex flex-col gap-4">
-					<Section
-						name={t("mounts.virtualDrive.sections.active.name")}
-						style={{
-							// @ts-expect-error not typed
-							WebkitAppRegion: "drag"
-						}}
-					>
-						{enablingVirtualDrive ? (
-							<Loader className="animate-spin-medium" />
-						) : isMountedQuery.data.mounted ? (
-							<div className="flex flex-row gap-3">
-								<CheckCircle className="text-green-500" />
-							</div>
-						) : (
-							<XCircle className="text-red-500" />
-						)}
-					</Section>
-					<div className="flex flex-col gap-3">
-						<p className="text-muted-foreground text-sm">
-							{window.desktopAPI.osPlatform() === "win32"
-								? t("mounts.virtualDrive.description")
-								: t("mounts.virtualDrive.unixDescription")}
-						</p>
-						<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.limitations")}</p>
-						{window.desktopAPI.osPlatform() !== "win32" && (
-							<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.unixSudo")}</p>
-						)}
-					</div>
-					<Section
-						name={t("mounts.virtualDrive.sections.enabled.name")}
-						info={t("mounts.virtualDrive.sections.enabled.info")}
-						className="mt-10"
-					>
-						<Switch
-							disabled={enablingVirtualDrive}
-							checked={isMountedQuery.isSuccess && isMountedQuery.data.mounted}
-							onCheckedChange={onEnabledChanged}
-						/>
-					</Section>
-					{window.desktopAPI.osPlatform() === "win32" ? (
+		<div className="flex flex-col w-full h-[100dvh] overflow-hidden">
+			<div className="overflow-x-hidden overflow-y-auto h-[calc(100dvh-88px)]">
+				<div
+					className="flex flex-col p-6 h-full"
+					style={{
+						width: settingsContainerSize.width
+					}}
+				>
+					<div className="flex flex-col gap-4">
 						<Section
-							name={t("mounts.virtualDrive.sections.driveLetter.name")}
-							info={t("mounts.virtualDrive.sections.driveLetter.info")}
+							name={t("mounts.virtualDrive.sections.active.name")}
+							style={{
+								// @ts-expect-error not typed
+								WebkitAppRegion: "drag"
+							}}
 						>
-							<Select
-								onValueChange={onDriveLetterChange}
-								value={desktopConfig.virtualDriveConfig.mountPoint}
-								disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-							>
-								<SelectTrigger className="min-w-[120px]">
-									<SelectValue placeholder={desktopConfig.virtualDriveConfig.mountPoint} />
-								</SelectTrigger>
-								<SelectContent className="max-h-[200px]">
-									{availableDrives.map(letter => {
-										return (
-											<SelectItem
-												key={letter}
-												value={letter}
-											>
-												{letter}
-											</SelectItem>
-										)
-									})}
-								</SelectContent>
-							</Select>
+							{enablingVirtualDrive ? (
+								<Loader className="animate-spin-medium" />
+							) : isMountedQuery.data.mounted ? (
+								<div className="flex flex-row gap-3">
+									<CheckCircle className="text-green-500" />
+								</div>
+							) : (
+								<XCircle className="text-red-500" />
+							)}
 						</Section>
-					) : (
+						<div className="flex flex-col gap-3">
+							<p className="text-muted-foreground text-sm">
+								{window.desktopAPI.osPlatform() === "win32"
+									? t("mounts.virtualDrive.description")
+									: t("mounts.virtualDrive.unixDescription")}
+							</p>
+							<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.limitations")}</p>
+							{window.desktopAPI.osPlatform() !== "win32" && (
+								<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.unixSudo")}</p>
+							)}
+						</div>
 						<Section
-							name={t("mounts.virtualDrive.sections.mountPoint.name")}
-							info={t("mounts.virtualDrive.sections.mountPoint.info")}
+							name={t("mounts.virtualDrive.sections.enabled.name")}
+							info={t("mounts.virtualDrive.sections.enabled.info")}
+							className="mt-10"
+						>
+							<Switch
+								disabled={enablingVirtualDrive}
+								checked={isMountedQuery.isSuccess && isMountedQuery.data.mounted}
+								onCheckedChange={onEnabledChanged}
+							/>
+						</Section>
+						{window.desktopAPI.osPlatform() === "win32" ? (
+							<Section
+								name={t("mounts.virtualDrive.sections.driveLetter.name")}
+								info={t("mounts.virtualDrive.sections.driveLetter.info")}
+							>
+								<Select
+									onValueChange={onDriveLetterChange}
+									value={desktopConfig.virtualDriveConfig.mountPoint}
+									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+								>
+									<SelectTrigger className="min-w-[120px]">
+										<SelectValue placeholder={desktopConfig.virtualDriveConfig.mountPoint} />
+									</SelectTrigger>
+									<SelectContent className="max-h-[200px]">
+										{availableDrives.map(letter => {
+											return (
+												<SelectItem
+													key={letter}
+													value={letter}
+												>
+													{letter}
+												</SelectItem>
+											)
+										})}
+									</SelectContent>
+								</Select>
+							</Section>
+						) : (
+							<Section
+								name={t("mounts.virtualDrive.sections.mountPoint.name")}
+								info={t("mounts.virtualDrive.sections.mountPoint.info")}
+							>
+								<div className="flex flex-row gap-1 items-center">
+									<Input
+										value={desktopConfig.virtualDriveConfig.mountPoint}
+										type="text"
+										onChange={e => {
+											e.preventDefault()
+											e.target.blur()
+										}}
+										className="min-w-[250px]"
+										autoCapitalize="none"
+										autoComplete="none"
+										autoCorrect="none"
+										disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+									/>
+									<Button
+										size="sm"
+										onClick={changeMountPoint}
+										disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+									>
+										<Edit size={18} />
+									</Button>
+								</div>
+							</Section>
+						)}
+						<Section
+							name={t("mounts.virtualDrive.sections.readOnly.name")}
+							info={t("mounts.virtualDrive.sections.readOnly.info")}
+						>
+							<Switch
+								disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+								checked={desktopConfig.virtualDriveConfig.readOnly}
+								onCheckedChange={onReadOnlyChange}
+							/>
+						</Section>
+						<Section
+							name={t("mounts.virtualDrive.sections.cache.name")}
+							info={t("mounts.virtualDrive.sections.cache.info")}
+						>
+							{cacheSizeQuery.isSuccess ? (
+								<div className="flex flex-row gap-3 items-center">
+									<p className="text-muted-foreground text-sm">
+										{t("mounts.virtualDrive.cacheUsed", {
+											size: formatBytes(cacheSizeQuery.data),
+											max: formatBytes(availableCacheSizeQuery.data)
+										})}
+									</p>
+									{cacheSizeQuery.data > 0 && (
+										<Button
+											onClick={cleanupCache}
+											size="sm"
+											variant="destructive"
+											disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+										>
+											{t("mounts.virtualDrive.clear")}
+										</Button>
+									)}
+								</div>
+							) : (
+								<Loader className="text-muted-foreground animate-spin-medium" />
+							)}
+						</Section>
+						<Section
+							name={t("mounts.virtualDrive.sections.cachePath.name")}
+							info={t("mounts.virtualDrive.sections.cachePath.info")}
 						>
 							<div className="flex flex-row gap-1 items-center">
-								<Input
-									value={desktopConfig.virtualDriveConfig.mountPoint}
-									type="text"
-									onChange={e => {
-										e.preventDefault()
-										e.target.blur()
-									}}
-									className="min-w-[250px]"
-									autoCapitalize="none"
-									autoComplete="none"
-									autoCorrect="none"
-									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-								/>
+								{desktopConfig.virtualDriveConfig.cachePath && (
+									<Input
+										value={desktopConfig.virtualDriveConfig.cachePath}
+										type="text"
+										onChange={e => {
+											e.preventDefault()
+											e.target.blur()
+										}}
+										className="min-w-[250px]"
+										autoCapitalize="none"
+										autoComplete="none"
+										autoCorrect="none"
+										disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+									/>
+								)}
 								<Button
 									size="sm"
-									onClick={changeMountPoint}
+									onClick={changeCachePath}
 									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 								>
 									<Edit size={18} />
 								</Button>
 							</div>
 						</Section>
-					)}
-					<Section
-						name={t("mounts.virtualDrive.sections.readOnly.name")}
-						info={t("mounts.virtualDrive.sections.readOnly.info")}
-					>
-						<Switch
-							disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-							checked={desktopConfig.virtualDriveConfig.readOnly}
-							onCheckedChange={onReadOnlyChange}
-						/>
-					</Section>
-					<Section
-						name={t("mounts.virtualDrive.sections.cache.name")}
-						info={t("mounts.virtualDrive.sections.cache.info")}
-					>
-						{cacheSizeQuery.isSuccess ? (
-							<div className="flex flex-row gap-3 items-center">
-								<p className="text-muted-foreground text-sm">
-									{t("mounts.virtualDrive.cacheUsed", {
-										size: formatBytes(cacheSizeQuery.data),
-										max: formatBytes(availableCacheSizeQuery.data)
-									})}
-								</p>
-								{cacheSizeQuery.data > 0 && (
-									<Button
-										onClick={cleanupCache}
-										size="sm"
-										variant="destructive"
-										disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-									>
-										{t("mounts.virtualDrive.clear")}
-									</Button>
-								)}
-							</div>
-						) : (
-							<Loader className="text-muted-foreground animate-spin-medium" />
-						)}
-					</Section>
-					<Section
-						name={t("mounts.virtualDrive.sections.cachePath.name")}
-						info={t("mounts.virtualDrive.sections.cachePath.info")}
-					>
-						<div className="flex flex-row gap-1 items-center">
-							{desktopConfig.virtualDriveConfig.cachePath && (
-								<Input
-									value={desktopConfig.virtualDriveConfig.cachePath}
-									type="text"
-									onChange={e => {
-										e.preventDefault()
-										e.target.blur()
-									}}
-									className="min-w-[250px]"
-									autoCapitalize="none"
-									autoComplete="none"
-									autoCorrect="none"
-									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-								/>
-							)}
-							<Button
-								size="sm"
-								onClick={changeCachePath}
+						<Section
+							name={t("mounts.virtualDrive.sections.cacheSize.name")}
+							info={t("mounts.virtualDrive.sections.cacheSize.info")}
+						>
+							<Select
+								onValueChange={onCacheChange}
+								value={desktopConfig.virtualDriveConfig.cacheSizeInGi.toString()}
 								disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 							>
-								<Edit size={18} />
-							</Button>
-						</div>
-					</Section>
-					<Section
-						name={t("mounts.virtualDrive.sections.cacheSize.name")}
-						info={t("mounts.virtualDrive.sections.cacheSize.info")}
-					>
-						<Select
-							onValueChange={onCacheChange}
-							value={desktopConfig.virtualDriveConfig.cacheSizeInGi.toString()}
-							disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-						>
-							<SelectTrigger className="min-w-[120px]">
-								<SelectValue placeholder={`${desktopConfig.virtualDriveConfig.cacheSizeInGi} GB`} />
-							</SelectTrigger>
-							<SelectContent className="max-h-[200px]">
-								{cacheSteps.map(size => {
-									return (
-										<SelectItem
-											key={size}
-											value={size.toString()}
-										>
-											{size} GB
-										</SelectItem>
-									)
-								})}
-							</SelectContent>
-						</Select>
-					</Section>
-					{!enablingVirtualDrive && isMountedQuery.data.mounted && window.desktopAPI.osPlatform() === "win32" && (
-						<Section
-							name={t("mounts.virtualDrive.sections.browse.name")}
-							info={t("mounts.virtualDrive.sections.browse.info")}
-							className="mt-10"
-						>
-							<Button
-								onClick={browse}
-								size="sm"
-							>
-								{t("mounts.virtualDrive.browse")}
-							</Button>
+								<SelectTrigger className="min-w-[120px]">
+									<SelectValue placeholder={`${desktopConfig.virtualDriveConfig.cacheSizeInGi} GB`} />
+								</SelectTrigger>
+								<SelectContent className="max-h-[200px]">
+									{cacheSteps.map(size => {
+										return (
+											<SelectItem
+												key={size}
+												value={size.toString()}
+											>
+												{size} GB
+											</SelectItem>
+										)
+									})}
+								</SelectContent>
+							</Select>
 						</Section>
-					)}
-					<div className="w-full h-20" />
+						{!enablingVirtualDrive && isMountedQuery.data.mounted && window.desktopAPI.osPlatform() === "win32" && (
+							<Section
+								name={t("mounts.virtualDrive.sections.browse.name")}
+								info={t("mounts.virtualDrive.sections.browse.info")}
+								className="mt-10"
+							>
+								<Button
+									onClick={browse}
+									size="sm"
+								>
+									{t("mounts.virtualDrive.browse")}
+								</Button>
+							</Section>
+						)}
+						<div className="w-full h-12" />
+					</div>
 				</div>
 			</div>
+			<Transfers />
 		</div>
 	)
 })

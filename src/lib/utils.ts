@@ -2,6 +2,7 @@
 
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { validate as validateUUID } from "uuid"
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -298,4 +299,21 @@ export function downloadStringAsFile(filename: string, content: string) {
 	document.body.removeChild(link)
 
 	URL.revokeObjectURL(link.href)
+}
+
+export function getCurrentParentDirectoryUUID(): string | null {
+	const url = window.location.href
+
+	if (!url.includes("/drive")) {
+		return null
+	}
+
+	const ex = url.split("/")
+	const uuid = ex.at(-1)
+
+	if (!uuid || !validateUUID(uuid)) {
+		return null
+	}
+
+	return uuid
 }

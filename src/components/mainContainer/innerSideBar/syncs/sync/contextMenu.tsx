@@ -145,6 +145,7 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 			})
 
 			setSelectedSync(null)
+
 			setDesktopConfig(prev => ({
 				...prev,
 				syncConfig: {
@@ -152,6 +153,7 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 					syncPairs: prev.syncConfig.syncPairs.filter(pair => pair.uuid !== sync.uuid)
 				}
 			}))
+
 			setCycleState(prev => ({
 				...prev,
 				[sync.uuid]: {
@@ -159,46 +161,57 @@ export const ContextMenu = memo(({ sync, children }: { sync: SyncPair; children:
 					timestamp: Date.now()
 				}
 			}))
+
 			setLocalIgnored(prev => ({
 				...prev,
 				[sync.uuid]: []
 			}))
+
 			setRemoteIgnored(prev => ({
 				...prev,
 				[sync.uuid]: []
 			}))
+
 			setProgress(prev => ({
 				...prev,
 				[sync.uuid]: 0
 			}))
+
 			setSpeed(prev => ({
 				...prev,
 				[sync.uuid]: 0
 			}))
+
 			setRemaining(prev => ({
 				...prev,
 				[sync.uuid]: 0
 			}))
+
 			setRemainingReadable(prev => ({
 				...prev,
 				[sync.uuid]: ""
 			}))
+
 			setErrors(prev => ({
 				...prev,
 				[sync.uuid]: []
 			}))
+
 			setTasksBytes(prev => ({
 				...prev,
 				[sync.uuid]: 0
 			}))
+
 			setTasksSize(prev => ({
 				...prev,
 				[sync.uuid]: 0
 			}))
+
 			setTasksCount(prev => ({
 				...prev,
 				[sync.uuid]: 0
 			}))
+
 			setTransferEvents(prev => ({
 				...prev,
 				[sync.uuid]: []

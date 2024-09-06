@@ -331,6 +331,11 @@ export const CreateSyncDialog = memo(() => {
 		}))
 	}, [])
 
+	const preventDefault = useCallback((e: Event) => {
+		e.preventDefault()
+		e.stopPropagation()
+	}, [])
+
 	useEffect(() => {
 		const listener = eventEmitter.on("openCreateSyncDialog", () => {
 			setOpen(true)
@@ -349,6 +354,7 @@ export const CreateSyncDialog = memo(() => {
 			<AlertDialogContent
 				onEscapeKeyDown={close}
 				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
+				onOpenAutoFocus={preventDefault}
 			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>{t("dialogs.createSync.title")}</AlertDialogTitle>

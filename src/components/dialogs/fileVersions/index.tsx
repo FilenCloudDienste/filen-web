@@ -14,6 +14,11 @@ export const FileVersionsDialog = memo(() => {
 		setOpen(openState)
 	}, [])
 
+	const preventDefault = useCallback((e: Event) => {
+		e.preventDefault()
+		e.stopPropagation()
+	}, [])
+
 	useEffect(() => {
 		const listener = eventEmitter.on("openFileVersionsDialog", (item: DriveCloudItem) => {
 			setItem(item)
@@ -30,7 +35,10 @@ export const FileVersionsDialog = memo(() => {
 			open={open}
 			onOpenChange={onOpenChange}
 		>
-			<DialogContent className="outline-none focus:outline-none active:outline-none hover:outline-none select-none">
+			<DialogContent
+				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
+				onOpenAutoFocus={preventDefault}
+			>
 				<DialogTitle>{t("dialogs.fileVersions.title")}</DialogTitle>
 				{item && (
 					<div className="flex flex-col">

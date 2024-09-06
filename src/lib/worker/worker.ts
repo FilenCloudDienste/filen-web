@@ -2504,7 +2504,7 @@ export async function corsHead(url: string): Promise<Record<string, string>> {
 				timeout: 15000
 			})
 
-			if (typeof response.headers["content-type"] !== "string") {
+			if (!response.headers || typeof response.headers["content-type"] !== "string") {
 				throw new Error("Response type is not string: " + url)
 			}
 
@@ -2515,11 +2515,11 @@ export async function corsHead(url: string): Promise<Record<string, string>> {
 			// Noop
 		}
 
-		const response = await axios.head("https://gateway.filen.io/v3/cors?url=" + encodeURIComponent(url), {
+		const response = await axios.get("https://corsproxy.io/?" + encodeURIComponent(url), {
 			timeout: 15000
 		})
 
-		if (typeof response.headers["content-type"] !== "string") {
+		if (!response.headers || typeof response.headers["content-type"] !== "string") {
 			throw new Error("Response type is not string: " + url)
 		}
 
@@ -2531,8 +2531,7 @@ export async function corsHead(url: string): Promise<Record<string, string>> {
 	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function corsGet(url: string): Promise<any> {
+export async function corsGet(url: string): Promise<AxiosResponse> {
 	await waitForInitialization()
 
 	try {
@@ -2540,24 +2539,24 @@ export async function corsGet(url: string): Promise<any> {
 			timeout: 15000
 		})
 
-		if (typeof response.headers["content-type"] !== "string") {
-			throw new Error("Response type is not string: " + url)
+		if (!response.headers || typeof response.headers["content-type"] !== "string") {
+			throw new Error("Response content-type is not string: " + url)
 		}
 
-		return response.data
+		return response
 	} catch {
 		// Noop
 	}
 
-	const response = await axios.get("https://gateway.filen.io/v3/cors?url=" + encodeURIComponent(url), {
+	const response = await axios.get("https://corsproxy.io/?" + encodeURIComponent(url), {
 		timeout: 15000
 	})
 
-	if (typeof response.headers["content-type"] !== "string") {
-		throw new Error("Response type is not string: " + url)
+	if (!response.headers || typeof response.headers["content-type"] !== "string") {
+		throw new Error("Response content-type is not string: " + url)
 	}
 
-	return response.data
+	return response
 }
 
 export async function parseOGFromURL(url: string): Promise<Record<string, string>> {
@@ -2570,33 +2569,13 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 			return workerParseOGFromURLCache.get(url)!
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let response: AxiosResponse<any, any>
-
-		try {
-			response = await axios.get("https://gateway.filen.io/v3/cors?url=" + encodeURIComponent(url), {
-				timeout: 15000
-			})
-
-			if (
-				typeof response.headers["content-type"] !== "string" ||
-				response.headers["content-type"].split(";")[0]!.trim() !== "text/html"
-			) {
-				throw new Error("Response type is not text/html: " + url)
-			}
-		} catch {
-			// Noop
-		}
-
-		response = await axios.get("https://gateway.filen.io/v3/cors?url=" + encodeURIComponent(url), {
-			timeout: 15000
-		})
+		const response = await corsGet(url)
 
 		if (
 			typeof response.headers["content-type"] !== "string" ||
 			response.headers["content-type"].split(";")[0]!.trim() !== "text/html"
 		) {
-			throw new Error("Response type is not text/html: " + url)
+			throw new Error("Response content-type is not text/html: " + url)
 		}
 
 		const metadata: Record<string, string> = {}

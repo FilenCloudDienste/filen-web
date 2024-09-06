@@ -1,7 +1,7 @@
 {
 	"name": "@filen/web",
 	"private": false,
-	"version": "0.1.30",
+	"version": "0.1.31",
 	"type": "module",
 	"description": "Filen Web & Desktop app",
 	"scripts": {
@@ -14,7 +14,7 @@
 		"preview": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite preview",
 		"serve": "cross-env NODE_OPTIONS=--max_old_space_size=16834 serve -s dist/",
 		"i18n:scan": "tsx ./i18nScanner.ts",
-		"install:filen": "npm install @filen/desktop@latest @filen/sdk@latest @filen/sync@latest"
+		"install:filen": "npm install @filen/desktop@latest @filen/sdk@latest @filen/sync@latest @filen/virtual-drive@latest"
 	},
 	"engines": {
 		"node": ">=20"
@@ -23,9 +23,10 @@
 		"@alptugidin/react-circular-progress-bar": "^1.1.2",
 		"@emoji-mart/data": "^1.1.2",
 		"@emoji-mart/react": "^1.1.1",
-		"@filen/desktop": "^3.0.15",
+		"@filen/desktop": "^3.0.16",
 		"@filen/sdk": "^0.1.163",
-		"@filen/sync": "^0.1.55",
+		"@filen/sync": "^0.1.57",
+		"@filen/virtual-drive": "^0.1.15",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
 		"@radix-ui/react-avatar": "^1.0.4",
 		"@radix-ui/react-checkbox": "^1.0.4",
