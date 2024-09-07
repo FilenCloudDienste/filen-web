@@ -1278,8 +1278,8 @@
 					"info": "我们建议将缓存大小设置得尽可能大。客户端将使用您的本地磁盘来显著加快虚拟磁盘的速度"
 				},
 				"cachePath": {
-					"name": "缓存路径",
-					"info": "更改虚拟磁盘的缓存路径。必须位于内部磁盘上。如果未更改，将默认使用应用的安装目录"
+					"name": "缓存位置",
+					"info": "更改虚拟磁盘的缓存位置。必须位于内部磁盘上。如果未更改，将默认使用应用的安装目录"
 				},
 				"readOnly": {
 					"name": "只读",
@@ -1303,9 +1303,16 @@
 				"mountPointNotEmpty": "挂载点需要是一个空目录。",
 				"pathNotInHomeDir": "挂载点需要位于您的主目录 (/home/<yourUsername>) 内。",
 				"pathNotInUserDir": "挂载点需要位于您的用户目录 (/Users/<yourUsername>) 内。",
-				"invalidCachePath": "缓存路径必须位于具有至少 10 GB 可用空间的内部磁盘上。",
-				"cachePathNotReadableWritable": "缓存路径不可读或不可写。",
-				"invalidCachePathLength": "缓存路径太长。"
+				"invalidCachePath": "缓存位置必须位于具有至少 10 GB 可用空间的内部磁盘上。",
+				"cachePathNotReadableWritable": "缓存位置不可读或不可写。",
+				"invalidCachePathLength": "缓存位置路径太长。"
+			},
+			"transfers": {
+				"uploading": "正在于后台上传 {{total}} 个文件",
+				"uploadingPlural": "正在于后台上传 {{total}} 个文件",
+				"uploadingSpeed": "正在于后台以 {{speed}} 上传 {{total}} 个文件",
+				"uploadingPluralSpeed": "正在于后台以 {{speed}} 上传 {{total}} 个文件",
+				"everythingUploaded": "一切都已同步"
 			}
 		},
 		"webdav": {
