@@ -1,6 +1,5 @@
 import { memo, useState, useCallback, useEffect } from "react"
 import Section from "@/components/settings/section"
-import Skeletons from "@/components/settings/skeletons"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 import { useTranslation } from "react-i18next"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
@@ -356,10 +355,6 @@ export const WebDAV = memo(() => {
 		}
 	}, [isOnlineQuery])
 
-	if (!isOnlineQuery.isSuccess) {
-		return <Skeletons />
-	}
-
 	return (
 		<div className="flex flex-col w-full h-[100dvh] overflow-y-auto overflow-x-hidden">
 			<div
@@ -376,7 +371,7 @@ export const WebDAV = memo(() => {
 							WebkitAppRegion: "drag"
 						}}
 					>
-						{enablingWebDAV ? (
+						{enablingWebDAV || !isOnlineQuery.isSuccess ? (
 							<Loader className="animate-spin-medium" />
 						) : isOnlineQuery.data.online ? (
 							<div className="flex flex-row gap-3">

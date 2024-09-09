@@ -3,7 +3,7 @@ import { createRootRoute, Outlet } from "@tanstack/react-router"
 import { memo, useEffect, useState, useRef, useCallback } from "react"
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClient, focusManager, useIsRestoring } from "@tanstack/react-query"
-import { PersistQueryClientProvider, type PersistQueryClientOptions } from "@tanstack/react-query-persist-client"
+import { PersistQueryClientProvider, type PersistQueryClientOptions, persistQueryClientRestore } from "@tanstack/react-query-persist-client"
 import useIsAuthed from "@/hooks/useIsAuthed"
 import createIDBPersister from "@/lib/queryPersister"
 import DragSelect from "@/components/dragSelect"
@@ -79,7 +79,11 @@ export const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
 	maxAge: Infinity,
 	dehydrateOptions: {
 		shouldDehydrateQuery(query) {
-			return query.queryKey.some(queryKey => UNCACHED_QUERY_KEYS.includes(queryKey as unknown as string))
+			if (query.state.status !== "success" || query.state.error) {
+				return false
+			}
+
+			return !query.queryKey.some(queryKey => typeof queryKey === "string" && UNCACHED_QUERY_KEYS.includes(queryKey))
 		}
 	}
 }
@@ -97,7 +101,10 @@ export const Loading = memo(() => {
 			}}
 		>
 			<div className={isMobile ? "w-[80px] h-[80px]" : "w-[128px] h-[128px]"}>
-				<LogoSVG color={dark ? "white" : "black"} />
+				<LogoSVG
+					color={dark ? "white" : "black"}
+					pulse={true}
+				/>
 			</div>
 		</div>
 	)
@@ -110,6 +117,14 @@ export const Root = memo(() => {
 	const isRestoring = useIsRestoring()
 
 	const setup = useCallback(async () => {
+		await persistQueryClientRestore({
+			queryClient: persistantQueryClient,
+			persister: queryClientPersister,
+			maxAge: Infinity,
+			buster: "",
+			hydrateOptions: undefined
+		}).catch(console.error)
+
 		try {
 			await setupApp()
 

@@ -38,7 +38,10 @@ export const UNCACHED_QUERY_KEYS = [
 	"filePublicLinkInfo",
 	"directoryPublicLinkInfo",
 	"fetchEvent",
-	"virtualDriveStats"
+	"virtualDriveStats",
+	"isVirtualDriveMounted",
+	"isS3Online",
+	"isWebDAVOnline"
 ]
 export const IS_INSIDE_PUBLIC_LINK_ON_LOAD =
 	typeof window !== "undefined" ? window.location.href.includes("/f/") || window.location.href.includes("/d/") : false

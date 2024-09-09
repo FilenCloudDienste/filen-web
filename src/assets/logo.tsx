@@ -1,12 +1,13 @@
 import { memo } from "react"
 
-const LogoSVG = memo(({ color = "#fff" }: { color: string }) => (
+const LogoSVG = memo(({ color = "#fff", pulse = false }: { color: string; pulse?: boolean }) => (
 	<>
 		<svg
 			id="Layer_1"
 			data-name="Layer 1"
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 2133.89 2133.89"
+			className={pulse ? "animate-pulse" : undefined}
 		>
 			<defs>
 				<style>

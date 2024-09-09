@@ -18,8 +18,6 @@ export const Syncs = memo(() => {
 		eventEmitter.emit("openCreateSyncDialog")
 	}, [])
 
-	console.log("rendering syncs")
-
 	return (
 		<div
 			className={cn("w-full flex flex-col", !selectedSync && "items-center justify-center")}

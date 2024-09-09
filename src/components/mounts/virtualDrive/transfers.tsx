@@ -11,11 +11,19 @@ export const Transfers = memo(() => {
 		queryKey: ["virtualDriveStats"],
 		queryFn: () => window.desktopAPI.virtualDriveStats(),
 		refetchInterval: 1000,
-		refetchIntervalInBackground: true,
+		refetchIntervalInBackground: false,
 		refetchOnMount: true,
 		refetchOnWindowFocus: true,
 		refetchOnReconnect: true
 	})
+
+	const uploadsInProgress = useMemo(() => {
+		if (!query.isSuccess) {
+			return 0
+		}
+
+		return query.data.uploadsInProgress + query.data.uploadsQueued
+	}, [query.isSuccess, query.data])
 
 	const speed = useMemo(() => {
 		if (!query.isSuccess || query.data.transfers.length === 0) {
@@ -25,17 +33,13 @@ export const Transfers = memo(() => {
 		return Math.max(...query.data.transfers.map(transfer => transfer.speed))
 	}, [query.isSuccess, query.data])
 
-	if (!query.isSuccess) {
-		return null
-	}
-
 	return (
-		<div className="flex flex-row h-12 w-full pt-2">
+		<div className="flex flex-row h-12 w-full pt-[7px]">
 			<div className="flex flex-row w-full px-4 pb-4">
 				<div className="flex flex-col h-10 bg-secondary rounded-sm w-full">
 					<div className="flex flex-row h-full w-full items-center px-4 justify-between gap-4">
 						<div className="flex flex-row h-full w-full items-center gap-2 text-sm">
-							{query.data.uploadsInProgress + query.data.uploadsQueued > 0 ? (
+							{uploadsInProgress > 0 ? (
 								<>
 									<RefreshCw
 										className="animate-spin-medium text-primary"
@@ -44,20 +48,20 @@ export const Transfers = memo(() => {
 									<p>
 										{speed > 0
 											? t(
-													query.data.uploadsInProgress + query.data.uploadsQueued <= 1
+													uploadsInProgress <= 1
 														? "mounts.virtualDrive.transfers.uploadingSpeed"
 														: "mounts.virtualDrive.transfers.uploadingPluralSpeed",
 													{
-														total: query.data.uploadsInProgress + query.data.uploadsQueued,
+														total: uploadsInProgress,
 														speed: bpsToReadable(speed)
 													}
 												)
 											: t(
-													query.data.uploadsInProgress + query.data.uploadsQueued <= 1
+													uploadsInProgress <= 1
 														? "mounts.virtualDrive.transfers.uploading"
 														: "mounts.virtualDrive.transfers.uploadingPlural",
 													{
-														total: query.data.uploadsInProgress + query.data.uploadsQueued
+														total: uploadsInProgress
 													}
 												)}
 									</p>

@@ -540,7 +540,7 @@ export const VirtualDrive = memo(() => {
 		}
 	}, [isMountedQuery])
 
-	if (!isMountedQuery.data || !availableDrivesQuery.isSuccess || !availableCacheSizeQuery.isSuccess || !dependenciesQuery.isSuccess) {
+	if (!availableDrivesQuery.isSuccess || !availableCacheSizeQuery.isSuccess || !dependenciesQuery.isSuccess) {
 		return <Skeletons />
 	}
 
@@ -582,7 +582,7 @@ export const VirtualDrive = memo(() => {
 								WebkitAppRegion: "drag"
 							}}
 						>
-							{enablingVirtualDrive ? (
+							{enablingVirtualDrive || !isMountedQuery.isSuccess ? (
 								<Loader className="animate-spin-medium" />
 							) : isMountedQuery.data.mounted ? (
 								<div className="flex flex-row gap-3">
@@ -599,9 +599,6 @@ export const VirtualDrive = memo(() => {
 									: t("mounts.virtualDrive.unixDescription")}
 							</p>
 							<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.limitations")}</p>
-							{window.desktopAPI.osPlatform() !== "win32" && (
-								<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.unixSudo")}</p>
-							)}
 						</div>
 						<Section
 							name={t("mounts.virtualDrive.sections.enabled.name")}
@@ -762,20 +759,23 @@ export const VirtualDrive = memo(() => {
 								</SelectContent>
 							</Select>
 						</Section>
-						{!enablingVirtualDrive && isMountedQuery.data.mounted && window.desktopAPI.osPlatform() === "win32" && (
-							<Section
-								name={t("mounts.virtualDrive.sections.browse.name")}
-								info={t("mounts.virtualDrive.sections.browse.info")}
-								className="mt-10"
-							>
-								<Button
-									onClick={browse}
-									size="sm"
+						{!enablingVirtualDrive &&
+							isMountedQuery.isSuccess &&
+							isMountedQuery.data.mounted &&
+							window.desktopAPI.osPlatform() === "win32" && (
+								<Section
+									name={t("mounts.virtualDrive.sections.browse.name")}
+									info={t("mounts.virtualDrive.sections.browse.info")}
+									className="mt-10"
 								>
-									{t("mounts.virtualDrive.browse")}
-								</Button>
-							</Section>
-						)}
+									<Button
+										onClick={browse}
+										size="sm"
+									>
+										{t("mounts.virtualDrive.browse")}
+									</Button>
+								</Section>
+							)}
 						<div className="w-full h-12" />
 					</div>
 				</div>
