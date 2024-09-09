@@ -44,7 +44,7 @@ export const DEFAULT_DESKTOP_CONFIG: FilenDesktopConfig = {
 		port: 1800,
 		https: false
 	},
-	virtualDriveConfig: {
+	networkDriveConfig: {
 		enabled: false,
 		mountPoint: IS_DESKTOP ? (window.desktopAPI.osPlatform() === "win32" ? "X:" : "/tmp/filen") : "X:",
 		cacheSizeInGi: 10,
@@ -129,7 +129,7 @@ export async function logout(): Promise<void> {
 		await Promise.all([
 			window.desktopAPI.stopS3Server(),
 			window.desktopAPI.stopWebDAVServer(),
-			window.desktopAPI.stopVirtualDrive(),
+			window.desktopAPI.stopNetworkDrive(),
 			window.desktopAPI.stopSync()
 		])
 	}

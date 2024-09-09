@@ -76,7 +76,7 @@ export const Button = memo(({ id }: { id: string }) => {
 							}
 						: id === "mounts"
 							? {
-									type: "virtual-drive"
+									type: "network-drive"
 								}
 							: id === "contacts"
 								? {

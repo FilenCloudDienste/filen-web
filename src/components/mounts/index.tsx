@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react"
 import useLocation from "@/hooks/useLocation"
-import VirtualDrive from "./virtualDrive"
+import NetworkDrive from "./networkDrive"
 import { IS_DESKTOP } from "@/constants"
 import WebDAV from "./webdav"
 import S3 from "./s3"
@@ -9,8 +9,8 @@ export const Mounts = memo(() => {
 	const location = useLocation()
 
 	const content = useMemo(() => {
-		if (location.includes("/virtual-drive")) {
-			return <VirtualDrive />
+		if (location.includes("/network-drive")) {
+			return <NetworkDrive />
 		}
 
 		if (location.includes("/webdav")) {

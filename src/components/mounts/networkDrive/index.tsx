@@ -18,8 +18,8 @@ import Input from "@/components/input"
 import { useMountsStore } from "@/stores/mounts.store"
 import Transfers from "./transfers"
 
-export async function isVirtualDriveMounted(): Promise<{ mounted: boolean }> {
-	const [mounted, active] = await Promise.all([window.desktopAPI.isVirtualDriveMounted(), window.desktopAPI.isVirtualDriveActive()])
+export async function isNetworkDriveMounted(): Promise<{ mounted: boolean }> {
+	const [mounted, active] = await Promise.all([window.desktopAPI.isNetworkDriveMounted(), window.desktopAPI.isNetworkDriveActive()])
 
 	return {
 		mounted: mounted && active
@@ -44,14 +44,14 @@ export async function areDependenciesInstalled(): Promise<{ installed: boolean }
 	}
 }
 
-export const VirtualDrive = memo(() => {
+export const NetworkDrive = memo(() => {
 	const { t } = useTranslation()
 	const settingsContainerSize = useSettingsContainerSize()
-	const { enablingVirtualDrive, setEnablingVirtualDrive } = useMountsStore(
+	const { enablingNetworkDrive, setEnablingNetworkDrive } = useMountsStore(
 		useCallback(
 			state => ({
-				enablingVirtualDrive: state.enablingVirtualDrive,
-				setEnablingVirtualDrive: state.setEnablingVirtualDrive
+				enablingNetworkDrive: state.enablingNetworkDrive,
+				setEnablingNetworkDrive: state.setEnablingNetworkDrive
 			}),
 			[]
 		)
@@ -60,8 +60,8 @@ export const VirtualDrive = memo(() => {
 	const errorToast = useErrorToast()
 
 	const isMountedQuery = useQuery({
-		queryKey: ["isVirtualDriveMounted"],
-		queryFn: () => isVirtualDriveMounted()
+		queryKey: ["isNetworkDriveMounted"],
+		queryFn: () => isNetworkDriveMounted()
 	})
 
 	const availableDrivesQuery = useQuery({
@@ -70,17 +70,17 @@ export const VirtualDrive = memo(() => {
 	})
 
 	const cacheSizeQuery = useQuery({
-		queryKey: ["virtualDriveCacheSize"],
-		queryFn: () => window.desktopAPI.virtualDriveCacheSize()
+		queryKey: ["networkDriveCacheSize"],
+		queryFn: () => window.desktopAPI.networkDriveCacheSize()
 	})
 
 	const availableCacheSizeQuery = useQuery({
-		queryKey: ["virtualDriveAvailableCache"],
-		queryFn: () => window.desktopAPI.virtualDriveAvailableCache()
+		queryKey: ["networkDriveAvailableCache"],
+		queryFn: () => window.desktopAPI.networkDriveAvailableCache()
 	})
 
 	const dependenciesQuery = useQuery({
-		queryKey: ["virtualDriveDependencies"],
+		queryKey: ["networkDriveDependencies"],
 		queryFn: () => areDependenciesInstalled()
 	})
 
@@ -98,13 +98,13 @@ export const VirtualDrive = memo(() => {
 		}
 
 		return [
-			...availableDrivesQuery.data.filter(letter => letter !== desktopConfig.virtualDriveConfig.mountPoint),
-			desktopConfig.virtualDriveConfig.mountPoint
+			...availableDrivesQuery.data.filter(letter => letter !== desktopConfig.networkDriveConfig.mountPoint),
+			desktopConfig.networkDriveConfig.mountPoint
 		]
-	}, [availableDrivesQuery.isSuccess, availableDrivesQuery.data, desktopConfig.virtualDriveConfig.mountPoint])
+	}, [availableDrivesQuery.isSuccess, availableDrivesQuery.data, desktopConfig.networkDriveConfig.mountPoint])
 
 	const changeMountPoint = useCallback(async () => {
-		if (enablingVirtualDrive) {
+		if (enablingNetworkDrive) {
 			return
 		}
 
@@ -130,17 +130,17 @@ export const VirtualDrive = memo(() => {
 			return
 		}
 
-		setEnablingVirtualDrive(true)
+		setEnablingNetworkDrive(true)
 
 		try {
 			if (window.desktopAPI.osPlatform() !== "win32" && !(await window.desktopAPI.isUnixMountPointValid(mountPoint))) {
-				errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
+				errorToast(t("mounts.networkDrive.errors.invalidMountPoint"))
 
 				return
 			}
 
 			if (window.desktopAPI.osPlatform() !== "win32" && !(await window.desktopAPI.isUnixMountPointEmpty(mountPoint))) {
-				errorToast(t("mounts.virtualDrive.errors.mountPointNotEmpty"))
+				errorToast(t("mounts.networkDrive.errors.mountPointNotEmpty"))
 
 				return
 			}
@@ -149,8 +149,8 @@ export const VirtualDrive = memo(() => {
 
 			setDesktopConfig(prev => ({
 				...prev,
-				virtualDriveConfig: {
-					...prev.virtualDriveConfig,
+				networkDriveConfig: {
+					...prev.networkDriveConfig,
 					mountPoint: mountPoint!
 				}
 			}))
@@ -161,31 +161,31 @@ export const VirtualDrive = memo(() => {
 
 			setDesktopConfig(prev => ({
 				...prev,
-				virtualDriveConfig: {
-					...prev.virtualDriveConfig,
+				networkDriveConfig: {
+					...prev.networkDriveConfig,
 					enabled: false
 				}
 			}))
 		} finally {
-			setEnablingVirtualDrive(false)
+			setEnablingNetworkDrive(false)
 		}
-	}, [enablingVirtualDrive, setEnablingVirtualDrive, errorToast, setDesktopConfig, isMountedQuery, availableDrivesQuery, t])
+	}, [enablingNetworkDrive, setEnablingNetworkDrive, errorToast, setDesktopConfig, isMountedQuery, availableDrivesQuery, t])
 
 	const onDriveLetterChange = useCallback(
 		async (letter: string) => {
-			if (enablingVirtualDrive) {
+			if (enablingNetworkDrive) {
 				return
 			}
 
-			setEnablingVirtualDrive(true)
+			setEnablingNetworkDrive(true)
 
 			try {
 				await Promise.all([isMountedQuery.refetch(), availableDrivesQuery.refetch()])
 
 				setDesktopConfig(prev => ({
 					...prev,
-					virtualDriveConfig: {
-						...prev.virtualDriveConfig,
+					networkDriveConfig: {
+						...prev.networkDriveConfig,
 						mountPoint: letter
 					}
 				}))
@@ -196,48 +196,48 @@ export const VirtualDrive = memo(() => {
 
 				setDesktopConfig(prev => ({
 					...prev,
-					virtualDriveConfig: {
-						...prev.virtualDriveConfig,
+					networkDriveConfig: {
+						...prev.networkDriveConfig,
 						enabled: false
 					}
 				}))
 			} finally {
-				setEnablingVirtualDrive(false)
+				setEnablingNetworkDrive(false)
 			}
 		},
-		[enablingVirtualDrive, setEnablingVirtualDrive, errorToast, setDesktopConfig, isMountedQuery, availableDrivesQuery]
+		[enablingNetworkDrive, setEnablingNetworkDrive, errorToast, setDesktopConfig, isMountedQuery, availableDrivesQuery]
 	)
 
 	const onEnabledChanged = useCallback(
 		async (enabled: boolean) => {
-			if (enablingVirtualDrive) {
+			if (enablingNetworkDrive) {
 				return
 			}
 
 			if (
 				!enabled &&
 				!(await showConfirmDialog({
-					title: t("mounts.virtualDrive.dialogs.disable.title"),
-					continueButtonText: t("mounts.virtualDrive.dialogs.disable.continue"),
-					description: t("mounts.virtualDrive.dialogs.disable.description"),
+					title: t("mounts.networkDrive.dialogs.disable.title"),
+					continueButtonText: t("mounts.networkDrive.dialogs.disable.continue"),
+					description: t("mounts.networkDrive.dialogs.disable.description"),
 					continueButtonVariant: "destructive"
 				}))
 			) {
 				return
 			}
 
-			setEnablingVirtualDrive(true)
+			setEnablingNetworkDrive(true)
 
 			try {
 				if (enabled) {
 					if (
 						window.desktopAPI.osPlatform() !== "win32" &&
-						!(await window.desktopAPI.doesPathStartWithHomeDir(desktopConfig.virtualDriveConfig.mountPoint))
+						!(await window.desktopAPI.doesPathStartWithHomeDir(desktopConfig.networkDriveConfig.mountPoint))
 					) {
 						errorToast(
 							window.desktopAPI.osPlatform() === "linux"
-								? t("mounts.virtualDrive.errors.pathNotInHomeDir")
-								: t("mounts.virtualDrive.errors.pathNotInUserDir")
+								? t("mounts.networkDrive.errors.pathNotInHomeDir")
+								: t("mounts.networkDrive.errors.pathNotInUserDir")
 						)
 
 						return
@@ -245,29 +245,29 @@ export const VirtualDrive = memo(() => {
 
 					if (
 						window.desktopAPI.osPlatform() !== "win32" &&
-						!(await window.desktopAPI.isUnixMountPointValid(desktopConfig.virtualDriveConfig.mountPoint))
+						!(await window.desktopAPI.isUnixMountPointValid(desktopConfig.networkDriveConfig.mountPoint))
 					) {
-						errorToast(t("mounts.virtualDrive.errors.invalidMountPoint"))
+						errorToast(t("mounts.networkDrive.errors.invalidMountPoint"))
 
 						return
 					}
 
 					if (
 						window.desktopAPI.osPlatform() !== "win32" &&
-						!(await window.desktopAPI.isUnixMountPointEmpty(desktopConfig.virtualDriveConfig.mountPoint))
+						!(await window.desktopAPI.isUnixMountPointEmpty(desktopConfig.networkDriveConfig.mountPoint))
 					) {
-						errorToast(t("mounts.virtualDrive.errors.mountPointNotEmpty"))
+						errorToast(t("mounts.networkDrive.errors.mountPointNotEmpty"))
 
 						return
 					}
 
-					await window.desktopAPI.restartVirtualDrive()
+					await window.desktopAPI.restartNetworkDrive()
 
-					if (!(await isVirtualDriveMounted()).mounted) {
-						throw new Error("Could not start virtual drive.")
+					if (!(await isNetworkDriveMounted()).mounted) {
+						throw new Error("Could not start network drive.")
 					}
 				} else {
-					await window.desktopAPI.stopVirtualDrive()
+					await window.desktopAPI.stopNetworkDrive()
 				}
 
 				await Promise.all([
@@ -279,8 +279,8 @@ export const VirtualDrive = memo(() => {
 
 				setDesktopConfig(prev => ({
 					...prev,
-					virtualDriveConfig: {
-						...prev.virtualDriveConfig,
+					networkDriveConfig: {
+						...prev.networkDriveConfig,
 						enabled
 					}
 				}))
@@ -291,24 +291,24 @@ export const VirtualDrive = memo(() => {
 
 				setDesktopConfig(prev => ({
 					...prev,
-					virtualDriveConfig: {
-						...prev.virtualDriveConfig,
+					networkDriveConfig: {
+						...prev.networkDriveConfig,
 						enabled: false
 					}
 				}))
 			} finally {
-				setEnablingVirtualDrive(false)
+				setEnablingNetworkDrive(false)
 			}
 		},
 		[
 			setDesktopConfig,
-			enablingVirtualDrive,
-			setEnablingVirtualDrive,
+			enablingNetworkDrive,
+			setEnablingNetworkDrive,
 			errorToast,
 			isMountedQuery,
 			availableDrivesQuery,
 			t,
-			desktopConfig.virtualDriveConfig.mountPoint,
+			desktopConfig.networkDriveConfig.mountPoint,
 			cacheSizeQuery,
 			availableCacheSizeQuery
 		]
@@ -316,19 +316,19 @@ export const VirtualDrive = memo(() => {
 
 	const onCacheChange = useCallback(
 		async (size: string) => {
-			if (enablingVirtualDrive) {
+			if (enablingNetworkDrive) {
 				return
 			}
 
-			setEnablingVirtualDrive(true)
+			setEnablingNetworkDrive(true)
 
 			try {
 				await Promise.all([isMountedQuery.refetch(), availableDrivesQuery.refetch(), availableCacheSizeQuery.refetch()])
 
 				setDesktopConfig(prev => ({
 					...prev,
-					virtualDriveConfig: {
-						...prev.virtualDriveConfig,
+					networkDriveConfig: {
+						...prev.networkDriveConfig,
 						cacheSizeInGi: parseInt(size)
 					}
 				}))
@@ -339,18 +339,18 @@ export const VirtualDrive = memo(() => {
 
 				setDesktopConfig(prev => ({
 					...prev,
-					virtualDriveConfig: {
-						...prev.virtualDriveConfig,
+					networkDriveConfig: {
+						...prev.networkDriveConfig,
 						enabled: false
 					}
 				}))
 			} finally {
-				setEnablingVirtualDrive(false)
+				setEnablingNetworkDrive(false)
 			}
 		},
 		[
-			enablingVirtualDrive,
-			setEnablingVirtualDrive,
+			enablingNetworkDrive,
+			setEnablingNetworkDrive,
 			errorToast,
 			setDesktopConfig,
 			isMountedQuery,
@@ -360,43 +360,43 @@ export const VirtualDrive = memo(() => {
 	)
 
 	const browse = useCallback(async () => {
-		if (!desktopConfig.virtualDriveConfig.enabled) {
+		if (!desktopConfig.networkDriveConfig.enabled) {
 			return
 		}
 
 		try {
-			if (!(await isVirtualDriveMounted()).mounted) {
+			if (!(await isNetworkDriveMounted()).mounted) {
 				return
 			}
 
-			await window.desktopAPI.openLocalPath(`${desktopConfig.virtualDriveConfig.mountPoint}\\`)
+			await window.desktopAPI.openLocalPath(`${desktopConfig.networkDriveConfig.mountPoint}\\`)
 		} catch (e) {
 			console.error(e)
 
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		}
-	}, [desktopConfig.virtualDriveConfig.mountPoint, desktopConfig.virtualDriveConfig.enabled, errorToast])
+	}, [desktopConfig.networkDriveConfig.mountPoint, desktopConfig.networkDriveConfig.enabled, errorToast])
 
 	const cleanupCache = useCallback(async () => {
-		if (enablingVirtualDrive) {
+		if (enablingNetworkDrive) {
 			return
 		}
 
 		if (
 			!(await showConfirmDialog({
-				title: t("mounts.virtualDrive.dialogs.cleanupCache.title"),
-				continueButtonText: t("mounts.virtualDrive.dialogs.cleanupCache.continue"),
-				description: t("mounts.virtualDrive.dialogs.cleanupCache.description"),
+				title: t("mounts.networkDrive.dialogs.cleanupCache.title"),
+				continueButtonText: t("mounts.networkDrive.dialogs.cleanupCache.continue"),
+				description: t("mounts.networkDrive.dialogs.cleanupCache.description"),
 				continueButtonVariant: "destructive"
 			}))
 		) {
 			return
 		}
 
-		setEnablingVirtualDrive(true)
+		setEnablingNetworkDrive(true)
 
 		try {
-			await window.desktopAPI.virtualDriveCleanupCache()
+			await window.desktopAPI.networkDriveCleanupCache()
 
 			await Promise.all([cacheSizeQuery.refetch(), isMountedQuery.refetch(), availableDrivesQuery.refetch()])
 		} catch (e) {
@@ -406,13 +406,13 @@ export const VirtualDrive = memo(() => {
 
 			setDesktopConfig(prev => ({
 				...prev,
-				virtualDriveConfig: {
-					...prev.virtualDriveConfig,
+				networkDriveConfig: {
+					...prev.networkDriveConfig,
 					enabled: false
 				}
 			}))
 		} finally {
-			setEnablingVirtualDrive(false)
+			setEnablingNetworkDrive(false)
 		}
 	}, [
 		errorToast,
@@ -420,8 +420,8 @@ export const VirtualDrive = memo(() => {
 		t,
 		isMountedQuery,
 		availableDrivesQuery,
-		enablingVirtualDrive,
-		setEnablingVirtualDrive,
+		enablingNetworkDrive,
+		setEnablingNetworkDrive,
 		setDesktopConfig
 	])
 
@@ -436,11 +436,11 @@ export const VirtualDrive = memo(() => {
 	}, [])
 
 	const changeCachePath = useCallback(async () => {
-		if (enablingVirtualDrive) {
+		if (enablingNetworkDrive) {
 			return
 		}
 
-		setEnablingVirtualDrive(true)
+		setEnablingNetworkDrive(true)
 
 		try {
 			const path = await window.desktopAPI.selectDirectory(false)
@@ -449,20 +449,20 @@ export const VirtualDrive = memo(() => {
 				return
 			}
 
-			if (path.paths[0].startsWith(desktopConfig.virtualDriveConfig.mountPoint)) {
-				errorToast(t("mounts.virtualDrive.errors.invalidCachePath"))
+			if (path.paths[0].startsWith(desktopConfig.networkDriveConfig.mountPoint)) {
+				errorToast(t("mounts.networkDrive.errors.invalidCachePath"))
 
 				return
 			}
 
 			if (!(await window.desktopAPI.isPathReadable(path.paths[0])) || !(await window.desktopAPI.isPathWritable(path.paths[0]))) {
-				errorToast(t("mounts.virtualDrive.errors.cachePathNotReadableWritable"))
+				errorToast(t("mounts.networkDrive.errors.cachePathNotReadableWritable"))
 
 				return
 			}
 
 			if (path.paths[0].length > 100) {
-				errorToast(t("mounts.virtualDrive.errors.invalidCachePathLength"))
+				errorToast(t("mounts.networkDrive.errors.invalidCachePathLength"))
 
 				return
 			}
@@ -470,7 +470,7 @@ export const VirtualDrive = memo(() => {
 			const diskType = await window.desktopAPI.getDiskType(path.paths[0])
 
 			if (diskType && !diskType.isPhysical) {
-				errorToast(t("mounts.virtualDrive.errors.invalidCachePath"))
+				errorToast(t("mounts.networkDrive.errors.invalidCachePath"))
 
 				return
 			}
@@ -484,8 +484,8 @@ export const VirtualDrive = memo(() => {
 
 			setDesktopConfig(prev => ({
 				...prev,
-				virtualDriveConfig: {
-					...prev.virtualDriveConfig,
+				networkDriveConfig: {
+					...prev.networkDriveConfig,
 					cachePath: path.paths[0]!
 				}
 			}))
@@ -496,33 +496,33 @@ export const VirtualDrive = memo(() => {
 
 			setDesktopConfig(prev => ({
 				...prev,
-				virtualDriveConfig: {
-					...prev.virtualDriveConfig,
+				networkDriveConfig: {
+					...prev.networkDriveConfig,
 					enabled: false
 				}
 			}))
 		} finally {
-			setEnablingVirtualDrive(false)
+			setEnablingNetworkDrive(false)
 		}
 	}, [
 		availableCacheSizeQuery,
 		availableDrivesQuery,
-		enablingVirtualDrive,
+		enablingNetworkDrive,
 		errorToast,
 		isMountedQuery,
 		setDesktopConfig,
-		setEnablingVirtualDrive,
+		setEnablingNetworkDrive,
 		t,
 		cacheSizeQuery,
-		desktopConfig.virtualDriveConfig.mountPoint
+		desktopConfig.networkDriveConfig.mountPoint
 	])
 
 	const onReadOnlyChange = useCallback(
 		(readOnly: boolean) => {
 			setDesktopConfig(prev => ({
 				...prev,
-				virtualDriveConfig: {
-					...prev.virtualDriveConfig,
+				networkDriveConfig: {
+					...prev.networkDriveConfig,
 					readOnly
 				}
 			}))
@@ -531,12 +531,12 @@ export const VirtualDrive = memo(() => {
 	)
 
 	useEffect(() => {
-		const refetchVirtualDriveListener = eventEmitter.on("refetchVirtualDrive", () => {
+		const refetchNetworkDriveListener = eventEmitter.on("refetchNetworkDrive", () => {
 			isMountedQuery.refetch().catch(console.error)
 		})
 
 		return () => {
-			refetchVirtualDriveListener.remove()
+			refetchNetworkDriveListener.remove()
 		}
 	}, [isMountedQuery])
 
@@ -547,11 +547,11 @@ export const VirtualDrive = memo(() => {
 	if (!dependenciesQuery.data.installed) {
 		return (
 			<div className="flex flex-col items-center justify-center overflow-hidden h-[calc(100dvh-48px)]">
-				<p>{t("mounts.virtualDrive.missingDeps")}</p>
+				<p>{t("mounts.networkDrive.missingDeps")}</p>
 				<p className="text-muted-foreground text-sm">
 					{window.desktopAPI.osPlatform() === "win32"
-						? t("mounts.virtualDrive.missingDepsWindows")
-						: t("mounts.virtualDrive.missingDepsLinux")}
+						? t("mounts.networkDrive.missingDepsWindows")
+						: t("mounts.networkDrive.missingDepsLinux")}
 				</p>
 				<Button
 					className="mt-4 gap-2 items-center"
@@ -559,7 +559,7 @@ export const VirtualDrive = memo(() => {
 					onClick={openDependenciesInstructions}
 				>
 					<ArrowRight size={16} />
-					{t("mounts.virtualDrive.missingDepsInstructions")}
+					{t("mounts.networkDrive.missingDepsInstructions")}
 				</Button>
 			</div>
 		)
@@ -576,13 +576,13 @@ export const VirtualDrive = memo(() => {
 				>
 					<div className="flex flex-col gap-4">
 						<Section
-							name={t("mounts.virtualDrive.sections.active.name")}
+							name={t("mounts.networkDrive.sections.active.name")}
 							style={{
 								// @ts-expect-error not typed
 								WebkitAppRegion: "drag"
 							}}
 						>
-							{enablingVirtualDrive || !isMountedQuery.isSuccess ? (
+							{enablingNetworkDrive || !isMountedQuery.isSuccess ? (
 								<Loader className="animate-spin-medium" />
 							) : isMountedQuery.data.mounted ? (
 								<div className="flex flex-row gap-3">
@@ -595,34 +595,34 @@ export const VirtualDrive = memo(() => {
 						<div className="flex flex-col gap-3">
 							<p className="text-muted-foreground text-sm">
 								{window.desktopAPI.osPlatform() === "win32"
-									? t("mounts.virtualDrive.description")
-									: t("mounts.virtualDrive.unixDescription")}
+									? t("mounts.networkDrive.description")
+									: t("mounts.networkDrive.unixDescription")}
 							</p>
-							<p className="text-muted-foreground text-sm">{t("mounts.virtualDrive.limitations")}</p>
+							<p className="text-muted-foreground text-sm">{t("mounts.networkDrive.limitations")}</p>
 						</div>
 						<Section
-							name={t("mounts.virtualDrive.sections.enabled.name")}
-							info={t("mounts.virtualDrive.sections.enabled.info")}
+							name={t("mounts.networkDrive.sections.enabled.name")}
+							info={t("mounts.networkDrive.sections.enabled.info")}
 							className="mt-10"
 						>
 							<Switch
-								disabled={enablingVirtualDrive}
+								disabled={enablingNetworkDrive}
 								checked={isMountedQuery.isSuccess && isMountedQuery.data.mounted}
 								onCheckedChange={onEnabledChanged}
 							/>
 						</Section>
 						{window.desktopAPI.osPlatform() === "win32" ? (
 							<Section
-								name={t("mounts.virtualDrive.sections.driveLetter.name")}
-								info={t("mounts.virtualDrive.sections.driveLetter.info")}
+								name={t("mounts.networkDrive.sections.driveLetter.name")}
+								info={t("mounts.networkDrive.sections.driveLetter.info")}
 							>
 								<Select
 									onValueChange={onDriveLetterChange}
-									value={desktopConfig.virtualDriveConfig.mountPoint}
-									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+									value={desktopConfig.networkDriveConfig.mountPoint}
+									disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 								>
 									<SelectTrigger className="min-w-[120px]">
-										<SelectValue placeholder={desktopConfig.virtualDriveConfig.mountPoint} />
+										<SelectValue placeholder={desktopConfig.networkDriveConfig.mountPoint} />
 									</SelectTrigger>
 									<SelectContent className="max-h-[200px]">
 										{availableDrives.map(letter => {
@@ -640,12 +640,12 @@ export const VirtualDrive = memo(() => {
 							</Section>
 						) : (
 							<Section
-								name={t("mounts.virtualDrive.sections.mountPoint.name")}
-								info={t("mounts.virtualDrive.sections.mountPoint.info")}
+								name={t("mounts.networkDrive.sections.mountPoint.name")}
+								info={t("mounts.networkDrive.sections.mountPoint.info")}
 							>
 								<div className="flex flex-row gap-1 items-center">
 									<Input
-										value={desktopConfig.virtualDriveConfig.mountPoint}
+										value={desktopConfig.networkDriveConfig.mountPoint}
 										type="text"
 										onChange={e => {
 											e.preventDefault()
@@ -655,12 +655,12 @@ export const VirtualDrive = memo(() => {
 										autoCapitalize="none"
 										autoComplete="none"
 										autoCorrect="none"
-										disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+										disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 									/>
 									<Button
 										size="sm"
 										onClick={changeMountPoint}
-										disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+										disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 									>
 										<Edit size={18} />
 									</Button>
@@ -668,23 +668,23 @@ export const VirtualDrive = memo(() => {
 							</Section>
 						)}
 						<Section
-							name={t("mounts.virtualDrive.sections.readOnly.name")}
-							info={t("mounts.virtualDrive.sections.readOnly.info")}
+							name={t("mounts.networkDrive.sections.readOnly.name")}
+							info={t("mounts.networkDrive.sections.readOnly.info")}
 						>
 							<Switch
-								disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-								checked={desktopConfig.virtualDriveConfig.readOnly}
+								disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+								checked={desktopConfig.networkDriveConfig.readOnly}
 								onCheckedChange={onReadOnlyChange}
 							/>
 						</Section>
 						<Section
-							name={t("mounts.virtualDrive.sections.cache.name")}
-							info={t("mounts.virtualDrive.sections.cache.info")}
+							name={t("mounts.networkDrive.sections.cache.name")}
+							info={t("mounts.networkDrive.sections.cache.info")}
 						>
 							{cacheSizeQuery.isSuccess ? (
 								<div className="flex flex-row gap-3 items-center">
 									<p className="text-muted-foreground text-sm">
-										{t("mounts.virtualDrive.cacheUsed", {
+										{t("mounts.networkDrive.cacheUsed", {
 											size: formatBytes(cacheSizeQuery.data),
 											max: formatBytes(availableCacheSizeQuery.data)
 										})}
@@ -694,9 +694,9 @@ export const VirtualDrive = memo(() => {
 											onClick={cleanupCache}
 											size="sm"
 											variant="destructive"
-											disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+											disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 										>
-											{t("mounts.virtualDrive.clear")}
+											{t("mounts.networkDrive.clear")}
 										</Button>
 									)}
 								</div>
@@ -705,13 +705,13 @@ export const VirtualDrive = memo(() => {
 							)}
 						</Section>
 						<Section
-							name={t("mounts.virtualDrive.sections.cachePath.name")}
-							info={t("mounts.virtualDrive.sections.cachePath.info")}
+							name={t("mounts.networkDrive.sections.cachePath.name")}
+							info={t("mounts.networkDrive.sections.cachePath.info")}
 						>
 							<div className="flex flex-row gap-1 items-center">
-								{desktopConfig.virtualDriveConfig.cachePath && (
+								{desktopConfig.networkDriveConfig.cachePath && (
 									<Input
-										value={desktopConfig.virtualDriveConfig.cachePath}
+										value={desktopConfig.networkDriveConfig.cachePath}
 										type="text"
 										onChange={e => {
 											e.preventDefault()
@@ -721,29 +721,29 @@ export const VirtualDrive = memo(() => {
 										autoCapitalize="none"
 										autoComplete="none"
 										autoCorrect="none"
-										disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+										disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 									/>
 								)}
 								<Button
 									size="sm"
 									onClick={changeCachePath}
-									disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+									disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 								>
 									<Edit size={18} />
 								</Button>
 							</div>
 						</Section>
 						<Section
-							name={t("mounts.virtualDrive.sections.cacheSize.name")}
-							info={t("mounts.virtualDrive.sections.cacheSize.info")}
+							name={t("mounts.networkDrive.sections.cacheSize.name")}
+							info={t("mounts.networkDrive.sections.cacheSize.info")}
 						>
 							<Select
 								onValueChange={onCacheChange}
-								value={desktopConfig.virtualDriveConfig.cacheSizeInGi.toString()}
-								disabled={enablingVirtualDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
+								value={desktopConfig.networkDriveConfig.cacheSizeInGi.toString()}
+								disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
 							>
 								<SelectTrigger className="min-w-[120px]">
-									<SelectValue placeholder={`${desktopConfig.virtualDriveConfig.cacheSizeInGi} GB`} />
+									<SelectValue placeholder={`${desktopConfig.networkDriveConfig.cacheSizeInGi} GB`} />
 								</SelectTrigger>
 								<SelectContent className="max-h-[200px]">
 									{cacheSteps.map(size => {
@@ -759,20 +759,20 @@ export const VirtualDrive = memo(() => {
 								</SelectContent>
 							</Select>
 						</Section>
-						{!enablingVirtualDrive &&
+						{!enablingNetworkDrive &&
 							isMountedQuery.isSuccess &&
 							isMountedQuery.data.mounted &&
 							window.desktopAPI.osPlatform() === "win32" && (
 								<Section
-									name={t("mounts.virtualDrive.sections.browse.name")}
-									info={t("mounts.virtualDrive.sections.browse.info")}
+									name={t("mounts.networkDrive.sections.browse.name")}
+									info={t("mounts.networkDrive.sections.browse.info")}
 									className="mt-10"
 								>
 									<Button
 										onClick={browse}
 										size="sm"
 									>
-										{t("mounts.virtualDrive.browse")}
+										{t("mounts.networkDrive.browse")}
 									</Button>
 								</Section>
 							)}
@@ -785,4 +785,4 @@ export const VirtualDrive = memo(() => {
 	)
 })
 
-export default VirtualDrive
+export default NetworkDrive

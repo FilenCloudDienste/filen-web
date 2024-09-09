@@ -239,7 +239,7 @@
 			"out": "Pending"
 		},
 		"mounts": {
-			"virtualDrive": "Virtual Drive",
+			"networkDrive": "Network Drive",
 			"s3": "S3",
 			"webdav": "WebDAV"
 		},
@@ -1235,26 +1235,26 @@
 		"accept": "Accept"
 	},
 	"mounts": {
-		"virtualDrive": {
+		"networkDrive": {
 			"mountedAt": "Mounted at {{letter}}",
 			"browse": "Browse",
 			"clear": "Clear",
 			"missingDeps": "Missing dependencies",
-			"missingDepsWindows": "To use the virtual drive you need to have WinFSP installed on your system.",
-			"missingDepsLinux": "To use the virtual drive you need to have FUSE3 installed on your system.",
+			"missingDepsWindows": "To use the network drive you need to have WinFSP installed on your system.",
+			"missingDepsLinux": "To use the network drive you need to have FUSE3 installed on your system.",
 			"missingDepsInstructions": "Installation instructions",
 			"cacheUsed": "{{size}} used",
 			"description": "Mount your cloud drive as a local drive, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",
 			"unixDescription": "Mount your cloud drive inside a local directory, making it easy to access and manage your files directly from your computer. Enjoy seamless integration, real-time synchronization, and secure access to your data, all within your familiar file explorer.",
 			"unixSudo": "To mount and unmount your cloud drive the client needs admin rights. Please allow access when you are prompted.",
-			"limitations": "Installing, running or unpacking programs and archives on the virtual drive is not supported.",
+			"limitations": "Installing, running or unpacking programs and archives on the network drive is not supported.",
 			"sections": {
 				"active": {
 					"name": "Active"
 				},
 				"enabled": {
 					"name": "Enabled",
-					"info": "Enable or disable the virtual drive. Refresh your explorer when toggling this option"
+					"info": "Enable or disable the network drive. Refresh your explorer when toggling this option"
 				},
 				"mountPoint": {
 					"name": "Mount point",
@@ -1263,27 +1263,27 @@
 				},
 				"driveLetter": {
 					"name": "Drive letter",
-					"info": "Set the drive letter for the virtual drive. Only available drive letters will show up"
+					"info": "Set the drive letter for the network drive. Only available drive letters will show up"
 				},
 				"browse": {
 					"name": "Browse",
-					"info": "Browse the virtual drive using your default explorer"
+					"info": "Browse the network drive using your default explorer"
 				},
 				"cache": {
 					"name": "Cache",
-					"info": "Caching significantly speeds up browsing your virtual drive"
+					"info": "Caching significantly speeds up browsing your network drive"
 				},
 				"cacheSize": {
 					"name": "Cache size",
-					"info": "We recommend setting the cache size as high as possible. The client will use your local disk to significantly speed up the virtual drive"
+					"info": "We recommend setting the cache size as high as possible. The client will use your local disk to significantly speed up the network drive"
 				},
 				"cachePath": {
 					"name": "Cache location",
-					"info": "Change the cache location of the virtual drive. Must be on an internal disk. Will use the app installation directory by default if unchanged"
+					"info": "Change the cache location of the network drive. Must be on an internal disk. Will use the app installation directory by default if unchanged"
 				},
 				"readOnly": {
 					"name": "Read only",
-					"info": "Mount the virtual drive as read only"
+					"info": "Mount the network drive as read only"
 				}
 			},
 			"dialogs": {
@@ -1294,7 +1294,7 @@
 				},
 				"disable": {
 					"title": "Disable",
-					"description": "Are you sure you want to disable the virtual drive? Every active operation on it will be cancelled or will error. Please make sure you are not actively using it anymore.",
+					"description": "Are you sure you want to disable the network drive? Every active operation on it will be cancelled or will error. Please make sure you are not actively using it anymore.",
 					"continue": "Disable"
 				}
 			},

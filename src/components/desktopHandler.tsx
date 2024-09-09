@@ -4,7 +4,7 @@ import eventEmitter from "@/lib/eventEmitter"
 import useIsAuthed from "@/hooks/useIsAuthed"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
 import { Semaphore } from "@/lib/semaphore"
-import { isVirtualDriveMounted } from "./mounts/virtualDrive"
+import { isNetworkDriveMounted } from "./mounts/networkDrive"
 import { isWebDAVOnline } from "./mounts/webdav"
 import { isS3Online } from "./mounts/s3"
 import { useMountsStore } from "@/stores/mounts.store"
@@ -15,11 +15,11 @@ export const DesktopHandler = memo(() => {
 	const [authed] = useIsAuthed()
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const lastDesktopConfigRef = useRef<string>("")
-	const { setEnablingS3, setEnablingVirtualDrive, setEnablingWebDAV } = useMountsStore(
+	const { setEnablingS3, setEnablingNetworkDrive, setEnablingWebDAV } = useMountsStore(
 		useCallback(
 			state => ({
 				setEnablingS3: state.setEnablingS3,
-				setEnablingVirtualDrive: state.setEnablingVirtualDrive,
+				setEnablingNetworkDrive: state.setEnablingNetworkDrive,
 				setEnablingWebDAV: state.setEnablingWebDAV
 			}),
 			[]
@@ -30,31 +30,31 @@ export const DesktopHandler = memo(() => {
 		return JSON.stringify(desktopConfig)
 	}, [desktopConfig])
 
-	const startVirtualDrive = useCallback(async () => {
+	const startNetworkDrive = useCallback(async () => {
 		if (!authed) {
 			return
 		}
 
-		setEnablingVirtualDrive(true)
+		setEnablingNetworkDrive(true)
 
 		try {
-			await window.desktopAPI.restartVirtualDrive()
+			await window.desktopAPI.restartNetworkDrive()
 
-			eventEmitter.emit("refetchVirtualDrive")
+			eventEmitter.emit("refetchNetworkDrive")
 		} catch (e) {
 			console.error(e)
 
 			setDesktopConfig(prev => ({
 				...prev,
-				virtualDriveConfig: {
-					...prev.virtualDriveConfig,
+				networkDriveConfig: {
+					...prev.networkDriveConfig,
 					enabled: false
 				}
 			}))
 		} finally {
-			setEnablingVirtualDrive(false)
+			setEnablingNetworkDrive(false)
 		}
-	}, [setDesktopConfig, authed, setEnablingVirtualDrive])
+	}, [setDesktopConfig, authed, setEnablingNetworkDrive])
 
 	const startWebDAV = useCallback(async () => {
 		if (!authed) {
@@ -121,14 +121,14 @@ export const DesktopHandler = memo(() => {
 			await updateDesktopConfigMutex.acquire()
 
 			try {
-				const [{ mounted: virtualDriveMounted }, { online: webdavOnline }, { online: s3Online }] = await Promise.all([
-					isVirtualDriveMounted(),
+				const [{ mounted: networkDriveMounted }, { online: webdavOnline }, { online: s3Online }] = await Promise.all([
+					isNetworkDriveMounted(),
 					isWebDAVOnline(),
 					isS3Online()
 				])
 
 				await Promise.all([
-					desktopConfig.virtualDriveConfig.enabled && !virtualDriveMounted ? startVirtualDrive() : Promise.resolve(),
+					desktopConfig.networkDriveConfig.enabled && !networkDriveMounted ? startNetworkDrive() : Promise.resolve(),
 					desktopConfig.webdavConfig.enabled && !webdavOnline ? startWebDAV() : Promise.resolve(),
 					desktopConfig.s3Config.enabled && !s3Online ? startS3() : Promise.resolve()
 				])
@@ -140,7 +140,7 @@ export const DesktopHandler = memo(() => {
 				updateDesktopConfigMutex.release()
 			}
 		})()
-	}, [currentDesktopConfigStringified, desktopConfig, startS3, startVirtualDrive, startWebDAV])
+	}, [currentDesktopConfigStringified, desktopConfig, startS3, startNetworkDrive, startWebDAV])
 
 	return null
 })

@@ -313,13 +313,13 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 						{!isMobile && <p>{t("innerSideBar.settings.plans")}</p>}
 					</>
 				)}
-				{uuid === "mounts/virtual-drive" && (
+				{uuid === "mounts/network-drive" && (
 					<>
 						<HardDrive
 							size={iconSize}
 							className="shrink-0"
 						/>
-						{!isMobile && <p>{t("innerSideBar.mounts.virtualDrive")}</p>}
+						{!isMobile && <p>{t("innerSideBar.mounts.networkDrive")}</p>}
 					</>
 				)}
 				{uuid === "mounts/webdav" && (

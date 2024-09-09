@@ -38,8 +38,8 @@ export const UNCACHED_QUERY_KEYS = [
 	"filePublicLinkInfo",
 	"directoryPublicLinkInfo",
 	"fetchEvent",
-	"virtualDriveStats",
-	"isVirtualDriveMounted",
+	"networkDriveStats",
+	"isNetworkDriveMounted",
 	"isS3Online",
 	"isWebDAVOnline"
 ]
@@ -49,8 +49,8 @@ export const MAX_PREVIEW_SIZE = IS_DESKTOP ? Infinity : 256 * MiB
 export const VALID_LOCAL_PORT_RANGE = [1024, 65535]
 export const SIDEBAR_WIDTH = IS_DESKTOP && IS_APPLE_DEVICE ? 75 : 64
 export const DESKTOP_TOPBAR_HEIGHT = IS_DESKTOP ? (IS_APPLE_DEVICE ? 0 : 24) : 0
-export const SDK_CONFIG_VERSION = 2
-export const DESKTOP_CONFIG_VERSION = 2
-export const AUTHED_VERSION = 2
+export const SDK_CONFIG_VERSION = 3
+export const DESKTOP_CONFIG_VERSION = 3
+export const AUTHED_VERSION = 3
 export const MAX_CONCURRENT_UPLOADS = 16
 export const MAX_CONCURRENT_DOWNLOADS = 16

@@ -82,7 +82,7 @@ export const InnerSideBar = memo(() => {
 				)}
 				{location.includes("/mounts") && (
 					<>
-						<Button uuid="mounts/virtual-drive" />
+						<Button uuid="mounts/network-drive" />
 						<Button uuid="mounts/webdav" />
 						<Button uuid="mounts/s3" />
 					</>

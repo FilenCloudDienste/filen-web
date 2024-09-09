@@ -48,10 +48,10 @@ export function doesSyncNameExist(name: string): boolean {
 	return desktopConfig.syncConfig.syncPairs.some(pair => pair.name.trim() === name.trim())
 }
 
-export function tryingToSyncVirtualDrive(path: string): boolean {
+export function tryingToSyncNetworkDrive(path: string): boolean {
 	const desktopConfig = getDesktopConfig()
 
-	return path.startsWith(desktopConfig.virtualDriveConfig.mountPoint)
+	return path.startsWith(desktopConfig.networkDriveConfig.mountPoint)
 }
 
 export const CreateSyncDialog = memo(() => {
@@ -151,7 +151,7 @@ export const CreateSyncDialog = memo(() => {
 
 				if (
 					!(await window.desktopAPI.isAllowedToSyncDirectory(createState.localPath)) ||
-					tryingToSyncVirtualDrive(createState.localPath)
+					tryingToSyncNetworkDrive(createState.localPath)
 				) {
 					errorToast(t("dialogs.createSync.errors.invalidLocalPath"))
 

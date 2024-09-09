@@ -51,7 +51,7 @@ export const Top = memo(() => {
 							location.includes("settings")
 								? { type: "general" }
 								: location.includes("mounts")
-									? { type: "virtual-drive" }
+									? { type: "network-drive" }
 									: location.includes("contacts")
 										? { type: "all" }
 										: { _splat: baseFolderUUID }

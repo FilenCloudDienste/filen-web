@@ -8,8 +8,8 @@ export const Transfers = memo(() => {
 	const { t } = useTranslation()
 
 	const query = useQuery({
-		queryKey: ["virtualDriveStats"],
-		queryFn: () => window.desktopAPI.virtualDriveStats(),
+		queryKey: ["networkDriveStats"],
+		queryFn: () => window.desktopAPI.networkDriveStats(),
 		refetchInterval: 1000,
 		refetchIntervalInBackground: false,
 		refetchOnMount: true,
@@ -49,8 +49,8 @@ export const Transfers = memo(() => {
 										{speed > 0
 											? t(
 													uploadsInProgress <= 1
-														? "mounts.virtualDrive.transfers.uploadingSpeed"
-														: "mounts.virtualDrive.transfers.uploadingPluralSpeed",
+														? "mounts.networkDrive.transfers.uploadingSpeed"
+														: "mounts.networkDrive.transfers.uploadingPluralSpeed",
 													{
 														total: uploadsInProgress,
 														speed: bpsToReadable(speed)
@@ -58,8 +58,8 @@ export const Transfers = memo(() => {
 												)
 											: t(
 													uploadsInProgress <= 1
-														? "mounts.virtualDrive.transfers.uploading"
-														: "mounts.virtualDrive.transfers.uploadingPlural",
+														? "mounts.networkDrive.transfers.uploading"
+														: "mounts.networkDrive.transfers.uploadingPlural",
 													{
 														total: uploadsInProgress
 													}
@@ -72,7 +72,7 @@ export const Transfers = memo(() => {
 										className="text-green-500"
 										size={16}
 									/>
-									<p>{t("mounts.virtualDrive.transfers.everythingUploaded")}</p>
+									<p>{t("mounts.networkDrive.transfers.everythingUploaded")}</p>
 								</>
 							)}
 						</div>
