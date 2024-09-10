@@ -1374,6 +1374,7 @@
 		"s3": {
 			"copyConnect": "复制",
                         "description": "启动本地 S3 服务器，提供标准化协议来访问和管理您的云盘。这可以兼容各种支持 S3 的应用程序和设备，从而增强您的文件可访问性和管理能力。",
+			"info": "连接到 S3 服务器时，您需要将区域设置为 \"filen\" 并启用 \"s3ForcePathStyle\",
 			"sections": {
 				"active": {
 					"name": "激活"
