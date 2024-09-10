@@ -239,7 +239,7 @@
 			"out": "待处理"
 	},
 		"mounts": {
-			"virtualDrive": "虚拟磁盘",
+			"networkDrive": "网络磁盘",
 			"s3": "S3",
 			"webdav": "WebDAV"
 		},
