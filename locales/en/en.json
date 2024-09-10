@@ -1374,6 +1374,7 @@
 		"s3": {
 			"copyConnect": "Copy",
 			"description": "Start a local S3 server, providing a standardized protocol to access and manage your cloud drive. This allows compatibility with a wide range of applications and devices that support S3, enhancing your file accessibility and management capabilities.",
+			"info": "When connecting to the S3 server you need to set the region to \"filen\" and enable \"s3ForcePathStyle\".",
 			"sections": {
 				"active": {
 					"name": "Active"

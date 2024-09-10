@@ -240,6 +240,7 @@ export const S3 = memo(() => {
 					</Section>
 					<div className="flex flex-col gap-3">
 						<p className="text-muted-foreground text-sm">{t("mounts.s3.description")}</p>
+						<p className="text-muted-foreground text-sm">{t("mounts.s3.info")}</p>
 					</div>
 					<Section
 						name={t("mounts.s3.sections.enabled.name")}
