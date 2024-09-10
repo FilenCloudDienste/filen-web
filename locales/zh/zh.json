@@ -603,7 +603,7 @@
 	"chats": {
 		"newMessagesSince": "自 {{since}} 以来有 {{count}} 条新消息",
 		"markAsRead": "标为已读",
-		"maxSizeReached": "最大消息大小限制为 {{chars}} 个字符",
+		"maxSizeReached": "最大消息长度限制为 {{chars}} 个字符",
 		"newMessageSince": "自 {{since}} 以来有 {{count}} 条新消息",
 		"showParticipants": "显示参与者",
 		"hideParticipants": "隐藏参与者",
