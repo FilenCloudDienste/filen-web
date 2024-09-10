@@ -8,6 +8,7 @@ import { type FilenDesktopConfig } from "@filen/desktop/dist/types"
 import { clear as clearLocalForage } from "@/lib/localForage"
 import { connect as socketConnect } from "@/lib/socket"
 import { localStorageKey as authedLocalStorageKey } from "@/hooks/useIsAuthed"
+import queryClientPersisterIDB from "./queryPersister"
 
 export const DEFAULT_SDK_CONFIG: FilenSDKConfig = {
 	email: "anonymous",
@@ -123,7 +124,7 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
  * @returns {Promise<void>}
  */
 export async function logout(): Promise<void> {
-	await clearLocalForage()
+	await Promise.all([clearLocalForage(), queryClientPersisterIDB.clear()])
 
 	if (IS_DESKTOP) {
 		await Promise.all([

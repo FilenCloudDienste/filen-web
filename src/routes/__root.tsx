@@ -2,10 +2,10 @@ import { ThemeProvider, useTheme } from "@/providers/themeProvider"
 import { createRootRoute, Outlet } from "@tanstack/react-router"
 import { memo, useEffect, useState, useRef, useCallback } from "react"
 import { Toaster } from "@/components/ui/toaster"
-import { QueryClient, focusManager, useIsRestoring } from "@tanstack/react-query"
-import { PersistQueryClientProvider, type PersistQueryClientOptions, persistQueryClientRestore } from "@tanstack/react-query-persist-client"
+import { QueryClient, focusManager, useIsRestoring, QueryClientProvider } from "@tanstack/react-query"
+import { experimental_createPersister, type PersistedQuery } from "@tanstack/query-persist-client-core"
 import useIsAuthed from "@/hooks/useIsAuthed"
-import createIDBPersister from "@/lib/queryPersister"
+import queryClientPersisterIDB, { queryClientPersisterPrefix } from "@/lib/queryPersister"
 import DragSelect from "@/components/dragSelect"
 import DropZone from "@/components/dropZone"
 import ConfirmDialog from "@/components/dialogs/confirm"
@@ -41,6 +41,7 @@ import RemoteConfigHandler from "@/components/remoteConfigHandler"
 import MaintenanceDialog from "@/components/dialogs/maintenance"
 import LockDialog from "@/components/dialogs/lock"
 import ExportReminder from "@/components/exportReminder"
+import memoize from "lodash/memoize"
 
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
@@ -60,32 +61,71 @@ focusManager.setEventListener(handleFocus => {
 	}
 })
 
-export const persistantQueryClient = new QueryClient({
+const shouldPersistQuery = memoize(
+	(queryKey: unknown[]) => {
+		const shouldNotPersist = queryKey.some(queryKey => typeof queryKey === "string" && UNCACHED_QUERY_KEYS.includes(queryKey))
+
+		return !shouldNotPersist
+	},
+	queryKey => queryKey.join(":")
+)
+
+export const queryClientPersister = experimental_createPersister({
+	storage: queryClientPersisterIDB,
+	maxAge: 86400 * 1000 * 7,
+	buster: "",
+	serialize: query => {
+		if (query.state.status !== "success" || !shouldPersistQuery(query.queryKey as unknown[])) {
+			return undefined
+		}
+
+		return query
+	},
+	deserialize: query => query as PersistedQuery,
+	prefix: queryClientPersisterPrefix
+})
+
+export const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			refetchOnMount: "always",
 			refetchOnReconnect: "always",
 			refetchOnWindowFocus: "always",
-			staleTime: Infinity,
-			gcTime: Infinity
+			staleTime: 86400 * 1000 * 7,
+			gcTime: 86400 * 1000 * 7,
+			persister: queryClientPersister
 		}
 	}
 })
 
-export const queryClientPersister = createIDBPersister()
+export async function restoreQueries(): Promise<void> {
+	const keys = await queryClientPersisterIDB.keys()
 
-export const persistOptions: Omit<PersistQueryClientOptions, "queryClient"> = {
-	persister: queryClientPersister,
-	maxAge: Infinity,
-	dehydrateOptions: {
-		shouldDehydrateQuery(query) {
-			if (query.state.status !== "success" || query.state.error) {
-				return false
+	await Promise.all(
+		keys.map(async key => {
+			if (key.startsWith(queryClientPersisterPrefix)) {
+				const persistedQuery = (await queryClientPersisterIDB.getItem(key)) as unknown as PersistedQuery
+
+				if (!persistedQuery || !persistedQuery.state) {
+					await queryClientPersisterIDB.removeItem(key)
+
+					return
+				}
+
+				const shouldNotPersist = !shouldPersistQuery(persistedQuery.queryKey as unknown[])
+
+				if (persistedQuery.state.status === "success") {
+					if (!shouldNotPersist) {
+						queryClient.setQueryData(persistedQuery.queryKey, persistedQuery.state.data, {
+							updatedAt: persistedQuery.state.dataUpdatedAt
+						})
+					} else {
+						await queryClientPersisterIDB.removeItem(key)
+					}
+				}
 			}
-
-			return !query.queryKey.some(queryKey => typeof queryKey === "string" && UNCACHED_QUERY_KEYS.includes(queryKey))
-		}
-	}
+		})
+	)
 }
 
 export const Loading = memo(() => {
@@ -117,16 +157,8 @@ export const Root = memo(() => {
 	const isRestoring = useIsRestoring()
 
 	const setup = useCallback(async () => {
-		await persistQueryClientRestore({
-			queryClient: persistantQueryClient,
-			persister: queryClientPersister,
-			maxAge: Infinity,
-			buster: "",
-			hydrateOptions: undefined
-		}).catch(console.error)
-
 		try {
-			await setupApp()
+			await Promise.all([restoreQueries(), setupApp()])
 
 			console.log("Setup done")
 
@@ -147,10 +179,7 @@ export const Root = memo(() => {
 	return (
 		<main className="overflow-hidden">
 			<ThemeProvider>
-				<PersistQueryClientProvider
-					client={persistantQueryClient}
-					persistOptions={persistOptions}
-				>
+				<QueryClientProvider client={queryClient}>
 					{!ready || isRestoring ? (
 						<Loading />
 					) : (
@@ -201,7 +230,7 @@ export const Root = memo(() => {
 					<IsOnlineDialog />
 					<RemoteConfigHandler />
 					<MaintenanceDialog />
-				</PersistQueryClientProvider>
+				</QueryClientProvider>
 			</ThemeProvider>
 			<Toaster />
 		</main>

@@ -1,26 +1,40 @@
-import { getItem, setItem, removeItem } from "@/lib/localForage"
-import { type PersistedClient, type Persister } from "@tanstack/react-query-persist-client"
+import localForage from "localforage"
+// @ts-expect-error Not typed
+import memoryStorageDriver from "localforage-memoryStorageDriver"
 
-/**
- * Persist all queries in IndexedDB.
- * @date 3/13/2024 - 4:05:38 AM
- *
- * @export
- * @param {IDBValidKey} [idbValidKey="reactQuery"]
- * @returns {Persister}
- */
-export function createIDBPersister(idbValidKey: IDBValidKey = "reactQuery"): Persister {
+export const VERSION = 1
+export const queryClientPersisterPrefix = "reactQueryV1"
+
+export const store = localForage.createInstance({
+	name: "Filen_reactQuery",
+	version: 1.0,
+	storeName: "filen_reactQuery_v" + VERSION,
+	size: 1024 * 1024 * 1024
+})
+
+store.defineDriver(memoryStorageDriver).catch(console.error)
+store.setDriver([store.INDEXEDDB, memoryStorageDriver._driver]).catch(console.error)
+
+export function createIDBPersister() {
 	return {
-		persistClient: async (client: PersistedClient) => {
-			await setItem(idbValidKey as string, client)
+		getItem: (key: string) => {
+			return store.getItem(key)
 		},
-		restoreClient: async () => {
-			return (await getItem<PersistedClient>(idbValidKey as string)) as PersistedClient
+		setItem: (key: string, value: unknown) => {
+			return store.setItem(key, value)
 		},
-		removeClient: async () => {
-			await removeItem(idbValidKey as string)
+		removeItem: (key: string) => {
+			return store.removeItem(key)
+		},
+		keys: () => {
+			return store.keys()
+		},
+		clear: () => {
+			return store.clear()
 		}
-	} satisfies Persister
+	}
 }
 
-export default createIDBPersister
+export const queryClientPersisterIDB = createIDBPersister()
+
+export default queryClientPersisterIDB
