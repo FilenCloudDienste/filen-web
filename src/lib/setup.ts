@@ -60,6 +60,108 @@ export const DEFAULT_DESKTOP_CONFIG: FilenDesktopConfig = {
 	}
 }
 
+export async function resetLocalStorage(): Promise<void> {
+	await Promise.all([clearLocalForage(), queryClientPersisterIDB.clear()])
+
+	const cookieConsent = window.localStorage.getItem("cookieConsent")
+	const defaultNoteType = window.localStorage.getItem("defaultNoteType")
+	const videoPlayerVolume = window.localStorage.getItem("videoPlayerVolume")
+	const chatNotificationsEnabled = window.localStorage.getItem("chatNotificationsEnabled")
+	const contactNotificationsEnabled = window.localStorage.getItem("contactNotificationsEnabled")
+	const i18nextLng = window.localStorage.getItem("i18nextLng")
+	const audioPlayerVolume = window.localStorage.getItem("audioPlayerVolume")
+	const driveSortBy = window.localStorage.getItem("driveSortBy")
+	const listType = window.localStorage.getItem("listType")
+	const lockPin = window.localStorage.getItem("lockPin")
+	const lockTimeout = window.localStorage.getItem("lockTimeout")
+	const mainContainerResizablePanelSizes = window.localStorage.getItem("mainContainerResizablePanelSizes")
+	const mainContainerResizablePanelSizesNotes = window.localStorage.getItem("mainContainerResizablePanelSizes:notes")
+	const minimizeToTrayEnabled = window.localStorage.getItem("minimizeToTrayEnabled")
+	const sideBarTreeOpen = window.localStorage.getItem("sideBarTreeOpen")
+	const textEditorResizablePanelSizes = window.localStorage.getItem("textEditorResizablePanelSizes")
+	const textEditorResizablePanelSizesNotes = window.localStorage.getItem("textEditorResizablePanelSizes:notes")
+	const textEditorResizablePanelSizesPublicLink = window.localStorage.getItem("textEditorResizablePanelSizes:publicLink")
+	const useResizablePanelSizes = window.localStorage.getItem("useResizablePanelSizes")
+
+	window.localStorage.clear()
+
+	if (useResizablePanelSizes) {
+		window.localStorage.setItem("useResizablePanelSizes", useResizablePanelSizes)
+	}
+
+	if (textEditorResizablePanelSizes) {
+		window.localStorage.setItem("textEditorResizablePanelSizes", textEditorResizablePanelSizes)
+	}
+
+	if (textEditorResizablePanelSizesNotes) {
+		window.localStorage.setItem("textEditorResizablePanelSizes:notes", textEditorResizablePanelSizesNotes)
+	}
+
+	if (textEditorResizablePanelSizesPublicLink) {
+		window.localStorage.setItem("textEditorResizablePanelSizes:publicLink", textEditorResizablePanelSizesPublicLink)
+	}
+
+	if (cookieConsent) {
+		window.localStorage.setItem("cookieConsent", cookieConsent)
+	}
+
+	if (mainContainerResizablePanelSizes) {
+		window.localStorage.setItem("mainContainerResizablePanelSizes", mainContainerResizablePanelSizes)
+	}
+
+	if (mainContainerResizablePanelSizesNotes) {
+		window.localStorage.setItem("mainContainerResizablePanelSizes:notes", mainContainerResizablePanelSizesNotes)
+	}
+
+	if (driveSortBy) {
+		window.localStorage.setItem("driveSortBy", driveSortBy)
+	}
+
+	if (lockPin) {
+		window.localStorage.setItem("lockPin", lockPin)
+	}
+
+	if (lockTimeout) {
+		window.localStorage.setItem("lockTimeout", lockTimeout)
+	}
+
+	if (listType) {
+		window.localStorage.setItem("listType", listType)
+	}
+
+	if (defaultNoteType) {
+		window.localStorage.setItem("defaultNoteType", defaultNoteType)
+	}
+
+	if (videoPlayerVolume) {
+		window.localStorage.setItem("videoPlayerVolume", videoPlayerVolume)
+	}
+
+	if (audioPlayerVolume) {
+		window.localStorage.setItem("audioPlayerVolume", audioPlayerVolume)
+	}
+
+	if (chatNotificationsEnabled) {
+		window.localStorage.setItem("chatNotificationsEnabled", chatNotificationsEnabled)
+	}
+
+	if (contactNotificationsEnabled) {
+		window.localStorage.setItem("contactNotificationsEnabled", contactNotificationsEnabled)
+	}
+
+	if (i18nextLng) {
+		window.localStorage.setItem("i18nextLng", i18nextLng)
+	}
+
+	if (minimizeToTrayEnabled) {
+		window.localStorage.setItem("minimizeToTrayEnabled", minimizeToTrayEnabled)
+	}
+
+	if (sideBarTreeOpen) {
+		window.localStorage.setItem("sideBarTreeOpen", sideBarTreeOpen)
+	}
+}
+
 /**
  * Setup the app.
  *
@@ -124,8 +226,6 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
  * @returns {Promise<void>}
  */
 export async function logout(): Promise<void> {
-	await Promise.all([clearLocalForage(), queryClientPersisterIDB.clear()])
-
 	if (IS_DESKTOP) {
 		await Promise.all([
 			window.desktopAPI.stopS3Server(),
@@ -135,38 +235,7 @@ export async function logout(): Promise<void> {
 		])
 	}
 
-	const cookieConsent = window.localStorage.getItem("cookieConsent")
-	const defaultNoteType = window.localStorage.getItem("defaultNoteType")
-	const videoPlayerVolume = window.localStorage.getItem("videoPlayerVolume")
-	const chatNotificationsEnabled = window.localStorage.getItem("chatNotificationsEnabled")
-	const contactNotificationsEnabled = window.localStorage.getItem("contactNotificationsEnabled")
-	const i18nextLng = window.localStorage.getItem("i18nextLng")
-
-	window.localStorage.clear()
-
-	if (cookieConsent) {
-		window.localStorage.setItem("cookieConsent", cookieConsent)
-	}
-
-	if (defaultNoteType) {
-		window.localStorage.setItem("defaultNoteType", defaultNoteType)
-	}
-
-	if (videoPlayerVolume) {
-		window.localStorage.setItem("videoPlayerVolume", videoPlayerVolume)
-	}
-
-	if (chatNotificationsEnabled) {
-		window.localStorage.setItem("chatNotificationsEnabled", chatNotificationsEnabled)
-	}
-
-	if (contactNotificationsEnabled) {
-		window.localStorage.setItem("contactNotificationsEnabled", contactNotificationsEnabled)
-	}
-
-	if (i18nextLng) {
-		window.localStorage.setItem("i18nextLng", i18nextLng)
-	}
+	await resetLocalStorage()
 
 	if (IS_DESKTOP) {
 		await window.desktopAPI.restart()

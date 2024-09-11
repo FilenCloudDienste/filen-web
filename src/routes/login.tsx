@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
 import { Loader } from "lucide-react"
-import { setup, DEFAULT_DESKTOP_CONFIG } from "@/lib/setup"
+import { setup, DEFAULT_DESKTOP_CONFIG, resetLocalStorage } from "@/lib/setup"
 import worker from "@/lib/worker"
 import { showInputDialog } from "@/components/dialogs/input"
 import useErrorToast from "@/hooks/useErrorToast"
@@ -98,6 +98,8 @@ export function Login() {
 				password,
 				twoFactorCode
 			})
+
+			await resetLocalStorage()
 
 			window.localStorage.setItem(
 				`sdkConfig:${SDK_CONFIG_VERSION}`,
