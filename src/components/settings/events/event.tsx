@@ -189,16 +189,9 @@ export const Event = memo(({ event, account }: { event: UserEvent; account: User
 		}
 	}, [event, t])
 
-	const open = useCallback(() => {
-		eventEmitter.emit("openEventDialog", event.uuid)
-	}, [event.uuid])
-
-	return (
-		<div
-			className="flex flex-row border-b items-center p-4 py-3 justify-between gap-10 hover:bg-secondary hover:rounded-md w-full cursor-pointer"
-			onClick={open}
-		>
-			<div className="flex flex-row gap-3 items-center">
+	const eventIcon = useMemo(() => {
+		return (
+			<>
 				{event.type === "folderColorChanged" ||
 				event.type === "folderLinkEdited" ||
 				event.type === "baseFolderCreated" ||
@@ -245,6 +238,25 @@ export const Event = memo(({ event, account }: { event: UserEvent; account: User
 						size={24}
 					/>
 				)}
+			</>
+		)
+	}, [account.avatarURL, event.info, event.type])
+
+	const open = useCallback(() => {
+		eventEmitter.emit("openEventDialog", {
+			id: event.uuid,
+			icon: eventIcon,
+			text: eventText
+		})
+	}, [event.uuid, eventIcon, eventText])
+
+	return (
+		<div
+			className="flex flex-row border-b items-center p-4 py-3 justify-between gap-10 hover:bg-secondary hover:rounded-md w-full cursor-pointer"
+			onClick={open}
+		>
+			<div className="flex flex-row gap-3 items-center">
+				{eventIcon}
 				<p className="line-clamp-1 text-ellipsis break-all">{eventText}</p>
 			</div>
 			<p className="text-muted-foreground text-sm shrink-0">{simpleDate(event.timestamp)}</p>

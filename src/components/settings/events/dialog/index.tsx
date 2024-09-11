@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next"
 export const EventDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
 	const [uuid, setUUID] = useState<string | null>(null)
+	const [icon, setIcon] = useState<JSX.Element | null>(null)
+	const [text, setText] = useState<string>("")
 	const { t } = useTranslation()
 
 	const preventDefault = useCallback((e: Event) => {
@@ -15,8 +17,10 @@ export const EventDialog = memo(() => {
 	}, [])
 
 	useEffect(() => {
-		const listener = eventEmitter.on("openEventDialog", (id: string) => {
+		const listener = eventEmitter.on("openEventDialog", ({ id, text, icon }: { id: string; text: string; icon: JSX.Element }) => {
 			setUUID(id)
+			setIcon(icon)
+			setText(text)
 			setOpen(true)
 		})
 
@@ -36,7 +40,13 @@ export const EventDialog = memo(() => {
 				onOpenAutoFocus={preventDefault}
 			>
 				<DialogHeader>{t("dialogs.event.title")}</DialogHeader>
-				{uuid && <Content uuid={uuid} />}
+				{uuid && icon && text && (
+					<Content
+						uuid={uuid}
+						icon={icon}
+						text={text}
+					/>
+				)}
 				<DialogFooter />
 			</DialogContent>
 		</Dialog>

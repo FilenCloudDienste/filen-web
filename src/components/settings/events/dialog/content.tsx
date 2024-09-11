@@ -15,7 +15,7 @@ export type Event = {
 	}
 }
 
-export const Content = memo(({ uuid }: { uuid: string }) => {
+export const Content = memo(({ uuid, icon, text }: { uuid: string; icon: JSX.Element; text: string }) => {
 	const query = useQuery({
 		queryKey: ["fetchEvent", uuid],
 		queryFn: () => worker.fetchEvent({ uuid }) as Promise<Event>
@@ -62,6 +62,10 @@ export const Content = memo(({ uuid }: { uuid: string }) => {
 
 	return (
 		<div className="flex flex-col mt-2 gap-2">
+			<div className="flex flex-row bg-secondary rounded-md p-2 px-2.5 gap-2">
+				<div className="flex flex-row shrink-0">{icon}</div>
+				<p>{text}</p>
+			</div>
 			<div className="flex flex-row bg-secondary rounded-md p-2 px-2.5 justify-between items-center">
 				<p className="text-muted-foreground text-sm">{uuid}</p>
 				<Copy
