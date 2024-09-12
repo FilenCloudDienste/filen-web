@@ -17,6 +17,7 @@ import { generateCacheSteps } from "./utils"
 import Input from "@/components/input"
 import { useMountsStore } from "@/stores/mounts.store"
 import Transfers from "./transfers"
+import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 
 export async function isNetworkDriveMounted(): Promise<{ mounted: boolean }> {
 	const [mounted, active] = await Promise.all([window.desktopAPI.isNetworkDriveMounted(), window.desktopAPI.isNetworkDriveActive()])
@@ -567,7 +568,12 @@ export const NetworkDrive = memo(() => {
 
 	return (
 		<div className="flex flex-col w-full h-[100dvh] overflow-hidden">
-			<div className="overflow-x-hidden overflow-y-auto h-[calc(100dvh-88px)]">
+			<div
+				className="overflow-x-hidden overflow-y-auto"
+				style={{
+					height: "calc(100dvh - " + (DESKTOP_TOPBAR_HEIGHT + 40 + 17) + "px)"
+				}}
+			>
 				<div
 					className="flex flex-col p-6 h-full"
 					style={{
