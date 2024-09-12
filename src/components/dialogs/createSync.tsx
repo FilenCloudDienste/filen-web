@@ -50,8 +50,9 @@ export function doesSyncNameExist(name: string): boolean {
 
 export function tryingToSyncNetworkDrive(path: string): boolean {
 	const desktopConfig = getDesktopConfig()
+	const sep = window.desktopAPI.osPlatform() === "win32" ? "\\" : "/"
 
-	return path.startsWith(desktopConfig.networkDriveConfig.mountPoint)
+	return path.startsWith(desktopConfig.networkDriveConfig.mountPoint + sep)
 }
 
 export const CreateSyncDialog = memo(() => {
