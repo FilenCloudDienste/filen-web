@@ -428,7 +428,8 @@
 				"invalidLocalPath": "您选择的本地路径无效，无法同步。请选择其他路径。",
 				"remotePathAlreadyConfigured": "您选择的云路径已在其他同步中配置。这可能会导致无限同步循环。",
 				"localPathAlreadyConfigured": "您选择的本地路径已在其他同步中配置。这可能会导致无限同步循环。",
-				"syncNameAlreadyExists": "名称为 \"{{name}}\" 的同步已存在。"
+				"syncNameAlreadyExists": "名称为 \"{{name}}\" 的同步已存在。",
+				"localPathSyncedByICloud": "您无法同步已由 iCloud 同步的路径。"
 			},
 			"warnings": {
 				"localDirectoryBig": {
@@ -1246,7 +1247,7 @@
 			"cacheUsed": "{{size}} 已使用",
 			"description": "将您的云盘安装为网络磁盘，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些都在您熟悉的文件资源管理器中完成。",
 			"unixDescription": "将您的云盘安装到本地目录中，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些操作都在您熟悉的文件资源管理器中完成。",
-			"unixSudo": "要安装和卸载云盘，客户端需要管理员权限。请在提示时允许访问。",
+			"Sudo": "要安装和卸载云盘，客户端需要管理员权限。请在提示时允许访问。",
                         "limitations": "不支持在虚拟磁盘上安装、运行或解压程序和压缩包。",
 			"sections": {
 				"active": {
@@ -1443,7 +1444,9 @@
 			"savingState": "正在保存状态",
 			"waitingForLocalDirectoryChanges": "正在等待本地更改",
 			"acquiringLock": "正在获取同步锁",
-			"gettingTrees": "正在读取本地和云端文件夹"
+			"gettingTrees": "正在读取本地和云端文件夹",
+			"remoteSmokeTestFailed": "无法读取云文件夹，因为它不存在或者您未连接到互联网",
+			"localSmokeTestFailed": "无法读取本地文件夹，要么该文件夹不存在，要么您没有读取或写入权限"
 		},
 		"empty": {
 			"title": "尚未设置同步",
