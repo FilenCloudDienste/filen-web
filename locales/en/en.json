@@ -428,7 +428,8 @@
 				"invalidLocalPath": "The local path you have selected is invalid and cannot be synced. Please choose a different path.",
 				"remotePathAlreadyConfigured": "The cloud path you have selected is already configured in a different sync. This can lead to infinite sync loops.",
 				"localPathAlreadyConfigured": "The local path you have selected is already configured in a different sync. This can lead to infinite sync loops.",
-				"syncNameAlreadyExists": "A sync with the name \"{{name}}\" already exists."
+				"syncNameAlreadyExists": "A sync with the name \"{{name}}\" already exists.",
+				"localPathSyncedByICloud": "You cannot sync a path already synced by iCloud."
 			},
 			"warnings": {
 				"localDirectoryBig": {

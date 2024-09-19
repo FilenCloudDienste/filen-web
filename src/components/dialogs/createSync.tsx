@@ -23,7 +23,6 @@ import { validate as validateUUID, v4 as uuidv4 } from "uuid"
 import useDesktopConfig, { getDesktopConfig } from "@/hooks/useDesktopConfig"
 import { type SyncMode, type SyncPair } from "@filen/sync/dist/types"
 import { Switch } from "../ui/switch"
-import useLoadingToast from "@/hooks/useLoadingToast"
 import { showConfirmDialog } from "./confirm"
 
 export function isSyncPathAlreadyInConfig(type: "local" | "remote", path: string): boolean {
@@ -79,7 +78,6 @@ export const CreateSyncDialog = memo(() => {
 	})
 	const errorToast = useErrorToast()
 	const [, setDesktopConfig] = useDesktopConfig()
-	const loadingToast = useLoadingToast()
 	const [creating, setCreating] = useState<boolean>(false)
 
 	const modeToString = useMemo(() => {
@@ -125,15 +123,13 @@ export const CreateSyncDialog = memo(() => {
 
 			if (
 				createState.localPath.length === 0 ||
-				createState.name.length === 0 ||
+				createState.name.trim().length === 0 ||
 				createState.remotePath.length === 0 ||
 				createState.remoteUUID.length === 0 ||
 				!validateUUID(createState.remoteUUID)
 			) {
 				return
 			}
-
-			const toast = loadingToast()
 
 			setCreating(true)
 
@@ -150,11 +146,8 @@ export const CreateSyncDialog = memo(() => {
 					return
 				}
 
-				if (
-					!(await window.desktopAPI.isAllowedToSyncDirectory(createState.localPath)) ||
-					tryingToSyncNetworkDrive(createState.localPath)
-				) {
-					errorToast(t("dialogs.createSync.errors.invalidLocalPath"))
+				if (isSyncPathAlreadyInConfig("remote", createState.remotePath)) {
+					errorToast(t("dialogs.createSync.errors.remotePathAlreadyConfigured"))
 
 					return
 				}
@@ -168,8 +161,18 @@ export const CreateSyncDialog = memo(() => {
 					return
 				}
 
-				if (isSyncPathAlreadyInConfig("remote", createState.remotePath)) {
-					errorToast(t("dialogs.createSync.errors.remotePathAlreadyConfigured"))
+				if (
+					!(await window.desktopAPI.isAllowedToSyncDirectory(createState.localPath)) ||
+					tryingToSyncNetworkDrive(createState.localPath) ||
+					(await window.desktopAPI.tryingToSyncDesktop(createState.localPath))
+				) {
+					errorToast(t("dialogs.createSync.errors.invalidLocalPath"))
+
+					return
+				}
+
+				if (window.desktopAPI.osPlatform() === "darwin" && (await window.desktopAPI.isPathSyncedByICloud(createState.localPath))) {
+					errorToast(t("dialogs.createSync.errors.localPathSyncedByICloud"))
 
 					return
 				}
@@ -243,12 +246,10 @@ export const CreateSyncDialog = memo(() => {
 
 				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 			} finally {
-				toast.dismiss()
-
 				setCreating(false)
 			}
 		},
-		[createState, close, setDesktopConfig, t, errorToast, loadingToast]
+		[createState, close, setDesktopConfig, t, errorToast]
 	)
 
 	const onModeChange = useCallback((mode: SyncMode) => {

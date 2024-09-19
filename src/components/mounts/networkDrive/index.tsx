@@ -28,11 +28,11 @@ export async function isNetworkDriveMounted(): Promise<{ mounted: boolean }> {
 }
 
 export async function areDependenciesInstalled(): Promise<{ installed: boolean }> {
-	if (window.desktopAPI.osPlatform() === "win32") {
+	/*if (window.desktopAPI.osPlatform() === "win32") {
 		return {
 			installed: await window.desktopAPI.isWinFSPInstalled()
 		}
-	}
+	}*/
 
 	if (window.desktopAPI.osPlatform() === "linux") {
 		return {
@@ -40,11 +40,11 @@ export async function areDependenciesInstalled(): Promise<{ installed: boolean }
 		}
 	}
 
-	if (window.desktopAPI.osPlatform() === "darwin") {
+	/*if (window.desktopAPI.osPlatform() === "darwin") {
 		return {
 			installed: await window.desktopAPI.isFUSETInstalledOnMacOS()
 		}
-	}
+	}*/
 
 	return {
 		installed: true
