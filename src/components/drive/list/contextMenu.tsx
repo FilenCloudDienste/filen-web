@@ -37,7 +37,9 @@ export const ContextMenu = memo(({ children }: { children: React.ReactNode }) =>
 			continueButtonText: t("drive.dialogs.createDirectory.continue"),
 			value: "",
 			autoFocusInput: true,
-			placeholder: t("drive.dialogs.createDirectory.placeholder")
+			placeholder: t("drive.dialogs.createDirectory.placeholder"),
+			minLength: 0,
+			maxLength: 255
 		})
 
 		if (inputResponse.cancelled) {

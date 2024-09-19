@@ -46,7 +46,9 @@ export const Tags = memo(() => {
 				value: "",
 				autoFocusInput: true,
 				placeholder: t("notes.dialogs.createTag.placeholder"),
-				continueButtonVariant: "default"
+				continueButtonVariant: "default",
+				minLength: 0,
+				maxLength: 255
 			})
 
 			if (

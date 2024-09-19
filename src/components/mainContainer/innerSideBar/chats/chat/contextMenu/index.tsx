@@ -56,7 +56,9 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 			continueButtonText: t("chats.dialogs.editName.continue"),
 			value: conversation.name ? conversation.name : "",
 			autoFocusInput: true,
-			placeholder: t("chats.dialogs.editName.placeholder")
+			placeholder: t("chats.dialogs.editName.placeholder"),
+			minLength: 0,
+			maxLength: 255
 		})
 
 		if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {

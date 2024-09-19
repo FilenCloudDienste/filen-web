@@ -388,7 +388,9 @@ export const ContextMenu = memo(
 				value: item.name,
 				autoFocusInput: true,
 				placeholder: t("drive.dialogs.rename.placeholder"),
-				continueButtonVariant: "default"
+				continueButtonVariant: "default",
+				minLength: 0,
+				maxLength: 255
 			})
 
 			if (

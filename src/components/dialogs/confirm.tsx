@@ -160,8 +160,12 @@ export const ConfirmDialog = memo(() => {
 				onOpenAutoFocus={preventDefault}
 			>
 				<AlertDialogHeader>
-					<AlertDialogTitle>{props.title}</AlertDialogTitle>
-					<AlertDialogDescription>{props.description}</AlertDialogDescription>
+					<AlertDialogTitle>
+						<p className="line-clamp-1 text-ellipsis break-all">{props.title}</p>
+					</AlertDialogTitle>
+					<AlertDialogDescription>
+						<p className="break-all">{props.description}</p>
+					</AlertDialogDescription>
 					{props.withInputField && (
 						<div className="flex flex-row items-center gap-1 py-4 justify-center">
 							<Input

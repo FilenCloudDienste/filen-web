@@ -52,6 +52,7 @@ export const TopBar = memo(() => {
 	const searchInputRef = useRef<HTMLInputElement>(null)
 	const driveURLState = useDriveURLState()
 	const isMobile = useIsMobile()
+	const emptyTrashBtnRef = useRef<HTMLButtonElement>(null)
 
 	const changeListType = useCallback(() => {
 		setListType(prev => ({ ...prev, [parent]: listType[parent] === "grid" ? "list" : "grid" }))
@@ -72,6 +73,8 @@ export const TopBar = memo(() => {
 		if (!location.includes("trash")) {
 			return
 		}
+
+		emptyTrashBtnRef.current?.blur()
 
 		if (
 			!(await showConfirmDialog({
@@ -175,6 +178,7 @@ export const TopBar = memo(() => {
 						className="h-8 shrink-0"
 						variant="destructive"
 						disabled={items.length === 0}
+						ref={emptyTrashBtnRef}
 						onClick={emptyTrash}
 					>
 						{t("empty")}

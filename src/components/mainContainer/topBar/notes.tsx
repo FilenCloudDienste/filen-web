@@ -60,7 +60,9 @@ export const Notes = memo(() => {
 			value: selectedNote.title,
 			autoFocusInput: true,
 			placeholder: t("notes.dialogs.renameNote.placeholder"),
-			continueButtonVariant: "default"
+			continueButtonVariant: "default",
+			minLength: 0,
+			maxLength: 255
 		})
 
 		if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {

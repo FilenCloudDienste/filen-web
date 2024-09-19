@@ -2,7 +2,7 @@ import { ThemeProvider, useTheme } from "@/providers/themeProvider"
 import { createRootRoute, Outlet } from "@tanstack/react-router"
 import { memo, useEffect, useState, useRef, useCallback } from "react"
 import { Toaster } from "@/components/ui/toaster"
-import { QueryClient, focusManager, useIsRestoring, QueryClientProvider } from "@tanstack/react-query"
+import { QueryClient, focusManager, QueryClientProvider } from "@tanstack/react-query"
 import { experimental_createPersister, type PersistedQuery } from "@tanstack/query-persist-client-core"
 import useIsAuthed from "@/hooks/useIsAuthed"
 import queryClientPersisterIDB, { queryClientPersisterPrefix } from "@/lib/queryPersister"
@@ -154,7 +154,6 @@ export const Root = memo(() => {
 	const [ready, setReady] = useState<boolean>(false)
 	const [authed] = useIsAuthed()
 	const initRef = useRef<boolean>(false)
-	const isRestoring = useIsRestoring()
 
 	const setup = useCallback(async () => {
 		try {
@@ -180,7 +179,7 @@ export const Root = memo(() => {
 		<main className="overflow-hidden">
 			<ThemeProvider>
 				<QueryClientProvider client={queryClient}>
-					{!ready || isRestoring ? (
+					{!ready ? (
 						<Loading />
 					) : (
 						<>

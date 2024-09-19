@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useEffect } from "react"
+import { memo, useCallback, useEffect } from "react"
 import Section from "@/components/settings/section"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 import { useTranslation } from "react-i18next"
@@ -39,10 +39,6 @@ export const WebDAV = memo(() => {
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
-	const [hostname, setHostname] = useState<string>(desktopConfig.webdavConfig.hostname)
-	const [port, setPort] = useState<number>(desktopConfig.webdavConfig.port)
-	const [username, setUsername] = useState<string>(desktopConfig.webdavConfig.username)
-	const [password, setPassword] = useState<string>(desktopConfig.webdavConfig.password)
 	const successToast = useSuccessToast()
 
 	const isOnlineQuery = useQuery({
@@ -68,13 +64,20 @@ export const WebDAV = memo(() => {
 				return
 			}
 
-			if (checked && (!isValidIPv4(hostname) || !(await window.desktopAPI.canStartServerOnIPAndPort({ ip: hostname, port })))) {
+			if (
+				checked &&
+				(!isValidIPv4(desktopConfig.webdavConfig.hostname) ||
+					!(await window.desktopAPI.canStartServerOnIPAndPort({
+						ip: desktopConfig.webdavConfig.hostname,
+						port: desktopConfig.webdavConfig.port
+					})))
+			) {
 				errorToast(t("mounts.webdav.errors.invalidHostname"))
 
 				return
 			}
 
-			if (checked && !isPortValidLocally(port)) {
+			if (checked && !isPortValidLocally(desktopConfig.webdavConfig.port)) {
 				errorToast(t("mounts.webdav.errors.invalidPort", { range: `${VALID_LOCAL_PORT_RANGE[0]}-${VALID_LOCAL_PORT_RANGE[1]}` }))
 
 				return
@@ -99,11 +102,7 @@ export const WebDAV = memo(() => {
 					...prev,
 					webdavConfig: {
 						...prev.webdavConfig,
-						enabled: checked,
-						username,
-						password,
-						port,
-						hostname
+						enabled: checked
 					}
 				}))
 			} catch (e) {
@@ -115,18 +114,23 @@ export const WebDAV = memo(() => {
 					...prev,
 					webdavConfig: {
 						...prev.webdavConfig,
-						enabled: false,
-						username,
-						password,
-						port,
-						hostname
+						enabled: false
 					}
 				}))
 			} finally {
 				setEnablingWebDAV(false)
 			}
 		},
-		[t, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, errorToast, setDesktopConfig, username, password, port, hostname]
+		[
+			t,
+			enablingWebDAV,
+			setEnablingWebDAV,
+			isOnlineQuery,
+			errorToast,
+			setDesktopConfig,
+			desktopConfig.webdavConfig.hostname,
+			desktopConfig.webdavConfig.port
+		]
 	)
 
 	const onAuthModeChange = useCallback(
@@ -135,18 +139,6 @@ export const WebDAV = memo(() => {
 				return
 			}
 
-			if (!isValidIPv4(hostname) || !(await window.desktopAPI.canStartServerOnIPAndPort({ ip: hostname, port }))) {
-				errorToast(t("mounts.webdav.errors.invalidHostname"))
-
-				return
-			}
-
-			if (!isPortValidLocally(port)) {
-				errorToast(t("mounts.webdav.errors.invalidPort", { range: `${VALID_LOCAL_PORT_RANGE[0]}-${VALID_LOCAL_PORT_RANGE[1]}` }))
-
-				return
-			}
-
 			setEnablingWebDAV(true)
 
 			try {
@@ -164,11 +156,7 @@ export const WebDAV = memo(() => {
 					...prev,
 					webdavConfig: {
 						...prev.webdavConfig,
-						authMode: mode,
-						username,
-						password,
-						port,
-						hostname
+						authMode: mode
 					}
 				}))
 			} catch (e) {
@@ -180,18 +168,14 @@ export const WebDAV = memo(() => {
 					...prev,
 					webdavConfig: {
 						...prev.webdavConfig,
-						enabled: false,
-						username,
-						password,
-						port,
-						hostname
+						enabled: false
 					}
 				}))
 			} finally {
 				setEnablingWebDAV(false)
 			}
 		},
-		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig, port, username, password, t, hostname]
+		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig]
 	)
 
 	const onProtocolChange = useCallback(
@@ -200,18 +184,6 @@ export const WebDAV = memo(() => {
 				return
 			}
 
-			if (!isValidIPv4(hostname) || !(await window.desktopAPI.canStartServerOnIPAndPort({ ip: hostname, port }))) {
-				errorToast(t("mounts.webdav.errors.invalidHostname"))
-
-				return
-			}
-
-			if (!isPortValidLocally(port)) {
-				errorToast(t("mounts.webdav.errors.invalidPort", { range: `${VALID_LOCAL_PORT_RANGE[0]}-${VALID_LOCAL_PORT_RANGE[1]}` }))
-
-				return
-			}
-
 			setEnablingWebDAV(true)
 
 			try {
@@ -229,11 +201,7 @@ export const WebDAV = memo(() => {
 					...prev,
 					webdavConfig: {
 						...prev.webdavConfig,
-						https: protocol === "https",
-						username,
-						password,
-						port,
-						hostname
+						https: protocol === "https"
 					}
 				}))
 			} catch (e) {
@@ -245,18 +213,14 @@ export const WebDAV = memo(() => {
 					...prev,
 					webdavConfig: {
 						...prev.webdavConfig,
-						enabled: false,
-						username,
-						password,
-						port,
-						hostname
+						enabled: false
 					}
 				}))
 			} finally {
 				setEnablingWebDAV(false)
 			}
 		},
-		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig, username, password, port, t, hostname]
+		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig]
 	)
 
 	const onProxyModeChange = useCallback(
@@ -265,18 +229,6 @@ export const WebDAV = memo(() => {
 				return
 			}
 
-			if (!isValidIPv4(hostname) || !(await window.desktopAPI.canStartServerOnIPAndPort({ ip: hostname, port }))) {
-				errorToast(t("mounts.webdav.errors.invalidHostname"))
-
-				return
-			}
-
-			if (!isPortValidLocally(port)) {
-				errorToast(t("mounts.webdav.errors.invalidPort", { range: `${VALID_LOCAL_PORT_RANGE[0]}-${VALID_LOCAL_PORT_RANGE[1]}` }))
-
-				return
-			}
-
 			setEnablingWebDAV(true)
 
 			try {
@@ -294,11 +246,7 @@ export const WebDAV = memo(() => {
 					...prev,
 					webdavConfig: {
 						...prev.webdavConfig,
-						proxyMode: checked,
-						username,
-						password,
-						port,
-						hostname
+						proxyMode: checked
 					}
 				}))
 			} catch (e) {
@@ -310,18 +258,14 @@ export const WebDAV = memo(() => {
 					...prev,
 					webdavConfig: {
 						...prev.webdavConfig,
-						enabled: false,
-						username,
-						password,
-						port,
-						hostname
+						enabled: false
 					}
 				}))
 			} finally {
 				setEnablingWebDAV(false)
 			}
 		},
-		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig, username, password, port, t, hostname]
+		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig]
 	)
 
 	const copyConnect = useCallback(async () => {
@@ -344,6 +288,58 @@ export const WebDAV = memo(() => {
 		desktopConfig.webdavConfig.hostname,
 		desktopConfig.webdavConfig.port
 	])
+
+	const onHostnameChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setDesktopConfig(prev => ({
+				...prev,
+				webdavConfig: {
+					...prev.webdavConfig,
+					hostname: e.target.value.trim()
+				}
+			}))
+		},
+		[setDesktopConfig]
+	)
+
+	const onPortChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setDesktopConfig(prev => ({
+				...prev,
+				webdavConfig: {
+					...prev.webdavConfig,
+					port: parseInt(e.target.value.trim())
+				}
+			}))
+		},
+		[setDesktopConfig]
+	)
+
+	const onUsernameChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setDesktopConfig(prev => ({
+				...prev,
+				webdavConfig: {
+					...prev.webdavConfig,
+					username: e.target.value.trim().length > 0 ? e.target.value.trim() : "admin"
+				}
+			}))
+		},
+		[setDesktopConfig]
+	)
+
+	const onPasswordChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setDesktopConfig(prev => ({
+				...prev,
+				webdavConfig: {
+					...prev.webdavConfig,
+					password: e.target.value.trim().length > 0 ? e.target.value.trim() : "admin"
+				}
+			}))
+		},
+		[setDesktopConfig]
+	)
 
 	useEffect(() => {
 		const refetchWebDAVListener = eventEmitter.on("refetchWebDAV", () => {
@@ -418,9 +414,9 @@ export const WebDAV = memo(() => {
 						info={t("mounts.webdav.sections.hostname.info")}
 					>
 						<Input
-							value={hostname}
+							value={desktopConfig.webdavConfig.hostname}
 							type="text"
-							onChange={e => setHostname(e.target.value.trim())}
+							onChange={onHostnameChange}
 							className="w-[130px]"
 							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
@@ -433,9 +429,9 @@ export const WebDAV = memo(() => {
 						info={t("mounts.webdav.sections.port.info")}
 					>
 						<Input
-							value={port}
+							value={desktopConfig.webdavConfig.port}
 							type="number"
-							onChange={e => setPort(parseInt(e.target.value.trim()))}
+							onChange={onPortChange}
 							className="w-[80px]"
 							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
@@ -466,13 +462,9 @@ export const WebDAV = memo(() => {
 						info={t("mounts.webdav.sections.username.info")}
 					>
 						<Input
-							value={username}
+							value={desktopConfig.webdavConfig.username}
 							type="text"
-							onChange={e => {
-								const user = e.target.value.trim()
-
-								setUsername(user.length === 0 ? "admin" : user)
-							}}
+							onChange={onUsernameChange}
 							className="w-[200px]"
 							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
@@ -487,13 +479,9 @@ export const WebDAV = memo(() => {
 						info={t("mounts.webdav.sections.password.info")}
 					>
 						<Input
-							value={password}
+							value={desktopConfig.webdavConfig.password}
 							type="text"
-							onChange={e => {
-								const pass = e.target.value.trim()
-
-								setPassword(pass.length === 0 ? "admin" : pass)
-							}}
+							onChange={onPasswordChange}
 							className="w-[200px]"
 							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"

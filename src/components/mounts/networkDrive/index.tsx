@@ -40,6 +40,12 @@ export async function areDependenciesInstalled(): Promise<{ installed: boolean }
 		}
 	}
 
+	if (window.desktopAPI.osPlatform() === "darwin") {
+		return {
+			installed: await window.desktopAPI.isFUSETInstalledOnMacOS()
+		}
+	}
+
 	return {
 		installed: true
 	}
@@ -434,6 +440,10 @@ export const NetworkDrive = memo(() => {
 		if (window.desktopAPI.osPlatform() === "linux") {
 			window.open("https://launchpad.net/ubuntu/+source/fuse3", "_blank")
 		}
+
+		if (window.desktopAPI.osPlatform() === "darwin") {
+			window.open("https://www.fuse-t.org/", "_blank")
+		}
 	}, [])
 
 	const changeCachePath = useCallback(async () => {
@@ -605,6 +615,7 @@ export const NetworkDrive = memo(() => {
 									: t("mounts.networkDrive.unixDescription")}
 							</p>
 							<p className="text-muted-foreground text-sm">{t("mounts.networkDrive.limitations")}</p>
+							<p className="text-muted-foreground text-sm">{t("mounts.networkDrive.sudo")}</p>
 						</div>
 						<Section
 							name={t("mounts.networkDrive.sections.enabled.name")}

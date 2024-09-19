@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useEffect } from "react"
+import { memo, useCallback, useEffect } from "react"
 import Section from "@/components/settings/section"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 import { useTranslation } from "react-i18next"
@@ -30,10 +30,6 @@ export const S3 = memo(() => {
 	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
-	const [hostname, setHostname] = useState<string>(desktopConfig.s3Config.hostname)
-	const [port, setPort] = useState<number>(desktopConfig.s3Config.port)
-	const [accessKeyId, setAccessKeyId] = useState<string>(desktopConfig.s3Config.accessKeyId)
-	const [secretKeyId, setSecretKeyId] = useState<string>(desktopConfig.s3Config.accessKeyId)
 	const successToast = useSuccessToast()
 	const { enablingS3, setEnablingS3 } = useMountsStore(
 		useCallback(state => ({ enablingS3: state.enablingS3, setEnablingS3: state.setEnablingS3 }), [])
@@ -62,13 +58,20 @@ export const S3 = memo(() => {
 				return
 			}
 
-			if (checked && (!isValidIPv4(hostname) || !(await window.desktopAPI.canStartServerOnIPAndPort({ ip: hostname, port })))) {
+			if (
+				checked &&
+				(!isValidIPv4(desktopConfig.s3Config.hostname) ||
+					!(await window.desktopAPI.canStartServerOnIPAndPort({
+						ip: desktopConfig.s3Config.hostname,
+						port: desktopConfig.s3Config.port
+					})))
+			) {
 				errorToast(t("mounts.s3.errors.invalidHostname"))
 
 				return
 			}
 
-			if (checked && !isPortValidLocally(port)) {
+			if (checked && !isPortValidLocally(desktopConfig.s3Config.port)) {
 				errorToast(t("mounts.s3.errors.invalidPort", { range: `${VALID_LOCAL_PORT_RANGE[0]}-${VALID_LOCAL_PORT_RANGE[1]}` }))
 
 				return
@@ -93,11 +96,7 @@ export const S3 = memo(() => {
 					...prev,
 					s3Config: {
 						...prev.s3Config,
-						enabled: checked,
-						accessKeyId,
-						secretKeyId,
-						port,
-						hostname
+						enabled: checked
 					}
 				}))
 			} catch (e) {
@@ -109,35 +108,28 @@ export const S3 = memo(() => {
 					...prev,
 					s3Config: {
 						...prev.s3Config,
-						enabled: false,
-						accessKeyId,
-						secretKeyId,
-						port,
-						hostname
+						enabled: false
 					}
 				}))
 			} finally {
 				setEnablingS3(false)
 			}
 		},
-		[t, setEnablingS3, enablingS3, setDesktopConfig, isOnlineQuery, errorToast, accessKeyId, secretKeyId, port, hostname]
+		[
+			t,
+			setEnablingS3,
+			enablingS3,
+			setDesktopConfig,
+			isOnlineQuery,
+			errorToast,
+			desktopConfig.s3Config.hostname,
+			desktopConfig.s3Config.port
+		]
 	)
 
 	const onProtocolChange = useCallback(
 		async (protocol: "http" | "https") => {
 			if (enablingS3) {
-				return
-			}
-
-			if (!isValidIPv4(hostname) || !(await window.desktopAPI.canStartServerOnIPAndPort({ ip: hostname, port }))) {
-				errorToast(t("mounts.s3.errors.invalidHostname"))
-
-				return
-			}
-
-			if (!isPortValidLocally(port)) {
-				errorToast(t("mounts.s3.errors.invalidPort", { range: `${VALID_LOCAL_PORT_RANGE[0]}-${VALID_LOCAL_PORT_RANGE[1]}` }))
-
 				return
 			}
 
@@ -158,11 +150,7 @@ export const S3 = memo(() => {
 					...prev,
 					s3Config: {
 						...prev.s3Config,
-						https: protocol === "https",
-						accessKeyId,
-						secretKeyId,
-						port,
-						hostname
+						https: protocol === "https"
 					}
 				}))
 			} catch (e) {
@@ -174,18 +162,14 @@ export const S3 = memo(() => {
 					...prev,
 					s3Config: {
 						...prev.s3Config,
-						enabled: false,
-						accessKeyId,
-						secretKeyId,
-						port,
-						hostname
+						enabled: false
 					}
 				}))
 			} finally {
 				setEnablingS3(false)
 			}
 		},
-		[errorToast, setEnablingS3, enablingS3, isOnlineQuery, setDesktopConfig, accessKeyId, secretKeyId, port, t, hostname]
+		[errorToast, setEnablingS3, enablingS3, isOnlineQuery, setDesktopConfig]
 	)
 
 	const copyConnect = useCallback(async () => {
@@ -201,6 +185,58 @@ export const S3 = memo(() => {
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		}
 	}, [successToast, errorToast, t, desktopConfig.s3Config.https, desktopConfig.s3Config.hostname, desktopConfig.s3Config.port])
+
+	const onHostnameChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setDesktopConfig(prev => ({
+				...prev,
+				s3Config: {
+					...prev.s3Config,
+					hostname: e.target.value.trim()
+				}
+			}))
+		},
+		[setDesktopConfig]
+	)
+
+	const onPortChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setDesktopConfig(prev => ({
+				...prev,
+				s3Config: {
+					...prev.s3Config,
+					port: parseInt(e.target.value.trim())
+				}
+			}))
+		},
+		[setDesktopConfig]
+	)
+
+	const onAccessKeyIdChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setDesktopConfig(prev => ({
+				...prev,
+				s3Config: {
+					...prev.s3Config,
+					accessKeyId: e.target.value.trim().length > 0 ? e.target.value.trim() : "admin"
+				}
+			}))
+		},
+		[setDesktopConfig]
+	)
+
+	const onSecretKeyIdChange = useCallback(
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			setDesktopConfig(prev => ({
+				...prev,
+				s3Config: {
+					...prev.s3Config,
+					secretKeyId: e.target.value.trim().length > 0 ? e.target.value.trim() : "admin"
+				}
+			}))
+		},
+		[setDesktopConfig]
+	)
 
 	useEffect(() => {
 		const refetchS3Listener = eventEmitter.on("refetchS3", () => {
@@ -276,9 +312,9 @@ export const S3 = memo(() => {
 						info={t("mounts.s3.sections.hostname.info")}
 					>
 						<Input
-							value={hostname}
+							value={desktopConfig.s3Config.hostname}
 							type="text"
-							onChange={e => setHostname(e.target.value.trim())}
+							onChange={onHostnameChange}
 							className="w-[130px]"
 							disabled={enablingS3 || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
@@ -291,9 +327,9 @@ export const S3 = memo(() => {
 						info={t("mounts.s3.sections.port.info")}
 					>
 						<Input
-							value={port}
+							value={desktopConfig.s3Config.port}
 							type="number"
-							onChange={e => setPort(parseInt(e.target.value.trim()))}
+							onChange={onPortChange}
 							className="w-[80px]"
 							disabled={enablingS3 || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
@@ -306,13 +342,9 @@ export const S3 = memo(() => {
 						info={t("mounts.s3.sections.accessKeyId.info")}
 					>
 						<Input
-							value={accessKeyId}
+							value={desktopConfig.s3Config.accessKeyId}
 							type="text"
-							onChange={e => {
-								const access = e.target.value.trim()
-
-								setAccessKeyId(access.length === 0 ? "admin" : access)
-							}}
+							onChange={onAccessKeyIdChange}
 							className="w-[200px]"
 							disabled={enablingS3 || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"
@@ -327,13 +359,9 @@ export const S3 = memo(() => {
 						info={t("mounts.s3.sections.secretKeyId.info")}
 					>
 						<Input
-							value={secretKeyId}
+							value={desktopConfig.s3Config.secretKeyId}
 							type="text"
-							onChange={e => {
-								const secret = e.target.value.trim()
-
-								setSecretKeyId(secret.length === 0 ? "admin" : secret)
-							}}
+							onChange={onSecretKeyIdChange}
 							className="w-[200px]"
 							disabled={enablingS3 || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
 							autoCapitalize="none"

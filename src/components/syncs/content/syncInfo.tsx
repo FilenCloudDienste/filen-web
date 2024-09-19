@@ -1,6 +1,6 @@
 import { memo, useMemo, useCallback } from "react"
 import { useSyncsStore } from "@/stores/syncs.store"
-import { RefreshCw, CheckCircle, PauseCircle, XCircle, Pause, Play } from "lucide-react"
+import { RefreshCw, CheckCircle, PauseCircle, XCircle, Pause, Play, AlertCircle } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { formatBytes } from "@/utils"
 import { bpsToReadable } from "@/components/transfers/utils"
@@ -115,7 +115,7 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 		<div className="flex flex-row w-full px-4 pb-4">
 			<div className="flex flex-col h-10 bg-secondary rounded-sm w-full">
 				<div className="flex flex-row h-full w-full items-center px-4 justify-between gap-4">
-					<div className="flex flex-row h-full w-full items-center gap-2 text-sm">
+					<div className="flex flex-row h-full w-full items-center gap-2 text-sm text-ellipsis line-clamp-1 break-all">
 						{taskErrors + localTreeErrors > 0 ? (
 							<>
 								<XCircle
@@ -147,6 +147,22 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 											size={16}
 										/>
 										<p>{t("syncs.info.processingDeltas")}</p>
+									</>
+								) : cycleState.state === "cycleLocalSmokeTestFailed" ? (
+									<>
+										<AlertCircle
+											className="text-red-500"
+											size={16}
+										/>
+										<p>{t("syncs.info.localSmokeTestFailed")}</p>
+									</>
+								) : cycleState.state === "cycleRemoteSmokeTestFailed" ? (
+									<>
+										<AlertCircle
+											className="text-red-500"
+											size={16}
+										/>
+										<p>{t("syncs.info.remoteSmokeTestFailed")}</p>
 									</>
 								) : cycleState.state === "cycleWaitingForLocalDirectoryChangesStarted" ? (
 									<>

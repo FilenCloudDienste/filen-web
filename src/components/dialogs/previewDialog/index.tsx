@@ -424,7 +424,9 @@ export const PreviewDialog = memo(() => {
 			continueButtonText: t("drive.dialogs.createTextFile.continue"),
 			value: ".txt",
 			autoFocusInput: true,
-			placeholder: t("drive.dialogs.createTextFile.placeholder")
+			placeholder: t("drive.dialogs.createTextFile.placeholder"),
+			minLength: 0,
+			maxLength: 255
 		})
 
 		if (inputResponse.cancelled) {
