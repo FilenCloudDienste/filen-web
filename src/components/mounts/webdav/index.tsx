@@ -223,51 +223,6 @@ export const WebDAV = memo(() => {
 		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig]
 	)
 
-	const onProxyModeChange = useCallback(
-		async (checked: boolean) => {
-			if (enablingWebDAV) {
-				return
-			}
-
-			setEnablingWebDAV(true)
-
-			try {
-				if ((await isWebDAVOnline()).online) {
-					await window.desktopAPI.restartWebDAVServer()
-
-					if (!(await isWebDAVOnline()).online) {
-						throw new Error("Could not start WebDAV server.")
-					}
-				}
-
-				await isOnlineQuery.refetch()
-
-				setDesktopConfig(prev => ({
-					...prev,
-					webdavConfig: {
-						...prev.webdavConfig,
-						proxyMode: checked
-					}
-				}))
-			} catch (e) {
-				console.error(e)
-
-				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				setDesktopConfig(prev => ({
-					...prev,
-					webdavConfig: {
-						...prev.webdavConfig,
-						enabled: false
-					}
-				}))
-			} finally {
-				setEnablingWebDAV(false)
-			}
-		},
-		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig]
-	)
-
 	const copyConnect = useCallback(async () => {
 		try {
 			await navigator.clipboard.writeText(
@@ -491,7 +446,7 @@ export const WebDAV = memo(() => {
 							maxLength={32}
 						/>
 					</Section>
-					<Section
+					{/*<Section
 						name={t("mounts.webdav.sections.proxyMode.name")}
 						info={t("mounts.webdav.sections.proxyMode.info")}
 					>
@@ -500,7 +455,7 @@ export const WebDAV = memo(() => {
 							checked={desktopConfig.webdavConfig.proxyMode}
 							onCheckedChange={onProxyModeChange}
 						/>
-					</Section>
+					</Section>*/}
 					{!enablingWebDAV && isOnlineQuery.isSuccess && isOnlineQuery.data.online && (
 						<Section
 							name={t("mounts.webdav.sections.connect.name")}

@@ -31,13 +31,12 @@ import useIsMobile from "@/hooks/useIsMobile"
 
 export const TopBar = memo(() => {
 	const { t } = useTranslation()
-	const { searchTerm, setSearchTerm, setItems, items } = useDriveItemsStore(
+	const { searchTerm, setSearchTerm, setItems } = useDriveItemsStore(
 		useCallback(
 			state => ({
 				searchTerm: state.searchTerm,
 				setSearchTerm: state.setSearchTerm,
-				setItems: state.setItems,
-				items: state.items
+				setItems: state.setItems
 			}),
 			[]
 		)
@@ -177,7 +176,6 @@ export const TopBar = memo(() => {
 					<Button
 						className="h-8 shrink-0"
 						variant="destructive"
-						disabled={items.length === 0}
 						ref={emptyTrashBtnRef}
 						onClick={emptyTrash}
 					>

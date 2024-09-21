@@ -1,7 +1,7 @@
 {
 	"name": "@filen/web",
 	"private": false,
-	"version": "0.1.43",
+	"version": "0.1.44",
 	"type": "module",
 	"description": "Filen Web & Desktop app",
 	"scripts": {
