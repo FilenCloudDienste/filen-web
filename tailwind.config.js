@@ -15,7 +15,8 @@ module.exports = {
 		},
 		extend: {
 			fontFamily: {
-				geist: ["Geist", "Regular"]
+				geist: ["Geist", "Regular"],
+				inter: ["Inter", "Regular"]
 			},
 			colors: {
 				border: "hsl(var(--border))",

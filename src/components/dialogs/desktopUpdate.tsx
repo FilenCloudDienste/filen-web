@@ -88,7 +88,7 @@ export const DesktopUpdateDialog = memo(() => {
 	return (
 		<AlertDialog open={open}>
 			<AlertDialogContent
-				onEscapeKeyDown={dismiss}
+				onEscapeKeyDown={isUpdating ? preventDefault : dismiss}
 				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"
 				onOpenAutoFocus={preventDefault}
 			>
