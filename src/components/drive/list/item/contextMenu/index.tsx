@@ -393,11 +393,7 @@ export const ContextMenu = memo(
 				maxLength: 255
 			})
 
-			if (
-				inputResponse.cancelled ||
-				inputResponse.value.trim().length === 0 ||
-				inputResponse.value.trim().toLowerCase() === item.name.toLowerCase()
-			) {
+			if (inputResponse.cancelled || inputResponse.value.trim().length === 0) {
 				return
 			}
 

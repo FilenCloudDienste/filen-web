@@ -1938,28 +1938,26 @@ export async function generatePDFThumbnail({ item, buffer }: { item: DriveCloudI
 export async function renameItem({ item, name }: { item: DriveCloudItem; name: string }): Promise<void> {
 	await waitForInitialization()
 
-	await (item.name.toLowerCase() === name.toLowerCase()
-		? Promise.resolve()
-		: item.type === "file"
-			? getSDK()
-					.cloud()
-					.renameFile({
-						uuid: item.uuid,
-						metadata: {
-							name,
-							size: item.size,
-							key: item.key,
-							mime: item.mime,
-							hash: item.hash,
-							lastModified: item.lastModified,
-							creation: item.creation
-						} satisfies FileMetadata,
-						name
-					})
-			: getSDK().cloud().renameDirectory({
+	await (item.type === "file"
+		? getSDK()
+				.cloud()
+				.renameFile({
 					uuid: item.uuid,
+					metadata: {
+						name,
+						size: item.size,
+						key: item.key,
+						mime: item.mime,
+						hash: item.hash,
+						lastModified: item.lastModified,
+						creation: item.creation
+					} satisfies FileMetadata,
 					name
-				}))
+				})
+		: getSDK().cloud().renameDirectory({
+				uuid: item.uuid,
+				name
+			}))
 
 	if (item.type === "directory") {
 		await setItem(`directoryUUIDToName:${item.uuid}`, name)
