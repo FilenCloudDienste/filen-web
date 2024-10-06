@@ -15,6 +15,7 @@ import { type MainToWindowMessage } from "@filen/desktop/dist/ipc"
 import worker from "@/lib/worker"
 import useErrorToast from "@/hooks/useErrorToast"
 import { Button } from "../ui/button"
+import useDriveURLState from "@/hooks/useDriveURLState"
 
 export const transferStateSortingPriority: Record<TransferState, number> = {
 	started: 1,
@@ -53,6 +54,7 @@ export const Transfers = memo(() => {
 	const [paused, setPaused] = useState<boolean>(false)
 	const isTogglingPauseOrAbort = useRef<boolean>(false)
 	const errorToast = useErrorToast()
+	const driveURLState = useDriveURLState()
 
 	const onDragOver = useCallback(
 		(e: React.DragEvent<HTMLDivElement>) => {
@@ -377,6 +379,23 @@ export const Transfers = memo(() => {
 		}
 	}, [virtuosoHeight, t])
 
+	const onOpenChange = useCallback(
+		(o: boolean) => {
+			if (driveURLState.publicLink && !o && ongoingTransfers.length > 0) {
+				setOpen(true)
+
+				return
+			}
+
+			setOpen(o)
+		},
+		[driveURLState.publicLink, ongoingTransfers.length]
+	)
+
+	const onInteractOutside = useCallback(() => {
+		onOpenChange(false)
+	}, [onOpenChange])
+
 	useEffect(() => {
 		if (ongoingTransfers.length <= 0) {
 			bytesSent.current = 0
@@ -418,12 +437,14 @@ export const Transfers = memo(() => {
 	return (
 		<Sheet
 			open={open}
-			onOpenChange={setOpen}
+			onOpenChange={onOpenChange}
 		>
 			<SheetContent
 				forceMount={true}
 				className="outline-none focus:outline-none active:outline-none hover:outline-none no-outline select-none"
 				onDragOver={onDragOver}
+				onInteractOutside={onInteractOutside}
+				onPointerDownOutside={onInteractOutside}
 			>
 				<SheetHeader className="mb-4">
 					<SheetTitle>{transfersSorted.length > 0 && t("transfers.title")}</SheetTitle>
