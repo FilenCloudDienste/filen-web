@@ -109,6 +109,19 @@ export const CreateSyncDialog = memo(() => {
 		}
 	}, [createState.mode, t])
 
+	const resetInputs = useCallback(() => {
+		setCreateState({
+			name: "",
+			localPath: "",
+			remotePath: "",
+			remoteUUID: "",
+			mode: "twoWay",
+			paused: true,
+			excludeDotFiles: true,
+			localTrashDisabled: false
+		})
+	}, [])
+
 	const onOpenChange = useCallback((openState: boolean) => {
 		setOpen(openState)
 	}, [])
@@ -230,17 +243,7 @@ export const CreateSyncDialog = memo(() => {
 					}
 				}))
 
-				setCreateState({
-					name: "",
-					localPath: "",
-					remotePath: "",
-					remoteUUID: "",
-					mode: "twoWay",
-					paused: true,
-					excludeDotFiles: true,
-					localTrashDisabled: false
-				})
-
+				resetInputs()
 				close()
 			} catch (e) {
 				console.error(e)
@@ -250,7 +253,7 @@ export const CreateSyncDialog = memo(() => {
 				setCreating(false)
 			}
 		},
-		[createState, close, setDesktopConfig, t, errorToast]
+		[createState, close, setDesktopConfig, t, errorToast, resetInputs]
 	)
 
 	const onModeChange = useCallback((mode: SyncMode) => {
@@ -338,6 +341,12 @@ export const CreateSyncDialog = memo(() => {
 		e.preventDefault()
 		e.stopPropagation()
 	}, [])
+
+	useEffect(() => {
+		if (!creating && open) {
+			resetInputs()
+		}
+	}, [open, resetInputs, creating])
 
 	useEffect(() => {
 		const listener = eventEmitter.on("openCreateSyncDialog", () => {
