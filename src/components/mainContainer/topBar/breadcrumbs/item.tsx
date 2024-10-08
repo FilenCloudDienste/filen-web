@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import { directoryUUIDToNameCache } from "@/cache"
 import useRouteParent from "@/hooks/useRouteParent"
 import { cn } from "@/lib/utils"
+import pathModule from "path"
 
 export const Item = memo(({ path, index, pathname }: { path: string; index: number; pathname: string }) => {
 	const { baseFolderUUID } = useSDKConfig()
@@ -20,7 +21,7 @@ export const Item = memo(({ path, index, pathname }: { path: string; index: numb
 		const ex = pathname.split("/drive/").join("").split("/")
 
 		for (const exItem of ex) {
-			builtPathname += builtPathname.length === 0 ? exItem : `/${exItem}`
+			builtPathname = pathModule.posix.join(builtPathname, exItem)
 
 			if (builtPathname.endsWith(path)) {
 				navigate({

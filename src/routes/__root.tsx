@@ -176,7 +176,7 @@ export const Root = memo(() => {
 	}, [setup])
 
 	return (
-		<main className="overflow-hidden">
+		<main className="overflow-hidden antialiased">
 			<ThemeProvider>
 				<QueryClientProvider client={queryClient}>
 					{!ready ? (

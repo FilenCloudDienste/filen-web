@@ -50,7 +50,10 @@ export const List = memo(
 				return []
 			}
 
-			return orderItemsByType({ items: query.data, type: "nameAsc" })
+			return orderItemsByType({
+				items: query.data,
+				type: "nameAsc"
+			})
 		}, [query.isSuccess, query.data])
 
 		const getItemKey = useCallback((_: number, item: DriveCloudItem) => item.uuid, [])

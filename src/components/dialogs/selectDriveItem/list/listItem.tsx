@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { type SelectionType, type ResponseItem } from ".."
 import pathModule from "path"
 import useSDKConfig from "@/hooks/useSDKConfig"
+import { validate as validateUUID } from "uuid"
 
 export const ListItem = memo(
 	({
@@ -75,14 +76,20 @@ export const ListItem = memo(
 			let built = ""
 
 			for (const part of ex) {
-				if (part.length === 0) {
+				if (part.length === 0 || !validateUUID(part)) {
 					continue
 				}
 
-				built += part === baseFolderUUID ? "/" : directoryUUIDToNameCache.get(part) ?? ""
+				if (part === baseFolderUUID) {
+					continue
+				}
+
+				if (directoryUUIDToNameCache.has(part)) {
+					built = pathModule.posix.join(built, directoryUUIDToNameCache.get(part)!)
+				}
 			}
 
-			return built
+			return built.startsWith("/") ? built : `/${built}`
 		}, [pathname, baseFolderUUID])
 
 		const selectItem = useCallback(
@@ -101,7 +108,7 @@ export const ListItem = memo(
 						setResponseItems([
 							{
 								...item,
-								path: pathModule.join(currentPath, item.name)
+								path: pathModule.posix.join(currentPath, item.name)
 							}
 						])
 					} else {
@@ -109,7 +116,7 @@ export const ListItem = memo(
 							...prev.filter(i => i.uuid !== item.uuid),
 							{
 								...item,
-								path: pathModule.join(currentPath, item.name)
+								path: pathModule.posix.join(currentPath, item.name)
 							}
 						])
 					}
