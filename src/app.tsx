@@ -14,7 +14,6 @@ import { setThemeOnPageLoad, useTheme } from "./providers/themeProvider"
 import { type CookieConsentValues } from "./components/cookieConsent"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { IS_DESKTOP } from "./constants"
-import useLocation from "./hooks/useLocation"
 
 setThemeOnPageLoad()
 
@@ -32,7 +31,6 @@ export const rootElement = document.getElementById("app")
 export const HelmetComponent = memo(() => {
 	const { dark } = useTheme()
 	const [cookieConsent] = useLocalStorage<CookieConsentValues>("cookieConsent", "undecided")
-	const location = useLocation()
 
 	return (
 		<Helmet
@@ -46,7 +44,7 @@ export const HelmetComponent = memo(() => {
 				name="theme-color"
 				content={dark ? "#09090b" : "#f4f4f5"}
 			/>
-			{(location.includes("/f/") || location.includes("/d/")) && (
+			{(window.location.href.includes("/f/") || window.location.href.includes("/d/")) && (
 				<meta
 					name="robots"
 					content="noindex, nofollow"
