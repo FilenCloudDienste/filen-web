@@ -74,7 +74,6 @@ export const General = memo(() => {
 				return "Italiano"
 			}
 
-			case "jp":
 			case "ja": {
 				return "日本語"
 			}
@@ -99,9 +98,12 @@ export const General = memo(() => {
 				return "Türkçe"
 			}
 
-			case "uk":
-			case "ua": {
+			case "uk": {
 				return "Українська"
+			}
+
+			case "zh": {
+				return "简体中文"
 			}
 
 			default: {
@@ -462,6 +464,7 @@ export const General = memo(() => {
 								<SelectItem value="ru">Русский</SelectItem>
 								<SelectItem value="tr">Türkçe</SelectItem>
 								<SelectItem value="uk">Українська</SelectItem>
+								<SelectItem value="zh">简体中文</SelectItem>
 							</SelectContent>
 						</Select>
 					</Section>

@@ -35,9 +35,6 @@ i18n.use(LanguageDetector)
 			ja: {
 				translation: locales.ja
 			},
-			jp: {
-				translation: locales.ja
-			},
 			ko: {
 				translation: locales.ko
 			},
@@ -53,11 +50,11 @@ i18n.use(LanguageDetector)
 			tr: {
 				translation: locales.tr
 			},
-			ua: {
-				translation: locales.ua
-			},
 			uk: {
 				translation: locales.ua
+			},
+			zh: {
+				translation: locales.zh
 			}
 		},
 		lng: storedLang || navigatorLang || undefined,
