@@ -1,0 +1,1628 @@
+{
+	"cloudDrive": "クラウドドライブ",
+	"new": "新規",
+	"image": "画像",
+	"empty": "空",
+	"copiedToClipboard": "クリップボードにコピーされました",
+	"everyone": "全員",
+	"unknownUser": "不明なユーザー",
+	"login": {
+		"header": "ログイン",
+		"description": "アカウントにログインするには、以下にメールアドレスとパスワードを入力してください",
+		"useTwoFactorRecoveryKey": "回復キーを使用する",
+		"buttons": {
+			"login": "ログイン",
+			"createAccount": "アカウントを作成",
+			"forgotPassword": "パスワードを忘れましたか？"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "メールアドレス",
+				"password": "パスワード",
+				"2faCode": "2FAコード",
+				"2faRecoveryKey": "回復キー"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"2faCode": "381740",
+				"2faRecoveryKey": "回復キー"
+			}
+		},
+		"dialogs": {
+			"forgotPassword": {
+				"title": "パスワードを忘れた",
+				"continue": "指示を送信",
+				"placeholder": "メールアドレス"
+			}
+		},
+		"alerts": {
+			"emailOrPasswordWrong": "メールアドレスまたはパスワードが間違っています",
+			"enter2FA": "二要素認証コードを入力してください",
+			"enter2FARecoveryKey": "二要素認証回復キーを入力してください",
+			"forgotPasswordSent": "{{email}}にパスワードリセットの指示が送信されました"
+		}
+	},
+	"register": {
+		"header": "アカウントを作成",
+		"description": "アカウントを作成するには、以下にメールアドレスとパスワードを入力してください",
+		"buttons": {
+			"register": "アカウントを作成",
+			"resendConfirmation": "確認メールを再送信",
+			"login": "ログイン"
+		},
+		"passwordStrength": {
+			"length": "長さ",
+			"uppercase": "大文字",
+			"lowercase": "小文字",
+			"specialChars": "特殊文字"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "メールアドレス",
+				"password": "パスワード",
+				"confirmPassword": "パスワードを確認"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"dialogs": {
+			"confirmationSend": {
+				"title": "確認メールを再送信",
+				"continue": "送信",
+				"placeholder": "メールアドレス"
+			}
+		},
+		"alerts": {
+			"passwordWeak": "選択したパスワードは弱すぎます",
+			"confirmationSent": "{{email}}に確認メールが送信されました",
+			"passwordsNotMatching": "パスワードが一致しません",
+			"success": {
+				"title": "アカウント作成完了",
+				"continue": "続ける",
+				"description": "{{email}}に確認メールを送信しました。登録を確認するために、メール内のリンクをクリックしてください。迷惑メールフォルダも確認してください。"
+			}
+		}
+	},
+	"reset": {
+		"header": "パスワードをリセット",
+		"description": "メールアドレス、新しいパスワード、マスターキーを入力してパスワードをリセットします",
+		"importMasterKeys": "キーをインポート",
+		"masterKeysImported": "キーがインポートされました",
+		"masterKeysNotImported": "キーがインポートされていません",
+		"placeholders": {
+			"normal": {
+				"email": "メールアドレス",
+				"password": "パスワード",
+				"confirmPassword": "パスワードを確認"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"buttons": {
+			"reset": "リセット",
+			"back": "戻る"
+		},
+		"dialogs": {
+			"noMasterKeysImported": {
+				"title": "パスワードをリセット",
+				"continue": "了解しました",
+				"description": "エクスポートしたマスターキーなしでパスワードをリセットすると、ゼロ知識のエンドツーエンド暗号化の仕組みにより、アカウントに保存されたすべてのデータにアクセスできなくなります。"
+			},
+			"noMasterKeysImported2": {
+				"title": "パスワードをリセット",
+				"continue": "確信しています",
+				"description": "本当に確信していますか？マスターキーをインポートしないと、アカウントに保存されたすべてのデータが削除されます。この警告を無視してリセットしても問題ありません。"
+			},
+			"noMasterKeysImported3": {
+				"title": "パスワードをリセット",
+				"continue": "はい",
+				"description": "本当に大丈夫ですか？"
+			}
+		},
+		"alerts": {
+			"invalidMasterKeysFile": "無効なマスターキーのファイル",
+			"invalidMasterKeysFileWrongUserId": "これらのキーは別のアカウントに属しています",
+			"masterKeysImported": "マスターキーがインポートされました",
+			"passwordWeak": "選択したパスワードは弱すぎます",
+			"passwordsNotMatching": "パスワードが一致しません",
+			"invalidMasterKeys": "無効なマスターキー",
+			"passwordChanged": "パスワードが正常に変更されました"
+		}
+	},
+	"auth": {
+		"footer": {
+			"tos": "利用規約",
+			"privacy": "プライバシー"
+		}
+	},
+	"api": {
+		"errors": {
+			"invalid_params": "無効なパラメータ",
+			"internal_error": "内部エラー",
+			"rate_limited": "レート制限"
+		}
+	},
+	"topbar": {
+		"placeholders": {
+			"normal": {
+				"search": "このディレクトリで検索..."
+			},
+			"example": {
+				"search": "このディレクトリで検索..."
+			}
+		}
+	},
+	"dropZone": {
+		"cta": "ここにアップロード",
+		"chatsCta": "チャットに添付"
+	},
+	"topBar": {
+		"breadcrumb": {
+			"cloudDrive": "クラウドドライブ"
+		},
+		"searchInThisFolder": "このディレクトリで検索...",
+		"breadcrumbs": {
+			"recents": "最近",
+			"cloudDrive": "クラウドドライブ",
+			"links": "リンク",
+			"sharedWithMe": "共有されたファイル",
+			"sharedWithOthers": "他者と共有",
+			"favorites": "お気に入り",
+			"trash": "ゴミ箱",
+			"directory": "ディレクトリ"
+		},
+		"listView": "リスト表示",
+		"gridView": "グリッド表示"
+	},
+	"innerSideBar": {
+		"top": {
+			"settings": "設定",
+			"notes": "ノート",
+			"chats": "チャット",
+			"contacts": "連絡先",
+			"syncs": "同期",
+			"mounts": "マウント"
+		},
+		"bottom": {
+			"settings": "設定"
+		},
+		"notes": {
+			"search": "検索...",
+			"tags": {
+				"all": "すべて",
+				"favorites": "お気に入り",
+				"pinned": "ピン留め"
+			},
+			"createNote": "ノートを作成",
+			"createTag": "タグを作成",
+			"empty": "ノートはまだありません",
+			"emptyCreate": "作成する",
+				"emptySearch": "\"{{search}}\"に対する結果は見つかりませんでした"
+		},
+		"chats": {
+			"empty": "チャットはまだありません",
+			"emptyCreate": "作成する",
+			"search": "検索...",
+			"createChat": "チャットを作成",
+			"emptySearch": "\"{{search}}\"に対する結果は見つかりませんでした"
+		},
+		"recents": "最近",
+		"cloudDrive": "クラウドドライブ",
+		"links": "リンク",
+		"sharedWithMe": "共有されたファイル",
+		"sharedWithOthers": "他者と共有",
+		"favorites": "お気に入り",
+		"trash": "ゴミ箱",
+		"settings": {
+			"general": "一般",
+			"invoices": "請求書",
+			"subscriptions": "サブスクリプション",
+			"account": "アカウント",
+			"events": "イベント",
+			"security": "セキュリティ",
+			"invite": "招待",
+			"plans": "プラン"
+		},
+		"contacts": {
+			"online": "オンライン",
+			"offline": "オフライン",
+			"all": "すべて",
+			"blocked": "ブロック済み",
+			"in": "リクエスト",
+			"out": "保留"
+		},
+		"mounts": {
+			"networkDrive": "ネットワークドライブ",
+			"s3": "S3",
+			"webdav": "WebDAV"
+		},
+		"syncs": {
+			"empty": "同期はまだありません",
+			"emptyCreate": "作成する",
+			"nothingFound": "\"{{search}}\"に対する結果は見つかりませんでした",
+			"createSync": "同期を作成",
+			"search": "検索...",
+			"emptySearch": "\"{{search}}\"に対する結果は見つかりませんでした"
+		}
+	},
+	"sideBar": {
+		"cloudDrive": "クラウドドライブ",
+		"transfers": "転送",
+		"notes": "ノート",
+		"chats": "チャット",
+		"contacts": "連絡先",
+		"settings": "設定",
+		"syncs": "同期",
+		"mounts": "マウント",
+		"terminal": "ターミナル"
+	},
+	"dialogs": {
+		"cancel": "キャンセル",
+		"selectDriveItem": {
+			"title": "選択",
+			"submit": "選択",
+			"newFolder": "新規ディレクトリ",
+			"empty": "アップロードされたファイルやディレクトリはありません",
+			"selectRoot": "クラウドドライブを選択"
+		},
+		"selectContacts": {
+			"title": "連絡先を選択",
+			"submit": "選択",
+			"empty": "連絡先はまだありません"
+		},
+		"publicLink": {
+			"title": "公開リンク",
+			"description": "公開リンクを作成",
+			"close": "閉じる",
+			"save": "保存",
+			"enabled": "有効",
+			"downloadButton": "ダウンロードボタン",
+			"link": "リンク",
+			"copyLink": "コピー",
+			"expiresAfter": "有効期限",
+			"password": "パスワード（無効にするには空欄にしてください）",
+			"passwordPlaceholder": "パスワード",
+			"progress": "公開リンクに追加されたアイテム{{done}} / {{total}}",
+			"expireNever": "なし"
+		},
+		"sharedWith": {
+			"title": "共有相手",
+			"add": "追加",
+			"close": "閉じる",
+			"remove": "削除",
+			"stopSharing": {
+				"title": "共有を停止",
+				"description": "{{name}}と{{item}}の共有を停止してもよろしいですか？",
+				"continue": "共有を停止"
+			}
+		},
+		"changeEmail": {
+			"title": "メールアドレスを変更",
+			"newEmail": "新しいメールアドレス",
+			"newEmailPlaceholder": "新しいメール",
+			"confirmNewEmail": "新しいメールアドレスを確認",
+			"confirmNewEmailPlaceholder": "新しいメールを確認",
+			"password": "あなたのパスワード",
+			"passwordPlaceholder": "パスワード",
+			"close": "閉じる",
+			"save": "保存",
+			"successToast": "メールアドレスが正常に変更されました"
+		},
+		"changePassword": {
+			"title": "パスワードを変更",
+			"newPassword": "新しいパスワード",
+			"newPasswordPlaceholder": "新しいパスワード",
+			"confirmNewPassword": "新しいパスワードを確認",
+			"confirmNewPasswordPlaceholder": "新しいパスワードを確認",
+			"currentPassword": "現在のパスワード",
+			"currentPasswordPlaceholder": "現在のパスワード",
+			"close": "閉じる",
+			"save": "保存",
+			"successToast": "パスワードが正常に変更されました"
+		},
+		"personalInformation": {
+			"title": "個人情報を変更",
+			"firstName": "名",
+			"lastName": "姓",
+			"close": "閉じる",
+			"save": "保存",
+			"companyName": "会社名",
+			"vatId": "VAT ID",
+			"street": "住所",
+			"streetNumber": "番地",
+			"city": "市",
+			"postalCode": "郵便番号",
+			"country": "国"
+		},
+		"twoFactorCode": {
+			"useRecoveryKey": "回復キーを使用する",
+			"recoveryKeyPlaceholder": "回復キー",
+			"title": "二要素認証",
+			"continue": "続ける",
+			"info": "二要素認証コードを入力してください"
+		},
+		"noteParticipants": {
+			"remove": "削除",
+			"toggleReadPermissions": "読み取り権限に変更",
+			"toggleWritePermissions": "書き込み権限に変更",
+			"title": "参加者",
+			"close": "閉じる"
+		},
+		"fileVersions": {
+			"title": "ファイルのバージョン",
+			"delete": {
+				"title": "ファイルのバージョンを削除",
+				"description": "{{name}}を完全に削除してもよろしいですか？この操作は元に戻せません！",
+				"continue": "削除"
+			}
+		},
+		"noteHistory": {
+			"empty": "以前のノートのバージョンはまだありません"
+		},
+		"previewDialog": {
+			"save": "保存",
+			"readOnly": "読み取り専用"
+		},
+		"transparentFullScreenImage": {
+			"openOriginal": "オリジナルを開く"
+		},
+		"report": {
+			"title": "違反を報告",
+			"email": "メールアドレス",
+			"emailPlaceholder": "メールアドレス",
+			"comment": "コメント",
+			"commentPlaceholder": "適切な措置を講じるために必要な詳細をすべてご提供ください（任意）",
+			"reason": "理由",
+			"close": "閉じる",
+			"send": "送信",
+			"successToast": "違反報告が送信されました",
+			"reasons": {
+				"cp": "児童性的虐待資料",
+				"dmca": "著作権侵害",
+				"stolen": "盗まれたデータ",
+				"other": "その他",
+				"spam": "スパム",
+				"malware": "マルウェア"
+			}
+		},
+		"profile": {
+			"memberSince": "{{since}}からのメンバー",
+			"add": "連絡先リクエストを送信",
+			"block": "ブロック",
+			"remove": "連絡先から削除",
+			"unblock": "ブロック解除"
+		},
+		"createSync": {
+			"cancel": "キャンセル",
+			"create": "作成",
+			"name": "同期名",
+			"localPath": "ローカルパス",
+			"remotePath": "クラウドパス",
+				"select": "選択",
+			"syncMode": "同期モード",
+			"title": "同期を作成",
+			"paused": "一時停止中",
+			"excludeDotFiles": "ドットファイルを除外（推奨）",
+			"disableLocalTrash": "ローカルトラッシュを無効にし、アイテムを完全に削除",
+			"mode": {
+				"twoWay": "双方向",
+				"localToCloud": "ローカルからクラウド",
+				"localBackup": "ローカルバックアップ",
+				"cloudToLocal": "クラウドからローカル",
+				"cloudBackup": "クラウドバックアップ",
+				"twoWayInfo": "両方向でのすべてのアクションをミラーリング",
+				"localToCloudInfo": "ローカルで行ったすべてのアクションをクラウドにミラーリングしますが、クラウドの変更には影響しません",
+				"localBackupInfo": "クラウドにデータをアップロードするだけで、何も削除したりクラウドの変更に影響を与えたりしません",
+				"cloudToLocalInfo": "クラウドで行ったすべてのアクションをローカルにミラーリングしますが、ローカルの変更には影響しません",
+				"cloudBackupInfo": "クラウドからデータをダウンロードするだけで、何も削除したりローカルの変更に影響を与えたりしません"
+			},
+			"errors": {
+				"localPathNotWritable": "選択したローカルパスは書き込み可能ではありません。クライアントが適切にアクセスできることを確認してください。",
+				"invalidLocalPath": "選択したローカルパスは無効であり、同期できません。別のパスを選択してください。",
+				"remotePathAlreadyConfigured": "選択したクラウドパスは別の同期で既に構成されています。これにより無限の同期ループが発生する可能性があります。",
+				"localPathAlreadyConfigured": "選択したローカルパスは別の同期で既に構成されています。これにより無限の同期ループが発生する可能性があります。",
+				"syncNameAlreadyExists": "「{{name}}」という名前の同期が既に存在します。",
+				"localPathSyncedByICloud": "iCloudによって既に同期されたパスは同期できません。"
+			},
+			"warnings": {
+				"localDirectoryBig": {
+					"title": "警告",
+					"continue": "続ける",
+					"description": "{{count}}アイテム以上を同期すると、特に低スペックのデバイスでシステムが遅くなる可能性があります。ハイエンドのマシンを使用している場合は続行できますが、問題を回避するために少ないファイルを同期することをお勧めします。"
+				},
+				"localDirectoryNotPhysical": {
+					"title": "警告",
+					"continue": "続ける",
+					"description": "選択したローカルディレクトリが物理ディスク上にないようです。これにより同期の問題や予測不可能な動作が発生する可能性があります。続行してもよろしいですか？"
+				}
+			}
+		},
+		"info": {
+			"title": "情報",
+			"close": "閉じる",
+			"directoryType": "ディレクトリ",
+			"size": "サイズ",
+			"type": "タイプ",
+			"name": "名前",
+			"location": "場所",
+			"modified": "変更済み",
+			"uploaded": "アップロード済み",
+			"files": "ファイル",
+			"directories": "ディレクトリ"
+		},
+		"desktopUpdate": {
+			"title": "更新可能",
+			"info": "新しいバージョン（{{version}}）がダウンロードされ、インストールの準備が整いました。更新しますか？",
+			"dismiss": "閉じる",
+			"update": "更新",
+			"installing": "更新をインストール中です。このプロセスを中断しないでください！"
+		},
+		"storage": {
+			"title": "ストレージ不足",
+			"info": "利用可能なストレージが不足しています。さらにファイルをアップロードするにはプランを購入する必要があります。すべてのプランはストレージの面で積み重なります。希望するだけのプランにサブスクリプションできます。",
+			"dismiss": "閉じる",
+			"upgrade": "アップグレード"
+		},
+		"event": {
+			"title": "イベント"
+		},
+		"exportReminder": {
+			"title": "マスターキーをエクスポート",
+			"description": "マスターキーをエクスポートし、別の安全な場所に保管してください。パスワードをリセットするときにデータ損失を避けるためにマスターキーが必要です。パスワードを変更するたびにマスターキーをエクスポートする必要があります。",
+			"continue": "エクスポート",
+			"dismiss": "閉じる"
+		}
+	},
+"contextMenus": {
+		"item": {
+			"download": "ダウンロード",
+			"publicLink": "公開リンク",
+			"share": "共有",
+			"shareProgress": "{{done}} アイテムを共有しました",
+			"versions": "バージョン",
+			"favorite": "お気に入り",
+			"unfavorite": "お気に入り解除",
+			"rename": "名前を変更",
+			"move": "移動",
+			"trash": "ゴミ箱",
+			"restore": "復元",
+			"preview": "プレビュー",
+			"edit": "編集",
+			"remove": "削除",
+			"stopSharing": "共有を停止",
+			"selectDestination": "宛先を選択",
+			"cloudDrive": "クラウドドライブ",
+			"open": "開く",
+			"color": "カラー",
+			"deletePermanently": "完全に削除",
+			"copyId": "IDをコピー",
+			"info": "情報",
+			"dialogs": {
+				"trash": {
+					"title": "ゴミ箱",
+					"description": "{{name}}をゴミ箱に送信してもよろしいですか？その後、いつでも復元できます。",
+					"continue": "ゴミ箱"
+				},
+				"trashMultiple": {
+					"title": "ゴミ箱",
+					"description": "{{count}} アイテムをゴミ箱に送信してもよろしいですか？その後、いつでも復元できます。",
+					"continue": "ゴミ箱"
+				},
+				"deletePermanently": {
+					"title": "完全に削除",
+					"description": "{{name}}を完全に削除してもよろしいですか？この操作は元に戻せません！",
+					"continue": "削除"
+				},
+				"deletePermanentlyMultiple": {
+					"title": "完全に削除",
+					"description": "{{count}} アイテムを完全に削除してもよろしいですか？この操作は元に戻せません！",
+					"continue": "削除"
+				}
+			}
+		},
+		"drive": {
+			"uploadFiles": "ファイルをアップロード",
+			"uploadFolders": "ディレクトリをアップロード",
+			"newTextFile": "新規テキストファイル",
+			"newFolder": "新規ディレクトリ"
+		},
+		"notes": {
+			"history": "履歴",
+			"participants": "参加者",
+			"type": "タイプ",
+			"pin": "ピン留め",
+			"unpin": "ピン留め解除",
+			"favorite": "お気に入り",
+			"unfavorite": "お気に入り解除",
+			"duplicate": "複製",
+			"export": "エクスポート",
+			"exportAll": "すべてエクスポート",
+			"archive": "アーカイブ",
+			"restore": "復元",
+			"trash": "ゴミ箱",
+			"delete": "削除",
+			"rename": "名前を変更",
+			"tags": "タグ",
+			"leave": "退席",
+			"copyId": "IDをコピー",
+			"createTag": "タグを作成",
+			"types": {
+				"md": "Markdown",
+				"rich": "リッチテキスト",
+				"text": "テキスト",
+				"checklist": "チェックリスト",
+				"code": "コード"
+			}
+		},
+		"contacts": {
+			"profile": "プロフィール",
+			"remove": "削除",
+			"block": "ブロック"
+		},
+		"chat": {
+			"input": {
+				"selectFromDrive": "ドライブから選択",
+				"attachFiles": "ファイルを添付"
+			}
+		},
+		"chats": {
+			"editName": "名前を編集",
+			"leave": "退席",
+			"delete": "削除",
+			"copyId": "IDをコピー"
+		},
+		"syncs": {
+			"delete": "削除",
+			"pause": "一時停止",
+			"resume": "再開"
+		}
+	},
+	"transfers": {
+		"title": "転送",
+		"remaining": "残り約{{time}}",
+		"noActiveTransfers": "転送はまだありません",
+		"state": {
+			"finished": "完了",
+			"queued": "キュー待ち",
+			"started": "開始",
+			"error": "エラー",
+			"stopped": "停止",
+			"paused": "一時停止",
+			"creatingDirectories": "ディレクトリを作成中"
+		},
+		"pause": "一時停止",
+		"resume": "再開",
+		"stop": "停止"
+	},
+	"chats": {
+		"newMessagesSince": "{{count}} 件の新しいメッセージが{{since}}から届いています",
+		"markAsRead": "既読にする",
+		"maxSizeReached": "最大メッセージサイズは{{chars}}文字に制限されています",
+		"newMessageSince": "{{count}} 件の新しいメッセージが{{since}}から届いています",
+		"showParticipants": "参加者を表示",
+		"hideParticipants": "参加者を隠す",
+		"addParticipants": "参加者を追加",
+		"emojisMatching": "{{text}}に一致する絵文字",
+		"empty": {
+			"title": "チャットはまだありません",
+			"description": "作成したチャットや追加されたチャットがここに表示されます",
+			"create": "作成"
+		},
+		"header": {
+			"title": "エンドツーエンド暗号化チャット",
+			"description": "Filenはすべてのチャットをデフォルトでゼロ知識のエンドツーエンド暗号化で保護します。",
+			"feature1": "チャットのメンバーだけがコンテンツを復号化し、読むことができます",
+			"feature2": "システムは、受信したデータが実際に表示されているユーザーからのものであり、変更されていないことを保証します"
+		},
+		"message": {
+			"time": {
+				"now": "今",
+				"secondAgo": "{{seconds}} 秒前",
+				"secondsAgo": "{{seconds}} 秒前",
+				"minuteAgo": "{{minutes}} 分前",
+				"minutesAgo": "{{minutes}} 分前",
+				"hourAgo": "{{hours}} 時間前",
+				"hoursAgo": "{{hours}} 時間前",
+				"todayAt": "今日 {{date}} に",
+				"yesterdayAt": "昨日 {{date}} に"
+			},
+			"edited": "編集済み",
+			"reply": "返信",
+			"delete": "削除",
+			"edit": "編集",
+			"copyId": "IDをコピー",
+			"copyText": "テキストをコピー",
+			"leave": "退席"
+		},
+		"input": {
+			"placeholder": "メッセージを送信...",
+			"typing": "入力中...",
+			"typingMultiple": "入力中...",
+			"replyingTo": "返信先",
+			"placeholderMobile": "メッセージ..."
+		},
+		"dialogs": {
+			"deleteMessage": {
+				"title": "メッセージを削除",
+				"description": "このメッセージを削除してもよろしいですか？この操作は元に戻せません！",
+				"continue": "削除"
+			},
+			"removeParticipant": {
+				"title": "参加者を削除",
+				"description": "{{name}}をこのチャットから削除してもよろしいですか？",
+				"continue": "削除"
+			},
+			"deleteConversation": {
+				"title": "チャットを削除",
+				"description": "このチャットを削除してもよろしいですか？この操作は元に戻せません！",
+				"continue": "削除"
+			},
+			"leaveConversation": {
+				"title": "チャットを退席",
+				"description": "このチャットを退席してもよろしいですか？",
+				"continue": "退席"
+			},
+			"editName": {
+				"title": "名前を編集",
+				"placeholder": "新しい名前",
+				"continue": "保存"
+			}
+		},
+		"embeds": {
+			"og": {
+				"noTitleAvailable": "タイトルはありません",
+				"noDescriptionAvailable": "説明はありません",
+				"noImageAvailable": "画像はありません"
+			}
+		},
+		"participants": {
+			"profile": "プロフィール",
+			"remove": "削除"
+		}
+	},
+	"contacts": {
+		"addContact": "連絡先を追加",
+		"search": "検索...",
+		"empty": "連絡先はまだありません",
+		"emptySearch": "\"{{search}}\"に対する結果は見つかりませんでした",
+		"openChat": "チャットを開く",
+		"more": "もっと見る",
+		"dialogs": {
+			"unblock": {
+				"title": "ユーザーのブロック解除",
+				"description": "{{name}}のブロックを解除してもよろしいですか？",
+				"continue": "ブロック解除"
+			},
+			"remove": {
+				"title": "連絡先を削除",
+				"description": "{{name}}を連絡先から削除してもよろしいですか？",
+				"continue": "削除"
+			},
+			"block": {
+				"title": "ユーザーをブロック",
+				"description": "{{name}}をブロックしてもよろしいですか？",
+				"continue": "ブロック"
+			},
+			"sendRequest": {
+				"title": "連絡先リクエストを送信",
+				"placeholder": "Filenユーザーのメールアドレス",
+				"continue": "送信"
+			}
+		}
+	},
+	"settings": {
+		"dialogs": {
+			"deleteVersions": {
+				"title": "ファイルバージョンを削除",
+				"description": "すべてのファイルバージョンを削除してもよろしいですか？この操作は元に戻せません！",
+				"continue": "削除"
+			},
+			"deleteAll": {
+				"title": "すべてのファイルとディレクトリを削除",
+				"description": "すべてのファイルとディレクトリを削除してもよろしいですか？この操作は元に戻せません！",
+				"continue": "削除"
+			},
+			"deleteAll2": {
+				"title": "すべてのファイルとディレクトリを削除",
+				"description": "本当に大丈夫ですか？この操作は元に戻せません！",
+				"continue": "削除"
+			},
+			"deleteAll3": {
+				"title": "すべてのファイルとディレクトリを削除",
+				"description": "100%確実ですか？この操作は元に戻せません！",
+				"continue": "削除"
+			},
+			"requestAccountDeletion": {
+				"title": "アカウント削除",
+				"description": "アカウントと関連データを削除してもよろしいですか？確認メールをお送りします。この操作は元に戻せません！",
+				"continue": "削除リクエスト"
+			},
+			"logout": {
+				"title": "ログアウト",
+				"description": "ログアウトしてもよろしいですか？",
+				"continue": "ログアウト"
+			},
+			"clearThumbnailCache": {
+				"title": "サムネイルキャッシュをクリア",
+				"description": "ローカルサムネイルキャッシュをクリアしてもよろしいですか？これによりローカルストレージの空きが増えますが、必要に応じて画像プレビューを再生成する必要があります。",
+				"continue": "クリア"
+			},
+			"cancelSubscription": {
+				"title": "サブスクリプションをキャンセル",
+				"description": "サブスクリプションをキャンセルしてもよろしいですか？",
+				"continue": "サブスクリプションをキャンセル",
+				"close": "閉じる"
+			},
+			"nickName": {
+				"title": "ニックネームを編集",
+				"placeholder": "新しいニックネーム",
+				"continue": "保存",
+				"invalid": "ニックネームは3〜32文字の英数字でなければなりません。"
+			},
+			"twoFactorAuthenticationRecoveryKey": {
+				"title": "回復キー",
+				"description": "二要素認証の回復キーを安全な場所に保管してください。二要素認証デバイスを失った場合、アカウントへのアクセスを回復する唯一の方法です！",
+				"continue": "完了"
+			}
+		},
+		"general": {
+			"storageUsed": "使用済みストレージ",
+			"files": "ファイル {{size}}",
+			"versionedFiles": "バージョン管理されたファイル {{size}}",
+			"free": "空き {{size}}",
+			"used": "{{used}} / {{max}} 使用中",
+			"dark": "ダーク",
+			"light": "ライト",
+			"system": "システム",
+			"noteType": {
+				"md": "Markdown",
+				"rich": "リッチテキスト",
+				"text": "テキスト",
+				"checklist": "チェックリスト",
+				"code": "コード"
+			},
+			"sections": {
+				"defaultNoteType": {
+					"name": "デフォルトのノートタイプ",
+					"info": "デフォルトのノートタイプを変更"
+				},
+				"chatNotifications": {
+					"name": "チャット通知",
+					"info": "チャット通知を有効または無効にします"
+				},
+				"notificationSound": {
+					"name": "通知音",
+					"info": "通知音を有効または無効にします"
+				},
+				"contactNotifications": {
+					"name": "連絡先通知",
+					"info": "連絡先通知を有効または無効にします"
+				},
+				"theme": {
+					"name": "テーマ",
+					"info": "アプリの外観を変更"
+				},
+				"language": {
+					"name": "言語",
+					"info": "アプリの言語を変更"
+				},
+				"clearThumbnailCache": {
+					"name": "サムネイルキャッシュ",
+					"info": "サムネイルキャッシュをクリア",
+					"action": "クリア"
+				},
+				"logout": {
+					"name": "ログアウト",
+					"info": "ログアウト",
+					"action": "ログアウト"
+				},
+				"minimizeToTray": {
+					"name": "トレイに最小化",
+					"info": "ウィンドウを最小化するのではなく、Filenをトレイに隠します"
+				},
+				"autoLaunch": {
+					"name": "自動起動",
+					"info": "システム起動時にFilenを自動的に起動"
+				},
+				"exportDesktopLogs": {
+					"name": "ログをエクスポート",
+					"info": "すべてのデスクトップクライアントのログをエクスポート",
+					"action": "エクスポート"
+				}
+			}
+		},
+"invite": {
+		"copy": "コピー",
+		"title": "他の人を招待して最大30 GBのストレージを受け取る",
+		"description": "Filenに友達を招待するたびに{{yourEarnings}}を受け取り、あなたの友達も{{otherEarnings}}を受け取ります。これが簡単です。",
+		"earned": "{{earned}} / {{max}}",
+		"storageEarned": "獲得したストレージ"
+	},
+	"events": {
+		"empty": "まだイベントはありません",
+		"fileUploaded": "{{name}} がアップロードされました",
+		"fileVersioned": "{{name}} がバージョン管理されました",
+		"versionedFileRestored": "{{name}} がファイルのバージョンから復元されました",
+		"fileMoved": "{{name}} が移動されました",
+		"fileRenamed": "{{name}} が {{newName}} に名前を変更されました",
+		"fileTrash": "{{name}} がゴミ箱に移動されました",
+		"fileRm": "{{name}} が削除されました",
+		"fileRestored": "{{name}} がゴミ箱から復元されました",
+		"fileShared": "{{name}} が {{email}} と共有されました",
+		"fileLinkEdited": "{{name}} の公開リンクが編集されました",
+		"folderTrash": "{{name}} がゴミ箱に移動されました",
+		"folderShared": "{{name}} が {{email}} と共有されました",
+		"folderMoved": "{{name}} が移動されました",
+		"folderRenamed": "{{name}} が {{newName}} に名前を変更されました",
+		"subFolderCreated": "{{name}} が作成されました",
+		"baseFolderCreated": "{{name}} が作成されました",
+		"folderRestored": "{{name}} がゴミ箱から復元されました",
+		"folderColorChanged": "{{name}} の色が変更されました",
+		"login": "ログインしました",
+		"deleteVersioned": "バージョン管理されたファイルが削除されました",
+		"deleteAll": "すべてのファイルとディレクトリが削除されました",
+		"deleteUnfinished": "未完了のアップロードが削除されました",
+		"trashEmptied": "ゴミ箱が空になりました",
+		"requestAccountDeletion": "アカウント削除がリクエストされました",
+		"2faEnabled": "二要素認証が有効化されました",
+		"2faDisabled": "二要素認証が無効化されました",
+		"codeRedeemed": "コード {{code}} が引き換えられました",
+		"emailChanged": "メールアドレスが {{email}} に変更されました",
+		"passwordChanged": "パスワードが変更されました",
+		"removedSharedInItems": "{{count}} の共有アイテムが {{email}} から削除されました",
+		"removedSharedOutItems": "{{count}} の共有アイテムが {{email}} と共有解除されました",
+		"folderLinkEdited": "ディレクトリリンクが編集されました",
+		"itemFavoriteAdded": "{{name}} がお気に入りに追加されました",
+		"itemFavoriteRemoved": "{{name}} がお気に入りから削除されました",
+		"failedLogin": "ログインに失敗しました",
+		"deleteFolderPermanently": "{{name}} が完全に削除されました",
+		"deleteFilePermanently": "{{name}} が完全に削除されました",
+		"emailChangeAttempt": "メール変更の試みが記録されました"
+	},
+	"invoices": {
+		"plan": "プラン",
+		"method": "方法",
+		"date": "日付",
+		"download": "ダウンロード",
+		"amount": "金額",
+		"paid": "支払済み",
+		"noInvoices": "まだ請求書はありません",
+		"paymentMethod": "支払い方法"
+	},
+	"subscriptions": {
+		"plan": "プラン",
+		"method": "方法",
+		"date": "日付",
+		"download": "ダウンロード",
+		"amount": "金額",
+		"status": "ステータス",
+		"noSubscriptions": "まだサブスクリプションはありません",
+		"cancel": "キャンセル",
+		"storage": "ストレージ",
+		"moreInfo": "サブスクリプションに関する詳細情報",
+		"paymentMethod": "支払い方法",
+		"info": "{{storage}} ストレージで、無制限のアップロード、ダウンロード、ノート、およびチャットが可能です。Filenの全機能をアンロックします。",
+		"statuses": {
+			"cancelled": "キャンセルされました",
+			"active": "アクティブ",
+			"waiting": "待機中"
+		}
+	},
+	"plans": {
+		"starter": "スターター",
+		"monthly": "月額",
+		"annually": "年額",
+		"lifetime": "生涯",
+		"buyNow": "今すぐ購入",
+		"payInvoice": "請求書を支払う",
+		"sale": "セール",
+		"limited": "限定販売",
+		"creditCard": "クレジットカード",
+		"crypto": "暗号通貨",
+		"legal1": "プランを購入することで、Filenがキャンセルするまで毎請求期間ごとに自動的に料金を請求することを許可します。アカウントページからいつでもキャンセルできます。部分的な返金はありません。",
+		"legal2": "また、当社の",
+		"tos": "利用規約",
+		"and": "と",
+		"privacyPolicy": "プライバシーポリシー",
+		"features": {
+			"free": {
+				"1": "無制限の帯域幅",
+				"2": "無制限のアップロード",
+				"3": "クライアント側の暗号化",
+				"4": "ゼロ知識技術",
+				"5": "同期",
+				"6": "ネットワークドライブ",
+				"7": "制限されたファイル共有",
+				"8": "制限されたノート",
+				"9": "制限されたチャット"
+			},
+			"pro": {
+				"1": "無制限の帯域幅",
+				"2": "無制限のアップロード",
+				"3": "クライアント側の暗号化",
+				"4": "ゼロ知識技術",
+				"5": "同期",
+				"6": "ネットワークドライブ",
+				"7": "ファイル共有",
+				"8": "無制限のノート",
+				"9": "無制限のチャット"
+			}
+		}
+	},
+	"security": {
+		"sections": {
+			"password": {
+				"name": "パスワード",
+				"info": "パスワードを変更",
+				"action": "変更"
+			},
+			"twoFactorAuthentication": {
+				"name": "二要素認証",
+				"info": "二要素認証を有効または無効にします"
+			},
+			"exportMasterKeys": {
+				"name": "マスターキーのエクスポート",
+				"info": "パスワードをリセットする必要がある場合にアカウントを復元できるように、マスターキーをエクスポートします。パスワードを変更するたびにマスターキーをエクスポートする必要があります。",
+				"action": "エクスポート",
+				"subInfo": "マスターキーをエクスポートし、別の安全な場所に保管してください。パスワードをリセットする際にデータ損失を避けるためにマスターキーが必要です。パスワードを変更するたびにマスターキーをエクスポートする必要があります。"
+			},
+			"lockTimeout": {
+				"name": "アプリのロック",
+				"info": "一定の時間非アクティブな場合にアプリをロックします。ロックスクリーンが機能するためにはPINを設定する必要があります",
+				"values": {
+					"never": "なし",
+					"immediately": "直ちに",
+					"oneMinute": "1分",
+					"threeMinutes": "3分",
+					"fiveMinutes": "5分",
+					"tenMinutes": "10分",
+					"fifteenMinutes": "15分",
+					"thirtyMinutes": "30分",
+					"oneHour": "1時間",
+					"threeHours": "3時間",
+					"sixHours": "6時間",
+					"twelveHours": "12時間",
+					"twentyFourHours": "24時間"
+				}
+			},
+			"lockPin": {
+				"name": "ロックPIN",
+				"info": "アプリのロックを解除するためのPINを設定",
+				"action": "変更"
+			}
+		},
+		"dialogs": {
+			"lockPin": {
+				"notMatching": "入力したPINが一致しません",
+				"enterPin": "PINを入力",
+				"confirmPin": "PINを確認"
+			},
+			"lock": {
+				"wrongPin": "間違ったPIN"
+			}
+		}
+	},
+	"account": {
+		"sections": {
+			"avatar": {
+				"name": "アバター",
+				"info": "あなたのアバターは公開されます",
+				"action": "編集",
+				"invalid": "無効な画像。許可されているファイル形式はPNGとJPG、最大サイズは2MBです。"
+			},
+			"versionedFiles": {
+				"name": "バージョン管理されたファイル",
+				"info": "すべてのバージョン管理されたファイルを削除",
+				"action": "削除"
+			},
+			"all": {
+				"name": "すべてのファイルとディレクトリ",
+				"info": "すべてのファイルとフォルダを削除",
+				"action": "削除"
+			},
+			"email": {
+				"name": "メールアドレス",
+				"info": "メールアドレスを変更",
+				"action": "変更"
+			},
+			"nickName": {
+				"name": "ニックネーム",
+				"info": "ニックネームを変更",
+				"action": "変更"
+			},
+			"personalInformation": {
+				"name": "個人情報",
+				"info": "個人情報を編集します。ビジネス顧客のみ。請求書に使用され、公開されません。",
+				"action": "編集"
+			},
+			"fileVersioning": {
+				"name": "ファイルバージョン管理",
+				"info": "ファイルのバージョン管理を有効または無効にします"
+			},
+			"loginAlerts": {
+				"name": "ログインアラート",
+				"info": "ログインアラートを有効または無効にします"
+			},
+			"appearOffline": {
+				"name": "オフラインで表示",
+				"info": "チャットでオフラインに表示"
+			},
+			"requestAccountData": {
+				"name": "アカウントデータのリクエスト",
+				"info": "GDPRに従って保存しているすべての個人データをリクエストします",
+				"action": "リクエスト"
+			},
+			"requestAccountDeletion": {
+				"name": "アカウント削除のリクエスト",
+				"info": "アカウントの削除をリクエストします。確認メールをお送りします。",
+				"action": "リクエスト"
+			}
+		}
+    }
+	},
+	"drive": {
+		"header": {
+			"name": "名前",
+			"size": "サイズ",
+			"modified": "変更済み"
+		},
+		"list": {
+			"item": {
+				"sharedWith": "{{count}} と共有"
+			}
+		},
+		"dialogs": {
+			"createTextFile": {
+				"title": "テキストファイルを作成",
+				"placeholder": "名前",
+				"continue": "作成",
+				"invalidFileName": "無効なファイル名です。"
+			},
+			"createDirectory": {
+				"title": "ディレクトリを作成",
+				"placeholder": "名前",
+				"continue": "作成",
+				"invalidDirectoryName": "無効なディレクトリ名です。"
+			},
+			"rename": {
+				"title": "名前を変更",
+				"placeholder": "新しい名前",
+				"continue": "名前を変更",
+				"invalidFileName": "無効なファイル名です。",
+				"invalidDirectoryName": "無効なディレクトリ名です。"
+			},
+			"share": {
+				"title": "共有",
+				"placeholder": "Filenユーザーのメールアドレス",
+				"continue": "共有"
+			}
+		},
+		"emptyPlaceholder": {
+			"uploadFiles": "ファイルをアップロード",
+			"search": {
+				"title": "検索",
+				"info": "\"{{search}}\"に対する結果は見つかりませんでした"
+			},
+			"publicLink": {
+				"title": "空のディレクトリ",
+				"info": "このディレクトリの所有者はまだファイルをアップロードしていません"
+			},
+			"drive": {
+				"title": "まだファイルやディレクトリはアップロードされていません",
+				"info": "ファイルやディレクトリをここにドラッグ＆ドロップするか、下のボタンを押してください"
+			},
+			"trash": {
+				"title": "ゴミ箱はまだ空です",
+				"info": "ゴミ箱に送られたファイルやディレクトリがここに表示されます"
+			},
+			"recents": {
+				"title": "まだファイルはアップロードされていません",
+				"info": "最近アップロードされたファイルがここに表示されます"
+			},
+			"links": {
+				"title": "まだ公開リンクは作成されていません",
+				"info": "ファイルやディレクトリの公開リンクがここに表示されます"
+			},
+			"favorites": {
+				"title": "まだお気に入りはありません",
+				"info": "お気に入りのファイルやディレクトリがここに表示されます"
+			},
+			"sharedIn": {
+				"title": "まだ共有されたものはありません",
+				"info": "共有されたファイルやディレクトリがここに表示されます"
+			},
+			"sharedOut": {
+				"title": "まだ他者と共有されたものはありません",
+				"info": "他者と共有されたファイルやディレクトリがここに表示されます"
+			}
+		}
+	},
+	"publicLink": {
+		"invalid": "無効な公開リンク",
+		"invalidInfo": "この公開リンクは期限切れまたは存在しません",
+		"back": "戻る",
+		"directory": {
+			"downloadWholeDirectory": "ディレクトリ全体をダウンロード",
+			"downloadDirectory": "ディレクトリをダウンロード"
+		},
+		"sideBar": {
+			"ad": {
+				"header": "私たちはFilenです",
+				"title": "プライベートで安全なクラウドストレージ",
+				"info1": "プライバシーを設計に基づいて",
+				"info2": "エンドツーエンドの暗号化",
+				"info3": "ゼロ知識技術",
+				"cta": "10GBのストレージを無料で"
+			},
+			"reportAbuse": "報告する"
+		},
+		"auth": {
+			"wrongPassword": "間違ったパスワード",
+			"title": "このリンクはパスワード保護されています",
+			"subTitle": "アクセスするには、送信者が提供したパスワードを入力してください。",
+			"password": "パスワード",
+			"passwordPlaceholder": "パスワード",
+			"access": "アクセス"
+		}
+	},
+"notes": {
+		"contentPlaceholder": "ノートの内容...",
+		"maxSizeReached": "ノートの最大サイズは{{chars}}文字に制限されています",
+		"empty": {
+			"title": "まだノートはありません",
+			"description": "作成したノートや追加されたノートがここに表示されます",
+			"create": "作成"
+		},
+		"dialogs": {
+			"removeParticipant": {
+				"title": "参加者を削除",
+				"description": "{{name}}をこのノートから削除してもよろしいですか？",
+				"continue": "削除"
+			},
+			"deleteNote": {
+				"title": "ノートを削除",
+				"description": "{{name}}を削除してもよろしいですか？この操作は元に戻せません！",
+				"continue": "削除"
+			},
+			"deleteTag": {
+				"title": "タグを削除",
+				"description": "{{name}}を削除してもよろしいですか？この操作は元に戻せません！",
+				"continue": "削除"
+			},
+			"renameTag": {
+				"title": "名前を変更",
+				"placeholder": "新しい名前",
+				"continue": "名前を変更"
+			},
+			"createTag": {
+				"title": "タグを作成",
+				"placeholder": "名前",
+				"continue": "作成"
+			},
+			"renameNote": {
+				"title": "名前を変更",
+				"placeholder": "新しい名前",
+				"continue": "名前を変更"
+			},
+			"leaveNote": {
+				"title": "ノートを退席",
+				"description": "{{name}}を退席してもよろしいですか？ノートにアクセスできなくなります。",
+				"continue": "退席"
+			}
+		}
+	},
+	"previewDialog": {
+		"unsavedChanges": {
+			"title": "未保存の変更",
+			"description": "保存せずに終了してもよろしいですか？すべての変更が失われます。",
+			"continue": "閉じる"
+		}
+	},
+	"sharedIn": {
+		"dialogs": {
+			"remove": {
+				"title": "削除",
+				"description": "{{item}}を共有から削除してもよろしいですか？アクセスできなくなります！",
+				"continue": "削除"
+			}
+		}
+	},
+	"desktop": {
+		"dialogs": {
+			"close": {
+				"title": "閉じる",
+				"description": "Filenを終了してもよろしいですか？",
+				"continue": "終了"
+			}
+		}
+	},
+	"trash": {
+		"dialogs": {
+			"empty": {
+				"title": "ゴミ箱を空にする",
+				"description": "ゴミ箱を空にしてもよろしいですか？この操作は元に戻せません！",
+				"continue": "空にする"
+			}
+		}
+	},
+	"notifications": {
+		"chat": "チャット",
+		"contactRequest": "連絡先リクエスト",
+		"contactRequestInfo": "{{name}} があなたに連絡先リクエストを送信しました"
+	},
+	"cookieConsent": {
+		"description": "このサイトはクッキーを使用して、あなたの体験を測定し改善します。",
+		"optOut": "オプトアウト",
+		"onlyNeeded": "必要なもののみ",
+		"accept": "受け入れる"
+	},
+	"mounts": {
+		"networkDrive": {
+			"mountedAt": "{{letter}} にマウントされています",
+			"browse": "ブラウズ",
+			"clear": "クリア",
+			"missingDeps": "依存関係が不足しています",
+			"missingDepsWindows": "ネットワークドライブを使用するには、WinFSPをシステムにインストールする必要があります。",
+			"missingDepsLinux": "ネットワークドライブを使用するには、FUSE3をシステムにインストールする必要があります。",
+			"missingDepsInstructions": "インストール手順",
+			"cacheUsed": "{{size}} 使用中",
+			"description": "クラウドドライブをネットワークドライブとしてマウントし、コンピュータから直接ファイルにアクセスし管理できるようにします。シームレスな統合、リアルタイムの同期、安全なデータアクセスを、馴染みのあるファイルエクスプローラー内でお楽しみください。",
+			"unixDescription": "クラウドドライブをローカルディレクトリ内にマウントし、コンピュータから直接ファイルにアクセスし管理できるようにします。シームレスな統合、リアルタイムの同期、安全なデータアクセスを、馴染みのあるファイルエクスプローラー内でお楽しみください。",
+			"sudo": "クラウドドライブをマウントおよびアンマウントするには、クライアントが管理者権限を必要とする場合があります。プロンプトが表示された場合はアクセスを許可してください。",
+			"limitations": "ネットワークドライブ上でプログラムやアーカイブのインストール、実行、または解凍はサポートされていません。",
+			"sections": {
+				"active": {
+					"name": "アクティブ"
+				},
+				"enabled": {
+					"name": "有効",
+					"info": "ネットワークドライブを有効または無効にします。このオプションを切り替えたときはエクスプローラーを更新してください"
+				},
+				"mountPoint": {
+					"name": "マウントポイント",
+					"info": "ローカルディレクトリにマウントポイントを設定します。ローカルディレクトリは空であり、読み取りと書き込みが可能でなければなりません",
+					"change": "変更"
+				},
+				"driveLetter": {
+					"name": "ドライブレター",
+					"info": "ネットワークドライブのドライブレターを設定します。利用可能なドライブレターのみが表示されます"
+				},
+				"browse": {
+					"name": "ブラウズ",
+					"info": "デフォルトのエクスプローラーを使用してネットワークドライブをブラウズ"
+				},
+				"cache": {
+					"name": "キャッシュ",
+					"info": "キャッシングにより、ネットワークドライブのブラウジングが大幅に高速化されます"
+				},
+				"cacheSize": {
+					"name": "キャッシュサイズ",
+					"info": "キャッシュサイズを可能な限り高く設定することをお勧めします。クライアントはローカルディスクを使用してネットワークドライブの速度を大幅に向上させます"
+				},
+				"cachePath": {
+					"name": "キャッシュの場所",
+					"info": "ネットワークドライブのキャッシュの場所を変更します。内部ディスク上でなければなりません。変更しない場合はアプリのインストールディレクトリが使用されます"
+				},
+				"readOnly": {
+					"name": "読み取り専用",
+					"info": "ネットワークドライブを読み取り専用でマウントします"
+				}
+			},
+			"dialogs": {
+				"cleanupCache": {
+					"title": "キャッシュをクリア",
+					"description": "ローカルキャッシュをクリアしてもよろしいですか？キャッシュをクリアすると、初回のファイル読み込み時間が大幅に遅くなる可能性があります。",
+					"continue": "クリア"
+				},
+				"disable": {
+					"title": "無効にする",
+					"description": "ネットワークドライブを無効にしてもよろしいですか？すべてのアクティブな操作がキャンセルされるか、エラーが発生します。もはやアクティブに使用していないことを確認してください。",
+					"continue": "無効にする"
+				}
+			},
+			"errors": {
+				"invalidMountPoint": "無効なマウントポイントです。",
+				"mountPointNotEmpty": "マウントポイントは空のディレクトリである必要があります。",
+				"pathNotInHomeDir": "マウントポイントはホームディレクトリ内（/home/<yourUsername>）である必要があります。",
+				"pathNotInUserDir": "マウントポイントはユーザーディレクトリ内（/Users/<yourUsername>）である必要があります。",
+				"invalidCachePath": "キャッシュの場所は、少なくとも10GBの空き容量がある内部ディスク上である必要があります。",
+				"cachePathNotReadableWritable": "キャッシュの場所は読み取りまたは書き込みができません。",
+				"invalidCachePathLength": "キャッシュの場所のパスが長すぎます。"
+			},
+			"transfers": {
+				"uploading": "バックグラウンドで{{total}}ファイルをアップロード中",
+				"uploadingPlural": "バックグラウンドで{{total}}ファイルをアップロード中",
+				"uploadingSpeed": "バックグラウンドで{{total}}ファイルを{{speed}}でアップロード中",
+				"uploadingPluralSpeed": "バックグラウンドで{{total}}ファイルを{{speed}}でアップロード中",
+				"everythingUploaded": "すべて同期済み"
+			}
+		},
+		"webdav": {
+			"copyConnect": "コピー",
+			"description": "ローカルWebDAVサーバーを開始し、クラウドドライブにアクセスして管理するための標準化されたプロトコルを提供します。これにより、WebDAVをサポートする幅広いアプリケーションやデバイスとの互換性が得られ、ファイルのアクセスと管理が向上します。",
+			"sections": {
+				"active": {
+					"name": "アクティブ"
+				},
+				"enabled": {
+					"name": "有効",
+					"info": "WebDAVサーバーを有効または無効にします"
+				},
+				"protocol": {
+					"name": "HTTPプロトコル",
+					"info": "HTTPプロトコルを変更します"
+				},
+				"hostname": {
+					"name": "ホスト名",
+					"info": "サーバーがリッスンするホスト名を変更します"
+				},
+				"port": {
+					"name": "ポート",
+					"info": "サーバーがリッスンするポートを変更します"
+				},
+				"authMode": {
+					"name": "認証モード",
+					"info": "認証モードを変更します"
+				},
+				"username": {
+					"name": "ユーザー名",
+					"info": "HTTP認証のユーザー名を変更します。これはFilenのメールアドレスやニックネームではありません"
+				},
+				"password": {
+					"name": "パスワード",
+					"info": "HTTP認証のパスワードを変更します。これはFilenのパスワードではありません"
+				},
+				"proxyMode": {
+					"name": "プロキシモード",
+					"info": "プロキシモードを有効にします"
+				},
+				"connect": {
+					"name": "接続",
+					"info": "WebDAV URLをコピー"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "無効にする",
+					"description": "WebDAVサーバーを無効にしてもよろしいですか？すべてのアクティブな操作がキャンセルされるか、エラーが発生します。もはやアクティブに使用していないことを確認してください。",
+					"continue": "無効にする"
+				}
+			},
+			"errors": {
+				"invalidPort": "無効なポート。受け入れ可能な範囲：{{range}}。",
+				"invalidHostname": "無効なホスト名。"
+			}
+		},
+		"s3": {
+			"copyConnect": "コピー",
+			"description": "ローカルS3サーバーを開始し、クラウドドライブにアクセスして管理するための標準化されたプロトコルを提供します。これにより、S3をサポートする幅広いアプリケーションやデバイスとの互換性が得られ、ファイルのアクセスと管理が向上します。",
+			"info": "S3サーバーに接続する際は、地域を「filen」に設定し、「s3ForcePathStyle」を有効にする必要があります。",
+			"sections": {
+				"active": {
+					"name": "アクティブ"
+				},
+				"enabled": {
+					"name": "有効",
+					"info": "S3サーバーを有効または無効にします"
+				},
+				"protocol": {
+					"name": "HTTPプロトコル",
+					"info": "HTTPプロトコルを変更します"
+				},
+				"hostname": {
+					"name": "ホスト名",
+					"info": "サーバーがリッスンするホスト名を変更します"
+				},
+				"port": {
+					"name": "ポート",
+					"info": "サーバーがリッスンするポートを変更します"
+				},
+				"accessKeyId": {
+					"name": "AccessKeyId",
+					"info": "AccessKeyIdを変更します。これはFilenのメールアドレスやニックネームではありません"
+				},
+				"secretKeyId": {
+					"name": "SecretKeyId",
+					"info": "SecretKeyIdを変更します。これはFilenのパスワードではありません"
+				},
+				"connect": {
+					"name": "接続",
+					"info": "WebDAV URLをコピー"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "無効にする",
+					"description": "S3サーバーを無効にしてもよろしいですか？すべてのアクティブな操作がキャンセルされるか、エラーが発生します。もはやアクティブに使用していないことを確認してください。",
+					"continue": "無効にする"
+				}
+			},
+			"errors": {
+				"invalidPort": "無効なポート。受け入れ可能な範囲：{{range}}。",
+				"invalidHostname": "無効なホスト名。"
+			}
+		}
+	},
+"syncs": {
+		"eventsTitle": "イベント",
+		"ignoredTitle": "無視された",
+		"issuesTitle": "問題",
+		"settingsTitle": "設定",
+		"transfersTitle": "転送",
+		"noTransfers": "アクティブな転送はありません",
+		"noEventsYet": "まだイベントはありません",
+		"nothingIgnored": "無視されたファイルやディレクトリはありません",
+		"noIssues": "問題はありません",
+		"info": {
+			"progress": "{{items}} アイテムを同期中 ({{total}}) {{speed}}で、残り約{{remaining}}",
+			"progressNoEstimate": "{{items}} アイテムを同期中 ({{total}})",
+			"upToDate": "すべて同期済み",
+			"errors": "{{count}} の同期エラー",
+			"errorsResolve": "解決",
+			"paused": "同期が一時停止しています",
+			"processingDeltas": "デルタを処理中",
+			"syncingChanges": "変更を同期中",
+			"savingState": "状態を保存中",
+			"waitingForLocalDirectoryChanges": "ローカルの変更を待機中",
+			"acquiringLock": "同期ロックを取得中",
+			"gettingTrees": "ローカルおよびクラウドのディレクトリを読み込み中",
+			"remoteSmokeTestFailed": "クラウドディレクトリを読み込めませんでした。存在しないか、インターネットに接続されていない可能性があります",
+			"localSmokeTestFailed": "ローカルディレクトリを読み込めませんでした。存在しないか、読み取りまたは書き込みアクセス権がない可能性があります"
+		},
+		"empty": {
+			"title": "まだ同期は設定されていません",
+			"description": "ローカルディレクトリをクラウドと同期することができます。また、クラウドディレクトリをデバイスと同期することもできます",
+			"create": "作成"
+		},
+		"events": {
+			"createLocalDirectory": "{{name}} がローカルに作成されました",
+			"renameLocalDirectory": "{{name}} がローカルで名前を変更されました",
+			"deleteLocalDirectory": "{{name}} がローカルで削除されました",
+			"createRemoteDirectory": "{{name}} がクラウドに作成されました",
+			"renameRemoteDirectory": "{{name}} がクラウドで名前を変更されました",
+			"deleteRemoteDirectory": "{{name}} がクラウドで削除されました",
+			"deleteLocalFile": "{{name}} がローカルで削除されました",
+			"deleteRemoteFile": "{{name}} がクラウドで削除されました",
+			"download": "{{name}} がクラウドからダウンロードされました",
+			"upload": "{{name}} がクラウドにアップロードされました",
+			"renameLocalFile": "{{name}} がローカルで名前を変更されました",
+			"renameRemoteFile": "{{name}} がクラウドで名前を変更されました"
+		},
+		"settings": {
+			"sections": {
+				"delete": {
+					"name": "削除",
+					"info": "同期を削除",
+					"delete": "削除"
+				},
+				"pause": {
+					"name": "一時停止",
+					"info": "同期を一時停止"
+				},
+				"mode": {
+					"name": "同期モード",
+					"info": "同期モードを変更"
+				},
+				"forceSync": {
+					"name": "強制同期",
+					"info": "内部キャッシュをリセットし、ローカルおよびクラウドディレクトリの再スキャンを強制します",
+					"forceSync": "強制同期"
+				},
+				"excludeDotFiles": {
+					"name": "ドットファイルを除外",
+					"info": "ドットファイル/パスの除外を切り替えます（推奨）"
+				},
+				"filenIgnore": {
+					"name": ".filenignore",
+					"info": "ローカルまたはクラウドの除外用に無視ファイルを編集します。.gitignoreファイルのように機能します",
+					"edit": "編集"
+				},
+				"disableLocalTrash": {
+					"name": "ローカルトラッシュを無効にする",
+					"info": "ローカルトラッシュを有効または無効にします。無効にすると、クライアントはファイルやディレクトリをローカルトラッシュディレクトリに移動するのではなく、完全に削除します。"
+				}
+			}
+		},
+		"dialogs": {
+			"delete": {
+				"title": "同期を削除",
+				"description": "この同期を削除してもよろしいですか？",
+				"continue": "削除"
+			},
+			"resetErrors": {
+				"title": "エラーを解決",
+				"description": "すべてのエラーを解決済みとしてマークし、同期を続行してもよろしいですか？すべてのエラーが解決されていることを確認してください。",
+				"continue": "解決"
+			},
+			"filenIgnore": {
+				"title": ".filenignore",
+				"save": "保存"
+			},
+			"deleteIssue": {
+				"title": "問題を削除",
+				"description": "この問題を削除してもよろしいですか？解決済みまたは一時的なものであることを確認してください。そうでない場合は、最終的に戻ってきます。",
+				"continue": "削除"
+			}
+		},
+		"ignored": {
+			"types": {
+				"dotFile": "ドットファイル",
+				"defaultIgnore": "デフォルトで無視",
+				"empty": "空"
+			},
+			"reasons": {
+				"dotFile": "ファイルまたはディレクトリがドットパス内にあります",
+				"defaultIgnore": "ファイルまたはディレクトリがデフォルトで無視されるパス内にあります",
+				"empty": "ファイルが空です",
+				"invalidPath": "ファイルまたはディレクトリが無効なパス内にあります",
+				"symlink": "ファイルまたはディレクトリがシンボリックリンクです。クライアントは無限同期ループを防ぐためにシンボリックリンクをたどりません。",
+				"duplicate": "ファイルまたはディレクトリのパスが2回存在します",
+				"filenIgnore": ".filenignoreで無視されたファイルまたはディレクトリ",
+				"invalidType": "アイテムがファイルまたはディレクトリではありません",
+				"nameLength": "ファイルまたはディレクトリ名が長すぎます",
+				"pathLength": "ファイルまたはディレクトリのパスが長すぎます",
+				"permissions": "権限が不十分です"
+			}
+		},
+		"issues": {
+			"types": {
+				"title": {
+					"permission": "権限",
+					"io": "I/O",
+					"noSpace": "空き容量またはファイル監視の不足",
+					"openFiles": "オープンファイルの制限",
+					"fileOrDirExists": "ファイルまたはディレクトリが存在します",
+					"fileOrDirNotFound": "ファイルまたはディレクトリが見つかりません",
+					"isFile": "ファイル",
+					"isDir": "ディレクトリ",
+					"notDir": "ディレクトリではありません",
+					"badConnection": "接続エラー",
+					"fileOrDirTemporarilyUnavailable": "ファイルまたはディレクトリが一時的に利用できません",
+					"unknown": "不明なエラー",
+					"dirNotEmpty": "ディレクトリは空ではありません",
+					"fileOrDirNameTooLong": "ファイルまたはディレクトリ名/パスが長すぎます"
+				},
+				"info": {
+					"permission": "クライアントがローカル同期ディレクトリにアクセスするために必要なすべての権限を持っていることを確認してください。",
+					"io": "ローカル同期ディレクトリと基盤となるストレージメディアが正常に動作していることを確認してください。クライアントはそれに適切にアクセスできません。",
+					"noSpace": "ローカルストレージの空き容量が不足しているか、システムの利用可能なファイル監視が不足しています。",
+					"openFiles": "クライアントがオープンファイルの制限に達しました。制限を増やしてください。",
+					"fileOrDirExists": "ファイルまたはディレクトリはすでに存在します。これはおそらく一時的な問題です。クライアントを再起動してみてください。",
+					"fileOrDirNotFound": "ファイルまたはディレクトリが見つかりません。これはおそらく一時的な問題です。クライアントを再起動してみてください。",
+					"isFile": "おそらく一時的な問題です。クライアントを再起動してみてください。",
+					"isDir": "おそらく一時的な問題です。クライアントを再起動してみてください。",
+					"notDir": "おそらく一時的な問題です。クライアントを再起動してみてください。",
+					"badConnection": "インターネットに接続されていることを確認し、Filenに問題なくアクセスできることを確認してください。",
+					"fileOrDirTemporarilyUnavailable": "おそらく一時的な問題です。クライアントを再起動してみてください。",
+					"unknown": "不明なエラー。クライアントを再起動してみてください。",
+					"dirNotEmpty": "ディレクトリは空ではありません。おそらく一時的な問題です。クライアントを再起動してみてください。",
+					"fileOrDirNameTooLong": "ローカルファイルシステムでのファイルまたはディレクトリ名/パスが長すぎます。"
+				}
+			}
+		}
+	},
+	"isOnline": {
+		"title": "誰かがケーブルを抜きましたか？",
+		"info": "プラットフォームに接続するのに問題があります。インターネット接続を確認してください。",
+		"infoSub": "インターネットが正常に機能している場合は、私たちに連絡してください。"
+	},
+	"404": {
+		"info": "おっと、探しているページは存在しません。",
+		"btn": "ホームページに戻る"
+	},
+	"announcements": {
+		"gotIt": "了解しました"
+	},
+	"maintenance": {
+		"title": "Filenは現在メンテナンス中です",
+		"info": "体験をさらに向上させるためにメンテナンスを行っています。プラットフォームはまもなく新しく改善されて戻ってきます。",
+		"infoSub": "ご辛抱いただきありがとうございます！新機能を提供するために裏で一生懸命働いています。続報をお待ちください！"
+	}
+}

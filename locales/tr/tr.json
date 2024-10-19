@@ -1,0 +1,1628 @@
+{
+    "cloudDrive": "Bulut Sürücüsü",
+    "new": "Yeni",
+    "image": "Görüntü",
+    "empty": "Boş",
+    "copiedToClipboard": "Panoya kopyalandı",
+    "everyone": "Herkes",
+    "unknownUser": "Bilinmeyen Kullanıcı",
+    "login": {
+        "header": "Giriş",
+        "description": "Hesabınıza giriş yapmak için e-posta adresinizi ve şifrenizi aşağıya girin",
+        "useTwoFactorRecoveryKey": "Yerine kurtarma anahtarını kullan",
+        "buttons": {
+            "login": "Giriş yap",
+            "createAccount": "Hesap oluştur",
+            "forgotPassword": "Şifrenizi mi unuttunuz?"
+        },
+        "placeholders": {
+            "normal": {
+                "email": "E-posta adresi",
+                "password": "Şifre",
+                "2faCode": "2FA kodu",
+                "2faRecoveryKey": "Kurtarma anahtarı"
+            },
+            "example": {
+                "email": "me@example.com",
+                "password": "****************",
+                "2faCode": "381740",
+                "2faRecoveryKey": "Kurtarma anahtarı"
+            }
+        },
+        "dialogs": {
+            "forgotPassword": {
+                "title": "Şifreyi unuttum",
+                "continue": "Talimatları gönder",
+                "placeholder": "E-posta adresi"
+            }
+        },
+        "alerts": {
+            "emailOrPasswordWrong": "E-posta veya şifre hatalı",
+            "enter2FA": "Lütfen İki Faktörlü Kimlik Doğrulama kodunuzu girin",
+            "enter2FARecoveryKey": "Lütfen İki Faktörlü Kimlik Doğrulama kurtarma anahtarınızı girin",
+            "forgotPasswordSent": "Şifre sıfırlama talimatları {{email}} adresine gönderildi"
+        }
+    },
+    "register": {
+        "header": "Hesap oluştur",
+        "description": "Aşağıya e-posta adresinizi ve şifrenizi girerek bir hesap oluşturun",
+        "buttons": {
+            "register": "Hesap oluştur",
+            "resendConfirmation": "Onay e-postasını yeniden gönder",
+            "login": "Giriş yap"
+        },
+        "passwordStrength": {
+            "length": "Uzunluk",
+            "uppercase": "Büyük harfler",
+            "lowercase": "Küçük harfler",
+            "specialChars": "Özel karakterler"
+        },
+        "placeholders": {
+            "normal": {
+                "email": "E-posta adresi",
+                "password": "Şifre",
+                "confirmPassword": "Şifreyi onayla"
+            },
+            "example": {
+                "email": "me@example.com",
+                "password": "****************",
+                "confirmPassword": "****************"
+            }
+        },
+        "dialogs": {
+            "confirmationSend": {
+                "title": "Onay e-postasını yeniden gönder",
+                "continue": "Gönder",
+                "placeholder": "E-posta adresi"
+            }
+        },
+        "alerts": {
+            "passwordWeak": "Seçtiğiniz şifre çok zayıf",
+            "confirmationSent": "Onay e-postası {{email}} adresine gönderildi",
+            "passwordsNotMatching": "Şifreler aynı değil",
+            "success": {
+                "title": "Hesap oluşturuldu",
+                "continue": "Devam et",
+                "description": "{{email}} adresine bir onay e-postası gönderdik. Lütfen kaydınızı onaylamak için e-postadaki bağlantıya tıklayın. Spam klasörünüzü de kontrol etmeyi unutmayın."
+            }
+        }
+    },
+    "reset": {
+        "header": "Şifre sıfırlama",
+        "description": "E-posta adresinizi, yeni şifrenizi girin ve anahtarlarınızı içe aktararak şifrenizi sıfırlayın",
+        "importMasterKeys": "Anahtarları içe aktar",
+        "masterKeysImported": "Anahtarlar içe aktarıldı",
+        "masterKeysNotImported": "Hiç anahtar içe aktarılmadı",
+        "placeholders": {
+            "normal": {
+                "email": "E-posta adresi",
+                "password": "Şifre",
+                "confirmPassword": "Şifreyi onayla"
+            },
+            "example": {
+                "email": "me@example.com",
+                "password": "****************",
+                "confirmPassword": "****************"
+            }
+        },
+        "buttons": {
+            "reset": "Sıfırla",
+            "back": "Geri"
+        },
+        "dialogs": {
+            "noMasterKeysImported": {
+                "title": "Şifreyi sıfırla",
+                "continue": "Anladım",
+                "description": "İhracat yaptığım anahtarlar olmadan şifremi sıfırlamanın, sıfır bilgi uçtan uca şifreleme çalıştığı için hesabımdaki tüm verileri erişilemez hale getireceğini anlıyorum."
+            },
+            "noMasterKeysImported2": {
+                "title": "Şifreyi sıfırla",
+                "continue": "Eminim",
+                "description": "Emin misiniz? Anahtarlarınızı içe aktarmazsanız hesabınızdaki tüm verileri silmek üzeresiniz. Anahtarlarınız yoksa bu uyarıyı görmezden gelebilirsiniz ve hesabınızı sıfırlamak istiyorsanız devam edebilirsiniz."
+            },
+            "noMasterKeysImported3": {
+                "title": "Şifreyi sıfırla",
+                "continue": "Evet",
+                "description": "Gerçekten emin misiniz?"
+            }
+        },
+        "alerts": {
+            "invalidMasterKeysFile": "Geçersiz anahtar dosyası",
+            "invalidMasterKeysFileWrongUserId": "Bu anahtarlar farklı bir hesaba ait",
+            "masterKeysImported": "Anahtarlar içe aktarıldı",
+            "passwordWeak": "Seçtiğiniz şifre çok zayıf",
+            "passwordsNotMatching": "Şifreler aynı değil",
+            "invalidMasterKeys": "Geçersiz anahtarlar",
+            "passwordChanged": "Şifre başarıyla değiştirildi"
+        }
+    },
+    "auth": {
+        "footer": {
+            "tos": "Hizmet Şartları",
+            "privacy": "Gizlilik"
+        }
+    },
+    "api": {
+        "errors": {
+            "invalid_params": "Geçersiz parametreler",
+            "internal_error": "Dahili hata",
+            "rate_limited": "Hız limiti aşıldı"
+        }
+    },
+    "topbar": {
+        "placeholders": {
+            "normal": {
+                "search": "Bu dizinde ara..."
+            },
+            "example": {
+                "search": "Bu dizinde ara..."
+            }
+        }
+    },
+    "dropZone": {
+        "cta": "Buraya yükle",
+        "chatsCta": "Sohbete ekle"
+    },
+    "topBar": {
+        "breadcrumb": {
+            "cloudDrive": "Bulut Sürücüsü"
+        },
+        "searchInThisFolder": "Bu dizinde ara...",
+        "breadcrumbs": {
+            "recents": "Son İşlemler",
+            "cloudDrive": "Bulut Sürücüsü",
+            "links": "Bağlantılar",
+            "sharedWithMe": "Benimle paylaşılan",
+            "sharedWithOthers": "Başkalarıyla paylaşılan",
+            "favorites": "Favoriler",
+            "trash": "Çöp",
+            "directory": "Dizin"
+        },
+        "listView": "Liste görünümü",
+        "gridView": "Kare görünümü"
+    },
+    "innerSideBar": {
+        "top": {
+            "settings": "Ayarlar",
+            "notes": "Notlar",
+            "chats": "Sohbetler",
+            "contacts": "Kişiler",
+            "syncs": "Senkranizasyonlar",
+            "mounts": "Bağlantılar"
+        },
+        "bottom": {
+            "settings": "Ayarlar"
+        },
+        "notes": {
+            "search": "Ara...",
+            "tags": {
+                "all": "Tümü",
+                "favorites": "Favoriler",
+                "pinned": "Sabitlenmiş"
+            },
+            "createNote": "Not oluştur",
+            "createTag": "Etiket oluştur",
+            "empty": "Henüz not yok",
+            "emptyCreate": "Bir tane oluştur",
+            "emptySearch": "\"{{search}}\" için hiçbir şey bulunamadı"
+        },
+        "chats": {
+            "empty": "Henüz sohbet yok",
+            "emptyCreate": "Bir tane oluştur",
+            "search": "Ara...",
+            "createChat": "Sohbet oluştur",
+            "emptySearch": "\"{{search}}\" için hiçbir şey bulunamadı"
+        },
+        "recents": "Son İşlemler",
+        "cloudDrive": "Bulut Sürücüsü",
+        "links": "Bağlantılar",
+        "sharedWithMe": "Benimle paylaşılan",
+        "sharedWithOthers": "Başkalarıyla paylaşılan",
+        "favorites": "Favoriler",
+        "trash": "Çöp",
+        "settings": {
+            "general": "Genel",
+            "invoices": "Faturalar",
+            "subscriptions": "Abonelikler",
+            "account": "Hesap",
+            "events": "Etkinlikler",
+            "security": "Güvenlik",
+            "invite": "Davet et",
+            "plans": "Planlar"
+        },
+        "contacts": {
+            "online": "Çevrimiçi",
+            "offline": "Çevrimdışı",
+            "all": "Tümü",
+            "blocked": "Engellenmiş",
+            "in": "İstekler",
+            "out": "Bekleyen"
+        },
+        "mounts": {
+            "networkDrive": "Ağ Sürücüsü",
+            "s3": "S3",
+            "webdav": "WebDAV"
+        },
+        "syncs": {
+            "empty": "Henüz senkronizasyon yok",
+            "emptyCreate": "Bir tane oluştur",
+            "nothingFound": "\"{{search}}\" için hiçbir şey bulunamadı",
+            "createSync": "Senkronizasyon oluştur",
+            "search": "Ara...",
+            "emptySearch": "\"{{search}}\" için hiçbir şey bulunamadı"
+        }
+    },
+    "sideBar": {
+        "cloudDrive": "Bulut Sürücüsü",
+        "transfers": "Transferler",
+        "notes": "Notlar",
+        "chats": "Sohbetler",
+        "contacts": "Kişiler",
+        "settings": "Ayarlar",
+        "syncs": "Senkranizasyonlar",
+        "mounts": "Bağlantılar",
+        "terminal": "Terminal"
+    },
+    "dialogs": {
+        "cancel": "İptal",
+        "selectDriveItem": {
+            "title": "Seç",
+            "submit": "Seç",
+            "newFolder": "Yeni dizin",
+            "empty": "Henüz yüklenmiş dosya veya dizin yok",
+            "selectRoot": "Bulut Sürücüsünü seç"
+        },
+        "selectContacts": {
+            "title": "Kişileri seç",
+            "submit": "Seç",
+            "empty": "Henüz kişi yok"
+        },
+        "publicLink": {
+            "title": "Herkese açık bağlantı",
+            "description": "Herkese açık bir bağlantı oluştur",
+            "close": "Kapat",
+            "save": "Kaydet",
+            "enabled": "Açık",
+            "downloadButton": "İndir butonu",
+            "link": "Bağlantı",
+            "copyLink": "Kopyala",
+            "expiresAfter": "Son kullanım tarihi",
+            "password": "Şifre (devre dışı bırakmak için boş bırakın)",
+            "passwordPlaceholder": "Şifre",
+            "progress": "{{done}} / {{total}} öğe herkese açık bağlantıya eklendi",
+            "expireNever": "Asla"
+        },
+        "sharedWith": {
+            "title": "Paylaşılan",
+            "add": "Ekle",
+            "close": "Kapat",
+            "remove": "Kaldır",
+            "stopSharing": {
+                "title": "Paylaşımı durdur",
+                "description": "{{item}}'yi {{name}} ile paylaşmayı durdurmak istediğinizden emin misiniz?",
+                "continue": "Paylaşımı durdur"
+            }
+        },
+        "changeEmail": {
+            "title": "E-posta adresinizi değiştirin",
+            "newEmail": "Yeni e-posta adresi",
+            "newEmailPlaceholder": "Yeni e-posta",
+            "confirmNewEmail": "Yeni e-posta adresini onaylayın",
+            "confirmNewEmailPlaceholder": "Yeni e-posta onayı",
+            "password": "Şifreniz",
+            "passwordPlaceholder": "Şifre",
+            "close": "Kapat",
+            "save": "Kaydet",
+            "successToast": "E-posta adresiniz başarıyla değiştirildi"
+        },
+        "changePassword": {
+            "title": "Şifrenizi değiştirin",
+            "newPassword": "Yeni şifre",
+            "newPasswordPlaceholder": "Yeni şifre",
+            "confirmNewPassword": "Yeni şifreyi onaylayın",
+            "confirmNewPasswordPlaceholder": "Yeni şifre onayı",
+            "currentPassword": "Mevcut şifreniz",
+            "currentPasswordPlaceholder": "Mevcut şifre",
+            "close": "Kapat",
+            "save": "Kaydet",
+            "successToast": "Şifreniz başarıyla değiştirildi"
+        },
+        "personalInformation": {
+            "title": "Kişisel bilgileri değiştirin",
+            "firstName": "İsim",
+            "lastName": "Soyisim",
+            "close": "Kapat",
+            "save": "Kaydet",
+            "companyName": "Şirket adı",
+            "vatId": "KDV Numarası",
+            "street": "Sokak",
+            "streetNumber": "Sokak numarası",
+            "city": "Şehir",
+            "postalCode": "Posta kodu",
+            "country": "Ülke"
+        },
+        "twoFactorCode": {
+            "useRecoveryKey": "Yerine kurtarma anahtarını kullan",
+            "recoveryKeyPlaceholder": "Kurtarma anahtarı",
+            "title": "İki Faktörlü Kimlik Doğrulama",
+            "continue": "Devam et",
+            "info": "Lütfen iki faktörlü kimlik doğrulama kodunuzu girin"
+        },
+        "noteParticipants": {
+            "remove": "Kaldır",
+            "toggleReadPermissions": "Okuma izinlerini değiştir",
+            "toggleWritePermissions": "Yazma izinlerini değiştir",
+            "title": "Katılımcılar",
+            "close": "Kapat"
+        },
+        "fileVersions": {
+            "title": "Dosya sürümleri",
+            "delete": {
+                "title": "Dosya sürümünü sil",
+                "description": "{{name}}'yi kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Sil"
+            }
+        },
+        "noteHistory": {
+            "empty": "Henüz önceki not sürümü yok"
+        },
+        "previewDialog": {
+            "save": "Kaydet",
+            "readOnly": "Sadece okunur"
+        },
+        "transparentFullScreenImage": {
+            "openOriginal": "Orijinali aç"
+        },
+        "report": {
+            "title": "İhlali bildirin",
+            "email": "E-posta adresi",
+            "emailPlaceholder": "E-posta adresi",
+            "comment": "Yorum",
+            "commentPlaceholder": "Gerekli tüm detayları bize sağlayın, böylece uygun bir şekilde hızlıca işlem yapabiliriz (isteğe bağlı)",
+            "reason": "Sebep",
+            "close": "Kapat",
+            "send": "Gönder",
+            "successToast": "İhlal raporu gönderildi",
+            "reasons": {
+                "cp": "Çocuk cinsel istismarı materyali",
+                "dmca": "Telif hakkı ihlali",
+                "stolen": "Çalınmış veriler",
+                "other": "Diğer",
+                "spam": "Spam",
+                "malware": "Zararlı yazılım"
+            }
+        },
+        "profile": {
+            "memberSince": "{{since}}'den beri üye",
+            "add": "Kişi talebi gönder",
+            "block": "Engelle",
+            "remove": "Kişilerden kaldır",
+            "unblock": "Engeli kaldır"
+        },
+        "createSync": {
+            "cancel": "İptal",
+            "create": "Oluştur",
+            "name": "Senkronizasyon adı",
+            "localPath": "Yerel yol",
+            "remotePath": "Bulut yolu",
+            "select": "Seç",
+            "syncMode": "Senkronizasyon modu",
+            "title": "Senkronizasyon oluştur",
+            "paused": "Duraklatıldı",
+            "excludeDotFiles": "Nokta dosyalarını hariç tut (önerilir)",
+            "disableLocalTrash": "Yerel çöp kutusunu devre dışı bırak ve öğeleri kalıcı olarak sil",
+            "mode": {
+                "twoWay": "İki yönlü",
+                "localToCloud": "Yerelden buluta",
+                "localBackup": "Yerel yedekleme",
+                "cloudToLocal": "Buluttan yerel",
+                "cloudBackup": "Bulut yedeklemesi",
+                "twoWayInfo": "Her iki yönde her eylemi yansıt",
+                "localToCloudInfo": "Yerel olarak yapılan her eylemi buluta yansıt, ancak bulut değişikliklerine asla müdahale etme",
+                "localBackupInfo": "Yalnızca verileri buluta yükle, hiçbir şeyi silme veya bulut değişikliklerine müdahale etme",
+                "cloudToLocalInfo": "Bulutta yapılan her eylemi yerelde yansıt, ancak yerel değişikliklere asla müdahale etme",
+                "cloudBackupInfo": "Yalnızca buluttan verileri indir, hiçbir şeyi silme veya yerel değişikliklere müdahale etme"
+            },
+            "errors": {
+                "localPathNotWritable": "Seçtiğiniz yerel yol yazılabilir değil. Lütfen istemcinin buna düzgün erişim sağlayabildiğinden emin olun.",
+                "invalidLocalPath": "Seçtiğiniz yerel yol geçersiz ve senkronize edilemez. Lütfen farklı bir yol seçin.",
+                "remotePathAlreadyConfigured": "Seçtiğiniz bulut yolu zaten başka bir senkronizasyonda yapılandırılmış. Bu, sonsuz senkronizasyon döngülerine yol açabilir.",
+                "localPathAlreadyConfigured": "Seçtiğiniz yerel yol zaten başka bir senkronizasyonda yapılandırılmış. Bu, sonsuz senkronizasyon döngülerine yol açabilir.",
+                "syncNameAlreadyExists": " \"{{name}}\" adında bir senkronizasyon zaten var.",
+                "localPathSyncedByICloud": "Zaten iCloud tarafından senkronize edilen bir yolu senkronize edemezsiniz."
+            },
+            "warnings": {
+                "localDirectoryBig": {
+                    "title": "Uyarı",
+                    "continue": "Devam et",
+                    "description": "{{count}} öğeden fazlasını senkronize etmek sisteminizi yavaşlatabilir, özellikle düşük performanslı cihazlarda. Yüksek performanslı bir makinedeyseniz devam edebilirsiniz, ancak potansiyel sorunlardan kaçınmak için daha az dosya senkronize etmenizi öneririz."
+                },
+                "localDirectoryNotPhysical": {
+                    "title": "Uyarı",
+                    "continue": "Devam et",
+                    "description": "Seçtiğiniz yerel dizin fiziksel bir diskte görünmüyor. Bu, senkronizasyon sorunlarına ve öngörülemeyen davranışlara yol açabilir. Devam etmek istiyor musunuz?"
+                }
+            }
+        },
+        "info": {
+            "title": "Bilgi",
+            "close": "Kapat",
+            "directoryType": "Dizin",
+            "size": "Boyut",
+            "type": "Tür",
+            "name": "İsim",
+            "location": "Konum",
+            "modified": "Değiştirildi",
+            "uploaded": "Yüklendi",
+            "files": "Dosyalar",
+            "directories": "Dizinler"
+        },
+        "desktopUpdate": {
+            "title": "Güncelleme mevcut",
+            "info": "Yeni bir sürüm ({{version}}) indirildi ve kurulmaya hazır. Güncellemek ister misiniz?",
+            "dismiss": "Kapat",
+            "update": "Güncelle",
+            "installing": "Güncelleme kuruluyor, lütfen bu süreci kesmeyin!"
+        },
+        "storage": {
+            "title": "Yetersiz depolama",
+            "info": "Yeterli depolama alanınız yok. Daha fazla dosya yükleyebilmek için bir plan satın almanız gerekiyor. Tüm planlar depolama açısından birikiyor. İstediğiniz kadar plana abone olabilirsiniz.",
+            "dismiss": "Kapat",
+            "upgrade": "Yükselt"
+        },
+        "event": {
+            "title": "Etkinlik"
+        },
+        "exportReminder": {
+            "title": "Anahtarları dışa aktar",
+            "description": "Lütfen anahtarlarınızı dışa aktarın ve ayrı bir güvenli konumda saklayın. Şifrenizi sıfırladığınızda veri kaybını önlemek için anahtarlarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor.",
+            "continue": "Dışa aktar",
+            "dismiss": "Kapat"
+        }
+    },
+    "contextMenus": {
+        "item": {
+            "download": "İndir",
+            "publicLink": "Herkese açık bağlantı",
+            "share": "Paylaş",
+            "shareProgress": "{{done}} öğe paylaşıldı",
+            "versions": "Sürümler",
+            "favorite": "Favori",
+            "unfavorite": "Favorilerden çıkar",
+            "rename": "Yeniden adlandır",
+            "move": "Taşı",
+            "trash": "Çöp",
+            "restore": "Geri yükle",
+            "preview": "Önizleme",
+            "edit": "Düzenle",
+            "remove": "Kaldır",
+            "stopSharing": "Paylaşımı durdur",
+            "selectDestination": "Hedefi seç",
+            "cloudDrive": "Bulut Sürücüsü",
+            "open": "Aç",
+            "color": "Renk",
+            "deletePermanently": "Kalıcı olarak sil",
+            "copyId": "ID'yi kopyala",
+            "info": "Bilgi",
+            "dialogs": {
+                "trash": {
+                    "title": "Çöp",
+                    "description": "{{name}}'yi çöpe göndermek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
+                    "continue": "Çöp"
+                },
+                "trashMultiple": {
+                    "title": "Çöp",
+                    "description": "{{count}} öğeyi çöpe göndermek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
+                    "continue": "Çöp"
+                },
+                "deletePermanently": {
+                    "title": "Kalıcı olarak sil",
+                    "description": "{{name}}'yi kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                    "continue": "Sil"
+                },
+                "deletePermanentlyMultiple": {
+                    "title": "Kalıcı olarak sil",
+                    "description": "{{count}} öğeyi kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                    "continue": "Sil"
+                }
+            }
+        },
+        "drive": {
+            "uploadFiles": "Dosyaları yükle",
+            "uploadFolders": "Dizinleri yükle",
+            "newTextFile": "Yeni metin dosyası",
+            "newFolder": "Yeni dizin"
+        },
+        "notes": {
+            "history": "Geçmiş",
+            "participants": "Katılımcılar",
+            "type": "Tür",
+            "pin": "Sabit",
+            "unpin": "Sabitlikten çıkar",
+            "favorite": "Favori",
+            "unfavorite": "Favorilerden çıkar",
+            "duplicate": "Çoğalt",
+            "export": "Dışa aktar",
+            "exportAll": "Hepsini dışa aktar",
+            "archive": "Arşivle",
+            "restore": "Geri yükle",
+            "trash": "Çöp",
+            "delete": "Sil",
+            "rename": "Yeniden adlandır",
+            "tags": "Etiketler",
+            "leave": "Ayrıl",
+            "copyId": "ID'yi kopyala",
+            "createTag": "Etiket oluştur",
+            "types": {
+                "md": "Markdown",
+                "rich": "Zengin metin",
+                "text": "Metin",
+                "checklist": "Kontrol listesi",
+                "code": "Kod"
+            }
+        },
+        "contacts": {
+            "profile": "Profil",
+            "remove": "Kaldır",
+            "block": "Engelle"
+        },
+        "chat": {
+            "input": {
+                "selectFromDrive": "Sürücüyü seç",
+                "attachFiles": "Dosyaları ekle"
+            }
+        },
+        "chats": {
+            "editName": "İsmi düzenle",
+            "leave": "Ayrıl",
+            "delete": "Sil",
+            "copyId": "ID'yi kopyala"
+        },
+        "syncs": {
+            "delete": "Sil",
+            "pause": "Duraklat",
+            "resume": "Devam ettir"
+        }
+    },
+    "transfers": {
+        "title": "Transferler",
+        "remaining": "{{time}} kaldı",
+        "noActiveTransfers": "Henüz transfer yok",
+        "state": {
+            "finished": "Tamamlandı",
+            "queued": "Sıralı",
+            "started": "Başlatıldı",
+            "error": "Hata",
+            "stopped": "Durduruldu",
+            "paused": "Duraklatıldı",
+            "creatingDirectories": "Dizinler oluşturuluyor"
+        },
+        "pause": "Duraklat",
+        "resume": "Devam ettir",
+        "stop": "Durdur"
+    },
+    "chats": {
+        "newMessagesSince": "{{count}} yeni mesaj {{since}}'den beri",
+        "markAsRead": "Okundu olarak işaretle",
+        "maxSizeReached": "Maksimum mesaj boyutu {{chars}} karakter ile sınırlıdır",
+        "newMessageSince": "{{count}} yeni mesaj {{since}}'den beri",
+        "showParticipants": "Katılımcıları göster",
+        "hideParticipants": "Katılımcıları gizle",
+        "addParticipants": "Katılımcı ekle",
+        "emojisMatching": "{{text}} ile eşleşen emojiler",
+        "empty": {
+            "title": "Henüz sohbet yok",
+            "description": "Oluşturduğunuz veya eklendiğiniz sohbetler burada görünecektir",
+            "create": "Oluştur"
+        },
+        "header": {
+            "title": "Uçtan uca şifreli sohbet",
+            "description": "Filen, her sohbeti varsayılan olarak sıfır bilgi uçtan uca şifreleme ile güvence altına alır.",
+            "feature1": "Sadece sohbetin üyeleri içeriği şifreleyip okuyabilir",
+            "feature2": "Sistem, alınan verilerin gerçekten görüntülenen kullanıcıdan geldiğini ve değiştirilmediğini garanti eder"
+        },
+        "message": {
+            "time": {
+                "now": "Şimdi",
+                "secondAgo": "{{seconds}} saniye önce",
+                "secondsAgo": "{{seconds}} saniye önce",
+                "minuteAgo": "{{minutes}} dakika önce",
+                "minutesAgo": "{{minutes}} dakika önce",
+                "hourAgo": "{{hours}} saat önce",
+                "hoursAgo": "{{hours}} saat önce",
+                "todayAt": "Bugün {{date}}'de",
+                "yesterdayAt": "Dün {{date}}'de"
+            },
+            "edited": "Düzenlendi",
+            "reply": "Yanıtla",
+            "delete": "Sil",
+            "edit": "Düzenle",
+            "copyId": "ID'yi kopyala",
+            "copyText": "Metni kopyala",
+            "leave": "Ayrıl"
+        },
+        "input": {
+            "placeholder": "Mesaj gönder...",
+            "typing": "yazıyor...",
+            "typingMultiple": "yazıyorlar...",
+            "replyingTo": "Yanıt veriliyor",
+            "placeholderMobile": "Mesaj..."
+        },
+        "dialogs": {
+            "deleteMessage": {
+                "title": "Mesajı sil",
+                "description": "Bu mesajı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Sil"
+            },
+            "removeParticipant": {
+                "title": "Katılımcıyı kaldır",
+                "description": "{{name}}'yi bu sohbetten kaldırmak istediğinizden emin misiniz?",
+                "continue": "Kaldır"
+            },
+            "deleteConversation": {
+                "title": "Sohbeti sil",
+                "description": "Bu sohbeti silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Sil"
+            },
+            "leaveConversation": {
+                "title": "Sohbetten ayrıl",
+                "description": "Bu sohbetten ayrılmak istediğinizden emin misiniz?",
+                "continue": "Ayrıl"
+            },
+            "editName": {
+                "title": "İsmi düzenle",
+                "placeholder": "Yeni isim",
+                "continue": "Kaydet"
+            }
+        },
+        "embeds": {
+            "og": {
+                "noTitleAvailable": "Mevcut başlık yok",
+                "noDescriptionAvailable": "Mevcut açıklama yok",
+                "noImageAvailable": "Mevcut görüntü yok"
+            }
+        },
+        "participants": {
+            "profile": "Profil",
+            "remove": "Kaldır"
+        }
+    },
+    "contacts": {
+        "addContact": "Kişi ekle",
+        "search": "Ara...",
+        "empty": "Henüz kişi yok",
+        "emptySearch": "\"{{search}}\" için hiçbir şey bulunamadı",
+        "openChat": "Sohbeti aç",
+        "more": "Daha fazla",
+        "dialogs": {
+            "unblock": {
+                "title": "Kullanıcının engelini kaldır",
+                "description": "{{name}}'nin engelini kaldırmak istediğinizden emin misiniz?",
+                "continue": "Engeli kaldır"
+            },
+            "remove": {
+                "title": "Kişiyi kaldır",
+                "description": "{{name}}'yi kişilerinizden kaldırmak istediğinizden emin misiniz?",
+                "continue": "Kaldır"
+            },
+            "block": {
+                "title": "Kullanıcıyı engelle",
+                "description": "{{name}}'yi engellemek istediğinizden emin misiniz?",
+                "continue": "Engelle"
+            },
+            "sendRequest": {
+                "title": "Kişi talebi gönder",
+                "placeholder": "Filen kullanıcısının e-posta adresi",
+                "continue": "Gönder"
+            }
+        }
+    },
+    "settings": {
+        "dialogs": {
+            "deleteVersions": {
+                "title": "Dosya sürümlerini sil",
+                "description": "Tüm dosya sürümlerini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Sil"
+            },
+            "deleteAll": {
+                "title": "Tüm dosyaları ve dizinleri sil",
+                "description": "Tüm dosyaları ve dizinleri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Sil"
+            },
+            "deleteAll2": {
+                "title": "Tüm dosyaları ve dizinleri sil",
+                "description": "Gerçekten emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Sil"
+            },
+            "deleteAll3": {
+                "title": "Tüm dosyaları ve dizinleri sil",
+                "description": "Yüzde 100 emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Sil"
+            },
+            "requestAccountDeletion": {
+                "title": "Hesap silme",
+                "description": "Hesabınızı ve ona bağlı tüm verileri silmek istediğinizden emin misiniz? Size bir onay e-postası göndereceğiz. Bu işlem geri alınamaz!",
+                "continue": "Silme talebi"
+            },
+            "logout": {
+                "title": "Çıkış yap",
+                "description": "Çıkış yapmak istediğinizden emin misiniz?",
+                "continue": "Çıkış yap"
+            },
+            "clearThumbnailCache": {
+                "title": "Önizleme önbelleğini temizle",
+                "description": "Yerel önizleme önbelleğini temizlemek istediğinizden emin misiniz? Bu, yerel depolama alanını boşaltır, ancak görüntü önizlemeleri gerektiğinde yeniden oluşturulacaktır.",
+                "continue": "Temizle"
+            },
+            "cancelSubscription": {
+                "title": "Aboneliği iptal et",
+                "description": "Aboneliğinizi iptal etmek istediğinizden emin misiniz?",
+                "continue": "Aboneliği iptal et",
+                "close": "Kapat"
+            },
+            "nickName": {
+                "title": "Takma adı düzenle",
+                "placeholder": "Yeni takma ad",
+                "continue": "Kaydet",
+                "invalid": "Takma ad 3 ile 32 karakter uzunluğunda ve alfanümerik olmalıdır."
+            },
+            "twoFactorAuthenticationRecoveryKey": {
+                "title": "Kurtarma anahtarı",
+                "description": "Lütfen İki Faktörlü Kimlik Doğrulama kurtarma anahtarınızı güvenli bir yerde saklayın. İki Faktörlü Kimlik Doğrulama cihazınızı kaybettiğinizde hesabınıza erişiminizi geri kazanmanın tek yolu budur!",
+                "continue": "Tamam"
+            }
+        },
+        "general": {
+            "storageUsed": "Kullanılan depolama",
+            "files": "Dosyalar {{size}}",
+            "versionedFiles": "Sürümlü dosyalar {{size}}",
+            "free": "Ücretsiz {{size}}",
+            "used": "{{used}} / {{max}} kullanıldı",
+            "dark": "Karanlık",
+            "light": "Aydınlık",
+            "system": "Sistem",
+            "noteType": {
+                "md": "Markdown",
+                "rich": "Zengin metin",
+                "text": "Metin",
+                "checklist": "Kontrol listesi",
+                "code": "Kod"
+            },
+            "sections": {
+                "defaultNoteType": {
+                    "name": "Varsayılan not türü",
+                    "info": "Varsayılan not türünü değiştir"
+                },
+                "chatNotifications": {
+                    "name": "Sohbet bildirimleri",
+                    "info": "Sohbet bildirimlerini etkinleştir veya devre dışı bırak"
+                },
+                "notificationSound": {
+                    "name": "Bildirim sesi",
+                    "info": "Bildirim sesini etkinleştir veya devre dışı bırak"
+                },
+                "contactNotifications": {
+                    "name": "Kişi bildirimleri",
+                    "info": "Kişi bildirimlerini etkinleştir veya devre dışı bırak"
+                },
+                "theme": {
+                    "name": "Tema",
+                    "info": "Uygulamanın görünümünü değiştir"
+                },
+                "language": {
+                    "name": "Dil",
+                    "info": "Uygulama dilini değiştir"
+                },
+                "clearThumbnailCache": {
+                    "name": "Önizleme önbelleği",
+                    "info": "Önizleme önbelleğini temizle",
+                    "action": "Temizle"
+                },
+                "logout": {
+                    "name": "Çıkış yap",
+                    "info": "Çıkış yap",
+                    "action": "Çıkış yap"
+                },
+                "minimizeToTray": {
+                    "name": "Sistem tepsisine küçült",
+                    "info": "Filen'i pencereleri küçültmek yerine sistem tepsisine gizle"
+                },
+                "autoLaunch": {
+                    "name": "Otomatik başlat",
+                    "info": "Sistemin başlangıcında Filen'i otomatik olarak başlat"
+                },
+                "exportDesktopLogs": {
+                    "name": "Günlükleri dışa aktar",
+                    "info": "Tüm masaüstü istemci günlüklerini dışa aktar",
+                    "action": "Dışa aktar"
+                }
+            }
+        },
+        "invite": {
+            "copy": "Kopyala",
+            "title": "Başkalarını davet ederek 30 GB'a kadar depolama alanı kazanın",
+            "description": "Filen'e davet ettiğiniz her arkadaş için {{yourEarnings}} kazanıyorsunuz - ve arkadaşınız da {{otherEarnings}} kazanıyor. Bu kadar kolay.",
+            "earned": "{{earned}} / {{max}}",
+            "storageEarned": "Kazanılan depolama"
+        },
+        "events": {
+            "empty": "Henüz etkinlik yok",
+            "fileUploaded": "{{name}} yüklendi",
+            "fileVersioned": "{{name}} sürümlendi",
+            "versionedFileRestored": "{{name}} dosya sürümlerinden geri yüklendi",
+            "fileMoved": "{{name}} taşındı",
+            "fileRenamed": "{{name}} {{newName}} olarak yeniden adlandırıldı",
+            "fileTrash": "{{name}} çöp kutusuna taşındı",
+            "fileRm": "{{name}} silindi",
+            "fileRestored": "{{name}} çöp kutusundan geri yüklendi",
+            "fileShared": "{{name}} {{email}} ile paylaşıldı",
+            "fileLinkEdited": "{{name}}'nin herkese açık bağlantısı düzenlendi",
+            "folderTrash": "{{name}} çöp kutusuna taşındı",
+            "folderShared": "{{name}} {{email}} ile paylaşıldı",
+            "folderMoved": "{{name}} taşındı",
+            "folderRenamed": "{{name}} {{newName}} olarak yeniden adlandırıldı",
+            "subFolderCreated": "{{name}} oluşturuldu",
+            "baseFolderCreated": "{{name}} oluşturuldu",
+            "folderRestored": "{{name}} çöp kutusundan geri yüklendi",
+            "folderColorChanged": "{{name}}'nin rengi değiştirildi",
+            "login": "Giriş yapıldı",
+            "deleteVersioned": "Sürümlü dosyalar silindi",
+            "deleteAll": "Tüm dosyalar ve dizinler silindi",
+            "deleteUnfinished": "Tamamlanmamış yüklemeler silindi",
+            "trashEmptied": "Çöp kutusu boşaltıldı",
+            "requestAccountDeletion": "Hesap silme talep edildi",
+            "2faEnabled": "İki Faktörlü Kimlik Doğrulama etkinleştirildi",
+            "2faDisabled": "İki Faktörlü Kimlik Doğrulama devre dışı bırakıldı",
+            "codeRedeemed": "Kod {{code}} kullanıldı",
+            "emailChanged": "E-posta adresi {{email}} olarak değiştirildi",
+            "passwordChanged": "Şifre değiştirildi",
+            "removedSharedInItems": "{{count}} paylaşılan öğe {{email}}'den kaldırıldı",
+            "removedSharedOutItems": "{{count}} paylaşılan öğe {{email}} ile kaldırıldı",
+            "folderLinkEdited": "Dizin bağlantısı düzenlendi",
+            "itemFavoriteAdded": "{{name}} favorilere eklendi",
+            "itemFavoriteRemoved": "{{name}} favorilerden çıkarıldı",
+            "failedLogin": "Giriş başarısız",
+            "deleteFolderPermanently": "{{name}} kalıcı olarak silindi",
+            "deleteFilePermanently": "{{name}} kalıcı olarak silindi",
+            "emailChangeAttempt": "Bir e-posta değişikliği girişimi kaydedildi"
+        },
+        "invoices": {
+            "plan": "Plan",
+            "method": "Yöntem",
+            "date": "Tarih",
+            "download": "İndir",
+            "amount": "Tutar",
+            "paid": "Ödendi",
+            "noInvoices": "Henüz fatura yok",
+            "paymentMethod": "Ödeme yöntemi"
+        },
+        "subscriptions": {
+            "plan": "Plan",
+            "method": "Yöntem",
+            "date": "Tarih",
+            "download": "İndir",
+            "amount": "Tutar",
+            "status": "Durum",
+            "noSubscriptions": "Henüz abonelik yok",
+            "cancel": "İptal et",
+            "storage": "Depolama",
+            "moreInfo": "Aboneliğiniz hakkında daha fazla bilgi",
+            "paymentMethod": "Ödeme yöntemi",
+            "info": "{{storage}} depolama ile sınırsız yükleme, indirme, not ve sohbet. Filen'in tam potansiyelini açma.",
+            "statuses": {
+                "cancelled": "İptal edildi",
+                "active": "Aktif",
+                "waiting": "Beklemede"
+            }
+        },
+        "plans": {
+            "starter": "Başlangıç",
+            "monthly": "Aylık",
+            "annually": "Yıllık",
+            "lifetime": "Ömür boyu",
+            "buyNow": "Şimdi satın al",
+            "payInvoice": "Faturayı öde",
+            "sale": "İndirim",
+            "limited": "Sınırlı stok",
+            "creditCard": "Kredi Kartı",
+            "crypto": "Kripto para",
+            "legal1": "Bir plan satın alarak, iptal etmediğiniz sürece Filen'in her faturalandırma döneminde otomatik olarak ücretlendirilmesini yetkilendirmiş olursunuz. Hesabınız sayfanızdan istediğiniz zaman iptal edebilirsiniz. Kısmi iadeler yapılmaz.",
+            "legal2": "Ayrıca otomatik olarak kabul edersiniz",
+            "tos": "Hizmet Şartları",
+            "and": "ve",
+            "privacyPolicy": "Gizlilik Politikası",
+            "features": {
+                "free": {
+                    "1": "Sınırsız bant genişliği",
+                    "2": "Sınırsız yükleme",
+                    "3": "İstemci tarafı şifreleme",
+                    "4": "Sıfır bilgi teknolojisi",
+                    "5": "Senkronizasyon",
+                    "6": "Ağ sürücüsü",
+                    "7": "Sınırlı dosya paylaşımı",
+                    "8": "Sınırlı notlar",
+                    "9": "Sınırlı sohbetler"
+                },
+                "pro": {
+                    "1": "Sınırsız bant genişliği",
+                    "2": "Sınırsız yükleme",
+                    "3": "İstemci tarafı şifreleme",
+                    "4": "Sıfır bilgi teknolojisi",
+                    "5": "Senkronizasyon",
+                    "6": "Ağ sürücüsü",
+                    "7": "Dosya paylaşımı",
+                    "8": "Sınırsız notlar",
+                    "9": "Sınırsız sohbetler"
+                }
+            }
+        },
+        "security": {
+            "sections": {
+                "password": {
+                    "name": "Şifre",
+                    "info": "Şifrenizi değiştirin",
+                    "action": "Değiştir"
+                },
+                "twoFactorAuthentication": {
+                    "name": "İki Faktörlü Kimlik Doğrulama",
+                    "info": "İki Faktörlü Kimlik Doğrulamayı etkinleştir veya devre dışı bırak"
+                },
+                "exportMasterKeys": {
+                    "name": "Anahtarları dışa aktar",
+                    "info": "Şifrenizi sıfırlamanız gerektiğinde hesabınızı geri yükleyebilmek için anahtarlarınızı dışa aktarın. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor.",
+                    "action": "Dışa aktar",
+                    "subInfo": "Lütfen anahtarlarınızı dışa aktarın ve ayrı bir güvenli konumda saklayın. Şifrenizi sıfırladığınızda veri kaybını önlemek için anahtarlarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor."
+                },
+                "lockTimeout": {
+                    "name": "Uygulamayı kilitle",
+                    "info": "Aktif olmadığınızda belirli bir süre sonra uygulamayı kilitleyin. Kilit ekranının çalışması için bir PIN ayarlamanız gerekir.",
+                    "values": {
+                        "never": "Asla",
+                        "immediately": "Hemen",
+                        "oneMinute": "1 dakika",
+                        "threeMinutes": "3 dakika",
+                        "fiveMinutes": "5 dakika",
+                        "tenMinutes": "10 dakika",
+                        "fifteenMinutes": "15 dakika",
+                        "thirtyMinutes": "30 dakika",
+                        "oneHour": "1 saat",
+                        "threeHours": "3 saat",
+                        "sixHours": "6 saat",
+                        "twelveHours": "12 saat",
+                        "twentyFourHours": "24 saat"
+                    }
+                },
+                "lockPin": {
+                    "name": "Kilit PIN'i",
+                    "info": "Uygulamayı kilitlemek için bir PIN ayarlayın",
+                    "action": "Değiştir"
+                }
+            },
+            "dialogs": {
+                "lockPin": {
+                    "notMatching": "Girdiğiniz PIN'ler eşleşmiyor",
+                    "enterPin": "Bir PIN girin",
+                    "confirmPin": "PIN'i onaylayın"
+                },
+                "lock": {
+                    "wrongPin": "Yanlış PIN"
+                }
+            }
+        },
+        "account": {
+            "sections": {
+                "avatar": {
+                    "name": "Avatar",
+                    "info": "Avatarınız herkese açık olarak görünecek",
+                    "action": "Düzenle",
+                    "invalid": "Geçersiz görüntü. İzin verilen dosya türleri PNG ve JPG, maksimum boyut 2MB."
+                },
+                "versionedFiles": {
+                    "name": "Sürümlü dosyalar",
+                    "info": "Tüm sürümlü dosyaları sil",
+                    "action": "Sil"
+                },
+                "all": {
+                    "name": "Tüm dosyalar ve dizinler",
+                    "info": "Tüm dosyaları ve klasörleri sil",
+                    "action": "Sil"
+                },
+                "email": {
+                    "name": "E-posta adresi",
+                    "info": "E-posta adresinizi değiştirin",
+                    "action": "Değiştir"
+                },
+                "nickName": {
+                    "name": "Takma ad",
+                    "info": "Takma adınızı değiştirin",
+                    "action": "Değiştir"
+                },
+                "personalInformation": {
+                    "name": "Kişisel bilgiler",
+                    "info": "Kişisel bilgilerinizi düzenleyin. Sadece kurumsal müşteriler için. Faturalama için kullanılacak ve kamuya açık değildir.",
+                    "action": "Düzenle"
+                },
+                "fileVersioning": {
+                    "name": "Dosya sürümleme",
+                    "info": "Dosya sürümlemeyi etkinleştir veya devre dışı bırak"
+                },
+                "loginAlerts": {
+                    "name": "Giriş uyarıları",
+                    "info": "Giriş uyarılarını etkinleştir veya devre dışı bırak"
+                },
+                "appearOffline": {
+                    "name": "Çevrimdışı görün",
+                    "info": "Sohbetlerde çevrimdışı görün"
+                },
+                "requestAccountData": {
+                    "name": "Hesap verilerini talep et",
+                    "info": "GDPR'ye göre sakladığımız tüm kişisel verileri talep et",
+                    "action": "Talep et"
+                },
+                "requestAccountDeletion": {
+                    "name": "Hesap silme talebi",
+                    "info": "Hesabınızın silinmesini talep edin. Size bir onay e-postası göndereceğiz.",
+                    "action": "Talep et"
+                }
+            }
+        }
+    },
+    "drive": {
+        "header": {
+            "name": "İsim",
+            "size": "Boyut",
+            "modified": "Değiştirildi"
+        },
+        "list": {
+            "item": {
+                "sharedWith": "{{count}} kişiyle paylaşıldı"
+            }
+        },
+        "dialogs": {
+            "createTextFile": {
+                "title": "Metin dosyası oluştur",
+                "placeholder": "İsim",
+                "continue": "Oluştur",
+                "invalidFileName": "Geçersiz dosya adı."
+            },
+            "createDirectory": {
+                "title": "Dizin oluştur",
+                "placeholder": "İsim",
+                "continue": "Oluştur",
+                "invalidDirectoryName": "Geçersiz dizin adı."
+            },
+            "rename": {
+                "title": "Yeniden adlandır",
+                "placeholder": "Yeni isim",
+                "continue": "Yeniden adlandır",
+                "invalidFileName": "Geçersiz dosya adı.",
+                "invalidDirectoryName": "Geçersiz dizin adı."
+            },
+            "share": {
+                "title": "Paylaş",
+                "placeholder": "Bir Filen kullanıcısının e-posta adresi",
+                "continue": "Paylaş"
+            }
+        },
+        "emptyPlaceholder": {
+            "uploadFiles": "Dosya yükle",
+            "search": {
+                "title": "Ara",
+                "info": "\"{{search}}\" için hiçbir şey bulunamadı"
+            },
+            "publicLink": {
+                "title": "Boş dizin",
+                "info": "Bu dizinin sahibi henüz içerisine dosya yüklemedi"
+            },
+            "drive": {
+                "title": "Henüz yüklenmiş dosya veya dizin yok",
+                "info": "Dosyaları veya dizinleri buraya sürükleyip bırakın veya aşağıdaki düğmeye basın"
+            },
+            "trash": {
+                "title": "Henüz çöp kutusunda bir şey yok",
+                "info": "Çöp kutusuna gönderilen dosyalar ve dizinler burada görünecektir"
+            },
+            "recents": {
+                "title": "Henüz yüklenmiş dosya yok",
+                "info": "Son yüklenen dosyalar burada görünecektir"
+            },
+            "links": {
+                "title": "Henüz oluşturulmuş herkese açık bağlantı yok",
+                "info": "Dosya ve dizinlerin herkese açık bağlantıları burada görünecektir"
+            },
+            "favorites": {
+                "title": "Henüz favorilere eklenmiş bir şey yok",
+                "info": "Favori dosyalar ve dizinler burada görünecektir"
+            },
+            "sharedIn": {
+                "title": "Henüz sizinle paylaşılan bir şey yok",
+                "info": "Paylaşılan dosyalar ve dizinler burada görünecektir"
+            },
+            "sharedOut": {
+                "title": "Henüz başkalarıyla paylaşılan bir şey yok",
+                "info": "Paylaşılan dosyalar ve dizinler burada görünecektir"
+            }
+        }
+    },
+    "publicLink": {
+        "invalid": "Geçersiz herkese açık bağlantı",
+        "invalidInfo": "Bu herkese açık bağlantı ya süresi dolmuş ya da mevcut değil",
+        "back": "Geri dön",
+        "directory": {
+            "downloadWholeDirectory": "Tüm dizini indir",
+            "downloadDirectory": "Dizini indir"
+        },
+        "sideBar": {
+            "ad": {
+                "header": "Biz Filen'iz",
+                "title": "Özel ve güvenli bulut depolama",
+                "info1": "Tasarım gereği gizlilik",
+                "info2": "Uçtan uca şifreleme",
+                "info3": "Sıfır bilgi teknolojisi",
+                "cta": "10 GB depolama ücretsiz"
+            },
+            "reportAbuse": "İhlali bildirin"
+        },
+        "auth": {
+            "wrongPassword": "Yanlış şifre",
+            "title": "Bu bağlantı şifre ile korunmaktadır",
+            "subTitle": "Erişim kazanmak için lütfen gönderen tarafından sağlanan şifreyi girin.",
+            "password": "Şifre",
+            "passwordPlaceholder": "Şifre",
+            "access": "Erişim"
+        }
+    },
+    "notes": {
+        "contentPlaceholder": "Not içeriği...",
+        "maxSizeReached": "Maksimum not boyutu {{chars}} karakter ile sınırlıdır",
+        "empty": {
+            "title": "Henüz not yok",
+            "description": "Oluşturduğunuz veya eklendiğiniz notlar burada görünecektir",
+            "create": "Oluştur"
+        },
+        "dialogs": {
+            "removeParticipant": {
+                "title": "Katılımcıyı kaldır",
+                "description": "{{name}}'yi bu nottan kaldırmak istediğinizden emin misiniz?",
+                "continue": "Kaldır"
+            },
+            "deleteNote": {
+                "title": "Notu sil",
+                "description": "{{name}}'yi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Sil"
+            },
+            "deleteTag": {
+                "title": "Etiketi sil",
+                "description": "{{name}}'yi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Sil"
+            },
+            "renameTag": {
+                "title": "Yeniden adlandır",
+                "placeholder": "Yeni isim",
+                "continue": "Yeniden adlandır"
+            },
+            "createTag": {
+                "title": "Etiket oluştur",
+                "placeholder": "İsim",
+                "continue": "Oluştur"
+            },
+            "renameNote": {
+                "title": "Yeniden adlandır",
+                "placeholder": "Yeni isim",
+                "continue": "Yeniden adlandır"
+            },
+            "leaveNote": {
+                "title": "Notu terk et",
+                "description": "{{name}}'den ayrılmak istediğinizden emin misiniz? Artık bu nota erişiminiz olmayacak.",
+                "continue": "Ayrıl"
+            }
+        }
+    },
+    "previewDialog": {
+        "unsavedChanges": {
+            "title": "Kaydedilmemiş değişiklikler",
+            "description": "Kaydetmeden çıkmak istediğinizden emin misiniz? Tüm değişiklikler kaybolacak.",
+            "continue": "Kapat"
+        }
+    },
+    "sharedIn": {
+        "dialogs": {
+            "remove": {
+                "title": "Kaldır",
+                "description": "{{item}}'yi paylaşımlarınızdan kaldırmak istediğinizden emin misiniz? Artık buna erişiminiz olmayacak!",
+                "continue": "Kaldır"
+            }
+        }
+    },
+    "desktop": {
+        "dialogs": {
+            "close": {
+                "title": "Kapat",
+                "description": "Filen'den çıkmak istediğinizden emin misiniz?",
+                "continue": "Çık"
+            }
+        }
+    },
+    "trash": {
+        "dialogs": {
+            "empty": {
+                "title": "Çöp kutusunu boşalt",
+                "description": "Çöp kutunuzu boşaltmak istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "continue": "Boşalt"
+            }
+        }
+    },
+    "notifications": {
+        "chat": "Sohbet",
+        "contactRequest": "Kişi talebi",
+        "contactRequestInfo": "{{name}} size bir kişi talebi gönderdi"
+    },
+    "cookieConsent": {
+        "description": "Bu site deneyiminizi ölçmek ve geliştirmek için çerezler kullanır.",
+        "optOut": "Reddet",
+        "onlyNeeded": "Sadece gerekli",
+        "accept": "Kabul et"
+    },
+    "mounts": {
+        "networkDrive": {
+            "mountedAt": "{{letter}}'de monte edildi",
+            "browse": "Gözat",
+            "clear": "Temizle",
+            "missingDeps": "Eksik bağımlılıklar",
+            "missingDepsWindows": "Ağ sürücüsünü kullanmak için sisteminizde WinFSP'nin yüklü olması gerekiyor.",
+            "missingDepsLinux": "Ağ sürücüsünü kullanmak için sisteminizde FUSE3'ün yüklü olması gerekiyor.",
+            "missingDepsInstructions": "Kurulum talimatları",
+            "cacheUsed": "{{size}} kullanıldı",
+            "description": "Bulut sürücünüzü ağ sürücüsü olarak monte edin, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
+            "unixDescription": "Bulut sürücünüzü yerel bir dizin içine monte edin, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
+            "sudo": "Bulut sürücünüzü monte etmek ve kaldırmak için istemcinin yönetici haklarına ihtiyacı olabilir. Lütfen istendiğinde erişime izin verin.",
+            "limitations": "Ağ sürücüsünde programların ve arşivlerin kurulumu, çalıştırılması veya açılması desteklenmez.",
+            "sections": {
+                "active": {
+                    "name": "Aktif"
+                },
+                "enabled": {
+                    "name": "Etkin",
+                    "info": "Ağ sürücüsünü etkinleştir veya devre dışı bırak. Bu seçeneği değiştirirken gezgininizi yenileyin."
+                },
+                "mountPoint": {
+                    "name": "Monte noktası",
+                    "info": "Monte noktasını yerel bir dizine ayarlayın. Yerel dizin boş, okunabilir ve yazılabilir olmalıdır.",
+                    "change": "Değiştir"
+                },
+                "driveLetter": {
+                    "name": "Sürücü harfi",
+                    "info": "Ağ sürücüsü için sürücü harfini ayarlayın. Yalnızca mevcut sürücü harfleri gösterilecektir."
+                },
+                "browse": {
+                    "name": "Gözat",
+                    "info": "Ağ sürücüsünü varsayılan gezgininizle gözatın."
+                },
+                "cache": {
+                    "name": "Önbellek",
+                    "info": "Önbellekleme, ağ sürücünüzde göz atmayı önemli ölçüde hızlandırır."
+                },
+                "cacheSize": {
+                    "name": "Önbellek boyutu",
+                    "info": "Önbellek boyutunu mümkün olduğunca yüksek ayarlamanızı öneririz. İstemci, ağ sürücüsünü önemli ölçüde hızlandırmak için yerel diskinizi kullanacaktır."
+                },
+                "cachePath": {
+                    "name": "Önbellek konumu",
+                    "info": "Ağ sürücüsünün önbellek konumunu değiştirin. Yerel bir diskte olmalıdır. Değiştirilmezse varsayılan olarak uygulama kurulum dizinini kullanacaktır."
+                },
+                "readOnly": {
+                    "name": "Sadece okunur",
+                    "info": "Ağ sürücüsünü sadece okunur olarak monte et"
+                }
+            },
+            "dialogs": {
+                "cleanupCache": {
+                    "title": "Önbelleği temizle",
+                    "description": "Yerel önbelleği temizlemek istediğinizden emin misiniz? Önbelleği temizlemek, dosya yükleme sürelerini önemli ölçüde yavaşlatabilir.",
+                    "continue": "Temizle"
+                },
+                "disable": {
+                    "title": "Devre dışı bırak",
+                    "description": "Ağ sürücüsünü devre dışı bırakmak istediğinizden emin misiniz? Üzerinde aktif olan tüm işlemler iptal edilecek veya hata verecektir. Lütfen artık aktif olarak kullanmadığınızdan emin olun.",
+                    "continue": "Devre dışı bırak"
+                }
+            },
+            "errors": {
+                "invalidMountPoint": "Geçersiz monte noktası.",
+                "mountPointNotEmpty": "Monte noktası boş bir dizin olmalıdır.",
+                "pathNotInHomeDir": "Monte noktası, ev dizininiz içinde olmalıdır (/home/<kullanıcıAdınız>).",
+                "pathNotInUserDir": "Monte noktası, kullanıcı dizininiz içinde olmalıdır (/Users/<kullanıcıAdınız>).",
+                "invalidCachePath": "Önbellek konumu, en az 10 GB boş alana sahip bir dahili diskte olmalıdır.",
+                "cachePathNotReadableWritable": "Önbellek konumu okunabilir veya yazılabilir değildir.",
+                "invalidCachePathLength": "Önbellek konumu yolu çok uzundur."
+            },
+            "transfers": {
+                "uploading": "Arka planda {{total}} dosya yükleniyor",
+                "uploadingPlural": "Arka planda {{total}} dosya yükleniyor",
+                "uploadingSpeed": "Arka planda {{total}} dosya yükleniyor {{speed}} hızında",
+                "uploadingPluralSpeed": "Arka planda {{total}} dosya yükleniyor {{speed}} hızında",
+                "everythingUploaded": "Her şey senkronize edildi"
+            }
+        },
+        "webdav": {
+            "copyConnect": "Kopyala",
+            "description": "Yerel bir WebDAV sunucusu başlatın ve bulut sürücünüze erişim ve yönetim için standart bir protokol sağlayın. Bu, WebDAV'ı destekleyen çok sayıda uygulama ve cihazla uyumluluk sağlayarak dosya erişiminizi ve yönetim yeteneklerinizi artırır.",
+            "sections": {
+                "active": {
+                    "name": "Aktif"
+                },
+                "enabled": {
+                    "name": "Etkin",
+                    "info": "WebDAV sunucusunu etkinleştir veya devre dışı bırak"
+                },
+                "protocol": {
+                    "name": "HTTP Protokolü",
+                    "info": "HTTP Protokolünü değiştir"
+                },
+                "hostname": {
+                    "name": "Ana bilgisayar adı",
+                    "info": "Sunucunun dinlemesi gereken ana bilgisayar adını değiştir"
+                },
+                "port": {
+                    "name": "Port",
+                    "info": "Sunucunun dinlemesi gereken portu değiştir"
+                },
+                "authMode": {
+                    "name": "Kimlik doğrulama modu",
+                    "info": "Kimlik doğrulama modunu değiştir"
+                },
+                "username": {
+                    "name": "Kullanıcı adı",
+                    "info": "HTTP kimlik doğrulama kullanıcı adını değiştirin. Bu, Filen e-posta adresiniz veya takma adınız olmamalıdır."
+                },
+                "password": {
+                    "name": "Şifre",
+                    "info": "HTTP kimlik doğrulama şifresini değiştirin. Bu, Filen şifreniz olmamalıdır."
+                },
+                "proxyMode": {
+                    "name": "Proxy modu",
+                    "info": "Proxy modunu etkinleştir"
+                },
+                "connect": {
+                    "name": "Bağlan",
+                    "info": "WebDAV URL'sini kopyala"
+                }
+            },
+            "dialogs": {
+                "disable": {
+                    "title": "Devre dışı bırak",
+                    "description": "WebDAV sunucusunu devre dışı bırakmak istediğinizden emin misiniz? Üzerinde aktif olan tüm işlemler iptal edilecek veya hata verecektir. Lütfen artık aktif olarak kullanmadığınızdan emin olun.",
+                    "continue": "Devre dışı bırak"
+                }
+            },
+            "errors": {
+                "invalidPort": "Geçersiz port. Kabul edilen aralık: {{range}}.",
+                "invalidHostname": "Geçersiz ana bilgisayar adı."
+            }
+        },
+        "s3": {
+            "copyConnect": "Kopyala",
+            "description": "Yerel bir S3 sunucusu başlatın ve bulut sürücünüze erişim ve yönetim için standart bir protokol sağlayın. Bu, S3'ü destekleyen çok sayıda uygulama ve cihazla uyumluluk sağlayarak dosya erişiminizi ve yönetim yeteneklerinizi artırır.",
+            "info": "S3 sunucusuna bağlanırken bölgeyi \"filen\" olarak ayarlamanız ve \"s3ForcePathStyle\"'ı etkinleştirmeniz gerekiyor.",
+            "sections": {
+                "active": {
+                    "name": "Aktif"
+                },
+                "enabled": {
+                    "name": "Etkin",
+                    "info": "S3 sunucusunu etkinleştir veya devre dışı bırak"
+                },
+                "protocol": {
+                    "name": "HTTP Protokolü",
+                    "info": "HTTP Protokolünü değiştir"
+                },
+                "hostname": {
+                    "name": "Ana bilgisayar adı",
+                    "info": "Sunucunun dinlemesi gereken ana bilgisayar adını değiştir"
+                },
+                "port": {
+                    "name": "Port",
+                    "info": "Sunucunun dinlemesi gereken portu değiştir"
+                },
+                "accessKeyId": {
+                    "name": "AccessKeyId",
+                    "info": "AccessKeyId'yi değiştirin. Bu, Filen e-posta adresiniz veya takma adınız olmamalıdır."
+                },
+                "secretKeyId": {
+                    "name": "SecretKeyId",
+                    "info": "SecretKeyId'yi değiştirin. Bu, Filen şifreniz olmamalıdır."
+                },
+                "connect": {
+                    "name": "Bağlan",
+                    "info": "WebDAV URL'sini kopyala"
+                }
+            },
+            "dialogs": {
+                "disable": {
+                    "title": "Devre dışı bırak",
+                    "description": "S3 sunucusunu devre dışı bırakmak istediğinizden emin misiniz? Üzerinde aktif olan tüm işlemler iptal edilecek veya hata verecektir. Lütfen artık aktif olarak kullanmadığınızdan emin olun.",
+                    "continue": "Devre dışı bırak"
+                }
+            },
+            "errors": {
+                "invalidPort": "Geçersiz port. Kabul edilen aralık: {{range}}.",
+                "invalidHostname": "Geçersiz ana bilgisayar adı."
+            }
+        }
+    },
+    "syncs": {
+        "eventsTitle": "Etkinlikler",
+        "ignoredTitle": "Yoksayıldı",
+        "issuesTitle": "Sorunlar",
+        "settingsTitle": "Ayarlar",
+        "transfersTitle": "Transferler",
+        "noTransfers": "Aktif transfer yok",
+        "noEventsYet": "Henüz etkinlik yok",
+        "nothingIgnored": "Yoksayılan dosya veya dizin yok",
+        "noIssues": "Sorun yok",
+        "info": {
+            "progress": "{{items}} öğe ({{total}}) senkronize ediliyor, {{speed}} hızında, yaklaşık {{remaining}} kaldı",
+            "progressNoEstimate": "{{items}} öğe ({{total}}) senkronize ediliyor",
+            "upToDate": "Her şey senkronize edildi",
+            "errors": "{{count}} senkronizasyon hatası",
+            "errorsResolve": "Çöz",
+            "paused": "Senkronizasyon duraklatıldı",
+            "processingDeltas": "Delta işleniyor",
+            "syncingChanges": "Değişiklikler senkronize ediliyor",
+            "savingState": "Durum kaydediliyor",
+            "waitingForLocalDirectoryChanges": "Yerel değişiklikler bekleniyor",
+            "acquiringLock": "Senkronizasyon kilidi alınıyor",
+            "gettingTrees": "Yerel ve bulut dizini okunuyor",
+            "remoteSmokeTestFailed": "Bulut dizini okunamadı, ya mevcut değil ya da internete bağlı değilsiniz",
+            "localSmokeTestFailed": "Yerel dizin okunamadı, ya mevcut değil ya da okuma veya yazma erişiminiz yok"
+        },
+        "empty": {
+            "title": "Henüz senkronizasyon ayarlanmamış",
+            "description": "Yerel dizinlerinizi bulutla veya bulut dizinlerini cihazınızla senkronize edebilirsiniz",
+            "create": "Oluştur"
+        },
+        "events": {
+            "createLocalDirectory": "{{name}} yerel olarak oluşturuldu",
+            "renameLocalDirectory": "{{name}} yerel olarak yeniden adlandırıldı",
+            "deleteLocalDirectory": "{{name}} yerel olarak silindi",
+            "createRemoteDirectory": "{{name}} bulutta oluşturuldu",
+            "renameRemoteDirectory": "{{name}} bulutta yeniden adlandırıldı",
+            "deleteRemoteDirectory": "{{name}} bulutta silindi",
+            "deleteLocalFile": "{{name}} yerel olarak silindi",
+            "deleteRemoteFile": "{{name}} bulutta silindi",
+            "download": "{{name}} buluttan indirildi",
+            "upload": "{{name}} buluta yüklendi",
+            "renameLocalFile": "{{name}} yerel olarak yeniden adlandırıldı",
+            "renameRemoteFile": "{{name}} bulutta yeniden adlandırıldı"
+        },
+        "settings": {
+            "sections": {
+                "delete": {
+                    "name": "Sil",
+                    "info": "Senkronizasyonu sil",
+                    "delete": "Sil"
+                },
+                "pause": {
+                    "name": "Duraklat",
+                    "info": "Senkronizasyonu duraklat"
+                },
+                "mode": {
+                    "name": "Senkronizasyon modu",
+                    "info": "Senkronizasyon modunu değiştir"
+                },
+                "forceSync": {
+                    "name": "Zorla senkronizasyon",
+                    "info": "İçsel önbelleği sıfırlayın ve yerel ve bulut dizinini yeniden taramayı zorlayın",
+                    "forceSync": "Zorla senkronizasyon"
+                },
+                "excludeDotFiles": {
+                    "name": "Nokta dosyalarını hariç tut",
+                    "info": "Nokta dosyası/yolu dışlama seçeneğini aç/kapat (önerilir)"
+                },
+                "filenIgnore": {
+                    "name": ".filenignore",
+                    "info": "Yerel veya bulut dışlamaları için bir yoksayıcı dosyayı düzenleyin. .gitignore dosyası gibi çalışır",
+                    "edit": "Düzenle"
+                },
+                "disableLocalTrash": {
+                    "name": "Yerel çöp kutusunu devre dışı bırak",
+                    "info": "Yerel çöp kutusunu etkinleştir veya devre dışı bırak. Devre dışı bırakıldığında, istemci dosyaları veya dizinleri yerel senkronizasyon yolunun içindeki yerel çöp kutusu dizinine taşımak yerine kalıcı olarak silecektir."
+                }
+            }
+        },
+        "dialogs": {
+            "delete": {
+                "title": "Senkronizasyonu sil",
+                "description": "Bu senkronizasyonu silmek istediğinizden emin misiniz?",
+                "continue": "Sil"
+            },
+            "resetErrors": {
+                "title": "Hataları çöz",
+                "description": "Tüm hataları çözülmüş olarak işaretlemek ve senkronizasyona devam etmek istediğinizden emin misiniz? Lütfen tüm hataların çözüldüğünden emin olun.",
+                "continue": "Çöz"
+            },
+            "filenIgnore": {
+                "title": ".filenignore",
+                "save": "Kaydet"
+            },
+            "deleteIssue": {
+                "title": "Sorunu sil",
+                "description": "Bu sorunu silmek istediğinizden emin misiniz? Lütfen bunun çözüldüğünden veya geçici olduğundan emin olun, aksi takdirde sonunda geri dönecektir.",
+                "continue": "Sil"
+            }
+        },
+        "ignored": {
+            "types": {
+                "dotFile": "Nokta dosyası",
+                "defaultIgnore": "Varsayılan olarak yoksayıldı",
+                "empty": "Boş"
+            },
+            "reasons": {
+                "dotFile": "Dosya veya dizin nokta yolunun içindedir",
+                "defaultIgnore": "Dosya veya dizin varsayılan olarak yoksayılan bir yolun içindedir",
+                "empty": "Dosya boş",
+                "invalidPath": "Dosya veya dizin geçersiz bir yolun içindedir",
+                "symlink": "Dosya veya dizin bir sembolik bağlantıdır. İstemci sonsuz senkronizasyon döngülerini önlemek için sembolik bağlantıları takip etmez.",
+                "duplicate": "Dosya veya dizin yolu iki kez mevcut",
+                "filenIgnore": ".filenignore tarafından yoksayıldı",
+                "invalidType": "Öğe dosya veya dizin değildir",
+                "nameLength": "Dosya veya dizin adı çok uzun",
+                "pathLength": "Dosya veya dizin yolu çok uzun",
+                "permissions": "Yetersiz izinler"
+            }
+        },
+        "issues": {
+            "types": {
+                "title": {
+                    "permission": "İzinler",
+                    "io": "G/Ç",
+                    "noSpace": "Yeterli alan yok veya dosya izleyicileri mevcut değil",
+                    "openFiles": "Açık dosya limiti",
+                    "fileOrDirExists": "Dosya veya dizin mevcut",
+                    "fileOrDirNotFound": "Dosya veya dizin bulunamadı",
+                    "isFile": "Dosya",
+                    "isDir": "Dizin",
+                    "notDir": "Dizin değil",
+                    "badConnection": "Bağlantı",
+                    "fileOrDirTemporarilyUnavailable": "Dosya veya dizin geçici olarak kullanılamıyor",
+                    "unknown": "Bilinmeyen hata",
+                    "dirNotEmpty": "Dizin boş değil",
+                    "fileOrDirNameTooLong": "Dosya veya dizin adı/yolu çok uzun"
+                },
+                "info": {
+                    "permission": "Lütfen istemcinin yerel senkronizasyon dizinine erişmek için gerekli tüm izinlere sahip olduğundan emin olun.",
+                    "io": "Lütfen yerel senkronizasyon dizininizin ve altındaki depolama ortamının çalıştığından emin olun. İstemci buna düzgün bir şekilde erişemiyor.",
+                    "noSpace": "Yeterli yerel depolama alanınız kalmadı veya sistem mevcut dosya izleyicilerinin sınırına ulaştı.",
+                    "openFiles": "İstemci açık dosya limitine ulaştı. Lütfen limiti artırın.",
+                    "fileOrDirExists": "Dosya veya dizin zaten mevcut. Bu muhtemelen geçici bir sorun, istemciyi yeniden başlatmayı deneyin.",
+                    "fileOrDirNotFound": "Dosya veya dizin bulunamadı. Bu muhtemelen geçici bir sorun, istemciyi yeniden başlatmayı deneyin.",
+                    "isFile": "Bu muhtemelen geçici bir sorun, istemciyi yeniden başlatmayı deneyin.",
+                    "isDir": "Bu muhtemelen geçici bir sorun, istemciyi yeniden başlatmayı deneyin.",
+                    "notDir": "Bu muhtemelen geçici bir sorun, istemciyi yeniden başlatmayı deneyin.",
+                    "badConnection": "Lütfen internete bağlı olduğunuzdan ve Filen'e sorun yaşamadan erişebildiğinizden emin olun.",
+                    "fileOrDirTemporarilyUnavailable": "Bu muhtemelen geçici bir sorun, istemciyi yeniden başlatmayı deneyin.",
+                    "unknown": "Bilinmeyen hata, istemciyi yeniden başlatmayı deneyin.",
+                    "dirNotEmpty": "Dizin boş değil. Bu muhtemelen geçici bir sorun, istemciyi yeniden başlatmayı deneyin.",
+                    "fileOrDirNameTooLong": "Dosya veya dizin adı/yolu yerel dosya sisteminiz için çok uzun."
+                }
+            }
+        }
+    },
+    "isOnline": {
+        "title": "Birisi kabloyu çıkar mıydı?",
+        "info": "Platformumuza bağlanmada sorun yaşıyoruz, lütfen internet bağlantınızı kontrol edin.",
+        "infoSub": "Eğer internetiniz çalışıyorsa lütfen bizimle iletişime geçin."
+    },
+    "404": {
+        "info": "Oops, aradığınız sayfa mevcut değil.",
+        "btn": "Anasayfaya git"
+    },
+    "announcements": {
+        "gotIt": "Anladım"
+    },
+    "maintenance": {
+        "title": "Filen şu anda bakımda",
+        "info": "Deneyiminizi daha da geliştirmek için şu anda bazı bakım çalışmaları yapıyoruz. Platformumuz yakında, taze ve geliştirilmiş bir şekilde geri dönecek.",
+        "infoSub": "Sabır gösterdiğiniz için teşekkür ederiz! Size yeni özellikler sunmak için yoğun bir şekilde çalışıyoruz. Bizi takipte kalın!"
+    }
+}

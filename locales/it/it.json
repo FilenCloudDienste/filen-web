@@ -1,0 +1,1628 @@
+{
+    "cloudDrive": "Cloud Drive",
+    "new": "Nuovo",
+    "image": "Immagine",
+    "empty": "Vuoto",
+    "copiedToClipboard": "Copiato negli appunti",
+    "everyone": "Tutti",
+    "unknownUser": "Utente sconosciuto",
+    "login": {
+        "header": "Accesso",
+        "description": "Inserisci la tua email e password qui sotto per accedere al tuo account",
+        "useTwoFactorRecoveryKey": "Usa il codice di recupero invece",
+        "buttons": {
+            "login": "Accedi",
+            "createAccount": "Crea un account",
+            "forgotPassword": "Hai dimenticato la password?"
+        },
+        "placeholders": {
+            "normal": {
+                "email": "Indirizzo email",
+                "password": "Password",
+                "2faCode": "Codice 2FA",
+                "2faRecoveryKey": "Chiave di recupero"
+            },
+            "example": {
+                "email": "me@example.com",
+                "password": "****************",
+                "2faCode": "381740",
+                "2faRecoveryKey": "Chiave di recupero"
+            }
+        },
+        "dialogs": {
+            "forgotPassword": {
+                "title": "Password dimenticata",
+                "continue": "Invia istruzioni",
+                "placeholder": "Indirizzo email"
+            }
+        },
+        "alerts": {
+            "emailOrPasswordWrong": "Email o password errati",
+            "enter2FA": "Per favore inserisci il tuo codice di Autenticazione a Due Fattori",
+            "enter2FARecoveryKey": "Per favore inserisci la tua chiave di recupero 2FA",
+            "forgotPasswordSent": "Istruzioni per il reset della password inviate a {{email}}"
+        }
+    },
+    "register": {
+        "header": "Crea un account",
+        "description": "Inserisci la tua email e password qui sotto per creare un account",
+        "buttons": {
+            "register": "Crea account",
+            "resendConfirmation": "Reinvia email di conferma",
+            "login": "Accedi"
+        },
+        "passwordStrength": {
+            "length": "Lunghezza",
+            "uppercase": "Caratteri maiuscoli",
+            "lowercase": "Caratteri minuscoli",
+            "specialChars": "Caratteri speciali"
+        },
+        "placeholders": {
+            "normal": {
+                "email": "Indirizzo email",
+                "password": "Password",
+                "confirmPassword": "Conferma password"
+            },
+            "example": {
+                "email": "me@example.com",
+                "password": "****************",
+                "confirmPassword": "****************"
+            }
+        },
+        "dialogs": {
+            "confirmationSend": {
+                "title": "Reinvia email di conferma",
+                "continue": "Invia",
+                "placeholder": "Indirizzo email"
+            }
+        },
+        "alerts": {
+            "passwordWeak": "La tua password scelta è troppo debole",
+            "confirmationSent": "Email di conferma inviata a {{email}}",
+            "passwordsNotMatching": "Le password non corrispondono",
+            "success": {
+                "title": "Account creato",
+                "continue": "Continua",
+                "description": "Abbiamo inviato un'email di conferma a {{email}}. Clicca sul link nell'email per confermare la tua registrazione. Assicurati di controllare anche la cartella dello spam."
+            }
+        }
+    },
+    "reset": {
+        "header": "Reimposta password",
+        "description": "Inserisci il tuo indirizzo email, la tua nuova password e importa le tue chiavi master per reimpostare la tua password",
+        "importMasterKeys": "Importa chiavi",
+        "masterKeysImported": "Chiavi importate",
+        "masterKeysNotImported": "Nessuna chiave importata",
+        "placeholders": {
+            "normal": {
+                "email": "Indirizzo email",
+                "password": "Password",
+                "confirmPassword": "Conferma password"
+            },
+            "example": {
+                "email": "me@example.com",
+                "password": "****************",
+                "confirmPassword": "****************"
+            }
+        },
+        "buttons": {
+            "reset": "Reimposta",
+            "back": "Indietro"
+        },
+        "dialogs": {
+            "noMasterKeysImported": {
+                "title": "Reimposta password",
+                "continue": "Ho capito",
+                "description": "Capisco che reimpostando la mia password senza le mie chiavi master esportate renderò tutti i dati memorizzati sul mio account inaccessibili a causa del funzionamento della crittografia end-to-end a conoscenza zero."
+            },
+            "noMasterKeysImported2": {
+                "title": "Reimposta password",
+                "continue": "Ne sono sicuro",
+                "description": "Sei sicuro? Stai per eliminare tutti i dati memorizzati sul tuo account se non importi le tue chiavi master. Puoi semplicemente ignorare questo avviso se non hai il file delle tue chiavi master e desideri reimpostare il tuo account."
+            },
+            "noMasterKeysImported3": {
+                "title": "Reimposta password",
+                "continue": "Sì",
+                "description": "Sei davvero sicuro?"
+            }
+        },
+        "alerts": {
+            "invalidMasterKeysFile": "File delle chiavi master non valido",
+            "invalidMasterKeysFileWrongUserId": "Queste chiavi appartengono a un altro account",
+            "masterKeysImported": "Chiavi master importate",
+            "passwordWeak": "La tua password scelta è troppo debole",
+            "passwordsNotMatching": "Le password non corrispondono",
+            "invalidMasterKeys": "Chiavi master non valide",
+            "passwordChanged": "Password cambiata con successo"
+        }
+    },
+    "auth": {
+        "footer": {
+            "tos": "Termini di servizio",
+            "privacy": "Privacy"
+        }
+    },
+    "api": {
+        "errors": {
+            "invalid_params": "Parametri non validi",
+            "internal_error": "Errore interno",
+            "rate_limited": "Limitato nel rateo"
+        }
+    },
+    "topbar": {
+        "placeholders": {
+            "normal": {
+                "search": "Cerca in questa directory..."
+            },
+            "example": {
+                "search": "Cerca in questa directory..."
+            }
+        }
+    },
+    "dropZone": {
+        "cta": "Carica qui",
+        "chatsCta": "Allega alla chat"
+    },
+    "topBar": {
+        "breadcrumb": {
+            "cloudDrive": "Cloud Drive"
+        },
+        "searchInThisFolder": "Cerca in questa directory...",
+        "breadcrumbs": {
+            "recents": "Recenti",
+            "cloudDrive": "Cloud Drive",
+            "links": "Collegamenti",
+            "sharedWithMe": "Condivisi con me",
+            "sharedWithOthers": "Condivisi con altri",
+            "favorites": "Preferiti",
+            "trash": "Cestino",
+            "directory": "Directory"
+        },
+        "listView": "Visualizzazione elenco",
+        "gridView": "Visualizzazione griglia"
+    },
+    "innerSideBar": {
+        "top": {
+            "settings": "Impostazioni",
+            "notes": "Note",
+            "chats": "Chat",
+            "contacts": "Contatti",
+            "syncs": "Sincronizzazioni",
+            "mounts": "Montaggi"
+        },
+        "bottom": {
+            "settings": "Impostazioni"
+        },
+        "notes": {
+            "search": "Cerca...",
+            "tags": {
+                "all": "Tutti",
+                "favorites": "Preferiti",
+                "pinned": "In evidenza"
+            },
+            "createNote": "Crea nota",
+            "createTag": "Crea etichetta",
+            "empty": "Nessuna nota ancora",
+            "emptyCreate": "Crea una",
+            "emptySearch": "Nessun risultato trovato per \"{{search}}\""
+        },
+        "chats": {
+            "empty": "Nessuna chat ancora",
+            "emptyCreate": "Crea una",
+            "search": "Cerca...",
+            "createChat": "Crea chat",
+            "emptySearch": "Nessun risultato trovato per \"{{search}}\""
+        },
+        "recents": "Recenti",
+        "cloudDrive": "Cloud Drive",
+        "links": "Collegamenti",
+        "sharedWithMe": "Condivisi con me",
+        "sharedWithOthers": "Condivisi con altri",
+        "favorites": "Preferiti",
+        "trash": "Cestino",
+        "settings": {
+            "general": "Generale",
+            "invoices": "Fatture",
+            "subscriptions": "Abbonamenti",
+            "account": "Account",
+            "events": "Eventi",
+            "security": "Sicurezza",
+            "invite": "Invita",
+            "plans": "Piani"
+        },
+        "contacts": {
+            "online": "Online",
+            "offline": "Offline",
+            "all": "Tutti",
+            "blocked": "Bloccati",
+            "in": "Richieste",
+            "out": "In attesa"
+        },
+        "mounts": {
+            "networkDrive": "Unità di rete",
+            "s3": "S3",
+            "webdav": "WebDAV"
+        },
+        "syncs": {
+            "empty": "Nessuna sincronizzazione ancora",
+            "emptyCreate": "Crea una",
+            "nothingFound": "Nessun risultato trovato per \"{{search}}\"",
+            "createSync": "Crea sincronizzazione",
+            "search": "Cerca...",
+            "emptySearch": "Nessun risultato trovato per \"{{search}}\""
+        }
+    },
+    "sideBar": {
+        "cloudDrive": "Cloud Drive",
+        "transfers": "Trasferimenti",
+        "notes": "Note",
+        "chats": "Chat",
+        "contacts": "Contatti",
+        "settings": "Impostazioni",
+        "syncs": "Sincronizzazioni",
+        "mounts": "Montaggi",
+        "terminal": "Terminale"
+    },
+    "dialogs": {
+        "cancel": "Annulla",
+        "selectDriveItem": {
+            "title": "Seleziona",
+            "submit": "Seleziona",
+            "newFolder": "Nuova directory",
+            "empty": "Nessun file o directory caricato ancora",
+            "selectRoot": "Seleziona Cloud Drive"
+        },
+        "selectContacts": {
+            "title": "Seleziona contatti",
+            "submit": "Seleziona",
+            "empty": "Nessun contatto ancora"
+        },
+        "publicLink": {
+            "title": "Link pubblico",
+            "description": "Crea un link pubblico",
+            "close": "Chiudi",
+            "save": "Salva",
+            "enabled": "Abilitato",
+            "downloadButton": "Pulsante di download",
+            "link": "Link",
+            "copyLink": "Copia",
+            "expiresAfter": "Scade dopo",
+            "password": "Password (lascia vuoto per disabilitare)",
+            "passwordPlaceholder": "Password",
+            "progress": "{{done}} di {{total}} elementi aggiunti al link pubblico",
+            "expireNever": "Mai"
+        },
+        "sharedWith": {
+            "title": "Condiviso con",
+            "add": "Aggiungi",
+            "close": "Chiudi",
+            "remove": "Rimuovi",
+            "stopSharing": {
+                "title": "Interrompi condivisione",
+                "description": "Sei sicuro di voler interrompere la condivisione di {{item}} con {{name}}?",
+                "continue": "Interrompi condivisione"
+            }
+        },
+        "changeEmail": {
+            "title": "Cambia il tuo indirizzo email",
+            "newEmail": "Nuovo indirizzo email",
+            "newEmailPlaceholder": "Nuovo email",
+            "confirmNewEmail": "Conferma il nuovo indirizzo email",
+            "confirmNewEmailPlaceholder": "Conferma nuovo email",
+            "password": "La tua password",
+            "passwordPlaceholder": "Password",
+            "close": "Chiudi",
+            "save": "Salva",
+            "successToast": "Indirizzo email cambiato con successo"
+        },
+        "changePassword": {
+            "title": "Cambia la tua password",
+            "newPassword": "Nuova password",
+            "newPasswordPlaceholder": "Nuova password",
+            "confirmNewPassword": "Conferma nuova password",
+            "confirmNewPasswordPlaceholder": "Conferma nuova password",
+            "currentPassword": "La tua password attuale",
+            "currentPasswordPlaceholder": "Password attuale",
+            "close": "Chiudi",
+            "save": "Salva",
+            "successToast": "Password cambiata con successo"
+        },
+        "personalInformation": {
+            "title": "Cambia informazioni personali",
+            "firstName": "Nome",
+            "lastName": "Cognome",
+            "close": "Chiudi",
+            "save": "Salva",
+            "companyName": "Nome azienda",
+            "vatId": "Partita IVA",
+            "street": "Via",
+            "streetNumber": "Numero civico",
+            "city": "Città",
+            "postalCode": "Codice postale",
+            "country": "Paese"
+        },
+        "twoFactorCode": {
+            "useRecoveryKey": "Usa il codice di recupero invece",
+            "recoveryKeyPlaceholder": "Chiave di recupero",
+            "title": "Autenticazione a Due Fattori",
+            "continue": "Continua",
+            "info": "Per favore inserisci il tuo codice di Autenticazione a Due Fattori"
+        },
+        "noteParticipants": {
+            "remove": "Rimuovi",
+            "toggleReadPermissions": "Cambia a permessi di lettura",
+            "toggleWritePermissions": "Cambia a permessi di scrittura",
+            "title": "Partecipanti",
+            "close": "Chiudi"
+        },
+        "fileVersions": {
+            "title": "Versioni del file",
+            "delete": {
+                "title": "Elimina versione del file",
+                "description": "Sei sicuro di voler eliminare {{name}} permanentemente? Questa azione non può essere annullata!",
+                "continue": "Elimina"
+            }
+        },
+        "noteHistory": {
+            "empty": "Nessuna versione precedente della nota ancora"
+        },
+        "previewDialog": {
+            "save": "Salva",
+            "readOnly": "Solo lettura"
+        },
+        "transparentFullScreenImage": {
+            "openOriginal": "Apri originale"
+        },
+        "report": {
+            "title": "Segnala abuso",
+            "email": "Indirizzo email",
+            "emailPlaceholder": "Indirizzo email",
+            "comment": "Commento",
+            "commentPlaceholder": "Fornisci tutti i dettagli necessari affinché possiamo prendere provvedimenti appropriati il prima possibile (opzionale)",
+            "reason": "Motivo",
+            "close": "Chiudi",
+            "send": "Invia",
+            "successToast": "Segnalazione di abuso inviata",
+            "reasons": {
+                "cp": "Materiale di abuso sessuale infantile",
+                "dmca": "Violazione del copyright",
+                "stolen": "Dati rubati",
+                "other": "Altro",
+                "spam": "Spam",
+                "malware": "Malware"
+            }
+        },
+        "profile": {
+            "memberSince": "Membro dal {{since}}",
+            "add": "Invia richiesta di contatto",
+            "block": "Blocca",
+            "remove": "Rimuovi dai contatti",
+            "unblock": "Sblocca"
+        },
+        "createSync": {
+            "cancel": "Annulla",
+            "create": "Crea",
+            "name": "Nome sincronizzazione",
+            "localPath": "Percorso locale",
+            "remotePath": "Percorso cloud",
+            "select": "Seleziona",
+            "syncMode": "Modalità sincronizzazione",
+            "title": "Crea sincronizzazione",
+            "paused": "In pausa",
+            "excludeDotFiles": "Escludi file nascosti (consigliato)",
+            "disableLocalTrash": "Disabilita il cestino locale ed elimina gli elementi permanentemente",
+            "mode": {
+                "twoWay": "Bidirezionale",
+                "localToCloud": "Locale a cloud",
+                "localBackup": "Backup locale",
+                "cloudToLocal": "Cloud a locale",
+                "cloudBackup": "Backup cloud",
+                "twoWayInfo": "Specchia ogni azione in entrambe le direzioni",
+                "localToCloudInfo": "Specchia ogni azione eseguita localmente nel cloud ma non agire mai sulle modifiche del cloud",
+                "localBackupInfo": "Carica solo i dati nel cloud, non eliminare nulla o agire sulle modifiche del cloud",
+                "cloudToLocalInfo": "Specchia ogni azione eseguita nel cloud localmente ma non agire mai sulle modifiche locali",
+                "cloudBackupInfo": "Scarica solo i dati dal cloud, non eliminare nulla o agire sulle modifiche locali"
+            },
+            "errors": {
+                "localPathNotWritable": "Il percorso locale che hai selezionato non è scrivibile. Assicurati che il client possa accedervi correttamente.",
+                "invalidLocalPath": "Il percorso locale che hai selezionato non è valido e non può essere sincronizzato. Seleziona un percorso diverso.",
+                "remotePathAlreadyConfigured": "Il percorso cloud che hai selezionato è già configurato in una sincronizzazione diversa. Questo può portare a loop di sincronizzazione infiniti.",
+                "localPathAlreadyConfigured": "Il percorso locale che hai selezionato è già configurato in una sincronizzazione diversa. Questo può portare a loop di sincronizzazione infiniti.",
+                "syncNameAlreadyExists": "Una sincronizzazione con il nome \"{{name}}\" esiste già.",
+                "localPathSyncedByICloud": "Non puoi sincronizzare un percorso già sincronizzato da iCloud."
+            },
+            "warnings": {
+                "localDirectoryBig": {
+                    "title": "Attenzione",
+                    "continue": "Continua",
+                    "description": "Sincronizzare più di {{count}} elementi può rallentare il tuo sistema, soprattutto su dispositivi meno potenti. Se sei su una macchina potente, puoi procedere, ma ti consigliamo di sincronizzare meno file per evitare problemi potenziali."
+                },
+                "localDirectoryNotPhysical": {
+                    "title": "Attenzione",
+                    "continue": "Continua",
+                    "description": "La directory locale che hai selezionato non sembra essere su un disco fisico. Questo può causare problemi di sincronizzazione e comportamenti imprevedibili. Vuoi continuare?"
+                }
+            }
+        },
+        "info": {
+            "title": "Info",
+            "close": "Chiudi",
+            "directoryType": "Directory",
+            "size": "Dimensione",
+            "type": "Tipo",
+            "name": "Nome",
+            "location": "Posizione",
+            "modified": "Modificato",
+            "uploaded": "Caricato",
+            "files": "File",
+            "directories": "Directory"
+        },
+        "desktopUpdate": {
+            "title": "Aggiornamento disponibile",
+            "info": "Una nuova versione ({{version}}) è stata scaricata ed è pronta per essere installata. Vuoi aggiornare?",
+            "dismiss": "Ignora",
+            "update": "Aggiorna",
+            "installing": "Installazione in corso, non interrompere questo processo!"
+        },
+        "storage": {
+            "title": "Spazio di archiviazione insufficiente",
+            "info": "Non hai abbastanza spazio di archiviazione disponibile. Per caricare più file, devi acquistare un piano. Tutti i piani si accumulano in termini di archiviazione. Puoi iscriverti a quanti più piani vuoi.",
+            "dismiss": "Ignora",
+            "upgrade": "Aggiorna"
+        },
+        "event": {
+            "title": "Evento"
+        },
+        "exportReminder": {
+            "title": "Esporta chiavi master",
+            "description": "Per favore esporta le tue chiavi master e conservale in un luogo sicuro separato. Hai bisogno delle tue chiavi master quando reimposti la tua password per evitare la perdita di dati. Devi esportare le tue chiavi master ogni volta che cambi la tua password.",
+            "continue": "Esporta",
+            "dismiss": "Ignora"
+        }
+    },
+    "contextMenus": {
+        "item": {
+            "download": "Download",
+            "publicLink": "Link pubblico",
+            "share": "Condividi",
+            "shareProgress": "{{done}} elementi condivisi",
+            "versions": "Versioni",
+            "favorite": "Aggiungi ai preferiti",
+            "unfavorite": "Rimuovi dai preferiti",
+            "rename": "Rinomina",
+            "move": "Sposta",
+            "trash": "Cestino",
+            "restore": "Ripristina",
+            "preview": "Anteprima",
+            "edit": "Modifica",
+            "remove": "Rimuovi",
+            "stopSharing": "Interrompi condivisione",
+            "selectDestination": "Seleziona destinazione",
+            "cloudDrive": "Cloud Drive",
+            "open": "Apri",
+            "color": "Colore",
+            "deletePermanently": "Elimina permanentemente",
+            "copyId": "Copia ID",
+            "info": "Info",
+            "dialogs": {
+                "trash": {
+                    "title": "Cestino",
+                    "description": "Sei sicuro di voler inviare {{name}} nel cestino? Puoi sempre recuperarlo in seguito.",
+                    "continue": "Cestino"
+                },
+                "trashMultiple": {
+                    "title": "Cestino",
+                    "description": "Sei sicuro di voler inviare {{count}} elementi nel cestino? Puoi sempre recuperarli in seguito.",
+                    "continue": "Cestino"
+                },
+                "deletePermanently": {
+                    "title": "Elimina permanentemente",
+                    "description": "Sei sicuro di voler eliminare {{name}} permanentemente? Questa azione non può essere annullata!",
+                    "continue": "Elimina"
+                },
+                "deletePermanentlyMultiple": {
+                    "title": "Elimina permanentemente",
+                    "description": "Sei sicuro di voler eliminare {{count}} elementi permanentemente? Questa azione non può essere annullata!",
+                    "continue": "Elimina"
+                }
+            }
+        },
+        "drive": {
+            "uploadFiles": "Carica file",
+            "uploadFolders": "Carica directory",
+            "newTextFile": "Nuovo file di testo",
+            "newFolder": "Nuova directory"
+        },
+        "notes": {
+            "history": "Cronologia",
+            "participants": "Partecipanti",
+            "type": "Tipo",
+            "pin": "Fissa",
+            "unpin": "Rimuovi fissaggio",
+            "favorite": "Aggiungi ai preferiti",
+            "unfavorite": "Rimuovi dai preferiti",
+            "duplicate": "Duplica",
+            "export": "Esporta",
+            "exportAll": "Esporta tutto",
+            "archive": "Archivia",
+            "restore": "Ripristina",
+            "trash": "Cestino",
+            "delete": "Elimina",
+            "rename": "Rinomina",
+            "tags": "Etichette",
+            "leave": "Lascia",
+            "copyId": "Copia ID",
+            "createTag": "Crea etichetta",
+            "types": {
+                "md": "Markdown",
+                "rich": "Richtext",
+                "text": "Testo",
+                "checklist": "Checklist",
+                "code": "Codice"
+            }
+        },
+        "contacts": {
+            "profile": "Profilo",
+            "remove": "Rimuovi",
+            "block": "Blocca"
+        },
+        "chat": {
+            "input": {
+                "selectFromDrive": "Seleziona dal drive",
+                "attachFiles": "Allega file"
+            }
+        },
+        "chats": {
+            "editName": "Modifica nome",
+            "leave": "Lascia",
+            "delete": "Elimina",
+            "copyId": "Copia ID"
+        },
+        "syncs": {
+            "delete": "Elimina",
+            "pause": "Pausa",
+            "resume": "Riprendi"
+        }
+    },
+    "transfers": {
+        "title": "Trasferimenti",
+        "remaining": "Circa {{time}} rimanenti",
+        "noActiveTransfers": "Nessun trasferimento ancora",
+        "state": {
+            "finished": "Terminato",
+            "queued": "In coda",
+            "started": "Avviato",
+            "error": "Errore",
+            "stopped": "Fermato",
+            "paused": "In pausa",
+            "creatingDirectories": "Creando directory"
+        },
+        "pause": "Pausa",
+        "resume": "Riprendi",
+        "stop": "Ferma"
+    },
+    "chats": {
+        "newMessagesSince": "{{count}} nuovi messaggi da {{since}}",
+        "markAsRead": "Segna come letto",
+        "maxSizeReached": "La dimensione massima del messaggio è limitata a {{chars}} caratteri",
+        "newMessageSince": "{{count}} nuovo messaggio da {{since}}",
+        "showParticipants": "Mostra partecipanti",
+        "hideParticipants": "Nascondi partecipanti",
+        "addParticipants": "Aggiungi partecipanti",
+        "emojisMatching": "Emojis corrispondenti a {{text}}",
+        "empty": {
+            "title": "Nessuna chat ancora",
+            "description": "Le chat che hai creato o a cui sei stato aggiunto appariranno qui",
+            "create": "Crea"
+        },
+        "header": {
+            "title": "Chat end-to-end crittografata",
+            "description": "Filen protegge ogni chat con crittografia end-to-end a conoscenza zero per impostazione predefinita.",
+            "feature1": "Solo i membri della chat possono decrittare e leggere il contenuto",
+            "feature2": "Il sistema garantisce che i dati ricevuti provengano effettivamente dall'utente visualizzato e non siano stati modificati"
+        },
+        "message": {
+            "time": {
+                "now": "Ora",
+                "secondAgo": "{{seconds}} secondo fa",
+                "secondsAgo": "{{seconds}} secondi fa",
+                "minuteAgo": "{{minutes}} minuto fa",
+                "minutesAgo": "{{minutes}} minuti fa",
+                "hourAgo": "{{hours}} ora fa",
+                "hoursAgo": "{{hours}} ore fa",
+                "todayAt": "Oggi alle {{date}}",
+                "yesterdayAt": "Ieri alle {{date}}"
+            },
+            "edited": "Modificato",
+            "reply": "Rispondi",
+            "delete": "Elimina",
+            "edit": "Modifica",
+            "copyId": "Copia ID",
+            "copyText": "Copia testo",
+            "leave": "Lascia"
+        },
+        "input": {
+            "placeholder": "Invia un messaggio...",
+            "typing": "sta scrivendo...",
+            "typingMultiple": "stanno scrivendo...",
+            "replyingTo": "Rispondendo a",
+            "placeholderMobile": "Messaggio..."
+        },
+        "dialogs": {
+            "deleteMessage": {
+                "title": "Elimina messaggio",
+                "description": "Sei sicuro di voler eliminare questo messaggio? Questa azione non può essere annullata!",
+                "continue": "Elimina"
+            },
+            "removeParticipant": {
+                "title": "Rimuovi partecipante",
+                "description": "Sei sicuro di voler rimuovere {{name}} da questa chat?",
+                "continue": "Rimuovi"
+            },
+            "deleteConversation": {
+                "title": "Elimina chat",
+                "description": "Sei sicuro di voler eliminare questa chat? Questa azione non può essere annullata!",
+                "continue": "Elimina"
+            },
+            "leaveConversation": {
+                "title": "Lascia chat",
+                "description": "Sei sicuro di voler lasciare questa chat?",
+                "continue": "Lascia"
+            },
+            "editName": {
+                "title": "Modifica nome",
+                "placeholder": "Nuovo nome",
+                "continue": "Salva"
+            }
+        },
+        "embeds": {
+            "og": {
+                "noTitleAvailable": "Nessun titolo disponibile",
+                "noDescriptionAvailable": "Nessuna descrizione disponibile",
+                "noImageAvailable": "Nessuna immagine disponibile"
+            }
+        },
+        "participants": {
+            "profile": "Profilo",
+            "remove": "Rimuovi"
+        }
+    },
+    "contacts": {
+        "addContact": "Aggiungi contatto",
+        "search": "Cerca...",
+        "empty": "Nessun contatto ancora",
+        "emptySearch": "Nessun risultato trovato per \"{{search}}\"",
+        "openChat": "Apri chat",
+        "more": "Di più",
+        "dialogs": {
+            "unblock": {
+                "title": "Sblocca utente",
+                "description": "Sei sicuro di voler sbloccare {{name}}?",
+                "continue": "Sblocca"
+            },
+            "remove": {
+                "title": "Rimuovi contatto",
+                "description": "Sei sicuro di voler rimuovere {{name}} dai tuoi contatti?",
+                "continue": "Rimuovi"
+            },
+            "block": {
+                "title": "Blocca utente",
+                "description": "Sei sicuro di voler bloccare {{name}}?",
+                "continue": "Blocca"
+            },
+            "sendRequest": {
+                "title": "Invia richiesta di contatto",
+                "placeholder": "Indirizzo email di un utente Filen",
+                "continue": "Invia"
+            }
+        }
+    },
+    "settings": {
+        "dialogs": {
+            "deleteVersions": {
+                "title": "Elimina versioni dei file",
+                "description": "Sei sicuro di voler eliminare tutte le versioni dei file? Questa azione non può essere annullata!",
+                "continue": "Elimina"
+            },
+            "deleteAll": {
+                "title": "Elimina tutti i file e le directory",
+                "description": "Sei sicuro di voler eliminare tutti i file e le directory? Questa azione non può essere annullata!",
+                "continue": "Elimina"
+            },
+            "deleteAll2": {
+                "title": "Elimina tutti i file e le directory",
+                "description": "Sei davvero sicuro? Questa azione non può essere annullata!",
+                "continue": "Elimina"
+            },
+            "deleteAll3": {
+                "title": "Elimina tutti i file e le directory",
+                "description": "Sei sicuro al 100%? Questa azione non può essere annullata!",
+                "continue": "Elimina"
+            },
+            "requestAccountDeletion": {
+                "title": "Cancellazione dell'account",
+                "description": "Sei sicuro di voler eliminare il tuo account e tutti i dati associati? Ti invieremo un'email di conferma. Questa azione non può essere annullata!",
+                "continue": "Richiedi eliminazione"
+            },
+            "logout": {
+                "title": "Logout",
+                "description": "Sei sicuro di voler uscire?",
+                "continue": "Logout"
+            },
+            "clearThumbnailCache": {
+                "title": "Pulisci la cache delle miniature",
+                "description": "Sei sicuro di voler pulire la cache locale delle miniature? Questo libererà spazio di archiviazione locale, ma le anteprime delle immagini dovranno essere generate nuovamente quando necessario.",
+                "continue": "Pulisci"
+            },
+            "cancelSubscription": {
+                "title": "Annulla abbonamento",
+                "description": "Sei sicuro di voler annullare il tuo abbonamento?",
+                "continue": "Annulla abbonamento",
+                "close": "Chiudi"
+            },
+            "nickName": {
+                "title": "Modifica soprannome",
+                "placeholder": "Nuovo soprannome",
+                "continue": "Salva",
+                "invalid": "Il soprannome deve essere lungo tra 3 e 32 caratteri e alfanumerico."
+            },
+            "twoFactorAuthenticationRecoveryKey": {
+                "title": "Chiave di recupero",
+                "description": "Per favore conserva la tua chiave di recupero per l'autenticazione a due fattori in un luogo sicuro. È l'unico modo per riaccedere al tuo account in caso di smarrimento del dispositivo di autenticazione a due fattori!",
+                "continue": "Fatto"
+            }
+        },
+        "general": {
+            "storageUsed": "Spazio di archiviazione utilizzato",
+            "files": "File {{size}}",
+            "versionedFiles": "File versionati {{size}}",
+            "free": "Gratuito {{size}}",
+            "used": "{{used}} di {{max}} utilizzati",
+            "dark": "Scuro",
+            "light": "Chiaro",
+            "system": "Sistema",
+            "noteType": {
+                "md": "Markdown",
+                "rich": "Richtext",
+                "text": "Testo",
+                "checklist": "Checklist",
+                "code": "Codice"
+            },
+            "sections": {
+                "defaultNoteType": {
+                    "name": "Tipo di nota predefinito",
+                    "info": "Cambia il tipo di nota predefinito"
+                },
+                "chatNotifications": {
+                    "name": "Notifiche chat",
+                    "info": "Abilita o disabilita le notifiche chat"
+                },
+                "notificationSound": {
+                    "name": "Suono di notifica",
+                    "info": "Abilita o disabilita il suono di notifica"
+                },
+                "contactNotifications": {
+                    "name": "Notifiche contatti",
+                    "info": "Abilita o disabilita le notifiche contatti"
+                },
+                "theme": {
+                    "name": "Tema",
+                    "info": "Cambia l'aspetto dell'app"
+                },
+                "language": {
+                    "name": "Lingua",
+                    "info": "Cambia la lingua dell'app"
+                },
+                "clearThumbnailCache": {
+                    "name": "Cache miniature",
+                    "info": "Pulisci la cache delle miniature",
+                    "action": "Pulisci"
+                },
+                "logout": {
+                    "name": "Logout",
+                    "info": "Logout",
+                    "action": "Logout"
+                },
+                "minimizeToTray": {
+                    "name": "Minimizza nella barra delle applicazioni",
+                    "info": "Nascondi Filen nella barra delle applicazioni invece di minimizzare la finestra"
+                },
+                "autoLaunch": {
+                    "name": "Avvio automatico",
+                    "info": "Avvia Filen automaticamente all'avvio del sistema"
+                },
+                "exportDesktopLogs": {
+                    "name": "Esporta log",
+                    "info": "Esporta tutti i log del client desktop",
+                    "action": "Esporta"
+                }
+            }
+        },
+        "invite": {
+            "copy": "Copia",
+            "title": "Ricevi fino a 30 GB di spazio di archiviazione invitando altri",
+            "description": "Per ogni amico che inviti a Filen ricevi {{yourEarnings}} - e il tuo amico riceve anche {{otherEarnings}}. È così facile.",
+            "earned": "{{earned}} di {{max}}",
+            "storageEarned": "Spazio di archiviazione guadagnato"
+        },
+        "events": {
+            "empty": "Nessun evento ancora",
+            "fileUploaded": "{{name}} caricato",
+            "fileVersioned": "{{name}} versionato",
+            "versionedFileRestored": "{{name}} ripristinato dalle versioni dei file",
+            "fileMoved": "{{name}} spostato",
+            "fileRenamed": "{{name}} rinominato in {{newName}}",
+            "fileTrash": "{{name}} spostato nel cestino",
+            "fileRm": "{{name}} eliminato",
+            "fileRestored": "{{name}} ripristinato dal cestino",
+            "fileShared": "{{name}} condiviso con {{email}}",
+            "fileLinkEdited": "Link pubblico di {{name}} modificato",
+            "folderTrash": "{{name}} spostato nel cestino",
+            "folderShared": "{{name}} condiviso con {{email}}",
+            "folderMoved": "{{name}} spostato",
+            "folderRenamed": "{{name}} rinominato in {{newName}}",
+            "subFolderCreated": "{{name}} creato",
+            "baseFolderCreated": "{{name}} creato",
+            "folderRestored": "{{name}} ripristinato dal cestino",
+            "folderColorChanged": "Colore di {{name}} cambiato",
+            "login": "Accesso effettuato",
+            "deleteVersioned": "File versionati eliminati",
+            "deleteAll": "Tutti i file e le directory eliminati",
+            "deleteUnfinished": "Caricamenti non completati eliminati",
+            "trashEmptied": "Cestino svuotato",
+            "requestAccountDeletion": "Richiesta di cancellazione dell'account",
+            "2faEnabled": "Autenticazione a Due Fattori abilitata",
+            "2faDisabled": "Autenticazione a Due Fattori disabilitata",
+            "codeRedeemed": "Codice {{code}} riscattato",
+            "emailChanged": "Indirizzo email cambiato in {{email}}",
+            "passwordChanged": "Password cambiata",
+            "removedSharedInItems": "{{count}} elementi condivisi da {{email}} rimossi",
+            "removedSharedOutItems": "{{count}} elementi condivisi con {{email}} rimossi",
+            "folderLinkEdited": "Link di directory modificato",
+            "itemFavoriteAdded": "{{name}} aggiunto ai preferiti",
+            "itemFavoriteRemoved": "{{name}} rimosso dai preferiti",
+            "failedLogin": "Accesso non riuscito",
+            "deleteFolderPermanently": "{{name}} eliminato permanentemente",
+            "deleteFilePermanently": "{{name}} eliminato permanentemente",
+            "emailChangeAttempt": "Registrato un tentativo di cambiamento dell'email"
+        },
+        "invoices": {
+            "plan": "Piano",
+            "method": "Metodo",
+            "date": "Data",
+            "download": "Scarica",
+            "amount": "Importo",
+            "paid": "Pagato",
+            "noInvoices": "Nessuna fattura ancora",
+            "paymentMethod": "Metodo di pagamento"
+        },
+        "subscriptions": {
+            "plan": "Piano",
+            "method": "Metodo",
+            "date": "Data",
+            "download": "Scarica",
+            "amount": "Importo",
+            "status": "Stato",
+            "noSubscriptions": "Nessun abbonamento ancora",
+            "cancel": "Annulla",
+            "storage": "Spazio di archiviazione",
+            "moreInfo": "Ulteriori informazioni sul tuo abbonamento",
+            "paymentMethod": "Metodo di pagamento",
+            "info": "{{storage}} di spazio di archiviazione con caricamenti, download, note e chat illimitati. Sbloccando il pieno potenziale di Filen.",
+            "statuses": {
+                "cancelled": "Annullato",
+                "active": "Attivo",
+                "waiting": "In attesa"
+            }
+        },
+        "plans": {
+            "starter": "Starter",
+            "monthly": "Mensile",
+            "annually": "Annuale",
+            "lifetime": "Vita",
+            "buyNow": "Acquista ora",
+            "payInvoice": "Paga fattura",
+            "sale": "Offerta",
+            "limited": "Disponibilità limitata",
+            "creditCard": "Carta di credito",
+            "crypto": "Criptovalute",
+            "legal1": "Acquistando un piano autorizzi Filen a addebitarti automaticamente per ogni periodo di fatturazione fino a quando non annulli. Puoi annullare in qualsiasi momento tramite la tua pagina dell'account. Nessun rimborso parziale.",
+            "legal2": "Accetti anche automaticamente i nostri",
+            "tos": "Termini di servizio",
+            "and": "e",
+            "privacyPolicy": "Informativa sulla privacy",
+            "features": {
+                "free": {
+                    "1": "Larghezza di banda illimitata",
+                    "2": "Caricamenti illimitati",
+                    "3": "Crittografia lato client",
+                    "4": "Tecnologia a conoscenza zero",
+                    "5": "Sincronizzazione",
+                    "6": "Unità di rete",
+                    "7": "Condivisione file limitata",
+                    "8": "Note limitate",
+                    "9": "Chat limitate"
+                },
+                "pro": {
+                    "1": "Larghezza di banda illimitata",
+                    "2": "Caricamenti illimitati",
+                    "3": "Crittografia lato client",
+                    "4": "Tecnologia a conoscenza zero",
+                    "5": "Sincronizzazione",
+                    "6": "Unità di rete",
+                    "7": "Condivisione file",
+                    "8": "Note illimitate",
+                    "9": "Chat illimitate"
+                }
+            }
+        },
+        "security": {
+            "sections": {
+                "password": {
+                    "name": "Password",
+                    "info": "Cambia la tua password",
+                    "action": "Cambia"
+                },
+                "twoFactorAuthentication": {
+                    "name": "Autenticazione a Due Fattori",
+                    "info": "Abilita o disabilita l'autenticazione a due fattori"
+                },
+                "exportMasterKeys": {
+                    "name": "Esporta chiavi master",
+                    "info": "Esporta le tue chiavi master in modo da poter ripristinare il tuo account in caso di necessità di reimpostare la tua password. Devi esportare le tue chiavi master ogni volta che cambi la tua password.",
+                    "action": "Esporta",
+                    "subInfo": "Per favore esporta le tue chiavi master e conservale in un luogo sicuro separato. Hai bisogno delle tue chiavi master quando reimposti la tua password per evitare la perdita di dati. Devi esportare le tue chiavi master ogni volta che cambi la tua password."
+                },
+                "lockTimeout": {
+                    "name": "Blocca l'app",
+                    "info": "Blocca l'app dopo un certo periodo di inattività. Devi impostare un PIN per il funzionamento dello schermo di blocco",
+                    "values": {
+                        "never": "Mai",
+                        "immediately": "Immediatamente",
+                        "oneMinute": "1 minuto",
+                        "threeMinutes": "3 minuti",
+                        "fiveMinutes": "5 minuti",
+                        "tenMinutes": "10 minuti",
+                        "fifteenMinutes": "15 minuti",
+                        "thirtyMinutes": "30 minuti",
+                        "oneHour": "1 ora",
+                        "threeHours": "3 ore",
+                        "sixHours": "6 ore",
+                        "twelveHours": "12 ore",
+                        "twentyFourHours": "24 ore"
+                    }
+                },
+                "lockPin": {
+                    "name": "PIN di blocco",
+                    "info": "Imposta un PIN per sbloccare l'app",
+                    "action": "Cambia"
+                }
+            },
+            "dialogs": {
+                "lockPin": {
+                    "notMatching": "I PIN inseriti non corrispondono",
+                    "enterPin": "Inserisci un PIN",
+                    "confirmPin": "Conferma PIN"
+                },
+                "lock": {
+                    "wrongPin": "PIN errato"
+                }
+            }
+        },
+        "account": {
+            "sections": {
+                "avatar": {
+                    "name": "Avatar",
+                    "info": "Il tuo avatar sarà visibile pubblicamente",
+                    "action": "Modifica",
+                    "invalid": "Immagine non valida. I tipi di file consentiti sono PNG e JPG, dimensione massima 2MB."
+                },
+                "versionedFiles": {
+                    "name": "File versionati",
+                    "info": "Elimina tutti i file versionati",
+                    "action": "Elimina"
+                },
+                "all": {
+                    "name": "Tutti i file e le directory",
+                    "info": "Elimina tutti i file e le cartelle",
+                    "action": "Elimina"
+                },
+                "email": {
+                    "name": "Indirizzo email",
+                    "info": "Cambia il tuo indirizzo email",
+                    "action": "Cambia"
+                },
+                "nickName": {
+                    "name": "Soprannome",
+                    "info": "Cambia il tuo soprannome",
+                    "action": "Cambia"
+                },
+                "personalInformation": {
+                    "name": "Informazioni personali",
+                    "info": "Modifica le tue informazioni personali. Solo per clienti aziendali. Sarà utilizzato per la fatturazione e non è pubblico.",
+                    "action": "Modifica"
+                },
+                "fileVersioning": {
+                    "name": "Versioning dei file",
+                    "info": "Abilita o disabilita il versioning dei file"
+                },
+                "loginAlerts": {
+                    "name": "Avvisi di accesso",
+                    "info": "Abilita o disabilita gli avvisi di accesso"
+                },
+                "appearOffline": {
+                    "name": "Apparire offline",
+                    "info": "Apparire offline nelle chat"
+                },
+                "requestAccountData": {
+                    "name": "Richiedi dati dell'account",
+                    "info": "Richiedi tutti i dati personali che conserviamo secondo il GDPR",
+                    "action": "Richiedi"
+                },
+                "requestAccountDeletion": {
+                    "name": "Richiedi cancellazione dell'account",
+                    "info": "Richiedi la cancellazione del tuo account. Ti invieremo un'email di conferma",
+                    "action": "Richiedi"
+                }
+            }
+        }
+    },
+    "drive": {
+        "header": {
+            "name": "Nome",
+            "size": "Dimensione",
+            "modified": "Modificato"
+        },
+        "list": {
+            "item": {
+                "sharedWith": "Condiviso con {{count}}"
+            }
+        },
+        "dialogs": {
+            "createTextFile": {
+                "title": "Crea file di testo",
+                "placeholder": "Nome",
+                "continue": "Crea",
+                "invalidFileName": "Nome file non valido."
+            },
+            "createDirectory": {
+                "title": "Crea directory",
+                "placeholder": "Nome",
+                "continue": "Crea",
+                "invalidDirectoryName": "Nome directory non valido."
+            },
+            "rename": {
+                "title": "Rinomina",
+                "placeholder": "Nuovo nome",
+                "continue": "Rinomina",
+                "invalidFileName": "Nome file non valido.",
+                "invalidDirectoryName": "Nome directory non valido."
+            },
+            "share": {
+                "title": "Condividi",
+                "placeholder": "Indirizzo email di un utente Filen",
+                "continue": "Condividi"
+            }
+        },
+        "emptyPlaceholder": {
+            "uploadFiles": "Carica file",
+            "search": {
+                "title": "Cerca",
+                "info": "Nessun risultato trovato per \"{{search}}\""
+            },
+            "publicLink": {
+                "title": "Directory vuota",
+                "info": "Il proprietario di questa directory non ha ancora caricato alcun file"
+            },
+            "drive": {
+                "title": "Nessun file o directory caricato ancora",
+                "info": "Trascina e rilascia file o directory qui o premi il pulsante qui sotto"
+            },
+            "trash": {
+                "title": "Niente nel cestino ancora",
+                "info": "I file e le directory inviati nel cestino appariranno qui"
+            },
+            "recents": {
+                "title": "Nessun file caricato ancora",
+                "info": "I file caricati di recente appariranno qui"
+            },
+            "links": {
+                "title": "Nessun link pubblico creato ancora",
+                "info": "I link pubblici di file e directory appariranno qui"
+            },
+            "favorites": {
+                "title": "Niente aggiunto ai preferiti ancora",
+                "info": "I file e le directory preferiti appariranno qui"
+            },
+            "sharedIn": {
+                "title": "Niente condiviso con te ancora",
+                "info": "I file e le directory condivisi appariranno qui"
+            },
+            "sharedOut": {
+                "title": "Niente condiviso con altri ancora",
+                "info": "I file e le directory condivisi appariranno qui"
+            }
+        }
+    },
+    "publicLink": {
+        "invalid": "Link pubblico non valido",
+        "invalidInfo": "Questo link pubblico è scaduto o non esiste",
+        "back": "Torna indietro",
+        "directory": {
+            "downloadWholeDirectory": "Scarica directory intera",
+            "downloadDirectory": "Scarica directory"
+        },
+        "sideBar": {
+            "ad": {
+                "header": "Siamo Filen",
+                "title": "Archiviazione cloud privata e sicura",
+                "info1": "Privacy per design",
+                "info2": "Crittografia end-to-end",
+                "info3": "Tecnologia a conoscenza zero",
+                "cta": "10 GB di spazio gratuito"
+            },
+            "reportAbuse": "Segnala abuso"
+        },
+        "auth": {
+            "wrongPassword": "Password errata",
+            "title": "Questo link è protetto da password",
+            "subTitle": "Inserisci la password fornita dal mittente per accedere.",
+            "password": "Password",
+            "passwordPlaceholder": "Password",
+            "access": "Accesso"
+        }
+    },
+    "notes": {
+        "contentPlaceholder": "Contenuto della nota...",
+        "maxSizeReached": "La dimensione massima della nota è limitata a {{chars}} caratteri",
+        "empty": {
+            "title": "Nessuna nota ancora",
+            "description": "Le note che hai creato o a cui sei stato aggiunto appariranno qui",
+            "create": "Crea"
+        },
+        "dialogs": {
+            "removeParticipant": {
+                "title": "Rimuovi partecipante",
+                "description": "Sei sicuro di voler rimuovere {{name}} da questa nota?",
+                "continue": "Rimuovi"
+            },
+            "deleteNote": {
+                "title": "Elimina nota",
+                "description": "Sei sicuro di voler eliminare {{name}}? Questa azione non può essere annullata!",
+                "continue": "Elimina"
+            },
+            "deleteTag": {
+                "title": "Elimina etichetta",
+                "description": "Sei sicuro di voler eliminare {{name}}? Questa azione non può essere annullata!",
+                "continue": "Elimina"
+            },
+            "renameTag": {
+                "title": "Rinomina",
+                "placeholder": "Nuovo nome",
+                "continue": "Rinomina"
+            },
+            "createTag": {
+                "title": "Crea etichetta",
+                "placeholder": "Nome",
+                "continue": "Crea"
+            },
+            "renameNote": {
+                "title": "Rinomina",
+                "placeholder": "Nuovo nome",
+                "continue": "Rinomina"
+            },
+            "leaveNote": {
+                "title": "Lascia nota",
+                "description": "Sei sicuro di voler lasciare {{name}}? Non potrai più accedere alla nota.",
+                "continue": "Lascia"
+            }
+        }
+    },
+    "previewDialog": {
+        "unsavedChanges": {
+            "title": "Modifiche non salvate",
+            "description": "Sei sicuro di voler uscire senza salvare? Tutte le modifiche andranno perse.",
+            "continue": "Chiudi"
+        }
+    },
+    "sharedIn": {
+        "dialogs": {
+            "remove": {
+                "title": "Rimuovi",
+                "description": "Sei sicuro di voler rimuovere {{item}} dalle tue condivisioni? Non potrai più accedervi!",
+                "continue": "Rimuovi"
+            }
+        }
+    },
+    "desktop": {
+        "dialogs": {
+            "close": {
+                "title": "Chiudi",
+                "description": "Sei sicuro di voler uscire da Filen?",
+                "continue": "Esci"
+            }
+        }
+    },
+    "trash": {
+        "dialogs": {
+            "empty": {
+                "title": "Svuota cestino",
+                "description": "Sei sicuro di voler svuotare il tuo cestino? Questa azione non può essere annullata!",
+                "continue": "Svuota"
+            }
+        }
+    },
+    "notifications": {
+        "chat": "Chat",
+        "contactRequest": "Richiesta di contatto",
+        "contactRequestInfo": "{{name}} ti ha inviato una richiesta di contatto"
+    },
+    "cookieConsent": {
+        "description": "Questo sito utilizza cookie per misurare e migliorare la tua esperienza.",
+        "optOut": "Rifiuta",
+        "onlyNeeded": "Solo necessari",
+        "accept": "Accetta"
+    },
+    "mounts": {
+        "networkDrive": {
+            "mountedAt": "Montato su {{letter}}",
+            "browse": "Esplora",
+            "clear": "Pulisci",
+            "missingDeps": "Dipendenze mancanti",
+            "missingDepsWindows": "Per utilizzare l'unità di rete è necessario avere WinFSP installato sul sistema.",
+            "missingDepsLinux": "Per utilizzare l'unità di rete è necessario avere FUSE3 installato sul sistema.",
+            "missingDepsInstructions": "Istruzioni per l'installazione",
+            "cacheUsed": "{{size}} utilizzati",
+            "description": "Monta il tuo cloud drive come unità di rete, rendendo facile l'accesso e la gestione dei tuoi file direttamente dal computer. Goditi l'integrazione senza soluzione di continuità, la sincronizzazione in tempo reale e l'accesso sicuro ai tuoi dati, tutto all'interno del tuo esploratore di file familiare.",
+            "unixDescription": "Monta il tuo cloud drive all'interno di una directory locale, rendendo facile l'accesso e la gestione dei tuoi file direttamente dal computer. Goditi l'integrazione senza soluzione di continuità, la sincronizzazione in tempo reale e l'accesso sicuro ai tuoi dati, tutto all'interno del tuo esploratore di file familiare.",
+            "sudo": "Per montare e smontare il tuo cloud drive, il client potrebbe aver bisogno dei diritti di amministrazione. Ti preghiamo di consentire l'accesso quando richiesto.",
+            "limitations": "L'installazione, l'esecuzione o l'estrazione di programmi e archivi sull'unità di rete non è supportata.",
+            "sections": {
+                "active": {
+                    "name": "Attivo"
+                },
+                "enabled": {
+                    "name": "Abilitato",
+                    "info": "Abilita o disabilita l'unità di rete. Aggiorna il tuo esploratore quando attivi o disattivi questa opzione"
+                },
+                "mountPoint": {
+                    "name": "Punto di montaggio",
+                    "info": "Imposta il punto di montaggio su una directory locale. La directory locale deve essere vuota e leggibile e scrivibile",
+                    "change": "Cambia"
+                },
+                "driveLetter": {
+                    "name": "Lettera dell'unità",
+                    "info": "Imposta la lettera dell'unità per l'unità di rete. Solo le lettere dell'unità disponibili verranno visualizzate"
+                },
+                "browse": {
+                    "name": "Esplora",
+                    "info": "Esplora l'unità di rete utilizzando il tuo esploratore predefinito"
+                },
+                "cache": {
+                    "name": "Cache",
+                    "info": "Il caching accelera notevolmente la navigazione nell'unità di rete"
+                },
+                "cacheSize": {
+                    "name": "Dimensione della cache",
+                    "info": "Ti consigliamo di impostare la dimensione della cache il più alta possibile. Il client utilizzerà il tuo disco locale per accelerare notevolmente l'unità di rete"
+                },
+                "cachePath": {
+                    "name": "Posizione della cache",
+                    "info": "Cambia la posizione della cache dell'unità di rete. Deve essere su un disco interno. Utilizzerà la directory di installazione dell'app per impostazione predefinita se non viene modificata"
+                },
+                "readOnly": {
+                    "name": "Sola lettura",
+                    "info": "Monta l'unità di rete in sola lettura"
+                }
+            },
+            "dialogs": {
+                "cleanupCache": {
+                    "title": "Pulisci cache",
+                    "description": "Sei sicuro di voler pulire la cache locale? Pulire la cache può rallentare notevolmente i tempi di caricamento iniziali dei file.",
+                    "continue": "Pulisci"
+                },
+                "disable": {
+                    "title": "Disabilita",
+                    "description": "Sei sicuro di voler disabilitare l'unità di rete? Ogni operazione attiva su di essa sarà annullata o darà errore. Ti preghiamo di assicurarti di non utilizzarla attivamente.",
+                    "continue": "Disabilita"
+                }
+            },
+            "errors": {
+                "invalidMountPoint": "Punto di montaggio non valido.",
+                "mountPointNotEmpty": "Il punto di montaggio deve essere una directory vuota.",
+                "pathNotInHomeDir": "Il punto di montaggio deve trovarsi all'interno della tua directory home (/home/<tuoNomeUtente>).",
+                "pathNotInUserDir": "Il punto di montaggio deve trovarsi all'interno della tua directory utente (/Users/<tuoNomeUtente>).",
+                "invalidCachePath": "La posizione della cache deve trovarsi su un disco interno con almeno 10 GB di spazio libero.",
+                "cachePathNotReadableWritable": "La posizione della cache non è leggibile o scrivibile.",
+                "invalidCachePathLength": "Il percorso della posizione della cache è troppo lungo."
+            },
+            "transfers": {
+                "uploading": "Caricamento di {{total}} file in background",
+                "uploadingPlural": "Caricamento di {{total}} file in background",
+                "uploadingSpeed": "Caricamento di {{total}} file in background a {{speed}}",
+                "uploadingPluralSpeed": "Caricamento di {{total}} file in background a {{speed}}",
+                "everythingUploaded": "Tutto sincronizzato"
+            }
+        },
+        "webdav": {
+            "copyConnect": "Copia",
+            "description": "Avvia un server WebDAV locale, fornendo un protocollo standardizzato per accedere e gestire il tuo cloud drive. Ciò consente la compatibilità con un'ampia gamma di applicazioni e dispositivi che supportano WebDAV, migliorando l'accessibilità e le capacità di gestione dei file.",
+            "sections": {
+                "active": {
+                    "name": "Attivo"
+                },
+                "enabled": {
+                    "name": "Abilitato",
+                    "info": "Abilita o disabilita il server WebDAV"
+                },
+                "protocol": {
+                    "name": "Protocollo HTTP",
+                    "info": "Cambia il protocollo HTTP"
+                },
+                "hostname": {
+                    "name": "Nome host",
+                    "info": "Cambia il nome host su cui il server deve ascoltare"
+                },
+                "port": {
+                    "name": "Porta",
+                    "info": "Cambia la porta su cui il server deve ascoltare"
+                },
+                "authMode": {
+                    "name": "Modalità di autenticazione",
+                    "info": "Cambia la modalità di autenticazione"
+                },
+                "username": {
+                    "name": "Nome utente",
+                    "info": "Cambia il nome utente per l'autenticazione HTTP. Questo non dovrebbe essere la tua email o soprannome di Filen"
+                },
+                "password": {
+                    "name": "Password",
+                    "info": "Cambia la password per l'autenticazione HTTP. Questa non dovrebbe essere la tua password di Filen"
+                },
+                "proxyMode": {
+                    "name": "Modalità proxy",
+                    "info": "Abilita la modalità proxy"
+                },
+                "connect": {
+                    "name": "Connetti",
+                    "info": "Copia l'URL WebDAV"
+                }
+            },
+            "dialogs": {
+                "disable": {
+                    "title": "Disabilita",
+                    "description": "Sei sicuro di voler disabilitare il server WebDAV? Ogni operazione attiva su di esso sarà annullata o darà errore. Ti preghiamo di assicurarti di non utilizzarlo attivamente.",
+                    "continue": "Disabilita"
+                }
+            },
+            "errors": {
+                "invalidPort": "Porta non valida. Intervallo accettato: {{range}}.",
+                "invalidHostname": "Nome host non valido."
+            }
+        },
+        "s3": {
+            "copyConnect": "Copia",
+            "description": "Avvia un server S3 locale, fornendo un protocollo standardizzato per accedere e gestire il tuo cloud drive. Ciò consente la compatibilità con un'ampia gamma di applicazioni e dispositivi che supportano S3, migliorando l'accessibilità e le capacità di gestione dei file.",
+            "info": "Quando ti connetti al server S3, devi impostare la regione su \"filen\" e abilitare \"s3ForcePathStyle\".",
+            "sections": {
+                "active": {
+                    "name": "Attivo"
+                },
+                "enabled": {
+                    "name": "Abilitato",
+                    "info": "Abilita o disabilita il server S3"
+                },
+                "protocol": {
+                    "name": "Protocollo HTTP",
+                    "info": "Cambia il protocollo HTTP"
+                },
+                "hostname": {
+                    "name": "Nome host",
+                    "info": "Cambia il nome host su cui il server deve ascoltare"
+                },
+                "port": {
+                    "name": "Porta",
+                    "info": "Cambia la porta su cui il server deve ascoltare"
+                },
+                "accessKeyId": {
+                    "name": "AccessKeyId",
+                    "info": "Cambia l'AccessKeyId. Questo non dovrebbe essere la tua email o soprannome di Filen"
+                },
+                "secretKeyId": {
+                    "name": "SecretKeyId",
+                    "info": "Cambia il SecretKeyId. Questo non dovrebbe essere la tua password di Filen"
+                },
+                "connect": {
+                    "name": "Connetti",
+                    "info": "Copia l'URL WebDAV"
+                }
+            },
+            "dialogs": {
+                "disable": {
+                    "title": "Disabilita",
+                    "description": "Sei sicuro di voler disabilitare il server S3? Ogni operazione attiva su di esso sarà annullata o darà errore. Ti preghiamo di assicurarti di non utilizzarlo attivamente.",
+                    "continue": "Disabilita"
+                }
+            },
+            "errors": {
+                "invalidPort": "Porta non valida. Intervallo accettato: {{range}}.",
+                "invalidHostname": "Nome host non valido."
+            }
+        }
+    },
+    "syncs": {
+        "eventsTitle": "Eventi",
+        "ignoredTitle": "Ignorati",
+        "issuesTitle": "Problemi",
+        "settingsTitle": "Impostazioni",
+        "transfersTitle": "Trasferimenti",
+        "noTransfers": "Nessun trasferimento attivo",
+        "noEventsYet": "Nessun evento ancora",
+        "nothingIgnored": "Nessun file o directory ignorati",
+        "noIssues": "Nessun problema",
+        "info": {
+            "progress": "Sincronizzazione di {{items}} elementi ({{total}}) a {{speed}}, circa {{remaining}} rimanenti",
+            "progressNoEstimate": "Sincronizzazione di {{items}} elementi ({{total}})",
+            "upToDate": "Tutto sincronizzato",
+            "errors": "{{count}} errori di sincronizzazione",
+            "errorsResolve": "Risolvi",
+            "paused": "La sincronizzazione è in pausa",
+            "processingDeltas": "Elaborazione delle differenze",
+            "syncingChanges": "Sincronizzazione delle modifiche",
+            "savingState": "Salvataggio dello stato",
+            "waitingForLocalDirectoryChanges": "In attesa di modifiche locali",
+            "acquiringLock": "Acquisendo il blocco di sincronizzazione",
+            "gettingTrees": "Lettura della directory locale e cloud",
+            "remoteSmokeTestFailed": "Impossibile leggere la directory cloud, potrebbe non esistere o non sei connesso a Internet",
+            "localSmokeTestFailed": "Impossibile leggere la directory locale, potrebbe non esistere o non hai accesso in lettura o scrittura"
+        },
+        "empty": {
+            "title": "Nessuna sincronizzazione impostata ancora",
+            "description": "Puoi sincronizzare le tue directory locali con il cloud o le directory del cloud con il tuo dispositivo",
+            "create": "Crea"
+        },
+        "events": {
+            "createLocalDirectory": "{{name}} creato localmente",
+            "renameLocalDirectory": "{{name}} rinominato localmente",
+            "deleteLocalDirectory": "{{name}} eliminato localmente",
+            "createRemoteDirectory": "{{name}} creato nel cloud",
+            "renameRemoteDirectory": "{{name}} rinominato nel cloud",
+            "deleteRemoteDirectory": "{{name}} eliminato nel cloud",
+            "deleteLocalFile": "{{name}} eliminato localmente",
+            "deleteRemoteFile": "{{name}} eliminato nel cloud",
+            "download": "{{name}} scaricato dal cloud",
+            "upload": "{{name}} caricato nel cloud",
+            "renameLocalFile": "{{name}} rinominato localmente",
+            "renameRemoteFile": "{{name}} rinominato nel cloud"
+        },
+        "settings": {
+            "sections": {
+                "delete": {
+                    "name": "Elimina",
+                    "info": "Elimina la sincronizzazione",
+                    "delete": "Elimina"
+                },
+                "pause": {
+                    "name": "Pausa",
+                    "info": "Metti in pausa la sincronizzazione"
+                },
+                "mode": {
+                    "name": "Modalità di sincronizzazione",
+                    "info": "Cambia la modalità di sincronizzazione"
+                },
+                "forceSync": {
+                    "name": "Forza sincronizzazione",
+                    "info": "Reimposta la cache interna e forzare la nuova scansione della directory locale e cloud",
+                    "forceSync": "Forza sincronizzazione"
+                },
+                "excludeDotFiles": {
+                    "name": "Escludi file nascosti",
+                    "info": "Attiva o disattiva l'esclusione di file/percorso nascosti (raccomandato)"
+                },
+                "filenIgnore": {
+                    "name": ".filenignore",
+                    "info": "Modifica un file di esclusione per file o directory locali o cloud. Funziona proprio come un file .gitignore",
+                    "edit": "Modifica"
+                },
+                "disableLocalTrash": {
+                    "name": "Disabilita cestino locale",
+                    "info": "Abilita o disabilita il cestino locale. Quando disabilitato, il client eliminerà permanentemente file o directory invece di spostarli nella directory del cestino locale all'interno del percorso di sincronizzazione locale"
+                }
+            }
+        },
+        "dialogs": {
+            "delete": {
+                "title": "Elimina sincronizzazione",
+                "description": "Sei sicuro di voler eliminare questa sincronizzazione?",
+                "continue": "Elimina"
+            },
+            "resetErrors": {
+                "title": "Risolvi errori",
+                "description": "Sei sicuro di voler contrassegnare tutti gli errori come risolti e continuare la sincronizzazione? Ti preghiamo di assicurarti che tutti gli errori siano risolti.",
+                "continue": "Risolvi"
+            },
+            "filenIgnore": {
+                "title": ".filenignore",
+                "save": "Salva"
+            },
+            "deleteIssue": {
+                "title": "Elimina problema",
+                "description": "Sei sicuro di voler eliminare questo problema? Ti preghiamo di assicurarti che sia stato risolto o fosse temporaneo, altrimenti tornerà eventualmente.",
+                "continue": "Elimina"
+            }
+        },
+        "ignored": {
+            "types": {
+                "dotFile": "File nascosto",
+                "defaultIgnore": "Ignorato per impostazione predefinita",
+                "empty": "Vuoto"
+            },
+            "reasons": {
+                "dotFile": "Il file o la directory si trova in un percorso nascosto",
+                "defaultIgnore": "Il file o la directory si trova in un percorso ignorato per impostazione predefinita",
+                "empty": "Il file è vuoto",
+                "invalidPath": "Il file o la directory si trova in un percorso non valido",
+                "symlink": "Il file o la directory è un collegamento simbolico. Il client non segue i collegamenti simbolici per evitare loop di sincronizzazione infiniti.",
+                "duplicate": "Il file o il percorso della directory esiste due volte",
+                "filenIgnore": "File o directory ignorato da .filenignore",
+                "invalidType": "L'elemento non è un file o una directory",
+                "nameLength": "Nome del file o della directory troppo lungo",
+                "pathLength": "Percorso del file o della directory troppo lungo",
+                "permissions": "Permessi insufficienti"
+            }
+        },
+        "issues": {
+            "types": {
+                "title": {
+                    "permission": "Permessi",
+                    "io": "I/O",
+                    "noSpace": "Spazio non sufficiente o file watchers disponibili",
+                    "openFiles": "Limite file aperti",
+                    "fileOrDirExists": "File o directory esiste",
+                    "fileOrDirNotFound": "File o directory non trovato",
+                    "isFile": "File",
+                    "isDir": "Directory",
+                    "notDir": "Non è una directory",
+                    "badConnection": "Connessione",
+                    "fileOrDirTemporarilyUnavailable": "File o directory temporaneamente non disponibile",
+                    "unknown": "Errore sconosciuto",
+                    "dirNotEmpty": "Directory non vuota",
+                    "fileOrDirNameTooLong": "Nome del file o della directory/path troppo lungo"
+                },
+                "info": {
+                    "permission": "Assicurati che il client abbia tutti i permessi necessari per accedere alla directory di sincronizzazione locale.",
+                    "io": "Assicurati che la tua directory di sincronizzazione locale e il supporto di archiviazione sottostante funzionino. Il client non riesce ad accedervi correttamente.",
+                    "noSpace": "Non hai abbastanza spazio di archiviazione locale disponibile o il sistema ha esaurito i file watchers disponibili.",
+                    "openFiles": "Il client ha raggiunto il limite di file aperti. Aumenta il limite.",
+                    "fileOrDirExists": "Il file o la directory esiste già. Questo è probabilmente un problema temporaneo, prova a riavviare il client.",
+                    "fileOrDirNotFound": "File o directory non trovato. Questo è probabilmente un problema temporaneo, prova a riavviare il client.",
+                    "isFile": "Questo è probabilmente un problema temporaneo, prova a riavviare il client.",
+                    "isDir": "Questo è probabilmente un problema temporaneo, prova a riavviare il client.",
+                    "notDir": "Questo è probabilmente un problema temporaneo, prova a riavviare il client.",
+                    "badConnection": "Assicurati di essere connesso a Internet e di poter accedere a Filen senza problemi.",
+                    "fileOrDirTemporarilyUnavailable": "Questo è probabilmente un problema temporaneo, prova a riavviare il client.",
+                    "unknown": "Errore sconosciuto, prova a riavviare il client.",
+                    "dirNotEmpty": "La directory non è vuota. Questo è probabilmente un problema temporaneo, prova a riavviare il client.",
+                    "fileOrDirNameTooLong": "Nome o percorso del file o della directory troppo lungo per il tuo filesystem locale."
+                }
+            }
+        }
+    },
+    "isOnline": {
+        "title": "Qualcuno ha scollegato il cavo?",
+        "info": "Stiamo riscontrando problemi a connetterti alla nostra piattaforma, controlla la tua connessione a Internet.",
+        "infoSub": "Contattaci se la tua connessione Internet funziona."
+    },
+    "404": {
+        "info": "Oops, la pagina che stai cercando non esiste.",
+        "btn": "Vai alla homepage"
+    },
+    "announcements": {
+        "gotIt": "Capito"
+    },
+    "maintenance": {
+        "title": "Filen è attualmente in manutenzione",
+        "info": "Stiamo attualmente eseguendo alcune operazioni di manutenzione per migliorare la tua esperienza. La nostra piattaforma tornerà presto, fresca e migliorata.",
+        "infoSub": "Grazie per la tua pazienza! Stiamo lavorando duramente dietro le quinte per offrirti nuove funzionalità. Resta sintonizzato!"
+    }
+}

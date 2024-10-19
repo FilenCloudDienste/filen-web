@@ -1,0 +1,1628 @@
+{
+    "cloudDrive": "Cloud Drive",
+    "new": "Nový",
+    "image": "Obrázek",
+    "empty": "Prázdný",
+    "copiedToClipboard": "Zkopírováno do schránky",
+    "everyone": "Všichni",
+    "unknownUser": "Neznámý uživatel",
+    "login": {
+        "header": "Přihlášení",
+        "description": "Zadejte níže svou e-mailovou adresu a heslo pro přihlášení do svého účtu",
+        "useTwoFactorRecoveryKey": "Použít místo toho obnovovací klíč",
+        "buttons": {
+            "login": "Přihlásit se",
+            "createAccount": "Vytvořit účet",
+            "forgotPassword": "Zapomněli jste heslo?"
+        },
+        "placeholders": {
+            "normal": {
+                "email": "E-mailová adresa",
+                "password": "Heslo",
+                "2faCode": "2FA kód",
+                "2faRecoveryKey": "Obnovovací klíč"
+            },
+            "example": {
+                "email": "me@example.com",
+                "password": "****************",
+                "2faCode": "381740",
+                "2faRecoveryKey": "Obnovovací klíč"
+            }
+        },
+        "dialogs": {
+            "forgotPassword": {
+                "title": "Zapomenuté heslo",
+                "continue": "Odeslat pokyny",
+                "placeholder": "E-mailová adresa"
+            }
+        },
+        "alerts": {
+            "emailOrPasswordWrong": "E-mail nebo heslo je nesprávné",
+            "enter2FA": "Zadejte prosím svůj kód dvoufaktorové autentizace",
+            "enter2FARecoveryKey": "Zadejte prosím svůj obnovovací klíč dvoufaktorové autentizace",
+            "forgotPasswordSent": "Pokyny pro resetování hesla byly odeslány na {{email}}"
+        }
+    },
+    "register": {
+        "header": "Vytvořit účet",
+        "description": "Zadejte níže svou e-mailovou adresu a heslo pro vytvoření účtu",
+        "buttons": {
+            "register": "Vytvořit účet",
+            "resendConfirmation": "Znovu odeslat potvrzovací e-mail",
+            "login": "Přihlásit se"
+        },
+        "passwordStrength": {
+            "length": "Délka",
+            "uppercase": "Velká písmena",
+            "lowercase": "Malá písmena",
+            "specialChars": "Speciální znaky"
+        },
+        "placeholders": {
+            "normal": {
+                "email": "E-mailová adresa",
+                "password": "Heslo",
+                "confirmPassword": "Potvrdit heslo"
+            },
+            "example": {
+                "email": "me@example.com",
+                "password": "****************",
+                "confirmPassword": "****************"
+            }
+        },
+        "dialogs": {
+            "confirmationSend": {
+                "title": "Znovu odeslat potvrzovací e-mail",
+                "continue": "Odeslat",
+                "placeholder": "E-mailová adresa"
+            }
+        },
+        "alerts": {
+            "passwordWeak": "Vaše zvolené heslo je příliš slabé",
+            "confirmationSent": "Potvrzovací e-mail byl odeslán na {{email}}",
+            "passwordsNotMatching": "Hesla se neshodují",
+            "success": {
+                "title": "Účet vytvořen",
+                "continue": "Pokračovat",
+                "description": "Odeslali jsme potvrzovací e-mail na {{email}}. Klikněte prosím na odkaz v e-mailu pro potvrzení registrace. Nezapomeňte zkontrolovat také svou složku se spamem."
+            }
+        }
+    },
+    "reset": {
+        "header": "Obnovit heslo",
+        "description": "Zadejte svou e-mailovou adresu, nové heslo a importujte své hlavní klíče pro obnovu hesla",
+        "importMasterKeys": "Importovat klíče",
+        "masterKeysImported": "Klíče importovány",
+        "masterKeysNotImported": "Žádné klíče nebyly importovány",
+        "placeholders": {
+            "normal": {
+                "email": "E-mailová adresa",
+                "password": "Heslo",
+                "confirmPassword": "Potvrdit heslo"
+            },
+            "example": {
+                "email": "me@example.com",
+                "password": "****************",
+                "confirmPassword": "****************"
+            }
+        },
+        "buttons": {
+            "reset": "Obnovit",
+            "back": "Zpět"
+        },
+        "dialogs": {
+            "noMasterKeysImported": {
+                "title": "Obnovit heslo",
+                "continue": "Rozumím",
+                "description": "Rozumím, že pokud obnovím své heslo bez svých exportovaných hlavních klíčů, zpřístupním všechna data uložená na svém účtu kvůli tomu, jak funguje zero-knowledge end-to-end encryption."
+            },
+            "noMasterKeysImported2": {
+                "title": "Obnovit heslo",
+                "continue": "Jsem si jistý",
+                "description": "Jste si jisti? Pokud neimportujete své hlavní klíče, odstraníte všechna data uložená na svém účtu. Tuto výstrahu můžete jednoduše ignorovat, pokud nemáte soubor svých hlavních klíčů a chcete obnovit svůj účet."
+            },
+            "noMasterKeysImported3": {
+                "title": "Obnovit heslo",
+                "continue": "Ano",
+                "description": "Jste si opravdu jisti?"
+            }
+        },
+        "alerts": {
+            "invalidMasterKeysFile": "Neplatný soubor hlavních klíčů",
+            "invalidMasterKeysFileWrongUserId": "Tyto klíče patří k jinému účtu",
+            "masterKeysImported": "Hlavní klíče importovány",
+            "passwordWeak": "Vaše zvolené heslo je příliš slabé",
+            "passwordsNotMatching": "Hesla se neshodují",
+            "invalidMasterKeys": "Neplatné hlavní klíče",
+            "passwordChanged": "Heslo bylo úspěšně změněno"
+        }
+    },
+    "auth": {
+        "footer": {
+            "tos": "Podmínky služby",
+            "privacy": "Ochrana soukromí"
+        }
+    },
+    "api": {
+        "errors": {
+            "invalid_params": "Neplatné parametry",
+            "internal_error": "Interní chyba",
+            "rate_limited": "Omezení rychlosti"
+        }
+    },
+    "topbar": {
+        "placeholders": {
+            "normal": {
+                "search": "Hledat v tomto adresáři..."
+            },
+            "example": {
+                "search": "Hledat v tomto adresáři..."
+            }
+        }
+    },
+    "dropZone": {
+        "cta": "Nahrát zde",
+        "chatsCta": "Připojit k chatu"
+    },
+    "topBar": {
+        "breadcrumb": {
+            "cloudDrive": "Cloud Drive"
+        },
+        "searchInThisFolder": "Hledat v tomto adresáři...",
+        "breadcrumbs": {
+            "recents": "Nedávné",
+            "cloudDrive": "Cloud Drive",
+            "links": "Odkazy",
+            "sharedWithMe": "Sdílené se mnou",
+            "sharedWithOthers": "Sdílené s ostatními",
+            "favorites": "Oblíbené",
+            "trash": "Koš",
+            "directory": "Adresář"
+        },
+        "listView": "Zobrazení seznamu",
+        "gridView": "Zobrazení mřížky"
+    },
+    "innerSideBar": {
+        "top": {
+            "settings": "Nastavení",
+            "notes": "Poznámky",
+            "chats": "Chaty",
+            "contacts": "Kontakty",
+            "syncs": "Synchronizace",
+            "mounts": "Připojení"
+        },
+        "bottom": {
+            "settings": "Nastavení"
+        },
+        "notes": {
+            "search": "Hledat...",
+            "tags": {
+                "all": "Všechny",
+                "favorites": "Oblíbené",
+                "pinned": "Připnuté"
+            },
+            "createNote": "Vytvořit poznámku",
+            "createTag": "Vytvořit tag",
+            "empty": "Žádné poznámky zatím",
+            "emptyCreate": "Vytvořte jednu",
+            "emptySearch": "Nebylo nalezeno nic pro \"{{search}}\""
+        },
+        "chats": {
+            "empty": "Žádné chaty zatím",
+            "emptyCreate": "Vytvořte jeden",
+            "search": "Hledat...",
+            "createChat": "Vytvořit chat",
+            "emptySearch": "Nebylo nalezeno nic pro \"{{search}}\""
+        },
+        "recents": "Nedávné",
+        "cloudDrive": "Cloud Drive",
+        "links": "Odkazy",
+        "sharedWithMe": "Sdílené se mnou",
+        "sharedWithOthers": "Sdílené s ostatními",
+        "favorites": "Oblíbené",
+        "trash": "Koš",
+        "settings": {
+            "general": "Obecné",
+            "invoices": "Faktury",
+            "subscriptions": "Předplatné",
+            "account": "Účet",
+            "events": "Události",
+            "security": "Bezpečnost",
+            "invite": "Pozvat",
+            "plans": "Plány"
+        },
+        "contacts": {
+            "online": "Online",
+            "offline": "Offline",
+            "all": "Všechny",
+            "blocked": "Blokováno",
+            "in": "Žádosti",
+            "out": "Čekající"
+        },
+        "mounts": {
+            "networkDrive": "Síťový disk",
+            "s3": "S3",
+            "webdav": "WebDAV"
+        },
+        "syncs": {
+            "empty": "Žádné synchronizace zatím",
+            "emptyCreate": "Vytvořte jednu",
+            "nothingFound": "Nebylo nalezeno nic pro \"{{search}}\"",
+            "createSync": "Vytvořit synchronizaci",
+            "search": "Hledat...",
+            "emptySearch": "Nebylo nalezeno nic pro \"{{search}}\""
+        }
+    },
+    "sideBar": {
+        "cloudDrive": "Cloud Drive",
+        "transfers": "Přenosy",
+        "notes": "Poznámky",
+        "chats": "Chaty",
+        "contacts": "Kontakty",
+        "settings": "Nastavení",
+        "syncs": "Synchronizace",
+        "mounts": "Připojení",
+        "terminal": "Terminál"
+    },
+    "dialogs": {
+        "cancel": "Zrušit",
+        "selectDriveItem": {
+            "title": "Vybrat",
+            "submit": "Vybrat",
+            "newFolder": "Nový adresář",
+            "empty": "Žádné soubory nebo adresáře zatím nebyly nahrány",
+            "selectRoot": "Vybrat Cloud Drive"
+        },
+        "selectContacts": {
+            "title": "Vybrat kontakty",
+            "submit": "Vybrat",
+            "empty": "Žádné kontakty zatím"
+        },
+        "publicLink": {
+            "title": "Veřejný odkaz",
+            "description": "Vytvořit veřejný odkaz",
+            "close": "Zavřít",
+            "save": "Uložit",
+            "enabled": "Povoleno",
+            "downloadButton": "Tlačítko pro stažení",
+            "link": "Odkaz",
+            "copyLink": "Kopírovat",
+            "expiresAfter": "Platnost končí po",
+            "password": "Heslo (nechte prázdné pro deaktivaci)",
+            "passwordPlaceholder": "Heslo",
+            "progress": "{{done}} z {{total}} položek přidáno k veřejnému odkazu",
+            "expireNever": "Nikdy"
+        },
+        "sharedWith": {
+            "title": "Sdílené s",
+            "add": "Přidat",
+            "close": "Zavřít",
+            "remove": "Odstranit",
+            "stopSharing": {
+                "title": "Přestat sdílet",
+                "description": "Opravdu chcete přestat sdílet {{item}} s {{name}}?",
+                "continue": "Přestat sdílet"
+            }
+        },
+        "changeEmail": {
+            "title": "Změnit svou e-mailovou adresu",
+            "newEmail": "Nová e-mailová adresa",
+            "newEmailPlaceholder": "Nový e-mail",
+            "confirmNewEmail": "Potvrdit novou e-mailovou adresu",
+            "confirmNewEmailPlaceholder": "Potvrdit nový e-mail",
+            "password": "Vaše heslo",
+            "passwordPlaceholder": "Heslo",
+            "close": "Zavřít",
+            "save": "Uložit",
+            "successToast": "E-mailová adresa byla úspěšně změněna"
+        },
+        "changePassword": {
+            "title": "Změnit své heslo",
+            "newPassword": "Nové heslo",
+            "newPasswordPlaceholder": "Nové heslo",
+            "confirmNewPassword": "Potvrdit nové heslo",
+            "confirmNewPasswordPlaceholder": "Potvrdit nové heslo",
+            "currentPassword": "Vaše aktuální heslo",
+            "currentPasswordPlaceholder": "Aktuální heslo",
+            "close": "Zavřít",
+            "save": "Uložit",
+            "successToast": "Heslo bylo úspěšně změněno"
+        },
+        "personalInformation": {
+            "title": "Změnit osobní informace",
+            "firstName": "Jméno",
+            "lastName": "Příjmení",
+            "close": "Zavřít",
+            "save": "Uložit",
+            "companyName": "Název společnosti",
+            "vatId": "DIČ",
+            "street": "Ulice",
+            "streetNumber": "Číslo ulice",
+            "city": "Město",
+            "postalCode": "PSČ",
+            "country": "Země"
+        },
+        "twoFactorCode": {
+            "useRecoveryKey": "Použít místo toho obnovovací klíč",
+            "recoveryKeyPlaceholder": "Obnovovací klíč",
+            "title": "Dvoufaktorová autentizace",
+            "continue": "Pokračovat",
+            "info": "Zadejte prosím svůj kód dvoufaktorové autentizace"
+        },
+        "noteParticipants": {
+            "remove": "Odstranit",
+            "toggleReadPermissions": "Změnit na oprávnění pro čtení",
+            "toggleWritePermissions": "Změnit na oprávnění pro zápis",
+            "title": "Účastníci",
+            "close": "Zavřít"
+        },
+        "fileVersions": {
+            "title": "Verze souboru",
+            "delete": {
+                "title": "Smazat verzi souboru",
+                "description": "Opravdu chcete trvale smazat {{name}}? Tuto akci nelze vrátit zpět!",
+                "continue": "Smazat"
+            }
+        },
+        "noteHistory": {
+            "empty": "Žádné předchozí verze poznámky zatím"
+        },
+        "previewDialog": {
+            "save": "Uložit",
+            "readOnly": "Jen pro čtení"
+        },
+        "transparentFullScreenImage": {
+            "openOriginal": "Otevřít originál"
+        },
+        "report": {
+            "title": "Nahlásit zneužití",
+            "email": "E-mailová adresa",
+            "emailPlaceholder": "E-mailová adresa",
+            "comment": "Komentář",
+            "commentPlaceholder": "Uveďte nám prosím všechny potřebné podrobnosti, abychom mohli co nejdříve podniknout příslušné kroky (volitelné)",
+            "reason": "Důvod",
+            "close": "Zavřít",
+            "send": "Odeslat",
+            "successToast": "Hlášení o zneužití odesláno",
+            "reasons": {
+                "cp": "Materiály sexuálního zneužívání dětí",
+                "dmca": "Porušení autorských práv",
+                "stolen": "Krádež dat",
+                "other": "Jiné",
+                "spam": "Spam",
+                "malware": "Malware"
+            }
+        },
+        "profile": {
+            "memberSince": "Člen od {{since}}",
+            "add": "Odeslat žádost o kontakt",
+            "block": "Blokovat",
+            "remove": "Odstranit z kontaktů",
+            "unblock": "Odblokovat"
+        },
+        "createSync": {
+            "cancel": "Zrušit",
+            "create": "Vytvořit",
+            "name": "Název synchronizace",
+            "localPath": "Místní cesta",
+            "remotePath": "Cloudová cesta",
+            "select": "Vybrat",
+            "syncMode": "Režim synchronizace",
+            "title": "Vytvořit synchronizaci",
+            "paused": "Pozastaveno",
+            "excludeDotFiles": "Vyloučit skryté soubory (doporučeno)",
+            "disableLocalTrash": "Deaktivovat místní koš a místo toho trvale odstranit položky",
+            "mode": {
+                "twoWay": "Obousměrné",
+                "localToCloud": "Místní do cloudu",
+                "localBackup": "Místní záloha",
+                "cloudToLocal": "Cloud do místního",
+                "cloudBackup": "Záloha cloudu",
+                "twoWayInfo": "Zrcadlit každou akci v obou směrech",
+                "localToCloudInfo": "Zrcadlit každou akci provedenou lokálně do cloudu, ale nikdy neprovádět akce na změny v cloudu",
+                "localBackupInfo": "Pouze nahrávat data do cloudu, nikdy nic neodstraňovat nebo neprovádět akce na změny v cloudu",
+                "cloudToLocalInfo": "Zrcadlit každou akci provedenou v cloudu lokálně, ale nikdy neprovádět akce na místní změny",
+                "cloudBackupInfo": "Pouze stahovat data z cloudu, nikdy nic neodstraňovat nebo neprovádět akce na místní změny"
+            },
+            "errors": {
+                "localPathNotWritable": "Vybraná místní cesta není zapisovatelná. Ujistěte se, že k ní má klient správný přístup.",
+                "invalidLocalPath": "Vybraná místní cesta je neplatná a nelze ji synchronizovat. Vyberte prosím jinou cestu.",
+                "remotePathAlreadyConfigured": "Vybraná cloudová cesta již byla nakonfigurována v jiné synchronizaci. To může vést k nekonečným smyčkám synchronizace.",
+                "localPathAlreadyConfigured": "Vybraná místní cesta již byla nakonfigurována v jiné synchronizaci. To může vést k nekonečným smyčkám synchronizace.",
+                "syncNameAlreadyExists": "Synchronizace s názvem \"{{name}}\" již existuje.",
+                "localPathSyncedByICloud": "Nemůžete synchronizovat cestu, která již byla synchronizována pomocí iCloud."
+            },
+            "warnings": {
+                "localDirectoryBig": {
+                    "title": "Upozornění",
+                    "continue": "Pokračovat",
+                    "description": "Synchronizace více než {{count}} položek může zpomalit váš systém, zejména na slabších zařízeních. Pokud máte výkonný stroj, můžete pokračovat, ale doporučujeme synchronizovat méně souborů, abyste se vyhnuli možným problémům."
+                },
+                "localDirectoryNotPhysical": {
+                    "title": "Upozornění",
+                    "continue": "Pokračovat",
+                    "description": "Vybraný místní adresář se nezdá být na fyzickém disku. To může způsobit problémy se synchronizací a nepředvídatelné chování. Chcete pokračovat?"
+                }
+            }
+        },
+        "info": {
+            "title": "Info",
+            "close": "Zavřít",
+            "directoryType": "Adresář",
+            "size": "Velikost",
+            "type": "Typ",
+            "name": "Název",
+            "location": "Umístění",
+            "modified": "Upraveno",
+            "uploaded": "Nahráno",
+            "files": "Soubory",
+            "directories": "Adresáře"
+        },
+        "desktopUpdate": {
+            "title": "Aktualizace k dispozici",
+            "info": "Nová verze ({{version}}) byla stažena a je připravena k instalaci. Chcete aktualizovat?",
+            "dismiss": "Odmítnout",
+            "update": "Aktualizovat",
+            "installing": "Instaluji aktualizaci, prosím, nepřerušujte tento proces!"
+        },
+        "storage": {
+            "title": "Nedostatek úložného prostoru",
+            "info": "Nemáte dostatek dostupného úložného prostoru. Abyste mohli nahrávat další soubory, musíte zakoupit plán. Všechny plány se kombinují co do úložného prostoru. Můžete se přihlásit k tolika plánům, kolik chcete.",
+            "dismiss": "Odmítnout",
+            "upgrade": "Zvýšit"
+        },
+        "event": {
+            "title": "Událost"
+        },
+        "exportReminder": {
+            "title": "Exportujte hlavní klíče",
+            "description": "Prosím, exportujte své hlavní klíče a uložte je na bezpečné místo. Potřebujete své hlavní klíče, když obnovujete heslo, abyste se vyhnuli ztrátě dat. Musíte exportovat své hlavní klíče pokaždé, když změníte heslo.",
+            "continue": "Exportovat",
+            "dismiss": "Odmítnout"
+        }
+    },
+    "contextMenus": {
+        "item": {
+            "download": "Stáhnout",
+            "publicLink": "Veřejný odkaz",
+            "share": "Sdílet",
+            "shareProgress": "{{done}} položek sdíleno",
+            "versions": "Verze",
+            "favorite": "Oblíbené",
+            "unfavorite": "Odebrat z oblíbených",
+            "rename": "Přejmenovat",
+            "move": "Přesunout",
+            "trash": "Koš",
+            "restore": "Obnovit",
+            "preview": "Náhled",
+            "edit": "Upravit",
+            "remove": "Odstranit",
+            "stopSharing": "Přestat sdílet",
+            "selectDestination": "Vybrat cílovou lokaci",
+            "cloudDrive": "Cloud Drive",
+            "open": "Otevřít",
+            "color": "Barva",
+            "deletePermanently": "Trvale smazat",
+            "copyId": "Kopírovat ID",
+            "info": "Info",
+            "dialogs": {
+                "trash": {
+                    "title": "Koš",
+                    "description": "Opravdu chcete poslat {{name}} do koše? Můžete jej vždy obnovit.",
+                    "continue": "Do koše"
+                },
+                "trashMultiple": {
+                    "title": "Koš",
+                    "description": "Opravdu chcete poslat {{count}} položek do koše? Můžete je vždy obnovit.",
+                    "continue": "Do koše"
+                },
+                "deletePermanently": {
+                    "title": "Trvale smazat",
+                    "description": "Opravdu chcete trvale smazat {{name}}? Tuto akci nelze vrátit zpět!",
+                    "continue": "Smazat"
+                },
+                "deletePermanentlyMultiple": {
+                    "title": "Trvale smazat",
+                    "description": "Opravdu chcete trvale smazat {{count}} položek? Tuto akci nelze vrátit zpět!",
+                    "continue": "Smazat"
+                }
+            }
+        },
+        "drive": {
+            "uploadFiles": "Nahrát soubory",
+            "uploadFolders": "Nahrát adresáře",
+            "newTextFile": "Nový textový soubor",
+            "newFolder": "Nový adresář"
+        },
+        "notes": {
+            "history": "Historie",
+            "participants": "Účastníci",
+            "type": "Typ",
+            "pin": "Připnout",
+            "unpin": "Odepnout",
+            "favorite": "Oblíbené",
+            "unfavorite": "Odebrat z oblíbených",
+            "duplicate": "Duplikovat",
+            "export": "Exportovat",
+            "exportAll": "Exportovat vše",
+            "archive": "Archivovat",
+            "restore": "Obnovit",
+            "trash": "Koš",
+            "delete": "Smazat",
+            "rename": "Přejmenovat",
+            "tags": "Tagy",
+            "leave": "Opustit",
+            "copyId": "Kopírovat ID",
+            "createTag": "Vytvořit tag",
+            "types": {
+                "md": "Markdown",
+                "rich": "Richtext",
+                "text": "Text",
+                "checklist": "Kontrolní seznam",
+                "code": "Kód"
+            }
+        },
+        "contacts": {
+            "profile": "Profil",
+            "remove": "Odstranit",
+            "block": "Blokovat"
+        },
+        "chat": {
+            "input": {
+                "selectFromDrive": "Vybrat z disku",
+                "attachFiles": "Připojit soubory"
+            }
+        },
+        "chats": {
+            "editName": "Upravit název",
+            "leave": "Opustit",
+            "delete": "Smazat",
+            "copyId": "Kopírovat ID"
+        },
+        "syncs": {
+            "delete": "Smazat",
+            "pause": "Pozastavit",
+            "resume": "Pokračovat"
+        }
+    },
+    "transfers": {
+        "title": "Přenosy",
+        "remaining": "Odkud {{time}} zbývá",
+        "noActiveTransfers": "Žádné přenosy zatím",
+        "state": {
+            "finished": "Dokončeno",
+            "queued": "Ve frontě",
+            "started": "Začalo",
+            "error": "Chyba",
+            "stopped": "Zastaveno",
+            "paused": "Pozastaveno",
+            "creatingDirectories": "Vytváření adresářů"
+        },
+        "pause": "Pozastavit",
+        "resume": "Pokračovat",
+        "stop": "Zastavit"
+    },
+    "chats": {
+        "newMessagesSince": "{{count}} nové zprávy od {{since}}",
+        "markAsRead": "Označit jako přečtené",
+        "maxSizeReached": "Maximální velikost zprávy je omezena na {{chars}} znaků",
+        "newMessageSince": "{{count}} nová zpráva od {{since}}",
+        "showParticipants": "Zobrazit účastníky",
+        "hideParticipants": "Skrýt účastníky",
+        "addParticipants": "Přidat účastníky",
+        "emojisMatching": "Emodži odpovídající {{text}}",
+        "empty": {
+            "title": "Žádné chaty zatím",
+            "description": "Chaty, které jste vytvořili nebo do kterých jste byli přidáni, se zde zobrazí.",
+            "create": "Vytvořit"
+        },
+        "header": {
+            "title": "Šifrovaný chat end-to-end",
+            "description": "Filen zabezpečuje každý chat pomocí zero-knowledge end-to-end encryption ve výchozím nastavení.",
+            "feature1": "Pouze členové chatu mohou dešifrovat a číst obsah",
+            "feature2": "Systém zajišťuje, že data přijatá skutečně pocházejí od zobrazeného uživatele a nebyla změněna"
+        },
+        "message": {
+            "time": {
+                "now": "Nyní",
+                "secondAgo": "{{seconds}} sekundu zpět",
+                "secondsAgo": "{{seconds}} sekundy zpět",
+                "minuteAgo": "{{minutes}} minutu zpět",
+                "minutesAgo": "{{minutes}} minuty zpět",
+                "hourAgo": "{{hours}} hodinu zpět",
+                "hoursAgo": "{{hours}} hodiny zpět",
+                "todayAt": "Dnes v {{date}}",
+                "yesterdayAt": "Včera v {{date}}"
+            },
+            "edited": "Upraveno",
+            "reply": "Odpovědět",
+            "delete": "Smazat",
+            "edit": "Upravit",
+            "copyId": "Kopírovat ID",
+            "copyText": "Kopírovat text",
+            "leave": "Opustit"
+        },
+        "input": {
+            "placeholder": "Odeslat zprávu...",
+            "typing": "píše...",
+            "typingMultiple": "píšou...",
+            "replyingTo": "Odpovídáte na",
+            "placeholderMobile": "Zpráva..."
+        },
+        "dialogs": {
+            "deleteMessage": {
+                "title": "Smazat zprávu",
+                "description": "Opravdu chcete tuto zprávu smazat? Tuto akci nelze vrátit zpět!",
+                "continue": "Smazat"
+            },
+            "removeParticipant": {
+                "title": "Odstranit účastníka",
+                "description": "Opravdu chcete odstranit {{name}} z tohoto chatu?",
+                "continue": "Odstranit"
+            },
+            "deleteConversation": {
+                "title": "Smazat chat",
+                "description": "Opravdu chcete smazat tento chat? Tuto akci nelze vrátit zpět!",
+                "continue": "Smazat"
+            },
+            "leaveConversation": {
+                "title": "Opustit chat",
+                "description": "Opravdu chcete opustit tento chat?",
+                "continue": "Opustit"
+            },
+            "editName": {
+                "title": "Upravit název",
+                "placeholder": "Nový název",
+                "continue": "Uložit"
+            }
+        },
+        "embeds": {
+            "og": {
+                "noTitleAvailable": "Není k dispozici žádný název",
+                "noDescriptionAvailable": "Není k dispozici žádný popis",
+                "noImageAvailable": "Není k dispozici žádný obrázek"
+            }
+        },
+        "participants": {
+            "profile": "Profil",
+            "remove": "Odstranit"
+        }
+    },
+    "contacts": {
+        "addContact": "Přidat kontakt",
+        "search": "Hledat...",
+        "empty": "Žádné kontakty zatím",
+        "emptySearch": "Nebylo nalezeno nic pro \"{{search}}\"",
+        "openChat": "Otevřít chat",
+        "more": "Více",
+        "dialogs": {
+            "unblock": {
+                "title": "Odblokovat uživatele",
+                "description": "Opravdu chcete odblokovat {{name}}?",
+                "continue": "Odblokovat"
+            },
+            "remove": {
+                "title": "Odstranit kontakt",
+                "description": "Opravdu chcete odstranit {{name}} ze svých kontaktů?",
+                "continue": "Odstranit"
+            },
+            "block": {
+                "title": "Blokovat uživatele",
+                "description": "Opravdu chcete zablokovat {{name}}?",
+                "continue": "Blokovat"
+            },
+            "sendRequest": {
+                "title": "Odeslat žádost o kontakt",
+                "placeholder": "E-mailová adresa uživatele Filen",
+                "continue": "Odeslat"
+            }
+        }
+    },
+    "settings": {
+        "dialogs": {
+            "deleteVersions": {
+                "title": "Smazat verze souborů",
+                "description": "Opravdu chcete smazat všechny verze souborů? Tuto akci nelze vrátit zpět!",
+                "continue": "Smazat"
+            },
+            "deleteAll": {
+                "title": "Smazat všechny soubory a adresáře",
+                "description": "Opravdu chcete smazat všechny soubory a adresáře? Tuto akci nelze vrátit zpět!",
+                "continue": "Smazat"
+            },
+            "deleteAll2": {
+                "title": "Smazat všechny soubory a adresáře",
+                "description": "Opravdu si tím jste jisti? Tuto akci nelze vrátit zpět!",
+                "continue": "Smazat"
+            },
+            "deleteAll3": {
+                "title": "Smazat všechny soubory a adresáře",
+                "description": "Jste si tím 100% jisti? Tuto akci nelze vrátit zpět!",
+                "continue": "Smazat"
+            },
+            "requestAccountDeletion": {
+                "title": "Zrušení účtu",
+                "description": "Opravdu chcete zrušit svůj účet a všechna s ním spojená data? Odeslali jsme vám potvrzovací e-mail. Tuto akci nelze vrátit zpět!",
+                "continue": "Požádat o zrušení"
+            },
+            "logout": {
+                "title": "Odhlásit se",
+                "description": "Opravdu se chcete odhlásit?",
+                "continue": "Odhlásit se"
+            },
+            "clearThumbnailCache": {
+                "title": "Vymazat cache náhledů",
+                "description": "Opravdu chcete vymazat místní cache náhledů? Tím uvolníte místní úložný prostor, ale náhledy obrázků budou muset být znovu generovány, když to bude potřeba.",
+                "continue": "Vymazat"
+            },
+            "cancelSubscription": {
+                "title": "Zrušit předplatné",
+                "description": "Opravdu chcete zrušit své předplatné?",
+                "continue": "Zrušit předplatné",
+                "close": "Zavřít"
+            },
+            "nickName": {
+                "title": "Upravit přezdívku",
+                "placeholder": "Nová přezdívka",
+                "continue": "Uložit",
+                "invalid": "Přezdívka musí mít délku mezi 3 a 32 znaky a být alfanumerická."
+            },
+            "twoFactorAuthenticationRecoveryKey": {
+                "title": "Obnovovací klíč",
+                "description": "Uložte si prosím svůj obnovovací klíč dvoufaktorové autentizace na bezpečném místě. Je to jediný způsob, jak získat přístup k vašemu účtu v případě, že ztratíte zařízení pro dvoufaktorovou autentizaci!",
+                "continue": "Hotovo"
+            }
+        },
+        "general": {
+            "storageUsed": "Použité úložiště",
+            "files": "Soubory {{size}}",
+            "versionedFiles": "Verzované soubory {{size}}",
+            "free": "Volné {{size}}",
+            "used": "{{used}} z {{max}} použito",
+            "dark": "Tmavý",
+            "light": "Světelný",
+            "system": "Systém",
+            "noteType": {
+                "md": "Markdown",
+                "rich": "Richtext",
+                "text": "Text",
+                "checklist": "Kontrolní seznam",
+                "code": "Kód"
+            },
+            "sections": {
+                "defaultNoteType": {
+                    "name": "Výchozí typ poznámky",
+                    "info": "Změňte výchozí typ poznámky"
+                },
+                "chatNotifications": {
+                    "name": "Notifikace chatu",
+                    "info": "Povolit nebo zakázat notifikace chatu"
+                },
+                "notificationSound": {
+                    "name": "Zvuk notifikace",
+                    "info": "Povolit nebo zakázat zvuk notifikace"
+                },
+                "contactNotifications": {
+                    "name": "Notifikace kontaktů",
+                    "info": "Povolit nebo zakázat notifikace kontaktů"
+                },
+                "theme": {
+                    "name": "Téma",
+                    "info": "Změňte vzhled aplikace"
+                },
+                "language": {
+                    "name": "Jazyk",
+                    "info": "Změňte jazyk aplikace"
+                },
+                "clearThumbnailCache": {
+                    "name": "Cache náhledů",
+                    "info": "Vymazat cache náhledů",
+                    "action": "Vymazat"
+                },
+                "logout": {
+                    "name": "Odhlásit se",
+                    "info": "Odhlásit se",
+                    "action": "Odhlásit se"
+                },
+                "minimizeToTray": {
+                    "name": "Minimalizovat do tray",
+                    "info": "Skrýt Filen v tray místo minimalizace okna"
+                },
+                "autoLaunch": {
+                    "name": "Automatické spuštění",
+                    "info": "Spustit Filen automaticky při startu systému"
+                },
+                "exportDesktopLogs": {
+                    "name": "Exportovat protokoly",
+                    "info": "Exportovat všechny protokoly desktopového klienta",
+                    "action": "Exportovat"
+                }
+            }
+        },
+        "invite": {
+            "copy": "Kopírovat",
+            "title": "Získejte až 30 GB úložiště pozváním dalších",
+            "description": "Za každého přítele, kterého pozvete do Filen, získáte {{yourEarnings}} - a váš přítel také získá {{otherEarnings}}. Je to tak snadné.",
+            "earned": "{{earned}} z {{max}}",
+            "storageEarned": "Získané úložiště"
+        },
+        "events": {
+            "empty": "Žádné události zatím",
+            "fileUploaded": "{{name}} nahrán",
+            "fileVersioned": "{{name}} verzován",
+            "versionedFileRestored": "{{name}} obnoven z verzí souboru",
+            "fileMoved": "{{name}} přesunut",
+            "fileRenamed": "{{name}} přejmenován na {{newName}}",
+            "fileTrash": "{{name}} přesunut do koše",
+            "fileRm": "{{name}} smazán",
+            "fileRestored": "{{name}} obnoven z koše",
+            "fileShared": "{{name}} sdílen s {{email}}",
+            "fileLinkEdited": "Veřejný odkaz na {{name}} upraven",
+            "folderTrash": "{{name}} přesunut do koše",
+            "folderShared": "{{name}} sdílen s {{email}}",
+            "folderMoved": "{{name}} přesunut",
+            "folderRenamed": "{{name}} přejmenován na {{newName}}",
+            "subFolderCreated": "{{name}} vytvořen",
+            "baseFolderCreated": "{{name}} vytvořen",
+            "folderRestored": "{{name}} obnoven z koše",
+            "folderColorChanged": "Barva {{name}} změněna",
+            "login": "Přihlášeno",
+            "deleteVersioned": "Verzované soubory smazány",
+            "deleteAll": "Všechny soubory a adresáře smazány",
+            "deleteUnfinished": "Nedokončené nahrávání smazány",
+            "trashEmptied": "Koš vyprázdněn",
+            "requestAccountDeletion": "Požádáno o zrušení účtu",
+            "2faEnabled": "Dvoufaktorová autentizace povolena",
+            "2faDisabled": "Dvoufaktorová autentizace zakázána",
+            "codeRedeemed": "Kód {{code}} uplatněn",
+            "emailChanged": "E-mailová adresa změněna na {{email}}",
+            "passwordChanged": "Heslo změněno",
+            "removedSharedInItems": "{{count}} sdílených položek od {{email}} odstraněno",
+            "removedSharedOutItems": "{{count}} sdílených položek s {{email}} odstraněno",
+            "folderLinkEdited": "Odkaz na adresář upraven",
+            "itemFavoriteAdded": "{{name}} přidáno k oblíbeným",
+            "itemFavoriteRemoved": "{{name}} odstraněno z oblíbených",
+            "failedLogin": "Nepodařilo se přihlásit",
+            "deleteFolderPermanently": "{{name}} trvale smazán",
+            "deleteFilePermanently": "{{name}} trvale smazán",
+            "emailChangeAttempt": "Zaznamenán pokus o změnu e-mailu"
+        },
+        "invoices": {
+            "plan": "Plán",
+            "method": "Metoda",
+            "date": "Datum",
+            "download": "Stáhnout",
+            "amount": "Částka",
+            "paid": "Zaplaceno",
+            "noInvoices": "Žádné faktury zatím",
+            "paymentMethod": "Platební metoda"
+        },
+        "subscriptions": {
+            "plan": "Plán",
+            "method": "Metoda",
+            "date": "Datum",
+            "download": "Stáhnout",
+            "amount": "Částka",
+            "status": "Stav",
+            "noSubscriptions": "Žádná předplatná zatím",
+            "cancel": "Zrušit",
+            "storage": "Úložiště",
+            "moreInfo": "Další informace o vašem předplatném",
+            "paymentMethod": "Platební metoda",
+            "info": "{{storage}} úložiště s neomezenými nahráváními, stahováními, poznámkami a chaty. Odemkněte plný potenciál Filen.",
+            "statuses": {
+                "cancelled": "Zrušeno",
+                "active": "Aktivní",
+                "waiting": "Čekající"
+            }
+        },
+        "plans": {
+            "starter": "Základní",
+            "monthly": "Měsíčně",
+            "annually": "Ročně",
+            "lifetime": "Navždy",
+            "buyNow": "Koupit nyní",
+            "payInvoice": "Uhradit fakturu",
+            "sale": "Sleva",
+            "limited": "Omezená dostupnost",
+            "creditCard": "Kreditní karta",
+            "crypto": "Kryptoměny",
+            "legal1": "Zakoupením plánu povolujete Filen, aby vám automaticky účtoval poplatky za každé fakturační období, dokud neodvoláte. Můžete kdykoliv zrušit prostřednictvím své stránky účtu. Žádné částečné vrácení peněz.",
+            "legal2": "Také automaticky souhlasíte s našimi",
+            "tos": "Podmínkami služby",
+            "and": "a",
+            "privacyPolicy": "Zásadami ochrany osobních údajů",
+            "features": {
+                "free": {
+                    "1": "Neomezená šířka pásma",
+                    "2": "Neomezené nahrávání",
+                    "3": "Šifrování na straně klienta",
+                    "4": "Technologie zero knowledge",
+                    "5": "Synchronizace",
+                    "6": "Síťový disk",
+                    "7": "Omezené sdílení souborů",
+                    "8": "Omezené poznámky",
+                    "9": "Omezené chaty"
+                },
+                "pro": {
+                    "1": "Neomezená šířka pásma",
+                    "2": "Neomezené nahrávání",
+                    "3": "Šifrování na straně klienta",
+                    "4": "Technologie zero knowledge",
+                    "5": "Synchronizace",
+                    "6": "Síťový disk",
+                    "7": "Sdílení souborů",
+                    "8": "Neomezené poznámky",
+                    "9": "Neomezené chaty"
+                }
+            }
+        },
+        "security": {
+            "sections": {
+                "password": {
+                    "name": "Heslo",
+                    "info": "Změňte své heslo",
+                    "action": "Změnit"
+                },
+                "twoFactorAuthentication": {
+                    "name": "Dvoufaktorová autentizace",
+                    "info": "Povolit nebo zakázat dvoufaktorovou autentizaci"
+                },
+                "exportMasterKeys": {
+                    "name": "Export hlavních klíčů",
+                    "info": "Exportujte své hlavní klíče, abyste mohli obnovit svůj účet v případě, že potřebujete resetovat své heslo. Musíte exportovat své hlavní klíče pokaždé, když změníte své heslo.",
+                    "action": "Exportovat",
+                    "subInfo": "Prosím, exportujte své hlavní klíče a uložte je na bezpečné místo. Potřebujete své hlavní klíče, když obnovíte své heslo, abyste se vyhnuli ztrátě dat. Musíte exportovat své hlavní klíče pokaždé, když změníte své heslo."
+                },
+                "lockTimeout": {
+                    "name": "Zamknout aplikaci",
+                    "info": "Zamkněte aplikaci po určitém čase neaktivity. Musíte nastavit PIN pro funkci zamykání.",
+                    "values": {
+                        "never": "Nikdy",
+                        "immediately": "Okamžitě",
+                        "oneMinute": "1 minuta",
+                        "threeMinutes": "3 minuty",
+                        "fiveMinutes": "5 minut",
+                        "tenMinutes": "10 minut",
+                        "fifteenMinutes": "15 minut",
+                        "thirtyMinutes": "30 minut",
+                        "oneHour": "1 hodina",
+                        "threeHours": "3 hodiny",
+                        "sixHours": "6 hodin",
+                        "twelveHours": "12 hodin",
+                        "twentyFourHours": "24 hodin"
+                    }
+                },
+                "lockPin": {
+                    "name": "Zamykací PIN",
+                    "info": "Nastavte PIN pro odemknutí aplikace",
+                    "action": "Změnit"
+                }
+            },
+            "dialogs": {
+                "lockPin": {
+                    "notMatching": "Zadané PINy se neshodují",
+                    "enterPin": "Zadejte PIN",
+                    "confirmPin": "Potvrďte PIN"
+                },
+                "lock": {
+                    "wrongPin": "Špatný PIN"
+                }
+            }
+        },
+        "account": {
+            "sections": {
+                "avatar": {
+                    "name": "Avatar",
+                    "info": "Váš avatar bude veřejně viditelný",
+                    "action": "Upravit",
+                    "invalid": "Neplatný obrázek. Povolené typy souborů jsou PNG a JPG, maximální velikost 2 MB."
+                },
+                "versionedFiles": {
+                    "name": "Verzované soubory",
+                    "info": "Smazat všechny verzované soubory",
+                    "action": "Smazat"
+                },
+                "all": {
+                    "name": "Všechny soubory a adresáře",
+                    "info": "Smazat všechny soubory a složky",
+                    "action": "Smazat"
+                },
+                "email": {
+                    "name": "E-mailová adresa",
+                    "info": "Změňte svou e-mailovou adresu",
+                    "action": "Změnit"
+                },
+                "nickName": {
+                    "name": "Přezdívka",
+                    "info": "Změňte svou přezdívku",
+                    "action": "Změnit"
+                },
+                "personalInformation": {
+                    "name": "Osobní informace",
+                    "info": "Upravte své osobní informace. Pouze pro podnikové zákazníky. Bude použito pro fakturaci a není veřejné.",
+                    "action": "Upravit"
+                },
+                "fileVersioning": {
+                    "name": "Verzování souborů",
+                    "info": "Povolit nebo zakázat verzování souborů"
+                },
+                "loginAlerts": {
+                    "name": "Upozornění na přihlášení",
+                    "info": "Povolit nebo zakázat upozornění na přihlášení"
+                },
+                "appearOffline": {
+                    "name": "Být offline",
+                    "info": "Být offline v chatech"
+                },
+                "requestAccountData": {
+                    "name": "Požádat o údaje účtu",
+                    "info": "Požádat o všechny osobní údaje, které uchováváme podle GDPR",
+                    "action": "Požádat"
+                },
+                "requestAccountDeletion": {
+                    "name": "Požádat o zrušení účtu",
+                    "info": "Požádat o zrušení vašeho účtu. Odeslali jsme vám potvrzovací e-mail",
+                    "action": "Požádat"
+                }
+            }
+        }
+    },
+    "drive": {
+        "header": {
+            "name": "Název",
+            "size": "Velikost",
+            "modified": "Upraveno"
+        },
+        "list": {
+            "item": {
+                "sharedWith": "Sdíleno s {{count}}"
+            }
+        },
+        "dialogs": {
+            "createTextFile": {
+                "title": "Vytvořit textový soubor",
+                "placeholder": "Název",
+                "continue": "Vytvořit",
+                "invalidFileName": "Neplatný název souboru."
+            },
+            "createDirectory": {
+                "title": "Vytvořit adresář",
+                "placeholder": "Název",
+                "continue": "Vytvořit",
+                "invalidDirectoryName": "Neplatný název adresáře."
+            },
+            "rename": {
+                "title": "Přejmenovat",
+                "placeholder": "Nový název",
+                "continue": "Přejmenovat",
+                "invalidFileName": "Neplatný název souboru.",
+                "invalidDirectoryName": "Neplatný název adresáře."
+            },
+            "share": {
+                "title": "Sdílet",
+                "placeholder": "E-mailová adresa uživatele Filen",
+                "continue": "Sdílet"
+            }
+        },
+        "emptyPlaceholder": {
+            "uploadFiles": "Nahrát soubory",
+            "search": {
+                "title": "Hledat",
+                "info": "Nebylo nalezeno nic pro \"{{search}}\""
+            },
+            "publicLink": {
+                "title": "Prázdný adresář",
+                "info": "Majitel tohoto adresáře ještě nenahrál žádné soubory"
+            },
+            "drive": {
+                "title": "Žádné soubory nebo adresáře zatím nebyly nahrány",
+                "info": "Přetáhněte sem soubory nebo adresáře, nebo stiskněte tlačítko níže"
+            },
+            "trash": {
+                "title": "V koši zatím nic není",
+                "info": "Soubory a adresáře odeslané do koše se zde objeví"
+            },
+            "recents": {
+                "title": "Žádné soubory zatím nebyly nahrány",
+                "info": "Nedávno nahrané soubory se zde objeví"
+            },
+            "links": {
+                "title": "Žádné veřejné odkazy zatím nebyly vytvořeny",
+                "info": "Veřejné odkazy na soubory a adresáře se zde objeví"
+            },
+            "favorites": {
+                "title": "Zatím nic není označeno jako oblíbené",
+                "info": "Oblíbené soubory a adresáře se zde objeví"
+            },
+            "sharedIn": {
+                "title": "Zatím nic není sdíleno s vámi",
+                "info": "Sdílené soubory a adresáře se zde objeví"
+            },
+            "sharedOut": {
+                "title": "Zatím nic není sdíleno s ostatními",
+                "info": "Sdílené soubory a adresáře se zde objeví"
+            }
+        }
+    },
+    "publicLink": {
+        "invalid": "Neplatný veřejný odkaz",
+        "invalidInfo": "Tento veřejný odkaz buď vypršel, nebo neexistuje",
+        "back": "Zpět",
+        "directory": {
+            "downloadWholeDirectory": "Stáhnout celý adresář",
+            "downloadDirectory": "Stáhnout adresář"
+        },
+        "sideBar": {
+            "ad": {
+                "header": "Jsme Filen",
+                "title": "Soukromé a bezpečné cloudové úložiště",
+                "info1": "Ochrana soukromí od základů",
+                "info2": "Šifrování end-to-end",
+                "info3": "Technologie zero knowledge",
+                "cta": "10 GB úložiště zdarma"
+            },
+            "reportAbuse": "Nahlásit zneužití"
+        },
+        "auth": {
+            "wrongPassword": "Špatné heslo",
+            "title": "Tento odkaz je chráněn heslem",
+            "subTitle": "Zadejte prosím heslo poskytnuté odesílatelem pro přístup.",
+            "password": "Heslo",
+            "passwordPlaceholder": "Heslo",
+            "access": "Přístup"
+        }
+    },
+    "notes": {
+        "contentPlaceholder": "Obsah poznámky...",
+        "maxSizeReached": "Maximální velikost poznámky je omezena na {{chars}} znaků",
+        "empty": {
+            "title": "Žádné poznámky zatím",
+            "description": "Poznámky, které jste vytvořili nebo do kterých jste byli přidáni, se zde zobrazí.",
+            "create": "Vytvořit"
+        },
+        "dialogs": {
+            "removeParticipant": {
+                "title": "Odstranit účastníka",
+                "description": "Opravdu chcete odstranit {{name}} z této poznámky?",
+                "continue": "Odstranit"
+            },
+            "deleteNote": {
+                "title": "Smazat poznámku",
+                "description": "Opravdu chcete smazat {{name}}? Tuto akci nelze vrátit zpět!",
+                "continue": "Smazat"
+            },
+            "deleteTag": {
+                "title": "Smazat tag",
+                "description": "Opravdu chcete smazat {{name}}? Tuto akci nelze vrátit zpět!",
+                "continue": "Smazat"
+            },
+            "renameTag": {
+                "title": "Přejmenovat",
+                "placeholder": "Nový název",
+                "continue": "Přejmenovat"
+            },
+            "createTag": {
+                "title": "Vytvořit tag",
+                "placeholder": "Název",
+                "continue": "Vytvořit"
+            },
+            "renameNote": {
+                "title": "Přejmenovat",
+                "placeholder": "Nový název",
+                "continue": "Přejmenovat"
+            },
+            "leaveNote": {
+                "title": "Opustit poznámku",
+                "description": "Opravdu chcete opustit {{name}}? Nebudete mít již přístup k této poznámce.",
+                "continue": "Opustit"
+            }
+        }
+    },
+    "previewDialog": {
+        "unsavedChanges": {
+            "title": "Neuložené změny",
+            "description": "Opravdu chcete odejít bez uložení? Všechny změny budou ztraceny.",
+            "continue": "Zavřít"
+        }
+    },
+    "sharedIn": {
+        "dialogs": {
+            "remove": {
+                "title": "Odstranit",
+                "description": "Opravdu chcete odstranit {{item}} z vašich sdílení? Nebudete mít k němu již přístup!",
+                "continue": "Odstranit"
+            }
+        }
+    },
+    "desktop": {
+        "dialogs": {
+            "close": {
+                "title": "Zavřít",
+                "description": "Opravdu chcete ukončit Filen?",
+                "continue": "Ukončit"
+            }
+        }
+    },
+    "trash": {
+        "dialogs": {
+            "empty": {
+                "title": "Vyprázdnit koš",
+                "description": "Opravdu chcete vyprázdnit svůj koš? Tuto akci nelze vrátit zpět!",
+                "continue": "Vyprázdnit"
+            }
+        }
+    },
+    "notifications": {
+        "chat": "Chat",
+        "contactRequest": "Žádost o kontakt",
+        "contactRequestInfo": "{{name}} vám poslal žádost o kontakt"
+    },
+    "cookieConsent": {
+        "description": "Tato stránka používá soubory cookie k měření a zlepšení vaší zkušenosti.",
+        "optOut": "Odhlásit se",
+        "onlyNeeded": "Pouze potřebné",
+        "accept": "Přijmout"
+    },
+    "mounts": {
+        "networkDrive": {
+            "mountedAt": "Připojeno na {{letter}}",
+            "browse": "Procházet",
+            "clear": "Vymazat",
+            "missingDeps": "Chybějící závislosti",
+            "missingDepsWindows": "Pro použití síťového disku musíte mít na svém systému nainstalován WinFSP.",
+            "missingDepsLinux": "Pro použití síťového disku musíte mít na svém systému nainstalován FUSE3.",
+            "missingDepsInstructions": "Pokyny pro instalaci",
+            "cacheUsed": "{{size}} použito",
+            "description": "Připojte svůj cloudový disk jako síťový disk, což usnadňuje přístup a správu vašich souborů přímo z počítače. Užijte si hladkou integraci, synchronizaci v reálném čase a bezpečný přístup k vašim datům, vše v rámci vašeho známého správce souborů.",
+            "unixDescription": "Připojte svůj cloudový disk uvnitř místního adresáře, což usnadňuje přístup a správu vašich souborů přímo z počítače. Užijte si hladkou integraci, synchronizaci v reálném čase a bezpečný přístup k vašim datům, vše v rámci vašeho známého správce souborů.",
+            "sudo": "Pro připojení a odpojení vašeho cloudového disku může klient potřebovat administrátorská práva. Prosím, povolte přístup, když budete vyzváni.",
+            "limitations": "Instalace, spuštění nebo rozbalení programů a archivů na síťovém disku není podporováno.",
+            "sections": {
+                "active": {
+                    "name": "Aktivní"
+                },
+                "enabled": {
+                    "name": "Povoleno",
+                    "info": "Povolit nebo zakázat síťový disk. Obnovte svůj správce souborů, když tuto možnost přepínáte."
+                },
+                "mountPoint": {
+                    "name": "Připojovací bod",
+                    "info": "Nastavte připojovací bod na místní adresář. Místní adresář musí být prázdný a čitelný a zapisovatelný.",
+                    "change": "Změnit"
+                },
+                "driveLetter": {
+                    "name": "Písmeno disku",
+                    "info": "Nastavte písmeno disku pro síťový disk. Zobrazí se pouze dostupná písmena disku."
+                },
+                "browse": {
+                    "name": "Procházet",
+                    "info": "Procházet síťový disk pomocí vašeho výchozího správce souborů."
+                },
+                "cache": {
+                    "name": "Cache",
+                    "info": "Cache významně zrychluje procházení vašeho síťového disku."
+                },
+                "cacheSize": {
+                    "name": "Velikost cache",
+                    "info": "Doporučujeme nastavit velikost cache co nejvyšší. Klient využije váš místní disk k významnému zrychlení síťového disku."
+                },
+                "cachePath": {
+                    "name": "Umístění cache",
+                    "info": "Změňte umístění cache síťového disku. Musí být na interním disku. Pokud se nemění, bude použito umístění instalačního adresáře aplikace jako výchozí."
+                },
+                "readOnly": {
+                    "name": "Pouze pro čtení",
+                    "info": "Připojit síťový disk jako pouze pro čtení."
+                }
+            },
+            "dialogs": {
+                "cleanupCache": {
+                    "title": "Vymazat cache",
+                    "description": "Opravdu chcete vymazat místní cache? Vymazání cache může výrazně zpomalit počáteční načítání souborů.",
+                    "continue": "Vymazat"
+                },
+                "disable": {
+                    "title": "Zakázat",
+                    "description": "Opravdu chcete zakázat síťový disk? Každá aktivní operace na něm bude zrušena nebo způsobí chybu. Ujistěte se, že jej již aktivně nepoužíváte.",
+                    "continue": "Zakázat"
+                }
+            },
+            "errors": {
+                "invalidMountPoint": "Neplatný připojovací bod.",
+                "mountPointNotEmpty": "Připojovací bod musí být prázdný adresář.",
+                "pathNotInHomeDir": "Připojovací bod musí být uvnitř vašeho domovského adresáře (/home/<vašeUživatelskéJméno>).",
+                "pathNotInUserDir": "Připojovací bod musí být uvnitř vašeho uživatelského adresáře (/Users/<vašeUživatelskéJméno>).",
+                "invalidCachePath": "Umístění cache musí být na interním disku s alespoň 10 GB volného místa.",
+                "cachePathNotReadableWritable": "Umístění cache není čitelné ani zapisovatelné.",
+                "invalidCachePathLength": "Cesta umístění cache je příliš dlouhá."
+            },
+            "transfers": {
+                "uploading": "Nahrávání {{total}} souboru na pozadí",
+                "uploadingPlural": "Nahrávání {{total}} souborů na pozadí",
+                "uploadingSpeed": "Nahrávání {{total}} souboru na pozadí rychlostí {{speed}}",
+                "uploadingPluralSpeed": "Nahrávání {{total}} souborů na pozadí rychlostí {{speed}}",
+                "everythingUploaded": "Vše synchronizováno"
+            }
+        },
+        "webdav": {
+            "copyConnect": "Kopírovat",
+            "description": "Spusťte místní server WebDAV, který poskytuje standardizovaný protokol pro přístup a správu vašeho cloudového disku. To umožňuje kompatibilitu s širokou škálou aplikací a zařízení, které podporují WebDAV, což zvyšuje vaši přístupnost a možnosti správy souborů.",
+            "sections": {
+                "active": {
+                    "name": "Aktivní"
+                },
+                "enabled": {
+                    "name": "Povoleno",
+                    "info": "Povolit nebo zakázat server WebDAV."
+                },
+                "protocol": {
+                    "name": "HTTP protokol",
+                    "info": "Změnit HTTP protokol."
+                },
+                "hostname": {
+                    "name": "Hostname",
+                    "info": "Změnit hostname, na kterém by měl server naslouchat."
+                },
+                "port": {
+                    "name": "Port",
+                    "info": "Změnit port, na kterém by měl server naslouchat."
+                },
+                "authMode": {
+                    "name": "Režim autentizace",
+                    "info": "Změnit režim autentizace."
+                },
+                "username": {
+                    "name": "Uživatelské jméno",
+                    "info": "Změnit uživatelské jméno pro HTTP autentizaci. Toto by nemělo být vaše e-mailová adresa nebo přezdívka Filen."
+                },
+                "password": {
+                    "name": "Heslo",
+                    "info": "Změnit heslo pro HTTP autentizaci. Toto by nemělo být vaše heslo Filen."
+                },
+                "proxyMode": {
+                    "name": "Režim proxy",
+                    "info": "Povolit režim proxy."
+                },
+                "connect": {
+                    "name": "Připojit",
+                    "info": "Kopírovat URL WebDAV."
+                }
+            },
+            "dialogs": {
+                "disable": {
+                    "title": "Zakázat",
+                    "description": "Opravdu chcete zakázat server WebDAV? Každá aktivní operace na něm bude zrušena nebo způsobí chybu. Ujistěte se, že jej již aktivně nepoužíváte.",
+                    "continue": "Zakázat"
+                }
+            },
+            "errors": {
+                "invalidPort": "Neplatný port. Přijatelný rozsah: {{range}}.",
+                "invalidHostname": "Neplatný hostname."
+            }
+        },
+        "s3": {
+            "copyConnect": "Kopírovat",
+            "description": "Spusťte místní server S3, který poskytuje standardizovaný protokol pro přístup a správu vašeho cloudového disku. To umožňuje kompatibilitu s širokou škálou aplikací a zařízení, které podporují S3, což zvyšuje vaši přístupnost a možnosti správy souborů.",
+            "info": "Při připojování k serveru S3 musíte nastavit region na \"filen\" a povolit \"s3ForcePathStyle\".",
+            "sections": {
+                "active": {
+                    "name": "Aktivní"
+                },
+                "enabled": {
+                    "name": "Povoleno",
+                    "info": "Povolit nebo zakázat server S3."
+                },
+                "protocol": {
+                    "name": "HTTP protokol",
+                    "info": "Změnit HTTP protokol."
+                },
+                "hostname": {
+                    "name": "Hostname",
+                    "info": "Změnit hostname, na kterém by měl server naslouchat."
+                },
+                "port": {
+                    "name": "Port",
+                    "info": "Změnit port, na kterém by měl server naslouchat."
+                },
+                "accessKeyId": {
+                    "name": "AccessKeyId",
+                    "info": "Změnit AccessKeyId. Toto by nemělo být vaše e-mailová adresa nebo přezdívka Filen."
+                },
+                "secretKeyId": {
+                    "name": "SecretKeyId",
+                    "info": "Změnit SecretKeyId. Toto by nemělo být vaše heslo Filen."
+                },
+                "connect": {
+                    "name": "Připojit",
+                    "info": "Kopírovat URL WebDAV."
+                }
+            },
+            "dialogs": {
+                "disable": {
+                    "title": "Zakázat",
+                    "description": "Opravdu chcete zakázat server S3? Každá aktivní operace na něm bude zrušena nebo způsobí chybu. Ujistěte se, že jej již aktivně nepoužíváte.",
+                    "continue": "Zakázat"
+                }
+            },
+            "errors": {
+                "invalidPort": "Neplatný port. Přijatelný rozsah: {{range}}.",
+                "invalidHostname": "Neplatný hostname."
+            }
+        }
+    },
+    "syncs": {
+        "eventsTitle": "Události",
+        "ignoredTitle": "Ignorováno",
+        "issuesTitle": "Problémy",
+        "settingsTitle": "Nastavení",
+        "transfersTitle": "Přenosy",
+        "noTransfers": "Žádné aktivní přenosy",
+        "noEventsYet": "Žádné události zatím",
+        "nothingIgnored": "Žádné soubory ani adresáře nejsou ignorovány",
+        "noIssues": "Žádné problémy",
+        "info": {
+            "progress": "Synchronizuji {{items}} položek ({{total}}) rychlostí {{speed}}, zbývá asi {{remaining}}",
+            "progressNoEstimate": "Synchronizuji {{items}} položek ({{total}})",
+            "upToDate": "Vše synchronizováno",
+            "errors": "{{count}} chyby synchronizace",
+            "errorsResolve": "Vyřešit",
+            "paused": "Synchronizace je pozastavena",
+            "processingDeltas": "Zpracovávám rozdíly",
+            "syncingChanges": "Synchronizuji změny",
+            "savingState": "Ukládám stav",
+            "waitingForLocalDirectoryChanges": "Čekám na změny v místním adresáři",
+            "acquiringLock": "Získávám zámek synchronizace",
+            "gettingTrees": "Čtu místní a cloudový adresář",
+            "remoteSmokeTestFailed": "Nelze přečíst cloudový adresář, buď neexistuje, nebo nejste připojeni k internetu.",
+            "localSmokeTestFailed": "Nelze přečíst místní adresář, buď neexistuje, nebo nemáte právo číst nebo zapisovat."
+        },
+        "empty": {
+            "title": "Žádné synchronizace zatím",
+            "description": "Můžete synchronizovat své místní adresáře s cloudem nebo cloudové adresáře se svým zařízením.",
+            "create": "Vytvořit"
+        },
+        "events": {
+            "createLocalDirectory": "{{name}} vytvořen lokálně",
+            "renameLocalDirectory": "{{name}} přejmenován lokálně",
+            "deleteLocalDirectory": "{{name}} smazán lokálně",
+            "createRemoteDirectory": "{{name}} vytvořen v cloudu",
+            "renameRemoteDirectory": "{{name}} přejmenován v cloudu",
+            "deleteRemoteDirectory": "{{name}} smazán v cloudu",
+            "deleteLocalFile": "{{name}} smazán lokálně",
+            "deleteRemoteFile": "{{name}} smazán v cloudu",
+            "download": "{{name}} stažen z cloudu",
+            "upload": "{{name}} nahrán do cloudu",
+            "renameLocalFile": "{{name}} přejmenován lokálně",
+            "renameRemoteFile": "{{name}} přejmenován v cloudu"
+        },
+        "settings": {
+            "sections": {
+                "delete": {
+                    "name": "Smazat",
+                    "info": "Smazat synchronizaci",
+                    "delete": "Smazat"
+                },
+                "pause": {
+                    "name": "Pozastavit",
+                    "info": "Pozastavit synchronizaci"
+                },
+                "mode": {
+                    "name": "Režim synchronizace",
+                    "info": "Změnit režim synchronizace"
+                },
+                "forceSync": {
+                    "name": "Nutit synchronizaci",
+                    "info": "Resetovat interní cache a nutit znovu skenování místního a cloudového adresáře",
+                    "forceSync": "Nutit synchronizaci"
+                },
+                "excludeDotFiles": {
+                    "name": "Vyloučit skryté soubory",
+                    "info": "Přepnout vyloučení skrytých souborů/cest (doporučeno)"
+                },
+                "filenIgnore": {
+                    "name": ".filenignore",
+                    "info": "Upravit soubor ignorování pro vyloučení místních nebo cloudových souborů. Funguje stejně jako soubor .gitignore.",
+                    "edit": "Upravit"
+                },
+                "disableLocalTrash": {
+                    "name": "Deaktivovat místní koš",
+                    "info": "Povolit nebo zakázat místní koš. Když je zakázán, klient trvale smaže soubory nebo adresáře namísto jejich přesunutí do místního koše v rámci místní synchronizace."
+                }
+            }
+        },
+        "dialogs": {
+            "delete": {
+                "title": "Smazat synchronizaci",
+                "description": "Opravdu chcete smazat tuto synchronizaci?",
+                "continue": "Smazat"
+            },
+            "resetErrors": {
+                "title": "Vyřešit chyby",
+                "description": "Opravdu chcete označit všechny chyby jako vyřešené a pokračovat v synchronizaci? Ujistěte se, že jsou všechny chyby vyřešeny.",
+                "continue": "Vyřešit"
+            },
+            "filenIgnore": {
+                "title": ".filenignore",
+                "save": "Uložit"
+            },
+            "deleteIssue": {
+                "title": "Smazat problém",
+                "description": "Opravdu chcete smazat tento problém? Ujistěte se, že jste jej vyřešili nebo že byl dočasný, jinak se nakonec vrátí.",
+                "continue": "Smazat"
+            }
+        },
+        "ignored": {
+            "types": {
+                "dotFile": "Skrytý soubor",
+                "defaultIgnore": "Ignorováno výchozím způsobem",
+                "empty": "Prázdné"
+            },
+            "reasons": {
+                "dotFile": "Soubor nebo adresář se nachází uvnitř skryté cesty",
+                "defaultIgnore": "Soubor nebo adresář se nachází uvnitř cesty, která je ignorována výchozím způsobem",
+                "empty": "Soubor je prázdný",
+                "invalidPath": "Soubor nebo adresář se nachází uvnitř neplatné cesty",
+                "symlink": "Soubor nebo adresář je symbolický odkaz. Klient nesleduje symbolické odkazy, aby se předešlo nekonečným smyčkám synchronizace.",
+                "duplicate": "Cesta souboru nebo adresáře existuje dvakrát",
+                "filenIgnore": "Soubor nebo adresář ignorován .filenignore",
+                "invalidType": "Položka není soubor nebo adresář",
+                "nameLength": "Název souboru nebo adresáře je příliš dlouhý",
+                "pathLength": "Cesta souboru nebo adresáře je příliš dlouhá",
+                "permissions": "Nedostatečná oprávnění"
+            }
+        },
+        "issues": {
+            "types": {
+                "title": {
+                    "permission": "Oprávnění",
+                    "io": "I/O",
+                    "noSpace": "Není dostatek místa nebo dostupných sledovačů souborů",
+                    "openFiles": "Limit otevřených souborů",
+                    "fileOrDirExists": "Soubor nebo adresář existuje",
+                    "fileOrDirNotFound": "Soubor nebo adresář nebyl nalezen",
+                    "isFile": "Soubor",
+                    "isDir": "Adresář",
+                    "notDir": "Není adresář",
+                    "badConnection": "Připojení",
+                    "fileOrDirTemporarilyUnavailable": "Soubor nebo adresář je dočasně nedostupný",
+                    "unknown": "Neznámá chyba",
+                    "dirNotEmpty": "Adresář není prázdný",
+                    "fileOrDirNameTooLong": "Název/přístup k souboru nebo adresáři je příliš dlouhý"
+                },
+                "info": {
+                    "permission": "Ujistěte se, že má klient všechna potřebná oprávnění pro přístup k místnímu synchronizačnímu adresáři.",
+                    "io": "Ujistěte se, že váš místní synchronizační adresář a podkladová úložná média fungují. Klient k nim nemůže správně přistupovat.",
+                    "noSpace": "Nemáte dostatek volného místa na místním úložišti, nebo systém vyčerpal dostupné sledovače souborů.",
+                    "openFiles": "Klient dosáhl limitu otevřených souborů. Zvyšte limit.",
+                    "fileOrDirExists": "Soubor nebo adresář již existuje. To je pravděpodobně dočasný problém, zkuste restartovat klienta.",
+                    "fileOrDirNotFound": "Soubor nebo adresář nebyl nalezen. To je pravděpodobně dočasný problém, zkuste restartovat klienta.",
+                    "isFile": "To je pravděpodobně dočasný problém, zkuste restartovat klienta.",
+                    "isDir": "To je pravděpodobně dočasný problém, zkuste restartovat klienta.",
+                    "notDir": "To je pravděpodobně dočasný problém, zkuste restartovat klienta.",
+                    "badConnection": "Ujistěte se, že jste připojeni k internetu a můžete bez problémů přistupovat k Filen.",
+                    "fileOrDirTemporarilyUnavailable": "To je pravděpodobně dočasný problém, zkuste restartovat klienta.",
+                    "unknown": "Neznámá chyba, zkuste restartovat klienta.",
+                    "dirNotEmpty": "Adresář není prázdný. To je pravděpodobně dočasný problém, zkuste restartovat klienta.",
+                    "fileOrDirNameTooLong": "Název/přístup k souboru nebo adresáři je příliš dlouhý pro váš místní souborový systém."
+                }
+            }
+        }
+    },
+    "isOnline": {
+        "title": "Někdo odpojil kabel?",
+        "info": "Máme problémy s připojením k naší platformě, prosím zkontrolujte své internetové připojení.",
+        "infoSub": "Prosím, kontaktujte nás, pokud vaše internetové připojení funguje."
+    },
+    "404": {
+        "info": "Oops, stránka, kterou hledáte, neexistuje.",
+        "btn": "Přejít na domovskou stránku"
+    },
+    "announcements": {
+        "gotIt": "Rozumím"
+    },
+    "maintenance": {
+        "title": "Filen je momentálně v údržbě",
+        "info": "Právě provádíme údržbu, abychom zlepšili vaši zkušenost. Naše platforma se brzy vrátí, čerstvá a vylepšená.",
+        "infoSub": "Děkujeme za vaši trpělivost! Pracujeme na nových funkcích. Zůstaňte s námi!"
+    }
+}

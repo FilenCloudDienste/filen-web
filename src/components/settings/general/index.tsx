@@ -50,14 +50,58 @@ export const General = memo(() => {
 
 	const i18nLangToString = useMemo(() => {
 		switch (i18n.language) {
-			case "en":
-			case "en-US": {
+			case "en": {
 				return "English"
 			}
 
-			case "de":
-			case "de-DE": {
+			case "de": {
 				return "Deutsch"
+			}
+
+			case "cs": {
+				return "Čeština"
+			}
+
+			case "es": {
+				return "Español"
+			}
+
+			case "fr": {
+				return "Français"
+			}
+
+			case "it": {
+				return "Italiano"
+			}
+
+			case "jp":
+			case "ja": {
+				return "日本語"
+			}
+
+			case "ko": {
+				return "한국어"
+			}
+
+			case "pl": {
+				return "Polski"
+			}
+
+			case "pt": {
+				return "Português"
+			}
+
+			case "ru": {
+				return "Русский"
+			}
+
+			case "tr": {
+				return "Türkçe"
+			}
+
+			case "uk":
+			case "ua": {
+				return "Українська"
 			}
 
 			default: {
@@ -405,8 +449,19 @@ export const General = memo(() => {
 								<SelectValue placeholder={i18nLangToString} />
 							</SelectTrigger>
 							<SelectContent className="max-h-[200px]">
-								<SelectItem value="en-US">English</SelectItem>
-								<SelectItem value="de-DE">Deutsch</SelectItem>
+								<SelectItem value="en">English</SelectItem>
+								<SelectItem value="de">Deutsch</SelectItem>
+								<SelectItem value="cs">Čeština</SelectItem>
+								<SelectItem value="es">Español</SelectItem>
+								<SelectItem value="fr">Français</SelectItem>
+								<SelectItem value="it">Italiano</SelectItem>
+								<SelectItem value="ja">日本語</SelectItem>
+								<SelectItem value="ko">한국어</SelectItem>
+								<SelectItem value="pl">Polski</SelectItem>
+								<SelectItem value="pt">Português</SelectItem>
+								<SelectItem value="ru">Русский</SelectItem>
+								<SelectItem value="tr">Türkçe</SelectItem>
+								<SelectItem value="uk">Українська</SelectItem>
 							</SelectContent>
 						</Select>
 					</Section>
