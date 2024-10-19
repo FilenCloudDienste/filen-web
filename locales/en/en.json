@@ -926,7 +926,35 @@
 			"limited": "Limited availability",
 			"creditCard": "Credit Card",
 			"crypto": "Cryptocurrencies",
-			"legal1": "By purchasing a plan you authorize Filen to automatically charge you each billing period until you cancel. You can cancel anytime via your Account page. No partial refunds."
+			"legal1": "By purchasing a plan you authorize Filen to automatically charge you each billing period until you cancel. You can cancel anytime via your Account page. No partial refunds.",
+			"legal2": "You also automatically agree to our",
+			"tos": "Terms of Service",
+			"and": "and",
+			"privacyPolicy": "Privacy Policy",
+			"features": {
+				"free": {
+					"1": "Unlimited bandwidth",
+					"2": "Unlimited uploads",
+					"3": "Client side encryption",
+					"4": "Zero knowledge technology",
+					"5": "Syncing",
+					"6": "Network drive",
+					"7": "Limited file sharing",
+					"8": "Limited notes",
+					"9": "Limited chats"
+				},
+				"pro": {
+					"1": "Unlimited bandwidth",
+					"2": "Unlimited uploads",
+					"3": "Client side encryption",
+					"4": "Zero knowledge technology",
+					"5": "Syncing",
+					"6": "Network drive",
+					"7": "File sharing",
+					"8": "Unlimited notes",
+					"9": "Unlimited chats"
+				}
+			}
 		},
 		"security": {
 			"sections": {

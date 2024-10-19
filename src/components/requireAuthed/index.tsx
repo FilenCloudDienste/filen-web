@@ -8,8 +8,10 @@ export const RequireAuth = memo(({ children }: { children: React.ReactNode }) =>
 
 	useEffect(() => {
 		if (!authed) {
+			const redirectToPlanId = window.location.href.includes("plans?id=") ? window.location.href.split("plans?id=")[1] : null
+
 			navigate({
-				to: "/login",
+				to: redirectToPlanId ? `/login?planId=${redirectToPlanId}` : "/login",
 				replace: true,
 				resetScroll: true
 			})

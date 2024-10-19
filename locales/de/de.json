@@ -926,7 +926,35 @@
 			"limited": "Begrenzte Verfügbarkeit",
 			"creditCard": "Kreditkarte",
 			"crypto": "Kryptowährungen",
-			"legal1": "Durch den Kauf eines Plans ermächtigst du Filen, dich bei jeder Abrechnungsperiode automatisch zu belasten, bis du kündigst. Du kannst jederzeit über deine Kontoseite kündigen. Keine Teilrückerstattungen."
+			"legal1": "Durch den Kauf eines Plans ermächtigst du Filen, dich bei jeder Abrechnungsperiode automatisch zu belasten, bis du kündigst. Du kannst jederzeit über deine Kontoseite kündigen. Keine Teilrückerstattungen.",
+			"legal2": "Mit dem Kauf akzeptierst Du automatisch die",
+			"tos": "Nutzungsbedingungen",
+			"and": "und",
+			"privacyPolicy": "Datenschutzerklärung",
+			"features": {
+				"free": {
+					"1": "Unbegrenzte Bandbreite",
+					"2": "Unbegrenzte Uploads",
+					"3": "Clientseitige Verschlüsselung",
+					"4": "Zero-Knowledge-Technologie",
+					"5": "Synchronisierung",
+					"6": "Netzlaufwerk",
+					"7": "Eingeschränktes Teilen von Dateien",
+					"8": "Eingeschränkte Notizen",
+					"9": "Eingeschränkte Chats"
+				},
+				"pro": {
+					"1": "Unbegrenzte Bandbreite",
+					"2": "Unbegrenzte Uploads",
+					"3": "Clientseitige Verschlüsselung",
+					"4": "Zero-Knowledge-Technologie",
+					"5": "Synchronisierung",
+					"6": "Netzlaufwerk",
+					"7": "Dateifreigabe",
+					"8": "Unbegrenzte Notizen",
+					"9": "Unbegrenzte Chats"
+				}
+			}
 		},
 		"security": {
 			"sections": {

@@ -3011,13 +3011,15 @@ export async function workerClearThumbnailCache(): Promise<void> {
 export async function cdnConfig(): Promise<RemoteConfig> {
 	await waitForInitialization()
 
-	return (
-		await axios.get("https://cdn.filen.io/cfg.test.json?" + Date.now(), {
+	const response = (
+		await axios.get("https://cdn.filen.io/cfg.json?" + Date.now(), {
 			timeout: 60000,
 			responseType: "json",
 			method: "GET"
 		})
-	).data
+	).data as RemoteConfig
+
+	return response
 }
 
 export async function createSubscription({ planId, paymentMethod }: { planId: number; paymentMethod: PaymentMethods }): Promise<string> {

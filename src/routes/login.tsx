@@ -133,6 +133,21 @@ export function Login() {
 
 			window.localStorage.setItem(authedLocalStorageKey, "true")
 
+			const redirectToPlanId = window.location.href.includes("?planId=") ? window.location.href.split("?planId=")[1] : null
+
+			if (redirectToPlanId) {
+				navigate({
+					to: "/settings/$type",
+					replace: true,
+					resetScroll: true,
+					params: {
+						type: `plans?id=${redirectToPlanId}`
+					}
+				})
+
+				return
+			}
+
 			navigate({
 				to: "/drive/$",
 				replace: true,

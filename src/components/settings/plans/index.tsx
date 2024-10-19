@@ -56,6 +56,7 @@ export const Plans = memo(() => {
 						<TabsContent
 							value={term}
 							key={term}
+							className="overflow-y-auto overflow-x-hidden"
 						>
 							<div className="flex flex-row gap-2 mt-8 flex-wrap justify-center">
 								{(term === "starter"
@@ -77,21 +78,21 @@ export const Plans = memo(() => {
 							<div className="flex flex-col mt-10 text-xs text-muted-foreground justify-center items-center">
 								<p className="max-w-[500px] text-center">{t("settings.plans.legal1")}</p>
 								<p>
-									You also automatically agree to our{" "}
+									{t("settings.plans.legal2")}{" "}
 									<a
 										href="https://filen.io/terms"
 										target="_blank"
 										className="text-blue-500 hover:underline"
 									>
-										Terms of Service
+										{t("settings.plans.tos")}
 									</a>{" "}
-									and{" "}
+									{t("settings.plans.and")}{" "}
 									<a
 										href="https://filen.io/privacy"
 										target="_blank"
 										className="text-blue-500 hover:underline"
 									>
-										Privacy Policy
+										{t("settings.plans.privacyPolicy")}
 									</a>
 									.
 								</p>

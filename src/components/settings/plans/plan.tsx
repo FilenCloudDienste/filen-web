@@ -1,10 +1,10 @@
 import { memo, useCallback, useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatBytes } from "@/utils"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { IoLogoPaypal } from "react-icons/io5"
+import { IoLogoPaypal, IoCheckmark } from "react-icons/io5"
 import { FaCcStripe, FaBitcoin } from "react-icons/fa6"
 import useErrorToast from "@/hooks/useErrorToast"
 import worker from "@/lib/worker"
@@ -61,26 +61,39 @@ export const Plan = memo(({ plan }: { plan: RemoteConfigPlan }) => {
 		>
 			<CardHeader>
 				<CardTitle>
-					<p>
-						{plan.name}
-						{!plan.name.toLowerCase().includes("starter") ? " " + plan.term : ""}
-					</p>
+					{plan.name}
+					{!plan.name.toLowerCase().includes("starter") ? " " + plan.term : ""}
 				</CardTitle>
-				<CardDescription>
+				<div>
 					{config.pricing.saleEnabled ? (
 						<div className="flex flex-col">
-							<p className="line-through">{plan.cost}€</p>
+							<p className="line-through text-muted-foreground text-sm">{plan.cost}€</p>
 							<p className="text-lg text-primary">{plan.sale}€</p>
 							<p className="text-red-500">🎉 -{Math.round(100 - (plan.sale / plan.cost) * 100)}%</p>
 						</div>
 					) : (
 						<p className="text-lg text-muted-foreground">{plan.cost}€</p>
 					)}
-				</CardDescription>
+				</div>
 			</CardHeader>
 			<CardContent>
 				<p>{formatBytes(plan.storage)}</p>
-				{plan.term === "lifetime" && <p className="text-xs text-muted-foreground">{t("settings.plans.limited")}</p>}
+				{(plan.term === "lifetime" || config.pricing.saleEnabled) && (
+					<p className="text-xs text-muted-foreground">{t("settings.plans.limited")}</p>
+				)}
+				<div className="flex flex-col mt-6 gap-2">
+					{new Array(9).fill(0).map((_, index) => {
+						return (
+							<div
+								key={index}
+								className="flex flex-row items-center gap-2 line-clamp-1 text-ellipsis break-all"
+							>
+								<IoCheckmark />
+								<p className="text-sm text-muted-foreground">{t(`settings.plans.features.pro.${index + 1}`)}</p>
+							</div>
+						)
+					})}
+				</div>
 			</CardContent>
 			<CardFooter>
 				{isCreatingSubURL ? (
