@@ -28,20 +28,20 @@
 				"2faCode": "381740",
 				"2faRecoveryKey": "恢复密钥"
 			}
-		},		
+		},
 		"dialogs": {
 			"forgotPassword": {
 				"title": "忘记密码",
 				"continue": "发送说明",
 				"placeholder": "邮件地址"
-							}
+			}
 		},
 		"alerts": {
 			"emailOrPasswordWrong": "邮件地址或密码错误",
 			"enter2FA": "请输入您的双重认证代码",
 			"enter2FARecoveryKey": "请输入您的双重认证恢复密钥",
-		    "forgotPasswordSent": "密码重置说明已发送至 {{email}}"
-		    	}
+			"forgotPasswordSent": "密码重置说明已发送至 {{email}}"
+		}
 	},
 	"register": {
 		"header": "创建账户",
@@ -177,7 +177,7 @@
 			"favorites": "收藏",
 			"trash": "回收站",
 			"directory": "文件夹"
-	    },
+		},
 		"listView": "列表视图",
 		"gridView": "网格视图"
 	},
@@ -237,7 +237,7 @@
 			"blocked": "已拉黑",
 			"in": "请求",
 			"out": "待处理"
-	},
+		},
 		"mounts": {
 			"networkDrive": "网络磁盘",
 			"s3": "S3",
@@ -289,7 +289,7 @@
 			"expiresAfter": "过期于",
 			"password": "密码（留空表示禁用）",
 			"passwordPlaceholder": "密码",
-                        "progress": "已将 {{done}} / {{total}} 个项目添加到公开链接",
+			"progress": "已将 {{done}} / {{total}} 个项目添加到公开链接",
 			"expireNever": "永不"
 		},
 		"sharedWith": {
@@ -501,7 +501,7 @@
 			"cloudDrive": "云盘",
 			"open": "打开",
 			"color": "颜色",
-	        "deletePermanently": "永久删除",
+			"deletePermanently": "永久删除",
 			"copyId": "复制 ID",
 			"info": "详情",
 			"dialogs": {
@@ -531,8 +531,8 @@
 			"uploadFiles": "上传文件",
 			"uploadFolders": "上传文件夹",
 			"newTextFile": "新建文本文件",
-			"newFolder": "新建文件夹",
-			},
+			"newFolder": "新建文件夹"
+		},
 		"notes": {
 			"history": "历史",
 			"participants": "参与者",
@@ -971,7 +971,7 @@
 					"name": "导出主密钥",
 					"info": "导出主密钥，以便在需要重置密码时可以恢复账户。每次更改密码时都需要导出主密钥。",
 					"action": "导出",
-					"subInfo": "请导出您的主密钥并将其存储在单独的安全位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码时都需要导出主密钥。",
+					"subInfo": "请导出您的主密钥并将其存储在单独的安全位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码时都需要导出主密钥。"
 				},
 				"lockTimeout": {
 					"name": "锁定应用",
@@ -1261,8 +1261,8 @@
 		"description": "本网站使用 cookie 来衡量和改善您的体验。",
 		"optOut": "选择退出",
 		"onlyNeeded": "仅需的",
-		"accept": "接受",
-        },
+		"accept": "接受"
+	},
 	"mounts": {
 		"virtualDrive": {
 			"mountedAt": "挂载于 {{letter}}",
@@ -1276,7 +1276,7 @@
 			"description": "将您的云盘安装为网络磁盘，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些都在您熟悉的文件资源管理器中完成。",
 			"unixDescription": "将您的云盘安装到本地目录中，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些操作都在您熟悉的文件资源管理器中完成。",
 			"Sudo": "要安装和卸载云盘，客户端可能需要管理员权限。请在系统弹出提示时允许其访问。",
-                        "limitations": "不支持在网络磁盘上安装、运行或解压程序和压缩包。",
+			"limitations": "不支持在网络磁盘上安装、运行或解压程序和压缩包。",
 			"sections": {
 				"active": {
 					"name": "激活"
@@ -1285,7 +1285,7 @@
 					"name": "已启用",
 					"info": "启用或禁用网络磁盘。切换此选项时刷新您的资源管理器"
 				},
-			         "mountPoint": {
+				"mountPoint": {
 					"name": "挂载点",
 					"info": "将挂载点设置为本地目录。本地目录需要为空且可读写",
 					"change": "更改"
@@ -1402,7 +1402,7 @@
 		},
 		"s3": {
 			"copyConnect": "复制",
-                        "description": "启动本地 S3 服务器，提供标准化协议来访问和管理您的云盘。这可以兼容各种支持 S3 的应用程序和设备，从而增强您的文件可访问性和管理能力。",
+			"description": "启动本地 S3 服务器，提供标准化协议来访问和管理您的云盘。这可以兼容各种支持 S3 的应用程序和设备，从而增强您的文件可访问性和管理能力。",
 			"info": "在连接到 S3 服务器时，您需要将区域设置为 \"filen\" 并启用 \"s3ForcePathStyle\".",
 			"sections": {
 				"active": {
