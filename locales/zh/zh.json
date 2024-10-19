@@ -1,0 +1,1628 @@
+{
+	"cloudDrive": "云盘",
+	"new": "新建",
+	"image": "图像",
+	"empty": "清空",
+	"copiedToClipboard": "已复制到剪贴板",
+	"everyone": "所有人",
+	"unknownUser": "未知用户",
+	"login": {
+		"header": "登录",
+		"description": "在下面输入您的邮件和密码来登录您的账户",
+		"useTwoFactorRecoveryKey": "改用恢复密钥",
+		"buttons": {
+			"login": "登录",
+			"createAccount": "创建账户",
+			"forgotPassword": "忘记密码？"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "邮件地址",
+				"password": "密码",
+				"2faCode": "双重认证代码",
+				"2faRecoveryKey": "恢复密钥"
+			},
+			"example": {
+				"email": "shili@hanhuazu.com",
+				"password": "****************",
+				"2faCode": "381740",
+				"2faRecoveryKey": "恢复密钥"
+			}
+		},		
+		"dialogs": {
+			"forgotPassword": {
+				"title": "忘记密码",
+				"continue": "发送说明",
+				"placeholder": "邮件地址"
+							}
+		},
+		"alerts": {
+			"emailOrPasswordWrong": "邮件地址或密码错误",
+			"enter2FA": "请输入您的双重认证代码",
+			"enter2FARecoveryKey": "请输入您的双重认证恢复密钥",
+		    "forgotPasswordSent": "密码重置说明已发送至 {{email}}"
+		    	}
+	},
+	"register": {
+		"header": "创建账户",
+		"description": "在下面输入您的邮件地址和密码以创建账户",
+		"buttons": {
+			"register": "创建账户",
+			"resendConfirmation": "重新发送验证邮件",
+			"login": "登录"
+		},
+		"passwordStrength": {
+			"length": "长度",
+			"uppercase": "大写字符",
+			"lowercase": "小写字符",
+			"specialChars": "特殊字符"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "邮件地址",
+				"password": "密码",
+				"confirmPassword": "确认密码"
+			},
+			"example": {
+				"email": "shili@hanhuazu.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"dialogs": {
+			"confirmationSend": {
+				"title": "重新发送验证邮件",
+				"continue": "发送",
+				"placeholder": "邮件地址"
+			}
+		},
+		"alerts": {
+			"passwordWeak": "您选择的密码太弱",
+			"confirmationSent": "验证邮件已发送至 {{email}}",
+			"passwordsNotMatching": "密码不一致",
+			"success": {
+				"title": "已创建账户",
+				"continue": "继续",
+				"description": "我们已向 {{email}} 发送了一封验证电子邮件。请您点击邮件中的链接以确认注册。请务必检查您的垃圾邮件文件夹。"
+			}
+		}
+	},
+	"reset": {
+		"header": "重置密码",
+		"description": "输入您的邮件地址和新密码并导入主密钥来重置密码",
+		"importMasterKeys": "导入主密钥",
+		"masterKeysImported": "已导入主密钥",
+		"masterKeysNotImported": "未导入任何主密钥",
+		"placeholders": {
+			"normal": {
+				"email": "邮件地址",
+				"password": "密码",
+				"confirmPassword": "确认密码"
+			},
+			"example": {
+				"email": "shili@hanhuazu.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"buttons": {
+			"reset": "重置",
+			"back": "返回"
+		},
+		"dialogs": {
+			"noMasterKeysImported": {
+				"title": "重置密码",
+				"continue": "我了解",
+				"description": "我了解，由于零知识端到端加密的原理，如果不使用导出的主密钥重置密码，我将无法访问存储在我账户中的所有数据。"
+			},
+			"noMasterKeysImported2": {
+				"title": "重置密码",
+				"continue": "我确定",
+				"description": "您确定吗？如果不导入主密钥，您将删除账户中存储的所有数据。如果您没有主密钥文件并且想要重置账户，您可以忽略此警告。"
+			},
+			"noMasterKeysImported3": {
+				"title": "重置密码",
+				"continue": "是的",
+				"description": "您真的确定吗？"
+			}
+		},
+		"alerts": {
+			"invalidMasterKeysFile": "主密钥文件无效",
+			"invalidMasterKeysFileWrongUserId": "这些密钥属于不同的账户",
+			"masterKeysImported": "已导入主密钥",
+			"passwordWeak": "您选择的密码太弱",
+			"passwordsNotMatching": "密码不一致",
+			"invalidMasterKeys": "主密钥无效",
+			"passwordChanged": "密码更改成功"
+		}
+	},
+	"auth": {
+		"footer": {
+			"tos": "服务条款",
+			"privacy": "隐私"
+		}
+	},
+	"api": {
+		"errors": {
+			"invalid_params": "无效参数",
+			"internal_error": "内部错误",
+			"rate_limited": "速率已被限制"
+		}
+	},
+	"topbar": {
+		"placeholders": {
+			"normal": {
+				"search": "在此文件夹中搜索..."
+			},
+			"example": {
+				"search": "在此文件夹中搜索..."
+			}
+		}
+	},
+	"dropZone": {
+		"cta": "在此处上传",
+		"chatsCta": "附加到聊天"
+	},
+	"topBar": {
+		"breadcrumb": {
+			"cloudDrive": "云盘"
+		},
+		"searchInThisFolder": "在此文件夹中搜索...",
+		"breadcrumbs": {
+			"recents": "最近",
+			"cloudDrive": "云盘",
+			"links": "链接",
+			"sharedWithMe": "与我共享",
+			"sharedWithOthers": "与他人共享",
+			"favorites": "收藏",
+			"trash": "回收站",
+			"directory": "文件夹"
+	    },
+		"listView": "列表视图",
+		"gridView": "网格视图"
+	},
+	"innerSideBar": {
+		"top": {
+			"settings": "设置",
+			"notes": "笔记",
+			"chats": "聊天",
+			"contacts": "联系人",
+			"syncs": "同步",
+			"mounts": "挂载"
+		},
+		"bottom": {
+			"settings": "设置"
+		},
+		"notes": {
+			"search": "搜索...",
+			"tags": {
+				"all": "所有",
+				"favorites": "收藏",
+				"pinned": "已置顶"
+			},
+			"createNote": "创建笔记",
+			"createTag": "创建标签",
+			"empty": "暂无笔记",
+			"emptyCreate": "创建一个",
+			"emptySearch": "未找到与 \"{{search}}\" 相符的内容"
+		},
+		"chats": {
+			"empty": "暂无聊天",
+			"emptyCreate": "创建一个",
+			"search": "搜索...",
+			"createChat": "创建聊天",
+			"emptySearch": "找到与 \"{{search}}\" 相符的内容"
+		},
+		"recents": "最近",
+		"cloudDrive": "云盘",
+		"links": "链接",
+		"sharedWithMe": "与我共享",
+		"sharedWithOthers": "与他人共享",
+		"favorites": "收藏",
+		"trash": "回收站",
+		"settings": {
+			"general": "通用",
+			"invoices": "发票",
+			"subscriptions": "订阅",
+			"account": "账户",
+			"events": "事件",
+			"security": "安全",
+			"invite": "邀请",
+			"plans": "计划"
+		},
+		"contacts": {
+			"online": "在线",
+			"offline": "离线",
+			"all": "所有",
+			"blocked": "已拉黑",
+			"in": "请求",
+			"out": "待处理"
+	},
+		"mounts": {
+			"networkDrive": "网络磁盘",
+			"s3": "S3",
+			"webdav": "WebDAV"
+		},
+		"syncs": {
+			"empty": "暂无同步",
+			"emptyCreate": "创建一个",
+			"nothingFound": "未找到与 \"{{search}}\" 相符的内容",
+			"createSync": "创建同步",
+			"search": "搜索...",
+			"emptySearch": "未找到与 \"{{search}}\" 相符的内容"
+		}
+	},
+	"sideBar": {
+		"cloudDrive": "云盘",
+		"transfers": "传输",
+		"notes": "笔记",
+		"chats": "聊天",
+		"contacts": "联系人",
+		"settings": "设置",
+		"syncs": "同步",
+		"mounts": "挂载",
+		"terminal": "终端"
+	},
+	"dialogs": {
+		"cancel": "取消",
+		"selectDriveItem": {
+			"title": "选择",
+			"submit": "选择",
+			"newFolder": "新建文件夹",
+			"empty": "尚未上传任何文件或文件夹",
+			"selectRoot": "从云端选择"
+		},
+		"selectContacts": {
+			"title": "选择联系人",
+			"submit": "选择",
+			"empty": "未选择任何联系人"
+		},
+		"publicLink": {
+			"title": "公开链接",
+			"description": "创建公开链接",
+			"close": "关闭",
+			"save": "保存",
+			"enabled": "已启用",
+			"downloadButton": "下载按钮",
+			"link": "链接",
+			"copyLink": "复制",
+			"expiresAfter": "过期于",
+			"password": "密码（留空表示禁用）",
+			"passwordPlaceholder": "密码",
+                        "progress": "已将 {{done}} / {{total}} 个项目添加到公开链接",
+			"expireNever": "永不"
+		},
+		"sharedWith": {
+			"title": "共享给",
+			"add": "添加",
+			"close": "关闭",
+			"remove": "移除",
+			"stopSharing": {
+				"title": "停止共享",
+				"description": "您确定要停止与 {{name}} 共享 {{item}} 吗？",
+				"continue": "停止共享"
+			}
+		},
+		"changeEmail": {
+			"title": "更改您的邮件地址",
+			"newEmail": "新邮件地址",
+			"newEmailPlaceholder": "新邮件地址",
+			"confirmNewEmail": "确认新邮件地址",
+			"confirmNewEmailPlaceholder": "确认新邮件地址",
+			"password": "您的密码",
+			"passwordPlaceholder": "密码",
+			"close": "关闭",
+			"save": "保存",
+			"successToast": "成功更改您的电子邮件地址"
+		},
+		"changePassword": {
+			"title": "更改您的密码",
+			"newPassword": "新密码",
+			"newPasswordPlaceholder": "新密码",
+			"confirmNewPassword": "确认新密码",
+			"confirmNewPasswordPlaceholder": "确认新密码",
+			"currentPassword": "您当前的密码",
+			"currentPasswordPlaceholder": "当前的密码",
+			"close": "关闭",
+			"save": "保存",
+			"successToast": "已成功更改密码"
+		},
+		"personalInformation": {
+			"title": "修改个人信息",
+			"firstName": "名",
+			"lastName": "姓",
+			"close": "关闭",
+			"save": "保存",
+			"companyName": "公司名称",
+			"vatId": "增值税号",
+			"street": "街道",
+			"streetNumber": "街道编号",
+			"city": "城市",
+			"postalCode": "邮政编码",
+			"country": "国家"
+		},
+		"twoFactorCode": {
+			"useRecoveryKey": "改用恢复密钥",
+			"recoveryKeyPlaceholder": "恢复密钥",
+			"title": "双重认证",
+			"continue": "继续",
+			"info": "请输入您的双重认证代码"
+		},
+		"noteParticipants": {
+			"remove": "移除",
+			"toggleReadPermissions": "更改权限为仅可读取",
+			"toggleWritePermissions": "更改权限为仅可写入",
+			"title": "参与者",
+			"close": "关闭"
+		},
+		"fileVersions": {
+			"title": "文件版本",
+			"delete": {
+				"title": "删除文件版本",
+				"description": "您确定要永久删除 {{name}} 吗？此操作无法撤消！",
+				"continue": "删除"
+			}
+		},
+		"noteHistory": {
+			"empty": "尚无先前的笔记版本"
+		},
+		"previewDialog": {
+			"save": "保存",
+			"readOnly": "只读"
+		},
+		"transparentFullScreenImage": {
+			"openOriginal": "打开原图"
+		},
+		"report": {
+			"title": "报告滥用",
+			"email": "邮件地址",
+			"emailPlaceholder": "邮件地址",
+			"comment": "评论",
+			"commentPlaceholder": "请向我们提供所有必要的详细信息，以便我们尽快采取适当措施（可选）",
+			"reason": "原因",
+			"close": "关闭",
+			"send": "发送",
+			"successToast": "已发送滥用报告",
+			"reasons": {
+				"cp": "幼儿色情",
+				"dmca": "侵权",
+				"stolen": "窃取数据",
+				"other": "其他",
+				"spam": "垃圾邮件",
+				"malware": "恶意软件"
+			}
+		},
+		"profile": {
+			"memberSince": "自 {{since}} 以来的成员",
+			"add": "发送联系人请求",
+			"block": "拉黑",
+			"remove": "从联系人中删除",
+			"unblock": "取消拉黑"
+		},
+		"createSync": {
+			"cancel": "取消",
+			"create": "创建",
+			"name": "同步名称",
+			"localPath": "本地路径",
+			"remotePath": "云端路径",
+			"select": "选择",
+			"syncMode": "同步模式",
+			"title": "创建同步",
+			"paused": "已暂停",
+			"excludeDotFiles": "排除点文件（推荐）",
+			"disableLocalTrash": "禁用本地回收站并永久删除项目",
+			"mode": {
+				"twoWay": "双向",
+				"localToCloud": "本地到云端",
+				"localBackup": "本地备份",
+				"cloudToLocal": "云端到本地",
+				"cloudBackup": "云端备份",
+				"twoWayInfo": "双向镜像每个操作",
+				"localToCloudInfo": "将本地执行的每项操作都镜像到云端，但永远不会对云端的变化进行操作",
+				"localBackupInfo": "仅将数据上传到云端，永远不会删除任何内容或根据云端的更改进行操作",
+				"cloudToLocalInfo": "在本地镜像云端中完成的每个操作，但永远不会对本地更改进行操作",
+				"cloudBackupInfo": "仅从云端下载数据，永远不会删除任何内容或对本地更改进行操作"
+			},
+			"errors": {
+				"localPathNotWritable": "您选择的本地路径不可写。请确保客户端可以正常访问它。",
+				"invalidLocalPath": "您选择的本地路径无效，无法同步。请选择其他路径。",
+				"remotePathAlreadyConfigured": "您选择的云路径已在其他同步中配置。这可能会导致无限同步循环。",
+				"localPathAlreadyConfigured": "您选择的本地路径已在其他同步中配置。这可能会导致无限同步循环。",
+				"syncNameAlreadyExists": "名称为 \"{{name}}\" 的同步已存在。",
+				"localPathSyncedByICloud": "您无法同步已由 iCloud 同步的路径。"
+			},
+			"warnings": {
+				"localDirectoryBig": {
+					"title": "警告",
+					"continue": "继续",
+					"description": "同步超过 {{count}} 个项目可能会降低系统速度，尤其是在低端设备上。如果您使用的是高端机器，您可以继续，但我们建议同步较少的文件以避免潜在问题。"
+				},
+				"localDirectoryNotPhysical": {
+					"title": "警告",
+					"continue": "继续",
+					"description": "您选择的本地目录似乎不在物理磁盘上。这可能会导致同步问题和不可预测的行为。要继续吗？"
+				}
+			}
+		},
+		"info": {
+			"title": "详情",
+			"close": "关闭",
+			"directoryType": "文件夹",
+			"size": "大小",
+			"type": "类型",
+			"name": "名称",
+			"location": "位置",
+			"modified": "修改日期",
+			"uploaded": "已上传",
+			"files": "文件",
+			"directories": "文件夹"
+		},
+		"desktopUpdate": {
+			"title": "有更新可用",
+			"info": "已下载新版本 ({{version}}) 并准备安装。是否要更新？",
+			"dismiss": "忽略",
+			"update": "更新",
+			"installing": "正在安装更新，请不要中断此进程！"
+		},
+		"storage": {
+			"title": "存储空间不足",
+			"info": "您没有足够的可用存储空间。为了上传更多文件，您需要购买一个计划。所有计划的存储量都可以叠加。您可以订购任意多个计划。",
+			"dismiss": "忽略",
+			"upgrade": "升级"
+		},
+		"event": {
+			"title": "事件"
+		},
+		"exportReminder": {
+			"title": "导出主密钥",
+			"description": "请导出您的主密钥并将其存储在单独的安全位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码后都需要导出主密钥。",
+			"continue": "导出",
+			"dismiss": "忽略"
+		}
+	},
+	"contextMenus": {
+		"item": {
+			"download": "下载",
+			"publicLink": "公开链接",
+			"share": "共享",
+			"shareProgress": "已共享 {{done}} 个项目",
+			"versions": "版本",
+			"favorite": "收藏",
+			"unfavorite": "取消收藏",
+			"rename": "重命名",
+			"move": "移动",
+			"trash": "回收站",
+			"restore": "恢复",
+			"preview": "预览",
+			"edit": "编辑",
+			"remove": "移除",
+			"stopSharing": "停止共享",
+			"selectDestination": "选择目标位置",
+			"cloudDrive": "云盘",
+			"open": "打开",
+			"color": "颜色",
+	        "deletePermanently": "永久删除",
+			"copyId": "复制 ID",
+			"info": "详情",
+			"dialogs": {
+				"trash": {
+					"title": "回收",
+					"description": "您确定要将 {{name}} 移到回收站吗？之后您可以随时恢复它。",
+					"continue": "回收"
+				},
+				"trashMultiple": {
+					"title": "回收",
+					"description": "您确定要将 {{count}} 个项目移到回收站吗？之后您可以随时恢复。",
+					"continue": "回收"
+				},
+				"deletePermanently": {
+					"title": "永久删除",
+					"description": "您确定要永久删除 {{name}} 吗？此操作无法撤消！",
+					"continue": "删除"
+				},
+				"deletePermanentlyMultiple": {
+					"title": "永久删除",
+					"description": "您确定要永久删除 {{count}} 个项目吗？此操作无法撤消！",
+					"continue": "删除"
+				}
+			}
+		},
+		"drive": {
+			"uploadFiles": "上传文件",
+			"uploadFolders": "上传文件夹",
+			"newTextFile": "新建文本文件",
+			"newFolder": "新建文件夹",
+			},
+		"notes": {
+			"history": "历史",
+			"participants": "参与者",
+			"type": "类型",
+			"pin": "置顶",
+			"unpin": "取消置顶",
+			"favorite": "收藏",
+			"unfavorite": "取消收藏",
+			"duplicate": "复制",
+			"export": "导出",
+			"exportAll": "导出所有",
+			"archive": "归档",
+			"restore": "恢复",
+			"trash": "回收站",
+			"delete": "删除",
+			"rename": "重命名",
+			"tags": "标签",
+			"leave": "离开",
+			"copyId": "复制 ID",
+			"createTag": "创建标签",
+			"types": {
+				"md": "Markdown",
+				"rich": "富文本",
+				"text": "文本",
+				"checklist": "清单",
+				"code": "代码"
+			}
+		},
+		"contacts": {
+			"profile": "资料",
+			"remove": "移除",
+			"block": "拉黑"
+		},
+		"chat": {
+			"input": {
+				"selectFromDrive": "从云端中选择",
+				"attachFiles": "附加文件"
+			}
+		},
+		"chats": {
+			"editName": "编辑名称",
+			"leave": "离开",
+			"delete": "删除",
+			"copyId": "复制 ID"
+		},
+		"syncs": {
+			"delete": "删除",
+			"pause": "暂停",
+			"resume": "恢复"
+		}
+	},
+	"transfers": {
+		"title": "传输",
+		"remaining": "大约剩余 {{time}}",
+		"noActiveTransfers": "暂无传输",
+		"state": {
+			"finished": "已完成",
+			"queued": "已入列",
+			"started": "已开始",
+			"error": "出错啦",
+			"stopped": "已停止",
+			"paused": "已暂停",
+			"creatingDirectories": "正在创建文件夹"
+		},
+		"pause": "暂停",
+		"resume": "开始",
+		"stop": "停止"
+	},
+	"chats": {
+		"newMessagesSince": "自 {{since}} 以来有 {{count}} 条新消息",
+		"markAsRead": "标为已读",
+		"maxSizeReached": "最大消息长度限制为 {{chars}} 个字符",
+		"newMessageSince": "自 {{since}} 以来有 {{count}} 条新消息",
+		"showParticipants": "显示参与者",
+		"hideParticipants": "隐藏参与者",
+		"addParticipants": "添加参与者",
+		"emojisMatching": "与 {{text}} 匹配的表情符号",
+		"empty": {
+			"title": "暂无聊天",
+			"description": "您创建的聊天或您被添加到的聊天将显示在这里",
+			"create": "创建"
+		},
+		"header": {
+			"title": "端到端加密",
+			"description": "Filen 默认使用零知识端到端加密来保护每次聊天。",
+			"feature1": "只有聊天成员可以解密并阅读内容",
+			"feature2": "系统确保收到的数据确实来自显示的用户，并且没有被更改"
+		},
+		"message": {
+			"time": {
+				"now": "现在",
+				"secondAgo": "{{seconds}} 秒前",
+				"secondsAgo": "{{seconds}} 秒前",
+				"minuteAgo": "{{minutes}} 分钟前",
+				"minutesAgo": "{{minutes}} 分钟前",
+				"hourAgo": "{{hours}} 小时前",
+				"hoursAgo": "{{hours}} 小时前",
+				"todayAt": "今天 {{date}}",
+				"yesterdayAt": "昨天 {{date}}"
+			},
+			"edited": "已修改",
+			"reply": "回复",
+			"delete": "删除",
+			"edit": "修改",
+			"copyId": "复制 ID",
+			"copyText": "复制文本",
+			"leave": "离开"
+		},
+		"input": {
+			"placeholder": "发送一条消息...",
+			"typing": "正在输入...",
+			"typingMultiple": "正在输入...",
+			"replyingTo": "正在回复给",
+			"placeholderMobile": "消息..."
+		},
+		"dialogs": {
+			"deleteMessage": {
+				"title": "删除消息",
+				"description": "您确定要删除此消息吗？此操作无法撤消！",
+				"continue": "删除"
+			},
+			"removeParticipant": {
+				"title": "移除参与者",
+				"description": "您确定要从此聊天中移除 {{name}} 吗？",
+				"continue": "移除"
+			},
+			"deleteConversation": {
+				"title": "删除聊天",
+				"description": "您确定要删除此聊天吗？此操作无法撤消！",
+				"continue": "删除"
+			},
+			"leaveConversation": {
+				"title": "离开聊天",
+				"description": "您确定要离开此聊天吗？",
+				"continue": "离开"
+			},
+			"editName": {
+				"title": "编辑名称",
+				"placeholder": "新名称",
+				"continue": "保存"
+			}
+		},
+		"embeds": {
+			"og": {
+				"noTitleAvailable": "没有可用的标题",
+				"noDescriptionAvailable": "没有可用的描述",
+				"noImageAvailable": "没有可用的图像"
+			}
+		},
+		"participants": {
+			"profile": "资料",
+			"remove": "移除"
+		}
+	},
+	"contacts": {
+		"addContact": "添加联系人",
+		"search": "搜索...",
+		"empty": "暂无联系人",
+		"emptySearch": "未找到与 \"{{search}}\" 相符的内容",
+		"openChat": "开始聊天",
+		"more": "更多",
+		"dialogs": {
+			"unblock": {
+				"title": "取消拉黑用户",
+				"description": "您确定要取消拉黑 {{name}} 吗？",
+				"continue": "取消拉黑"
+			},
+			"remove": {
+				"title": "移除联系人",
+				"description": "您确定要从联系人中移除 {{name}} 吗？",
+				"continue": "移除"
+			},
+			"block": {
+				"title": "拉黑用户",
+				"description": "您确定您想要拉黑 {{name}} 吗?",
+				"continue": "拉黑"
+			},
+			"sendRequest": {
+				"title": "发送联系人请求",
+				"placeholder": "Filen 用户的邮件地址",
+				"continue": "发送"
+			}
+		}
+	},
+	"settings": {
+		"dialogs": {
+			"deleteVersions": {
+				"title": "删除版本文件",
+				"description": "您确定要删除所有版本文件吗？此操作无法撤消！",
+				"continue": "删除"
+			},
+			"deleteAll": {
+				"title": "删除所有文件和文件夹",
+				"description": "您确定要删除所有文件和文件夹吗？此操作无法撤消！",
+				"continue": "删除"
+			},
+			"deleteAll2": {
+				"title": "删除所有文件和文件夹",
+				"description": "您真的确定吗？此操作无法撤消！",
+				"continue": "删除"
+			},
+			"deleteAll3": {
+				"title": "删除所有文件和文件夹",
+				"description": "您 100% 确定吗？此操作无法撤消！",
+				"continue": "删除"
+			},
+			"requestAccountDeletion": {
+				"title": "删除账户",
+				"description": "您确定要删除您的账户及其所有相关数据吗？我们将向您发送确认电子邮件。此操作无法撤消！",
+				"continue": "请求删除"
+			},
+			"logout": {
+				"title": "退出登录",
+				"description": "您确定要退出登录吗？",
+				"continue": "退出登录"
+			},
+			"clearThumbnailCache": {
+				"title": "清除缩略图缓存",
+				"description": "您确定要清除本地缩略图缓存吗？这将释放本地存储空间，但在需要时需要再次生成图像预览。",
+				"continue": "清除"
+			},
+			"cancelSubscription": {
+				"title": "取消订阅",
+				"description": "您确定要取消订阅吗？",
+				"continue": "取消订阅",
+				"close": "关闭"
+			},
+			"nickName": {
+				"title": "编辑昵称",
+				"placeholder": "新昵称",
+				"continue": "保存",
+				"invalid": "昵称长度必须介于 3 到 32 个字符之间，并且包含字母数字。"
+			},
+			"twoFactorAuthenticationRecoveryKey": {
+				"title": "恢复密钥",
+				"description": "请将您的双重身份验证恢复密钥存储在一个最安全的地方。如果您丢失了双重身份验证设备，这是重新获得账户访问权限的唯一方法！",
+				"continue": "完成"
+			}
+		},
+		"general": {
+			"storageUsed": "已使用的存储空间",
+			"files": "文件 {{size}}",
+			"versionedFiles": "版本文件 {{size}}",
+			"free": " {{size}} 空闲",
+			"used": "{{used}} / {{max}} 已使用",
+			"dark": "深色",
+			"light": "浅色",
+			"system": "系统",
+			"noteType": {
+				"md": "Markdown",
+				"rich": "富文本",
+				"text": "文本",
+				"checklist": "清单",
+				"code": "代码"
+			},
+			"sections": {
+				"defaultNoteType": {
+					"name": "默认笔记类型",
+					"info": "更改默认笔记类型"
+				},
+				"chatNotifications": {
+					"name": "聊天通知",
+					"info": "启用或禁用聊天通知"
+				},
+				"notificationSound": {
+					"name": "通知声音",
+					"info": "启用或禁用通知声音"
+				},
+				"contactNotifications": {
+					"name": "联系人通知",
+					"info": "启用或禁用联系人通知"
+				},
+				"theme": {
+					"name": "主题",
+					"info": "更改应用程序外观"
+				},
+				"language": {
+					"name": "语言",
+					"info": "更改应用语言"
+				},
+				"clearThumbnailCache": {
+					"name": "缩略图缓存",
+					"info": "清除缩略图缓存",
+					"action": "清除"
+				},
+				"logout": {
+					"name": "退出登录",
+					"info": "退出登录",
+					"action": "退出登录"
+				},
+				"minimizeToTray": {
+					"name": "最小化到托盘",
+					"info": "将 Filen 隐藏在托盘中，而不是最小化窗口"
+				},
+				"autoLaunch": {
+					"name": "自动启动",
+					"info": "系统启动时自动启动 Filen"
+				},
+				"exportDesktopLogs": {
+					"name": "导出日志",
+					"info": "导出所有桌面客户端日志",
+					"action": "导出"
+				}
+			}
+		},
+		"invite": {
+			"copy": "复制",
+			"title": "邀请其他人即可获得最多 30 GB 的存储空间",
+			"description": "您每邀请一位朋友，您都会收到 {{yourEarnings}} - 而您的朋友也会收到 {{otherEarnings}} 。就是这么简单。",
+			"earned": "{{earned}} / {{max}}",
+			"storageEarned": "已获得的存储"
+		},
+		"events": {
+			"empty": "暂无事件",
+			"fileUploaded": "{{name}} 已上传",
+			"fileVersioned": "{{name}} 已计入版本",
+			"versionedFileRestored": "{{name}} 已从版本文件中恢复",
+			"fileMoved": "{{name}} 已移动",
+			"fileRenamed": "{{name}} 已重命名为 {{newName}}",
+			"fileTrash": "{{name}} 已移到回收站",
+			"fileRm": "{{name}} 已删除",
+			"fileRestored": "{{name}} 已从回收站中恢复",
+			"fileShared": "{{name}} 已与 {{email}} 共享",
+			"fileLinkEdited": "{{name}} 的公开链接已编辑",
+			"folderTrash": "{{name}} 已移动到回收站",
+			"folderShared": "{{name}} 已与 {{email}} 共享",
+			"folderMoved": "{{name}} 已移动",
+			"folderRenamed": "{{name}} 已重命名为 {{newName}}",
+			"subFolderCreated": "{{name}} 已创建",
+			"baseFolderCreated": "{{name}} 已创建",
+			"folderRestored": "{{name}} 已从回收站中恢复",
+			"folderColorChanged": "{{name}} 的颜色已更改",
+			"login": "已登录",
+			"deleteVersioned": "版本文件已删除",
+			"deleteAll": "所有文件和文件夹均已删除",
+			"deleteUnfinished": "未完成的上传已删除",
+			"trashEmptied": "回收站已清空",
+			"requestAccountDeletion": "已请求删除账户",
+			"2faEnabled": "双重认证已启用",
+			"2faDisabled": "双重认证已禁用",
+			"codeRedeemed": "代码 {{code}} 已兑换",
+			"emailChanged": "邮件地址已更改为 {{email}}",
+			"passwordChanged": "密码已更改",
+			"removedSharedInItems": "已删除来自 {{email}} 的 {{count}} 个共享项目",
+			"removedSharedOutItems": "已删除 {{count}} 个与 {{email}} 共享的项目",
+			"folderLinkEdited": "文件夹链接已编辑",
+			"itemFavoriteAdded": "{{name}} 已被添加到收藏",
+			"itemFavoriteRemoved": "{{name}} 已从收藏中移除",
+			"failedLogin": "登录失败",
+			"deleteFolderPermanently": "{{name}} 文件夹已永久删除",
+			"deleteFilePermanently": "{{name}} 文件已永久删除",
+			"emailChangeAttempt": "记录了一次尝试更改邮件的操作"
+		},
+		"invoices": {
+			"plan": "计划",
+			"method": "方式",
+			"date": "日期",
+			"download": "下载",
+			"amount": "数量",
+			"paid": "已支付",
+			"noInvoices": "暂无发票",
+			"paymentMethod": "付款方式"
+		},
+		"subscriptions": {
+			"plan": "计划",
+			"method": "方式",
+			"date": "日期",
+			"download": "下载",
+			"amount": "数量",
+			"status": "状态",
+			"noSubscriptions": "尚未订阅",
+			"cancel": "取消",
+			"storage": "存储",
+			"moreInfo": "有关您的订阅的更多信息",
+			"paymentMethod": "付款方式",
+			"info": "{{storage}} 存储空间，无限上传、下载、笔记和聊天。释放 Filen 的全部潜力。",
+			"statuses": {
+				"cancelled": "已取消",
+				"active": "激活",
+				"waiting": "等待中"
+			}
+		},
+		"plans": {
+			"starter": "初级",
+			"monthly": "月度",
+			"annually": "年度",
+			"lifetime": "终身",
+			"buyNow": "立即购买",
+			"payInvoice": "支付发票",
+			"sale": "销售",
+			"limited": "供应有限",
+			"creditCard": "信用卡",
+			"crypto": "加密货币",
+			"legal1": "购买计划即表示您授权 Filen 在每个结算周期自动向您收费，直至您取消。您可以随时通过您的账户页面取消。不接受部分退款。",
+			"legal2": "您也自动同意我们的",
+			"tos": "服务条款",
+			"and": "和",
+			"privacyPolicy": "隐私政策",
+			"features": {
+				"free": {
+					"1": "无限带宽",
+					"2": "有限上传",
+					"3": "客户端加密",
+					"4": "零知识技术",
+					"5": "同步",
+					"6": "网络磁盘",
+					"7": "有限文件共享",
+					"8": "有限笔记",
+					"9": "有限聊天"
+				},
+				"pro": {
+					"1": "无限带宽",
+					"2": "无限上传",
+					"3": "客户端加密",
+					"4": "零知识技术",
+					"5": "同步",
+					"6": "网络磁盘",
+					"7": "无限文件共享",
+					"8": "无限笔记",
+					"9": "无限聊天"
+				}
+			}
+		},
+		"security": {
+			"sections": {
+				"password": {
+					"name": "密码",
+					"info": "更改您的密码",
+					"action": "更改"
+				},
+				"twoFactorAuthentication": {
+					"name": "双重认证",
+					"info": "启用或禁用双重身份认证"
+				},
+				"exportMasterKeys": {
+					"name": "导出主密钥",
+					"info": "导出主密钥，以便在需要重置密码时可以恢复账户。每次更改密码时都需要导出主密钥。",
+					"action": "导出",
+					"subInfo": "请导出您的主密钥并将其存储在单独的安全位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码时都需要导出主密钥。",
+				},
+				"lockTimeout": {
+					"name": "锁定应用",
+					"info": "当您处于不活动状态一段时间后锁定应用。您必须设置 PIN 才能使屏幕锁定正常工作",
+					"values": {
+						"never": "永不",
+						"immediately": "立即",
+						"oneMinute": "1分钟",
+						"threeMinutes": "3分钟",
+						"fiveMinutes": "5分钟",
+						"tenMinutes": "10分钟",
+						"fifteenMinutes": "15分钟",
+						"thirtyMinutes": "30分钟",
+						"oneHour": "1小时",
+						"threeHours": "3小时",
+						"sixHours": "6小时",
+						"twelveHours": "12小时",
+						"twentyFourHours": "24小时"
+					}
+				},
+				"lockPin": {
+					"name": "锁定 PIN",
+					"info": "设置 PIN 码以解锁程序",
+					"action": "更改"
+				}
+			},
+			"dialogs": {
+				"lockPin": {
+					"notMatching": "您输入的 PIN 码不匹配",
+					"enterPin": "输入 PIN 码",
+					"confirmPin": "确认 PIN 码"
+				},
+				"lock": {
+					"wrongPin": "错误的 PIN 码"
+				}
+			}
+		},
+		"account": {
+			"sections": {
+				"avatar": {
+					"name": "头像",
+					"info": "您的头像将公开显示",
+					"action": "编辑",
+					"invalid": "图像无效。允许的文件类型为 PNG 和 JPG，最大大小为 2MB。"
+				},
+				"versionedFiles": {
+					"name": "版本文件",
+					"info": "删除所有版本文件",
+					"action": "删除"
+				},
+				"all": {
+					"name": "所有文件和文件夹",
+					"info": "删除所有文件和文件夹",
+					"action": "删除"
+				},
+				"email": {
+					"name": "邮件地址",
+					"info": "更改您的邮件地址",
+					"action": "更改"
+				},
+				"nickName": {
+					"name": "昵称",
+					"info": "更改您的昵称",
+					"action": "更改"
+				},
+				"personalInformation": {
+					"name": "个人信息",
+					"info": "编辑您的个人信息。仅供企业客户使用。将用于开具发票，不对外公开",
+					"action": "编辑"
+				},
+				"fileVersioning": {
+					"name": "文件正在计入版本",
+					"info": "启用或禁用文件版本"
+				},
+				"loginAlerts": {
+					"name": "登录警报",
+					"info": "启用或禁用登录警报"
+				},
+				"appearOffline": {
+					"name": "显示为离线",
+					"info": "在聊天中显示为离线"
+				},
+				"requestAccountData": {
+					"name": "请求账户数据",
+					"info": "根据 GDPR 请求我们存储的所有个人数据",
+					"action": "请求"
+				},
+				"requestAccountDeletion": {
+					"name": "请求删除账户",
+					"info": "请求删除您的账户。我们将向您发送确认邮件",
+					"action": "请求"
+				}
+			}
+		}
+	},
+	"drive": {
+		"header": {
+			"name": "名称",
+			"size": "大小",
+			"modified": "修改日期"
+		},
+		"list": {
+			"item": {
+				"sharedWith": "已与 {{count}} 个人共享"
+			}
+		},
+		"dialogs": {
+			"createTextFile": {
+				"title": "创建文本文件",
+				"placeholder": "名称",
+				"continue": "创建",
+				"invalidFileName": "文件名无效。"
+			},
+			"createDirectory": {
+				"title": "创建目录",
+				"placeholder": "名称",
+				"continue": "创建",
+				"invalidDirectoryName": "目录名无效。"
+			},
+			"rename": {
+				"title": "重命名",
+				"placeholder": "新名称",
+				"continue": "重命名",
+				"invalidFileName": "文件名称无效。",
+				"invalidDirectoryName": "文件夹名称无效。"
+			},
+			"share": {
+				"title": "共享",
+				"placeholder": "Filen 用户的邮件地址",
+				"continue": "共享"
+			}
+		},
+		"emptyPlaceholder": {
+			"uploadFiles": "上传文件",
+			"search": {
+				"title": "搜索",
+				"info": "未找到与 \"{{search}}\" 相符的内容"
+			},
+			"publicLink": {
+				"title": "此文件夹为空",
+				"info": "此文件夹的所有者尚未上传任何文件"
+			},
+			"drive": {
+				"title": "尚未上传任何文件或文件夹",
+				"info": "将文件或文件夹拖放到此处或点击下方按钮"
+			},
+			"trash": {
+				"title": "回收站里空空如也",
+				"info": "发送到回收站的文件和文件夹将显示在此处"
+			},
+			"recents": {
+				"title": "尚未上传任何文件",
+				"info": "最近上传的文件将显示在这里"
+			},
+			"links": {
+				"title": "尚未创建公开链接",
+				"info": "文件和文件夹的公开链接将显示在这里"
+			},
+			"favorites": {
+				"title": "暂无收藏",
+				"info": "收藏的文件和文件夹将显示在这里"
+			},
+			"sharedIn": {
+				"title": "尚未与您共享任何内容",
+				"info": "共享文件和文件夹将显示在这里"
+			},
+			"sharedOut": {
+				"title": "尚未与他人共享任何内容",
+				"info": "共享文件和文件夹将显示在这里"
+			}
+		}
+	},
+	"publicLink": {
+		"invalid": "无效的公开链接",
+		"invalidInfo": "此公开链接已过期或不存在",
+		"back": "返回",
+		"directory": {
+			"downloadWholeDirectory": "下载整个文件夹",
+			"downloadDirectory": "下载文件夹"
+		},
+		"sideBar": {
+			"ad": {
+				"header": "我们是 Filen",
+				"title": "私密且安全的云储存",
+				"info1": "隐私设计",
+				"info2": "端到端加密",
+				"info3": "零知识技术",
+				"cta": "10 GB 免费存储空间"
+			},
+			"reportAbuse": "报告滥用"
+		},
+		"auth": {
+			"wrongPassword": "密码错误",
+			"title": "此链接受密码保护",
+			"subTitle": "请输入发送人提供的密码以获取访问权限。",
+			"password": "密码",
+			"passwordPlaceholder": "密码",
+			"access": "访问"
+		}
+	},
+	"notes": {
+		"contentPlaceholder": "笔记内容...",
+		"maxSizeReached": "最大笔记大小限制为 {{chars}} 个字符",
+		"empty": {
+			"title": "暂无笔记",
+			"description": "您创建的笔记或已添加的笔记将显示在此处",
+			"create": "创建"
+		},
+		"dialogs": {
+			"removeParticipant": {
+				"title": "移除参与者",
+				"description": "您确定要从此笔记中移除 {{name}} 吗？",
+				"continue": "移除"
+			},
+			"deleteNote": {
+				"title": "删除笔记",
+				"description": "您确定要删除 {{name}} 吗？此操作无法撤消！",
+				"continue": "删除"
+			},
+			"deleteTag": {
+				"title": "删除标签",
+				"description": "您确定要删除 {{name}} 吗？此操作无法撤消！",
+				"continue": "删除"
+			},
+			"renameTag": {
+				"title": "重命名",
+				"placeholder": "新名称",
+				"continue": "重命名"
+			},
+			"createTag": {
+				"title": "创建标签",
+				"placeholder": "名称",
+				"continue": "创建"
+			},
+			"renameNote": {
+				"title": "重命名",
+				"placeholder": "新名称",
+				"continue": "重命名"
+			},
+			"leaveNote": {
+				"title": "离开笔记",
+				"description": "您确定要离开 {{name}} 吗？您将无法再访问该笔记。",
+				"continue": "离开"
+			}
+		}
+	},
+	"previewDialog": {
+		"unsavedChanges": {
+			"title": "更改尚未保存",
+			"description": "您确定要退出而不保存吗？所有更改都将丢失。",
+			"continue": "关闭"
+		}
+	},
+	"sharedIn": {
+		"dialogs": {
+			"remove": {
+				"title": "移除",
+				"description": "您确定要从您的共享中删除 {{item}} 吗？您将无法再访问它！",
+				"continue": "移除"
+			}
+		}
+	},
+	"desktop": {
+		"dialogs": {
+			"close": {
+				"title": "关闭",
+				"description": "您确定要退出 Filen 吗？",
+				"continue": "退出"
+			}
+		}
+	},
+	"trash": {
+		"dialogs": {
+			"empty": {
+				"title": "清空回收站",
+				"description": "您确定要清空回收站吗？此操作无法撤消！",
+				"continue": "清空"
+			}
+		}
+	},
+	"notifications": {
+		"chat": "聊天",
+		"contactRequest": "联系人请求",
+		"contactRequestInfo": "{{name}} 已向您发送联系人请求"
+	},
+	"cookieConsent": {
+		"description": "本网站使用 cookie 来衡量和改善您的体验。",
+		"optOut": "选择退出",
+		"onlyNeeded": "仅需的",
+		"accept": "接受",
+        },
+	"mounts": {
+		"virtualDrive": {
+			"mountedAt": "挂载于 {{letter}}",
+			"browse": "浏览",
+			"clear": "清空",
+			"missingDeps": "缺少依赖项",
+			"missingDepsWindows": "要使用网络磁盘，您需要在系统上安装 WinFSP。",
+			"missingDepsLinux": "要使用网络磁盘，您需要在系统上安装 FUSE3。",
+			"missingDepsInstructions": "安装说明",
+			"cacheUsed": "{{size}} 已使用",
+			"description": "将您的云盘安装为网络磁盘，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些都在您熟悉的文件资源管理器中完成。",
+			"unixDescription": "将您的云盘安装到本地目录中，这样您就可以轻松地直接从计算机访问和管理文件。享受无缝集成、实时同步并安全地访问数据，所有这些操作都在您熟悉的文件资源管理器中完成。",
+			"Sudo": "要安装和卸载云盘，客户端可能需要管理员权限。请在系统弹出提示时允许其访问。",
+                        "limitations": "不支持在网络磁盘上安装、运行或解压程序和压缩包。",
+			"sections": {
+				"active": {
+					"name": "激活"
+				},
+				"enabled": {
+					"name": "已启用",
+					"info": "启用或禁用网络磁盘。切换此选项时刷新您的资源管理器"
+				},
+			         "mountPoint": {
+					"name": "挂载点",
+					"info": "将挂载点设置为本地目录。本地目录需要为空且可读写",
+					"change": "更改"
+				},
+				"driveLetter": {
+					"name": "盘符",
+					"info": "设置网络磁盘的盘符。仅会显示可用的盘符"
+				},
+				"browse": {
+					"name": "浏览",
+					"info": "使用默认资源管理器浏览网络磁盘"
+				},
+				"cache": {
+					"name": "缓存",
+					"info": "缓存显著加快了浏览网络磁盘的速度"
+				},
+				"cacheSize": {
+					"name": "缓存大小",
+					"info": "我们建议将缓存大小设置得尽可能大。客户端将使用您的本地磁盘来显著加快虚拟磁盘的速度"
+				},
+				"cachePath": {
+					"name": "缓存位置",
+					"info": "更改网络磁盘的缓存位置。必须位于内部磁盘上。如果未更改，将默认使用应用的安装目录"
+				},
+				"readOnly": {
+					"name": "只读",
+					"info": "将网络磁盘安装为只读"
+				}
+			},
+			"dialogs": {
+				"cleanupCache": {
+					"title": "清除缓存",
+					"description": "您确定要清除本地缓存吗？清除缓存会显著减慢初始文件加载速度。",
+					"continue": "清除"
+				},
+				"disable": {
+					"title": "禁用",
+					"description": "您确定要禁用网络磁盘吗？它上面的所有活动操作都将被取消或都会出错。请确保您不再主动使用它。",
+					"continue": "禁用"
+				}
+			},
+			"errors": {
+				"invalidMountPoint": "无效的挂载点",
+				"mountPointNotEmpty": "挂载点需要是一个空目录。",
+				"pathNotInHomeDir": "挂载点需要位于您的主目录 (/home/<yourUsername>) 内。",
+				"pathNotInUserDir": "挂载点需要位于您的用户目录 (/Users/<yourUsername>) 内。",
+				"invalidCachePath": "缓存位置必须位于具有至少 10 GB 可用空间的内部磁盘上。",
+				"cachePathNotReadableWritable": "缓存位置不可读或不可写。",
+				"invalidCachePathLength": "缓存位置路径太长。"
+			},
+			"transfers": {
+				"uploading": "正在于后台上传 {{total}} 个文件",
+				"uploadingPlural": "正在于后台上传 {{total}} 个文件",
+				"uploadingSpeed": "正在于后台以 {{speed}} 上传 {{total}} 个文件",
+				"uploadingPluralSpeed": "正在于后台以 {{speed}} 上传 {{total}} 个文件",
+				"everythingUploaded": "一切都已同步"
+			}
+		},
+		"webdav": {
+			"copyConnect": "复制",
+			"description": "启动本地 WebDAV 服务器，提供标准化协议来访问和管理您的云盘。这允许与支持 WebDAV 的各种应用程序和设备兼容，从而增强您的文件可访问性和管理能力。",
+			"sections": {
+				"active": {
+					"name": "激活"
+				},
+				"enabled": {
+					"name": "已启用",
+					"info": "启用或禁用 WebDAV 服务器"
+				},
+				"protocol": {
+					"name": "HTTP 协议",
+					"info": "更改 HTTP 协议"
+				},
+				"hostname": {
+					"name": "主机名称",
+					"info": "更改服务器应该监听的主机名"
+				},
+				"port": {
+					"name": "端口",
+					"info": "更改服务器应该监听的端口"
+				},
+				"authMode": {
+					"name": "认证方式",
+					"info": "更改认证方式"
+				},
+				"username": {
+					"name": "用户名",
+					"info": "更改 HTTP 身份认证用户名。这不应是您的 Filen 电子邮件或昵称"
+				},
+				"password": {
+					"name": "密码",
+					"info": "更改 HTTP 身份认证码。这不应该是您的 Filen 密码"
+				},
+				"proxyMode": {
+					"name": "代理模式",
+					"info": "启用代理模式。"
+				},
+				"connect": {
+					"name": "连接",
+					"info": "复制 WebDAV URL"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "禁用",
+					"description": "您确定要禁用 WebDAV 服务器吗？该服务器上的所有活动操作都将被取消或出错。请确保您不再主动使用该服务器。",
+					"continue": "禁用"
+				}
+			},
+			"errors": {
+				"invalidPort": "端口无效。接受的范围：{{range}}。",
+				"invalidHostname": "主机名称无效。"
+			}
+		},
+		"s3": {
+			"copyConnect": "复制",
+                        "description": "启动本地 S3 服务器，提供标准化协议来访问和管理您的云盘。这可以兼容各种支持 S3 的应用程序和设备，从而增强您的文件可访问性和管理能力。",
+			"info": "在连接到 S3 服务器时，您需要将区域设置为 \"filen\" 并启用 \"s3ForcePathStyle\".",
+			"sections": {
+				"active": {
+					"name": "激活"
+				},
+				"enabled": {
+					"name": "已启用",
+					"info": "启用或禁用 S3 服务器"
+				},
+				"protocol": {
+					"name": "HTTP 协议",
+					"info": "更改 HTTP 协议"
+				},
+				"hostname": {
+					"name": "主机名称",
+					"info": "更改服务器应该监听的主机名"
+				},
+				"port": {
+					"name": "端口",
+					"info": "更改服务器应该监听的端口"
+				},
+				"accessKeyId": {
+					"name": "AccessKeyId",
+					"info": "更改 AccessKeyId。这不应该是您的 Filen 电子邮件或昵称"
+				},
+				"secretKeyId": {
+					"name": "SecretKeyId",
+					"info": "更改 SecretKeyId。这不应该是您的 Filen 密码"
+				},
+				"connect": {
+					"name": "连接",
+					"info": "复制 WebDAV URL"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "禁用",
+					"description": "您确定要禁用 S3 服务器吗？该服务器上的所有活动操作都将被取消或出错。请确保您不再主动使用它。",
+					"continue": "禁用"
+				}
+			},
+			"errors": {
+				"invalidPort": "端口无效。接受的范围：{{range}}。",
+				"invalidHostname": "主机名称无效。"
+			}
+		}
+	},
+	"syncs": {
+		"eventsTitle": "事件",
+		"ignoredTitle": "已忽略",
+		"issuesTitle": "问题",
+		"settingsTitle": "设置",
+		"transfersTitle": "传输",
+		"noTransfers": "暂无活跃的传输",
+		"noEventsYet": "暂无事件",
+		"nothingIgnored": "未忽略任何文件或文件夹",
+		"noIssues": "暂无问题",
+		"info": {
+			"progress": "正在以 {{speed}} 同步 {{items}} / ({{total}} 项，大约剩余 {{remaining}} ",
+			"progressNoEstimate": "正在同步 {{items}} / ({{total}}) 个项目 ",
+			"upToDate": "均已同步",
+			"errors": "{{count}} 个同步错误",
+			"errorsResolve": "解决",
+			"paused": "同步已暂停",
+			"processingDeltas": "正在处理增量",
+			"syncingChanges": "正在同步更改",
+			"savingState": "正在保存状态",
+			"waitingForLocalDirectoryChanges": "正在等待本地更改",
+			"acquiringLock": "正在获取同步锁",
+			"gettingTrees": "正在读取本地和云端文件夹",
+			"remoteSmokeTestFailed": "无法读取云文件夹，因为它不存在或者您未连接到互联网",
+			"localSmokeTestFailed": "无法读取本地文件夹，要么该文件夹不存在，要么您没有读取或写入权限"
+		},
+		"empty": {
+			"title": "尚未设置同步",
+			"description": "您可以将本地目录与云同步，或将云文件夹与设备同步",
+			"create": "创建"
+		},
+		"events": {
+			"createLocalDirectory": "{{name}} 已在本地创建",
+			"renameLocalDirectory": "{{name}} 已在本地重命名",
+			"deleteLocalDirectory": "{{name}} 已从本地删除",
+			"createRemoteDirectory": "{{name}} 已在云端创建",
+			"renameRemoteDirectory": "{{name}} 已在云端重命名",
+			"deleteRemoteDirectory": "{{name}} 已从云端删除",
+			"deleteLocalFile": "{{name}} 已从本地删除",
+			"deleteRemoteFile": "{{name}} 已从云端删除",
+			"download": "{{name}} 已从云端下载",
+			"upload": "{{name}} 已上传至云端",
+			"renameLocalFile": "{{name}} 已在本地重命名",
+			"renameRemoteFile": "{{name}} 已在云端重命名"
+		},
+		"settings": {
+			"sections": {
+				"delete": {
+					"name": "删除",
+					"info": "删除同步",
+					"delete": "删除"
+				},
+				"pause": {
+					"name": "暂停",
+					"info": "暂停同步"
+				},
+				"mode": {
+					"name": "同步模式",
+					"info": "更改同步模式"
+				},
+				"forceSync": {
+					"name": "强制同步",
+					"info": "重置内部缓存并强制重新扫描本地和云文件夹",
+					"forceSync": "强制同步"
+				},
+				"excludeDotFiles": {
+					"name": "排除点文件",
+					"info": "切换点文件/路径排除（推荐）"
+				},
+				"filenIgnore": {
+					"name": ".filenignore",
+					"info": "编辑忽略文件以排除本地或云。工作原理与 .gitignore 文件相同",
+					"edit": "编辑"
+				},
+				"disableLocalTrash": {
+					"name": "禁用本地回收站",
+					"info": "启用或禁用本地回收站。禁用后，客户端将永久删除文件或目录，而不是将其移动到本地同步路径内的本地回收站目录中"
+				}
+			}
+		},
+		"dialogs": {
+			"delete": {
+				"title": "删除同步",
+				"description": "您确定要删除此同步吗？",
+				"continue": "删除"
+			},
+			"resetErrors": {
+				"title": "解决错误",
+				"description": "您确定要将所有错误标记为已解决并继续同步吗？请确保所有错误都已被解决。",
+				"continue": "解决"
+			},
+			"filenIgnore": {
+				"title": ".filenignore",
+				"save": "保存"
+			},
+			"deleteIssue": {
+				"title": "删除问题",
+				"description": "您确定要删除此问题吗？请确保您已解决该问题或该问题只是暂时的，否则该问题最终会再次出现。",
+				"continue": "删除"
+			}
+		},
+		"ignored": {
+			"types": {
+				"dotFile": "点文件",
+				"defaultIgnore": "默认忽略",
+				"empty": "清空"
+			},
+			"reasons": {
+				"dotFile": "文件或目录位于点路径内",
+				"defaultIgnore": "文件或目录位于默认忽略的路径内",
+				"empty": "文件为空",
+				"invalidPath": "文件或目录位于无效路径内",
+				"symlink": "文件或目录是符号链接。客户端不会跟踪符号链接，以防止无限同步循环。",
+				"duplicate": "文件或目录路径出现两次",
+				"filenIgnore": ".filenignore 忽略的文件或目录",
+				"invalidType": "项目不是文件或目录",
+				"nameLength": "文件或目录名太长",
+				"pathLength": "文件或目录路径太长",
+				"permissions": "权限不足"
+			}
+		},
+		"issues": {
+			"types": {
+				"title": {
+					"permission": "权限",
+					"io": "输入/输出",
+					"noSpace": "可用空间或文件监视器不足",
+					"openFiles": "打开文件限制",
+					"fileOrDirExists": "文件或目录存在",
+					"fileOrDirNotFound": "找不到文件或目录",
+					"isFile": "文件",
+					"isDir": "目录",
+					"notDir": "不是目录",
+					"badConnection": "连接",
+					"fileOrDirTemporarilyUnavailable": "文件或目录暂时不可用",
+					"unknown": "未知错误",
+					"dirNotEmpty": "目录不为空",
+					"fileOrDirNameTooLong": "文件或目录名称/路径太长"
+				},
+				"info": {
+					"permission": "请确保客户端具有访问本地同步目录所需的所有权限。",
+					"io": "请确保您的本地同步目录和底层存储媒体正常工作。客户端目前无法正确访问它。",
+					"noSpace": "您没有足够的本地存储空间，或者系统用完了可用的文件监视器。",
+					"openFiles": "客户端已达到打开文件数的限制。请增加限制。",
+					"fileOrDirExists": "该文件或目录已存在。这很可能是暂时的问题，请尝试重新启动客户端。",
+					"fileOrDirNotFound": "未找到文件或目录。这很可能是暂时问题，请尝试重新启动客户端。",
+					"isFile": "这很可能是一个暂时的问题，请尝试重新启动客户端。",
+					"isDir": "这很可能是一个暂时的问题，请尝试重新启动客户端。",
+					"notDir": "这很可能是一个暂时的问题，请尝试重新启动客户端。",
+					"badConnection": "请确保您已连接到互联网并且可以顺利访问 Filen。",
+					"fileOrDirTemporarilyUnavailable": "这很可能是一个暂时的问题，请尝试重新启动客户端。",
+					"unknown": "未知错误，请尝试重新启动客户端。",
+					"dirNotEmpty": "目录不为空。这很可能是暂时的问题，请尝试重新启动客户端。",
+					"fileOrDirNameTooLong": "文件或目录名称/路径对于您的本地文件系统来说太长。"
+				}
+			}
+		}
+	},
+	"isOnline": {
+		"title": "有人拔掉了网线吗？",
+		"info": "我们在将您连接到我们的平台时遇到问题，请检查您的互联网连接。",
+		"infoSub": "如果您的互联网可以正常使用，请联系我们。"
+	},
+	"404": {
+		"info": "哎呀，您要查找的页面不存在。",
+		"btn": "转到首页"
+	},
+	"announcements": {
+		"gotIt": "知道了"
+	},
+	"maintenance": {
+		"title": "Filen 目前正在维护中",
+		"info": "我们目前正在进行一些维护，以便为您提供更好的体验。我们的平台将很快恢复，全新且经过改进。",
+		"infoSub": "感谢您的耐心等待！我们正在幕后努力为您带来新功能。敬请期待！"
+	}
+}
