@@ -7,12 +7,14 @@ import { IS_DESKTOP, IS_APPLE_DEVICE, DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import { showConfirmDialog } from "./confirm"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/providers/themeProvider"
+import useDriveURLState from "@/hooks/useDriveURLState"
 
 export const IsOnlineDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(!window.navigator.onLine)
 	const { t } = useTranslation()
 	const isPinging = useRef<boolean>(false)
 	const { dark } = useTheme()
+	const { publicLink } = useDriveURLState()
 
 	const onEscapeKeyDown = useCallback((e: KeyboardEvent) => {
 		e.preventDefault()
@@ -106,6 +108,10 @@ export const IsOnlineDialog = memo(() => {
 			window.removeEventListener("offline", navigatorListener)
 		}
 	}, [ping])
+
+	if (publicLink) {
+		return null
+	}
 
 	return (
 		<Dialog open={open}>

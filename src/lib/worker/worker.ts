@@ -3339,12 +3339,12 @@ export async function pingAPI(): Promise<boolean> {
 
 	const timeout = setTimeout(() => {
 		abortController.abort()
-	}, 50000)
+	}, 55000)
 
 	try {
 		const response = await axios({
 			url: "https://gateway.filen.io",
-			timeout: 50000,
+			timeout: 55000,
 			method: "HEAD",
 			validateStatus: () => true,
 			signal: abortController.signal
