@@ -205,8 +205,14 @@ export const General = memo(() => {
 	)
 
 	const onLanguageChange = useCallback(
-		(lang: string) => {
-			i18n.changeLanguage(lang).catch(console.error)
+		async (lang: string) => {
+			try {
+				await i18n.changeLanguage(lang)
+
+				window.localStorage.setItem("i18nextLng", lang)
+			} catch (e) {
+				console.error(e)
+			}
 		},
 		[i18n]
 	)

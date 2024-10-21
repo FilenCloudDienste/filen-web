@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 import locales from "virtual:i18next-loader"
 
-export const storedLang = localStorage.getItem("lang")
+export const storedLang = localStorage.getItem("i18nextLng")
 export const navigatorLang = window.navigator.language
 	? window.navigator.language.includes("-")
 		? window.navigator.language.split("-")[0]?.toLowerCase()
@@ -57,7 +57,7 @@ i18n.use(LanguageDetector)
 				translation: locales.zh
 			}
 		},
-		lng: storedLang || navigatorLang || undefined,
+		lng: storedLang ? storedLang : navigatorLang ? navigatorLang : undefined,
 		debug: true,
 		fallbackLng: "en",
 		interpolation: {
