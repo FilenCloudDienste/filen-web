@@ -1,6 +1,6 @@
 import MainContainer from "@/components/mainContainer"
 import RequireAuth from "@/components/requireAuthed"
-import { memo, useCallback, useEffect } from "react"
+import { memo, useCallback, useEffect, useMemo } from "react"
 import { type CloudItem, type CloudItemShared } from "@filen/sdk"
 import List from "./list"
 import { type Prettify } from "@/types"
@@ -11,6 +11,13 @@ import { promiseAllChunked, dialogsOpen, contextMenusOpen, getCurrentParentDirec
 import { directoryUUIDToNameCache } from "@/cache"
 import useErrorToast from "@/hooks/useErrorToast"
 import eventEmitter from "@/lib/eventEmitter"
+import useAccount from "@/hooks/useAccount"
+import useWindowSize from "@/hooks/useWindowSize"
+import { DESKTOP_TOPBAR_HEIGHT, IS_DESKTOP } from "@/constants"
+import { useTranslation } from "react-i18next"
+import { useNavigate } from "@tanstack/react-router"
+import { Link, Star } from "lucide-react"
+import { Button } from "../ui/button"
 
 export type DriveCloudItem = Prettify<
 	CloudItem &
@@ -34,6 +41,18 @@ export const Drive = memo(() => {
 		})
 	)
 	const errorToast = useErrorToast()
+	const account = useAccount()
+	const windowSize = useWindowSize()
+	const { t } = useTranslation()
+	const navigate = useNavigate()
+
+	const activeSubCount = useMemo(() => {
+		return account ? account.account.subs.filter(sub => sub.activated && !sub.cancelled).length : 0
+	}, [account])
+
+	const listHeight = useMemo(() => {
+		return IS_DESKTOP ? windowSize.height - 48 - DESKTOP_TOPBAR_HEIGHT : windowSize.height - 48
+	}, [windowSize.height])
 
 	const uploadFiles = useCallback(
 		async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,6 +195,15 @@ export const Drive = memo(() => {
 		[setItems, searchTerm]
 	)
 
+	const upgradeNow = useCallback(() => {
+		navigate({
+			to: "/settings/$type",
+			params: {
+				type: "plans"
+			}
+		})
+	}, [navigate])
+
 	useEffect(() => {
 		window.addEventListener("keydown", keyDownListener)
 
@@ -206,7 +234,36 @@ export const Drive = memo(() => {
 					className="hidden"
 				/>
 				<div className="w-full h-full flex flex-col select-none">
-					<List />
+					{parent.includes("links") && account && activeSubCount === 0 ? (
+						<div
+							className="flex flex-col items-center justify-center p-4 w-full gap-2"
+							style={{
+								height: listHeight
+							}}
+						>
+							<div className="flex flex-row items-center justify-center w-full h-full">
+								<div className="flex flex-col p-4 justify-center items-center">
+									<Link
+										width={128}
+										height={128}
+										className="text-muted-foreground"
+									/>
+									<p className="text-xl text-center mt-4">{t("drive.linksNoSub.subscriptionNeeded")}</p>
+									<p className="text-muted-foreground text-center">{t("drive.linksNoSub.description")}</p>
+									<Button
+										variant="secondary"
+										className="items-center gap-2 mt-4"
+										onClick={upgradeNow}
+									>
+										<Star size={16} />
+										{t("drive.linksNoSub.upgradeNow")}
+									</Button>
+								</div>
+							</div>
+						</div>
+					) : (
+						<List />
+					)}
 				</div>
 			</MainContainer>
 		</RequireAuth>

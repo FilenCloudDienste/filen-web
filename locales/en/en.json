@@ -290,7 +290,9 @@
 			"password": "Password (leave empty to disable)",
 			"passwordPlaceholder": "Password",
 			"progress": "{{done}} of {{total}} items added to the public link",
-			"expireNever": "Never"
+			"expireNever": "Never",
+			"subscriptionNeeded": "You need an active subscription to create public links.",
+			"upgradeNow": "Upgrade now"
 		},
 		"sharedWith": {
 			"title": "Shared with",
@@ -1103,6 +1105,11 @@
 				"placeholder": "Email address of a Filen user",
 				"continue": "Share"
 			}
+		},
+		"linksNoSub": {
+			"subscriptionNeeded": "Subscription needed",
+			"description": "Upgrading to a any pro plan will unlock public links for your account",
+			"upgradeNow": "Upgrade now"
 		},
 		"emptyPlaceholder": {
 			"uploadFiles": "Upload files",
