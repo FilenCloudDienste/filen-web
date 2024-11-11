@@ -290,7 +290,9 @@
 			"password": "密码（留空表示禁用）",
 			"passwordPlaceholder": "密码",
 			"progress": "已将 {{done}} / {{total}} 个项目添加到公开链接",
-			"expireNever": "永不"
+			"expireNever": "永不",
+			"subscriptionNeeded": "您需要一个有效订阅才能创建公开链接。",
+			"upgradeNow": "立即升级"
 		},
 		"sharedWith": {
 			"title": "共享给",
@@ -1103,6 +1105,11 @@
 				"placeholder": "Filen 用户的邮件地址",
 				"continue": "共享"
 			}
+		},
+		"linksNoSub": {
+			"subscriptionNeeded": "需要订阅",
+			"description": "升级到任何 pro 计划都将为您的账户解锁公开链接创建权限",
+			"upgradeNow": "立即升级"
 		},
 		"emptyPlaceholder": {
 			"uploadFiles": "上传文件",
