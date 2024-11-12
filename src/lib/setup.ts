@@ -2,13 +2,15 @@ import { setItem } from "./localForage"
 import { reinitSDK, getSDK } from "./sdk"
 import worker from "./worker"
 import { type FilenSDKConfig } from "@filen/sdk"
-import { IS_DESKTOP, DESKTOP_CONFIG_VERSION, SDK_CONFIG_VERSION } from "@/constants"
+import { IS_DESKTOP } from "@/constants"
 import { registerFSAServiceWorker } from "./serviceWorker"
 import { type FilenDesktopConfig } from "@filen/desktop/dist/types"
 import { clear as clearLocalForage } from "@/lib/localForage"
 import { connect as socketConnect } from "@/lib/socket"
 import { localStorageKey as authedLocalStorageKey } from "@/hooks/useIsAuthed"
 import queryClientPersisterIDB from "./queryPersister"
+import { localStorageKey as sdkConfigLocalStorageKey } from "@/hooks/useSDKConfig"
+import { localStorageKey as desktopConfigLocalStorageKey } from "@/hooks/useDesktopConfig"
 
 export const DEFAULT_SDK_CONFIG: FilenSDKConfig = {
 	email: "anonymous",
@@ -173,10 +175,10 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
 	const authed = window.localStorage.getItem(authedLocalStorageKey)
 		? window.localStorage.getItem(authedLocalStorageKey) === "true"
 		: false
-	const sdkConfig = JSON.parse(window.localStorage.getItem(`sdkConfig:${SDK_CONFIG_VERSION}`) ?? JSON.stringify(DEFAULT_SDK_CONFIG))
+	const sdkConfig = JSON.parse(window.localStorage.getItem(sdkConfigLocalStorageKey) ?? JSON.stringify(DEFAULT_SDK_CONFIG))
 	const initConfig = config ? config : authed ? sdkConfig : DEFAULT_SDK_CONFIG
 	const desktopConfig = JSON.parse(
-		window.localStorage.getItem(`desktopConfig:${DESKTOP_CONFIG_VERSION}`) ??
+		window.localStorage.getItem(desktopConfigLocalStorageKey) ??
 			JSON.stringify({
 				...DEFAULT_DESKTOP_CONFIG,
 				sdkConfig: initConfig
@@ -203,19 +205,18 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
 		await socketConnect()
 	}
 
-	window.localStorage.setItem(`sdkConfig:${SDK_CONFIG_VERSION}`, JSON.stringify(initConfig))
-	window.localStorage.setItem(`desktopConfig:${DESKTOP_CONFIG_VERSION}`, JSON.stringify(desktopConfig))
+	window.localStorage.setItem(sdkConfigLocalStorageKey, JSON.stringify(initConfig))
+	window.localStorage.setItem(desktopConfigLocalStorageKey, JSON.stringify(desktopConfig))
 
-	await Promise.all([
-		setItem(`sdkConfig:${SDK_CONFIG_VERSION}`, initConfig),
-		setItem(`desktopConfig:${DESKTOP_CONFIG_VERSION}`, desktopConfig)
-	])
+	await Promise.all([setItem(sdkConfigLocalStorageKey, initConfig), setItem(desktopConfigLocalStorageKey, desktopConfig)])
 	await Promise.all([worker.initializeSDK(initConfig), IS_DESKTOP ? window.desktopAPI.setConfig(desktopConfig) : Promise.resolve()])
 
 	if (!IS_DESKTOP) {
 		// Try to register it, if it fails we fallback to the polyfill.
 		registerFSAServiceWorker().catch(console.error)
 	}
+
+	console.log("Setup done")
 }
 
 /**

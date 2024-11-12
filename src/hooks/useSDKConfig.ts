@@ -1,11 +1,11 @@
 import { type FilenSDKConfig } from "@filen/sdk"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { DEFAULT_SDK_CONFIG } from "@/lib/setup"
-import { SDK_CONFIG_VERSION } from "@/constants"
+import { SDK_CONFIG_VERSION, DESKTOP_CONFIG_VERSION } from "@/constants"
 
 export type UseSDKConfig = Required<FilenSDKConfig>
 
-export const localStorageKey = `sdkConfig:${SDK_CONFIG_VERSION}`
+export const localStorageKey = `sdkConfig:${SDK_CONFIG_VERSION}:${DESKTOP_CONFIG_VERSION}`
 
 export function getSDKConfig(): FilenSDKConfig {
 	const sdkConfig = window.localStorage.getItem(localStorageKey)

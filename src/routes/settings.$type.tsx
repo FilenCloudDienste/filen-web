@@ -7,7 +7,7 @@ export const Route = createFileRoute("/settings/$type")({
 	component: Settings
 })
 
-function Settings() {
+export function Settings() {
 	return (
 		<RequireAuth>
 			<MainContainer>

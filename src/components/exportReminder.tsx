@@ -58,10 +58,6 @@ export const ExportReminder = memo(() => {
 	}, [t, canShow, navigate])
 
 	useEffect(() => {
-		if (!canShow) {
-			return
-		}
-
 		clearTimeout(remindTimeout.current)
 
 		remindTimeout.current = setTimeout(() => {

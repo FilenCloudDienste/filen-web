@@ -8,6 +8,7 @@ import { getSocket } from "@/lib/socket"
 import { type SocketEvent } from "@filen/sdk"
 import { logout } from "@/lib/setup"
 import useIsAuthed from "@/hooks/useIsAuthed"
+import { getSDK } from "@/lib/sdk"
 
 export const ActivityHandler = memo(() => {
 	const windowFocus = useWindowFocus()
@@ -65,15 +66,23 @@ export const ActivityHandler = memo(() => {
 		}
 
 		try {
-			await worker.fetchAccount()
+			const sdk = getSDK()
+
+			if (typeof sdk.config.apiKey !== "string" || (typeof sdk.config.apiKey === "string" && sdk.config.apiKey.length <= 16)) {
+				return
+			}
+
+			const isAPIKeyValid = await sdk.user().checkAPIKeyValidity()
+
+			if (!isAPIKeyValid) {
+				await logoutFn()
+
+				return
+			}
 
 			setTimeout(loggedOutCheck, 15000)
 		} catch (e) {
 			console.error(e)
-
-			if (e instanceof Error && e.message.toLowerCase().includes("api") && e.message.toLowerCase().includes("key")) {
-				logoutFn()
-			}
 		}
 	}, [authed, logoutFn])
 
