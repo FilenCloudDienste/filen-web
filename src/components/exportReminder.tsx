@@ -1,29 +1,39 @@
-import { useEffect, useCallback, memo } from "react"
-import { useLocalStorage } from "@uidotdev/usehooks"
+import { useEffect, useCallback, memo, useRef, useMemo } from "react"
 import useAccount from "@/hooks/useAccount"
 import { showConfirmDialog } from "./dialogs/confirm"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "@tanstack/react-router"
 import useIsAuthed from "@/hooks/useIsAuthed"
-import { Semaphore } from "@/lib/semaphore"
-
-const mutex = new Semaphore(1)
+import useLocation from "@/hooks/useLocation"
 
 export const ExportReminder = memo(() => {
 	const account = useAccount()
-	const [exportReminderFired, setExportReminderFired] = useLocalStorage<boolean>("exportReminderFired", false)
 	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const [authed] = useIsAuthed()
+	const didShowReminder = useRef<boolean>(false)
+	const location = useLocation()
+	const remindTimeout = useRef<ReturnType<typeof setTimeout>>()
+
+	const canShow = useMemo(() => {
+		if (!account || account.account.didExportMasterKeys || didShowReminder.current || !authed) {
+			return false
+		}
+
+		return (
+			(location.includes("/drive") || location.includes("/notes") || location.includes("/chats") || location.includes("/contacts")) &&
+			!location.includes("/settings")
+		)
+	}, [account, authed, location])
 
 	const remind = useCallback(async () => {
-		await mutex.acquire()
+		if (!canShow) {
+			return
+		}
+
+		didShowReminder.current = true
 
 		try {
-			if (!account || account.account.didExportMasterKeys || exportReminderFired || !authed) {
-				return
-			}
-
 			if (
 				!(await showConfirmDialog({
 					title: t("dialogs.exportReminder.title"),
@@ -33,12 +43,8 @@ export const ExportReminder = memo(() => {
 					cancelButtonText: t("dialogs.exportReminder.dismiss")
 				}))
 			) {
-				setExportReminderFired(true)
-
 				return
 			}
-
-			setExportReminderFired(true)
 
 			navigate({
 				to: "/settings/$type",
@@ -48,18 +54,24 @@ export const ExportReminder = memo(() => {
 			})
 		} catch (e) {
 			console.error(e)
-		} finally {
-			mutex.release()
 		}
-	}, [account, t, navigate, exportReminderFired, setExportReminderFired, authed])
+	}, [t, canShow, navigate])
 
 	useEffect(() => {
-		if (!account || account.account.didExportMasterKeys || exportReminderFired || !authed) {
+		if (!canShow) {
 			return
 		}
 
-		remind()
-	}, [account, remind, exportReminderFired, authed])
+		clearTimeout(remindTimeout.current)
+
+		remindTimeout.current = setTimeout(() => {
+			remind()
+		}, 1000)
+
+		return () => {
+			clearTimeout(remindTimeout.current)
+		}
+	}, [canShow, remind])
 
 	return null
 })
