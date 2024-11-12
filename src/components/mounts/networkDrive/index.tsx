@@ -376,7 +376,9 @@ export const NetworkDrive = memo(() => {
 				return
 			}
 
-			await window.desktopAPI.openLocalPath(`${desktopConfig.networkDriveConfig.mountPoint}\\`)
+			await window.desktopAPI.openLocalPath(
+				`${desktopConfig.networkDriveConfig.mountPoint}${window.desktopAPI.osPlatform() === "win32" ? (!desktopConfig.networkDriveConfig.mountPoint.endsWith("\\") ? "\\" : "") : !desktopConfig.networkDriveConfig.mountPoint.endsWith("/") ? "/" : ""}`
+			)
 		} catch (e) {
 			console.error(e)
 
@@ -776,23 +778,20 @@ export const NetworkDrive = memo(() => {
 								</SelectContent>
 							</Select>
 						</Section>
-						{!enablingNetworkDrive &&
-							isMountedQuery.isSuccess &&
-							isMountedQuery.data.mounted &&
-							window.desktopAPI.osPlatform() === "win32" && (
-								<Section
-									name={t("mounts.networkDrive.sections.browse.name")}
-									info={t("mounts.networkDrive.sections.browse.info")}
-									className="mt-10"
+						{!enablingNetworkDrive && isMountedQuery.isSuccess && isMountedQuery.data.mounted && (
+							<Section
+								name={t("mounts.networkDrive.sections.browse.name")}
+								info={t("mounts.networkDrive.sections.browse.info")}
+								className="mt-10"
+							>
+								<Button
+									onClick={browse}
+									size="sm"
 								>
-									<Button
-										onClick={browse}
-										size="sm"
-									>
-										{t("mounts.networkDrive.browse")}
-									</Button>
-								</Section>
-							)}
+									{t("mounts.networkDrive.browse")}
+								</Button>
+							</Section>
+						)}
 						<div className="w-full h-12" />
 					</div>
 				</div>

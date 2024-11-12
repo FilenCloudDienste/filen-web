@@ -456,7 +456,9 @@ export const ContextMenu = memo(
 			} catch (e) {
 				console.error(e)
 
-				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				if (!(e as unknown as Error).toString().includes("abort")) {
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				}
 			} finally {
 				toast.dismiss()
 			}
@@ -538,7 +540,9 @@ export const ContextMenu = memo(
 			} catch (e) {
 				console.error(e)
 
-				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				if (!(e as unknown as Error).toString().includes("abort")) {
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				}
 			} finally {
 				if (toast) {
 					toast.dismiss()
