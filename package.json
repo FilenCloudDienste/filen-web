@@ -1,7 +1,7 @@
 {
 	"name": "@filen/web",
 	"private": false,
-	"version": "0.1.53",
+	"version": "0.1.54",
 	"type": "module",
 	"description": "Filen Web & Desktop app",
 	"scripts": {
@@ -23,7 +23,7 @@
 		"@alptugidin/react-circular-progress-bar": "^1.1.2",
 		"@emoji-mart/data": "^1.1.2",
 		"@emoji-mart/react": "^1.1.1",
-		"@filen/desktop": "^3.0.28",
+		"@filen/desktop": "^3.0.29",
 		"@filen/network-drive": "^0.9.28",
 		"@filen/sdk": "^0.1.176",
 		"@filen/sync": "^0.1.80",

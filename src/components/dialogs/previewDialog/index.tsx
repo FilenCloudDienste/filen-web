@@ -215,7 +215,7 @@ export const PreviewDialog = memo(() => {
 				for (const uuid in urlObjects) {
 					const object = urlObjects[uuid]
 
-					if (object && !object.startsWith("http://127.0.0.1")) {
+					if (object && !object.startsWith("http://localhost")) {
 						globalThis.URL.revokeObjectURL(object)
 					}
 				}
@@ -268,9 +268,13 @@ export const PreviewDialog = memo(() => {
 			}
 
 			try {
-				if ((previewType === "audio" || previewType === "video") && IS_DESKTOP && isFileStreamable(itm.name, itm.mime)) {
+				if (
+					(previewType === "audio" || previewType === "video" || previewType === "image") &&
+					IS_DESKTOP &&
+					isFileStreamable(itm.name, itm.mime)
+				) {
 					const isDesktopHTTPOnline = await worker.httpHealthCheck({
-						url: "http://127.0.0.1:61034/ping",
+						url: "http://localhost:61034/ping",
 						expectedStatusCode: 200,
 						method: "GET",
 						timeout: 5000
@@ -294,7 +298,7 @@ export const PreviewDialog = memo(() => {
 
 						setURLObjects(prev => ({
 							...prev,
-							[itm.uuid]: `http://127.0.0.1:61034/stream?file=${encodeURIComponent(fileBase64)}`
+							[itm.uuid]: `http://localhost:61034/stream?file=${encodeURIComponent(fileBase64)}`
 						}))
 
 						return

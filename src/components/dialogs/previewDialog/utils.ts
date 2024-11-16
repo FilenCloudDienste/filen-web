@@ -191,7 +191,19 @@ export const streamableMimeTypes: string[] = [
 	"audio/x-flac",
 	"audio/x-ogg",
 	"audio/x-vorbis",
-	"audio/x-opus"
+	"audio/x-opus",
+	"image/jpeg",
+	"image/pjpeg",
+	"image/png",
+	"image/gif",
+	"image/bmp",
+	"image/webp",
+	"image/avif",
+	"image/apng",
+	"image/svg+xml",
+	"image/x-icon",
+	"image/vnd.microsoft.icon",
+	"image/tiff"
 ]
 
 export function isFileStreamable(name: string, mime: string): boolean {
