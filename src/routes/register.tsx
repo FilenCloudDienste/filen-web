@@ -13,6 +13,7 @@ import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { showInputDialog } from "@/components/dialogs/input"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
+import Cookies from "js-cookie"
 
 export const Route = createFileRoute("/register")({
 	component: Register
@@ -133,6 +134,8 @@ export function Register() {
 				false
 			)
 
+			const refId = Cookies.get("refId")
+			const affId = Cookies.get("affId")
 			const salt = await getSDK().crypto().utils.generateRandomString({ length: 256 })
 			const derived = await getSDK().crypto().utils.generatePasswordAndMasterKeyBasedOnAuthVersion({
 				rawPassword: password,
@@ -140,12 +143,16 @@ export function Register() {
 				authVersion: 2
 			})
 
-			await getSDK().api(3).register({
-				email,
-				password: derived.derivedPassword,
-				salt,
-				authVersion: 2
-			})
+			await getSDK()
+				.api(3)
+				.register({
+					email,
+					password: derived.derivedPassword,
+					salt,
+					authVersion: 2,
+					...(typeof refId === "string" && refId.length > 0 && refId.length < 128 ? { refId } : {}),
+					...(typeof affId === "string" && affId.length > 0 && affId.length < 128 ? { affId } : {})
+				})
 
 			await showConfirmDialog({
 				title: t("register.alerts.success.title"),
