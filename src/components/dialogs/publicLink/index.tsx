@@ -28,7 +28,7 @@ export const PublicLinkDialog = memo(() => {
 	const navigate = useNavigate()
 
 	const activeSubCount = useMemo(() => {
-		return account ? account.account.subs.filter(sub => sub.activated && !sub.cancelled).length : 0
+		return account ? account.account.subs.filter(sub => sub.activated === 1 && sub.cancelled === 0).length : 0
 	}, [account])
 
 	const close = useCallback(() => {
