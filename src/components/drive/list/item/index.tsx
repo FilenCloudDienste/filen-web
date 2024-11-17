@@ -12,7 +12,7 @@ import { fileNameToThumbnailType, fileNameToPreviewType } from "@/components/dia
 import { cn } from "@/lib/utils"
 import { Heart, MoreHorizontal } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
-import { THUMBNAIL_MAX_FETCH_SIZE, MAX_PREVIEW_SIZE } from "@/constants"
+import { THUMBNAIL_MAX_FETCH_SIZE, MAX_PREVIEW_SIZE_DESKTOP, MAX_PREVIEW_SIZE_WEB, IS_DESKTOP } from "@/constants"
 import { Badge } from "@/components/ui/badge"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { useDriveSharedStore, useDriveItemsStore } from "@/stores/drive.store"
@@ -27,6 +27,7 @@ import useDriveURLState from "@/hooks/useDriveURLState"
 import useDriveListColumnSize from "@/hooks/useDriveListColumnSize"
 import { useDoubleTap } from "use-double-tap"
 import useIsMobile from "@/hooks/useIsMobile"
+import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -87,6 +88,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const listItemRef = useRef<HTMLDivElement>(null)
 	const driveListColumnSize = useDriveListColumnSize()
 	const isMobile = useIsMobile()
+	const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
 
 	const previewType = useMemo(() => {
 		return fileNameToPreviewType(item.name)
@@ -109,7 +111,13 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	}, [isInsidePublicLink, setPublicLinkSearch, setDriveSearch])
 
 	const onDoubleClick = useCallback(() => {
-		if (item.type === "file" && previewType !== "other" && MAX_PREVIEW_SIZE >= item.size) {
+		const maxPreviewSize = IS_DESKTOP
+			? isDesktopHTTPServerOnline
+				? MAX_PREVIEW_SIZE_DESKTOP
+				: MAX_PREVIEW_SIZE_WEB
+			: MAX_PREVIEW_SIZE_WEB
+
+		if (item.type === "file" && previewType !== "other" && maxPreviewSize >= item.size) {
 			eventEmitter.emit("openPreviewModal", { item })
 
 			return
@@ -152,7 +160,8 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 		setVirtualURL,
 		isInsidePublicLink,
 		navigating,
-		setSearch
+		setSearch,
+		isDesktopHTTPServerOnline
 	])
 
 	const onClick = useCallback(

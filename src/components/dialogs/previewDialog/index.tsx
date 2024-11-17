@@ -12,7 +12,7 @@ import { Loader as LoaderIcon, X, Save, ArrowLeft, ArrowRight, Eye } from "lucid
 import { showConfirmDialog } from "../confirm"
 import { uploadFile } from "@/lib/worker/worker"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { TOOLTIP_POPUP_DELAY, IS_APPLE_DEVICE, IS_DESKTOP, MAX_PREVIEW_SIZE, MAX_PREVIEW_SIZE_WEB } from "@/constants"
+import { TOOLTIP_POPUP_DELAY, IS_APPLE_DEVICE, IS_DESKTOP, MAX_PREVIEW_SIZE_DESKTOP, MAX_PREVIEW_SIZE_WEB } from "@/constants"
 import { useTranslation } from "react-i18next"
 import { v4 as uuidv4 } from "uuid"
 import { showInputDialog } from "../input"
@@ -30,7 +30,7 @@ import useLocation from "@/hooks/useLocation"
 import { cn, isValidFileName } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import useErrorToast from "@/hooks/useErrorToast"
-import worker from "@/lib/worker"
+import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
 
 const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
 
@@ -75,6 +75,7 @@ export const PreviewDialog = memo(() => {
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 	const location = useLocation()
 	const errorToast = useErrorToast()
+	const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
 
 	const itemsOrdered = useMemo(() => {
 		if (!open) {
@@ -262,8 +263,13 @@ export const PreviewDialog = memo(() => {
 			}
 
 			const previewType = fileNameToPreviewType(itm.name)
+			const maxPreviewSize = IS_DESKTOP
+				? isDesktopHTTPServerOnline
+					? MAX_PREVIEW_SIZE_DESKTOP
+					: MAX_PREVIEW_SIZE_WEB
+				: MAX_PREVIEW_SIZE_WEB
 
-			if (previewType === "other" || itm.size >= MAX_PREVIEW_SIZE) {
+			if (previewType === "other" || itm.size >= maxPreviewSize) {
 				return
 			}
 
@@ -273,46 +279,36 @@ export const PreviewDialog = memo(() => {
 					IS_DESKTOP &&
 					isFileStreamable(itm.name, itm.mime)
 				) {
-					const isDesktopHTTPOnline = await worker.httpHealthCheck({
-						url: "http://localhost:61034/ping",
-						expectedStatusCode: 200,
-						method: "GET",
-						timeout: 5000
-					})
+					const fileBase64 = Buffer.from(
+						JSON.stringify({
+							name: itm.name,
+							mime: itm.mime,
+							size: itm.size,
+							uuid: itm.uuid,
+							bucket: itm.bucket,
+							key: itm.key,
+							version: itm.version,
+							chunks: itm.chunks,
+							region: itm.region
+						}),
+						"utf-8"
+					).toString("base64")
 
-					if (isDesktopHTTPOnline) {
-						const fileBase64 = Buffer.from(
-							JSON.stringify({
-								name: itm.name,
-								mime: itm.mime,
-								size: itm.size,
-								uuid: itm.uuid,
-								bucket: itm.bucket,
-								key: itm.key,
-								version: itm.version,
-								chunks: itm.chunks,
-								region: itm.region
-							}),
-							"utf-8"
-						).toString("base64")
+					setURLObjects(prev => ({
+						...prev,
+						[itm.uuid]: `http://localhost:61034/stream?file=${encodeURIComponent(fileBase64)}`
+					}))
 
-						setURLObjects(prev => ({
-							...prev,
-							[itm.uuid]: `http://localhost:61034/stream?file=${encodeURIComponent(fileBase64)}`
-						}))
-
-						return
-					}
-
-					if (itm.size >= MAX_PREVIEW_SIZE_WEB) {
-						return
-					}
+					return
 				}
 
 				const buffer = await readFileAndSanitize({ item: itm, emitEvents: false })
 
 				if (previewType === "text" || previewType === "docx" || previewType === "md" || previewType === "code") {
-					setBuffers(prev => ({ ...prev, [itm.uuid]: buffer }))
+					setBuffers(prev => ({
+						...prev,
+						[itm.uuid]: buffer
+					}))
 				} else {
 					setURLObjects(prev => ({
 						...prev,
@@ -325,7 +321,7 @@ export const PreviewDialog = memo(() => {
 				cleanup()
 			}
 		},
-		[cleanup]
+		[cleanup, isDesktopHTTPServerOnline]
 	)
 
 	const saveFile = useCallback(async () => {
@@ -353,7 +349,11 @@ export const PreviewDialog = memo(() => {
 
 			eventEmitter.emit("refetchDrive")
 
-			setBuffers(prev => ({ ...prev, [itm.uuid]: buffer }))
+			setBuffers(prev => ({
+				...prev,
+				[itm.uuid]: buffer
+			}))
+
 			setItem(itm)
 			setDidChange(false)
 		} catch (e) {
@@ -475,7 +475,10 @@ export const PreviewDialog = memo(() => {
 		setSaving(false)
 		setDidChange(false)
 		setItem(newTextFileItem)
-		setBuffers(prev => ({ ...prev, [newTextFileItem.uuid]: Buffer.from("", "utf8") }))
+		setBuffers(prev => ({
+			...prev,
+			[newTextFileItem.uuid]: Buffer.from("", "utf8")
+		}))
 		setOpen(true)
 	}, [
 		saving,

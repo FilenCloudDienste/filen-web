@@ -41,12 +41,14 @@ export const UNCACHED_QUERY_KEYS = [
 	"networkDriveStats",
 	"isNetworkDriveMounted",
 	"isS3Online",
-	"isWebDAVOnline"
+	"isWebDAVOnline",
+	"useIsDesktopHTTPServerOnline"
 ]
 export const IS_INSIDE_PUBLIC_LINK_ON_LOAD =
 	typeof window !== "undefined" ? window.location.href.includes("/f/") || window.location.href.includes("/d/") : false
 export const MAX_PREVIEW_SIZE_WEB = 256 * MiB
-export const MAX_PREVIEW_SIZE = IS_DESKTOP ? Infinity : MAX_PREVIEW_SIZE_WEB
+export const MAX_PREVIEW_SIZE_DESKTOP = Infinity
+export const MAX_PREVIEW_SIZE = IS_DESKTOP ? MAX_PREVIEW_SIZE_DESKTOP : MAX_PREVIEW_SIZE_WEB
 export const VALID_LOCAL_PORT_RANGE = [1024, 65535]
 export const SIDEBAR_WIDTH = IS_DESKTOP && IS_APPLE_DEVICE ? 75 : 64
 export const DESKTOP_TOPBAR_HEIGHT = IS_DESKTOP ? (IS_APPLE_DEVICE ? 0 : 24) : 0
@@ -55,3 +57,4 @@ export const DESKTOP_CONFIG_VERSION = 4
 export const AUTHED_VERSION = 4
 export const MAX_CONCURRENT_UPLOADS = 16
 export const MAX_CONCURRENT_DOWNLOADS = 16
+export const DESKTOP_HTTP_SERVER_PORT = 61034

@@ -48,12 +48,13 @@ import {
 } from "lucide-react"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import { selectContacts } from "@/components/dialogs/selectContacts"
-import { MAX_PREVIEW_SIZE } from "@/constants"
+import { MAX_PREVIEW_SIZE_DESKTOP, MAX_PREVIEW_SIZE_WEB, IS_DESKTOP } from "@/constants"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { isValidFileName, isValidHexColor } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
 import { type WorkerToMainMessage } from "@/lib/worker/types"
 import Input from "@/components/input"
+import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
 
 const iconSize = 16
 
@@ -93,6 +94,7 @@ export const ContextMenu = memo(
 		const { passwordState: publicLinkPaswordState } = usePublicLinkStore()
 		const successToast = useSuccessToast()
 		const publicLinkURLState = usePublicLinkURLState()
+		const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
 
 		const isInsidePublicLink = useMemo(() => {
 			return location.includes("/f/") || location.includes("/d/")
@@ -639,12 +641,17 @@ export const ContextMenu = memo(
 
 		const contextMenuContent = useMemo((): React.ReactNode => {
 			const groups: Record<string, React.ReactNode[]> = {}
+			const maxPreviewSize = IS_DESKTOP
+				? isDesktopHTTPServerOnline
+					? MAX_PREVIEW_SIZE_DESKTOP
+					: MAX_PREVIEW_SIZE_WEB
+				: MAX_PREVIEW_SIZE_WEB
 
 			if (
 				selectedItems.length === 1 &&
 				item.type === "file" &&
 				previewType !== "other" &&
-				MAX_PREVIEW_SIZE >= item.size &&
+				maxPreviewSize >= item.size &&
 				!selectedItemsContainUndecryptableItems
 			) {
 				if (!groups["download"]) {
@@ -997,7 +1004,8 @@ export const ContextMenu = memo(
 			copyId,
 			restore,
 			deletePermanently,
-			trash
+			trash,
+			isDesktopHTTPServerOnline
 		])
 
 		useEffect(() => {
