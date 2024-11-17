@@ -12,7 +12,7 @@ import { Loader as LoaderIcon, X, Save, ArrowLeft, ArrowRight, Eye } from "lucid
 import { showConfirmDialog } from "../confirm"
 import { uploadFile } from "@/lib/worker/worker"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { TOOLTIP_POPUP_DELAY, IS_APPLE_DEVICE, IS_DESKTOP, MAX_PREVIEW_SIZE } from "@/constants"
+import { TOOLTIP_POPUP_DELAY, IS_APPLE_DEVICE, IS_DESKTOP, MAX_PREVIEW_SIZE, MAX_PREVIEW_SIZE_WEB } from "@/constants"
 import { useTranslation } from "react-i18next"
 import { v4 as uuidv4 } from "uuid"
 import { showInputDialog } from "../input"
@@ -304,7 +304,7 @@ export const PreviewDialog = memo(() => {
 						return
 					}
 
-					if (itm.size >= MAX_PREVIEW_SIZE) {
+					if (itm.size >= MAX_PREVIEW_SIZE_WEB) {
 						return
 					}
 				}
