@@ -354,7 +354,7 @@ export const sdkWorker: SDKWorker = {
 							async fetch(params) {
 								await waitForInitialization()
 
-								params.onProgress = bytes => {
+								/*params.onProgress = bytes => {
 									postMessageToMain({
 										type: "downloadProgress",
 										data: {
@@ -363,7 +363,7 @@ export const sdkWorker: SDKWorker = {
 											name: ""
 										}
 									})
-								}
+								}*/
 
 								return await getSDK().api(3).file().download().chunk().buffer(params)
 							}
