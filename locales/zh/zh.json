@@ -315,7 +315,15 @@
 			"passwordPlaceholder": "密码",
 			"close": "关闭",
 			"save": "保存",
-			"successToast": "成功更改您的电子邮件地址"
+			"successToast": "已成功更改您的电子邮件地址",
+			"alerts": {
+				"success": {
+					"title": "电子邮件地址已更改",
+					"continue": "继续",
+					"description": "我们已向 {{email}} 发送了一封确认邮件。请点击邮件中的链接确认您的新电子邮件地址。请务必检查您的“垃圾邮件”文件夹。",
+					"dismiss": "忽略"
+				}
+			}
 		},
 		"changePassword": {
 			"title": "更改您的密码",
@@ -1045,7 +1053,7 @@
 					"action": "编辑"
 				},
 				"fileVersioning": {
-					"name": "文件正在计入版本",
+					"name": "文件版本",
 					"info": "启用或禁用文件版本"
 				},
 				"loginAlerts": {
