@@ -3,7 +3,7 @@ import { type SDKWorker, type FilenSDKConfig } from "@filen/sdk"
 import { transfer, proxy } from "comlink"
 import eventEmitter from "../eventEmitter"
 
-export const sdkWorkers: SDKWorker[] = []
+let sdkWorkers: SDKWorker[] = []
 
 export async function initializeSDKWorker(config: FilenSDKConfig): Promise<void> {
 	const sdkWorker = new ComlinkWorker<typeof import("./sdkWorker")>(new URL("./sdkWorker", import.meta.url), {
@@ -193,7 +193,19 @@ export async function initializeSDKWorker(config: FilenSDKConfig): Promise<void>
 }
 
 export async function initializeSDKWorkers(config: FilenSDKConfig): Promise<SDKWorker[] | undefined> {
-	await Promise.all(new Array(SDK_WORKER_THREADS).fill(0).map(async () => await initializeSDKWorker(config)))
+	sdkWorkers = []
+
+	if (config.apiKey && config.apiKey.length >= 16 && config.masterKeys && config.masterKeys.length > 0) {
+		await Promise.all(
+			new Array(SDK_WORKER_THREADS).fill(0).map(
+				async () =>
+					await initializeSDKWorker({
+						...config,
+						connectToSocket: false
+					})
+			)
+		)
+	}
 
 	return getSDKWorkers()
 }
