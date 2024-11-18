@@ -315,7 +315,15 @@
 			"passwordPlaceholder": "Password",
 			"close": "Close",
 			"save": "Save",
-			"successToast": "Successfully changed your email address"
+			"successToast": "Successfully changed your email address",
+			"alerts": {
+				"success": {
+					"title": "Email address changed",
+					"continue": "Continue",
+					"description": "We have sent a confirmation email to {{email}}. Please click the link in the email to confirm your new email address. Make sure to also check your spam folder.",
+					"dismiss": "Dismiss"
+				}
+			}
 		},
 		"changePassword": {
 			"title": "Change your password",

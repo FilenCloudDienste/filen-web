@@ -58,3 +58,4 @@ export const AUTHED_VERSION = 4
 export const MAX_CONCURRENT_UPLOADS = 16
 export const MAX_CONCURRENT_DOWNLOADS = 16
 export const DESKTOP_HTTP_SERVER_PORT = 61034
+export const REMOTE_CFG_NAME = import.meta.env.DEV ? "cfg.test.json" : "cfg.json"

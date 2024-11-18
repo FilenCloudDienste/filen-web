@@ -17,7 +17,7 @@ import { type DirDownloadType } from "@filen/sdk/dist/types/api/v3/dir/download"
 import eventEmitter from "../eventEmitter"
 import { transfer } from "comlink"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
-import { THUMBNAIL_VERSION, THUMBNAIL_QUALITY, THUMBNAIL_MAX_SIZE } from "@/constants"
+import { THUMBNAIL_VERSION, THUMBNAIL_QUALITY, THUMBNAIL_MAX_SIZE, REMOTE_CFG_NAME } from "@/constants"
 import pdfjsLib from "../pdfJS"
 import { type Note, type NoteType, type NoteTag } from "@filen/sdk/dist/types/api/v3/notes"
 import { simpleDate } from "@/utils"
@@ -3012,7 +3012,7 @@ export async function cdnConfig(): Promise<RemoteConfig> {
 	await waitForInitialization()
 
 	const response = (
-		await axios.get("https://cdn.filen.io/cfg.json?" + Date.now(), {
+		await axios.get("https://cdn.filen.io/" + REMOTE_CFG_NAME + "?" + Date.now(), {
 			timeout: 60000,
 			responseType: "json",
 			method: "GET"

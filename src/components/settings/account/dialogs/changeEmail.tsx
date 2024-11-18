@@ -7,7 +7,7 @@ import Input from "@/components/input"
 import worker from "@/lib/worker"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
-import useSuccessToast from "@/hooks/useSuccessToast"
+import { showConfirmDialog } from "@/components/dialogs/confirm"
 
 export const ChangeEmailDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
@@ -26,7 +26,6 @@ export const ChangeEmailDialog = memo(() => {
 	const [showPassword, setShowPassword] = useState<boolean>(false)
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
-	const successToast = useSuccessToast()
 
 	const close = useCallback(() => {
 		setOpen(false)
@@ -75,9 +74,17 @@ export const ChangeEmailDialog = memo(() => {
 				password: inputs.password
 			})
 
-			setTimeout(() => setOpen(false), 100)
+			await showConfirmDialog({
+				title: t("dialogs.changeEmail.alerts.success.title"),
+				continueButtonText: t("dialogs.changeEmail.alerts.success.continue"),
+				cancelButtonText: t("dialogs.changeEmail.alerts.success.dismiss"),
+				description: t("dialogs.changeEmail.alerts.success.description", {
+					email: inputs.new.trim()
+				}),
+				continueButtonVariant: "default"
+			})
 
-			successToast(t("dialogs.changeEmail.successToast"))
+			setTimeout(() => setOpen(false), 100)
 		} catch (e) {
 			console.error(e)
 
@@ -85,7 +92,7 @@ export const ChangeEmailDialog = memo(() => {
 		} finally {
 			toast.dismiss()
 		}
-	}, [loadingToast, errorToast, inputs, successToast, t])
+	}, [loadingToast, errorToast, inputs, t])
 
 	useEffect(() => {
 		const listener = eventEmitter.on("openChangeEmailDialog", () => {
