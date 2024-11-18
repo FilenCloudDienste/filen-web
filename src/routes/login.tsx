@@ -207,7 +207,7 @@ export function Login() {
 											id="twoFactorCode"
 											required={true}
 											autoFocus={true}
-											type="text"
+											type="password"
 											placeholder={t("login.placeholders.normal.2faRecoveryKey")}
 											value={twoFactorCode}
 											onChange={e => setTwoFactorCode(e.target.value)}
