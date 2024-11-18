@@ -63,4 +63,4 @@ export const CPU_CORES =
 	globalThis?.navigator?.hardwareConcurrency && globalThis?.navigator?.hardwareConcurrency > 0
 		? globalThis?.navigator?.hardwareConcurrency
 		: 2
-export const SDK_WORKER_THREADS = CPU_CORES - 2 >= 4 ? 4 : 4
+export const SDK_WORKER_THREADS = CPU_CORES - 2 >= 8 ? 8 : 4
