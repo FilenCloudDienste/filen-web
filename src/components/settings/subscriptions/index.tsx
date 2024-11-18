@@ -119,12 +119,14 @@ export const Subscriptions = memo(() => {
 													? "Stripe"
 													: "Crypto"}
 										</p>
-										<p
-											className="text-sm underline mt-3 cursor-pointer"
-											onClick={() => cancel(subscription.id)}
-										>
-											{t("settings.subscriptions.cancel")}
-										</p>
+										{!subscription.planName.toLowerCase().includes("lifetime") && (
+											<p
+												className="text-sm underline mt-3 cursor-pointer"
+												onClick={() => cancel(subscription.id)}
+											>
+												{t("settings.subscriptions.cancel")}
+											</p>
+										)}
 									</div>
 								</div>
 							</div>
