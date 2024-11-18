@@ -50,6 +50,11 @@ export const Account = memo(() => {
 			const fileHandle = await showSaveFilePicker({
 				suggestedName: `${sanitizeFileName(account.account.email)}.data.json`
 			})
+
+			if (typeof fileHandle.createWritable !== "function") {
+				throw new Error("Your browser does not support streaming downloads.")
+			}
+
 			const writer = await fileHandle.createWritable()
 
 			const toast = loadingToast()

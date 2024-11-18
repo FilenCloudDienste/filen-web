@@ -187,6 +187,11 @@ export const Security = memo(() => {
 			const fileHandle = await showSaveFilePicker({
 				suggestedName: fileName
 			})
+
+			if (typeof fileHandle.createWritable !== "function") {
+				throw new Error("Your browser does not support streaming downloads.")
+			}
+
 			const writer = await fileHandle.createWritable()
 			const toast = loadingToast()
 

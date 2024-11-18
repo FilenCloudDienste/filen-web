@@ -532,6 +532,10 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 		abortControllers[item.uuid] = new AbortController()
 	}
 
+	if (typeof fileHandle.createWritable !== "function") {
+		throw new Error("Your browser does not support streaming downloads.")
+	}
+
 	const writer = await fileHandle.createWritable()
 	const stream = getSDK()
 		.cloud()
@@ -1077,6 +1081,10 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkKey?: string
 	id?: string
 }): Promise<void> {
+	if (typeof fileHandle.createWritable !== "function") {
+		throw new Error("Your browser does not support streaming downloads.")
+	}
+
 	await waitForInitialization()
 
 	const itemsWithPath: DriveCloudItemWithPath[] = []
