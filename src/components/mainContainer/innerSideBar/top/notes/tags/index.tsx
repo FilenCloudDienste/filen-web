@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect } from "react"
+import { memo, useCallback, useEffect, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import { Heart, Plus } from "lucide-react"
@@ -37,6 +37,14 @@ export const Tags = memo(() => {
 		queryKey: ["listNotesTags"],
 		queryFn: () => worker.listNotesTags()
 	})
+
+	const tagsSorted = useMemo(() => {
+		if (!query.isSuccess) {
+			return []
+		}
+
+		return query.data.sort((a, b) => a.name.localeCompare(b.name))
+	}, [query.isSuccess, query.data])
 
 	const createTag = useCallback(
 		async (applyToNoteUUID?: string) => {
@@ -139,24 +147,23 @@ export const Tags = memo(() => {
 			>
 				{t("innerSideBar.notes.tags.pinned")}
 			</div>
-			{query.isSuccess &&
-				query.data.map(tag => {
-					return (
-						<ContextMenu
-							tag={tag}
-							key={tag.uuid}
-							refetch={query.refetch}
+			{tagsSorted.map(tag => {
+				return (
+					<ContextMenu
+						tag={tag}
+						key={tag.uuid}
+						refetch={query.refetch}
+					>
+						<div
+							className={cn(tagClassName, activeTag === tag.uuid && "bg-secondary text-primary")}
+							onClick={() => setActiveTag(tag.uuid)}
 						>
-							<div
-								className={cn(tagClassName, activeTag === tag.uuid && "bg-secondary text-primary")}
-								onClick={() => setActiveTag(tag.uuid)}
-							>
-								{tag.favorite && <Heart size={14} />}
-								<p className="line-clamp-1 break-all text-ellipsis">{tag.name}</p>
-							</div>
-						</ContextMenu>
-					)
-				})}
+							{tag.favorite && <Heart size={14} />}
+							<p className="line-clamp-1 break-all text-ellipsis">{tag.name}</p>
+						</div>
+					</ContextMenu>
+				)
+			})}
 			<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 				<Tooltip>
 					<TooltipTrigger asChild={true}>
