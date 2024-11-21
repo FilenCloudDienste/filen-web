@@ -264,7 +264,7 @@ export const Transfers = memo(() => {
 		try {
 			await Promise.all(
 				transfers.map(async transfer => {
-					const progressNormalized = parseInt(((transfer.bytes / transfer.size) * 100).toFixed(0))
+					const progressNormalized = parseFloat(((transfer.bytes / transfer.size) * 100).toFixed(2))
 
 					if (transfer.state === "stopped" || transfer.state === "error" || progressNormalized >= 95) {
 						return
@@ -319,7 +319,7 @@ export const Transfers = memo(() => {
 			} else {
 				await Promise.all(
 					transfers.map(async transfer => {
-						const progressNormalized = parseInt(((transfer.bytes / transfer.size) * 100).toFixed(0))
+						const progressNormalized = parseFloat(((transfer.bytes / transfer.size) * 100).toFixed(2))
 
 						if (
 							transfer.state === "stopped" ||
