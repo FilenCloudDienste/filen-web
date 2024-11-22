@@ -154,6 +154,7 @@ export const Chats = memo(() => {
 		async (event: SocketEvent) => {
 			try {
 				if (event.type === "chatMessageNew" && !processedMessageUUIDs[event.data.uuid]) {
+					// eslint-disable-next-line react-compiler/react-compiler
 					processedMessageUUIDs[event.data.uuid] = true
 
 					const filteredConversations = conversations.filter(c => c.uuid === event.data.conversation)

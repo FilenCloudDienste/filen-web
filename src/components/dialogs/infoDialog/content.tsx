@@ -1,4 +1,4 @@
-import { memo, useRef, useMemo, useCallback, useState } from "react"
+import { memo, useMemo, useCallback, useState } from "react"
 import { type DriveCloudItem } from "@/components/drive"
 import { ColoredFolderSVGIcon, fileNameToSVGIcon } from "@/assets/fileExtensionIcons"
 import { thumbnailURLObjectCache, directoryUUIDToNameCache, directorySizeCache } from "@/cache"
@@ -19,9 +19,10 @@ import { TOOLTIP_POPUP_DELAY } from "@/constants"
 
 export const Content = memo(({ item }: { item: DriveCloudItem }) => {
 	const [size, setSize] = useState<number>(item.size)
-	const thumbnailURL = useRef<string | null>(
-		thumbnailURLObjectCache.has(item.uuid) ? thumbnailURLObjectCache.get(item.uuid)! : null
-	).current
+	const thumbnailURL = useMemo(
+		() => (thumbnailURLObjectCache.has(item.uuid) ? thumbnailURLObjectCache.get(item.uuid)! : null),
+		[item.uuid]
+	)
 	const { t } = useTranslation()
 	const location = useLocation()
 	const { currentReceiverId, currentSharerId } = useDriveSharedStore(

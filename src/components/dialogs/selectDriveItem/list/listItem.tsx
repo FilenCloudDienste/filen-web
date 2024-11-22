@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useRef, useMemo } from "react"
+import { memo, useState, useCallback, useMemo } from "react"
 import { type DriveCloudItem } from "@/components/drive"
 import { ChevronRight } from "lucide-react"
 import { formatBytes } from "@/utils"
@@ -36,9 +36,10 @@ export const ListItem = memo(
 		const [size, setSize] = useState<number>(
 			item.type === "directory" && directorySizeCache.has(item.uuid) ? directorySizeCache.get(item.uuid)!.size : item.size
 		)
-		const thumbnailURL = useRef<string | null>(
-			thumbnailURLObjectCache.has(item.uuid) ? thumbnailURLObjectCache.get(item.uuid)! : null
-		).current
+		const thumbnailURL = useMemo(
+			() => (thumbnailURLObjectCache.has(item.uuid) ? thumbnailURLObjectCache.get(item.uuid)! : null),
+			[item.uuid]
+		)
 
 		const fetchDirectorySize = useCallback(async () => {
 			if (item.type !== "directory") {

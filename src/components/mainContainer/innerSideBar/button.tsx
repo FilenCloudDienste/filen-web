@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback, useRef } from "react"
+import { memo, useMemo, useCallback } from "react"
 import { Link } from "@tanstack/react-router"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useRouteParent from "@/hooks/useRouteParent"
@@ -49,7 +49,7 @@ export const Button = memo(({ uuid }: { uuid: string }) => {
 	const requestsInCount = useContactsStore(useCallback(state => state.requestsInCount, []))
 	const account = useAccount(false)
 	const isMobile = useIsMobile()
-	const iconSize = useRef<number>(isMobile ? 20 : 19).current
+	const iconSize = useMemo(() => (isMobile ? 20 : 19), [isMobile])
 
 	const link = useMemo(() => {
 		const uuidEx = uuid.split("/")

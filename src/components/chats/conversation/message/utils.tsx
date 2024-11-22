@@ -33,8 +33,10 @@ export const EmojiElement = memo(
 		const ref = useRef<HTMLSpanElement>(null)
 		const instance = useRef<Emoji | null>(null)
 
+		// eslint-disable-next-line react-compiler/react-compiler
 		if (instance.current) {
 			// @ts-expect-error emoji-mart types are bad
+			// eslint-disable-next-line react-compiler/react-compiler
 			instance.current.update(props)
 		}
 
@@ -46,6 +48,7 @@ export const EmojiElement = memo(
 			}
 		}, [props])
 
+		// eslint-disable-next-line react-compiler/react-compiler
 		return createElement("div", {
 			ref,
 			style: props.style

@@ -19,6 +19,7 @@ import DocXPreview from "@/components/dialogs/previewDialog/docx"
 import VideoPreview from "@/components/dialogs/previewDialog/video"
 import useIsMobile from "@/hooks/useIsMobile"
 import AudioPreview from "@/components/dialogs/previewDialog/audio"
+import { MAX_PREVIEW_SIZE_WEB } from "@/constants"
 
 export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> & { size: number } }) => {
 	const filePublicLinkInfo = useFilePublicLinkInfo(info)
@@ -191,7 +192,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				</p>
 				<p className="text-muted-foreground mt-1 line-clamp-1 text-ellipsis break-all">{formatBytes(item.size)}</p>
 				<div className={cn("flex flex-row gap-2 items-center", urlState.embed || urlState.chatEmbed ? "mt-3" : "mt-8")}>
-					{previewType !== "other" && !urlState.embed && !urlState.chatEmbed && (
+					{previewType !== "other" && !urlState.embed && !urlState.chatEmbed && item.size < MAX_PREVIEW_SIZE_WEB && (
 						<Button
 							variant="secondary"
 							onClick={preview}
@@ -225,7 +226,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 
 		const previewType = fileNameToPreviewType(item.name)
 
-		if (previewType === "other" || item.size >= 256 * 1024 * 1024) {
+		if (previewType === "other" || item.size >= MAX_PREVIEW_SIZE_WEB) {
 			return
 		}
 
@@ -254,7 +255,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				loader
 			) : (
 				<>
-					{hidePreview || previewType === "other" || urlState.hidePreview ? (
+					{hidePreview || previewType === "other" || urlState.hidePreview || item.size >= MAX_PREVIEW_SIZE_WEB ? (
 						normal
 					) : (
 						<>

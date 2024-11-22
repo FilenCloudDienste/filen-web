@@ -16,6 +16,7 @@ export const ExportReminder = memo(() => {
 	const remindTimeout = useRef<ReturnType<typeof setTimeout>>()
 
 	const canShow = useMemo(() => {
+		// eslint-disable-next-line react-compiler/react-compiler
 		if (!account || account.account.didExportMasterKeys || didShowReminder.current || !authed) {
 			return false
 		}

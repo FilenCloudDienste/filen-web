@@ -49,6 +49,8 @@ import { fileNameToThumbnailType } from "@/components/dialogs/previewDialog/util
 import DOMPurify from "dompurify"
 import { type DirExistsResponse } from "@filen/sdk/dist/types/api/v3/dir/exists"
 import { type RemoteConfig } from "@/types"
+import { initializeSDKWorkers } from "../sdkWorker"
+import { type SDKWorkerToMainWorkerMessage } from "../sdkWorker/sdkWorker"
 
 const parseOGFromURLMutex = new Semaphore(1)
 const corsHeadMutex = new Semaphore(1)
@@ -59,6 +61,32 @@ const textEncoder = new TextEncoder()
 
 // We setup an eventEmitter first here in case we are running in the main thread.
 let postMessageToMain: (message: WorkerToMainMessage) => void = message => eventEmitter.emit("workerMessage", message)
+
+eventEmitter.on("sdkWorkerMessage", (event: SDKWorkerToMainWorkerMessage) => {
+	if (event.type === "uploadProgress") {
+		postMessageToMain({
+			type: "upload",
+			data: {
+				type: "progress",
+				uuid: event.data.uuid,
+				bytes: event.data.bytes,
+				name: event.data.name
+			}
+		})
+	}
+
+	if (event.type === "downloadProgress") {
+		postMessageToMain({
+			type: "download",
+			data: {
+				type: "progress",
+				uuid: event.data.uuid,
+				bytes: event.data.bytes,
+				name: event.data.name
+			}
+		})
+	}
+})
 
 export async function waitForInitialization(): Promise<void> {
 	// Only check for init if we are running inside a WebWorker.
@@ -79,6 +107,12 @@ export async function waitForInitialization(): Promise<void> {
 
 export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
 	getSDK().init(config)
+
+	const sdkWorkers = await initializeSDKWorkers(config)
+
+	if (sdkWorkers) {
+		getSDK().setSDKWorkers(sdkWorkers)
+	}
 
 	console.log("Worker SDK initialized")
 
@@ -498,6 +532,10 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 		abortControllers[item.uuid] = new AbortController()
 	}
 
+	if (typeof fileHandle.createWritable !== "function") {
+		throw new Error("Your browser does not support streaming downloads.")
+	}
+
 	const writer = await fileHandle.createWritable()
 	const stream = getSDK()
 		.cloud()
@@ -607,14 +645,14 @@ export async function uploadFile({
 	await waitForInitialization()
 
 	const fileName = name ? name : file.name
-	const fileId = uuidv4()
+	const fileUUID = uuidv4()
 
-	if (!pauseSignals[fileId]) {
-		pauseSignals[fileId] = new PauseSignal()
+	if (!pauseSignals[fileUUID]) {
+		pauseSignals[fileUUID] = new PauseSignal()
 	}
 
-	if (!abortControllers[fileId]) {
-		abortControllers[fileId] = new AbortController()
+	if (!abortControllers[fileUUID]) {
+		abortControllers[fileUUID] = new AbortController()
 	}
 
 	const item = await getSDK()
@@ -622,9 +660,10 @@ export async function uploadFile({
 		.uploadWebFile({
 			file,
 			parent,
+			uuid: fileUUID,
 			name: fileName,
-			pauseSignal: pauseSignals[fileId],
-			abortSignal: abortControllers[fileId]!.signal,
+			pauseSignal: pauseSignals[fileUUID],
+			abortSignal: abortControllers[fileUUID]!.signal,
 			onQueued: () => {
 				if (!emitEvents) {
 					return
@@ -634,7 +673,7 @@ export async function uploadFile({
 					type: "upload",
 					data: {
 						type: "queued",
-						uuid: fileId,
+						uuid: fileUUID,
 						name: fileName
 					}
 				})
@@ -648,7 +687,7 @@ export async function uploadFile({
 					type: "upload",
 					data: {
 						type: "started",
-						uuid: fileId,
+						uuid: fileUUID,
 						name: fileName,
 						size: file.size
 					}
@@ -663,7 +702,7 @@ export async function uploadFile({
 					type: "upload",
 					data: {
 						type: "progress",
-						uuid: fileId,
+						uuid: fileUUID,
 						bytes: transferred,
 						name: fileName
 					}
@@ -678,14 +717,14 @@ export async function uploadFile({
 					type: "upload",
 					data: {
 						type: "finished",
-						uuid: fileId,
+						uuid: fileUUID,
 						name: fileName,
 						size: file.size
 					}
 				})
 
-				delete pauseSignals[fileId]
-				delete abortControllers[fileId]
+				delete pauseSignals[fileUUID]
+				delete abortControllers[fileUUID]
 			},
 			onError: err => {
 				if (!emitEvents) {
@@ -700,15 +739,15 @@ export async function uploadFile({
 					type: "upload",
 					data: {
 						type: "error",
-						uuid: fileId,
+						uuid: fileUUID,
 						err,
 						name: fileName,
 						size: file.size
 					}
 				})
 
-				delete pauseSignals[fileId]
-				delete abortControllers[fileId]
+				delete pauseSignals[fileUUID]
+				delete abortControllers[fileUUID]
 			},
 			onUploaded: async item => {
 				if (item.type !== "file") {
@@ -1042,6 +1081,10 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkKey?: string
 	id?: string
 }): Promise<void> {
+	if (typeof fileHandle.createWritable !== "function") {
+		throw new Error("Your browser does not support streaming downloads.")
+	}
+
 	await waitForInitialization()
 
 	const itemsWithPath: DriveCloudItemWithPath[] = []

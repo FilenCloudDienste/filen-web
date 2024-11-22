@@ -13,7 +13,7 @@ import { Play, Pause, XCircle, Loader } from "lucide-react"
 
 export const TransferProgress = memo(({ state, bytes, size }: { state: TransferState; bytes: number; size: number }) => {
 	const progressNormalized = useMemo(() => {
-		return parseInt(((bytes / size) * 100).toFixed(0))
+		return parseFloat(((bytes / size) * 100).toFixed(2))
 	}, [size, bytes])
 
 	return (
@@ -56,7 +56,7 @@ export const TransferActions = memo(
 		const setTransfers = useTransfersStore(useCallback(state => state.setTransfers, []))
 
 		const progressNormalized = useMemo(() => {
-			return parseInt(((bytes / size) * 100).toFixed(0))
+			return parseFloat(((bytes / size) * 100).toFixed(2))
 		}, [size, bytes])
 
 		const pause = useCallback(async () => {

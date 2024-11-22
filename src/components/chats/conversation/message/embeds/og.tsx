@@ -1,4 +1,4 @@
-import { memo, useRef } from "react"
+import { memo, useMemo } from "react"
 import Container from "./container"
 import { useTranslation } from "react-i18next"
 
@@ -18,33 +18,32 @@ export const OG = memo(
 	}) => {
 		const { t } = useTranslation()
 
-		const title = useRef<string>(
-			typeof ogData["og:title"] === "string"
-				? ogData["og:title"]
-				: typeof ogData["meta:title"] === "string"
-					? ogData["meta:title"]
-					: typeof ogData["title"] === "string"
-						? ogData["title"]
-						: t("chats.embeds.og.noTitleAvailable")
-		).current
-
-		const description = useRef<string>(
-			typeof ogData["og:description"] === "string"
-				? ogData["og:description"]
-				: typeof ogData["meta:description"] === "string"
-					? ogData["meta:description"]
-					: typeof ogData["description"] === "string"
-						? ogData["description"]
-						: t("chats.embeds.og.noDescriptionAvailable")
-		).current
-
-		const image = useRef<string | null>(
-			typeof ogData["og:image"] === "string"
-				? ogData["og:image"]
-				: typeof ogData["twitter:image"] === "string"
-					? ogData["twitter:image"]
-					: null
-		).current
+		const { title, description, image } = useMemo(() => {
+			return {
+				title:
+					typeof ogData["og:title"] === "string"
+						? ogData["og:title"]
+						: typeof ogData["meta:title"] === "string"
+							? ogData["meta:title"]
+							: typeof ogData["title"] === "string"
+								? ogData["title"]
+								: t("chats.embeds.og.noTitleAvailable"),
+				description:
+					typeof ogData["og:description"] === "string"
+						? ogData["og:description"]
+						: typeof ogData["meta:description"] === "string"
+							? ogData["meta:description"]
+							: typeof ogData["description"] === "string"
+								? ogData["description"]
+								: t("chats.embeds.og.noDescriptionAvailable"),
+				image:
+					typeof ogData["og:image"] === "string"
+						? ogData["og:image"]
+						: typeof ogData["twitter:image"] === "string"
+							? ogData["twitter:image"]
+							: null
+			}
+		}, [ogData, t])
 
 		return (
 			<Container

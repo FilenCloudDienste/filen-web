@@ -43,10 +43,12 @@ export const List = memo(() => {
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 
 	const query = useQuery({
-		queryKey: ["listDirectory", parent, currentReceiverId],
+		queryKey: ["listDirectory", parent, currentReceiverId, location],
 		queryFn: () =>
 			location.includes("/favorites")
-				? worker.listFavorites()
+				? location.trim().endsWith("/favorites")
+					? worker.listFavorites()
+					: worker.listDirectory({ uuid: parent })
 				: location.includes("/shared-in")
 					? worker.listDirectorySharedIn({ uuid: parent })
 					: location.includes("/shared-out")

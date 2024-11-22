@@ -169,16 +169,27 @@ export const Message = memo(
 		const { userId } = useSDKConfig()
 		const [hovering, setHovering] = useState<boolean>(false)
 		const ref = useRef<HTMLDivElement>(null)
-		const links = useRef<string[]>(extractLinksFromString(message.message)).current
-		const initialDisplayAs = useRef<Record<string, MessageDisplayType>>(
-			chatDisplayMessageAsCache.has(message.uuid)
-				? chatDisplayMessageAsCache.get(message.uuid)!
-				: links.reduce((obj, link) => ({ ...obj, [link]: getMessageDisplayType(link) }), {})
-		).current
-		const [displayAs, setDisplayAs] = useState<Record<string, MessageDisplayType>>(initialDisplayAs)
 		const [ogData, setOGData] = useState<Record<string, Record<string, string>>>(
 			chatOGDataCache.has(message.uuid) ? chatOGDataCache.get(message.uuid)! : {}
 		)
+
+		const links = useMemo(() => {
+			return extractLinksFromString(message.message)
+		}, [message.message])
+
+		const initialDisplayAs: Record<string, MessageDisplayType> = useMemo(() => {
+			return chatDisplayMessageAsCache.has(message.uuid)
+				? chatDisplayMessageAsCache.get(message.uuid)!
+				: links.reduce(
+						(obj, link) => ({
+							...obj,
+							[link]: getMessageDisplayType(link)
+						}),
+						{}
+					)
+		}, [links, message.uuid])
+
+		const [displayAs, setDisplayAs] = useState<Record<string, MessageDisplayType>>(initialDisplayAs)
 
 		const replyUUID = useMemo(() => {
 			return replyMessage ? replyMessage.uuid : ""

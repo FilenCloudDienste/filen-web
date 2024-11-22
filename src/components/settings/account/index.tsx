@@ -50,6 +50,11 @@ export const Account = memo(() => {
 			const fileHandle = await showSaveFilePicker({
 				suggestedName: `${sanitizeFileName(account.account.email)}.data.json`
 			})
+
+			if (typeof fileHandle.createWritable !== "function") {
+				throw new Error("Your browser does not support streaming downloads.")
+			}
+
 			const writer = await fileHandle.createWritable()
 
 			const toast = loadingToast()
@@ -298,7 +303,7 @@ export const Account = memo(() => {
 			try {
 				const arrayBuffer = await file.arrayBuffer()
 
-				await worker.uploadAvatar({ arrayBuffer: transfer(arrayBuffer, [arrayBuffer]) })
+				await worker.uploadAvatar(transfer({ arrayBuffer }, [arrayBuffer]))
 				await account.refetch()
 			} catch (e) {
 				if (e instanceof Error && e.message.toLowerCase().includes("maximum storage reached")) {

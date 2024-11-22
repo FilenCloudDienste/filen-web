@@ -18,14 +18,20 @@ export function usePublicLinkURLState() {
 	const { dark } = useTheme()
 	const location = useLocation()
 
+	const routeParentNormalized = useMemo(() => {
+		return decodeURIComponent(routeParent).split("#").at(0) ?? ""
+	}, [routeParent])
+
 	const state = useMemo(() => {
-		const ex = locationHash.split("?")
+		const locationHashNormalized =
+			locationHash.length <= 0 ? decodeURIComponent(location).split("#")[1] ?? "" : decodeURIComponent(locationHash)
+		const ex = locationHashNormalized.split("?")
 		const parsedSearchParams = ex.length >= 2 ? parseURLSearchParams(`https://filen.io/?${ex[1]}`) : null
 
 		return {
 			isPublicLink: location.includes("/f/") || location.includes("/d/"),
 			key: ex[0] ? ex[0] : "",
-			uuid: routeParent,
+			uuid: routeParentNormalized,
 			embed: parsedSearchParams && parsedSearchParams["embed"] === "true" ? true : false,
 			color: parsedSearchParams && typeof parsedSearchParams["color"] === "string" ? parsedSearchParams["color"] : null,
 			hidePreview: parsedSearchParams && parsedSearchParams["hidePreview"] === "true" ? true : false,
@@ -36,7 +42,7 @@ export function usePublicLinkURLState() {
 					? "dark"
 					: "light") as "dark" | "light"
 		}
-	}, [locationHash, routeParent, dark, location])
+	}, [locationHash, dark, location, routeParentNormalized])
 
 	return state
 }
@@ -59,9 +65,13 @@ export function useFilePublicLinkHasPassword(): UseFilePublicLinkHasPassword {
 	const urlState = usePublicLinkURLState()
 	const routeParent = useRouteParent()
 
+	const routeParentNormalized = useMemo(() => {
+		return decodeURIComponent(routeParent).split("#").at(0) ?? ""
+	}, [routeParent])
+
 	const passwordQuery = useQuery({
-		queryKey: ["filePublicLinkHasPassword", routeParent],
-		queryFn: () => worker.filePublicLinkHasPassword({ uuid: routeParent }),
+		queryKey: ["filePublicLinkHasPassword", routeParentNormalized],
+		queryFn: () => worker.filePublicLinkHasPassword({ uuid: routeParentNormalized }),
 		retry: false,
 		retryDelay: 0
 	})
@@ -69,7 +79,7 @@ export function useFilePublicLinkHasPassword(): UseFilePublicLinkHasPassword {
 	return {
 		status: passwordQuery.error && passwordQuery.error.message.includes("not found") ? false : passwordQuery.isSuccess,
 		loading: passwordQuery.isFetching,
-		uuid: routeParent,
+		uuid: routeParentNormalized,
 		key: urlState.key,
 		hasPassword: passwordQuery.isSuccess ? passwordQuery.data.hasPassword : false,
 		salt: passwordQuery.isSuccess ? passwordQuery.data.salt : ""
@@ -93,12 +103,20 @@ export function useFilePublicLinkInfo(info?: Omit<FileLinkInfoResponse, "size"> 
 	const urlState = usePublicLinkURLState()
 	const routeParent = useRouteParent()
 
+	const routeParentNormalized = useMemo(() => {
+		return decodeURIComponent(routeParent).split("#").at(0) ?? ""
+	}, [routeParent])
+
 	const infoQuery = useQuery({
-		queryKey: ["filePublicLinkInfo", routeParent, info, urlState.key],
+		queryKey: ["filePublicLinkInfo", routeParentNormalized, info, urlState.key],
 		queryFn: () =>
 			info
 				? Promise.resolve(info as unknown as Omit<FileLinkInfoResponse, "size"> & { size: number })
-				: worker.filePublicLinkInfo({ uuid: routeParent, password: "empty", key: urlState.key }),
+				: worker.filePublicLinkInfo({
+						uuid: routeParentNormalized,
+						password: "empty",
+						key: urlState.key
+					}),
 		retry: false,
 		retryDelay: 0
 	})
@@ -106,7 +124,7 @@ export function useFilePublicLinkInfo(info?: Omit<FileLinkInfoResponse, "size"> 
 	return {
 		status: infoQuery.error && infoQuery.error.message.includes("not found") ? false : infoQuery.isSuccess,
 		loading: infoQuery.isFetching,
-		uuid: routeParent,
+		uuid: routeParentNormalized,
 		key: urlState.key,
 		info: infoQuery.data!
 	}
@@ -129,9 +147,19 @@ export function useDirectoryPublicLinkInfo(info?: DirLinkInfoDecryptedResponse):
 	const urlState = usePublicLinkURLState()
 	const routeParent = useRouteParent()
 
+	const routeParentNormalized = useMemo(() => {
+		return decodeURIComponent(routeParent).split("#").at(0) ?? ""
+	}, [routeParent])
+
 	const infoQuery = useQuery({
-		queryKey: ["directoryPublicLinkInfo", routeParent, info, urlState.key],
-		queryFn: () => (info ? Promise.resolve(info) : worker.directoryPublicLinkInfo({ uuid: routeParent, key: urlState.key })),
+		queryKey: ["directoryPublicLinkInfo", routeParentNormalized, info, urlState.key],
+		queryFn: () =>
+			info
+				? Promise.resolve(info)
+				: worker.directoryPublicLinkInfo({
+						uuid: routeParentNormalized,
+						key: urlState.key
+					}),
 		retry: false,
 		retryDelay: 0
 	})
@@ -139,7 +167,7 @@ export function useDirectoryPublicLinkInfo(info?: DirLinkInfoDecryptedResponse):
 	return {
 		status: infoQuery.error && infoQuery.error.message.includes("not found") ? false : infoQuery.isSuccess,
 		loading: infoQuery.isFetching,
-		uuid: routeParent,
+		uuid: routeParentNormalized,
 		key: urlState.key,
 		info: infoQuery.data!
 	}
@@ -160,7 +188,14 @@ export function useDirectoryLinkContent({
 }) {
 	const query = useQuery({
 		queryKey: ["directoryPublicLinkContent", uuid, key, password, info.salt, parent],
-		queryFn: () => worker.directoryPublicLinkContent({ uuid, key, password, salt: info.salt, parent })
+		queryFn: () =>
+			worker.directoryPublicLinkContent({
+				uuid,
+				key,
+				password,
+				salt: info.salt,
+				parent
+			})
 	})
 
 	const content = useMemo((): DriveCloudItem[] => {

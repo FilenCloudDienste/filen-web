@@ -444,6 +444,10 @@ export const ContextMenu = memo(
 					suggestedName: `${sanitizeFileName(note.title)}.txt`
 				})
 
+				if (typeof fileHandle.createWritable !== "function") {
+					throw new Error("Your browser does not support streaming downloads.")
+				}
+
 				const writer = await fileHandle.createWritable()
 
 				await writer.write(content)
@@ -471,6 +475,10 @@ export const ContextMenu = memo(
 				const fileHandle = await showSaveFilePicker({
 					suggestedName: "Notes.zip"
 				})
+
+				if (typeof fileHandle.createWritable !== "function") {
+					throw new Error("Your browser does not support streaming downloads.")
+				}
 
 				const writer = await fileHandle.createWritable()
 				const zipWriter = new ZipWriter(writer, {

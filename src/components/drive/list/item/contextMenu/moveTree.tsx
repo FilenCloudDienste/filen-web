@@ -16,7 +16,11 @@ export const MoveTree = memo(({ parent, name }: { parent: string; name: string }
 
 	const query = useQuery({
 		queryKey: ["listDirectoryOnlyDirectories", parent],
-		queryFn: () => worker.listDirectory({ uuid: parent, onlyDirectories: true })
+		queryFn: () =>
+			worker.listDirectory({
+				uuid: parent,
+				onlyDirectories: true
+			})
 	})
 
 	const selectedItems = useMemo(() => {

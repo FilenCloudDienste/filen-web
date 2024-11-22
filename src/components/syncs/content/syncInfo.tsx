@@ -24,7 +24,7 @@ export const SyncInfoProgress = memo(({ syncUUID }: { syncUUID: string }) => {
 	)
 
 	const progressNormalized = useMemo(() => {
-		return parseInt(((tasksBytes / tasksSize) * 100).toFixed(0))
+		return parseFloat(((tasksBytes / tasksSize) * 100).toFixed(2))
 	}, [tasksSize, tasksBytes])
 
 	if (progressNormalized <= 0 || progressNormalized > 100 || tasksSize === 0) {

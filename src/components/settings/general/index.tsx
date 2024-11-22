@@ -376,31 +376,29 @@ export const General = memo(() => {
 					{IS_DESKTOP && (
 						<>
 							{window.desktopAPI.osPlatform() !== "linux" && (
-								<>
-									<Section
-										name={t("settings.general.sections.autoLaunch.name")}
-										info={t("settings.general.sections.autoLaunch.info")}
-										className="mt-10"
-									>
-										<Switch
-											checked={
-												autoLaunchQuery.isSuccess && autoLaunchQuery.data ? autoLaunchQuery.data.openAtLogin : false
-											}
-											onCheckedChange={toggleAutoLaunch}
-										/>
-									</Section>
-									{window.desktopAPI.osPlatform() !== "darwin" && (
-										<Section
-											name={t("settings.general.sections.minimizeToTray.name")}
-											info={t("settings.general.sections.minimizeToTray.info")}
-										>
-											<Switch
-												checked={minimizeToTrayEnabled}
-												onCheckedChange={setMinimizeToTrayEnabled}
-											/>
-										</Section>
-									)}
-								</>
+								<Section
+									name={t("settings.general.sections.autoLaunch.name")}
+									info={t("settings.general.sections.autoLaunch.info")}
+									className="mt-10"
+								>
+									<Switch
+										checked={
+											autoLaunchQuery.isSuccess && autoLaunchQuery.data ? autoLaunchQuery.data.openAtLogin : false
+										}
+										onCheckedChange={toggleAutoLaunch}
+									/>
+								</Section>
+							)}
+							{window.desktopAPI.osPlatform() !== "darwin" && (
+								<Section
+									name={t("settings.general.sections.minimizeToTray.name")}
+									info={t("settings.general.sections.minimizeToTray.info")}
+								>
+									<Switch
+										checked={minimizeToTrayEnabled}
+										onCheckedChange={setMinimizeToTrayEnabled}
+									/>
+								</Section>
 							)}
 							<Section
 								name={t("settings.general.sections.chatNotifications.name")}

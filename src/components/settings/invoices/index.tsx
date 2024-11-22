@@ -36,6 +36,11 @@ export const Invoices = memo(() => {
 				const fileHandle = await showSaveFilePicker({
 					suggestedName: `${sanitizeFileName(`Invoice_${uuid}`)}.pdf`
 				})
+
+				if (typeof fileHandle.createWritable !== "function") {
+					throw new Error("Your browser does not support streaming downloads.")
+				}
+
 				const writer = await fileHandle.createWritable()
 
 				const toast = loadingToast()

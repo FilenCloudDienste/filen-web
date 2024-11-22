@@ -59,3 +59,8 @@ export const MAX_CONCURRENT_UPLOADS = 16
 export const MAX_CONCURRENT_DOWNLOADS = 16
 export const DESKTOP_HTTP_SERVER_PORT = 61034
 export const REMOTE_CFG_NAME = import.meta.env.DEV ? "cfg.test.json" : "cfg.json"
+export const CPU_CORES =
+	globalThis?.navigator?.hardwareConcurrency && globalThis?.navigator?.hardwareConcurrency > 0
+		? globalThis?.navigator?.hardwareConcurrency
+		: 2
+export const SDK_WORKER_THREADS = CPU_CORES - 4 >= 8 ? 8 : 4
