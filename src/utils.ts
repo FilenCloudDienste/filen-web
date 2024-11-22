@@ -1,3 +1,6 @@
+import { type showSaveFilePicker } from "native-file-system-adapter"
+import { UAParserResult, IS_DESKTOP } from "./constants"
+
 export function convertTimestampToMs(timestamp: number): number {
 	const now = Date.now()
 
@@ -69,4 +72,25 @@ export function downloadTextFile({ name, content }: { name: string; content: str
 	element.click()
 
 	document.body.removeChild(element)
+}
+
+export function getShowSaveFilePickerOptions({
+	name,
+	types,
+	excludeAcceptAllOption
+}: {
+	name?: string
+	types?: { accept: Record<string, string[]> }[]
+	excludeAcceptAllOption?: boolean
+}): Parameters<typeof showSaveFilePicker>[0] {
+	const osName = UAParserResult.os.name?.trim().toLowerCase() ?? ""
+	const preferPolyfill = osName.length === 0 || IS_DESKTOP ? false : osName === "android" || osName === "ios" || osName === "blackberry"
+
+	return {
+		//_name: name,
+		suggestedName: name,
+		types: types && types.length > 0 ? types : undefined,
+		excludeAcceptAllOption,
+		_preferPolyfill: preferPolyfill
+	}
 }

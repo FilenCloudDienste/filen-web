@@ -6,7 +6,7 @@ import useErrorToast from "@/hooks/useErrorToast"
 import worker from "@/lib/worker"
 import { showSaveFilePicker } from "native-file-system-adapter"
 import { Switch } from "@/components/ui/switch"
-import { formatBytes } from "@/utils"
+import { formatBytes, getShowSaveFilePickerOptions } from "@/utils"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { showTwoFactorCodeDialog } from "@/components/dialogs/twoFactorCode"
 import { transfer } from "comlink"
@@ -47,9 +47,11 @@ export const Account = memo(() => {
 		}
 
 		try {
-			const fileHandle = await showSaveFilePicker({
-				suggestedName: `${sanitizeFileName(account.account.email)}.data.json`
-			})
+			const fileHandle = await showSaveFilePicker(
+				getShowSaveFilePickerOptions({
+					name: `${sanitizeFileName(account.account.email)}.data.json`
+				})
+			)
 
 			if (typeof fileHandle.createWritable !== "function") {
 				throw new Error("Your browser does not support streaming downloads.")

@@ -20,6 +20,7 @@ import { Select, SelectItem, SelectValue, SelectTrigger, SelectContent } from "@
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { IS_DESKTOP } from "@/constants"
 import LockPinDialog from "./dialogs/lockPin"
+import { getShowSaveFilePickerOptions } from "@/utils"
 
 export const Security = memo(() => {
 	const account = useAccount()
@@ -184,9 +185,11 @@ export const Security = memo(() => {
 		let didWrite = false
 
 		try {
-			const fileHandle = await showSaveFilePicker({
-				suggestedName: fileName
-			})
+			const fileHandle = await showSaveFilePicker(
+				getShowSaveFilePickerOptions({
+					name: fileName
+				})
+			)
 
 			if (typeof fileHandle.createWritable !== "function") {
 				throw new Error("Your browser does not support streaming downloads.")

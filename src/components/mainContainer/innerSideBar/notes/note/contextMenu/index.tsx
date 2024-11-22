@@ -45,6 +45,7 @@ import {
 } from "lucide-react"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useSuccessToast from "@/hooks/useSuccessToast"
+import { getShowSaveFilePickerOptions } from "@/utils"
 
 const iconSize = 16
 
@@ -440,9 +441,11 @@ export const ContextMenu = memo(
 					content = list.join("\n")
 				}
 
-				const fileHandle = await showSaveFilePicker({
-					suggestedName: `${sanitizeFileName(note.title)}.txt`
-				})
+				const fileHandle = await showSaveFilePicker(
+					getShowSaveFilePickerOptions({
+						name: `${sanitizeFileName(note.title)}.txt`
+					})
+				)
 
 				if (typeof fileHandle.createWritable !== "function") {
 					throw new Error("Your browser does not support streaming downloads.")
@@ -472,9 +475,11 @@ export const ContextMenu = memo(
 			let toast: ReturnType<typeof loadingToast> | null = null
 
 			try {
-				const fileHandle = await showSaveFilePicker({
-					suggestedName: "Notes.zip"
-				})
+				const fileHandle = await showSaveFilePicker(
+					getShowSaveFilePickerOptions({
+						name: "Notes.zip"
+					})
+				)
 
 				if (typeof fileHandle.createWritable !== "function") {
 					throw new Error("Your browser does not support streaming downloads.")

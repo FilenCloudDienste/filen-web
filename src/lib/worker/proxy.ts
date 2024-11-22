@@ -11,6 +11,7 @@ import { thumbnailURLObjectCache } from "@/cache"
 import { Semaphore, ISemaphore } from "../semaphore"
 import { getItem } from "@/lib/localForage"
 import { sanitizeFileName } from "../utils"
+import { getShowSaveFilePickerOptions } from "@/utils"
 
 export const generateThumbnailMutexes: Record<string, ISemaphore> = {}
 export const generateThumbnailSemaphore = new Semaphore(3)
@@ -35,9 +36,11 @@ export async function downloadFile({ item }: { item: DriveCloudItem }): Promise<
 		return
 	}
 
-	const fileHandle = await showSaveFilePicker({
-		suggestedName: sanitizeFileName(item.name)
-	})
+	const fileHandle = await showSaveFilePicker(
+		getShowSaveFilePickerOptions({
+			name: sanitizeFileName(item.name)
+		})
+	)
 
 	if (!useWorkerForDownloads) {
 		return await workerLib.downloadFile({
@@ -94,9 +97,11 @@ export async function downloadDirectory({
 	linkSalt?: string
 	linkKey?: string
 }): Promise<void> {
-	const fileHandle = await showSaveFilePicker({
-		suggestedName: `${sanitizeFileName(name)}.zip`
-	})
+	const fileHandle = await showSaveFilePicker(
+		getShowSaveFilePickerOptions({
+			name: `${sanitizeFileName(name)}.zip`
+		})
+	)
 
 	if (!useWorkerForDownloads) {
 		return await workerLib.downloadDirectory({
@@ -162,9 +167,11 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkSalt?: string
 	linkKey?: string
 }): Promise<void> {
-	const fileHandle = await showSaveFilePicker({
-		suggestedName: name ? sanitizeFileName(name) : `Download_${Date.now()}.zip`
-	})
+	const fileHandle = await showSaveFilePicker(
+		getShowSaveFilePickerOptions({
+			name: name ? sanitizeFileName(name) : `Download_${Date.now()}.zip`
+		})
+	)
 
 	const itemsWithPath = items.map(item => ({
 		...item,

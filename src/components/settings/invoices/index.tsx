@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DESKTOP_TOPBAR_HEIGHT, IS_DESKTOP } from "@/constants"
 import { cn, sanitizeFileName } from "@/lib/utils"
 import { useTranslation } from "react-i18next"
-import { simpleDate, convertTimestampToMs } from "@/utils"
+import { simpleDate, convertTimestampToMs, getShowSaveFilePickerOptions } from "@/utils"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import { showSaveFilePicker } from "native-file-system-adapter"
@@ -33,9 +33,11 @@ export const Invoices = memo(() => {
 			}
 
 			try {
-				const fileHandle = await showSaveFilePicker({
-					suggestedName: `${sanitizeFileName(`Invoice_${uuid}`)}.pdf`
-				})
+				const fileHandle = await showSaveFilePicker(
+					getShowSaveFilePickerOptions({
+						name: `${sanitizeFileName(`Invoice_${uuid}`)}.pdf`
+					})
+				)
 
 				if (typeof fileHandle.createWritable !== "function") {
 					throw new Error("Your browser does not support streaming downloads.")
