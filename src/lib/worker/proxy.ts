@@ -266,8 +266,7 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 				if (fromDb) {
 					blob = fromDb
 				} else {
-					const chunkedEnd = 1024 * 1024 * 12 - 1
-
+					const chunkedEnd = 1024 * 1024 * 16 - 1
 					const buffer = await worker.readFile({
 						item,
 						emitEvents: false,
@@ -275,7 +274,10 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 						end: chunkedEnd >= item.size - 1 ? item.size - 1 : chunkedEnd
 					})
 
-					blob = await workerLib.generateVideoThumbnail({ item, buffer })
+					blob = await workerLib.generateVideoThumbnail({
+						item,
+						buffer
+					})
 				}
 
 				const urlObject = globalThis.URL.createObjectURL(blob)
