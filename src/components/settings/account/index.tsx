@@ -303,7 +303,7 @@ export const Account = memo(() => {
 			try {
 				const arrayBuffer = await file.arrayBuffer()
 
-				await worker.uploadAvatar({ arrayBuffer: transfer(arrayBuffer, [arrayBuffer]) })
+				await worker.uploadAvatar(transfer({ arrayBuffer }, [arrayBuffer]))
 				await account.refetch()
 			} catch (e) {
 				if (e instanceof Error && e.message.toLowerCase().includes("maximum storage reached")) {

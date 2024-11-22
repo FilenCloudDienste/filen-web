@@ -7,7 +7,6 @@ import { comlink } from "vite-plugin-comlink"
 import i18nextLoader from "vite-plugin-i18next-loader"
 import svgr from "vite-plugin-svgr"
 import topLevelAwait from "vite-plugin-top-level-await"
-import million from "million/compiler"
 import checker from "vite-plugin-checker"
 
 const now = Date.now()
@@ -26,35 +25,27 @@ export default defineConfig({
 			promiseImportName: i => `__tla_${i}`
 		}),
 		react({
-			/*babel: {
+			babel: {
 				plugins: [
 					[
 						"babel-plugin-react-compiler",
 						{
-							runtimeModule: "@/compiler.js"
+							target: "18"
 						}
 					]
 				]
-			},*/
-			jsxImportSource: "@welldone-software/why-did-you-render"
-		}),
-		checker({
-			typescript: true
-		}),
-		million.vite({
-			auto: true,
-			filter: {
-				include: "src/**/*.{mtsx,mjsx,tsx,jsx}"
 			},
-			mode: "react",
-			telemetry: false
+			jsxImportSource: "@welldone-software/why-did-you-render"
 		}),
 		TanStackRouterVite(),
 		comlink(),
 		i18nextLoader({
 			paths: ["./locales"]
 		}),
-		svgr()
+		svgr(),
+		checker({
+			typescript: true
+		})
 	],
 	resolve: {
 		alias: {
