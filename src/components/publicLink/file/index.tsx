@@ -1,5 +1,5 @@
-import { memo, useCallback, useState } from "react"
-import { useFilePublicLinkHasPassword, usePublicLinkURLState } from "../../../hooks/usePublicLink"
+import { memo, useCallback, useState, useEffect } from "react"
+import { useFilePublicLinkHasPassword, usePublicLinkURLState, useFilePublicLinkInfo } from "../../../hooks/usePublicLink"
 import Container from "../container"
 import { validate as validateUUID } from "uuid"
 import Password from "../password"
@@ -11,10 +11,19 @@ export const File = memo(() => {
 	const filePublicLinkHasPassword = useFilePublicLinkHasPassword()
 	const [info, setInfo] = useState<(Omit<FileLinkInfoResponse, "size"> & { size: number }) | null>(null)
 	const urlState = usePublicLinkURLState()
+	const filePublicLinkInfo = useFilePublicLinkInfo()
 
 	const onAccess = useCallback((fileLinkInfo: (Omit<FileLinkInfoResponse, "size"> & { size: number }) | null) => {
 		setInfo(fileLinkInfo)
 	}, [])
+
+	useEffect(() => {
+		if (!filePublicLinkInfo.status || filePublicLinkInfo.loading) {
+			return
+		}
+
+		setInfo(filePublicLinkInfo.info)
+	}, [filePublicLinkInfo])
 
 	return (
 		<Container

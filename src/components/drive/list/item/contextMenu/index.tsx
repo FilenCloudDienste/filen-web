@@ -777,7 +777,12 @@ export const ContextMenu = memo(
 				)
 			}
 
-			if (!driveURLState.sharedIn && !driveURLState.trash && !driveURLState.publicLink && selectedItems.length === 1) {
+			if (
+				!(driveURLState.sharedIn && item.type === "directory") &&
+				!driveURLState.trash &&
+				!driveURLState.publicLink &&
+				selectedItems.length === 1
+			) {
 				if (!groups["favoriteInfoColor"]) {
 					groups["favoriteInfoColor"] = []
 				}

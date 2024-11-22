@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react"
+import { memo, useCallback, useState, useEffect } from "react"
 import { useDirectoryPublicLinkInfo, usePublicLinkURLState } from "../../../hooks/usePublicLink"
 import Container from "../container"
 import { validate as validateUUID } from "uuid"
@@ -26,10 +26,28 @@ export const Directory = memo(() => {
 		[]
 	)
 
+	useEffect(() => {
+		if (
+			directoryPublicLinkInfo.loading ||
+			!directoryPublicLinkInfo.status ||
+			(directoryPublicLinkInfo.info.hasPassword && typeof password !== "string")
+		) {
+			return
+		}
+
+		setInfo(directoryPublicLinkInfo.info)
+	}, [directoryPublicLinkInfo, password])
+
 	return (
 		<Container
 			loading={directoryPublicLinkInfo.loading}
-			hasInfo={info !== null}
+			hasInfo={
+				!directoryPublicLinkInfo.loading && directoryPublicLinkInfo.status
+					? directoryPublicLinkInfo.info.hasPassword && typeof password === "string" && password.length > 0
+						? true
+						: info !== null
+					: info !== null
+			}
 		>
 			{!urlState || !urlState.key || urlState.key.length !== 32 ? (
 				<Invalid />
