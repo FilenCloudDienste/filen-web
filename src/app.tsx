@@ -1,5 +1,5 @@
 //import "./wdyr"
-import "hacktimer/HackTimer.silent.min"
+//import "hacktimer/HackTimer.silent.min"
 import "./index.css"
 import "react-quill/dist/quill.snow.css"
 import "./lib/i18n"
