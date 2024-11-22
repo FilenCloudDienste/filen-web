@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useRef } from "react"
+import { memo, useState, useCallback, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import worker from "@/lib/worker"
 import { parseYouTubeVideoId } from "../utils"
@@ -26,9 +26,8 @@ export type YouTubeInfo = {
 
 export const YouTube = memo(
 	({ link, messageUUID, userId, senderId }: { link: string; messageUUID: string; senderId: number; userId: number }) => {
-		const imgId = useRef<string>(uuidv4()).current
+		const imgId = useMemo(() => uuidv4(), [])
 		const [play, setPlay] = useState<boolean>(false)
-		const parsedLink = useRef<string | null>(parseYouTubeVideoId(link)).current
 		const imgDimensions = useElementDimensions(imgId)
 
 		const query = useQuery({
@@ -38,6 +37,10 @@ export const YouTube = memo(
 					"https://www.youtube.com/oembed?url=https://youtube.com/watch?v=" + parseYouTubeVideoId(link) + "&format=json"
 				) as YouTubeInfo
 		})
+
+		const parsedLink = useMemo(() => {
+			return parseYouTubeVideoId(link)
+		}, [link])
 
 		const onPlayClick = useCallback(() => {
 			setPlay(true)
