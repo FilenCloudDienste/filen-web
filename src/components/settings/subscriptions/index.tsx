@@ -114,12 +114,12 @@ export const Subscriptions = memo(() => {
 										<p>{t("settings.subscriptions.paymentMethod")}</p>
 										<p className="text-muted-foreground">
 											{subscription.gateway.includes("paypal")
-												? "Paypal"
+												? "PayPal"
 												: subscription.gateway.includes("stripe")
 													? "Stripe"
 													: "Crypto"}
 										</p>
-										{subscription.activated === 1 && subscription.cancelled === 0 && (
+										{subscription.activated === 1 && subscription.cancelled === 0 && !subscription.planName.toLowerCase().includes("lifetime") && (
 											<p
 												className="text-sm underline mt-3 cursor-pointer"
 												onClick={() => cancel(subscription.id)}
