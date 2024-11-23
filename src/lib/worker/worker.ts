@@ -549,6 +549,7 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 			key: item.key,
 			pauseSignal: pauseSignals[item.uuid],
 			abortSignal: abortControllers[item.uuid]!.signal,
+			onProgressId: item.uuid,
 			onQueued: () => {
 				postMessageToMain({
 					type: "download",
@@ -664,6 +665,7 @@ export async function uploadFile({
 			name: fileName,
 			pauseSignal: pauseSignals[fileUUID],
 			abortSignal: abortControllers[fileUUID]!.signal,
+			onProgressId: fileUUID,
 			onQueued: () => {
 				if (!emitEvents) {
 					return
@@ -765,7 +767,7 @@ export async function uploadFile({
 						receivers: [],
 						size: item.size
 					}
-				}).catch(console.error)
+				}).catch(() => {})
 			}
 		})
 
@@ -849,6 +851,7 @@ export async function uploadDirectory({
 				name,
 				pauseSignal: pauseSignals[directoryId],
 				abortSignal: abortControllers[directoryId]!.signal,
+				onProgressId: directoryId,
 				onQueued: () => {
 					if (didQueue || !emitEvents) {
 						return
@@ -934,6 +937,16 @@ export async function uploadDirectory({
 						selected: false,
 						receivers
 					})
+
+					postMessageToMain({
+						type: "upload",
+						data: {
+							type: "directoryProgress",
+							uuid: directoryId,
+							name: name!,
+							created: 1
+						}
+					})
 				},
 				onUploaded: async item => {
 					items.push({
@@ -958,7 +971,7 @@ export async function uploadDirectory({
 								receivers: [],
 								size: item.size
 							}
-						})
+						}).catch(() => {})
 					}
 				}
 			})
@@ -1196,6 +1209,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 							key: item.key,
 							pauseSignal: pauseSignals[directoryId],
 							abortSignal: abortControllers[directoryId]!.signal,
+							onProgressId: directoryId,
 							onQueued: () => {
 								if (didQueue) {
 									return
@@ -1620,6 +1634,7 @@ export async function readFile({
 			end,
 			pauseSignal: pauseSignals[item.uuid],
 			abortSignal: abortControllers[item.uuid]!.signal,
+			onProgressId: item.uuid,
 			onQueued: () => {
 				if (!emitEvents) {
 					return

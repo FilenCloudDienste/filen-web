@@ -43,7 +43,8 @@ export const TransferActions = memo(
 		size,
 		type,
 		uuid,
-		isDirectory
+		isDirectory,
+		createdDirectories
 	}: {
 		state: TransferState
 		bytes: number
@@ -51,6 +52,7 @@ export const TransferActions = memo(
 		type: "upload" | "download"
 		uuid: string
 		isDirectory: boolean
+		createdDirectories: number
 	}) => {
 		const { t } = useTranslation()
 		const setTransfers = useTransfersStore(useCallback(state => state.setTransfers, []))
@@ -128,7 +130,7 @@ export const TransferActions = memo(
 									className="animate-spin-medium"
 									size={14}
 								/>
-								{t("transfers.state.creatingDirectories")}
+								{t("transfers.state.creatingDirectories")} ({createdDirectories})
 							</Badge>
 						) : (
 							<Badge variant="secondary">{t("transfers.state.queued")}</Badge>
@@ -206,13 +208,15 @@ export const TransferInfo = memo(({ name, size, isDirectory }: { name: string; s
 })
 
 export const Transfer = memo(({ transfer }: { transfer: TransferType }) => {
+	const isDirectory = useMemo(() => transfer.uuid.startsWith("directory:"), [transfer.uuid])
+
 	return (
 		<div className="flex flex-col w-full gap-4 pb-4">
 			<div className="flex flex-row items-center w-full gap-4 justify-between">
 				<TransferInfo
 					name={transfer.name}
 					size={transfer.size}
-					isDirectory={transfer.uuid.startsWith("directory:")}
+					isDirectory={isDirectory}
 				/>
 				<TransferActions
 					size={transfer.size}
@@ -220,7 +224,8 @@ export const Transfer = memo(({ transfer }: { transfer: TransferType }) => {
 					bytes={transfer.bytes}
 					type={transfer.type}
 					uuid={transfer.uuid}
-					isDirectory={transfer.uuid.startsWith("directory:")}
+					isDirectory={isDirectory}
+					createdDirectories={isDirectory ? transfer.createdDirectories : 0}
 				/>
 			</div>
 			<TransferProgress

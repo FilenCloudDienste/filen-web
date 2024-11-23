@@ -14,6 +14,7 @@ export type Transfer = {
 	queuedTimestamp: number
 	errorTimestamp: number
 	progressTimestamp: number
+	createdDirectories: number
 }
 
 export type TransfersStore = {

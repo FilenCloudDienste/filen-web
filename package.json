@@ -1,7 +1,7 @@
 {
 	"name": "@filen/web",
 	"private": false,
-	"version": "0.1.68",
+	"version": "0.1.69",
 	"type": "module",
 	"description": "Filen Web & Desktop app",
 	"scripts": {
@@ -25,7 +25,7 @@
 		"@emoji-mart/react": "^1.1.1",
 		"@filen/desktop": "^3.0.34",
 		"@filen/network-drive": "^0.9.36",
-		"@filen/sdk": "^0.1.183",
+		"@filen/sdk": "^0.1.184",
 		"@filen/sync": "^0.1.84",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
 		"@radix-ui/react-avatar": "^1.0.4",

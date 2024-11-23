@@ -126,6 +126,7 @@ export const Drive = memo(() => {
 				return
 			}
 
+			const parentCopy = `${parent}`
 			const files: { file: File; path: string }[] = []
 
 			for (const file of e.target.files) {
@@ -134,8 +135,6 @@ export const Drive = memo(() => {
 					path: file.webkitRelativePath
 				})
 			}
-
-			const parentCopy = `${parent}`
 
 			try {
 				const uploadedItems = await worker.uploadDirectory({

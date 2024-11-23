@@ -23,6 +23,10 @@ export type WorkerToMainMessage =
 						bytes: number
 				  }
 				| {
+						type: "directoryProgress"
+						created: number
+				  }
+				| {
 						type: "error"
 						err: Error
 						size: number

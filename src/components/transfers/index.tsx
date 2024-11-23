@@ -159,7 +159,8 @@ export const Transfers = memo(() => {
 							queuedTimestamp: now,
 							errorTimestamp: 0,
 							finishedTimestamp: 0,
-							progressTimestamp: 0
+							progressTimestamp: 0,
+							createdDirectories: 0
 						}
 					])
 
@@ -205,6 +206,20 @@ export const Transfers = memo(() => {
 					)
 
 					bytesSent.current += bytes
+				} else if (message.data.type === "directoryProgress") {
+					const created = message.data.created
+
+					setTransfers(prev =>
+						prev.map(transfer =>
+							transfer.uuid === message.data.uuid
+								? {
+										...transfer,
+										createdDirectories: transfer.createdDirectories + created,
+										progressTimestamp: now
+									}
+								: transfer
+						)
+					)
 				} else if (message.data.type === "finished") {
 					setFinishedTransfers(prev => [
 						...prev,
@@ -219,7 +234,8 @@ export const Transfers = memo(() => {
 							queuedTimestamp: now,
 							errorTimestamp: 0,
 							finishedTimestamp: now,
-							progressTimestamp: 0
+							progressTimestamp: 0,
+							createdDirectories: 0
 						}
 					])
 

@@ -336,7 +336,7 @@ export const sdkWorker: SDKWorker = {
 									postMessageToMain({
 										type: "uploadProgress",
 										data: {
-											uuid: params.uuid,
+											uuid: params.onProgressId ? params.onProgressId : params.uuid,
 											bytes,
 											name: ""
 										}
@@ -358,7 +358,7 @@ export const sdkWorker: SDKWorker = {
 									postMessageToMain({
 										type: "downloadProgress",
 										data: {
-											uuid: params.uuid,
+											uuid: params.onProgressId ? params.onProgressId : params.uuid,
 											bytes,
 											name: ""
 										}
