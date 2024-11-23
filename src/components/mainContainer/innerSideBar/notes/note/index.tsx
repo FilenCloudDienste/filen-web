@@ -29,12 +29,12 @@ export const Note = memo(
 			return note.participants.filter(p => p.userId !== userId)
 		}, [note.participants, userId])
 
-		const tags = useMemo(() => {
+		const tagsSorted = useMemo(() => {
 			if (deletedTagUUIDs.length === 0) {
 				return note.tags
 			}
 
-			return note.tags.filter(tag => !deletedTagUUIDs.includes(tag.uuid))
+			return note.tags.filter(tag => !deletedTagUUIDs.includes(tag.uuid)).sort((a, b) => a.name.localeCompare(b.name))
 		}, [note.tags, deletedTagUUIDs])
 
 		const select = useCallback(() => {
@@ -108,7 +108,7 @@ export const Note = memo(
 							{simpleDate(note.editedTimestamp)}
 						</p>
 						<div className="flex flex-row gap-2 flex-wrap w-full h-auto mt-2">
-							{tags.map(tag => {
+							{tagsSorted.map(tag => {
 								return (
 									<div
 										key={tag.uuid}
