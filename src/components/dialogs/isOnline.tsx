@@ -21,8 +21,8 @@ export const IsOnlineDialog = memo(() => {
 		e.stopPropagation()
 	}, [])
 
-	const ping = useCallback(async () => {
-		if (isPinging.current) {
+	const ping = useCallback(async (skipIsPingingCheck: boolean = false) => {
+		if (isPinging.current && !skipIsPingingCheck) {
 			return
 		}
 
@@ -95,17 +95,23 @@ export const IsOnlineDialog = memo(() => {
 		const interval = setInterval(ping, 60000)
 
 		const navigatorListener = () => {
-			ping()
+			ping(false)
+		}
+
+		const immediateNavigatorListener = () => {
+			ping(true)
 		}
 
 		window.addEventListener("online", navigatorListener)
 		window.addEventListener("offline", navigatorListener)
+		window.addEventListener("focus", immediateNavigatorListener)
 
 		return () => {
 			clearInterval(interval)
 
 			window.removeEventListener("online", navigatorListener)
 			window.removeEventListener("offline", navigatorListener)
+			window.removeEventListener("focus", immediateNavigatorListener)
 		}
 	}, [ping])
 
