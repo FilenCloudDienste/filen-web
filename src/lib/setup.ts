@@ -11,6 +11,7 @@ import { localStorageKey as authedLocalStorageKey } from "@/hooks/useIsAuthed"
 import queryClientPersisterIDB from "./queryPersister"
 import { localStorageKey as sdkConfigLocalStorageKey } from "@/hooks/useSDKConfig"
 import { localStorageKey as desktopConfigLocalStorageKey } from "@/hooks/useDesktopConfig"
+import { STORAGE_KEY as themeStorageKey } from "@/providers/themeProvider"
 
 export const DEFAULT_SDK_CONFIG: FilenSDKConfig = {
 	email: "anonymous",
@@ -84,8 +85,13 @@ export async function resetLocalStorage(): Promise<void> {
 	const textEditorResizablePanelSizesNotes = window.localStorage.getItem("textEditorResizablePanelSizes:notes")
 	const textEditorResizablePanelSizesPublicLink = window.localStorage.getItem("textEditorResizablePanelSizes:publicLink")
 	const useResizablePanelSizes = window.localStorage.getItem("useResizablePanelSizes")
+	const theme = window.localStorage.getItem(themeStorageKey)
 
 	window.localStorage.clear()
+
+	if (theme) {
+		window.localStorage.setItem(themeStorageKey, theme)
+	}
 
 	if (useResizablePanelSizes) {
 		window.localStorage.setItem("useResizablePanelSizes", useResizablePanelSizes)

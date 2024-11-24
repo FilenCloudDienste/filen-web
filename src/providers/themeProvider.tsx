@@ -1,5 +1,6 @@
 import { createContext, useContext, useLayoutEffect, useState } from "react"
 import Cookies from "js-cookie"
+import { IS_DESKTOP } from "@/constants"
 
 export const STORAGE_KEY = "theme"
 export const DEFAULT_THEME = "system"
@@ -8,8 +9,6 @@ export type Theme = "dark" | "light" | "system"
 
 export type ThemeProviderProps = {
 	children: React.ReactNode
-	defaultTheme?: Theme
-	storageKey?: string
 }
 
 export type ThemeProviderState = {
@@ -29,7 +28,7 @@ export const initialState: ThemeProviderState = {
 export const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function setThemeOnPageLoad(): void {
-	const initialTheme = (Cookies.get(STORAGE_KEY) as Theme) || DEFAULT_THEME
+	const initialTheme = (IS_DESKTOP ? (localStorage.getItem(STORAGE_KEY) as Theme) : (Cookies.get(STORAGE_KEY) as Theme)) || DEFAULT_THEME
 	const root = window.document.documentElement
 
 	root.classList.remove("light", "dark")
@@ -45,8 +44,10 @@ export function setThemeOnPageLoad(): void {
 	root.classList.add(initialTheme)
 }
 
-export function ThemeProvider({ children, defaultTheme = DEFAULT_THEME, storageKey = STORAGE_KEY, ...props }: ThemeProviderProps) {
-	const [theme, setTheme] = useState<Theme>(() => (Cookies.get(storageKey) as Theme) || defaultTheme)
+export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+	const [theme, setTheme] = useState<Theme>(
+		() => (IS_DESKTOP ? (localStorage.getItem(STORAGE_KEY) as Theme) : (Cookies.get(STORAGE_KEY) as Theme)) || DEFAULT_THEME
+	)
 
 	useLayoutEffect(() => {
 		const root = window.document.documentElement
@@ -69,7 +70,11 @@ export function ThemeProvider({ children, defaultTheme = DEFAULT_THEME, storageK
 		systemTheme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
 		dark: theme === "system" ? window.matchMedia("(prefers-color-scheme: dark)").matches : theme === "dark",
 		setTheme: (theme: Theme) => {
-			Cookies.set(storageKey, theme)
+			if (IS_DESKTOP) {
+				localStorage.setItem(STORAGE_KEY, theme)
+			} else {
+				Cookies.set(STORAGE_KEY, theme)
+			}
 
 			setTheme(theme)
 		}

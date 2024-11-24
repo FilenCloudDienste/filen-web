@@ -18,7 +18,7 @@ import TransparentFullScreenImageDialog from "@/components/dialogs/transparentFu
 import TwoFactorCodeDialog from "@/components/dialogs/twoFactorCode"
 import PublicLinkDialog from "@/components/dialogs/publicLink"
 import SharedWithDialog from "@/components/dialogs/sharedWith"
-import { UNCACHED_QUERY_KEYS } from "@/constants"
+import { UNCACHED_QUERY_KEYS, IS_DESKTOP } from "@/constants"
 import NotificationHandler from "@/components/notificationHandler"
 import ActivityHandler from "@/components/activityHandler"
 import FileVersionsDialog from "@/components/dialogs/fileVersions"
@@ -164,6 +164,23 @@ export const Root = memo(() => {
 			setReady(true)
 		} catch (e) {
 			console.error(e)
+		}
+	}, [])
+
+	useEffect(() => {
+		const onPreloadError = (e: VitePreloadErrorEvent) => {
+			e.preventDefault()
+			e.stopPropagation()
+
+			if (!IS_DESKTOP) {
+				window.location.reload()
+			}
+		}
+
+		window.addEventListener("vite:preloadError", onPreloadError)
+
+		return () => {
+			window.removeEventListener("vite:preloadError", onPreloadError)
 		}
 	}, [])
 
