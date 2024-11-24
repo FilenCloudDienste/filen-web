@@ -83,7 +83,7 @@
             "success": {
                 "title": "Hesap oluşturuldu",
                 "continue": "Devam et",
-                "description": "{{email}} adresine bir onay e-postası gönderdik. Lütfen kaydınızı onaylamak için e-postadaki bağlantıya tıklayın. Spam klasörünüzü de kontrol etmeyi unutmayın."
+                "description": "{{email}} adresine bir onay e-postası gönderdik. Lütfen kaydınızı tamamlamak için e-postadaki bağlantıya tıklayın. Spam klasörünüzü de kontrol etmeyi unutmayın."
             }
         }
     },
