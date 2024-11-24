@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button"
 import { useTranslation } from "react-i18next"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { v4 as uuidv4 } from "uuid"
+import { cn } from "@/lib/utils"
+import { IS_DESKTOP, IS_APPLE_DEVICE } from "@/constants"
 
 export const Editor = memo(
 	({
@@ -155,7 +157,10 @@ export const FilenIgnoreDialog = memo(() => {
 			>
 				<div className="w-screen h-[100dvh] flex flex-col">
 					<div
-						className="flex flex-row border-b h-[49px] bg-secondary w-full items-center justify-between px-4 z-50 gap-10 -mt-[1px]"
+						className={cn(
+							"flex flex-row border-b h-[49px] bg-secondary w-full items-center justify-between px-4 z-50 gap-10 -mt-[1px]",
+							IS_DESKTOP && IS_APPLE_DEVICE && "pl-20"
+						)}
 						style={{
 							// @ts-expect-error not typed
 							WebkitAppRegion: "drag"
