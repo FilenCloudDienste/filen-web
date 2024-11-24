@@ -503,11 +503,11 @@
             "color": "Renk",
             "deletePermanently": "Kalıcı olarak sil",
             "copyId": "ID'yi kopyala",
-            "info": "Bilgi",
+            "info": "Ayrıntılar",
             "dialogs": {
                 "trash": {
                     "title": "Çöp",
-                    "description": "{{name}}'yi çöpe göndermek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
+                    "description": "{{name}} adlı öğeyi çöpe göndermek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
                     "continue": "Çöp"
                 },
                 "trashMultiple": {
@@ -702,12 +702,12 @@
             },
             "remove": {
                 "title": "Kişiyi kaldır",
-                "description": "{{name}}'yi kişilerinizden kaldırmak istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişiyi kişilerinizden kaldırmak istediğinizden emin misiniz?",
                 "continue": "Kaldır"
             },
             "block": {
                 "title": "Kullanıcıyı engelle",
-                "description": "{{name}}'yi engellemek istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişiyi engellemek istediğinizden emin misiniz?",
                 "continue": "Engelle"
             },
             "sendRequest": {
@@ -856,7 +856,7 @@
             "fileRm": "{{name}} silindi",
             "fileRestored": "{{name}} çöp kutusundan geri yüklendi",
             "fileShared": "{{name}} {{email}} ile paylaşıldı",
-            "fileLinkEdited": "{{name}}'nin herkese açık bağlantısı düzenlendi",
+            "fileLinkEdited": "{{name}} adlı öğenin herkese açık bağlantısı düzenlendi",
             "folderTrash": "{{name}} çöp kutusuna taşındı",
             "folderShared": "{{name}} {{email}} ile paylaşıldı",
             "folderMoved": "{{name}} taşındı",
@@ -864,7 +864,7 @@
             "subFolderCreated": "{{name}} oluşturuldu",
             "baseFolderCreated": "{{name}} oluşturuldu",
             "folderRestored": "{{name}} çöp kutusundan geri yüklendi",
-            "folderColorChanged": "{{name}}'nin rengi değiştirildi",
+            "folderColorChanged": "{{name}} adlı öğenin rengi değiştirildi",
             "login": "Giriş yapıldı",
             "deleteVersioned": "Sürümlü dosyalar silindi",
             "deleteAll": "Tüm dosyalar ve dizinler silindi",
@@ -908,7 +908,7 @@
             "storage": "Depolama",
             "moreInfo": "Aboneliğiniz hakkında daha fazla bilgi",
             "paymentMethod": "Ödeme yöntemi",
-            "info": "{{storage}} depolama ile sınırsız yükleme, indirme, not ve sohbet. Filen'in tam potansiyelini açma.",
+            "info": "{{storage}} depolama ile sınırsız yükleme, indirme, not ve sohbet. Filen'in tüm potansiyelini ortaya çıkar.",
             "statuses": {
                 "cancelled": "İptal edildi",
                 "active": "Aktif",
@@ -1156,7 +1156,7 @@
             "ad": {
                 "header": "Biz Filen'iz",
                 "title": "Özel ve güvenli bulut depolama",
-                "info1": "Tasarım gereği gizlilik",
+                "info1": "Gizlilik odaklı tasarım",
                 "info2": "Uçtan uca şifreleme",
                 "info3": "Sıfır bilgi teknolojisi",
                 "cta": "10 GB depolama ücretsiz"
