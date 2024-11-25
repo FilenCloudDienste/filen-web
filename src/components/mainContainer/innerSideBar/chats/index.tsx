@@ -376,8 +376,33 @@ export const Chats = memo(() => {
 					if (foundConvo.length === 1 && foundConvo[0]) {
 						setLastSelectedChatsConversation(foundConvo[0].uuid)
 						setSelectedConversation(foundConvo[0])
+
+						navigate({
+							to: "/chats/$uuid",
+							params: {
+								uuid: foundConvo[0].uuid
+							}
+						})
+					}
+				} else {
+					if (!conversationsSorted.some(conversation => conversation.uuid === selectedConversation.uuid)) {
+						setLastSelectedChatsConversation("")
+						setSelectedConversation(null)
+
+						navigate({
+							to: "/chats"
+						})
 					}
 				}
+			}
+		} else {
+			if (selectedConversation) {
+				setLastSelectedChatsConversation("")
+				setSelectedConversation(null)
+
+				navigate({
+					to: "/chats"
+				})
 			}
 		}
 	}, [navigate, routeParent, conversationsSorted, setLastSelectedChatsConversation, setSelectedConversation, selectedConversation])

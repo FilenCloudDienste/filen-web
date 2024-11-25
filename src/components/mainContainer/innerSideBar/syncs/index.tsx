@@ -156,8 +156,33 @@ export const Syncs = memo(() => {
 					if (foundSync.length === 1 && foundSync[0]) {
 						setLastSelectedSync(foundSync[0].uuid)
 						setSelectedSync(foundSync[0])
+
+						navigate({
+							to: "/syncs/$uuid",
+							params: {
+								uuid: foundSync[0].uuid
+							}
+						})
+					}
+				} else {
+					if (!syncsSorted.some(sync => sync.uuid === selectedSync.uuid)) {
+						setLastSelectedSync("")
+						setSelectedSync(null)
+
+						navigate({
+							to: "/syncs"
+						})
 					}
 				}
+			}
+		} else {
+			if (selectedSync) {
+				setLastSelectedSync("")
+				setSelectedSync(null)
+
+				navigate({
+					to: "/syncs"
+				})
 			}
 		}
 	}, [navigate, routeParent, syncsSorted, setLastSelectedSync, setSelectedSync, selectedSync])

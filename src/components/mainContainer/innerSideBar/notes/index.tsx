@@ -230,8 +230,33 @@ export const Notes = memo(() => {
 					if (foundNote.length === 1 && foundNote[0]) {
 						setLastSelectedNote(foundNote[0].uuid)
 						setSelectedNote(foundNote[0])
+
+						navigate({
+							to: "/notes/$uuid",
+							params: {
+								uuid: foundNote[0].uuid
+							}
+						})
+					}
+				} else {
+					if (!notesSorted.some(note => note.uuid === selectedNote.uuid)) {
+						setLastSelectedNote("")
+						setSelectedNote(null)
+
+						navigate({
+							to: "/notes"
+						})
 					}
 				}
+			}
+		} else {
+			if (selectedNote) {
+				setLastSelectedNote("")
+				setSelectedNote(null)
+
+				navigate({
+					to: "/notes"
+				})
 			}
 		}
 	}, [navigate, routeParent, notesSorted, setLastSelectedNote, setSelectedNote, selectedNote])
