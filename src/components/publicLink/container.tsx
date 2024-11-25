@@ -95,7 +95,7 @@ export const Container = memo(({ children, loading, hasInfo }: { children: React
 				}}
 			>
 				{!urlState.embed && hasInfo && (
-					<div className="absolute bottom-4 right-4 z-50">
+					<div className="absolute bottom-4 right-4 z-30">
 						<Button
 							variant="secondary"
 							className="items-center gap-2"
