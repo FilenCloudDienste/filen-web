@@ -123,6 +123,8 @@ export const Directory = memo(
 					password: password && password.length > 0 ? password : undefined
 				})
 
+				setOpen(false)
+
 				await query.refetch()
 			} catch (e) {
 				console.error(e)
@@ -134,7 +136,7 @@ export const Directory = memo(
 				setProgress({ done: 0, total: 0 })
 				setSaving(false)
 			}
-		}, [loadingToast, errorToast, query, item.uuid, status, setSaving, saving, password, expiration, downloadBtn])
+		}, [loadingToast, errorToast, query, item.uuid, status, setSaving, saving, password, expiration, downloadBtn, setOpen])
 
 		const copyLink = useCallback(async () => {
 			if (!status || !status.exists || decryptedLinkKey.length === 0) {

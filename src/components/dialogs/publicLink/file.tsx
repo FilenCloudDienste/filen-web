@@ -119,6 +119,8 @@ export const File = memo(
 					password: password && password.length > 0 ? password : undefined
 				})
 
+				setOpen(false)
+
 				await query.refetch()
 			} catch (e) {
 				console.error(e)
@@ -129,7 +131,7 @@ export const File = memo(
 
 				setSaving(false)
 			}
-		}, [loadingToast, errorToast, query, item.uuid, status, setSaving, saving, password, expiration, downloadBtn])
+		}, [loadingToast, errorToast, query, item.uuid, status, setSaving, saving, password, expiration, downloadBtn, setOpen])
 
 		const copyLink = useCallback(async () => {
 			if (!status || !status.uuid) {
