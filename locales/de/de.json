@@ -1527,6 +1527,11 @@
 				"disableLocalTrash": {
 					"name": "Lokalen Papierkorb deaktivieren",
 					"info": "Aktiviere oder deaktiviere den lokalen Papierkorb. Wenn deaktiviert, werden Dateien oder Verzeichnisse vom Client dauerhaft gelöscht, anstatt sie in den lokalen Papierkorb im lokalen Synchronisierungspfad zu verschieben"
+				},
+				"clearTransferEvents": {
+					"name": "Ereignisse löschen",
+					"info": "Lokal gespeicherte Ereignisse löschen",
+					"clear": "Löschen"
 				}
 			}
 		},
@@ -1548,6 +1553,11 @@
 			"deleteIssue": {
 				"title": "Problem löschen",
 				"description": "Bist du sicher, dass du dieses Problem löschen möchtest? Bitte stelle sicher, dass es behoben oder vorübergehend war, andernfalls wird es wahrscheinlich wieder auftreten.",
+				"continue": "Löschen"
+			},
+			"clearTransferEvents": {
+				"title": "Ereignisse löschen",
+				"description": "Möchtest du die lokal gespeicherten Ereignisse wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
 				"continue": "Löschen"
 			}
 		},

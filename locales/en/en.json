@@ -1542,6 +1542,11 @@
 				"disableLocalTrash": {
 					"name": "Disable local trash",
 					"info": "Enable or disable the local trash. When disabled, the client will permanently delete files or directories instead of moving them into the local trash directory inside the local sync path"
+				},
+				"clearTransferEvents": {
+					"name": "Clear events",
+					"info": "Clear the locally stored events",
+					"clear": "Clear"
 				}
 			}
 		},
@@ -1564,6 +1569,11 @@
 				"title": "Delete issue",
 				"description": "Are you sure you want to delete this issue? Please make sure that you have resolved it or it was temporary, otherwise it will come back eventually.",
 				"continue": "Delete"
+			},
+			"clearTransferEvents": {
+				"title": "Clear events",
+				"description": "Are you sure you want to clear the locally saved events? This action cannot be undone.",
+				"continue": "Clear"
 			}
 		},
 		"ignored": {

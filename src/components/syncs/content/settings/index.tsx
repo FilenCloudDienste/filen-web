@@ -17,17 +17,20 @@ import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useIsSyncActive from "@/hooks/useIsSyncActive"
 import useWindowSize from "@/hooks/useWindowSize"
+import { setItem } from "@/lib/localForage"
+import { showConfirmDialog } from "@/components/dialogs/confirm"
 
 export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	const [, setDesktopConfig] = useDesktopConfig()
 	const { t } = useTranslation()
 	const settingsContainerSize = useSettingsContainerSize()
-	const { changing, setChanging, setSelectedSync } = useSyncsStore(
+	const { changing, setChanging, setSelectedSync, setTransferEvents } = useSyncsStore(
 		useCallback(
 			state => ({
 				changing: state.changing,
 				setChanging: state.setChanging,
-				setSelectedSync: state.setSelectedSync
+				setSelectedSync: state.setSelectedSync,
+				setTransferEvents: state.setTransferEvents
 			}),
 			[]
 		)
@@ -77,6 +80,30 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	const deleteSync = useCallback(async () => {
 		eventEmitter.emit("deleteSync", sync.uuid)
 	}, [sync.uuid])
+
+	const clearTransferEvents = useCallback(async () => {
+		if (
+			!(await showConfirmDialog({
+				title: t("syncs.dialogs.clearTransferEvents.title"),
+				continueButtonText: t("syncs.dialogs.clearTransferEvents.continue"),
+				description: t("syncs.dialogs.clearTransferEvents.description"),
+				continueButtonVariant: "destructive"
+			}))
+		) {
+			return
+		}
+
+		try {
+			await setItem("syncTransferEvents:" + sync.uuid, [])
+
+			setTransferEvents(prev => ({
+				...prev,
+				[sync.uuid]: []
+			}))
+		} catch (e) {
+			console.error(e)
+		}
+	}, [sync.uuid, setTransferEvents, t])
 
 	const toggleLocalTrashDisabled = useCallback(
 		async (enabled: boolean) => {
@@ -478,6 +505,19 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 								) : (
 									t("syncs.settings.sections.forceSync.forceSync")
 								)}
+							</Button>
+						</Section>
+						<Section
+							name={t("syncs.settings.sections.clearTransferEvents.name")}
+							info={t("syncs.settings.sections.clearTransferEvents.info")}
+						>
+							<Button
+								variant="secondary"
+								onClick={clearTransferEvents}
+								size="sm"
+								disabled={isForcingSync || changing || isSyncActive}
+							>
+								{t("syncs.settings.sections.clearTransferEvents.clear")}
 							</Button>
 						</Section>
 						<Section

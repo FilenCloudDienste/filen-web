@@ -50,7 +50,10 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 				tasksSize: state.tasksSize[syncUUID] ? state.tasksSize[syncUUID]! : 0,
 				cycleState: state.cycleState[syncUUID]
 					? state.cycleState[syncUUID]!
-					: { state: "cycleRestarting" as CycleState, timestamp: Date.now() },
+					: {
+							state: "cycleRestarting" as CycleState,
+							timestamp: Date.now()
+						},
 				taskErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "task").length : 0,
 				setErrors: state.setErrors,
 				localTreeErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "localTree").length : 0
