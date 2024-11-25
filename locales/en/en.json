@@ -1547,6 +1547,10 @@
 					"name": "Clear events",
 					"info": "Clear the locally stored events",
 					"clear": "Clear"
+				},
+				"name": {
+					"name": "Name",
+					"info": "Edit the sync name"
 				}
 			}
 		},
@@ -1574,6 +1578,11 @@
 				"title": "Clear events",
 				"description": "Are you sure you want to clear the locally saved events? This action cannot be undone.",
 				"continue": "Clear"
+			},
+			"name": {
+				"title": "Edit name",
+				"placeholder": "Name",
+				"continue": "Save"
 			}
 		},
 		"ignored": {

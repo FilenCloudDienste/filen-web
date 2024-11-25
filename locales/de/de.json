@@ -1532,6 +1532,10 @@
 					"name": "Ereignisse löschen",
 					"info": "Lokal gespeicherte Ereignisse löschen",
 					"clear": "Löschen"
+				},
+				"name": {
+					"name": "Name",
+					"info": "Synchronisierungsnamen ändern"
 				}
 			}
 		},
@@ -1559,6 +1563,11 @@
 				"title": "Ereignisse löschen",
 				"description": "Möchtest du die lokal gespeicherten Ereignisse wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
 				"continue": "Löschen"
+			},
+			"name": {
+				"title": "Name bearbeiten",
+				"placeholder": "Name",
+				"continue": "Speichern"
 			}
 		},
 		"ignored": {

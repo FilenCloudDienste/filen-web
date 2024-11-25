@@ -159,7 +159,7 @@ export const Notes = memo(() => {
 				</div>
 				<div className="flex flex-row grow">
 					<p
-						className="line-clamp-1 text-ellipsis break-all cursor-text"
+						className="line-clamp-1 text-ellipsis break-all cursor-pointer"
 						onClick={rename}
 						style={{
 							// @ts-expect-error not typed

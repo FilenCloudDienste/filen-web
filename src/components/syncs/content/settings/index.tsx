@@ -19,6 +19,8 @@ import useIsSyncActive from "@/hooks/useIsSyncActive"
 import useWindowSize from "@/hooks/useWindowSize"
 import { setItem } from "@/lib/localForage"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
+import { showInputDialog } from "@/components/dialogs/input"
+import { doesSyncNameExist } from "@/components/dialogs/createSync"
 
 export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	const [, setDesktopConfig] = useDesktopConfig()
@@ -80,6 +82,50 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 	const deleteSync = useCallback(async () => {
 		eventEmitter.emit("deleteSync", sync.uuid)
 	}, [sync.uuid])
+
+	const editName = useCallback(async () => {
+		const inputResponse = await showInputDialog({
+			title: t("syncs.dialogs.name.title"),
+			continueButtonText: t("syncs.dialogs.name.continue"),
+			value: sync.name,
+			autoFocusInput: true,
+			placeholder: t("syncs.dialogs.name.placeholder")
+		})
+
+		if (inputResponse.cancelled || inputResponse.value.trim().length === 0 || inputResponse.value.trim() === sync.name) {
+			return
+		}
+
+		if (doesSyncNameExist(inputResponse.value)) {
+			errorToast(t("dialogs.createSync.errors.syncNameAlreadyExists", { name: inputResponse.value.trim() }))
+
+			return
+		}
+
+		setSelectedSync(prev =>
+			prev && prev.uuid === sync.uuid
+				? {
+						...prev,
+						name: inputResponse.value.trim()
+					}
+				: prev
+		)
+
+		setDesktopConfig(prev => ({
+			...prev,
+			syncConfig: {
+				...prev.syncConfig,
+				syncPairs: prev.syncConfig.syncPairs.map(pair =>
+					pair.uuid === sync.uuid
+						? {
+								...pair,
+								name: inputResponse.value.trim()
+							}
+						: pair
+				)
+			}
+		}))
+	}, [sync.uuid, setDesktopConfig, t, sync.name, setSelectedSync, errorToast])
 
 	const clearTransferEvents = useCallback(async () => {
 		if (
@@ -321,7 +367,15 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 					}}
 				>
 					<div className="flex flex-col gap-4">
-						<div className="flex flex-row items-center justify-between border-b pb-3 gap-3">
+						<div className="flex flex-row items-center">
+							<p
+								className="line-clamp-1 text-ellipsis break-all text-xl cursor-pointer"
+								onClick={editName}
+							>
+								{sync.name}
+							</p>
+						</div>
+						<div className="flex flex-row items-center justify-between border-b pb-3 gap-3 mt-2">
 							<div className="flex flex-row items-center w-[45%] justify-start">
 								<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 									<Tooltip>
@@ -473,6 +527,19 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 								onCheckedChange={toggleLocalTrashDisabled}
 								disabled={changing || isSyncActive}
 							/>
+						</Section>
+						<Section
+							name={t("syncs.settings.sections.name.name")}
+							info={t("syncs.settings.sections.name.info")}
+						>
+							<Button
+								onClick={editName}
+								variant="secondary"
+								size="sm"
+								disabled={changing || isSyncActive}
+							>
+								<Edit size={18} />
+							</Button>
 						</Section>
 						<Section
 							name={t("syncs.settings.sections.filenIgnore.name")}
