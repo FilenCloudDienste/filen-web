@@ -852,6 +852,7 @@ export async function uploadDirectory({
 				pauseSignal: pauseSignals[directoryId],
 				abortSignal: abortControllers[directoryId]!.signal,
 				onProgressId: directoryId,
+				throwOnSingleFileUploadError: false,
 				onQueued: () => {
 					if (didQueue || !emitEvents) {
 						return
