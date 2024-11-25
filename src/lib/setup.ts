@@ -10,7 +10,14 @@ import { connect as socketConnect } from "@/lib/socket"
 import { localStorageKey as authedLocalStorageKey } from "@/hooks/useIsAuthed"
 import queryClientPersisterIDB from "./queryPersister"
 import { localStorageKey as sdkConfigLocalStorageKey } from "@/hooks/useSDKConfig"
-import { localStorageKey as desktopConfigLocalStorageKey } from "@/hooks/useDesktopConfig"
+import {
+	localStorageKey as desktopConfigLocalStorageKey,
+	setDesktopConfig,
+	syncConfigLocalStorageKey,
+	networkDriveConfigLocalStorageKey,
+	webdavConfigLocalStorageKey,
+	s3ConfigLocalStorageKey
+} from "@/hooks/useDesktopConfig"
 import { STORAGE_KEY as themeStorageKey } from "@/providers/themeProvider"
 
 export const DEFAULT_SDK_CONFIG: FilenSDKConfig = {
@@ -86,8 +93,28 @@ export async function resetLocalStorage(): Promise<void> {
 	const textEditorResizablePanelSizesPublicLink = window.localStorage.getItem("textEditorResizablePanelSizes:publicLink")
 	const useResizablePanelSizes = window.localStorage.getItem("useResizablePanelSizes")
 	const theme = window.localStorage.getItem(themeStorageKey)
+	const networkDriveConfig = window.localStorage.getItem(networkDriveConfigLocalStorageKey)
+	const syncConfig = window.localStorage.getItem(syncConfigLocalStorageKey)
+	const webdavConfig = window.localStorage.getItem(webdavConfigLocalStorageKey)
+	const s3Config = window.localStorage.getItem(s3ConfigLocalStorageKey)
 
 	window.localStorage.clear()
+
+	if (networkDriveConfig) {
+		window.localStorage.setItem(networkDriveConfigLocalStorageKey, networkDriveConfig)
+	}
+
+	if (syncConfig) {
+		window.localStorage.setItem(syncConfigLocalStorageKey, syncConfig)
+	}
+
+	if (webdavConfig) {
+		window.localStorage.setItem(webdavConfigLocalStorageKey, webdavConfig)
+	}
+
+	if (s3Config) {
+		window.localStorage.setItem(s3ConfigLocalStorageKey, s3Config)
+	}
 
 	if (theme) {
 		window.localStorage.setItem(themeStorageKey, theme)
@@ -211,7 +238,8 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
 	}
 
 	window.localStorage.setItem(sdkConfigLocalStorageKey, JSON.stringify(initConfig))
-	window.localStorage.setItem(desktopConfigLocalStorageKey, JSON.stringify(desktopConfig))
+
+	setDesktopConfig(desktopConfig, false)
 
 	await Promise.all([setItem(sdkConfigLocalStorageKey, initConfig), setItem(desktopConfigLocalStorageKey, desktopConfig)])
 	await Promise.all([worker.initializeSDK(initConfig), IS_DESKTOP ? window.desktopAPI.setConfig(desktopConfig) : Promise.resolve()])

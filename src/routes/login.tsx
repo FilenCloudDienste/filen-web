@@ -18,7 +18,7 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import { type FilenDesktopConfig } from "@filen/desktop/dist/types"
 import { localStorageKey as authedLocalStorageKey } from "@/hooks/useIsAuthed"
 import { localStorageKey as sdkConfigLocalStorageKey } from "@/hooks/useSDKConfig"
-import { localStorageKey as desktopConfigLocalStorageKey } from "@/hooks/useDesktopConfig"
+import { setDesktopConfig } from "@/hooks/useDesktopConfig"
 
 export const Route = createFileRoute("/login")({
 	component: Login
@@ -111,16 +111,16 @@ export function Login() {
 				} satisfies FilenSDKConfig)
 			)
 
-			window.localStorage.setItem(
-				desktopConfigLocalStorageKey,
-				JSON.stringify({
+			setDesktopConfig(
+				{
 					...DEFAULT_DESKTOP_CONFIG,
 					sdkConfig: {
 						...getSDK().config,
 						password: "redacted",
 						twoFactorCode: "redacted"
 					} satisfies FilenSDKConfig
-				} satisfies FilenDesktopConfig)
+				} satisfies FilenDesktopConfig,
+				false
 			)
 
 			await setup(
