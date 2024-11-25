@@ -566,3 +566,7 @@ export async function api_v3_file_download_chunk_buffer(...params: Parameters<ty
 
 	return transfer(result, [result.buffer])
 }
+
+export async function terminate(): Promise<void> {
+	self.close()
+}

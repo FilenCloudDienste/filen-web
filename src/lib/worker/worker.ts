@@ -2955,7 +2955,7 @@ export async function changeEmail({ email, password }: { email: string; password
 	})
 }
 
-export async function changePassword({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }): Promise<void> {
+export async function changePassword({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }): Promise<string> {
 	await waitForInitialization()
 
 	return await getSDK().user().changePassword({
@@ -3450,4 +3450,8 @@ export async function httpHealthCheck({
 
 		return false
 	}
+}
+
+export async function terminate(): Promise<void> {
+	self.close()
 }

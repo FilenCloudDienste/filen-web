@@ -9,6 +9,8 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import { cn } from "@/lib/utils"
+import { setup } from "@/lib/setup"
+import { getSDK } from "@/lib/sdk"
 
 export const ChangePasswordDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
@@ -71,10 +73,20 @@ export const ChangePasswordDialog = memo(() => {
 		const toast = loadingToast()
 
 		try {
-			await worker.changePassword({
+			const newAPIKey = await worker.changePassword({
 				newPassword: inputs.new,
 				currentPassword: inputs.password
 			})
+
+			await setup(
+				{
+					...getSDK().config,
+					apiKey: newAPIKey,
+					password: "redacted",
+					twoFactorCode: "redacted"
+				},
+				true
+			)
 
 			setTimeout(() => setOpen(false), 100)
 

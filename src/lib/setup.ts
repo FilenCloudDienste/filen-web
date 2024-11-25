@@ -192,7 +192,6 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
 	)
 
 	reinitSDK(initConfig)
-
 	getSDK().init(initConfig)
 
 	if (authed) {
