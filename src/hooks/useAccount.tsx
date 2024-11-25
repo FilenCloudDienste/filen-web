@@ -6,12 +6,22 @@ import { useUserStore } from "@/stores/user.store"
 
 export default function useAccount(setupRefetchListener: boolean = true) {
 	const { setAccount, setSettings } = useUserStore(
-		useCallback(state => ({ setAccount: state.setAccount, setSettings: state.setSettings }), [])
+		useCallback(
+			state => ({
+				setAccount: state.setAccount,
+				setSettings: state.setSettings
+			}),
+			[]
+		)
 	)
 
 	const query = useQuery({
 		queryKey: ["useAccount"],
-		queryFn: () => Promise.all([worker.fetchAccount(), worker.fetchSettings()])
+		queryFn: () => Promise.all([worker.fetchAccount(), worker.fetchSettings()]),
+		refetchInterval: 30000,
+		refetchIntervalInBackground: true,
+		refetchOnReconnect: true,
+		refetchOnWindowFocus: true
 	})
 
 	useEffect(() => {
