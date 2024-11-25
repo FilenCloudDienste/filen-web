@@ -87,3 +87,49 @@
 		background: var(--scrollbar-hover);
 	}
 }
+
+.markdown-content ul {
+	list-style: disc outside none;
+	padding-left: 2em;
+	margin: 1em 0;
+}
+
+.markdown-content ol {
+	list-style: decimal outside none;
+	padding-left: 2em;
+	margin: 1em 0;
+}
+
+.markdown-content li {
+	margin: 0.25em 0;
+}
+
+/* Nested lists */
+.markdown-content ul ul,
+.markdown-content ul ol,
+.markdown-content ol ul,
+.markdown-content ol ol {
+	margin: 0.25em 0;
+}
+
+.markdown-content ul ul {
+	list-style-type: circle;
+}
+
+.markdown-content ul ul ul {
+	list-style-type: square;
+}
+
+.markdown-content ol ol {
+	list-style-type: lower-alpha;
+}
+
+.markdown-content ol ol ol {
+	list-style-type: lower-roman;
+}
+
+.markdown-content li > ul,
+.markdown-content li > ol {
+	margin-top: 0;
+	margin-bottom: 0;
+}

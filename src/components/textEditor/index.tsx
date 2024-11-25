@@ -215,6 +215,7 @@ export const TextEditor = memo(
 							>
 								<MarkdownPreview
 									source={value}
+									className="markdown-content"
 									style={{
 										width: "100%",
 										height: height + "px",
