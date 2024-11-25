@@ -1542,6 +1542,11 @@
 				"disableLocalTrash": {
 					"name": "禁用本地回收站",
 					"info": "启用或禁用本地回收站。禁用后，客户端将永久删除文件或目录，而不是将其移动到本地同步路径内的本地回收站目录中"
+				},
+				"clearTransferEvents": {
+					"name": "清除事件",
+					"info": "清除本地存储的事件",
+					"clear": "清除"
 				}
 			}
 		},
@@ -1564,6 +1569,11 @@
 				"title": "删除问题",
 				"description": "您确定要删除此问题吗？请确保您已解决该问题或该问题只是暂时的，否则该问题最终会再次出现。",
 				"continue": "删除"
+			},
+			"clearTransferEvents": {
+				"title": "清除事件",
+				"description": "您确定要清除本地存储的事件吗？此操作无法撤消。",
+				"continue": "清除"
 			}
 		},
 		"ignored": {
