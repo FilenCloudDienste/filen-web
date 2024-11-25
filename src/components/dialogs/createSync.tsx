@@ -176,16 +176,16 @@ export const CreateSyncDialog = memo(() => {
 				}
 
 				if (
-					!(await window.desktopAPI.isAllowedToSyncDirectory(createState.localPath)) ||
-					tryingToSyncNetworkDrive(createState.localPath) ||
-					(await window.desktopAPI.tryingToSyncDesktop(createState.localPath))
+					!(await window.desktopAPI.isAllowedToSyncDirectory(createState.localPath)) //||
+					//tryingToSyncNetworkDrive(createState.localPath) ||
+					//(await window.desktopAPI.tryingToSyncDesktop(createState.localPath))
 				) {
 					errorToast(t("dialogs.createSync.errors.invalidLocalPath"))
 
 					return
 				}
 
-				if (window.desktopAPI.osPlatform() === "darwin" && (await window.desktopAPI.isPathSyncedByICloud(createState.localPath))) {
+				/*if (window.desktopAPI.osPlatform() === "darwin" && (await window.desktopAPI.isPathSyncedByICloud(createState.localPath))) {
 					errorToast(t("dialogs.createSync.errors.localPathSyncedByICloud"))
 
 					return
@@ -204,7 +204,7 @@ export const CreateSyncDialog = memo(() => {
 					) {
 						return
 					}
-				}
+				}*/
 
 				const itemCount = await window.desktopAPI.getLocalDirectoryItemCount(createState.localPath)
 
