@@ -221,6 +221,8 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
 		registerFSAServiceWorker().catch(console.error)
 	}
 
+	window.disableInvalidAPIKeyLogout = false
+
 	console.log("Setup done")
 }
 

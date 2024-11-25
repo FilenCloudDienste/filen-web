@@ -72,6 +72,8 @@ export const ChangePasswordDialog = memo(() => {
 
 		const toast = loadingToast()
 
+		window.disableInvalidAPIKeyLogout = true
+
 		try {
 			const newAPIKey = await worker.changePassword({
 				newPassword: inputs.new,
@@ -97,6 +99,8 @@ export const ChangePasswordDialog = memo(() => {
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
 			toast.dismiss()
+
+			window.disableInvalidAPIKeyLogout = false
 		}
 	}, [loadingToast, errorToast, inputs, successToast, t])
 

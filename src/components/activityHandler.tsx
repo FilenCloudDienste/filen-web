@@ -47,7 +47,7 @@ export const ActivityHandler = memo(() => {
 	}, [windowFocus, isInsidePublicLink, authed])
 
 	const logoutFn = useCallback(async () => {
-		if (!authed) {
+		if (!authed || window.disableInvalidAPIKeyLogout) {
 			return
 		}
 

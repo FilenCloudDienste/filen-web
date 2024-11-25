@@ -43,6 +43,8 @@ import LockDialog from "@/components/dialogs/lock"
 import ExportReminder from "@/components/exportReminder"
 import memoize from "lodash/memoize"
 
+window.disableInvalidAPIKeyLogout = false
+
 focusManager.setEventListener(handleFocus => {
 	const onFocus = () => {
 		handleFocus(true)
