@@ -1,12 +1,13 @@
 import { memo, useState, useEffect, useCallback, useRef } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { IS_DESKTOP } from "@/constants"
+import { IS_DESKTOP, IS_APPLE_DEVICE, DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
 import useErrorToast from "@/hooks/useErrorToast"
 import { useTranslation } from "react-i18next"
 import { LockIcon } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
+import WindowControls from "../windowControls"
 
 // This is by no means safe. In the packaged electron version we can disable the console, making it _almost_ impossible for a normal user to access the app when it's locked.
 // You could still open the Chromium DB in the user's install directory, but if someone with this kind of knowledge sits (or remotes) at your PC, you have other problems.
@@ -144,6 +145,18 @@ export const LockDialog = memo(() => {
 					WebkitAppRegion: "drag"
 				}}
 			>
+				{IS_DESKTOP && !IS_APPLE_DEVICE && (
+					<div
+						className="flex flex-row absolute right-0 top-0 z-50"
+						style={{
+							// @ts-expect-error not typed
+							WebkitAppRegion: "no-drag",
+							height: DESKTOP_TOPBAR_HEIGHT
+						}}
+					>
+						<WindowControls />
+					</div>
+				)}
 				<div
 					className="flex flex-col items-center p-10"
 					onClick={focusInput}

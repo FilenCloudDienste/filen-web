@@ -827,6 +827,10 @@
 					"name": "In den Tray minimieren",
 					"info": "Filen im Tray verstecken anstatt das Fenster zu minimieren"
 				},
+				"startMinimized": {
+					"name": "Minimiert starten",
+					"info": "Minimierten Start aktivieren oder deaktivieren"
+				},
 				"autoLaunch": {
 					"name": "Autostart",
 					"info": "Filen automatisch beim Systemstart starten"
@@ -913,7 +917,8 @@
 				"cancelled": "Gekündigt",
 				"active": "Aktiv",
 				"waiting": "Wartend"
-			}
+			},
+			"cannotCancelTooEarly": "Abonnements können nur 24 Stunden nach dem Erstkauf gekündigt werden."
 		},
 		"plans": {
 			"starter": "Starter",

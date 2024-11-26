@@ -8,8 +8,11 @@ import { isNetworkDriveMounted } from "./mounts/networkDrive"
 import { isWebDAVOnline } from "./mounts/webdav"
 import { isS3Online } from "./mounts/s3"
 import { useMountsStore } from "@/stores/mounts.store"
+import { useLocalStorage } from "@uidotdev/usehooks"
+import useIsSyncActive from "@/hooks/useIsSyncActive"
+import useSyncIssueCount from "@/hooks/useSyncIssueCount"
 
-export const updateDesktopConfigMutex = new Semaphore(1)
+const updateDesktopConfigMutex = new Semaphore(1)
 
 export const DesktopHandler = memo(() => {
 	const [authed] = useIsAuthed()
@@ -25,6 +28,10 @@ export const DesktopHandler = memo(() => {
 			[]
 		)
 	)
+	const [minimizeToTrayEnabled] = useLocalStorage<boolean>("minimizeToTrayEnabled", false)
+	const isSyncActive = useIsSyncActive()
+	const syncIssueCount = useSyncIssueCount()
+	const [startMinimizedEnabled] = useLocalStorage<boolean>("startMinimizedEnabled", false)
 
 	const currentDesktopConfigStringified = useMemo(() => {
 		return JSON.stringify(desktopConfig)
@@ -107,6 +114,27 @@ export const DesktopHandler = memo(() => {
 			setEnablingS3(false)
 		}
 	}, [setDesktopConfig, authed, setEnablingS3])
+
+	useEffect(() => {
+		if (!authed) {
+			return
+		}
+
+		Promise.all([window.desktopAPI.updateIsSyncing(isSyncActive), window.desktopAPI.updateWarningCount(syncIssueCount)]).catch(
+			console.error
+		)
+	}, [isSyncActive, syncIssueCount, authed])
+
+	useEffect(() => {
+		if (!authed) {
+			return
+		}
+
+		Promise.all([
+			window.desktopAPI.setMinimizeToTray(minimizeToTrayEnabled),
+			window.desktopAPI.setStartMinimized(startMinimizedEnabled)
+		]).catch(console.error)
+	}, [minimizeToTrayEnabled, startMinimizedEnabled, authed])
 
 	useEffect(() => {
 		;(async () => {

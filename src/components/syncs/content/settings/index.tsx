@@ -367,7 +367,7 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 					}}
 				>
 					<div className="flex flex-col gap-4">
-						<div className="flex flex-row items-center">
+						<div className="flex flex-row items-center -mt-4">
 							<p
 								className="line-clamp-1 text-ellipsis break-all text-xl cursor-pointer"
 								onClick={editName}

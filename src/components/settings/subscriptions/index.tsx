@@ -3,31 +3,57 @@ import useAccount from "@/hooks/useAccount"
 import { IS_DESKTOP, DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import { cn } from "@/lib/utils"
 import { useTranslation } from "react-i18next"
-import { formatBytes } from "@/utils"
+import { formatBytes, convertTimestampToMs } from "@/utils"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import worker from "@/lib/worker"
-import { Gem } from "lucide-react"
+import { Gem, CheckCircle, XCircle, Hourglass } from "lucide-react"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import Skeletons from "../skeletons"
+import { useUserStore } from "@/stores/user.store"
 
 export const Subscriptions = memo(() => {
 	const account = useAccount()
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
+	const { cancelledSubs, setCancelledSubs } = useUserStore(
+		useCallback(
+			state => ({
+				cancelledSubs: state.cancelledSubs,
+				setCancelledSubs: state.setCancelledSubs
+			}),
+			[]
+		)
+	)
 
 	const subscriptionsSorted = useMemo(() => {
 		if (!account) {
 			return []
 		}
 
-		return account.account.subs.sort((a, b) => b.startTimestamp - a.startTimestamp)
-	}, [account])
+		return account.account.subs
+			.sort((a, b) => b.startTimestamp - a.startTimestamp)
+			.map(sub =>
+				cancelledSubs.includes(sub.id)
+					? {
+							...sub,
+							cancelled: 1,
+							cancelTimestamp: Date.now()
+						}
+					: sub
+			)
+	}, [account, cancelledSubs])
 
 	const cancel = useCallback(
-		async (uuid: string) => {
+		async (uuid: string, startTimestamp: number) => {
 			if (!account) {
+				return
+			}
+
+			if (convertTimestampToMs(startTimestamp) + 24 * 3600 * 1000 > Date.now()) {
+				errorToast(t("settings.subscriptions.statuses.cancelled"))
+
 				return
 			}
 
@@ -47,6 +73,9 @@ export const Subscriptions = memo(() => {
 
 			try {
 				await worker.cancelSubscription({ uuid })
+
+				setCancelledSubs(prev => [...prev, uuid])
+
 				await account.refetch()
 			} catch (e) {
 				console.error(e)
@@ -56,7 +85,7 @@ export const Subscriptions = memo(() => {
 				toast.dismiss()
 			}
 		},
-		[loadingToast, errorToast, account, t]
+		[loadingToast, errorToast, account, t, setCancelledSubs]
 	)
 
 	if (!account) {
@@ -91,8 +120,32 @@ export const Subscriptions = memo(() => {
 								key={subscription.id}
 								className="flex flex-col bg-background border rounded-lg max-w-[600px] mb-4"
 							>
-								<div className="flex flex-row p-4 pb-0">
+								<div className="flex flex-row p-4 pb-2 items-center justify-between">
 									<p className="text-lg">{subscription.planName}</p>
+									{subscription.cancelled === 1 && (
+										<div className="flex flex-row items-center gap-2">
+											<XCircle
+												className="text-red-500"
+												size={18}
+											/>
+											<p>{t("settings.subscriptions.statuses.cancelled")}</p>
+										</div>
+									)}
+									{subscription.cancelled === 0 && subscription.activated === 1 && (
+										<div className="flex flex-row items-center gap-2">
+											<CheckCircle
+												className="text-green-500"
+												size={18}
+											/>
+											<p>{t("settings.subscriptions.statuses.active")}</p>
+										</div>
+									)}
+									{subscription.cancelled === 0 && subscription.activated === 0 && (
+										<div className="flex flex-row items-center gap-2">
+											<Hourglass size={18} />
+											<p>{t("settings.subscriptions.statuses.waiting")}</p>
+										</div>
+									)}
 								</div>
 								<div className="flex flex-row rounded-md p-4 gap-10">
 									<div className="flex flex-col gap-1">
@@ -119,14 +172,16 @@ export const Subscriptions = memo(() => {
 													? "Stripe"
 													: "Crypto"}
 										</p>
-										{subscription.activated === 1 && subscription.cancelled === 0 && !subscription.planName.toLowerCase().includes("lifetime") && (
-											<p
-												className="text-sm underline mt-3 cursor-pointer"
-												onClick={() => cancel(subscription.id)}
-											>
-												{t("settings.subscriptions.cancel")}
-											</p>
-										)}
+										{subscription.activated === 1 &&
+											subscription.cancelled === 0 &&
+											!subscription.planName.toLowerCase().includes("lifetime") && (
+												<p
+													className="text-sm underline mt-3 cursor-pointer text-red-500"
+													onClick={() => cancel(subscription.id, subscription.startTimestamp)}
+												>
+													{t("settings.subscriptions.cancel")}
+												</p>
+											)}
 									</div>
 								</div>
 							</div>

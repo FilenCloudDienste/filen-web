@@ -837,6 +837,10 @@
 					"name": "Minimize to tray",
 					"info": "Hide Filen in the tray instead of minimizing the window"
 				},
+				"startMinimized": {
+					"name": "Start minimized",
+					"info": "Enable or disable minimized startup"
+				},
 				"autoLaunch": {
 					"name": "Autostart",
 					"info": "Start Filen automatically on system start"
@@ -923,7 +927,8 @@
 				"cancelled": "Cancelled",
 				"active": "Active",
 				"waiting": "Waiting"
-			}
+			},
+			"cannotCancelTooEarly": "Subscriptions can only be cancelled 24 hours after the initial purchase."
 		},
 		"plans": {
 			"starter": "Starter",

@@ -13,7 +13,6 @@ import Skeletons from "@/components/settings/skeletons"
 import { Button } from "@/components/ui/button"
 import { formatBytes } from "@/utils"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
-import { generateCacheSteps } from "./utils"
 import Input from "@/components/input"
 import { useMountsStore } from "@/stores/mounts.store"
 import Transfers from "./transfers"
@@ -90,14 +89,6 @@ export const NetworkDrive = memo(() => {
 		queryKey: ["networkDriveDependencies"],
 		queryFn: () => areDependenciesInstalled()
 	})
-
-	const cacheSteps = useMemo(() => {
-		if (!availableCacheSizeQuery.isSuccess) {
-			return [10]
-		}
-
-		return generateCacheSteps(Math.floor(availableCacheSizeQuery.data / (1024 * 1024 * 1024)))
-	}, [availableCacheSizeQuery.isSuccess, availableCacheSizeQuery.data])
 
 	const availableDrives = useMemo(() => {
 		if (!availableDrivesQuery.isSuccess || window.desktopAPI.osPlatform() !== "win32") {
@@ -321,51 +312,6 @@ export const NetworkDrive = memo(() => {
 		]
 	)
 
-	const onCacheChange = useCallback(
-		async (size: string) => {
-			if (enablingNetworkDrive) {
-				return
-			}
-
-			setEnablingNetworkDrive(true)
-
-			try {
-				await Promise.all([isMountedQuery.refetch(), availableDrivesQuery.refetch(), availableCacheSizeQuery.refetch()])
-
-				setDesktopConfig(prev => ({
-					...prev,
-					networkDriveConfig: {
-						...prev.networkDriveConfig,
-						cacheSizeInGi: parseInt(size)
-					}
-				}))
-			} catch (e) {
-				console.error(e)
-
-				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				setDesktopConfig(prev => ({
-					...prev,
-					networkDriveConfig: {
-						...prev.networkDriveConfig,
-						enabled: false
-					}
-				}))
-			} finally {
-				setEnablingNetworkDrive(false)
-			}
-		},
-		[
-			enablingNetworkDrive,
-			setEnablingNetworkDrive,
-			errorToast,
-			setDesktopConfig,
-			isMountedQuery,
-			availableDrivesQuery,
-			availableCacheSizeQuery
-		]
-	)
-
 	const browse = useCallback(async () => {
 		if (!desktopConfig.networkDriveConfig.enabled) {
 			return
@@ -447,88 +393,6 @@ export const NetworkDrive = memo(() => {
 			window.open("https://www.fuse-t.org/", "_blank")
 		}
 	}, [])
-
-	const changeCachePath = useCallback(async () => {
-		if (enablingNetworkDrive) {
-			return
-		}
-
-		setEnablingNetworkDrive(true)
-
-		try {
-			const path = await window.desktopAPI.selectDirectory(false)
-
-			if (path.cancelled || !path.paths[0]) {
-				return
-			}
-
-			if (path.paths[0].startsWith(desktopConfig.networkDriveConfig.mountPoint)) {
-				errorToast(t("mounts.networkDrive.errors.invalidCachePath"))
-
-				return
-			}
-
-			if (!(await window.desktopAPI.isPathReadable(path.paths[0])) || !(await window.desktopAPI.isPathWritable(path.paths[0]))) {
-				errorToast(t("mounts.networkDrive.errors.cachePathNotReadableWritable"))
-
-				return
-			}
-
-			if (path.paths[0].length > 100) {
-				errorToast(t("mounts.networkDrive.errors.invalidCachePathLength"))
-
-				return
-			}
-
-			const diskType = await window.desktopAPI.getDiskType(path.paths[0])
-
-			if (diskType && !diskType.isPhysical) {
-				errorToast(t("mounts.networkDrive.errors.invalidCachePath"))
-
-				return
-			}
-
-			await Promise.all([
-				isMountedQuery.refetch(),
-				availableDrivesQuery.refetch(),
-				availableCacheSizeQuery.refetch(),
-				cacheSizeQuery.refetch()
-			])
-
-			setDesktopConfig(prev => ({
-				...prev,
-				networkDriveConfig: {
-					...prev.networkDriveConfig,
-					cachePath: path.paths[0]!
-				}
-			}))
-		} catch (e) {
-			console.error(e)
-
-			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-			setDesktopConfig(prev => ({
-				...prev,
-				networkDriveConfig: {
-					...prev.networkDriveConfig,
-					enabled: false
-				}
-			}))
-		} finally {
-			setEnablingNetworkDrive(false)
-		}
-	}, [
-		availableCacheSizeQuery,
-		availableDrivesQuery,
-		enablingNetworkDrive,
-		errorToast,
-		isMountedQuery,
-		setDesktopConfig,
-		setEnablingNetworkDrive,
-		t,
-		cacheSizeQuery,
-		desktopConfig.networkDriveConfig.mountPoint
-	])
 
 	const onReadOnlyChange = useCallback(
 		(readOnly: boolean) => {
@@ -722,61 +586,6 @@ export const NetworkDrive = memo(() => {
 							) : (
 								<Loader className="text-muted-foreground animate-spin-medium" />
 							)}
-						</Section>
-						<Section
-							name={t("mounts.networkDrive.sections.cachePath.name")}
-							info={t("mounts.networkDrive.sections.cachePath.info")}
-						>
-							<div className="flex flex-row gap-1 items-center">
-								{desktopConfig.networkDriveConfig.cachePath && (
-									<Input
-										value={desktopConfig.networkDriveConfig.cachePath}
-										type="text"
-										onChange={e => {
-											e.preventDefault()
-											e.target.blur()
-										}}
-										className="min-w-[250px]"
-										autoCapitalize="none"
-										autoComplete="none"
-										autoCorrect="none"
-										disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-									/>
-								)}
-								<Button
-									size="sm"
-									onClick={changeCachePath}
-									disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-								>
-									<Edit size={18} />
-								</Button>
-							</div>
-						</Section>
-						<Section
-							name={t("mounts.networkDrive.sections.cacheSize.name")}
-							info={t("mounts.networkDrive.sections.cacheSize.info")}
-						>
-							<Select
-								onValueChange={onCacheChange}
-								value={desktopConfig.networkDriveConfig.cacheSizeInGi.toString()}
-								disabled={enablingNetworkDrive || (isMountedQuery.isSuccess && isMountedQuery.data.mounted)}
-							>
-								<SelectTrigger className="min-w-[120px]">
-									<SelectValue placeholder={`${desktopConfig.networkDriveConfig.cacheSizeInGi} GB`} />
-								</SelectTrigger>
-								<SelectContent className="max-h-[200px]">
-									{cacheSteps.map(size => {
-										return (
-											<SelectItem
-												key={size}
-												value={size.toString()}
-											>
-												{size} GB
-											</SelectItem>
-										)
-									})}
-								</SelectContent>
-							</Select>
 						</Section>
 						{!enablingNetworkDrive && isMountedQuery.isSuccess && isMountedQuery.data.mounted && (
 							<Section

@@ -23,7 +23,7 @@
 		"@alptugidin/react-circular-progress-bar": "^1.1.2",
 		"@emoji-mart/data": "^1.1.2",
 		"@emoji-mart/react": "^1.1.1",
-		"@filen/desktop": "^3.0.34",
+		"@filen/desktop": "^3.0.35",
 		"@filen/network-drive": "^0.9.36",
 		"@filen/sdk": "^0.1.187",
 		"@filen/sync": "^0.1.84",

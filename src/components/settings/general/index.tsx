@@ -31,6 +31,7 @@ export const General = memo(() => {
 	const settingsContainerSize = useSettingsContainerSize()
 	const [minimizeToTrayEnabled, setMinimizeToTrayEnabled] = useLocalStorage<boolean>("minimizeToTrayEnabled", false)
 	const [notificationSoundEnabled, setNotificationSoundEnabled] = useLocalStorage<boolean>("notificationSoundEnabled", false)
+	const [startMinimizedEnabled, setStartMinimizedEnabled] = useLocalStorage<boolean>("startMinimizedEnabled", false)
 
 	const thumbnailCacheQuery = useQuery({
 		queryKey: ["workerCalculateThumbnailCacheUsage"],
@@ -389,17 +390,24 @@ export const General = memo(() => {
 									/>
 								</Section>
 							)}
-							{window.desktopAPI.osPlatform() !== "darwin" && (
-								<Section
-									name={t("settings.general.sections.minimizeToTray.name")}
-									info={t("settings.general.sections.minimizeToTray.info")}
-								>
-									<Switch
-										checked={minimizeToTrayEnabled}
-										onCheckedChange={setMinimizeToTrayEnabled}
-									/>
-								</Section>
-							)}
+							<Section
+								name={t("settings.general.sections.minimizeToTray.name")}
+								info={t("settings.general.sections.minimizeToTray.info")}
+							>
+								<Switch
+									checked={minimizeToTrayEnabled}
+									onCheckedChange={setMinimizeToTrayEnabled}
+								/>
+							</Section>
+							<Section
+								name={t("settings.general.sections.startMinimized.name")}
+								info={t("settings.general.sections.startMinimized.info")}
+							>
+								<Switch
+									checked={startMinimizedEnabled}
+									onCheckedChange={setStartMinimizedEnabled}
+								/>
+							</Section>
 							<Section
 								name={t("settings.general.sections.chatNotifications.name")}
 								info={t("settings.general.sections.chatNotifications.info")}
