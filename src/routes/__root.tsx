@@ -218,14 +218,18 @@ export const Root = memo(() => {
 										<NoteHistoryDialog />
 										<NoteParticipantsDialog />
 										<CreateSyncDialog />
-										<DesktopHandler />
 										<NotificationHandler />
 										<ActivityHandler />
-										<DesktopListener />
 										<InfoDialog />
 										<StorageDialog />
-										<LockDialog />
 										<ExportReminder />
+										{IS_DESKTOP && (
+											<>
+												<DesktopHandler />
+												<DesktopListener />
+												<LockDialog />
+											</>
+										)}
 									</>
 								) : (
 									<DropZone>
