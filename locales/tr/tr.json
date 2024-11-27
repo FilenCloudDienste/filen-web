@@ -841,7 +841,7 @@
         "invite": {
             "copy": "Kopyala",
             "title": "Başkalarını davet ederek 30 GB'a kadar depolama alanı kazanın",
-            "description": "Filen'e davet ettiğiniz her arkadaş için {{yourEarnings}} kazanıyorsunuz - ve arkadaşınız da {{otherEarnings}} kazanıyor. Bu kadar kolay.",
+            "description": "Filen'e davet ettiğiniz her arkadaş için {{yourEarnings}} kazanırsınız - ve arkadaşınız da {{otherEarnings}} kazanır. Bu kadar kolay.",
             "earned": "{{earned}} / {{max}}",
             "storageEarned": "Kazanılan depolama"
         },
