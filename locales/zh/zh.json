@@ -837,6 +837,10 @@
 					"name": "最小化到托盘",
 					"info": "将 Filen 隐藏在托盘中，而不是最小化窗口"
 				},
+				"startMinimized": {
+					"name": "启动时最小化",
+					"info": "启用或禁用启动时最小化"
+				},
 				"autoLaunch": {
 					"name": "自动启动",
 					"info": "系统启动时自动启动 Filen"
@@ -923,7 +927,8 @@
 				"cancelled": "已取消",
 				"active": "激活",
 				"waiting": "等待中"
-			}
+			},
+			"cannotCancelTooEarly": "订阅只能在初次购买后的24小时内取消。"
 		},
 		"plans": {
 			"starter": "初级",
