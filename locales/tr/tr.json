@@ -475,7 +475,7 @@
         },
         "exportReminder": {
             "title": "Ana anahtarı dışa aktar",
-            "description": "Lütfen ana anahtarınızı dışa aktarın ve güvenli bir yerde saklayın. Şifrenizi sıfırlarken veri kaybını önlemek için ana anahtarınıza ihtiyacınız olacak. Parolanızı her değiştirdiğinizde ana anahtarınızı dışa aktarmanız gerekir.",
+            "description": "Lütfen ana anahtarınızı dışa aktarın ve güvenli bir yerde saklayın. Şifrenizi sıfırlarken veri kaybını önlemek için ana anahtarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde ana anahtarınızı dışa aktarmanız gerekir.",
             "continue": "Dışa aktar",
             "dismiss": "Kapat"
         }
