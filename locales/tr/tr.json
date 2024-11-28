@@ -113,12 +113,12 @@
             "noMasterKeysImported": {
                 "title": "Şifreyi sıfırla",
                 "continue": "Anladım",
-                "description": "İhracat yaptığım anahtarlar olmadan şifremi sıfırlamanın, sıfır bilgi uçtan uca şifreleme çalıştığı için hesabımdaki tüm verileri erişilemez hale getireceğini anlıyorum."
+                "description": "Ana anahtarım olmadan şifremi sıfırladığım takdirde, sıfır bilgi uçtan uca şifrelemenin çalışma şekli nedeniyle hesabımda saklanan tüm verilerin erişilemez hale geleceğini anlıyorum."
             },
             "noMasterKeysImported2": {
                 "title": "Şifreyi sıfırla",
                 "continue": "Eminim",
-                "description": "Emin misiniz? Anahtarlarınızı içe aktarmazsanız hesabınızdaki tüm verileri silmek üzeresiniz. Anahtarlarınız yoksa bu uyarıyı görmezden gelebilirsiniz ve hesabınızı sıfırlamak istiyorsanız devam edebilirsiniz."
+                "description": "Emin misiniz? Ana anahtarınızı içe aktarmazsanız hesabınızda depolanan tüm veriler silinecektir. Ana anahtarınız yoksa ve hesabınızı sıfırlamak istiyorsanız bu uyarıyı görmezden gelebilirsiniz."
             },
             "noMasterKeysImported3": {
                 "title": "Şifreyi sıfırla",
@@ -474,8 +474,8 @@
             "title": "Etkinlik"
         },
         "exportReminder": {
-            "title": "Anahtarları dışa aktar",
-            "description": "Lütfen anahtarlarınızı dışa aktarın ve ayrı bir güvenli konumda saklayın. Şifrenizi sıfırladığınızda veri kaybını önlemek için anahtarlarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor.",
+            "title": "Ana anahtarı dışa aktar",
+            "description": "Lütfen ana anahtarınızı dışa aktarın ve güvenli bir yerde saklayın. Şifrenizi sıfırlarken veri kaybını önlemek için ana anahtarınıza ihtiyacınız olacak. Parolanızı her değiştirdiğinizde ana anahtarınızı dışa aktarmanız gerekir.",
             "continue": "Dışa aktar",
             "dismiss": "Kapat"
         }
@@ -968,8 +968,8 @@
                     "info": "İki Faktörlü Kimlik Doğrulamayı etkinleştir veya devre dışı bırak"
                 },
                 "exportMasterKeys": {
-                    "name": "Anahtarları dışa aktar",
-                    "info": "Şifrenizi sıfırlamanız gerektiğinde hesabınızı geri yükleyebilmek için anahtarlarınızı dışa aktarın. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor.",
+                    "name": "Ana anahtarı dışa aktar",
+                    "info": "Şifrenizi sıfırlamanız gerektiğinde hesabınızdaki verileri geri yükleyebilmeniz için ana anahtarınızı dışa aktarın. Şifrenizi her değiştirdiğinizde ana anahtarınızı dışa aktarmanız gerekir.",
                     "action": "Dışa aktar",
                     "subInfo": "Lütfen anahtarlarınızı dışa aktarın ve ayrı bir güvenli konumda saklayın. Şifrenizi sıfırladığınızda veri kaybını önlemek için anahtarlarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor."
                 },
