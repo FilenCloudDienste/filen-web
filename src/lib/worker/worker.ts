@@ -45,7 +45,7 @@ import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/lin
 import { type DirLinkContentDecryptedResponse } from "@filen/sdk/dist/types/api/v3/dir/link/content"
 import { type AuthInfoResponse } from "@filen/sdk/dist/types/api/v3/auth/info"
 import { type UserProfileResponse } from "@filen/sdk/dist/types/api/v3/user/profile"
-import { fileNameToThumbnailType } from "@/components/dialogs/previewDialog/utils"
+import { fileNameToThumbnailType, isFileStreamable } from "@/components/dialogs/previewDialog/utils"
 import DOMPurify from "dompurify"
 import { type DirExistsResponse } from "@filen/sdk/dist/types/api/v3/dir/exists"
 import { type RemoteConfig } from "@/types"
@@ -1810,16 +1810,14 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 
 /**
  * Generate a video thumbnail. Only works on the main thread due requiring a <video /> element.
- * @date 3/20/2024 - 11:21:23 PM
  *
  * @export
  * @async
- * @param {{ item: DriveCloudItem; buffer: Buffer }} param0
+ * @param {{ item: DriveCloudItem }} param0
  * @param {DriveCloudItem} param0.item
- * @param {Buffer} param0.buffer
  * @returns {Promise<Blob>}
  */
-export async function generateVideoThumbnail({ item, buffer }: { item: DriveCloudItem; buffer: Buffer }): Promise<Blob> {
+export async function generateVideoThumbnail({ item }: { item: DriveCloudItem }): Promise<Blob> {
 	await waitForInitialization()
 
 	if (!document) {
@@ -1837,89 +1835,120 @@ export async function generateVideoThumbnail({ item, buffer }: { item: DriveClou
 		return fromDb
 	}
 
-	const chunkedBlob = new Blob([buffer], { type: item.mime })
-	const urlObject = globalThis.URL.createObjectURL(chunkedBlob)
-	const video = document.createElement("video")
-
-	const blob = await new Promise<Blob>((resolve, reject) => {
-		video.src = urlObject
-
-		video.onerror = e => {
-			reject(e)
-		}
-
-		video.onloadedmetadata = () => {
-			if (video.duration < 1) {
-				reject(new Error("Video is too short to generate thumbnail"))
-
-				return
-			}
-
-			setTimeout(() => {
-				video.currentTime = 1
-			}, 100)
-		}
-
-		video.onseeked = () => {
-			const originalWidth = video.videoWidth
-			const originalHeight = video.videoHeight
-			let thumbnailWidth = originalWidth
-			let thumbnailHeight = originalHeight
-
-			if (originalWidth > THUMBNAIL_MAX_SIZE || originalHeight > THUMBNAIL_MAX_SIZE) {
-				const aspectRatio = originalWidth / originalHeight
-
-				if (originalWidth > originalHeight) {
-					thumbnailWidth = THUMBNAIL_MAX_SIZE
-					thumbnailHeight = Math.round(THUMBNAIL_MAX_SIZE / aspectRatio)
-				} else {
-					thumbnailHeight = THUMBNAIL_MAX_SIZE
-					thumbnailWidth = Math.round(THUMBNAIL_MAX_SIZE * aspectRatio)
-				}
-			}
-
-			const canvas = document.createElement("canvas")
-			const ctx = canvas.getContext("2d")
-
-			canvas.height = thumbnailHeight
-			canvas.width = thumbnailWidth
-
-			if (!ctx) {
-				reject(new Error("Could not create canvas"))
-
-				return
-			}
-
-			ctx.clearRect(0, 0, thumbnailWidth, thumbnailHeight)
-			ctx.fillStyle = "black"
-			ctx.fillRect(0, 0, thumbnailWidth, thumbnailHeight)
-			ctx.drawImage(video, 0, 0, originalWidth, originalHeight)
-
-			canvas.toBlob(
-				blob => {
-					if (!blob) {
-						reject(new Error("Could not generate blob."))
-
-						return
-					}
-
-					resolve(blob)
-				},
-				"image/jpeg",
-				THUMBNAIL_QUALITY
-			)
-		}
-
-		video.load()
-	}).finally(() => {
-		globalThis.URL.revokeObjectURL(urlObject)
-
-		video.remove()
+	const serviceWorkerOnline = await httpHealthCheck({
+		url: `${window.origin}/sw/ping`,
+		expectedStatusCode: 200,
+		method: "GET",
+		timeout: 5000,
+		expectedBodyText: "OK"
 	})
 
-	await setItem<Blob>(dbKey, blob)
+	if (!serviceWorkerOnline) {
+		throw new Error("[generateVideoThumbnail] Service worker not available.")
+	}
 
-	return blob
+	if (!isFileStreamable(item.name, item.mime)) {
+		throw new Error(`[generateVideoThumbnail] File not streamable (${item.name}).`)
+	}
+
+	const video = document.createElement("video")
+
+	try {
+		const fileBase64 = Buffer.from(
+			JSON.stringify({
+				name: item.name,
+				mime: item.mime,
+				size: item.size,
+				uuid: item.uuid,
+				bucket: item.bucket,
+				key: item.key,
+				version: item.version,
+				chunks: item.chunks,
+				region: item.region
+			}),
+			"utf-8"
+		).toString("base64")
+
+		const blob = await new Promise<Blob>((resolve, reject) => {
+			video.src = `${window.location.origin}/sw/stream?file=${encodeURIComponent(fileBase64)}#t=0,5`
+
+			video.onerror = e => {
+				reject(e)
+			}
+
+			video.onloadedmetadata = () => {
+				if (video.duration < 1) {
+					reject(new Error("Video is too short to generate thumbnail"))
+
+					return
+				}
+
+				setTimeout(() => {
+					video.currentTime = video.duration >= 3 ? 3 : 1
+				}, 100)
+			}
+
+			video.onseeked = () => {
+				const originalWidth = video.videoWidth
+				const originalHeight = video.videoHeight
+				const thumbnailWidth = THUMBNAIL_MAX_SIZE
+				const thumbnailHeight = THUMBNAIL_MAX_SIZE
+				const videoAspectRatio = originalWidth / originalHeight
+				const canvasAspectRatio = thumbnailWidth / thumbnailHeight
+				let drawWidth: number, drawHeight: number, offsetX: number, offsetY: number
+
+				if (videoAspectRatio > canvasAspectRatio) {
+					drawWidth = originalHeight * canvasAspectRatio
+					drawHeight = originalHeight
+					offsetX = (originalWidth - drawWidth) / 2
+					offsetY = 0
+				} else {
+					drawWidth = originalWidth
+					drawHeight = originalWidth / canvasAspectRatio
+					offsetX = 0
+					offsetY = (originalHeight - drawHeight) / 2
+				}
+
+				const canvas = document.createElement("canvas")
+				const ctx = canvas.getContext("2d")
+
+				canvas.width = thumbnailWidth
+				canvas.height = thumbnailHeight
+
+				if (!ctx) {
+					reject(new Error("Could not create canvas"))
+
+					return
+				}
+
+				ctx.clearRect(0, 0, thumbnailWidth, thumbnailHeight)
+				ctx.fillStyle = "black"
+				ctx.fillRect(0, 0, thumbnailWidth, thumbnailHeight)
+				ctx.drawImage(video, offsetX, offsetY, drawWidth, drawHeight, 0, 0, thumbnailWidth, thumbnailHeight)
+
+				canvas.toBlob(
+					blob => {
+						if (!blob) {
+							reject(new Error("Could not generate blob."))
+							return
+						}
+
+						resolve(blob)
+					},
+					"image/jpeg",
+					THUMBNAIL_QUALITY
+				)
+			}
+
+			video.load()
+		})
+
+		await setItem<Blob>(dbKey, blob)
+
+		return blob
+	} finally {
+		video.remove()
+	}
 }
 
 /**
@@ -3421,12 +3450,14 @@ export async function httpHealthCheck({
 	url,
 	method = "GET",
 	expectedStatusCode = 200,
-	timeout = 5000
+	timeout = 5000,
+	expectedBodyText
 }: {
 	url: string
 	expectedStatusCode?: number
 	method?: "GET" | "POST" | "HEAD"
 	timeout?: number
+	expectedBodyText?: string
 }): Promise<boolean> {
 	const abortController = new AbortController()
 
@@ -3440,12 +3471,17 @@ export async function httpHealthCheck({
 			timeout,
 			method,
 			signal: abortController.signal,
+			responseType: expectedBodyText ? "text" : undefined,
 			validateStatus: () => true
 		})
 
 		clearTimeout(timeouter)
 
-		return response.status === expectedStatusCode
+		if (!expectedBodyText) {
+			return response.status === expectedStatusCode
+		}
+
+		return response.status === expectedStatusCode && typeof response.data === "string" && expectedBodyText === response.data
 	} catch (e) {
 		clearTimeout(timeouter)
 

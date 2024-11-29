@@ -11,6 +11,7 @@ import { useMountsStore } from "@/stores/mounts.store"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import useIsSyncActive from "@/hooks/useIsSyncActive"
 import useSyncIssueCount from "@/hooks/useSyncIssueCount"
+import useSyncConfirmDeletion from "@/hooks/useSyncConfirmDeletion"
 
 const updateDesktopConfigMutex = new Semaphore(1)
 
@@ -32,6 +33,7 @@ export const DesktopHandler = memo(() => {
 	const isSyncActive = useIsSyncActive()
 	const syncIssueCount = useSyncIssueCount()
 	const [startMinimizedEnabled] = useLocalStorage<boolean>("startMinimizedEnabled", false)
+	const syncConfirmDeletion = useSyncConfirmDeletion()
 
 	const currentDesktopConfigStringified = useMemo(() => {
 		return JSON.stringify(desktopConfig)
@@ -120,10 +122,11 @@ export const DesktopHandler = memo(() => {
 			return
 		}
 
-		Promise.all([window.desktopAPI.updateIsSyncing(isSyncActive), window.desktopAPI.updateWarningCount(syncIssueCount)]).catch(
-			console.error
-		)
-	}, [isSyncActive, syncIssueCount, authed])
+		Promise.all([
+			window.desktopAPI.updateIsSyncing(isSyncActive),
+			window.desktopAPI.updateWarningCount(syncIssueCount + syncConfirmDeletion.length)
+		]).catch(console.error)
+	}, [isSyncActive, syncIssueCount, authed, syncConfirmDeletion.length])
 
 	useEffect(() => {
 		if (!authed) {

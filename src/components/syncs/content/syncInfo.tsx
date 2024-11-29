@@ -1,6 +1,6 @@
 import { memo, useMemo, useCallback } from "react"
 import { useSyncsStore } from "@/stores/syncs.store"
-import { RefreshCw, CheckCircle, PauseCircle, XCircle, Pause, Play, AlertCircle } from "lucide-react"
+import { RefreshCw, CheckCircle, PauseCircle, XCircle, Pause, Play, AlertCircle, Trash2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { formatBytes } from "@/utils"
 import { bpsToReadable } from "@/components/transfers/utils"
@@ -41,7 +41,18 @@ export const SyncInfoProgress = memo(({ syncUUID }: { syncUUID: string }) => {
 })
 
 export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: boolean }) => {
-	const { speed, remainingReadable, tasksCount, tasksSize, cycleState, setErrors, taskErrors, localTreeErrors } = useSyncsStore(
+	const {
+		speed,
+		remainingReadable,
+		tasksCount,
+		tasksSize,
+		cycleState,
+		setErrors,
+		taskErrors,
+		localTreeErrors,
+		confirmDeletion,
+		setConfirmDeletion
+	} = useSyncsStore(
 		useCallback(
 			state => ({
 				speed: state.speed[syncUUID] ? state.speed[syncUUID]! : 0,
@@ -56,7 +67,9 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 						},
 				taskErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "task").length : 0,
 				setErrors: state.setErrors,
-				localTreeErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "localTree").length : 0
+				localTreeErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "localTree").length : 0,
+				confirmDeletion: state.confirmDeletion[syncUUID] ? state.confirmDeletion[syncUUID]! : null,
+				setConfirmDeletion: state.setConfirmDeletion
 			}),
 			[syncUUID]
 		)
@@ -114,12 +127,131 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 		}
 	}, [syncUUID, errorToast, loadingToast, t, setErrors, localTreeErrors, taskErrors])
 
+	const confirmDel = useCallback(async () => {
+		if (!confirmDeletion) {
+			return
+		}
+
+		if (
+			!(await showConfirmDialog({
+				title:
+					confirmDeletion.where === "both"
+						? t("syncs.dialogs.confirmDeletionBoth.title")
+						: confirmDeletion.where === "local"
+							? t("syncs.dialogs.confirmDeletionLocal.title")
+							: t("syncs.dialogs.confirmDeletionRemote.title"),
+				continueButtonText:
+					confirmDeletion.where === "both"
+						? t("syncs.dialogs.confirmDeletionBoth.continue")
+						: confirmDeletion.where === "local"
+							? t("syncs.dialogs.confirmDeletionLocal.continue")
+							: t("syncs.dialogs.confirmDeletionRemote.continue"),
+				description:
+					confirmDeletion.where === "both"
+						? t("syncs.dialogs.confirmDeletionBoth.description", { count: confirmDeletion.previous })
+						: confirmDeletion.where === "local"
+							? t("syncs.dialogs.confirmDeletionLocal.description", { count: confirmDeletion.previous })
+							: t("syncs.dialogs.confirmDeletionRemote.description", { count: confirmDeletion.previous }),
+				continueButtonVariant: "destructive"
+			}))
+		) {
+			return
+		}
+
+		const toast = loadingToast()
+
+		try {
+			await window.desktopAPI.syncUpdateConfirmDeletion({
+				uuid: syncUUID,
+				result: "delete"
+			})
+
+			setConfirmDeletion(prev => ({
+				...prev,
+				[syncUUID]: null
+			}))
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			toast.dismiss()
+		}
+	}, [setConfirmDeletion, confirmDeletion, errorToast, loadingToast, t, syncUUID])
+
+	const confirmDelRestart = useCallback(async () => {
+		if (!confirmDeletion) {
+			return
+		}
+
+		if (
+			!(await showConfirmDialog({
+				title: t("syncs.dialogs.confirmDeletionRestart.title"),
+				continueButtonText: t("syncs.dialogs.confirmDeletionRestart.continue"),
+				description: t("syncs.dialogs.confirmDeletionRestart.description"),
+				continueButtonVariant: "default"
+			}))
+		) {
+			return
+		}
+
+		const toast = loadingToast()
+
+		try {
+			await window.desktopAPI.syncUpdateConfirmDeletion({
+				uuid: syncUUID,
+				result: "restart"
+			})
+
+			await window.desktopAPI.syncResetCache({
+				uuid: syncUUID
+			})
+
+			setConfirmDeletion(prev => ({
+				...prev,
+				[syncUUID]: null
+			}))
+		} catch (e) {
+			console.error(e)
+
+			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+		} finally {
+			toast.dismiss()
+		}
+	}, [setConfirmDeletion, confirmDeletion, errorToast, loadingToast, t, syncUUID])
+
 	return (
 		<div className="flex flex-row w-full px-4 pb-4">
 			<div className="flex flex-col h-10 bg-secondary rounded-sm w-full">
 				<div className="flex flex-row h-full w-full items-center px-4 justify-between gap-4">
-					<div className="flex flex-row h-full w-full items-center gap-2 text-sm text-ellipsis line-clamp-1 break-all">
-						{taskErrors + localTreeErrors > 0 ? (
+					<div className="flex flex-row h-full w-full items-center gap-3 text-sm text-ellipsis line-clamp-1 break-all">
+						{confirmDeletion ? (
+							<>
+								<Trash2
+									className="text-red-500"
+									size={16}
+								/>
+								<p>
+									{confirmDeletion.where === "both"
+										? t("syncs.info.confirmDeletionBoth", { previous: confirmDeletion.previous })
+										: confirmDeletion.where === "local"
+											? t("syncs.info.confirmDeletionLocal", { previous: confirmDeletion.previous })
+											: t("syncs.info.confirmDeletionRemote", { previous: confirmDeletion.previous })}
+								</p>
+								<p
+									className="text-red-500 hover:underline cursor-pointer"
+									onClick={confirmDel}
+								>
+									{t("syncs.info.confirm")}
+								</p>
+								<p
+									className="text-blue-500 hover:underline cursor-pointer"
+									onClick={confirmDelRestart}
+								>
+									{t("syncs.info.restart")}
+								</p>
+							</>
+						) : taskErrors + localTreeErrors > 0 ? (
 							<>
 								<XCircle
 									className="text-red-500"

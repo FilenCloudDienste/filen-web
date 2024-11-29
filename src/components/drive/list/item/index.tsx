@@ -8,11 +8,11 @@ import { directorySizeCache, thumbnailURLObjectCache } from "@/cache"
 import { setItem } from "@/lib/localForage"
 import eventEmitter from "@/lib/eventEmitter"
 import { generateThumbnail } from "@/lib/worker/proxy"
-import { fileNameToThumbnailType, fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
+import { fileNameToThumbnailType, fileNameToPreviewType, isFileStreamable } from "@/components/dialogs/previewDialog/utils"
 import { cn } from "@/lib/utils"
 import { Heart, MoreHorizontal } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
-import { THUMBNAIL_MAX_FETCH_SIZE, MAX_PREVIEW_SIZE_DESKTOP, MAX_PREVIEW_SIZE_WEB, IS_DESKTOP } from "@/constants"
+import { THUMBNAIL_MAX_FETCH_SIZE, MAX_PREVIEW_SIZE_SW, MAX_PREVIEW_SIZE_WEB } from "@/constants"
 import { Badge } from "@/components/ui/badge"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { useDriveSharedStore, useDriveItemsStore } from "@/stores/drive.store"
@@ -27,7 +27,7 @@ import useDriveURLState from "@/hooks/useDriveURLState"
 import useDriveListColumnSize from "@/hooks/useDriveListColumnSize"
 import { useDoubleTap } from "use-double-tap"
 import useIsMobile from "@/hooks/useIsMobile"
-import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
+import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -88,7 +88,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const listItemRef = useRef<HTMLDivElement>(null)
 	const driveListColumnSize = useDriveListColumnSize()
 	const isMobile = useIsMobile()
-	const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
+	const isServiceWorkerOnline = useIsServiceWorkerOnline()
 
 	const previewType = useMemo(() => {
 		return fileNameToPreviewType(item.name)
@@ -110,59 +110,90 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 		return isInsidePublicLink ? setPublicLinkSearch : setDriveSearch
 	}, [isInsidePublicLink, setPublicLinkSearch, setDriveSearch])
 
-	const onDoubleClick = useCallback(() => {
-		const maxPreviewSize = IS_DESKTOP
-			? isDesktopHTTPServerOnline
-				? MAX_PREVIEW_SIZE_DESKTOP
-				: MAX_PREVIEW_SIZE_WEB
-			: MAX_PREVIEW_SIZE_WEB
+	const triggerMoreIconContextMenu = useCallback(
+		(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+			e.preventDefault()
+			e.stopPropagation()
 
-		if (item.type === "file" && previewType !== "other" && maxPreviewSize >= item.size) {
-			eventEmitter.emit("openPreviewModal", { item })
-
-			return
-		}
-
-		if (item.type === "directory" && !location.includes("trash") && !navigating && !didNavigateAwayRef.current) {
-			didNavigateAwayRef.current = true
-
-			setNavigating(true)
-			setCurrentReceiverId(item.receiverId)
-			setCurrentReceiverEmail(item.receiverEmail)
-			setCurrentSharerId(item.sharerId)
-			setCurrentSharerEmail(item.sharerEmail)
-			setCurrentReceivers(item.receivers)
-			setSearch("")
-
-			if (isInsidePublicLink && setVirtualURL) {
-				setVirtualURL(prev => `${prev}/${item.uuid}`)
-			} else {
-				navigate({
-					to: "/drive/$",
-					params: {
-						_splat: `${location.split("/drive/").join("")}/${item.uuid}`
-					}
-				})
+			if (!mouseHovering || !listItemRef.current) {
+				return
 			}
 
-			return
-		}
-	}, [
-		item,
-		location,
-		navigate,
-		setCurrentReceiverId,
-		setCurrentSharerId,
-		setCurrentReceivers,
-		setCurrentReceiverEmail,
-		setCurrentSharerEmail,
-		previewType,
-		setVirtualURL,
-		isInsidePublicLink,
-		navigating,
-		setSearch,
-		isDesktopHTTPServerOnline
-	])
+			const contextMenuEvent = new MouseEvent("contextmenu", {
+				bubbles: true,
+				cancelable: true,
+				view: window,
+				clientX: e.clientX,
+				clientY: e.clientY
+			})
+
+			listItemRef.current.dispatchEvent(contextMenuEvent)
+		},
+		[mouseHovering]
+	)
+
+	const onDoubleClick = useCallback(
+		(e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+			const maxPreviewSize =
+				isServiceWorkerOnline && item.type === "file" && isFileStreamable(item.name, item.mime)
+					? MAX_PREVIEW_SIZE_SW
+					: MAX_PREVIEW_SIZE_WEB
+
+			if (item.type === "file") {
+				if (previewType !== "other" && maxPreviewSize >= item.size) {
+					eventEmitter.emit("openPreviewModal", { item })
+				} else {
+					if (e) {
+						triggerMoreIconContextMenu(e)
+					}
+				}
+
+				return
+			}
+
+			if (item.type === "directory" && !location.includes("trash") && !navigating && !didNavigateAwayRef.current) {
+				didNavigateAwayRef.current = true
+
+				setNavigating(true)
+				setCurrentReceiverId(item.receiverId)
+				setCurrentReceiverEmail(item.receiverEmail)
+				setCurrentSharerId(item.sharerId)
+				setCurrentSharerEmail(item.sharerEmail)
+				setCurrentReceivers(item.receivers)
+				setSearch("")
+
+				if (isInsidePublicLink && setVirtualURL) {
+					setVirtualURL(prev => `${prev}/${item.uuid}`)
+				} else {
+					navigate({
+						to: "/drive/$",
+						params: {
+							_splat: `${location.split("/drive/").join("")}/${item.uuid}`
+						}
+					})
+				}
+
+				return
+			}
+		},
+		[
+			item,
+			location,
+			navigate,
+			setCurrentReceiverId,
+			setCurrentSharerId,
+			setCurrentReceivers,
+			setCurrentReceiverEmail,
+			setCurrentSharerEmail,
+			previewType,
+			setVirtualURL,
+			isInsidePublicLink,
+			navigating,
+			setSearch,
+			isServiceWorkerOnline,
+			triggerMoreIconContextMenu
+		]
+	)
 
 	const onClick = useCallback(
 		(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -200,7 +231,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 			})
 
 			if (e.detail >= 2) {
-				onDoubleClick()
+				onDoubleClick(e)
 			}
 		},
 		[items, setItems, item.uuid, index, onDoubleClick]
@@ -322,7 +353,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 
 		const thumbnailType = fileNameToThumbnailType(item.name)
 
-		if (thumbnailType === "none" || item.size > THUMBNAIL_MAX_FETCH_SIZE) {
+		if (thumbnailType === "none" || ((thumbnailType === "image" || thumbnailType === "pdf") && item.size > THUMBNAIL_MAX_FETCH_SIZE)) {
 			return
 		}
 
@@ -399,28 +430,6 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const onMouseLeave = useCallback(() => {
 		setMouseHovering(false)
 	}, [])
-
-	const triggerMoreIconContextMenu = useCallback(
-		(e: React.MouseEvent<SVGSVGElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-			e.preventDefault()
-			e.stopPropagation()
-
-			if (!mouseHovering || !listItemRef.current) {
-				return
-			}
-
-			const contextMenuEvent = new MouseEvent("contextmenu", {
-				bubbles: true,
-				cancelable: true,
-				view: window,
-				clientX: e.clientX,
-				clientY: e.clientY
-			})
-
-			listItemRef.current.dispatchEvent(contextMenuEvent)
-		},
-		[mouseHovering]
-	)
 
 	useMountedEffect(() => {
 		fetchDirectorySize()

@@ -25,9 +25,7 @@ export function fileNameToPreviewType(name: string) {
 			return "image"
 		}
 
-		case ".wmv":
 		case ".mov":
-		case ".avi":
 		case ".mkv":
 		case ".webm":
 		case ".mp4": {
@@ -130,6 +128,9 @@ export function fileNameToThumbnailType(name: string) {
 			return "image"
 		}
 
+		case ".mov":
+		case ".mkv":
+		case ".webm":
 		case ".mp4": {
 			return "video"
 		}

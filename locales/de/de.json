@@ -1479,7 +1479,12 @@
 			"acquiringLock": "Synchronisationssperre wird erworben",
 			"gettingTrees": "Lese lokales und Cloud-Verzeichnis",
 			"remoteSmokeTestFailed": "Cloud-Verzeichnis konnte nicht gelesen werden, entweder existiert es nicht oder es besteht keine Internetverbindung",
-			"localSmokeTestFailed": "Lokales Verzeichnis konnte nicht gelesen werden, entweder existiert es nicht oder es fehlen Lese-/Schreibrechte"
+			"localSmokeTestFailed": "Lokales Verzeichnis konnte nicht gelesen werden, entweder existiert es nicht oder es fehlen Lese-/Schreibrechte",
+			"confirmDeletionBoth": "Bestätige das Löschen von {{previous}} Dateien und Verzeichnissen",
+			"confirmDeletionLocal": "Bestätige das Löschen von {{previous}} lokalen Dateien und Verzeichnissen",
+			"confirmDeletionRemote": "Bestätige das Löschen von {{previous}} Cloud Dateien und Verzeichnissen",
+			"confirm": "Bestätigen",
+			"restart": "Neu starten"
 		},
 		"empty": {
 			"title": "Noch keine Synchronisierungen eingerichtet",
@@ -1573,6 +1578,26 @@
 				"title": "Name bearbeiten",
 				"placeholder": "Name",
 				"continue": "Speichern"
+			},
+			"confirmDeletionLocal": {
+				"title": "Löschen bestätigen",
+				"description": "Bist du sicher? Dadurch werden alle {{count}} Dateien und Verzeichnisse in den Papierkorb in der Cloud verschoben. Diese Aktion kann nicht rückgängig gemacht werden.",
+				"continue": "Bestätigen"
+			},
+			"confirmDeletionRemote": {
+				"title": "Löschen bestätigen",
+				"description": "Bist du sicher? Dadurch werden alle {{count}} Dateien und Verzeichnisse in den lokalen Papierkorb verschoben. Diese Aktion kann nicht rückgängig gemacht werden.",
+				"continue": "Bestätigen"
+			},
+			"confirmDeletionBoth": {
+				"title": "Löschen bestätigen",
+				"description": "Bist du sicher? Dadurch werden alle {{count}} Dateien und Verzeichnisse in den lokalen und den Cloud-Papierkorb verschoben. Diese Aktion kann nicht rückgängig gemacht werden.",
+				"continue": "Bestätigen"
+			},
+			"confirmDeletionRestart": {
+				"title": "Synchronisierung neu starten",
+				"description": "Du kannst die Synchronisierung neu starten, wenn du alle Dateien und Ordner manuell wiederhergestellt hast.",
+				"continue": "Neu starten"
 			}
 		},
 		"ignored": {

@@ -8,6 +8,7 @@ import i18nextLoader from "vite-plugin-i18next-loader"
 import svgr from "vite-plugin-svgr"
 import topLevelAwait from "vite-plugin-top-level-await"
 import checker from "vite-plugin-checker"
+import { serviceWorkerPlugin } from "@gautemo/vite-plugin-service-worker"
 
 const now = Date.now()
 
@@ -43,6 +44,9 @@ export default defineConfig({
 			paths: ["./locales"]
 		}),
 		svgr(),
+		serviceWorkerPlugin({
+			filename: "sw.ts"
+		}),
 		checker({
 			typescript: true
 		})

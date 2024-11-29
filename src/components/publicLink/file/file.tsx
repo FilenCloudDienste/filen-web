@@ -2,7 +2,7 @@ import { memo, useMemo, useCallback, useState, useEffect, useRef } from "react"
 import { type FileLinkInfoResponse } from "@filen/sdk/dist/types/api/v3/file/link/info"
 import { useFilePublicLinkInfo, usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { Loader, Eye, Download, EyeOff } from "lucide-react"
-import { fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
+import { fileNameToPreviewType, isFileStreamable } from "@/components/dialogs/previewDialog/utils"
 import { fileNameToSVGIcon } from "@/assets/fileExtensionIcons"
 import { type DriveCloudItem } from "@/components/drive"
 import { formatBytes } from "@/utils"
@@ -19,7 +19,8 @@ import DocXPreview from "@/components/dialogs/previewDialog/docx"
 import VideoPreview from "@/components/dialogs/previewDialog/video"
 import useIsMobile from "@/hooks/useIsMobile"
 import AudioPreview from "@/components/dialogs/previewDialog/audio"
-import { MAX_PREVIEW_SIZE_WEB } from "@/constants"
+import { MAX_PREVIEW_SIZE_WEB, MAX_PREVIEW_SIZE_SW } from "@/constants"
+import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
 
 export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> & { size: number } }) => {
 	const filePublicLinkInfo = useFilePublicLinkInfo(info)
@@ -31,6 +32,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 	const { dark } = useTheme()
 	const [hidePreview, setHidePreview] = useState<boolean>(false)
 	const isMobile = useIsMobile()
+	const isServiceWorkerOnline = useIsServiceWorkerOnline()
 
 	const downloadEnabled = useMemo(() => {
 		if (!filePublicLinkInfo.status) {
@@ -69,6 +71,16 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 			mime: filePublicLinkInfo.info.mime
 		} satisfies DriveCloudItem
 	}, [filePublicLinkInfo])
+
+	const maxPreviewSize = useMemo(() => {
+		if (!item) {
+			return null
+		}
+
+		return isServiceWorkerOnline && item.type === "file" && isFileStreamable(item.name, item.mime)
+			? MAX_PREVIEW_SIZE_SW
+			: MAX_PREVIEW_SIZE_WEB
+	}, [isServiceWorkerOnline, item])
 
 	const previewType = useMemo(() => {
 		if (!item || urlState.hidePreview) {
@@ -174,7 +186,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 	}, [])
 
 	const normal = useMemo(() => {
-		if (!item) {
+		if (!item || !maxPreviewSize) {
 			return null
 		}
 
@@ -192,7 +204,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				</p>
 				<p className="text-muted-foreground mt-1 line-clamp-1 text-ellipsis break-all">{formatBytes(item.size)}</p>
 				<div className={cn("flex flex-row gap-2 items-center", urlState.embed || urlState.chatEmbed ? "mt-3" : "mt-8")}>
-					{previewType !== "other" && !urlState.embed && !urlState.chatEmbed && item.size < MAX_PREVIEW_SIZE_WEB && (
+					{previewType !== "other" && !urlState.embed && !urlState.chatEmbed && item.size < maxPreviewSize && (
 						<Button
 							variant="secondary"
 							onClick={preview}
@@ -215,10 +227,10 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 				</div>
 			</div>
 		)
-	}, [item, preview, download, previewType, urlState.embed, urlState.chatEmbed, downloadEnabled])
+	}, [item, preview, download, previewType, urlState.embed, urlState.chatEmbed, downloadEnabled, maxPreviewSize])
 
 	const loadFile = useCallback(async () => {
-		if (!item || item.type !== "file" || didLoadItemRef.current || !canLoadItem) {
+		if (!item || item.type !== "file" || didLoadItemRef.current || !canLoadItem || !maxPreviewSize) {
 			return
 		}
 
@@ -226,22 +238,56 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 
 		const previewType = fileNameToPreviewType(item.name)
 
-		if (previewType === "other" || item.size >= MAX_PREVIEW_SIZE_WEB) {
+		if (previewType === "other" || item.size >= maxPreviewSize) {
 			return
 		}
 
 		try {
-			const buffer = await worker.readFile({ item, emitEvents: false })
+			if (
+				isServiceWorkerOnline &&
+				(previewType === "audio" || previewType === "video" || previewType === "image") &&
+				isFileStreamable(item.name, item.mime)
+			) {
+				const fileBase64 = Buffer.from(
+					JSON.stringify({
+						name: item.name,
+						mime: item.mime,
+						size: item.size,
+						uuid: item.uuid,
+						bucket: item.bucket,
+						key: item.key,
+						version: item.version,
+						chunks: item.chunks,
+						region: item.region
+					}),
+					"utf-8"
+				).toString("base64")
+
+				setURLObject(`${window.location.origin}/sw/stream?file=${encodeURIComponent(fileBase64)}`)
+
+				return
+			}
+
+			const buffer = await worker.readFile({
+				item,
+				emitEvents: false
+			})
 
 			if (previewType === "text" || previewType === "docx" || previewType === "md" || previewType === "code") {
 				setBuffer(buffer)
 			} else {
-				setURLObject(globalThis.URL.createObjectURL(new Blob([buffer], { type: item.mime })))
+				setURLObject(
+					globalThis.URL.createObjectURL(
+						new Blob([buffer], {
+							type: item.mime
+						})
+					)
+				)
 			}
 		} catch (e) {
 			console.error(e)
 		}
-	}, [item, canLoadItem])
+	}, [item, canLoadItem, maxPreviewSize, isServiceWorkerOnline])
 
 	useEffect(() => {
 		if (item && canLoadItem && !didLoadItemRef.current) {
@@ -251,11 +297,11 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 
 	return (
 		<div className="flex flex-col w-full h-full items-center justify-center">
-			{!filePublicLinkInfo.status || !item ? (
+			{!filePublicLinkInfo.status || !item || !maxPreviewSize ? (
 				loader
 			) : (
 				<>
-					{hidePreview || previewType === "other" || urlState.hidePreview || item.size >= MAX_PREVIEW_SIZE_WEB ? (
+					{hidePreview || previewType === "other" || urlState.hidePreview || item.size >= maxPreviewSize ? (
 						normal
 					) : (
 						<>

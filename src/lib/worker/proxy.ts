@@ -253,7 +253,10 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 				if (fromDb) {
 					blob = fromDb
 				} else {
-					const buffer = await worker.readFile({ item, emitEvents: false })
+					const buffer = await worker.readFile({
+						item,
+						emitEvents: false
+					})
 
 					blob = await workerLib.generatePDFThumbnail({ item, buffer })
 				}
@@ -273,17 +276,8 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 				if (fromDb) {
 					blob = fromDb
 				} else {
-					const chunkedEnd = 1024 * 1024 * 16 - 1
-					const buffer = await worker.readFile({
-						item,
-						emitEvents: false,
-						start: 0,
-						end: chunkedEnd >= item.size - 1 ? item.size - 1 : chunkedEnd
-					})
-
 					blob = await workerLib.generateVideoThumbnail({
-						item,
-						buffer
+						item
 					})
 				}
 

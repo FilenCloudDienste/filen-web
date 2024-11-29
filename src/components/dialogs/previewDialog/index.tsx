@@ -12,7 +12,14 @@ import { Loader as LoaderIcon, X, Save, ArrowLeft, ArrowRight, Eye } from "lucid
 import { showConfirmDialog } from "../confirm"
 import { uploadFile } from "@/lib/worker/worker"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { TOOLTIP_POPUP_DELAY, IS_APPLE_DEVICE, IS_DESKTOP, MAX_PREVIEW_SIZE_DESKTOP, MAX_PREVIEW_SIZE_WEB } from "@/constants"
+import {
+	TOOLTIP_POPUP_DELAY,
+	IS_APPLE_DEVICE,
+	IS_DESKTOP,
+	MAX_PREVIEW_SIZE_SW,
+	MAX_PREVIEW_SIZE_WEB,
+	DESKTOP_HTTP_SERVER_PORT
+} from "@/constants"
 import { useTranslation } from "react-i18next"
 import { v4 as uuidv4 } from "uuid"
 import { showInputDialog } from "../input"
@@ -30,7 +37,7 @@ import useLocation from "@/hooks/useLocation"
 import { cn, isValidFileName } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import useErrorToast from "@/hooks/useErrorToast"
-import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
+import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
 
 const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
 
@@ -75,7 +82,7 @@ export const PreviewDialog = memo(() => {
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 	const location = useLocation()
 	const errorToast = useErrorToast()
-	const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
+	const isServiceWorkerOnline = useIsServiceWorkerOnline()
 
 	const itemsOrdered = useMemo(() => {
 		if (!open) {
@@ -223,6 +230,7 @@ export const PreviewDialog = memo(() => {
 
 				setURLObjects({})
 				setBuffers({})
+				setItem(null)
 			}
 		}, 3000)
 	}, [urlObjects])
@@ -263,11 +271,10 @@ export const PreviewDialog = memo(() => {
 			}
 
 			const previewType = fileNameToPreviewType(itm.name)
-			const maxPreviewSize = IS_DESKTOP
-				? isDesktopHTTPServerOnline
-					? MAX_PREVIEW_SIZE_DESKTOP
+			const maxPreviewSize =
+				isServiceWorkerOnline && itm.type === "file" && isFileStreamable(itm.name, itm.mime)
+					? MAX_PREVIEW_SIZE_SW
 					: MAX_PREVIEW_SIZE_WEB
-				: MAX_PREVIEW_SIZE_WEB
 
 			if (previewType === "other" || itm.size >= maxPreviewSize) {
 				return
@@ -275,8 +282,8 @@ export const PreviewDialog = memo(() => {
 
 			try {
 				if (
+					isServiceWorkerOnline &&
 					(previewType === "audio" || previewType === "video" || previewType === "image") &&
-					IS_DESKTOP &&
 					isFileStreamable(itm.name, itm.mime)
 				) {
 					const fileBase64 = Buffer.from(
@@ -296,13 +303,18 @@ export const PreviewDialog = memo(() => {
 
 					setURLObjects(prev => ({
 						...prev,
-						[itm.uuid]: `http://localhost:61034/stream?file=${encodeURIComponent(fileBase64)}`
+						[itm.uuid]: isServiceWorkerOnline
+							? `${window.location.origin}/sw/stream?file=${encodeURIComponent(fileBase64)}`
+							: `http://localhost:${DESKTOP_HTTP_SERVER_PORT}/stream?file=${encodeURIComponent(fileBase64)}`
 					}))
 
 					return
 				}
 
-				const buffer = await readFileAndSanitize({ item: itm, emitEvents: false })
+				const buffer = await readFileAndSanitize({
+					item: itm,
+					emitEvents: false
+				})
 
 				if (previewType === "text" || previewType === "docx" || previewType === "md" || previewType === "code") {
 					setBuffers(prev => ({
@@ -321,7 +333,7 @@ export const PreviewDialog = memo(() => {
 				cleanup()
 			}
 		},
-		[cleanup, isDesktopHTTPServerOnline]
+		[cleanup, isServiceWorkerOnline]
 	)
 
 	const saveFile = useCallback(async () => {

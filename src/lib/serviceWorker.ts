@@ -1,25 +1,30 @@
-import { IS_DESKTOP } from "@/constants"
+import { serviceWorkerFile } from "virtual:vite-plugin-service-worker"
 
 let isRegistered = false
 
 /**
- * Register the FileSystem API (Stream) service worker.
+ * Register service worker.
  *
  * @export
  * @async
  * @returns {Promise<void>}
  */
-export async function registerFSAServiceWorker(): Promise<void> {
-	if (isRegistered || IS_DESKTOP || !window || !window.navigator || !("serviceWorker" in window.navigator)) {
+export async function registerServiceWorker(): Promise<void> {
+	if (isRegistered || !window || !window.navigator || !("serviceWorker" in window.navigator)) {
 		return
 	}
 
 	try {
-		await window.navigator.serviceWorker.register("/sw.js", { scope: "/" })
+		const registration = await window.navigator.serviceWorker.register(serviceWorkerFile, {
+			scope: "/",
+			type: "module"
+		})
+
+		await registration.update()
 
 		isRegistered = true
 
-		console.log("FSA service worker registered")
+		console.log("Service worker registered")
 	} catch (e) {
 		console.error(e)
 	}

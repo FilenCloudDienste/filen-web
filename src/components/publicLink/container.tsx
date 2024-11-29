@@ -94,14 +94,15 @@ export const Container = memo(({ children, loading, hasInfo }: { children: React
 					width: widths.container
 				}}
 			>
-				{!urlState.embed && hasInfo && (
-					<div className="absolute bottom-4 right-4 z-30">
+				{!urlState.embed && hasInfo && !isMobile && (
+					<div className="absolute bottom-4 left-4 z-50">
 						<Button
 							variant="secondary"
-							className="items-center gap-2"
+							className="items-center gap-2 text-xs"
 							onClick={report}
+							size="sm"
 						>
-							<AlertCircle size={16} />
+							<AlertCircle size={14} />
 							{t("publicLink.sideBar.reportAbuse")}
 						</Button>
 					</div>

@@ -19,7 +19,7 @@ export const THUMBNAIL_VERSION = 1
 export const THUMBNAIL_QUALITY = 0.4
 export const THUMBNAIL_MAX_SIZE = 512
 export const MiB = 1024 * 1024
-export const THUMBNAIL_MAX_FETCH_SIZE = MiB * 32
+export const THUMBNAIL_MAX_FETCH_SIZE = MiB * 64
 export const PUBLIC_LINK_BASE_URL = IS_DESKTOP
 	? import.meta.env.DEV
 		? globalThis.location.protocol + "//" + globalThis.location.host + "/#/d/"
@@ -42,13 +42,14 @@ export const UNCACHED_QUERY_KEYS = [
 	"isNetworkDriveMounted",
 	"isS3Online",
 	"isWebDAVOnline",
-	"useIsDesktopHTTPServerOnline"
+	"useIsDesktopHTTPServerOnline",
+	"useIsServiceWorkerOnline"
 ]
 export const IS_INSIDE_PUBLIC_LINK_ON_LOAD =
 	typeof window !== "undefined" ? window.location.href.includes("/f/") || window.location.href.includes("/d/") : false
 export const MAX_PREVIEW_SIZE_WEB = 256 * MiB
-export const MAX_PREVIEW_SIZE_DESKTOP = Infinity
-export const MAX_PREVIEW_SIZE = IS_DESKTOP ? MAX_PREVIEW_SIZE_DESKTOP : MAX_PREVIEW_SIZE_WEB
+export const MAX_PREVIEW_SIZE_SW = Infinity
+export const MAX_PREVIEW_SIZE = IS_DESKTOP ? MAX_PREVIEW_SIZE_SW : MAX_PREVIEW_SIZE_WEB
 export const VALID_LOCAL_PORT_RANGE = [1024, 65535]
 export const SIDEBAR_WIDTH = IS_DESKTOP && IS_APPLE_DEVICE ? 75 : 64
 export const DESKTOP_TOPBAR_HEIGHT = IS_DESKTOP ? (IS_APPLE_DEVICE ? 0 : 24) : 0

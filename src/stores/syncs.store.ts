@@ -12,6 +12,12 @@ export type GeneralError = {
 	uuid: string
 }
 
+export type ConfirmDeletion = {
+	where: "local" | "remote" | "both"
+	previous: number
+	current: number
+}
+
 export type SyncsStore = {
 	selectedSync: SyncPair | null
 	transferEvents: Record<string, TransferDataWithTimestamp[]>
@@ -28,6 +34,7 @@ export type SyncsStore = {
 	tasksCount: Record<string, number>
 	tasksSize: Record<string, number>
 	tasksBytes: Record<string, number>
+	confirmDeletion: Record<string, ConfirmDeletion | null>
 	setSelectedSync: (fn: SyncPair | null | ((prev: SyncPair | null) => SyncPair | null)) => void
 	setChanging: (fn: boolean | ((prev: boolean) => boolean)) => void
 	setTransferEvents: (
@@ -55,6 +62,11 @@ export type SyncsStore = {
 	setTasksCount: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 	setTasksSize: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
 	setTasksBytes: (fn: Record<string, number> | ((prev: Record<string, number>) => Record<string, number>)) => void
+	setConfirmDeletion: (
+		fn:
+			| Record<string, ConfirmDeletion | null>
+			| ((prev: Record<string, ConfirmDeletion | null>) => Record<string, ConfirmDeletion | null>)
+	) => void
 }
 
 export const useSyncsStore = create<SyncsStore>(set => ({
@@ -74,6 +86,7 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	tasksCount: {},
 	tasksSize: {},
 	tasksBytes: {},
+	confirmDeletion: {},
 	setSelectedSync(fn) {
 		set(state => ({ selectedSync: typeof fn === "function" ? fn(state.selectedSync) : fn }))
 	},
@@ -118,5 +131,8 @@ export const useSyncsStore = create<SyncsStore>(set => ({
 	},
 	setTasksBytes(fn) {
 		set(state => ({ tasksBytes: typeof fn === "function" ? fn(state.tasksBytes) : fn }))
+	},
+	setConfirmDeletion(fn) {
+		set(state => ({ confirmDeletion: typeof fn === "function" ? fn(state.confirmDeletion) : fn }))
 	}
 }))

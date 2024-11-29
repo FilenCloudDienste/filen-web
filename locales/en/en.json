@@ -1494,7 +1494,12 @@
 			"acquiringLock": "Acquiring sync lock",
 			"gettingTrees": "Reading local and cloud directory",
 			"remoteSmokeTestFailed": "Could not read cloud directory, either it does not exist or you are not connected to the internet",
-			"localSmokeTestFailed": "Could not read local directory, either it does not exist or you do not have read or write access"
+			"localSmokeTestFailed": "Could not read local directory, either it does not exist or you do not have read or write access",
+			"confirmDeletionBoth": "Confirm deletion of {{previous}} files and directories",
+			"confirmDeletionLocal": "Confirm deletion of {{previous}} local files and directories",
+			"confirmDeletionRemote": "Confirm deletion of {{previous}} remote files and directories",
+			"confirm": "Confirm",
+			"restart": "Restart"
 		},
 		"empty": {
 			"title": "No syncs set up yet",
@@ -1588,6 +1593,26 @@
 				"title": "Edit name",
 				"placeholder": "Name",
 				"continue": "Save"
+			},
+			"confirmDeletionLocal": {
+				"title": "Confirm deletion",
+				"description": "Are you sure? This will move all {{count}} files and directories into the trash in the cloud. This action cannot be undone.",
+				"continue": "Confirm"
+			},
+			"confirmDeletionRemote": {
+				"title": "Confirm deletion",
+				"description": "Are you sure? This will move all {{count}} files and directories into the local trash. This action cannot be undone.",
+				"continue": "Confirm"
+			},
+			"confirmDeletionBoth": {
+				"title": "Confirm deletion",
+				"description": "Are you sure? This will move all {{count}} files and directories into the local and cloud trash. This action cannot be undone.",
+				"continue": "Confirm"
+			},
+			"confirmDeletionRestart": {
+				"title": "Restart sync",
+				"description": "You can restart the sync if you have restored all files and folders manually.",
+				"continue": "Restart"
 			}
 		},
 		"ignored": {

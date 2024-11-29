@@ -9,6 +9,8 @@ import useIsSyncActive from "@/hooks/useIsSyncActive"
 import { useSyncsStore } from "@/stores/syncs.store"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
+import useSyncIssueCount from "@/hooks/useSyncIssueCount"
+import useSyncConfirmDeletion from "@/hooks/useSyncConfirmDeletion"
 
 export const Sync = memo(({ sync }: { sync: SyncPair }) => {
 	const routeParent = useRouteParent()
@@ -16,6 +18,8 @@ export const Sync = memo(({ sync }: { sync: SyncPair }) => {
 	const setSelectedSync = useSyncsStore(useCallback(state => state.setSelectedSync, []))
 	const [, setLastSelectedSync] = useLocalStorage("lastSelectedSync", "")
 	const [desktopConfig] = useDesktopConfig()
+	const syncIssueCount = useSyncIssueCount(sync.uuid)
+	const syncConfirmDeletion = useSyncConfirmDeletion(sync.uuid)
 
 	const isPaused = useMemo(() => {
 		return desktopConfig.syncConfig.syncPairs.some(pair => pair.uuid === sync.uuid && pair.paused)
@@ -46,7 +50,10 @@ export const Sync = memo(({ sync }: { sync: SyncPair }) => {
 					) : (
 						<RefreshCw
 							size={20}
-							className={isSyncActive ? "animate-spin-medium" : undefined}
+							className={cn(
+								isSyncActive && syncIssueCount + syncConfirmDeletion.length === 0 && "animate-spin-medium",
+								syncIssueCount + syncConfirmDeletion.length > 0 && "text-orange-500"
+							)}
 						/>
 					)}
 					<p className="line-clamp-1 text-ellipsis break-all">{sync.name}</p>

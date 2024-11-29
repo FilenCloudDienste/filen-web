@@ -17,7 +17,7 @@ import useSDKConfig from "@/hooks/useSDKConfig"
 import * as actions from "./actions"
 import { selectDriveItem } from "@/components/dialogs/selectDriveItem"
 import eventEmitter from "@/lib/eventEmitter"
-import { fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
+import { fileNameToPreviewType, isFileStreamable } from "@/components/dialogs/previewDialog/utils"
 import useDriveURLState from "@/hooks/useDriveURLState"
 import { useNavigate } from "@tanstack/react-router"
 import useLocation from "@/hooks/useLocation"
@@ -48,13 +48,13 @@ import {
 } from "lucide-react"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import { selectContacts } from "@/components/dialogs/selectContacts"
-import { MAX_PREVIEW_SIZE_DESKTOP, MAX_PREVIEW_SIZE_WEB, IS_DESKTOP } from "@/constants"
+import { MAX_PREVIEW_SIZE_SW, MAX_PREVIEW_SIZE_WEB } from "@/constants"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import { isValidFileName, isValidHexColor } from "@/lib/utils"
 import { v4 as uuidv4 } from "uuid"
 import { type WorkerToMainMessage } from "@/lib/worker/types"
 import Input from "@/components/input"
-import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
+import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
 
 const iconSize = 16
 
@@ -94,7 +94,7 @@ export const ContextMenu = memo(
 		const { passwordState: publicLinkPaswordState } = usePublicLinkStore()
 		const successToast = useSuccessToast()
 		const publicLinkURLState = usePublicLinkURLState()
-		const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
+		const isServiceWorkerOnline = useIsServiceWorkerOnline()
 
 		const isInsidePublicLink = useMemo(() => {
 			return location.includes("/f/") || location.includes("/d/")
@@ -641,11 +641,10 @@ export const ContextMenu = memo(
 
 		const contextMenuContent = useMemo((): React.ReactNode => {
 			const groups: Record<string, React.ReactNode[]> = {}
-			const maxPreviewSize = IS_DESKTOP
-				? isDesktopHTTPServerOnline
-					? MAX_PREVIEW_SIZE_DESKTOP
+			const maxPreviewSize =
+				isServiceWorkerOnline && item.type === "file" && isFileStreamable(item.name, item.mime)
+					? MAX_PREVIEW_SIZE_SW
 					: MAX_PREVIEW_SIZE_WEB
-				: MAX_PREVIEW_SIZE_WEB
 
 			if (
 				selectedItems.length === 1 &&
@@ -984,8 +983,6 @@ export const ContextMenu = memo(
 			preview,
 			t,
 			selectedItemsContainUndecryptableItems,
-			item.size,
-			item.type,
 			previewType,
 			openDirectory,
 			driveURLState.trash,
@@ -997,7 +994,6 @@ export const ContextMenu = memo(
 			versions,
 			directoryColor,
 			info,
-			item.favorited,
 			onColorInputChange,
 			onColorPickerChange,
 			toggleFavorite,
@@ -1010,7 +1006,8 @@ export const ContextMenu = memo(
 			restore,
 			deletePermanently,
 			trash,
-			isDesktopHTTPServerOnline
+			isServiceWorkerOnline,
+			item
 		])
 
 		useEffect(() => {

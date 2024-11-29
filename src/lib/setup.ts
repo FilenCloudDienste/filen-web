@@ -3,7 +3,7 @@ import { reinitSDK, getSDK } from "./sdk"
 import worker from "./worker"
 import { type FilenSDKConfig } from "@filen/sdk"
 import { IS_DESKTOP } from "@/constants"
-import { registerFSAServiceWorker } from "./serviceWorker"
+import { registerServiceWorker } from "./serviceWorker"
 import { type FilenDesktopConfig } from "@filen/desktop/dist/types"
 import { clear as clearLocalForage } from "@/lib/localForage"
 import { connect as socketConnect } from "@/lib/socket"
@@ -241,13 +241,13 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
 
 	setDesktopConfig(desktopConfig, false)
 
-	await Promise.all([setItem(sdkConfigLocalStorageKey, initConfig), setItem(desktopConfigLocalStorageKey, desktopConfig)])
-	await Promise.all([worker.initializeSDK(initConfig), IS_DESKTOP ? window.desktopAPI.setConfig(desktopConfig) : Promise.resolve()])
+	await Promise.allSettled([
+		setItem(sdkConfigLocalStorageKey, initConfig),
+		setItem(desktopConfigLocalStorageKey, desktopConfig),
+		registerServiceWorker()
+	]).catch(console.error)
 
-	if (!IS_DESKTOP) {
-		// Try to register it, if it fails we fallback to the polyfill.
-		registerFSAServiceWorker().catch(console.error)
-	}
+	await Promise.all([worker.initializeSDK(initConfig), IS_DESKTOP ? window.desktopAPI.setConfig(desktopConfig) : Promise.resolve()])
 
 	window.disableInvalidAPIKeyLogout = false
 

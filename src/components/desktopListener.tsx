@@ -6,6 +6,7 @@ import throttle from "lodash/throttle"
 import { calcTimeLeft, calcSpeed, getTimeRemaining } from "./transfers/utils"
 import { type MainToWindowMessage } from "@filen/desktop/dist/ipc"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
+import { v4 as uuidv4 } from "uuid"
 
 export const DesktopListener = memo(() => {
 	const [authed] = useIsAuthed()
@@ -21,7 +22,8 @@ export const DesktopListener = memo(() => {
 		setSpeed,
 		setTasksCount,
 		setTasksSize,
-		setTasksBytes
+		setTasksBytes,
+		setConfirmDeletion
 	} = useSyncsStore(
 		useCallback(
 			state => ({
@@ -36,7 +38,8 @@ export const DesktopListener = memo(() => {
 				setSpeed: state.setSpeed,
 				setTasksCount: state.setTasksCount,
 				setTasksSize: state.setTasksSize,
-				setTasksBytes: state.setTasksBytes
+				setTasksBytes: state.setTasksBytes,
+				setConfirmDeletion: state.setConfirmDeletion
 			}),
 			[]
 		)
@@ -151,6 +154,13 @@ export const DesktopListener = memo(() => {
 			) {
 				if (!syncPairsUUIDsRef.current.includes(message.syncPair.uuid)) {
 					return
+				}
+
+				if (message.type === "cycleSuccess" || message.type === "cycleStarted" || message.type === "cycleRestarting") {
+					setConfirmDeletion(prev => ({
+						...prev,
+						[message.syncPair.uuid]: null
+					}))
 				}
 
 				if (message.type === "cycleError") {
@@ -454,6 +464,24 @@ export const DesktopListener = memo(() => {
 					...prev,
 					[message.syncPair.uuid]: message.data.size
 				}))
+			} else if (message.type === "confirmDeletion") {
+				const data = message.data
+
+				setConfirmDeletion(prev => ({
+					...prev,
+					[message.syncPair.uuid]: data
+				}))
+			} else if (message.type === "localDirectoryWatcherError") {
+				const error: GeneralError = {
+					error: message.data.error,
+					type: "localTree",
+					uuid: uuidv4()
+				}
+
+				setErrors(prev => ({
+					...prev,
+					[message.syncPair.uuid]: prev[message.syncPair.uuid] ? [...[error], ...prev[message.syncPair.uuid]!] : [error]
+				}))
 			}
 		},
 		[
@@ -469,7 +497,8 @@ export const DesktopListener = memo(() => {
 			setSpeed,
 			setTasksCount,
 			setTasksSize,
-			setTasksBytes
+			setTasksBytes,
+			setConfirmDeletion
 		]
 	)
 
