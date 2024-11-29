@@ -590,7 +590,7 @@
         "noActiveTransfers": "Henüz transfer yok",
         "state": {
             "finished": "Tamamlandı",
-            "queued": "Sıralı",
+            "queued": "Sıraya alındı",
             "started": "Başlatıldı",
             "error": "Hata",
             "stopped": "Durduruldu",
