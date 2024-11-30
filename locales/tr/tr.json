@@ -89,9 +89,9 @@
     },
     "reset": {
         "header": "Şifre sıfırlama",
-        "description": "E-posta adresinizi, yeni şifrenizi girin ve anahtarlarınızı içe aktararak şifrenizi sıfırlayın",
-        "importMasterKeys": "Anahtarları içe aktar",
-        "masterKeysImported": "Anahtarlar içe aktarıldı",
+        "description": "Şifrenizi sıfırlamak için e-posta adresinizi, yeni şifrenizi girin ve ana anahtarlarınızı içe aktarın",
+        "importMasterKeys": "Anahtarı içe aktar",
+        "masterKeysImported": "Anahtar içe aktarıldı",
         "masterKeysNotImported": "Hiç anahtar içe aktarılmadı",
         "placeholders": {
             "normal": {
@@ -128,11 +128,11 @@
         },
         "alerts": {
             "invalidMasterKeysFile": "Geçersiz anahtar dosyası",
-            "invalidMasterKeysFileWrongUserId": "Bu anahtarlar farklı bir hesaba ait",
-            "masterKeysImported": "Anahtarlar içe aktarıldı",
+            "invalidMasterKeysFileWrongUserId": "Bu anahtar farklı bir hesaba ait",
+            "masterKeysImported": "Anahtar içe aktarıldı",
             "passwordWeak": "Seçtiğiniz şifre çok zayıf",
             "passwordsNotMatching": "Şifreler aynı değil",
-            "invalidMasterKeys": "Geçersiz anahtarlar",
+            "invalidMasterKeys": "Geçersiz anahtar",
             "passwordChanged": "Şifre başarıyla değiştirildi"
         }
     },
@@ -286,7 +286,7 @@
             "downloadButton": "İndir butonu",
             "link": "Bağlantı",
             "copyLink": "Kopyala",
-            "expiresAfter": "Son kullanım tarihi",
+            "expiresAfter": "Sona erme süresi",
             "password": "Şifre (devre dışı bırakmak için boş bırakın)",
             "passwordPlaceholder": "Şifre",
             "progress": "{{done}} / {{total}} öğe herkese açık bağlantıya eklendi",
@@ -299,7 +299,7 @@
             "remove": "Kaldır",
             "stopSharing": {
                 "title": "Paylaşımı durdur",
-                "description": "{{item}}'yi {{name}} ile paylaşmayı durdurmak istediğinizden emin misiniz?",
+                "description": "{{item}} adlı öğenin {{name}} adresi ile paylaşımını durdurmak istediğinizden emin misiniz?",
                 "continue": "Paylaşımı durdur"
             }
         },
@@ -308,7 +308,7 @@
             "newEmail": "Yeni e-posta adresi",
             "newEmailPlaceholder": "Yeni e-posta",
             "confirmNewEmail": "Yeni e-posta adresini onaylayın",
-            "confirmNewEmailPlaceholder": "Yeni e-posta onayı",
+            "confirmNewEmailPlaceholder": "Yeni e-postayı onayla",
             "password": "Şifreniz",
             "passwordPlaceholder": "Şifre",
             "close": "Kapat",
@@ -320,7 +320,7 @@
             "newPassword": "Yeni şifre",
             "newPasswordPlaceholder": "Yeni şifre",
             "confirmNewPassword": "Yeni şifreyi onaylayın",
-            "confirmNewPasswordPlaceholder": "Yeni şifre onayı",
+            "confirmNewPasswordPlaceholder": "Yeni şifreyi onayla",
             "currentPassword": "Mevcut şifreniz",
             "currentPasswordPlaceholder": "Mevcut şifre",
             "close": "Kapat",
@@ -342,7 +342,7 @@
             "country": "Ülke"
         },
         "twoFactorCode": {
-            "useRecoveryKey": "Yerine kurtarma anahtarını kullan",
+            "useRecoveryKey": "Bunun yerine kurtarma anahtarını kullan",
             "recoveryKeyPlaceholder": "Kurtarma anahtarı",
             "title": "İki Faktörlü Kimlik Doğrulama",
             "continue": "Devam et",
@@ -359,7 +359,7 @@
             "title": "Dosya sürümleri",
             "delete": {
                 "title": "Dosya sürümünü sil",
-                "description": "{{name}}'yi kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "description": "{{name}} adlı sürümü kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             }
         },
@@ -374,7 +374,7 @@
             "openOriginal": "Orijinali aç"
         },
         "report": {
-            "title": "İhlali bildirin",
+            "title": "Kötüye kullanımı bildirin",
             "email": "E-posta adresi",
             "emailPlaceholder": "E-posta adresi",
             "comment": "Yorum",
@@ -382,7 +382,7 @@
             "reason": "Sebep",
             "close": "Kapat",
             "send": "Gönder",
-            "successToast": "İhlal raporu gönderildi",
+            "successToast": "Kötüye kullanım raporu gönderildi",
             "reasons": {
                 "cp": "Çocuk cinsel istismarı materyali",
                 "dmca": "Telif hakkı ihlali",
@@ -517,7 +517,7 @@
                 },
                 "deletePermanently": {
                     "title": "Kalıcı olarak sil",
-                    "description": "{{name}}'yi kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                    "description": "{{name}} adlı öğeyi kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                     "continue": "Sil"
                 },
                 "deletePermanentlyMultiple": {
@@ -557,7 +557,7 @@
                 "md": "Markdown",
                 "rich": "Zengin metin",
                 "text": "Metin",
-                "checklist": "Kontrol listesi",
+                "checklist": "Liste",
                 "code": "Kod"
             }
         },
@@ -656,7 +656,7 @@
             },
             "removeParticipant": {
                 "title": "Katılımcıyı kaldır",
-                "description": "{{name}}'yi bu sohbetten kaldırmak istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişiyi bu sohbetten kaldırmak istediğinizden emin misiniz?",
                 "continue": "Kaldır"
             },
             "deleteConversation": {
@@ -740,7 +740,7 @@
                 "continue": "Sil"
             },
             "requestAccountDeletion": {
-                "title": "Hesap silme",
+                "title": "Hesabı sil",
                 "description": "Hesabınızı ve ona bağlı tüm verileri silmek istediğinizden emin misiniz? Size bir onay e-postası göndereceğiz. Bu işlem geri alınamaz!",
                 "continue": "Silme talebi"
             },
@@ -777,7 +777,7 @@
             "files": "Dosyalar {{size}}",
             "versionedFiles": "Sürümlü dosyalar {{size}}",
             "free": "Ücretsiz {{size}}",
-            "used": "{{used}} / {{max}} kullanıldı",
+            "used": "{{used}} kullanılan / Toplam {{max}}",
             "dark": "Karanlık",
             "light": "Aydınlık",
             "system": "Sistem",
@@ -785,7 +785,7 @@
                 "md": "Markdown",
                 "rich": "Zengin metin",
                 "text": "Metin",
-                "checklist": "Kontrol listesi",
+                "checklist": "Liste",
                 "code": "Kod"
             },
             "sections": {
@@ -814,8 +814,8 @@
                     "info": "Uygulama dilini değiştir"
                 },
                 "clearThumbnailCache": {
-                    "name": "Önizleme önbelleği",
-                    "info": "Önizleme önbelleğini temizle",
+                    "name": "Küçük resim önbelleği",
+                    "info": "Küçük resim önbelleğini temizle",
                     "action": "Temizle"
                 },
                 "logout": {
@@ -855,10 +855,10 @@
             "fileTrash": "{{name}} çöp kutusuna taşındı",
             "fileRm": "{{name}} silindi",
             "fileRestored": "{{name}} çöp kutusundan geri yüklendi",
-            "fileShared": "{{name}} {{email}} ile paylaşıldı",
+            "fileShared": "{{name}} {{email}} adresi ile paylaşıldı",
             "fileLinkEdited": "{{name}} adlı öğenin herkese açık bağlantısı düzenlendi",
             "folderTrash": "{{name}} çöp kutusuna taşındı",
-            "folderShared": "{{name}} {{email}} ile paylaşıldı",
+            "folderShared": "{{name}} {{email}} adresi ile paylaşıldı",
             "folderMoved": "{{name}} taşındı",
             "folderRenamed": "{{name}} {{newName}} olarak yeniden adlandırıldı",
             "subFolderCreated": "{{name}} oluşturuldu",
@@ -876,8 +876,8 @@
             "codeRedeemed": "Kod {{code}} kullanıldı",
             "emailChanged": "E-posta adresi {{email}} olarak değiştirildi",
             "passwordChanged": "Şifre değiştirildi",
-            "removedSharedInItems": "{{count}} paylaşılan öğe {{email}}'den kaldırıldı",
-            "removedSharedOutItems": "{{count}} paylaşılan öğe {{email}} ile kaldırıldı",
+            "removedSharedInItems": "Paylaşılan {{count}} öğenin {{email}} adresi ile paylaşımı kaldırıldı",
+            "removedSharedOutItems": "{{email}} adresinin sizinle paylaştığı {{count}} öğe kaldırıldı",
             "folderLinkEdited": "Dizin bağlantısı düzenlendi",
             "itemFavoriteAdded": "{{name}} favorilere eklendi",
             "itemFavoriteRemoved": "{{name}} favorilerden çıkarıldı",
@@ -971,7 +971,7 @@
                     "name": "Ana anahtarı dışa aktar",
                     "info": "Şifrenizi sıfırlamanız gerektiğinde hesabınızdaki verileri geri yükleyebilmeniz için ana anahtarınızı dışa aktarın. Şifrenizi her değiştirdiğinizde ana anahtarınızı dışa aktarmanız gerekir.",
                     "action": "Dışa aktar",
-                    "subInfo": "Lütfen anahtarlarınızı dışa aktarın ve ayrı bir güvenli konumda saklayın. Şifrenizi sıfırladığınızda veri kaybını önlemek için anahtarlarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor."
+                    "subInfo": "Lütfen ana anahtarınızı dışa aktarın ve güvenli bir yerde saklayın. Şifrenizi sıfırlarken veri kaybını önlemek için ana anahtarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde ana anahtarınızı dışa aktarmanız gerekir."
                 },
                 "lockTimeout": {
                     "name": "Uygulamayı kilitle",
@@ -1100,7 +1100,7 @@
             },
             "share": {
                 "title": "Paylaş",
-                "placeholder": "Bir Filen kullanıcısının e-posta adresi",
+                "placeholder": "Filen kullanıcısının e-posta adresi",
                 "continue": "Paylaş"
             }
         },
@@ -1159,14 +1159,14 @@
                 "info1": "Gizlilik odaklı tasarım",
                 "info2": "Uçtan uca şifreleme",
                 "info3": "Sıfır bilgi teknolojisi",
-                "cta": "10 GB depolama ücretsiz"
+                "cta": "Ücretsiz 10 GB depolama"
             },
-            "reportAbuse": "İhlali bildirin"
+            "reportAbuse": "Kötüye kullanımı bildir"
         },
         "auth": {
             "wrongPassword": "Yanlış şifre",
             "title": "Bu bağlantı şifre ile korunmaktadır",
-            "subTitle": "Erişim kazanmak için lütfen gönderen tarafından sağlanan şifreyi girin.",
+            "subTitle": "Erişim için lütfen gönderen tarafından sağlanan şifreyi girin.",
             "password": "Şifre",
             "passwordPlaceholder": "Şifre",
             "access": "Erişim"
@@ -1183,7 +1183,7 @@
         "dialogs": {
             "removeParticipant": {
                 "title": "Katılımcıyı kaldır",
-                "description": "{{name}}'yi bu nottan kaldırmak istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişiyi bu nottan kaldırmak istediğinizden emin misiniz?",
                 "continue": "Kaldır"
             },
             "deleteNote": {
@@ -1260,7 +1260,7 @@
     "cookieConsent": {
         "description": "Bu site deneyiminizi ölçmek ve geliştirmek için çerezler kullanır.",
         "optOut": "Reddet",
-        "onlyNeeded": "Sadece gerekli",
+        "onlyNeeded": "Sadece gerekli çerezler",
         "accept": "Kabul et"
     },
     "mounts": {
@@ -1609,8 +1609,8 @@
         }
     },
     "isOnline": {
-        "title": "Birisi kabloyu çıkar mıydı?",
-        "info": "Platformumuza bağlanmada sorun yaşıyoruz, lütfen internet bağlantınızı kontrol edin.",
+        "title": "Biri kablonun fişini mi çekti?",
+        "info": "Sizi platformumuza bağlamakta sorun yaşıyoruz, lütfen internet bağlantınızı kontrol edin.",
         "infoSub": "Eğer internetiniz çalışıyorsa lütfen bizimle iletişime geçin."
     },
     "404": {
