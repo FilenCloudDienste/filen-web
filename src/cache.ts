@@ -1,6 +1,7 @@
 import { keys, getItem, removeItem } from "@/lib/localForage"
 import { type MessageDisplayType } from "./components/chats/conversation/message/utils"
 import { type DirectorySizeResult } from "@/lib/worker/worker"
+import { promiseAllChunked } from "./lib/utils"
 
 export const directorySizeCache = new Map<string, DirectorySizeResult>()
 export const directoryUUIDToNameCache = new Map<string, string>()
@@ -24,31 +25,33 @@ export async function warmupCacheFromDb(): Promise<void> {
 	try {
 		const dbKeys = await keys()
 
-		for (const dbKey of dbKeys) {
-			if (dbKey.startsWith("directoryUUIDToName:")) {
-				const ex = dbKey.split(":")
+		await promiseAllChunked(
+			dbKeys.map(async dbKey => {
+				if (dbKey.startsWith("directoryUUIDToName:")) {
+					const ex = dbKey.split(":")
 
-				if (!ex[1]) {
-					continue
+					if (!ex[1]) {
+						return
+					}
+
+					const result = await getItem<string>(dbKey)
+
+					directoryUUIDToNameCache.set(ex[1], result!)
 				}
 
-				const result = await getItem<string>(dbKey)
+				if (dbKey.startsWith("directorySize:")) {
+					const ex = dbKey.split(":")
 
-				directoryUUIDToNameCache.set(ex[1], result!)
-			}
+					if (!ex[1]) {
+						return
+					}
 
-			if (dbKey.startsWith("directorySize:")) {
-				const ex = dbKey.split(":")
+					const result = await getItem<DirectorySizeResult>(dbKey)
 
-				if (!ex[1]) {
-					continue
+					directorySizeCache.set(ex[1], result!)
 				}
-
-				const result = await getItem<DirectorySizeResult>(dbKey)
-
-				directorySizeCache.set(ex[1], result!)
-			}
-		}
+			})
+		)
 	} catch (e) {
 		console.error(e)
 	}
