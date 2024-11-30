@@ -2,7 +2,7 @@
     "cloudDrive": "Bulut Sürücüsü",
     "new": "Yeni",
     "image": "Görüntü",
-    "empty": "Boş",
+    "empty": "Boşalt",
     "copiedToClipboard": "Panoya kopyalandı",
     "everyone": "Herkes",
     "unknownUser": "Bilinmeyen Kullanıcı",
@@ -175,7 +175,7 @@
             "sharedWithMe": "Benimle paylaşılan",
             "sharedWithOthers": "Başkalarıyla paylaşılan",
             "favorites": "Favoriler",
-            "trash": "Çöp",
+            "trash": "Çöp kutusu",
             "directory": "Dizin"
         },
         "listView": "Liste görünümü",
@@ -219,7 +219,7 @@
         "sharedWithMe": "Benimle paylaşılan",
         "sharedWithOthers": "Başkalarıyla paylaşılan",
         "favorites": "Favoriler",
-        "trash": "Çöp",
+        "trash": "Çöp kutusu",
         "settings": {
             "general": "Genel",
             "invoices": "Faturalar",
@@ -393,7 +393,7 @@
             }
         },
         "profile": {
-            "memberSince": "{{since}}'den beri üye",
+            "memberSince": "{{since}} tarihinden beri üye",
             "add": "Kişi talebi gönder",
             "block": "Engelle",
             "remove": "Kişilerden kaldır",
@@ -491,7 +491,7 @@
             "unfavorite": "Favorilerden çıkar",
             "rename": "Yeniden adlandır",
             "move": "Taşı",
-            "trash": "Çöp",
+            "trash": "Sil",
             "restore": "Geri yükle",
             "preview": "Önizleme",
             "edit": "Düzenle",
@@ -506,14 +506,14 @@
             "info": "Ayrıntılar",
             "dialogs": {
                 "trash": {
-                    "title": "Çöp",
-                    "description": "{{name}} adlı öğeyi çöpe göndermek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
-                    "continue": "Çöp"
+                    "title": "Sil",
+                    "description": "{{name}} adlı öğeyi silmek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
+                    "continue": "Sil"
                 },
                 "trashMultiple": {
-                    "title": "Çöp",
-                    "description": "{{count}} öğeyi çöpe göndermek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
-                    "continue": "Çöp"
+                    "title": "Sil",
+                    "description": "{{count}} öğeyi silmek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
+                    "continue": "Sil"
                 },
                 "deletePermanently": {
                     "title": "Kalıcı olarak sil",
@@ -537,8 +537,8 @@
             "history": "Geçmiş",
             "participants": "Katılımcılar",
             "type": "Tür",
-            "pin": "Sabit",
-            "unpin": "Sabitlikten çıkar",
+            "pin": "Sabitle",
+            "unpin": "Sabitlemeyi kaldır",
             "favorite": "Favori",
             "unfavorite": "Favorilerden çıkar",
             "duplicate": "Çoğalt",
@@ -546,7 +546,7 @@
             "exportAll": "Hepsini dışa aktar",
             "archive": "Arşivle",
             "restore": "Geri yükle",
-            "trash": "Çöp",
+            "trash": "Sil",
             "delete": "Sil",
             "rename": "Yeniden adlandır",
             "tags": "Etiketler",
@@ -602,10 +602,10 @@
         "stop": "Durdur"
     },
     "chats": {
-        "newMessagesSince": "{{count}} yeni mesaj {{since}}'den beri",
+        "newMessagesSince": "{{count}} yeni mesaj {{since}} tarihinden beri",
         "markAsRead": "Okundu olarak işaretle",
         "maxSizeReached": "Maksimum mesaj boyutu {{chars}} karakter ile sınırlıdır",
-        "newMessageSince": "{{count}} yeni mesaj {{since}}'den beri",
+        "newMessageSince": "{{count}} yeni mesaj {{since}} tarihinden beri",
         "showParticipants": "Katılımcıları göster",
         "hideParticipants": "Katılımcıları gizle",
         "addParticipants": "Katılımcı ekle",
@@ -697,7 +697,7 @@
         "dialogs": {
             "unblock": {
                 "title": "Kullanıcının engelini kaldır",
-                "description": "{{name}}'nin engelini kaldırmak istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişinin engelini kaldırmak istediğinizden emin misiniz?",
                 "continue": "Engeli kaldır"
             },
             "remove": {
@@ -711,7 +711,7 @@
                 "continue": "Engelle"
             },
             "sendRequest": {
-                "title": "Kişi talebi gönder",
+                "title": "İletişim talebi gönder",
                 "placeholder": "Filen kullanıcısının e-posta adresi",
                 "continue": "Gönder"
             }
@@ -1188,12 +1188,12 @@
             },
             "deleteNote": {
                 "title": "Notu sil",
-                "description": "{{name}}'yi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "description": "{{name}} adlı notu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
             "deleteTag": {
                 "title": "Etiketi sil",
-                "description": "{{name}}'yi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "description": "{{name}} adlı etiketi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
             "renameTag": {
@@ -1213,7 +1213,7 @@
             },
             "leaveNote": {
                 "title": "Notu terk et",
-                "description": "{{name}}'den ayrılmak istediğinizden emin misiniz? Artık bu nota erişiminiz olmayacak.",
+                "description": "{{name}} adlı nottan ayrılmak istediğinizden emin misiniz? Artık bu nota erişiminiz olmayacak.",
                 "continue": "Ayrıl"
             }
         }
