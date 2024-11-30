@@ -134,6 +134,7 @@ function getStream(request: Request): Response {
 		})
 	}
 
+	const isDownload = searchParams.has("download")
 	const fileBase64 = decodeURIComponent(searchParams.get("file")!)
 	const file = JSON.parse(Buffer.from(fileBase64, "base64").toString("utf-8")) as {
 		name: string
@@ -159,11 +160,17 @@ function getStream(request: Request): Response {
 	let responseStatus = 200
 
 	responseHeaders.set("Content-Type", mimeType)
-	responseHeaders.set("Accept-Ranges", "bytes")
+
+	if (!isDownload) {
+		responseHeaders.set("Accept-Ranges", "bytes")
+	} else {
+		responseHeaders.set("Content-Disposition", `attachment; filename=${file.name}`)
+	}
+
 	// responseHeaders.set("Cache-Control", "no-store")
 	// responseHeaders.delete("Connection")
 
-	if (range) {
+	if (range && !isDownload) {
 		const parsedRange = parseByteRange(range, totalLength)
 
 		if (!parsedRange) {

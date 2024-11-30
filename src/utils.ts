@@ -1,5 +1,5 @@
 import { type showSaveFilePicker } from "native-file-system-adapter"
-import { UAParserResult, IS_DESKTOP } from "./constants"
+import { UAParserResult, IS_DESKTOP, IS_MOBILE_DEVICE } from "./constants"
 
 export function convertTimestampToMs(timestamp: number): number {
 	const now = Date.now()
@@ -84,7 +84,12 @@ export function getShowSaveFilePickerOptions({
 	excludeAcceptAllOption?: boolean
 }): Parameters<typeof showSaveFilePicker>[0] {
 	const osName = UAParserResult.os.name?.trim().toLowerCase() ?? ""
-	const preferPolyfill = osName.length === 0 || IS_DESKTOP ? false : osName === "android" || osName === "ios" || osName === "blackberry"
+	const preferPolyfill =
+		IS_MOBILE_DEVICE && !IS_DESKTOP
+			? true
+			: osName.length === 0 || IS_DESKTOP
+				? false
+				: osName === "android" || osName === "ios" || osName === "blackberry"
 
 	return {
 		//_name: name,

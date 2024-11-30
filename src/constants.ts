@@ -14,6 +14,13 @@ export const IS_WINDOWS_11 =
 		: false
 export const IS_LINUX =
 	typeof window !== "undefined" && typeof window.navigator !== "undefined" ? window.navigator.userAgent.includes("Linux") : false
+export const IS_MOBILE_DEVICE =
+	UAParserResult.device.type === "mobile" ||
+	UAParserResult.device.type === "console" ||
+	UAParserResult.device.type === "tablet" ||
+	UAParserResult.device.type === "embedded" ||
+	UAParserResult.device.type === "smarttv" ||
+	UAParserResult.device.type === "wearable"
 export const CTRL_KEY_TEXT = IS_APPLE_DEVICE ? "⌘" : "Ctrl"
 export const THUMBNAIL_VERSION = 1
 export const THUMBNAIL_QUALITY = 0.4
