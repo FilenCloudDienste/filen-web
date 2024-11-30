@@ -5,7 +5,7 @@ import axios from "axios"
 
 declare let self: ServiceWorkerGlobalScope
 
-export const sdk = new FilenSDK(
+const sdk = new FilenSDK(
 	{
 		email: "anonymous",
 		password: "anonymous",
@@ -26,7 +26,7 @@ export const sdk = new FilenSDK(
 	})
 )
 
-export const map = new Map<
+const map = new Map<
 	string,
 	{
 		url: string
@@ -35,13 +35,13 @@ export const map = new Map<
 	}
 >()
 
-export const WRITE = 0
-export const PULL = 0
-export const ERROR = 1
-export const ABORT = 1
-export const CLOSE = 2
+const WRITE = 0
+const PULL = 0
+const ERROR = 1
+const ABORT = 1
+const CLOSE = 2
 
-export class MessagePortSource implements UnderlyingSource {
+class MessagePortSource implements UnderlyingSource {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public controller: ReadableStreamController<any> | null = null
 	public port: MessagePort
@@ -95,12 +95,11 @@ export class MessagePortSource implements UnderlyingSource {
 /**
  * Parse the requested byte range from the header.
  *
- * @export
  * @param {string} range
  * @param {number} totalLength
  * @returns {({ start: number; end: number } | null)}
  */
-export function parseByteRange(range: string, totalLength: number): { start: number; end: number } | null {
+function parseByteRange(range: string, totalLength: number): { start: number; end: number } | null {
 	const [unit, rangeValue] = range.split("=")
 
 	if (unit !== "bytes" || !rangeValue) {
@@ -126,7 +125,7 @@ export function parseByteRange(range: string, totalLength: number): { start: num
 	}
 }
 
-export function getStream(request: Request): Response {
+function getStream(request: Request): Response {
 	const searchParams = new URL(request.url).searchParams
 
 	if (!searchParams.has("file")) {
@@ -161,8 +160,8 @@ export function getStream(request: Request): Response {
 
 	responseHeaders.set("Content-Type", mimeType)
 	responseHeaders.set("Accept-Ranges", "bytes")
-	//responseHeaders.set("Cache-Control", "no-store")
-	//responseHeaders.delete("Connection")
+	// responseHeaders.set("Cache-Control", "no-store")
+	// responseHeaders.delete("Connection")
 
 	if (range) {
 		const parsedRange = parseByteRange(range, totalLength)

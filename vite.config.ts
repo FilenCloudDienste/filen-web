@@ -8,7 +8,7 @@ import i18nextLoader from "vite-plugin-i18next-loader"
 import svgr from "vite-plugin-svgr"
 import topLevelAwait from "vite-plugin-top-level-await"
 import checker from "vite-plugin-checker"
-import { serviceWorkerPlugin } from "@gautemo/vite-plugin-service-worker"
+import { VitePWA } from "vite-plugin-pwa"
 
 const now = Date.now()
 
@@ -16,8 +16,14 @@ export default defineConfig({
 	base: "/",
 	plugins: [
 		nodePolyfills({
+			include: [],
 			overrides: {
 				fs: "memfs"
+			},
+			globals: {
+				Buffer: true,
+				global: true,
+				process: true
 			},
 			protocolImports: true
 		}),
@@ -44,8 +50,44 @@ export default defineConfig({
 			paths: ["./locales"]
 		}),
 		svgr(),
-		serviceWorkerPlugin({
-			filename: "sw.ts"
+		VitePWA({
+			srcDir: "src",
+			filename: "sw.ts",
+			strategies: "injectManifest",
+			workbox: {
+				maximumFileSizeToCacheInBytes: Infinity
+			},
+			injectRegister: false,
+			manifest: false,
+			injectManifest: {
+				injectionPoint: undefined,
+				rollupFormat: "iife",
+				minify: true,
+				sourcemap: true,
+				buildPlugins: {
+					vite: [
+						nodePolyfills({
+							include: [],
+							overrides: {
+								fs: "memfs"
+							},
+							globals: {
+								Buffer: true,
+								global: true,
+								process: true
+							},
+							protocolImports: true
+						}),
+						topLevelAwait({
+							promiseExportName: "__tla",
+							promiseImportName: i => `__tla_${i}`
+						})
+					]
+				}
+			},
+			devOptions: {
+				enabled: true
+			}
 		}),
 		checker({
 			typescript: true
@@ -58,7 +100,25 @@ export default defineConfig({
 	},
 	worker: {
 		format: "es",
-		plugins: () => [comlink()]
+		plugins: () => [
+			nodePolyfills({
+				include: [],
+				overrides: {
+					fs: "memfs"
+				},
+				globals: {
+					Buffer: true,
+					global: true,
+					process: true
+				},
+				protocolImports: true
+			}),
+			topLevelAwait({
+				promiseExportName: "__tla",
+				promiseImportName: i => `__tla_${i}`
+			}),
+			comlink()
+		]
 	},
 	build: {
 		sourcemap: true,

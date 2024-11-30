@@ -1,14 +1,14 @@
 {
 	"name": "@filen/web",
 	"private": false,
-	"version": "0.1.72",
+	"version": "0.1.73",
 	"type": "module",
 	"description": "Filen Web & Desktop app",
 	"scripts": {
 		"dev": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite",
 		"build": "npm run build:clean && npm run tsc && npm run build:vite",
 		"build:clean": "rimraf ./dist",
-		"build:vite": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite build",
+		"build:vite": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite build --mode production",
 		"tsc": "cross-env NODE_OPTIONS=--max_old_space_size=16834 tsc",
 		"lint": "cross-env NODE_OPTIONS=--max_old_space_size=16834 eslint . --ext ts,tsx,js,jsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite preview",
@@ -105,6 +105,8 @@
 		"zustand": "^4.5.2"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.26.0",
+		"@babel/preset-env": "^7.26.0",
 		"@gautemo/vite-plugin-service-worker": "^0.1.0",
 		"@tanstack/eslint-plugin-query": "^5.20.1",
 		"@tanstack/router-vite-plugin": "^1.19.0",
@@ -144,10 +146,12 @@
 		"tsx": "^4.11.0",
 		"typescript": "^5.2.2",
 		"vite": "^5.2.8",
+		"vite-plugin-babel": "^1.2.0",
 		"vite-plugin-checker": "^0.7.2",
 		"vite-plugin-comlink": "^5.1.0",
 		"vite-plugin-i18next-loader": "^2.0.12",
 		"vite-plugin-node-polyfills": "^0.22.0",
+		"vite-plugin-pwa": "^0.21.1",
 		"vite-plugin-svgr": "^4.2.0",
 		"vite-plugin-top-level-await": "^1.4.1"
 	},

@@ -1,5 +1,3 @@
-import { serviceWorkerFile } from "virtual:vite-plugin-service-worker"
-
 let isRegistered = false
 
 /**
@@ -15,10 +13,13 @@ export async function registerServiceWorker(): Promise<void> {
 	}
 
 	try {
-		const registration = await window.navigator.serviceWorker.register(serviceWorkerFile, {
-			scope: "/",
-			type: "module"
-		})
+		const registration = await window.navigator.serviceWorker.register(
+			import.meta.env.MODE === "production" ? "/sw.js" : "/dev-sw.js?dev-sw",
+			{
+				scope: "/",
+				type: import.meta.env.MODE === "production" ? "classic" : "module"
+			}
+		)
 
 		await registration.update()
 
