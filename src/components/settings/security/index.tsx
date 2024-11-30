@@ -344,13 +344,14 @@ export const Security = memo(() => {
 					)}
 					<Section
 						name={t("settings.security.sections.exportMasterKeys.name")}
-						info={t("settings.security.sections.exportMasterKeys.info")}
-						className="mt-10"
-						nameClassName={!account.account.didExportMasterKeys ? "text-red-500" : undefined}
-						subInfo={
-							!account.account.didExportMasterKeys ? t("settings.security.sections.exportMasterKeys.subInfo") : undefined
+						info={
+							!account.account.didExportMasterKeys
+								? t("settings.security.sections.exportMasterKeys.subInfo")
+								: t("settings.security.sections.exportMasterKeys.info")
 						}
-						subInfoClassName={!account.account.didExportMasterKeys ? "text-bold mt-4" : undefined}
+						className="mt-10"
+						infoClassName={!account.account.didExportMasterKeys ? "text-bold text-primary" : undefined}
+						nameClassName={!account.account.didExportMasterKeys ? "text-red-500" : undefined}
 					>
 						<div className="flex flex-row items-center gap-2">
 							{!account.account.didExportMasterKeys && (
