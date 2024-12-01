@@ -18,7 +18,7 @@ export default function useAccount(setupRefetchListener: boolean = true) {
 	const query = useQuery({
 		queryKey: ["useAccount"],
 		queryFn: () => Promise.all([worker.fetchAccount(), worker.fetchSettings()]),
-		refetchInterval: 30000,
+		refetchInterval: 15000,
 		refetchIntervalInBackground: true,
 		refetchOnReconnect: true,
 		refetchOnWindowFocus: true

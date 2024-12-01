@@ -518,16 +518,18 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 								disabled={changing || isSyncActive}
 							/>
 						</Section>
-						<Section
-							name={t("syncs.settings.sections.disableLocalTrash.name")}
-							info={t("syncs.settings.sections.disableLocalTrash.info")}
-						>
-							<Switch
-								checked={sync.localTrashDisabled}
-								onCheckedChange={toggleLocalTrashDisabled}
-								disabled={changing || isSyncActive}
-							/>
-						</Section>
+						{(sync.mode === "twoWay" || sync.mode === "cloudBackup" || sync.mode === "cloudToLocal") && (
+							<Section
+								name={t("syncs.settings.sections.disableLocalTrash.name")}
+								info={t("syncs.settings.sections.disableLocalTrash.info")}
+							>
+								<Switch
+									checked={sync.localTrashDisabled}
+									onCheckedChange={toggleLocalTrashDisabled}
+									disabled={changing || isSyncActive}
+								/>
+							</Section>
+						)}
 						<Section
 							name={t("syncs.settings.sections.name.name")}
 							info={t("syncs.settings.sections.name.info")}

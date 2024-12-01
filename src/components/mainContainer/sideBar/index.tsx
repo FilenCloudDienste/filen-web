@@ -21,15 +21,17 @@ export const SideBar = memo(() => {
 	const chatsUnreadCountQuery = useQuery({
 		queryKey: ["chatsUnreadCount"],
 		queryFn: () => worker.chatsUnreadCount(),
-		refetchInterval: 5000,
-		refetchIntervalInBackground: true
+		refetchInterval: 15000,
+		refetchIntervalInBackground: true,
+		refetchOnReconnect: true
 	})
 
 	const contactsRequestInCountQuery = useQuery({
 		queryKey: ["contactsRequestInCount"],
 		queryFn: () => worker.contactsRequestInCount(),
-		refetchInterval: 5000,
-		refetchIntervalInBackground: true
+		refetchInterval: 15000,
+		refetchIntervalInBackground: true,
+		refetchOnReconnect: true
 	})
 
 	const socketEventListener = useCallback(
