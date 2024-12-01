@@ -89,7 +89,7 @@
     },
     "reset": {
         "header": "Şifre sıfırlama",
-        "description": "Şifrenizi sıfırlamak için e-posta adresinizi, yeni şifrenizi girin ve ana anahtarlarınızı içe aktarın",
+        "description": "E-posta adresinizi, yeni şifrenizi girin ve ana anahtarınızı içe aktararak şifrenizi sıfırlayın",
         "importMasterKeys": "Anahtarı içe aktar",
         "masterKeysImported": "Anahtar içe aktarıldı",
         "masterKeysNotImported": "Hiç anahtar içe aktarılmadı",
@@ -394,7 +394,7 @@
         },
         "profile": {
             "memberSince": "{{since}} tarihinden beri üye",
-            "add": "Kişi talebi gönder",
+            "add": "İletişim talebi gönder",
             "block": "Engelle",
             "remove": "Kişilerden kaldır",
             "unblock": "Engeli kaldır"
@@ -417,7 +417,7 @@
                 "localBackup": "Yerel yedekleme",
                 "cloudToLocal": "Buluttan yerel",
                 "cloudBackup": "Bulut yedeklemesi",
-                "twoWayInfo": "Her iki yönde her eylemi yansıt",
+                "twoWayInfo": "Her eylemi her iki yönde de yansıtın",
                 "localToCloudInfo": "Yerel olarak yapılan her eylemi buluta yansıt, ancak bulut değişikliklerine asla müdahale etme",
                 "localBackupInfo": "Yalnızca verileri buluta yükle, hiçbir şeyi silme veya bulut değişikliklerine müdahale etme",
                 "cloudToLocalInfo": "Bulutta yapılan her eylemi yerelde yansıt, ancak yerel değişikliklere asla müdahale etme",
@@ -568,8 +568,8 @@
         },
         "chat": {
             "input": {
-                "selectFromDrive": "Sürücüyü seç",
-                "attachFiles": "Dosyaları ekle"
+                "selectFromDrive": "Sürücüden seç",
+                "attachFiles": "Masaüstünden dosya ekle"
             }
         },
         "chats": {
@@ -602,10 +602,10 @@
         "stop": "Durdur"
     },
     "chats": {
-        "newMessagesSince": "{{count}} yeni mesaj {{since}} tarihinden beri",
+        "newMessagesSince": "{{since}} tarihinden beri {{count}} yeni mesaj",
         "markAsRead": "Okundu olarak işaretle",
         "maxSizeReached": "Maksimum mesaj boyutu {{chars}} karakter ile sınırlıdır",
-        "newMessageSince": "{{count}} yeni mesaj {{since}} tarihinden beri",
+        "newMessageSince": "{{since}} tarihinden beri {{count}} yeni mesaj",
         "showParticipants": "Katılımcıları göster",
         "hideParticipants": "Katılımcıları gizle",
         "addParticipants": "Katılımcı ekle",
@@ -630,8 +630,8 @@
                 "minutesAgo": "{{minutes}} dakika önce",
                 "hourAgo": "{{hours}} saat önce",
                 "hoursAgo": "{{hours}} saat önce",
-                "todayAt": "Bugün {{date}}'de",
-                "yesterdayAt": "Dün {{date}}'de"
+                "todayAt": "Bugün {{date}} tarihinde",
+                "yesterdayAt": "Dün {{date}} tarihinde"
             },
             "edited": "Düzenlendi",
             "reply": "Yanıtla",
@@ -802,8 +802,8 @@
                     "info": "Bildirim sesini etkinleştir veya devre dışı bırak"
                 },
                 "contactNotifications": {
-                    "name": "Kişi bildirimleri",
-                    "info": "Kişi bildirimlerini etkinleştir veya devre dışı bırak"
+                    "name": "İletişim bildirimleri",
+                    "info": "İletişim bildirimlerini etkinleştir veya devre dışı bırak"
                 },
                 "theme": {
                     "name": "Tema",
@@ -814,8 +814,8 @@
                     "info": "Uygulama dilini değiştir"
                 },
                 "clearThumbnailCache": {
-                    "name": "Küçük resim önbelleği",
-                    "info": "Küçük resim önbelleğini temizle",
+                    "name": "Önizleme önbelleği",
+                    "info": "Önizleme önbelleğini temizle",
                     "action": "Temizle"
                 },
                 "logout": {
@@ -825,7 +825,7 @@
                 },
                 "minimizeToTray": {
                     "name": "Sistem tepsisine küçült",
-                    "info": "Filen'i pencereleri küçültmek yerine sistem tepsisine gizle"
+                    "info": "Filen'i simge durumuna küçültmek yerine sistem tepsisine gizle"
                 },
                 "autoLaunch": {
                     "name": "Otomatik başlat",
@@ -926,7 +926,7 @@
             "limited": "Sınırlı stok",
             "creditCard": "Kredi Kartı",
             "crypto": "Kripto para",
-            "legal1": "Bir plan satın alarak, iptal etmediğiniz sürece Filen'in her faturalandırma döneminde otomatik olarak ücretlendirilmesini yetkilendirmiş olursunuz. Hesabınız sayfanızdan istediğiniz zaman iptal edebilirsiniz. Kısmi iadeler yapılmaz.",
+            "legal1": "Bir plan satın alarak, siz iptal edene kadar Filen'in her fatura döneminde sizden otomatik olarak ücret almasına izin vermiş olursunuz. Hesabınız sayfanızdan istediğiniz zaman iptal edebilirsiniz. Kısmi iadeler yapılmaz.",
             "legal2": "Ayrıca otomatik olarak kabul edersiniz",
             "tos": "Hizmet Şartları",
             "and": "ve",
@@ -993,7 +993,7 @@
                     }
                 },
                 "lockPin": {
-                    "name": "Kilit PIN'i",
+                    "name": "PIN ile kilitle",
                     "info": "Uygulamayı kilitlemek için bir PIN ayarlayın",
                     "action": "Değiştir"
                 }
@@ -1254,8 +1254,8 @@
     },
     "notifications": {
         "chat": "Sohbet",
-        "contactRequest": "Kişi talebi",
-        "contactRequestInfo": "{{name}} size bir kişi talebi gönderdi"
+        "contactRequest": "İletişim talebi",
+        "contactRequestInfo": "{{name}} size bir iletişim talebi gönderdi"
     },
     "cookieConsent": {
         "description": "Bu site deneyiminizi ölçmek ve geliştirmek için çerezler kullanır.",
@@ -1273,7 +1273,7 @@
             "missingDepsLinux": "Ağ sürücüsünü kullanmak için sisteminizde FUSE3'ün yüklü olması gerekiyor.",
             "missingDepsInstructions": "Kurulum talimatları",
             "cacheUsed": "{{size}} kullanıldı",
-            "description": "Bulut sürücünüzü ağ sürücüsü olarak monte edin, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
+            "description": "Bulut sürücünüzü bir ağ sürücüsü olarak bağlayarak dosyalarınıza doğrudan bilgisayarınızdan erişmeyi ve yönetmeyi kolaylaştırın. Sorunsuz entegrasyonun, gerçek zamanlı senkronizasyonun ve verilerinize güvenli erişimin keyfini çıkarın, üstelik tüm bunları dosya gezgininizden yapın.",
             "unixDescription": "Bulut sürücünüzü yerel bir dizin içine monte edin, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
             "sudo": "Bulut sürücünüzü monte etmek ve kaldırmak için istemcinin yönetici haklarına ihtiyacı olabilir. Lütfen istendiğinde erişime izin verin.",
             "limitations": "Ağ sürücüsünde programların ve arşivlerin kurulumu, çalıştırılması veya açılması desteklenmez.",
@@ -1296,11 +1296,11 @@
                 },
                 "browse": {
                     "name": "Gözat",
-                    "info": "Ağ sürücüsünü varsayılan gezgininizle gözatın."
+                    "info": "Varsayılan dosya gezgininizi kullanarak ağ sürücüsüne göz atın"
                 },
                 "cache": {
                     "name": "Önbellek",
-                    "info": "Önbellekleme, ağ sürücünüzde göz atmayı önemli ölçüde hızlandırır."
+                    "info": "Önbelleğe alma, ağ sürücünüzde gezinmeyi önemli ölçüde hızlandırır"
                 },
                 "cacheSize": {
                     "name": "Önbellek boyutu",
@@ -1311,8 +1311,8 @@
                     "info": "Ağ sürücüsünün önbellek konumunu değiştirin. Yerel bir diskte olmalıdır. Değiştirilmezse varsayılan olarak uygulama kurulum dizinini kullanacaktır."
                 },
                 "readOnly": {
-                    "name": "Sadece okunur",
-                    "info": "Ağ sürücüsünü sadece okunur olarak monte et"
+                    "name": "Salt okunur",
+                    "info": "Ağ sürücüsünü salt okunur olarak bağlayın"
                 }
             },
             "dialogs": {
@@ -1511,9 +1511,9 @@
                     "info": "Senkronizasyon modunu değiştir"
                 },
                 "forceSync": {
-                    "name": "Zorla senkronizasyon",
-                    "info": "İçsel önbelleği sıfırlayın ve yerel ve bulut dizinini yeniden taramayı zorlayın",
-                    "forceSync": "Zorla senkronizasyon"
+                    "name": "Senkronizasyona zorla",
+                    "info": "Dahili önbelleği sıfırlayın ve yerel ve bulut dizinini yeniden taramayı zorlayın",
+                    "forceSync": "Senkronizasyona zorla"
                 },
                 "excludeDotFiles": {
                     "name": "Nokta dosyalarını hariç tut",
