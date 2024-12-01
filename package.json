@@ -1,7 +1,7 @@
 {
 	"name": "@filen/web",
 	"private": false,
-	"version": "0.1.75",
+	"version": "0.1.76",
 	"type": "module",
 	"description": "Filen Web & Desktop app",
 	"scripts": {
@@ -102,7 +102,7 @@
 		"use-debounce": "^10.0.0",
 		"use-double-tap": "^1.3.6",
 		"uuid": "^11.0.3",
-		"zustand": "^5.0.1"
+		"zustand": "^4.5.5"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.26.0",
