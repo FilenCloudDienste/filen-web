@@ -504,6 +504,8 @@
 			"deletePermanently": "Dauerhaft löschen",
 			"copyId": "ID kopieren",
 			"info": "Info",
+			"manageShareOut": "Freigabe verwalten",
+			"manageShareIn": "Freigabe löschen",
 			"dialogs": {
 				"trash": {
 					"title": "In den Papierkorb",

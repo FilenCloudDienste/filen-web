@@ -44,7 +44,8 @@ import {
 	RotateCcw,
 	Delete,
 	Copy,
-	Info
+	Info,
+	Gavel
 } from "lucide-react"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import { selectContacts } from "@/components/dialogs/selectContacts"
@@ -55,6 +56,7 @@ import { v4 as uuidv4 } from "uuid"
 import { type WorkerToMainMessage } from "@/lib/worker/types"
 import Input from "@/components/input"
 import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
+import worker from "@/lib/worker"
 
 const iconSize = 16
 
@@ -639,6 +641,54 @@ export const ContextMenu = memo(
 			eventEmitter.emit("openInfoDialog", item)
 		}, [item])
 
+		const manageShareOut = useCallback(() => {
+			if (isInsidePublicLink) {
+				return
+			}
+
+			eventEmitter.emit("openSharedWithDialog", item)
+		}, [item, isInsidePublicLink])
+
+		const removeShared = useCallback(
+			async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+				if (isInsidePublicLink) {
+					return
+				}
+
+				if (!e.shiftKey) {
+					if (
+						!(await showConfirmDialog({
+							title: t("sharedIn.dialogs.remove.title"),
+							continueButtonText: t("sharedIn.dialogs.remove.continue"),
+							description: t("sharedIn.dialogs.remove.description", {
+								item: item.name
+							}),
+							continueButtonVariant: "destructive"
+						}))
+					) {
+						return
+					}
+				}
+
+				const toast = loadingToast()
+
+				try {
+					await worker.removeSharedItem({ uuid: item.uuid })
+
+					if (location.includes("shared-in")) {
+						setItems(prev => prev.filter(itm => itm.uuid !== item.uuid))
+					}
+				} catch (e) {
+					console.error(e)
+
+					errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+				} finally {
+					toast.dismiss()
+				}
+			},
+			[errorToast, loadingToast, setItems, item.uuid, location, isInsidePublicLink, t, item.name]
+		)
+
 		const contextMenuContent = useMemo((): React.ReactNode => {
 			const groups: Record<string, React.ReactNode[]> = {}
 			const maxPreviewSize =
@@ -734,6 +784,38 @@ export const ContextMenu = memo(
 					>
 						<FolderOutput size={iconSize} />
 						{t("contextMenus.item.share")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (driveURLState.sharedOut && selectedItems.length === 1 && !driveURLState.publicLink) {
+				if (!groups["share"]) {
+					groups["share"] = []
+				}
+
+				groups["share"]!.push(
+					<ContextMenuItem
+						onClick={manageShareOut}
+						className="cursor-pointer gap-3"
+					>
+						<Gavel size={iconSize} />
+						{t("contextMenus.item.manageShareOut")}
+					</ContextMenuItem>
+				)
+			}
+
+			if (driveURLState.sharedIn && selectedItems.length === 1 && !driveURLState.publicLink) {
+				if (!groups["share"]) {
+					groups["share"] = []
+				}
+
+				groups["share"]!.push(
+					<ContextMenuItem
+						onClick={removeShared}
+						className="cursor-pointer gap-3"
+					>
+						<Gavel size={iconSize} />
+						{t("contextMenus.item.manageShareIn")}
 					</ContextMenuItem>
 				)
 			}
@@ -1007,7 +1089,9 @@ export const ContextMenu = memo(
 			deletePermanently,
 			trash,
 			isServiceWorkerOnline,
-			item
+			item,
+			manageShareOut,
+			removeShared
 		])
 
 		useEffect(() => {
