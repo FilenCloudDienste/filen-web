@@ -930,7 +930,8 @@
 				"active": "Active",
 				"waiting": "Waiting"
 			},
-			"cannotCancelTooEarly": "Subscriptions can only be cancelled 24 hours after the initial purchase."
+			"cannotCancelTooEarly": "Subscriptions can only be cancelled 24 hours after the initial purchase.",
+			"billingDetails": "Billing details"
 		},
 		"plans": {
 			"starter": "Starter",

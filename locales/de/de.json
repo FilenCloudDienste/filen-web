@@ -920,7 +920,8 @@
 				"active": "Aktiv",
 				"waiting": "Wartend"
 			},
-			"cannotCancelTooEarly": "Abonnements können nur 24 Stunden nach dem Erstkauf gekündigt werden."
+			"cannotCancelTooEarly": "Abonnements können nur 24 Stunden nach dem Erstkauf gekündigt werden.",
+			"billingDetails": "Zahlungsdetails"
 		},
 		"plans": {
 			"starter": "Starter",

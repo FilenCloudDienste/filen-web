@@ -182,6 +182,17 @@ export const Subscriptions = memo(() => {
 													{t("settings.subscriptions.cancel")}
 												</p>
 											)}
+										{subscription.gateway.includes("stripe") &&
+											!subscription.planName.toLowerCase().includes("lifetime") && (
+												<a
+													href="https://billing.stripe.com/p/login/6oE9Bl8Lxey0ayI9AA"
+													target="blank"
+												>
+													<p className="text-sm underline mt-3 cursor-pointer text-blue-500">
+														{t("settings.subscriptions.billingDetails")}
+													</p>
+												</a>
+											)}
 									</div>
 								</div>
 							</div>
