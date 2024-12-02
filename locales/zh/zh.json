@@ -928,7 +928,8 @@
 				"active": "激活",
 				"waiting": "等待中"
 			},
-			"cannotCancelTooEarly": "订阅只能在初次购买后的24小时内取消。"
+			"cannotCancelTooEarly": "订阅只能在初次购买后的24小时内取消。",
+			"billingDetails": "账单详情"
 		},
 		"plans": {
 			"starter": "初级",
