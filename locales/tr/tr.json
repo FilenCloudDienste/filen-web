@@ -1296,11 +1296,11 @@
                 },
                 "browse": {
                     "name": "Gözat",
-                    "info": "Varsayılan dosya gezgininizi kullanarak ağ sürücüsüne göz atın"
+                    "info": "Varsayılan dosya gezgininizi kullanarak ağ sürücüsüne göz atın."
                 },
                 "cache": {
                     "name": "Önbellek",
-                    "info": "Önbelleğe alma, ağ sürücünüzde gezinmeyi önemli ölçüde hızlandırır"
+                    "info": "Önbelleğe alma, ağ sürücünüzde gezinmeyi önemli ölçüde hızlandırır."
                 },
                 "cacheSize": {
                     "name": "Önbellek boyutu",
