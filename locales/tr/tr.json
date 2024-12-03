@@ -188,7 +188,7 @@
             "chats": "Sohbetler",
             "contacts": "Kişiler",
             "syncs": "Senkranizasyonlar",
-            "mounts": "Bağlantılar"
+            "mounts": "Bağlama noktaları"
         },
         "bottom": {
             "settings": "Ayarlar"
@@ -260,7 +260,7 @@
         "contacts": "Kişiler",
         "settings": "Ayarlar",
         "syncs": "Senkranizasyonlar",
-        "mounts": "Bağlantılar",
+        "mounts": "Bağlama noktaları",
         "terminal": "Terminal"
     },
     "dialogs": {
@@ -268,8 +268,8 @@
         "selectDriveItem": {
             "title": "Seç",
             "submit": "Seç",
-            "newFolder": "Yeni dizin",
-            "empty": "Henüz yüklenmiş dosya veya dizin yok",
+            "newFolder": "Yeni dosya",
+            "empty": "Henüz yüklenmiş dosya veya klasör yok",
             "selectRoot": "Bulut Sürücüsünü seç"
         },
         "selectContacts": {
@@ -293,7 +293,7 @@
             "expireNever": "Asla"
         },
         "sharedWith": {
-            "title": "Paylaşılan",
+            "title": "Bu kişilerle paylaşıldı",
             "add": "Ekle",
             "close": "Kapat",
             "remove": "Kaldır",
@@ -350,8 +350,8 @@
         },
         "noteParticipants": {
             "remove": "Kaldır",
-            "toggleReadPermissions": "Okuma izinlerini değiştir",
-            "toggleWritePermissions": "Yazma izinlerini değiştir",
+            "toggleReadPermissions": "Okuma izni ver",
+            "toggleWritePermissions": "Yazma izni ver",
             "title": "Katılımcılar",
             "close": "Kapat"
         },
@@ -459,7 +459,7 @@
         },
         "desktopUpdate": {
             "title": "Güncelleme mevcut",
-            "info": "Yeni bir sürüm ({{version}}) indirildi ve kurulmaya hazır. Güncellemek ister misiniz?",
+            "info": "Yeni sürüm ({{version}}) indirildi ve kurulmaya hazır. Güncellemek ister misiniz?",
             "dismiss": "Kapat",
             "update": "Güncelle",
             "installing": "Güncelleme kuruluyor, lütfen bu süreci kesmeyin!"
@@ -528,10 +528,10 @@
             }
         },
         "drive": {
-            "uploadFiles": "Dosyaları yükle",
-            "uploadFolders": "Dizinleri yükle",
+            "uploadFiles": "Dosya yükle",
+            "uploadFolders": "Klasör yükle",
             "newTextFile": "Yeni metin dosyası",
-            "newFolder": "Yeni dizin"
+            "newFolder": "Yeni klasör"
         },
         "notes": {
             "history": "Geçmiş",
@@ -545,7 +545,7 @@
             "export": "Dışa aktar",
             "exportAll": "Hepsini dışa aktar",
             "archive": "Arşivle",
-            "restore": "Geri yükle",
+            "restore": "Arşivden geri yükle",
             "trash": "Sil",
             "delete": "Sil",
             "rename": "Yeniden adlandır",
@@ -595,7 +595,7 @@
             "error": "Hata",
             "stopped": "Durduruldu",
             "paused": "Duraklatıldı",
-            "creatingDirectories": "Dizinler oluşturuluyor"
+            "creatingDirectories": "Klasör oluşturuluyor"
         },
         "pause": "Duraklat",
         "resume": "Devam ettir",
@@ -725,17 +725,17 @@
                 "continue": "Sil"
             },
             "deleteAll": {
-                "title": "Tüm dosyaları ve dizinleri sil",
-                "description": "Tüm dosyaları ve dizinleri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "title": "Tüm dosyaları ve klasörleri sil",
+                "description": "Tüm dosyaları ve klasörleri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
             "deleteAll2": {
-                "title": "Tüm dosyaları ve dizinleri sil",
+                "title": "Tüm dosyaları ve klasörleri sil",
                 "description": "Gerçekten emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
             "deleteAll3": {
-                "title": "Tüm dosyaları ve dizinleri sil",
+                "title": "Tüm dosyaları ve klasörleri sil",
                 "description": "Yüzde 100 emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
@@ -867,24 +867,24 @@
             "folderColorChanged": "{{name}} adlı öğenin rengi değiştirildi",
             "login": "Giriş yapıldı",
             "deleteVersioned": "Sürümlü dosyalar silindi",
-            "deleteAll": "Tüm dosyalar ve dizinler silindi",
+            "deleteAll": "Tüm dosyalar ve klasörler silindi",
             "deleteUnfinished": "Tamamlanmamış yüklemeler silindi",
             "trashEmptied": "Çöp kutusu boşaltıldı",
             "requestAccountDeletion": "Hesap silme talep edildi",
             "2faEnabled": "İki Faktörlü Kimlik Doğrulama etkinleştirildi",
             "2faDisabled": "İki Faktörlü Kimlik Doğrulama devre dışı bırakıldı",
-            "codeRedeemed": "Kod {{code}} kullanıldı",
+            "codeRedeemed": "{{code}} kodu kullanıldı",
             "emailChanged": "E-posta adresi {{email}} olarak değiştirildi",
             "passwordChanged": "Şifre değiştirildi",
-            "removedSharedInItems": "Paylaşılan {{count}} öğenin {{email}} adresi ile paylaşımı kaldırıldı",
-            "removedSharedOutItems": "{{email}} adresinin sizinle paylaştığı {{count}} öğe kaldırıldı",
-            "folderLinkEdited": "Dizin bağlantısı düzenlendi",
+            "removedSharedInItems": "{{email}} adresinin sizinle paylaştığı {{count}} öğenin paylaşımı kaldırıldı",
+            "removedSharedOutItems": "{{email}} adresi ile paylaşılan {{count}} öğenin paylaşımı kaldırıldı",
+            "folderLinkEdited": "Klasör bağlantısı düzenlendi",
             "itemFavoriteAdded": "{{name}} favorilere eklendi",
             "itemFavoriteRemoved": "{{name}} favorilerden çıkarıldı",
             "failedLogin": "Giriş başarısız",
             "deleteFolderPermanently": "{{name}} kalıcı olarak silindi",
             "deleteFilePermanently": "{{name}} kalıcı olarak silindi",
-            "emailChangeAttempt": "Bir e-posta değişikliği girişimi kaydedildi"
+            "emailChangeAttempt": "E-posta değişikliği girişimi kaydedildi"
         },
         "invoices": {
             "plan": "Plan",
@@ -1023,7 +1023,7 @@
                     "action": "Sil"
                 },
                 "all": {
-                    "name": "Tüm dosyalar ve dizinler",
+                    "name": "Tüm dosyalar ve klasörler",
                     "info": "Tüm dosyaları ve klasörleri sil",
                     "action": "Sil"
                 },
@@ -1086,17 +1086,17 @@
                 "invalidFileName": "Geçersiz dosya adı."
             },
             "createDirectory": {
-                "title": "Dizin oluştur",
+                "title": "Klasör oluştur",
                 "placeholder": "İsim",
                 "continue": "Oluştur",
-                "invalidDirectoryName": "Geçersiz dizin adı."
+                "invalidDirectoryName": "Geçersiz klasör adı."
             },
             "rename": {
                 "title": "Yeniden adlandır",
                 "placeholder": "Yeni isim",
                 "continue": "Yeniden adlandır",
                 "invalidFileName": "Geçersiz dosya adı.",
-                "invalidDirectoryName": "Geçersiz dizin adı."
+                "invalidDirectoryName": "Geçersiz klasör adı."
             },
             "share": {
                 "title": "Paylaş",
@@ -1111,16 +1111,16 @@
                 "info": "\"{{search}}\" için hiçbir şey bulunamadı"
             },
             "publicLink": {
-                "title": "Boş dizin",
-                "info": "Bu dizinin sahibi henüz içerisine dosya yüklemedi"
+                "title": "Boş klasör",
+                "info": "Bu klasörün sahibi henüz içerisine dosya yüklemedi"
             },
             "drive": {
-                "title": "Henüz yüklenmiş dosya veya dizin yok",
-                "info": "Dosyaları veya dizinleri buraya sürükleyip bırakın veya aşağıdaki düğmeye basın"
+                "title": "Henüz yüklenmiş dosya veya klasör yok",
+                "info": "Dosyaları veya klasörleri buraya sürükleyip bırakın veya aşağıdaki düğmeye basın"
             },
             "trash": {
                 "title": "Henüz çöp kutusunda bir şey yok",
-                "info": "Çöp kutusuna gönderilen dosyalar ve dizinler burada görünecektir"
+                "info": "Çöp kutusuna gönderilen dosyalar ve klasörler burada görünecektir"
             },
             "recents": {
                 "title": "Henüz yüklenmiş dosya yok",
@@ -1128,19 +1128,19 @@
             },
             "links": {
                 "title": "Henüz oluşturulmuş herkese açık bağlantı yok",
-                "info": "Dosya ve dizinlerin herkese açık bağlantıları burada görünecektir"
+                "info": "Dosya ve klasörlerin herkese açık bağlantıları burada görünecektir"
             },
             "favorites": {
                 "title": "Henüz favorilere eklenmiş bir şey yok",
-                "info": "Favori dosyalar ve dizinler burada görünecektir"
+                "info": "Favori dosyalar ve klasörler burada görünecektir"
             },
             "sharedIn": {
                 "title": "Henüz sizinle paylaşılan bir şey yok",
-                "info": "Paylaşılan dosyalar ve dizinler burada görünecektir"
+                "info": "Paylaşılan dosyalar ve klasörler burada görünecektir"
             },
             "sharedOut": {
                 "title": "Henüz başkalarıyla paylaşılan bir şey yok",
-                "info": "Paylaşılan dosyalar ve dizinler burada görünecektir"
+                "info": "Paylaşılan dosyalar ve klasörler burada görünecektir"
             }
         }
     },
@@ -1149,8 +1149,8 @@
         "invalidInfo": "Bu herkese açık bağlantı ya süresi dolmuş ya da mevcut değil",
         "back": "Geri dön",
         "directory": {
-            "downloadWholeDirectory": "Tüm dizini indir",
-            "downloadDirectory": "Dizini indir"
+            "downloadWholeDirectory": "Tüm klasörü indir",
+            "downloadDirectory": "Klasörü indir"
         },
         "sideBar": {
             "ad": {
@@ -1229,7 +1229,7 @@
         "dialogs": {
             "remove": {
                 "title": "Kaldır",
-                "description": "{{item}}'yi paylaşımlarınızdan kaldırmak istediğinizden emin misiniz? Artık buna erişiminiz olmayacak!",
+                "description": "Sizinle paylaşılan {{item}} adlı öğeyi kaldırmak istediğinizden emin misiniz? Artık buna erişiminiz olmayacak!",
                 "continue": "Kaldır"
             }
         }
@@ -1265,7 +1265,7 @@
     },
     "mounts": {
         "networkDrive": {
-            "mountedAt": "{{letter}}'de monte edildi",
+            "mountedAt": "{{letter}} konumuna bağlandı",
             "browse": "Gözat",
             "clear": "Temizle",
             "missingDeps": "Eksik bağımlılıklar",
@@ -1274,8 +1274,8 @@
             "missingDepsInstructions": "Kurulum talimatları",
             "cacheUsed": "{{size}} kullanıldı",
             "description": "Bulut sürücünüzü bir ağ sürücüsü olarak bağlayarak dosyalarınıza doğrudan bilgisayarınızdan erişmeyi ve yönetmeyi kolaylaştırın. Sorunsuz entegrasyonun, gerçek zamanlı senkronizasyonun ve verilerinize güvenli erişimin keyfini çıkarın, üstelik tüm bunları dosya gezgininizden yapın.",
-            "unixDescription": "Bulut sürücünüzü yerel bir dizin içine monte edin, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
-            "sudo": "Bulut sürücünüzü monte etmek ve kaldırmak için istemcinin yönetici haklarına ihtiyacı olabilir. Lütfen istendiğinde erişime izin verin.",
+            "unixDescription": "Bulut sürücünüzü yerel bir dizin içine bağlayın, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
+            "sudo": "Bulut sürücünüzü bağlamak ve kaldırmak için istemcinin yönetici haklarına ihtiyacı olabilir. Lütfen istendiğinde erişime izin verin.",
             "limitations": "Ağ sürücüsünde programların ve arşivlerin kurulumu, çalıştırılması veya açılması desteklenmez.",
             "sections": {
                 "active": {
@@ -1283,11 +1283,11 @@
                 },
                 "enabled": {
                     "name": "Etkin",
-                    "info": "Ağ sürücüsünü etkinleştir veya devre dışı bırak. Bu seçeneği değiştirirken gezgininizi yenileyin."
+                    "info": "Ağ sürücüsünü etkinleştir veya devre dışı bırak. Bu seçeneği değiştirirken dosya gezgininizi yenileyin."
                 },
                 "mountPoint": {
-                    "name": "Monte noktası",
-                    "info": "Monte noktasını yerel bir dizine ayarlayın. Yerel dizin boş, okunabilir ve yazılabilir olmalıdır.",
+                    "name": "Bağlama noktası",
+                    "info": "Bağlama noktasını yerel bir dizine ayarlayın. Yerel dizin boş, okunabilir ve yazılabilir olmalıdır.",
                     "change": "Değiştir"
                 },
                 "driveLetter": {
@@ -1328,10 +1328,10 @@
                 }
             },
             "errors": {
-                "invalidMountPoint": "Geçersiz monte noktası.",
-                "mountPointNotEmpty": "Monte noktası boş bir dizin olmalıdır.",
-                "pathNotInHomeDir": "Monte noktası, ev dizininiz içinde olmalıdır (/home/<kullanıcıAdınız>).",
-                "pathNotInUserDir": "Monte noktası, kullanıcı dizininiz içinde olmalıdır (/Users/<kullanıcıAdınız>).",
+                "invalidMountPoint": "Geçersiz bağlama noktası.",
+                "mountPointNotEmpty": "Bağlama noktası boş bir dizin olmalıdır.",
+                "pathNotInHomeDir": "Bağlama noktası, ev dizininiz içinde olmalıdır (/home/<kullanıcıAdınız>).",
+                "pathNotInUserDir": "Bağlama noktası, kullanıcı dizininiz içinde olmalıdır (/Users/<kullanıcıAdınız>).",
                 "invalidCachePath": "Önbellek konumu, en az 10 GB boş alana sahip bir dahili diskte olmalıdır.",
                 "cachePathNotReadableWritable": "Önbellek konumu okunabilir veya yazılabilir değildir.",
                 "invalidCachePathLength": "Önbellek konumu yolu çok uzundur."
