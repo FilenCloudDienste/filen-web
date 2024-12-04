@@ -19,8 +19,9 @@ import DocXPreview from "@/components/dialogs/previewDialog/docx"
 import VideoPreview from "@/components/dialogs/previewDialog/video"
 import useIsMobile from "@/hooks/useIsMobile"
 import AudioPreview from "@/components/dialogs/previewDialog/audio"
-import { MAX_PREVIEW_SIZE_WEB, MAX_PREVIEW_SIZE_SW } from "@/constants"
+import { MAX_PREVIEW_SIZE_WEB, MAX_PREVIEW_SIZE_SW, DESKTOP_HTTP_SERVER_PORT } from "@/constants"
 import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
+import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
 
 export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> & { size: number } }) => {
 	const filePublicLinkInfo = useFilePublicLinkInfo(info)
@@ -33,6 +34,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 	const [hidePreview, setHidePreview] = useState<boolean>(false)
 	const isMobile = useIsMobile()
 	const isServiceWorkerOnline = useIsServiceWorkerOnline()
+	const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
 
 	const downloadEnabled = useMemo(() => {
 		if (!filePublicLinkInfo.status) {
@@ -77,10 +79,10 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 			return null
 		}
 
-		return isServiceWorkerOnline && item.type === "file" && isFileStreamable(item.name, item.mime)
+		return (isServiceWorkerOnline || isDesktopHTTPServerOnline) && item.type === "file" && isFileStreamable(item.name, item.mime)
 			? MAX_PREVIEW_SIZE_SW
 			: MAX_PREVIEW_SIZE_WEB
-	}, [isServiceWorkerOnline, item])
+	}, [isServiceWorkerOnline, item, isDesktopHTTPServerOnline])
 
 	const previewType = useMemo(() => {
 		if (!item || urlState.hidePreview) {
@@ -244,7 +246,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 
 		try {
 			if (
-				isServiceWorkerOnline &&
+				(isServiceWorkerOnline || isDesktopHTTPServerOnline) &&
 				(previewType === "audio" || previewType === "video" || previewType === "image") &&
 				isFileStreamable(item.name, item.mime)
 			) {
@@ -263,7 +265,11 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 					"utf-8"
 				).toString("base64")
 
-				setURLObject(`${window.location.origin}/sw/stream?file=${encodeURIComponent(fileBase64)}`)
+				setURLObject(
+					isServiceWorkerOnline
+						? `${window.location.origin}/sw/stream?file=${encodeURIComponent(fileBase64)}`
+						: `http://localhost:${DESKTOP_HTTP_SERVER_PORT}/stream?file=${encodeURIComponent(fileBase64)}`
+				)
 
 				return
 			}
@@ -287,7 +293,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 		} catch (e) {
 			console.error(e)
 		}
-	}, [item, canLoadItem, maxPreviewSize, isServiceWorkerOnline])
+	}, [item, canLoadItem, maxPreviewSize, isServiceWorkerOnline, isDesktopHTTPServerOnline])
 
 	useEffect(() => {
 		if (item && canLoadItem && !didLoadItemRef.current) {

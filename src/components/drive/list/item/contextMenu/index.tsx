@@ -57,6 +57,7 @@ import { type WorkerToMainMessage } from "@/lib/worker/types"
 import Input from "@/components/input"
 import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
 import worker from "@/lib/worker"
+import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
 
 const iconSize = 16
 
@@ -97,6 +98,7 @@ export const ContextMenu = memo(
 		const successToast = useSuccessToast()
 		const publicLinkURLState = usePublicLinkURLState()
 		const isServiceWorkerOnline = useIsServiceWorkerOnline()
+		const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
 
 		const isInsidePublicLink = useMemo(() => {
 			return location.includes("/f/") || location.includes("/d/")
@@ -692,7 +694,7 @@ export const ContextMenu = memo(
 		const contextMenuContent = useMemo((): React.ReactNode => {
 			const groups: Record<string, React.ReactNode[]> = {}
 			const maxPreviewSize =
-				isServiceWorkerOnline && item.type === "file" && isFileStreamable(item.name, item.mime)
+				(isServiceWorkerOnline || isDesktopHTTPServerOnline) && item.type === "file" && isFileStreamable(item.name, item.mime)
 					? MAX_PREVIEW_SIZE_SW
 					: MAX_PREVIEW_SIZE_WEB
 
@@ -1091,7 +1093,8 @@ export const ContextMenu = memo(
 			isServiceWorkerOnline,
 			item,
 			manageShareOut,
-			removeShared
+			removeShared,
+			isDesktopHTTPServerOnline
 		])
 
 		useEffect(() => {

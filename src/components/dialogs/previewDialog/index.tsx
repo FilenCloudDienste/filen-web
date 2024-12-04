@@ -38,6 +38,7 @@ import { cn, isValidFileName } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import useErrorToast from "@/hooks/useErrorToast"
 import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
+import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
 
 const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
 
@@ -83,6 +84,7 @@ export const PreviewDialog = memo(() => {
 	const location = useLocation()
 	const errorToast = useErrorToast()
 	const isServiceWorkerOnline = useIsServiceWorkerOnline()
+	const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
 
 	const itemsOrdered = useMemo(() => {
 		if (!open) {
@@ -272,7 +274,7 @@ export const PreviewDialog = memo(() => {
 
 			const previewType = fileNameToPreviewType(itm.name)
 			const maxPreviewSize =
-				isServiceWorkerOnline && itm.type === "file" && isFileStreamable(itm.name, itm.mime)
+				(isServiceWorkerOnline || isDesktopHTTPServerOnline) && itm.type === "file" && isFileStreamable(itm.name, itm.mime)
 					? MAX_PREVIEW_SIZE_SW
 					: MAX_PREVIEW_SIZE_WEB
 
@@ -282,7 +284,7 @@ export const PreviewDialog = memo(() => {
 
 			try {
 				if (
-					isServiceWorkerOnline &&
+					(isServiceWorkerOnline || isDesktopHTTPServerOnline) &&
 					(previewType === "audio" || previewType === "video" || previewType === "image") &&
 					isFileStreamable(itm.name, itm.mime)
 				) {
@@ -333,7 +335,7 @@ export const PreviewDialog = memo(() => {
 				cleanup()
 			}
 		},
-		[cleanup, isServiceWorkerOnline]
+		[cleanup, isServiceWorkerOnline, isDesktopHTTPServerOnline]
 	)
 
 	const saveFile = useCallback(async () => {

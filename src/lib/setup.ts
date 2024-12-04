@@ -244,7 +244,7 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
 	await Promise.allSettled([
 		setItem(sdkConfigLocalStorageKey, initConfig),
 		setItem(desktopConfigLocalStorageKey, desktopConfig),
-		registerServiceWorker()
+		IS_DESKTOP ? Promise.resolve() : registerServiceWorker()
 	]).catch(console.error)
 
 	await Promise.all([worker.initializeSDK(initConfig), IS_DESKTOP ? window.desktopAPI.setConfig(desktopConfig) : Promise.resolve()])

@@ -8,7 +8,8 @@ export async function isDesktopHTTPServerOnline(): Promise<boolean> {
 				url: `http://localhost:${DESKTOP_HTTP_SERVER_PORT}/ping`,
 				expectedStatusCode: 200,
 				method: "GET",
-				timeout: 5000
+				timeout: 5000,
+				expectedBodyText: "pong"
 			})
 		: false
 }

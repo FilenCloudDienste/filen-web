@@ -28,6 +28,7 @@ import useDriveListColumnSize from "@/hooks/useDriveListColumnSize"
 import { useDoubleTap } from "use-double-tap"
 import useIsMobile from "@/hooks/useIsMobile"
 import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
+import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
 
 let draggedItems: DriveCloudItem[] = []
 
@@ -89,6 +90,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const driveListColumnSize = useDriveListColumnSize()
 	const isMobile = useIsMobile()
 	const isServiceWorkerOnline = useIsServiceWorkerOnline()
+	const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
 
 	const previewType = useMemo(() => {
 		return fileNameToPreviewType(item.name)
@@ -135,7 +137,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const onDoubleClick = useCallback(
 		(e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 			const maxPreviewSize =
-				isServiceWorkerOnline && item.type === "file" && isFileStreamable(item.name, item.mime)
+				(isServiceWorkerOnline || isDesktopHTTPServerOnline) && item.type === "file" && isFileStreamable(item.name, item.mime)
 					? MAX_PREVIEW_SIZE_SW
 					: MAX_PREVIEW_SIZE_WEB
 
@@ -191,7 +193,8 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 			navigating,
 			setSearch,
 			isServiceWorkerOnline,
-			triggerMoreIconContextMenu
+			triggerMoreIconContextMenu,
+			isDesktopHTTPServerOnline
 		]
 	)
 
