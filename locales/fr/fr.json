@@ -9,7 +9,7 @@
     "unknownUser": "Utilisateur inconnu",
     "login": {
         "header": "Connexion",
-        "description": "Saisir votre adresse e-mail et votre mot de passe ci-dessous pour vous connecter à votre compte",
+        "description": "Saisir ci-dessous votre adresse e-mail et votre mot de passe pour vous connecter à votre compte",
         "useTwoFactorRecoveryKey": "Utiliser la clé de récupération à la place",
         "buttons": {
             "login": "Connexion",
