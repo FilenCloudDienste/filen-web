@@ -17,7 +17,14 @@ import { type DirDownloadType } from "@filen/sdk/dist/types/api/v3/dir/download"
 import eventEmitter from "../eventEmitter"
 import { transfer } from "comlink"
 import { type CloudItemReceiver } from "@filen/sdk/dist/types/cloud"
-import { THUMBNAIL_VERSION, THUMBNAIL_QUALITY, THUMBNAIL_MAX_SIZE, REMOTE_CFG_NAME, DESKTOP_HTTP_SERVER_PORT } from "@/constants"
+import {
+	THUMBNAIL_VERSION,
+	THUMBNAIL_QUALITY,
+	THUMBNAIL_MAX_SIZE,
+	REMOTE_CFG_NAME,
+	DESKTOP_HTTP_SERVER_PORT,
+	IS_DESKTOP
+} from "@/constants"
 import pdfjsLib from "../pdfJS"
 import { type Note, type NoteType, type NoteTag } from "@filen/sdk/dist/types/api/v3/notes"
 import { simpleDate } from "@/utils"
@@ -1835,25 +1842,30 @@ export async function generateVideoThumbnail({ item }: { item: DriveCloudItem })
 		return fromDb
 	}
 
-	const [serviceWorkerOnline, desktopHTTPServerOnline] = await Promise.all([
-		httpHealthCheck({
-			url: `${window.origin}/sw/ping`,
-			expectedStatusCode: 200,
-			method: "GET",
-			timeout: 5000,
-			expectedBodyText: "OK"
-		}),
-		httpHealthCheck({
+	if (IS_DESKTOP) {
+		const desktopHTTPServerOnline = await httpHealthCheck({
 			url: `http://localhost:${DESKTOP_HTTP_SERVER_PORT}/ping`,
 			expectedStatusCode: 200,
 			method: "GET",
 			timeout: 5000,
 			expectedBodyText: "pong"
 		})
-	])
 
-	if (!serviceWorkerOnline && !desktopHTTPServerOnline) {
-		throw new Error("[generateVideoThumbnail] Service worker not available.")
+		if (!desktopHTTPServerOnline) {
+			throw new Error("[generateVideoThumbnail] HTTP server not available.")
+		}
+	} else {
+		const serviceWorkerOnline = await httpHealthCheck({
+			url: `${window.origin}/sw/ping`,
+			expectedStatusCode: 200,
+			method: "GET",
+			timeout: 5000,
+			expectedBodyText: "OK"
+		})
+
+		if (!serviceWorkerOnline) {
+			throw new Error("[generateVideoThumbnail] Service worker not available.")
+		}
 	}
 
 	if (!isFileStreamable(item.name, item.mime)) {
@@ -1879,7 +1891,8 @@ export async function generateVideoThumbnail({ item }: { item: DriveCloudItem })
 		).toString("base64")
 
 		const blob = await new Promise<Blob>((resolve, reject) => {
-			video.src = serviceWorkerOnline
+			video.crossOrigin = "anonymous"
+			video.src = !IS_DESKTOP
 				? `${window.location.origin}/sw/stream?file=${encodeURIComponent(fileBase64)}#t=0,5`
 				: `http://localhost:${DESKTOP_HTTP_SERVER_PORT}/stream?file=${encodeURIComponent(fileBase64)}#t=0,5`
 
