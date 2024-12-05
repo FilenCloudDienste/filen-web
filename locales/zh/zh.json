@@ -837,6 +837,10 @@
 					"name": "最小化到托盘",
 					"info": "将 Filen 隐藏在托盘中，而不是最小化窗口"
 				},
+				"startMinimized": {
+					"name": "启动时最小化",
+					"info": "启用或禁用启动时最小化"
+				},
 				"autoLaunch": {
 					"name": "自动启动",
 					"info": "系统启动时自动启动 Filen"
@@ -923,7 +927,9 @@
 				"cancelled": "已取消",
 				"active": "激活",
 				"waiting": "等待中"
-			}
+			},
+			"cannotCancelTooEarly": "订阅只能在初次购买后的24小时内取消。",
+			"billingDetails": "账单详情"
 		},
 		"plans": {
 			"starter": "初级",
@@ -1489,7 +1495,12 @@
 			"acquiringLock": "正在获取同步锁",
 			"gettingTrees": "正在读取本地和云端文件夹",
 			"remoteSmokeTestFailed": "无法读取云文件夹，因为它不存在或者您未连接到互联网",
-			"localSmokeTestFailed": "无法读取本地文件夹，要么该文件夹不存在，要么您没有读取或写入权限"
+			"localSmokeTestFailed": "无法读取本地文件夹，要么该文件夹不存在，要么您没有读取或写入权限",
+			"confirmDeletionBoth": "确认删除 {{previous}} 个文件和文件夹",
+			"confirmDeletionLocal": "确认删除 {{previous}} 个本地文件和文件夹",
+			"confirmDeletionRemote": "确认删除 {{previous}} 个远程文件和文件夹",
+			"confirm": "确认",
+			"restart": "重启"
 		},
 		"empty": {
 			"title": "尚未设置同步",
@@ -1542,6 +1553,15 @@
 				"disableLocalTrash": {
 					"name": "禁用本地回收站",
 					"info": "启用或禁用本地回收站。禁用后，客户端将永久删除文件或目录，而不是将其移动到本地同步路径内的本地回收站目录中"
+				},
+				"clearTransferEvents": {
+					"name": "清除事件",
+					"info": "清除本地存储的事件",
+					"clear": "清除"
+				},
+				"name": {
+					"name": "名称",
+					"info": "编辑同步名称"
 				}
 			}
 		},
@@ -1564,6 +1584,36 @@
 				"title": "删除问题",
 				"description": "您确定要删除此问题吗？请确保您已解决该问题或该问题只是暂时的，否则该问题最终会再次出现。",
 				"continue": "删除"
+			},
+			"clearTransferEvents": {
+				"title": "清除事件",
+				"description": "您确定要清除本地存储的事件吗？此操作无法撤消。",
+				"continue": "清除"
+			},
+			"name": {
+				"title": "编辑名称",
+				"placeholder": "名称",
+				"continue": "保存"
+			},
+			"confirmDeletionLocal": {
+				"title": "确认删除",
+				"description": "您确定吗？这会将所有 {{count}} 个文件和文件夹移到云端的回收站。此操作无法撤销",
+				"continue": "确认"
+			},
+			"confirmDeletionRemote": {
+				"title": "确认删除",
+				"description": "您确定吗？这会将所有 {{count}} 个文件和文件夹移到本地回收站。此操作无法撤销",
+				"continue": "确认"
+			},
+			"confirmDeletionBoth": {
+				"title": "确认删除",
+				"description": "您确定吗？这会将所有 {{count}} 个文件和文件夹移到本地和云端回收站。此操作无法撤销",
+				"continue": "确认"
+			},
+			"confirmDeletionRestart": {
+				"title": "重启同步",
+				"description": "如果您已手动恢复所有文件和文件夹，则可以重新启动同步。",
+				"continue": "重启"
 			}
 		},
 		"ignored": {
