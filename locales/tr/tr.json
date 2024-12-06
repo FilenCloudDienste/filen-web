@@ -364,14 +364,14 @@
             }
         },
         "noteHistory": {
-            "empty": "Henüz önceki not sürümü yok"
+            "empty": "Henüz not sürümü yok"
         },
         "previewDialog": {
             "save": "Kaydet",
             "readOnly": "Sadece okunur"
         },
         "transparentFullScreenImage": {
-            "openOriginal": "Orijinali aç"
+            "openOriginal": "Orjinali aç"
         },
         "report": {
             "title": "Kötüye kullanımı bildirin",
@@ -534,7 +534,7 @@
             "newFolder": "Yeni klasör"
         },
         "notes": {
-            "history": "Geçmiş",
+            "history": "Not geçmişi",
             "participants": "Katılımcılar",
             "type": "Tür",
             "pin": "Sabitle",
@@ -1212,7 +1212,7 @@
                 "continue": "Yeniden adlandır"
             },
             "leaveNote": {
-                "title": "Notu terk et",
+                "title": "Nottan ayrıl",
                 "description": "{{name}} adlı nottan ayrılmak istediğinizden emin misiniz? Artık bu nota erişiminiz olmayacak.",
                 "continue": "Ayrıl"
             }
