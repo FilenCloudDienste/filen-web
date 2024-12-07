@@ -1,5 +1,6 @@
 {
-    "cloudDrive": "Cloud Drive",
+<<<<<<< HEAD
+    "cloudDrive": "Stockage Cloud",
     "new": "Nouveau",
     "image": "Image",
     "empty": "Vide",
@@ -8,7 +9,7 @@
     "unknownUser": "Utilisateur inconnu",
     "login": {
         "header": "Connexion",
-        "description": "Entrez votre adresse email et votre mot de passe ci-dessous pour vous connecter à votre compte",
+        "description": "Saisir ci-dessous votre adresse e-mail et votre mot de passe pour vous connecter à votre compte",
         "useTwoFactorRecoveryKey": "Utiliser la clé de récupération à la place",
         "buttons": {
             "login": "Connexion",
@@ -17,13 +18,13 @@
         },
         "placeholders": {
             "normal": {
-                "email": "Adresse email",
+                "email": "Adresse e-mail",
                 "password": "Mot de passe",
                 "2faCode": "Code 2FA",
                 "2faRecoveryKey": "Clé de récupération"
             },
             "example": {
-                "email": "moi@exemple.com",
+                "email": "moi@exemple.fr",
                 "password": "****************",
                 "2faCode": "381740",
                 "2faRecoveryKey": "Clé de récupération"
@@ -33,11 +34,11 @@
             "forgotPassword": {
                 "title": "Mot de passe oublié",
                 "continue": "Envoyer les instructions",
-                "placeholder": "Adresse email"
+                "placeholder": "Adresse e-mail"
             }
         },
         "alerts": {
-            "emailOrPasswordWrong": "Email ou mot de passe incorrect",
+            "emailOrPasswordWrong": "E-mail ou mot de passe incorrect",
             "enter2FA": "Veuillez entrer votre code d'authentification à deux facteurs",
             "enter2FARecoveryKey": "Veuillez entrer votre clé de récupération 2FA",
             "forgotPasswordSent": "Les instructions de réinitialisation du mot de passe ont été envoyées à {{email}}"
@@ -45,10 +46,10 @@
     },
     "register": {
         "header": "Créer un compte",
-        "description": "Entrez votre adresse email et votre mot de passe ci-dessous pour créer un compte",
+        "description": "Saisir votre adresse e-mail et votre mot de passe ci-dessous pour créer un compte",
         "buttons": {
             "register": "Créer un compte",
-            "resendConfirmation": "Renvoyer l'email de confirmation",
+            "resendConfirmation": "Renvoyer l'e-mail de confirmation",
             "login": "Connexion"
         },
         "passwordStrength": {
@@ -59,48 +60,48 @@
         },
         "placeholders": {
             "normal": {
-                "email": "Adresse email",
+                "email": "Adresse e-mail",
                 "password": "Mot de passe",
                 "confirmPassword": "Confirmer le mot de passe"
             },
             "example": {
-                "email": "moi@exemple.com",
+                "email": "moi@exemple.fr",
                 "password": "****************",
                 "confirmPassword": "****************"
             }
         },
         "dialogs": {
             "confirmationSend": {
-                "title": "Renvoyer l'email de confirmation",
+                "title": "Renvoyer l'e-mail de confirmation",
                 "continue": "Envoyer",
-                "placeholder": "Adresse email"
+                "placeholder": "Adresse e-mail"
             }
         },
         "alerts": {
             "passwordWeak": "Le mot de passe choisi est trop faible",
-            "confirmationSent": "Email de confirmation envoyé à {{email}}",
+            "confirmationSent": "E-mail de confirmation envoyé à {{email}}",
             "passwordsNotMatching": "Les mots de passe ne correspondent pas",
             "success": {
                 "title": "Compte créé",
                 "continue": "Continuer",
-                "description": "Nous avons envoyé un email de confirmation à {{email}}. Veuillez cliquer sur le lien dans l'email pour confirmer votre inscription. Pensez à vérifier votre dossier spam."
+                "description": "Nous avons envoyé un e-mail de confirmation à {{email}}. Veuillez cliquer sur le lien dans l'e-mail pour confirmer votre inscription. Pensez à vérifier votre dossier spam."
             }
         }
     },
     "reset": {
         "header": "Réinitialiser le mot de passe",
-        "description": "Entrez votre adresse email, votre nouveau mot de passe et importez vos clés maîtresses pour réinitialiser votre mot de passe",
+        "description": "Saisir votre adresse e-mail, votre nouveau mot de passe et importez vos clés maîtres pour réinitialiser votre mot de passe",
         "importMasterKeys": "Importer les clés",
         "masterKeysImported": "Clés importées",
         "masterKeysNotImported": "Aucune clé importée",
         "placeholders": {
             "normal": {
-                "email": "Adresse email",
+                "email": "Adresse e-mail",
                 "password": "Mot de passe",
                 "confirmPassword": "Confirmer le mot de passe"
             },
             "example": {
-                "email": "moi@exemple.com",
+                "email": "moi@exemple.fr",
                 "password": "****************",
                 "confirmPassword": "****************"
             }
@@ -113,12 +114,12 @@
             "noMasterKeysImported": {
                 "title": "Réinitialiser le mot de passe",
                 "continue": "Je comprends",
-                "description": "Je comprends qu'en réinitialisant mon mot de passe sans mes clés maîtresses exportées, je rendrai toutes les données stockées sur mon compte inaccessibles en raison du fonctionnement du chiffrement de bout en bout à connaissance zéro."
+                "description": "Je comprends qu'en réinitialisant mon mot de passe sans avoir exporté mes clés maîtres, je rendrai toutes les données stockées sur mon compte inaccessibles en raison du fonctionnement du chiffrement de bout en bout à connaissance nulle."
             },
             "noMasterKeysImported2": {
                 "title": "Réinitialiser le mot de passe",
                 "continue": "Je suis sûr",
-                "description": "Êtes-vous sûr ? Vous êtes sur le point de supprimer toutes les données stockées sur votre compte si vous n'importez pas vos clés maîtresses. Vous pouvez simplement ignorer cet avertissement si vous n'avez pas votre fichier de clés maîtresses et souhaitez réinitialiser votre compte."
+                "description": "Êtes-vous sûr ? Vous êtes sur le point de supprimer toutes les données stockées sur votre compte si vous n'importez pas vos clés maîtres. Vous pouvez simplement ignorer cet avertissement si vous n'avez pas votre fichier de clés maîtres et souhaitez réinitialiser votre compte."
             },
             "noMasterKeysImported3": {
                 "title": "Réinitialiser le mot de passe",
@@ -127,12 +128,12 @@
             }
         },
         "alerts": {
-            "invalidMasterKeysFile": "Fichier de clés maîtresses invalide",
+            "invalidMasterKeysFile": "Fichier de clés maîtres invalide",
             "invalidMasterKeysFileWrongUserId": "Ces clés appartiennent à un autre compte",
-            "masterKeysImported": "Clés maîtresses importées",
+            "masterKeysImported": "Clés maîtres importées",
             "passwordWeak": "Le mot de passe choisi est trop faible",
             "passwordsNotMatching": "Les mots de passe ne correspondent pas",
-            "invalidMasterKeys": "Clés maîtresses invalides",
+            "invalidMasterKeys": "Clés maîtres invalides",
             "passwordChanged": "Mot de passe changé avec succès"
         }
     },
@@ -165,12 +166,12 @@
     },
     "topBar": {
         "breadcrumb": {
-            "cloudDrive": "Cloud Drive"
+            "cloudDrive": "Stockage Cloud"
         },
         "searchInThisFolder": "Rechercher dans ce répertoire...",
         "breadcrumbs": {
             "recents": "Récents",
-            "cloudDrive": "Cloud Drive",
+            "cloudDrive": "Stockage Cloud",
             "links": "Liens",
             "sharedWithMe": "Partagé avec moi",
             "sharedWithOthers": "Partagé avec d'autres",
@@ -178,8 +179,8 @@
             "trash": "Corbeille",
             "directory": "Répertoire"
         },
-        "listView": "Vue en liste",
-        "gridView": "Vue en grille"
+        "listView": "Vue en mode liste",
+        "gridView": "Vue en mode grille"
     },
     "innerSideBar": {
         "top": {
@@ -214,7 +215,7 @@
             "emptySearch": "Aucun résultat pour \"{{search}}\""
         },
         "recents": "Récents",
-        "cloudDrive": "Cloud Drive",
+        "cloudDrive": "Stockage Cloud",
         "links": "Liens",
         "sharedWithMe": "Partagé avec moi",
         "sharedWithOthers": "Partagé avec d'autres",
@@ -228,7 +229,7 @@
             "events": "Événements",
             "security": "Sécurité",
             "invite": "Inviter",
-            "plans": "Plans"
+            "plans": "Tarifs"
         },
         "contacts": {
             "online": "En ligne",
@@ -253,7 +254,7 @@
         }
     },
     "sideBar": {
-        "cloudDrive": "Cloud Drive",
+        "cloudDrive": "Stockage Cloud",
         "transfers": "Transferts",
         "notes": "Notes",
         "chats": "Discussions",
@@ -304,16 +305,16 @@
             }
         },
         "changeEmail": {
-            "title": "Changer votre adresse email",
-            "newEmail": "Nouvelle adresse email",
-            "newEmailPlaceholder": "Nouvel email",
-            "confirmNewEmail": "Confirmer la nouvelle adresse email",
-            "confirmNewEmailPlaceholder": "Confirmer le nouvel email",
+            "title": "Changer votre adresse e-mail",
+            "newEmail": "Nouvelle adresse e-mail",
+            "newEmailPlaceholder": "Nouvel e-mail",
+            "confirmNewEmail": "Confirmer la nouvelle adresse e-mail",
+            "confirmNewEmailPlaceholder": "Confirmer le nouvel e-mail",
             "password": "Votre mot de passe",
             "passwordPlaceholder": "Mot de passe",
             "close": "Fermer",
             "save": "Sauvegarder",
-            "successToast": "Votre adresse email a été changée avec succès"
+            "successToast": "Votre adresse e-mail a été changée avec succès"
         },
         "changePassword": {
             "title": "Changer votre mot de passe",
@@ -375,8 +376,8 @@
         },
         "report": {
             "title": "Signaler un abus",
-            "email": "Adresse email",
-            "emailPlaceholder": "Adresse email",
+            "email": "Adresse e-mail",
+            "emailPlaceholder": "Adresse e-mail",
             "comment": "Commentaire",
             "commentPlaceholder": "Veuillez nous fournir tous les détails nécessaires afin que nous puissions prendre des mesures appropriées dès que possible (facultatif)",
             "reason": "Raison",
@@ -384,7 +385,7 @@
             "send": "Envoyer",
             "successToast": "Rapport d'abus envoyé",
             "reasons": {
-                "cp": "Matériel d'abus sexuel sur enfant",
+                "cp": "Abus sexuel sur enfant",
                 "dmca": "Violation de droits d'auteur",
                 "stolen": "Données volées",
                 "other": "Autre",
@@ -466,7 +467,7 @@
         },
         "storage": {
             "title": "Espace de stockage insuffisant",
-            "info": "Vous n'avez pas suffisamment d'espace de stockage disponible. Pour pouvoir téléverser davantage de fichiers, vous devez acheter un plan. Tous les plans cumulent l'espace de stockage. Vous pouvez vous abonner à autant de plans que vous le souhaitez.",
+            "info": "Vous n'avez pas suffisamment d'espace de stockage disponible. Pour pouvoir charger davantage de fichiers, vous devez acheter un plan. Tous les plans cumulent l'espace de stockage. Vous pouvez vous abonner à autant de plans que vous le souhaitez.",
             "dismiss": "Ignorer",
             "upgrade": "Mettre à niveau"
         },
@@ -474,8 +475,8 @@
             "title": "Événement"
         },
         "exportReminder": {
-            "title": "Exporter les clés maîtresses",
-            "description": "Veuillez exporter vos clés maîtresses et les stocker dans un endroit sûr. Vous avez besoin de vos clés maîtresses pour réinitialiser votre mot de passe et éviter la perte de données. Vous devez exporter vos clés maîtresses à chaque fois que vous changez de mot de passe.",
+            "title": "Exporter les clés maîtres",
+            "description": "Veuillez exporter vos clés maîtres et les stocker dans un endroit sûr. Vous avez besoin de ce clés pour réinitialiser votre mot de passe et éviter la perte de données. Vous devez les exporter à chaque fois que vous changez de mot de passe.",
             "continue": "Exporter",
             "dismiss": "Ignorer"
         }
@@ -498,7 +499,7 @@
             "remove": "Supprimer",
             "stopSharing": "Arrêter le partage",
             "selectDestination": "Sélectionner la destination",
-            "cloudDrive": "Cloud Drive",
+            "cloudDrive": "Stockage Cloud",
             "open": "Ouvrir",
             "color": "Couleur",
             "deletePermanently": "Supprimer définitivement",
@@ -528,8 +529,8 @@
             }
         },
         "drive": {
-            "uploadFiles": "Téléverser des fichiers",
-            "uploadFolders": "Téléverser des répertoires",
+            "uploadFiles": "Charger des fichiers",
+            "uploadFolders": "Charger des répertoires",
             "newTextFile": "Nouveau fichier texte",
             "newFolder": "Nouveau répertoire"
         },
@@ -616,7 +617,7 @@
             "create": "Créer"
         },
         "header": {
-            "title": "Chat chiffré de bout en bout",
+            "title": "Tchat chiffré de bout en bout",
             "description": "Filen sécurise chaque discussion avec un chiffrement de bout en bout à connaissance zéro par défaut.",
             "feature1": "Seuls les membres de la discussion peuvent déchiffrer et lire le contenu",
             "feature2": "Le système garantit que les données reçues proviennent bien de l'utilisateur affiché et n'ont pas été modifiées"
@@ -712,7 +713,7 @@
             },
             "sendRequest": {
                 "title": "Envoyer une demande de contact",
-                "placeholder": "Adresse email d'un utilisateur Filen",
+                "placeholder": "Adresse e-mail d'un utilisateur Filen",
                 "continue": "Envoyer"
             }
         }
@@ -847,7 +848,7 @@
         },
         "events": {
             "empty": "Aucun événement pour le moment",
-            "fileUploaded": "{{name}} téléversé",
+            "fileUploaded": "{{name}} chargé",
             "fileVersioned": "{{name}} versionné",
             "versionedFileRestored": "{{name}} restauré depuis les versions de fichier",
             "fileMoved": "{{name}} déplacé",
@@ -868,13 +869,13 @@
             "login": "Connexion",
             "deleteVersioned": "Fichiers versionnés supprimés",
             "deleteAll": "Tous les fichiers et répertoires supprimés",
-            "deleteUnfinished": "Téléversements inachevés supprimés",
+            "deleteUnfinished": "Chargements inachevés supprimés",
             "trashEmptied": "Corbeille vidée",
             "requestAccountDeletion": "Demande de suppression de compte",
             "2faEnabled": "Authentification à deux facteurs activée",
             "2faDisabled": "Authentification à deux facteurs désactivée",
             "codeRedeemed": "Code {{code}} utilisé",
-            "emailChanged": "Adresse email changée en {{email}}",
+            "emailChanged": "Adresse e-mail changée en {{email}}",
             "passwordChanged": "Mot de passe changé",
             "removedSharedInItems": "{{count}} éléments partagés de {{email}} retirés",
             "removedSharedOutItems": "{{count}} éléments partagés avec {{email}} retirés",
@@ -908,7 +909,7 @@
             "storage": "Stockage",
             "moreInfo": "Plus d'informations sur votre abonnement",
             "paymentMethod": "Méthode de paiement",
-            "info": "{{storage}} de stockage avec téléversements, téléchargements, notes et discussions illimités. Débloquez le plein potentiel de Filen.",
+            "info": "{{storage}} de stockage avec chargements, téléchargements, notes et discussions illimités. Débloquez le plein potentiel de Filen.",
             "statuses": {
                 "cancelled": "Annulé",
                 "active": "Actif",
@@ -934,7 +935,7 @@
             "features": {
                 "free": {
                     "1": "Bande passante illimitée",
-                    "2": "Téléversements illimités",
+                    "2": "Chargements illimités",
                     "3": "Chiffrement côté client",
                     "4": "Technologie à connaissance zéro",
                     "5": "Synchronisation",
@@ -945,7 +946,7 @@
                 },
                 "pro": {
                     "1": "Bande passante illimitée",
-                    "2": "Téléversements illimités",
+                    "2": "Chargements illimités",
                     "3": "Chiffrement côté client",
                     "4": "Technologie à connaissance zéro",
                     "5": "Synchronisation",
@@ -968,10 +969,10 @@
                     "info": "Activer ou désactiver l'authentification à deux facteurs"
                 },
                 "exportMasterKeys": {
-                    "name": "Exporter les clés maîtresses",
-                    "info": "Exporter vos clés maîtresses afin de pouvoir restaurer votre compte en cas de réinitialisation de votre mot de passe. Vous devez exporter vos clés maîtresses à chaque fois que vous changez de mot de passe.",
+                    "name": "Exporter les clés maîtres",
+                    "info": "Exporter vos clés maîtres afin de pouvoir restaurer votre compte en cas de réinitialisation de votre mot de passe. Vous devez exporter vos clés maîtres à chaque fois que vous changez de mot de passe.",
                     "action": "Exporter",
-                    "subInfo": "Veuillez exporter vos clés maîtresses et les stocker dans un endroit sûr. Vous en aurez besoin pour réinitialiser votre mot de passe afin d'éviter toute perte de données. Vous devez les exporter à chaque changement de mot de passe."
+                    "subInfo": "Veuillez exporter vos clés maîtres et les stocker dans un endroit sûr. Vous en aurez besoin pour réinitialiser votre mot de passe afin d'éviter toute perte de données. Vous devez les exporter à chaque changement de mot de passe."
                 },
                 "lockTimeout": {
                     "name": "Verrouillage de l'application",
@@ -1028,8 +1029,8 @@
                     "action": "Supprimer"
                 },
                 "email": {
-                    "name": "Adresse email",
-                    "info": "Modifier votre adresse email",
+                    "name": "Adresse e-mail",
+                    "info": "Modifier votre adresse e-mail",
                     "action": "Modifier"
                 },
                 "nickName": {
@@ -1100,22 +1101,22 @@
             },
             "share": {
                 "title": "Partager",
-                "placeholder": "Adresse email d'un utilisateur Filen",
+                "placeholder": "Adresse e-mail d'un utilisateur Filen",
                 "continue": "Partager"
             }
         },
         "emptyPlaceholder": {
-            "uploadFiles": "Téléverser des fichiers",
+            "uploadFiles": "Charger des fichiers",
             "search": {
                 "title": "Rechercher",
                 "info": "Aucun résultat pour \"{{search}}\""
             },
             "publicLink": {
                 "title": "Répertoire vide",
-                "info": "Le propriétaire de ce répertoire n'a pas encore téléversé de fichiers"
+                "info": "Le propriétaire de ce répertoire n'a pas encore chargé de fichiers"
             },
             "drive": {
-                "title": "Aucun fichier ou répertoire téléversé pour le moment",
+                "title": "Aucun fichier ou répertoire chargé pour le moment",
                 "info": "Glissez-déposez des fichiers ou répertoires ici ou appuyez sur le bouton ci-dessous"
             },
             "trash": {
@@ -1123,8 +1124,8 @@
                 "info": "Les fichiers et répertoires envoyés à la corbeille apparaîtront ici"
             },
             "recents": {
-                "title": "Aucun fichier téléversé pour le moment",
-                "info": "Les fichiers récemment téléversés apparaîtront ici"
+                "title": "Aucun fichier chargé pour le moment",
+                "info": "Les fichiers récemment chargés apparaîtront ici"
             },
             "links": {
                 "title": "Aucun lien public créé pour le moment",
@@ -1273,9 +1274,9 @@
             "missingDepsLinux": "Pour utiliser le lecteur réseau, vous devez avoir FUSE3 installé sur votre système.",
             "missingDepsInstructions": "Instructions d'installation",
             "cacheUsed": "{{size}} utilisé",
-            "description": "Montez votre disque cloud comme un lecteur réseau, ce qui facilite l'accès et la gestion de vos fichiers directement depuis votre ordinateur. Profitez d'une intégration fluide, d'une synchronisation en temps réel et d'un accès sécurisé à vos données, le tout dans votre explorateur de fichiers habituel.",
-            "unixDescription": "Montez votre disque cloud dans un répertoire local, ce qui facilite l'accès et la gestion de vos fichiers directement depuis votre ordinateur. Profitez d'une intégration fluide, d'une synchronisation en temps réel et d'un accès sécurisé à vos données, le tout dans votre explorateur de fichiers habituel.",
-            "sudo": "Pour monter et démonter votre disque cloud, le client peut avoir besoin de droits administrateur. Veuillez autoriser l'accès lorsque vous y êtes invité.",
+            "description": "Montez votre espace de stockage cloud comme un lecteur réseau, ce qui facilite l'accès et la gestion de vos fichiers directement depuis votre ordinateur. Profitez d'une intégration fluide, d'une synchronisation en temps réel et d'un accès sécurisé à vos données, le tout dans votre explorateur de fichiers habituel.",
+            "unixDescription": "Montez votre espace de stockage cloud dans un répertoire local, ce qui facilite l'accès et la gestion de vos fichiers directement depuis votre ordinateur. Profitez d'une intégration fluide, d'une synchronisation en temps réel et d'un accès sécurisé à vos données, le tout dans votre explorateur de fichiers habituel.",
+            "sudo": "Pour monter et démonter votre espace de stockage cloud, le client peut avoir besoin de droits administrateur. Veuillez autoriser l'accès lorsque vous y êtes invité.",
             "limitations": "L'installation, l'exécution ou l'extraction de programmes et d'archives sur le lecteur réseau n'est pas prise en charge.",
             "sections": {
                 "active": {
@@ -1337,10 +1338,10 @@
                 "invalidCachePathLength": "Le chemin d'emplacement du cache est trop long."
             },
             "transfers": {
-                "uploading": "Téléversement de {{total}} fichier en arrière-plan",
-                "uploadingPlural": "Téléversement de {{total}} fichiers en arrière-plan",
-                "uploadingSpeed": "Téléversement de {{total}} fichier en arrière-plan à {{speed}}",
-                "uploadingPluralSpeed": "Téléversement de {{total}} fichiers en arrière-plan à {{speed}}",
+                "uploading": "Chargement de {{total}} fichier en arrière-plan",
+                "uploadingPlural": "Chargement de {{total}} fichiers en arrière-plan",
+                "uploadingSpeed": "Chargement de {{total}} fichier en arrière-plan à {{speed}}",
+                "uploadingPluralSpeed": "Chargement de {{total}} fichiers en arrière-plan à {{speed}}",
                 "everythingUploaded": "Tout est synchronisé"
             }
         },
@@ -1491,7 +1492,7 @@
             "deleteLocalFile": "{{name}} supprimé localement",
             "deleteRemoteFile": "{{name}} supprimé dans le cloud",
             "download": "{{name}} téléchargé depuis le cloud",
-            "upload": "{{name}} téléversé dans le cloud",
+            "upload": "{{name}} chargé dans le cloud",
             "renameLocalFile": "{{name}} renommé localement",
             "renameRemoteFile": "{{name}} renommé dans le cloud"
         },
@@ -1626,3 +1627,150 @@
         "infoSub": "Merci pour votre patience ! Nous travaillons dur en coulisses pour vous apporter de nouvelles fonctionnalités. Restez à l'écoute !"
     }
 }
+=======
+	"cloudDrive": "Cloud Drive",
+	"login": {
+		"header": "Connexion",
+		"description": "Saisir ci-dessous votre e-mail et mot de passe pour vous connecter à votre compte",
+		"useTwoFactorRecoveryKey": "Utilisez plutôt la clé de récupération",
+		"buttons": {
+			"login": "Connexion",
+			"createAccount": "Créer un compte",
+			"forgotPassword": "Mot de passe oublié ?"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "Adresse e-mail",
+				"password": "Mot de passe",
+				"2faCode": "Code 2FA",
+				"2faRecoveryKey": "Clé de récupération"
+			},
+			"example": {
+				"email": "moi@example.fr",
+				"password": "****************",
+				"2faCode": "381740",
+				"2faRecoveryKey": "Clé de récupération"
+			}
+		},
+		"alerts": {
+			"emailOrPasswordWrong": "E-mail ou mot de passe incorrect",
+			"enter2FA": "Veuillez saisir votre code d'authentification à deux facteurs",
+			"enter2FARecoveryKey": "Veuillez saisir votre clé de récupération à deux facteurs"
+		}
+	},
+	"auth": {
+		"footer": {
+			"tos": "Conditions d'utilisation",
+			"privacy": "Confidentialité"
+		}
+	},
+	"api": {
+		"errors": {
+			"invalid_params": "Paramètres incorrects",
+			"internal_error": "Erreur interne",
+			"rate_limited": "Vitesse limitée"
+		}
+	},
+	"topbar": {
+		"placeholders": {
+			"normal": {
+				"search": "Rechercher dans ce dossier..."
+			},
+			"example": {
+				"search": "Rechercher dans ce dossier..."
+			}
+		}
+	},
+	"dropZone": {
+		"cta": "Charger ici"
+	},
+	"topBar": {
+		"breadcrumb": {
+			"cloudDrive": "Cloud Drive"
+		},
+		"searchInThisFolder": "Rechercher dans ce dossier...",
+		"breadcrumbs": {
+			"recents": "Récents",
+			"cloudDrive": "Cloud Drive",
+			"links": "Liens",
+			"sharedWithMe": "Partagé avec moi",
+			"sharedWithOthers": "Partagé avec d'autres",
+			"favorites": "Favoris",
+			"trash": "Corbeille",
+			"directory": "Dossier"
+		}
+	},
+	"innerSideBar": {
+		"recents": "Récents",
+		"cloudDrive": "Cloud Drive",
+		"links": "Liens",
+		"sharedWithMe": "Partagé avec moi",
+		"sharedWithOthers": "Partagé avec d'autres",
+		"favorites": "Favoris",
+		"trash": "Corbeille",
+		"settings": {
+			"general": "Général"
+		}
+	},
+	"sideBar": {
+		"cloudDrive": "Cloud Drive",
+		"transfers": "Transferts",
+		"notes": "Notes",
+		"chats": "Conversations",
+		"contacts": "Contacts",
+		"settings": "Réglages",
+		"syncs": "Synchros"
+	},
+	"dialogs": {
+		"cancel": "Annuler",
+		"selectDriveDestination": {
+			"title": "Sélectionner la destination",
+			"submit": "Sélectionner",
+			"newFolder": "Nouveau dossier"
+		}
+	},
+	"contextMenus": {
+		"item": {
+			"download": "Télécharger",
+			"publicLink": "Lien public",
+			"share": "PArtager",
+			"versions": "Versions",
+			"favorite": "Favoris",
+			"unfavorite": "Non favoris",
+			"rename": "Renommer",
+			"move": "Déplacer",
+			"trash": "Corbeille",
+			"restore": "Restaurer",
+			"preview": "Prévisualiser",
+			"edit": "Editer",
+			"remove": "Supprimer",
+			"stopSharing": "Stopper le partage",
+			"selectDestination": "Sélectionner la destination",
+			"cloudDrive": "Cloud Drive",
+			"open": "Ouvrir"
+		},
+		"drive": {
+			"uploadFiles": "Charger des fichiers",
+			"uploadFolders": "Charger des dossiers",
+			"newTextFile": "Nouveau fichier texte",
+			"newFolder": "Nouveau dossier"
+		}
+	},
+	"transfers": {
+		"title": "Transferts",
+		"remaining": "Environ {{time}} restantes",
+		"noActiveTransfers": "Aucun transfert actif",
+		"state": {
+			"finished": "Terminé",
+			"queued": "En attente",
+			"started": "Démarré",
+			"error": "Erreur",
+			"stopped": "Arreté",
+			"paused": "En pause"
+		},
+		"pause": "Pause",
+		"resume": "Reprendre",
+		"stop": "Arreter"
+	}
+}
+>>>>>>> b4e5004a98dfed78f95995bdbb61991d8e498d89
