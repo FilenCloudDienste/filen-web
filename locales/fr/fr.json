@@ -114,12 +114,12 @@
             "noMasterKeysImported": {
                 "title": "Réinitialiser le mot de passe",
                 "continue": "Je comprends",
-                "description": "Je comprends qu'en réinitialisant mon mot de passe sans mes clés maîtresses exportées, je rendrai toutes les données stockées sur mon compte inaccessibles en raison du fonctionnement du chiffrement de bout en bout à connaissance zéro."
+                "description": "Je comprends qu'en réinitialisant mon mot de passe sans avoir exporté mes clés maîtres, je rendrai toutes les données stockées sur mon compte inaccessibles en raison du fonctionnement du chiffrement de bout en bout à connaissance nulle."
             },
             "noMasterKeysImported2": {
                 "title": "Réinitialiser le mot de passe",
                 "continue": "Je suis sûr",
-                "description": "Êtes-vous sûr ? Vous êtes sur le point de supprimer toutes les données stockées sur votre compte si vous n'importez pas vos clés maîtresses. Vous pouvez simplement ignorer cet avertissement si vous n'avez pas votre fichier de clés maîtresses et souhaitez réinitialiser votre compte."
+                "description": "Êtes-vous sûr ? Vous êtes sur le point de supprimer toutes les données stockées sur votre compte si vous n'importez pas vos clés maîtres. Vous pouvez simplement ignorer cet avertissement si vous n'avez pas votre fichier de clés maîtres et souhaitez réinitialiser votre compte."
             },
             "noMasterKeysImported3": {
                 "title": "Réinitialiser le mot de passe",
@@ -475,7 +475,7 @@
             "title": "Événement"
         },
         "exportReminder": {
-            "title": "Exporter les clés maîtresses",
+            "title": "Exporter les clés maîtres",
             "description": "Veuillez exporter vos clés maîtres et les stocker dans un endroit sûr. Vous avez besoin de ce clés pour réinitialiser votre mot de passe et éviter la perte de données. Vous devez les exporter à chaque fois que vous changez de mot de passe.",
             "continue": "Exporter",
             "dismiss": "Ignorer"
@@ -970,7 +970,7 @@
                 },
                 "exportMasterKeys": {
                     "name": "Exporter les clés maîtres",
-                    "info": "Exporter vos clés maîtres afin de pouvoir restaurer votre compte en cas de réinitialisation de votre mot de passe. Vous devez exporter vos clés maîtresses à chaque fois que vous changez de mot de passe.",
+                    "info": "Exporter vos clés maîtres afin de pouvoir restaurer votre compte en cas de réinitialisation de votre mot de passe. Vous devez exporter vos clés maîtres à chaque fois que vous changez de mot de passe.",
                     "action": "Exporter",
                     "subInfo": "Veuillez exporter vos clés maîtres et les stocker dans un endroit sûr. Vous en aurez besoin pour réinitialiser votre mot de passe afin d'éviter toute perte de données. Vous devez les exporter à chaque changement de mot de passe."
                 },
