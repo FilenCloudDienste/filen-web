@@ -514,6 +514,8 @@
 			"deletePermanently": "永久删除",
 			"copyId": "复制 ID",
 			"info": "详情",
+			"manageShareOut": "管理共享",
+			"manageShareIn": "移除共享",
 			"dialogs": {
 				"trash": {
 					"title": "回收",
@@ -605,7 +607,8 @@
 			"error": "出错啦",
 			"stopped": "已停止",
 			"paused": "已暂停",
-			"creatingDirectories": "正在创建文件夹"
+			"creatingDirectories": "正在创建文件夹",
+			"finishing": "整理中"
 		},
 		"pause": "暂停",
 		"resume": "开始",
