@@ -607,7 +607,8 @@
 			"error": "Error",
 			"stopped": "Stopped",
 			"paused": "Paused",
-			"creatingDirectories": "Creating directories"
+			"creatingDirectories": "Creating directories",
+			"finishing": "Finishing"
 		},
 		"pause": "Pause",
 		"resume": "Resume",

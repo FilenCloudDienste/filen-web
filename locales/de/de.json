@@ -597,7 +597,8 @@
 			"error": "Fehler",
 			"stopped": "Gestoppt",
 			"paused": "Pausiert",
-			"creatingDirectories": "Verzeichnisse werden erstellt"
+			"creatingDirectories": "Verzeichnisse werden erstellt",
+			"finishing": "Fertigstellung"
 		},
 		"pause": "Pausieren",
 		"resume": "Fortsetzen",

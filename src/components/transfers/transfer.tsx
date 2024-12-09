@@ -138,7 +138,7 @@ export const TransferActions = memo(
 					</>
 				) : (
 					<>
-						{progressNormalized < 95 && (
+						{progressNormalized < 95 ? (
 							<>
 								{state === "paused" ? (
 									<Button
@@ -168,7 +168,18 @@ export const TransferActions = memo(
 									/>
 								</Button>
 							</>
-						)}
+						) : state !== "finished" && state !== "paused" && state !== "stopped" ? (
+							<Badge
+								variant="secondary"
+								className="items-center gap-2"
+							>
+								<Loader
+									className="animate-spin-medium"
+									size={14}
+								/>
+								{t("transfers.state.finishing")}
+							</Badge>
+						) : null}
 					</>
 				)}
 			</div>
