@@ -88,6 +88,8 @@ export const Subscriptions = memo(() => {
 		[loadingToast, errorToast, account, t, setCancelledSubs]
 	)
 
+	const isLifetimePlan = (planName: string) => planName.toLowerCase().includes(t("settings.plans.lifetime").toLowerCase())
+
 	if (!account) {
 		return <Skeletons />
 	}
@@ -174,7 +176,7 @@ export const Subscriptions = memo(() => {
 										</p>
 										{subscription.activated === 1 &&
 											subscription.cancelled === 0 &&
-											!subscription.planName.toLowerCase().includes("lifetime") && (
+											!isLifetimePlan(subscription.planName) && (
 												<p
 													className="text-sm underline mt-3 cursor-pointer text-red-500"
 													onClick={() => cancel(subscription.id, subscription.startTimestamp)}
@@ -182,17 +184,16 @@ export const Subscriptions = memo(() => {
 													{t("settings.subscriptions.cancel")}
 												</p>
 											)}
-										{subscription.gateway.includes("stripe") &&
-											!subscription.planName.toLowerCase().includes("lifetime") && (
-												<a
-													href="https://billing.stripe.com/p/login/6oE9Bl8Lxey0ayI9AA"
-													target="blank"
-												>
-													<p className="text-sm underline mt-3 cursor-pointer text-blue-500">
-														{t("settings.subscriptions.billingDetails")}
-													</p>
-												</a>
-											)}
+										{subscription.gateway.includes("stripe") && !isLifetimePlan(subscription.planName) && (
+											<a
+												href="https://billing.stripe.com/p/login/6oE9Bl8Lxey0ayI9AA"
+												target="blank"
+											>
+												<p className="text-sm underline mt-3 cursor-pointer text-blue-500">
+													{t("settings.subscriptions.billingDetails")}
+												</p>
+											</a>
+										)}
 									</div>
 								</div>
 							</div>
