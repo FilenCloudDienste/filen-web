@@ -1,17 +1,23 @@
-import { memo, useCallback } from "react"
+import { memo, useCallback, useEffect } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useTranslation } from "react-i18next"
 import { useRemoteConfigStore } from "@/stores/remoteConfig.store"
 import { Unplug } from "lucide-react"
+import { useMiscStore } from "@/stores/misc.store"
 
 export const MaintenanceDialog = memo(() => {
 	const { t } = useTranslation()
 	const maintenanceActive = useRemoteConfigStore(useCallback(state => (state.config ? state.config.maintenance : false), []))
+	const setMaintenanceDialogOpen = useMiscStore(useCallback(state => state.setMaintenanceDialogOpen, []))
 
 	const onEscapeKeyDown = useCallback((e: KeyboardEvent) => {
 		e.preventDefault()
 		e.stopPropagation()
 	}, [])
+
+	useEffect(() => {
+		setMaintenanceDialogOpen(maintenanceActive)
+	}, [maintenanceActive, setMaintenanceDialogOpen])
 
 	return (
 		<Dialog open={maintenanceActive}>

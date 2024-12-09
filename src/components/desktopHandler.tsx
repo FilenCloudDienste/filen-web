@@ -12,6 +12,7 @@ import { useLocalStorage } from "@uidotdev/usehooks"
 import useIsSyncActive from "@/hooks/useIsSyncActive"
 import useSyncIssueCount from "@/hooks/useSyncIssueCount"
 import useSyncConfirmDeletion from "@/hooks/useSyncConfirmDeletion"
+import useNetworkDriveStats from "@/hooks/useNetworkDriveStats"
 
 const updateDesktopConfigMutex = new Semaphore(1)
 
@@ -34,6 +35,7 @@ export const DesktopHandler = memo(() => {
 	const syncIssueCount = useSyncIssueCount()
 	const [startMinimizedEnabled] = useLocalStorage<boolean>("startMinimizedEnabled", false)
 	const syncConfirmDeletion = useSyncConfirmDeletion()
+	const { uploadsInProgress: networkDriveUploadsInProgress } = useNetworkDriveStats()
 
 	const currentDesktopConfigStringified = useMemo(() => {
 		return JSON.stringify(desktopConfig)
@@ -123,10 +125,10 @@ export const DesktopHandler = memo(() => {
 		}
 
 		Promise.all([
-			window.desktopAPI.updateIsSyncing(isSyncActive),
+			window.desktopAPI.updateIsSyncing(isSyncActive || networkDriveUploadsInProgress > 0),
 			window.desktopAPI.updateWarningCount(syncIssueCount + syncConfirmDeletion.length)
 		]).catch(console.error)
-	}, [isSyncActive, syncIssueCount, authed, syncConfirmDeletion.length])
+	}, [isSyncActive, syncIssueCount, authed, syncConfirmDeletion.length, networkDriveUploadsInProgress])
 
 	useEffect(() => {
 		if (!authed) {

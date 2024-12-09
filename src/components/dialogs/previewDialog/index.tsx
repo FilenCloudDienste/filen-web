@@ -39,6 +39,7 @@ import { Button } from "@/components/ui/button"
 import useErrorToast from "@/hooks/useErrorToast"
 import useIsServiceWorkerOnline from "@/hooks/useIsServiceWorkerOnline"
 import useIsDesktopHTTPServerOnline from "@/hooks/useIsDesktopHTTPServerOnline"
+import { useDirectoryPublicLinkStore } from "@/stores/publicLink.store"
 
 const goToPreviewTypes = ["audio", "docx", "image", "pdf"]
 
@@ -76,7 +77,22 @@ export const PreviewDialog = memo(() => {
 	const [previewType, setPreviewType] = useState<string>("")
 	const canUpload = useCanUpload()
 	const { driveItems, driveSearchTerm } = useDriveItemsStore(
-		useCallback(state => ({ driveItems: state.items, driveSearchTerm: state.searchTerm }), [])
+		useCallback(
+			state => ({
+				driveItems: state.items,
+				driveSearchTerm: state.searchTerm
+			}),
+			[]
+		)
+	)
+	const { publicLinkItems, publicLinkSearchTerm } = useDirectoryPublicLinkStore(
+		useCallback(
+			state => ({
+				publicLinkItems: state.items,
+				publicLinkSearchTerm: state.searchTerm
+			}),
+			[]
+		)
 	)
 	const publicLinkURLState = usePublicLinkURLState()
 	const driveURLState = useDriveURLState()
@@ -86,14 +102,28 @@ export const PreviewDialog = memo(() => {
 	const isServiceWorkerOnline = useIsServiceWorkerOnline()
 	const isDesktopHTTPServerOnline = useIsDesktopHTTPServerOnline()
 
+	const { items, searchTerm } = useMemo(() => {
+		if (publicLinkURLState.isPublicLink && location.includes("/f/")) {
+			return {
+				items: publicLinkItems,
+				searchTerm: publicLinkSearchTerm
+			}
+		}
+
+		return {
+			items: driveItems,
+			searchTerm: driveSearchTerm
+		}
+	}, [publicLinkURLState.isPublicLink, driveItems, publicLinkItems, driveSearchTerm, publicLinkSearchTerm, location])
+
 	const itemsOrdered = useMemo(() => {
 		if (!open) {
-			return driveItems
+			return items
 		}
 
 		if (location.includes("recents")) {
 			return orderItemsByType({
-				items: driveItems,
+				items,
 				type: "uploadDateDesc"
 			})
 		}
@@ -101,23 +131,23 @@ export const PreviewDialog = memo(() => {
 		const sortBy = driveSortBy[routeParent]
 
 		return orderItemsByType({
-			items: driveItems,
+			items,
 			type: sortBy ? sortBy : "nameAsc"
 		})
-	}, [driveItems, location, driveSortBy, routeParent, open])
+	}, [items, location, driveSortBy, routeParent, open])
 
 	const itemsFiltered = useMemo(() => {
-		if (driveSearchTerm.length === 0 || !open) {
+		if (searchTerm.length === 0 || !open) {
 			return itemsOrdered
 		}
 
-		const searchTermLowered = driveSearchTerm.trim().toLowerCase()
+		const searchTermLowered = searchTerm.trim().toLowerCase()
 
 		return itemsOrdered.filter(item => item.name.toLowerCase().includes(searchTermLowered))
-	}, [itemsOrdered, driveSearchTerm, open])
+	}, [itemsOrdered, searchTerm, open])
 
 	const nextAndPreviousItems = useMemo(() => {
-		if (!item || didChange || publicLinkURLState.isPublicLink || !open) {
+		if (!item || didChange || (publicLinkURLState.isPublicLink && location.includes("/d/")) || !open) {
 			return {
 				nextItem: null,
 				previousItem: null,
@@ -166,7 +196,7 @@ export const PreviewDialog = memo(() => {
 			nextItemPreviewType: nextItem ? fileNameToPreviewType(nextItem.name) : null,
 			previousItemPreviewType: previousItem ? fileNameToPreviewType(previousItem.name) : null
 		}
-	}, [item, itemsFiltered, didChange, publicLinkURLState.isPublicLink, open])
+	}, [item, itemsFiltered, didChange, publicLinkURLState.isPublicLink, open, location])
 
 	const canGoToPreviousItem = useMemo(() => {
 		return (
@@ -627,7 +657,7 @@ export const PreviewDialog = memo(() => {
 								WebkitAppRegion: "no-drag"
 							}}
 						>
-							{goToPreviewTypes.includes(previewType) && !publicLinkURLState.isPublicLink && (
+							{goToPreviewTypes.includes(previewType) && !(publicLinkURLState.isPublicLink && location.includes("/d/")) && (
 								<>
 									{canGoToPreviousItem && (
 										<Button

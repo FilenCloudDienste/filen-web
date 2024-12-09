@@ -8,8 +8,9 @@ import { useTranslation } from "react-i18next"
 import { LockIcon } from "lucide-react"
 import useMountedEffect from "@/hooks/useMountedEffect"
 import WindowControls from "../windowControls"
+import { useMiscStore } from "@/stores/misc.store"
 
-// This is by no means safe. In the packaged electron version we can disable the console, making it _almost_ impossible for a normal user to access the app when it's locked.
+// This is by no means safe. In the packaged electron version we can disable the console, making it _almost_ impossible for a _normal_ user to access the app when it's locked.
 // You could still open the Chromium DB in the user's install directory, but if someone with this kind of knowledge sits (or remotes) at your PC, you have other problems.
 
 export const LockDialog = memo(() => {
@@ -21,6 +22,9 @@ export const LockDialog = memo(() => {
 	const errorToast = useErrorToast()
 	const { t } = useTranslation()
 	const ref = useRef<HTMLInputElement>(null)
+	const triesRef = useRef<number>(0)
+	const [lockNextTry, setLockNextTry] = useLocalStorage<number>("lockNextTry", 0)
+	const setLockDialogOpen = useMiscStore(useCallback(state => state.setLockDialogOpen, []))
 
 	const onEscapeKeyDown = useCallback((e: KeyboardEvent) => {
 		e.preventDefault()
@@ -65,17 +69,40 @@ export const LockDialog = memo(() => {
 			return
 		}
 
-		if (pin !== lockPin) {
-			errorToast(t("settings.security.dialogs.lock.wrongPin"))
+		const now = Date.now()
+
+		if (lockNextTry > now) {
+			errorToast(t("settings.security.dialogs.lock.tooManyAttempts"))
 
 			setPin("")
 
 			return
 		}
 
+		if (pin !== lockPin) {
+			setPin("")
+
+			triesRef.current += 1
+
+			if (triesRef.current >= 10) {
+				setLockNextTry(now + 300000)
+
+				triesRef.current = 0
+
+				errorToast(t("settings.security.dialogs.lock.tooManyAttempts"))
+			} else {
+				errorToast(t("settings.security.dialogs.lock.wrongPin"))
+			}
+
+			return
+		}
+
+		triesRef.current = 0
+
+		setLockNextTry(0)
 		resetTimer()
 		setOpen(false)
-	}, [pin, lockPin, resetTimer, errorToast, t, lockTimeout])
+	}, [pin, lockPin, resetTimer, errorToast, t, lockTimeout, lockNextTry, setLockNextTry])
 
 	const onKeyUp = useCallback(() => {
 		if (pin.length === 4) {
@@ -99,6 +126,10 @@ export const LockDialog = memo(() => {
 	const focusInput = useCallback(() => {
 		ref.current?.focus()
 	}, [])
+
+	useEffect(() => {
+		setLockDialogOpen(open)
+	}, [open, setLockDialogOpen])
 
 	useEffect(() => {
 		resetTimer()

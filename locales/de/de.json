@@ -1014,7 +1014,8 @@
 					"confirmPin": "PIN bestätigen"
 				},
 				"lock": {
-					"wrongPin": "Falscher PIN"
+					"wrongPin": "Falscher PIN",
+					"tooManyAttempts": "Zu viele Entsperrversuche. Versuch es später erneut."
 				}
 			}
 		},

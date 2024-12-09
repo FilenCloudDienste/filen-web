@@ -1024,7 +1024,8 @@
 					"confirmPin": "Confirm PIN"
 				},
 				"lock": {
-					"wrongPin": "Wrong PIN"
+					"wrongPin": "Wrong PIN",
+					"tooManyAttempts": "Too many unlock attempts, try again later."
 				}
 			}
 		},

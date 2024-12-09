@@ -1,37 +1,12 @@
-import { memo, useMemo } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { memo } from "react"
 import { useTranslation } from "react-i18next"
 import { RefreshCw, CheckCircle } from "lucide-react"
 import { bpsToReadable } from "@/components/transfers/utils"
+import useNetworkDriveStats from "@/hooks/useNetworkDriveStats"
 
 export const Transfers = memo(() => {
 	const { t } = useTranslation()
-
-	const query = useQuery({
-		queryKey: ["networkDriveStats"],
-		queryFn: () => window.desktopAPI.networkDriveStats(),
-		refetchInterval: 1000,
-		refetchIntervalInBackground: false,
-		refetchOnMount: true,
-		refetchOnWindowFocus: true,
-		refetchOnReconnect: true
-	})
-
-	const uploadsInProgress = useMemo(() => {
-		if (!query.isSuccess) {
-			return 0
-		}
-
-		return query.data.uploadsInProgress + query.data.uploadsQueued
-	}, [query.isSuccess, query.data])
-
-	const speed = useMemo(() => {
-		if (!query.isSuccess || query.data.transfers.length === 0) {
-			return 0
-		}
-
-		return Math.max(...query.data.transfers.map(transfer => transfer.speed))
-	}, [query.isSuccess, query.data])
+	const { uploadsInProgress, speed } = useNetworkDriveStats()
 
 	return (
 		<div className="flex flex-row w-full px-4 pb-4">

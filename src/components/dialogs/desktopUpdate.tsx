@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { IS_DESKTOP } from "@/constants"
 import useErrorToast from "@/hooks/useErrorToast"
 import { Loader } from "lucide-react"
+import { useMiscStore } from "@/stores/misc.store"
 
 export const DesktopUpdateDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
@@ -20,6 +21,10 @@ export const DesktopUpdateDialog = memo(() => {
 	const { t } = useTranslation()
 	const [version, setVersion] = useState<string>("1")
 	const [desktopUpdateDialogDismissedVersions, setDesktopUpdateDialogDismissedVersions] = useState<Record<string, boolean>>({})
+	const setUpdateDialogOpen = useMiscStore(useCallback(state => state.setUpdateDialogOpen, []))
+	const isOnlineDialogOpen = useMiscStore(useCallback(state => state.isOnlineDialogOpen, []))
+	const maintenanceDialogOpen = useMiscStore(useCallback(state => state.maintenanceDialogOpen, []))
+	const lockDialogOpen = useMiscStore(useCallback(state => state.lockDialogOpen, []))
 
 	const dismiss = useCallback(() => {
 		if (isUpdating) {
@@ -70,6 +75,10 @@ export const DesktopUpdateDialog = memo(() => {
 	}, [])
 
 	useEffect(() => {
+		setUpdateDialogOpen(open)
+	}, [open, setUpdateDialogOpen])
+
+	useEffect(() => {
 		let listener: ReturnType<typeof window.desktopAPI.onMainToWindowMessage> | null = null
 
 		if (IS_DESKTOP) {
@@ -86,7 +95,7 @@ export const DesktopUpdateDialog = memo(() => {
 	}, [onUpdateDownloaded])
 
 	return (
-		<AlertDialog open={open}>
+		<AlertDialog open={open && !maintenanceDialogOpen && !isOnlineDialogOpen && !lockDialogOpen}>
 			<AlertDialogContent
 				onEscapeKeyDown={isUpdating ? preventDefault : dismiss}
 				className="outline-none focus:outline-none active:outline-none hover:outline-none select-none"

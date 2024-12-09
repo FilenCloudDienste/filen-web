@@ -6,12 +6,16 @@ import { Unplug } from "lucide-react"
 import { IS_DESKTOP, IS_APPLE_DEVICE, DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import useDriveURLState from "@/hooks/useDriveURLState"
 import WindowControls from "../windowControls"
+import { useMiscStore } from "@/stores/misc.store"
 
 export const IsOnlineDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(!window.navigator.onLine)
 	const { t } = useTranslation()
 	const isPinging = useRef<boolean>(false)
 	const { publicLink } = useDriveURLState()
+	const setIsOnlineDialogOpen = useMiscStore(useCallback(state => state.setIsOnlineDialogOpen, []))
+	const maintenanceDialogOpen = useMiscStore(useCallback(state => state.maintenanceDialogOpen, []))
+	const lockDialogOpen = useMiscStore(useCallback(state => state.lockDialogOpen, []))
 
 	const onEscapeKeyDown = useCallback((e: KeyboardEvent) => {
 		e.preventDefault()
@@ -45,6 +49,10 @@ export const IsOnlineDialog = memo(() => {
 	}, [])
 
 	useEffect(() => {
+		setIsOnlineDialogOpen(open)
+	}, [open, setIsOnlineDialogOpen])
+
+	useEffect(() => {
 		ping()
 
 		const interval = setInterval(ping, 60000)
@@ -75,7 +83,7 @@ export const IsOnlineDialog = memo(() => {
 	}
 
 	return (
-		<Dialog open={open}>
+		<Dialog open={open && !maintenanceDialogOpen && !lockDialogOpen}>
 			<DialogContent
 				className="fullscreen-dialog no-close-button outline-none focus:outline-none active:outline-none hover:outline-none bg-background flex flex-row items-center justify-center select-none"
 				onEscapeKeyDown={onEscapeKeyDown}
