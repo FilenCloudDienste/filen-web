@@ -1024,7 +1024,8 @@
 					"confirmPin": "确认 PIN 码"
 				},
 				"lock": {
-					"wrongPin": "错误的 PIN 码"
+					"wrongPin": "错误的 PIN 码",
+					"tooManyAttempts": "解锁尝试次数过多，请稍后重试。"
 				}
 			}
 		},
