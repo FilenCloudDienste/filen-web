@@ -476,7 +476,7 @@
 		},
 		"storage": {
 			"title": "Inte tillräckligt utrymma",
-			"info": "Du har inte tillräckligt med utrymme tillgängligt. För att ladda upp fler filer behöver du en prenumeration. Alla prisplaner kan läggas på varandra vad gäller utrymme. Du kan prenumerera på flera prisplaner om du vill.",
+			"info": "Du har inte tillräckligt med utrymme tillgängligt. För att ladda upp fler filer behöver du köpa en prenumeration av en prisplan. Alla prisplaner kan läggas på varandra vad gäller utrymme. Du kan prenumerera på flera prisplaner om du vill.",
 			"dismiss": "Inte nu",
 			"upgrade": "Uppgradera"
 		},
@@ -492,7 +492,7 @@
 	},
 	"contextMenus": {
 		"item": {
-			"download": "Ladda ner",
+			"download": "Ladda ned",
 			"publicLink": "Publik länk",
 			"share": "Dela",
 			"shareProgress": "{{done}} objekt delade",
@@ -519,12 +519,12 @@
 			"dialogs": {
 				"trash": {
 					"title": "Papperskorg",
-					"description": "Är du säker att du vill flytta {{name}} till papperskorgen? Du kan alltid ångra dig senare.",
+					"description": "Är du säker att du vill flytta {{name}} till papperskorgen? Du kan alltid återställa objektet senare.",
 					"continue": "Flytta"
 				},
 				"trashMultiple": {
 					"title": "Papperskorg",
-					"description": "Är du säker att du vill flytta {{count}} objekt till papperskorgen? Du kan alltid ångra dig senare.",
+					"description": "Är du säker att du vill flytta {{count}} objekt till papperskorgen? Du kan alltid återställa objekten senare.",
 					"continue": "Flytta"
 				},
 				"deletePermanently": {
@@ -754,7 +754,7 @@
 			},
 			"requestAccountDeletion": {
 				"title": "Radera konto",
-				"description": "Är du säker att du vill radera ditt konto och alla dina data som är associerade med ditt konto? Vi kommer skicka ett verifierings mail. Denna åtgärd går inte att ångra!",
+				"description": "Är du säker att du vill radera ditt konto och alla dina data som är associerade med ditt konto? Vi kommer skicka ett bekräftelse mail. Denna åtgärd går inte att ångra!",
 				"continue": "Begär radering"
 			},
 			"logout": {
@@ -1081,7 +1081,7 @@
 				},
 				"requestAccountDeletion": {
 					"name": "Begär radering av konto",
-					"info": "Begär radering av ditt konto. Vi kommer skicka dig ett verifierings mail",
+					"info": "Begär radering av ditt konto. Vi kommer skicka dig ett bekräftelse mail",
 					"action": "Begär"
 				}
 			}
@@ -1174,8 +1174,8 @@
 		"invalidInfo": "Denna publika länk har antingen upphört eller finns inte.",
 		"back": "Tillbaka",
 		"directory": {
-			"downloadWholeDirectory": "Ladda ner hel mapp",
-			"downloadDirectory": "Ladda ner mapp"
+			"downloadWholeDirectory": "Ladda ned hel mapp",
+			"downloadDirectory": "Ladda ned mapp"
 		},
 		"sideBar": {
 			"ad": {
@@ -1191,10 +1191,10 @@
 		"auth": {
 			"wrongPassword": "Felaktigt lösenord",
 			"title": "Denna länk är skyddad med lösenord",
-			"subTitle": "Ange lösenordet du fått från avsändaren för att få tillträde.",
+			"subTitle": "Ange lösenordet du fått från avsändaren för att få åtkomst.",
 			"password": "Lösenord",
 			"passwordPlaceholder": "Lösenord",
-			"access": "Tillträde"
+			"access": "Åtkomst"
 		}
 	},
 	"notes": {
@@ -1238,7 +1238,7 @@
 			},
 			"leaveNote": {
 				"title": "Lämna anteckning",
-				"description": "Är du säker att du vill lämna {{name}}? Du kommer inte ha tillträde till anteckningen längre.",
+				"description": "Är du säker att du vill lämna {{name}}? Du kommer inte ha åtkomst till anteckningen längre.",
 				"continue": "Lämna"
 			}
 		}
@@ -1254,7 +1254,7 @@
 		"dialogs": {
 			"remove": {
 				"title": "Ta bort",
-				"description": "Är du säker att du vill ta bort {{item}} från dina delningar? Du kommer inte ha tillträde till den längre!",
+				"description": "Är du säker att du vill ta bort {{item}} från dina delningar? Du kommer inte ha åtkomst till den längre!",
 				"continue": "Ta bort"
 			}
 		}
@@ -1332,8 +1332,8 @@
 					"info": "Vi rekommenderar att ha cachen så stor som möjligt. Klienten kommer använda din lokala disk för att snabba upp nätverks enheten"
 				},
 				"cachePath": {
-					"name": "Cache plats",
-					"info": "Ändra platsen för cachen. Måste vara på en intern disk. Använder appens installations plats som standard."
+					"name": "Cache mapp",
+					"info": "Ändra mappen för cachen. Måste vara på en intern disk. Använder appens installations mapp som standard."
 				},
 				"readOnly": {
 					"name": "Skriv skydd",
@@ -1428,7 +1428,6 @@
 		"s3": {
 			"copyConnect": "Kopiera",
 			"description": "Starta en lokal S3 server, vilket ger ett standardiserad protokoll för att få tillgång till och hantera din moln enhet. Detta ger kompatibilitet med en mängd appar och enheter som har stöd för S3 och förbättrar hanteringen av dina filer.",
-
 			"info": "Vid anslutning till S3 servern måste du sätta regionen till \"filen\" och aktivera \"s3ForcePathStyle\".",
 			"sections": {
 				"active": {
