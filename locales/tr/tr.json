@@ -2,7 +2,7 @@
     "cloudDrive": "Bulut Sürücüsü",
     "new": "Yeni",
     "image": "Görüntü",
-    "empty": "Boş",
+    "empty": "Boşalt",
     "copiedToClipboard": "Panoya kopyalandı",
     "everyone": "Herkes",
     "unknownUser": "Bilinmeyen Kullanıcı",
@@ -83,15 +83,15 @@
             "success": {
                 "title": "Hesap oluşturuldu",
                 "continue": "Devam et",
-                "description": "{{email}} adresine bir onay e-postası gönderdik. Lütfen kaydınızı onaylamak için e-postadaki bağlantıya tıklayın. Spam klasörünüzü de kontrol etmeyi unutmayın."
+                "description": "{{email}} adresine bir onay e-postası gönderdik. Lütfen kaydınızı tamamlamak için e-postadaki bağlantıya tıklayın. Spam klasörünüzü de kontrol etmeyi unutmayın."
             }
         }
     },
     "reset": {
         "header": "Şifre sıfırlama",
-        "description": "E-posta adresinizi, yeni şifrenizi girin ve anahtarlarınızı içe aktararak şifrenizi sıfırlayın",
-        "importMasterKeys": "Anahtarları içe aktar",
-        "masterKeysImported": "Anahtarlar içe aktarıldı",
+        "description": "E-posta adresinizi, yeni şifrenizi girin ve ana anahtarınızı içe aktararak şifrenizi sıfırlayın",
+        "importMasterKeys": "Anahtarı içe aktar",
+        "masterKeysImported": "Anahtar içe aktarıldı",
         "masterKeysNotImported": "Hiç anahtar içe aktarılmadı",
         "placeholders": {
             "normal": {
@@ -113,12 +113,12 @@
             "noMasterKeysImported": {
                 "title": "Şifreyi sıfırla",
                 "continue": "Anladım",
-                "description": "İhracat yaptığım anahtarlar olmadan şifremi sıfırlamanın, sıfır bilgi uçtan uca şifreleme çalıştığı için hesabımdaki tüm verileri erişilemez hale getireceğini anlıyorum."
+                "description": "Ana anahtarım olmadan şifremi sıfırladığım takdirde, sıfır bilgi uçtan uca şifrelemenin çalışma şekli nedeniyle hesabımda saklanan tüm verilerin erişilemez hale geleceğini anlıyorum."
             },
             "noMasterKeysImported2": {
                 "title": "Şifreyi sıfırla",
                 "continue": "Eminim",
-                "description": "Emin misiniz? Anahtarlarınızı içe aktarmazsanız hesabınızdaki tüm verileri silmek üzeresiniz. Anahtarlarınız yoksa bu uyarıyı görmezden gelebilirsiniz ve hesabınızı sıfırlamak istiyorsanız devam edebilirsiniz."
+                "description": "Emin misiniz? Ana anahtarınızı içe aktarmazsanız hesabınızda depolanan tüm veriler silinecektir. Ana anahtarınız yoksa ve hesabınızı sıfırlamak istiyorsanız bu uyarıyı görmezden gelebilirsiniz."
             },
             "noMasterKeysImported3": {
                 "title": "Şifreyi sıfırla",
@@ -128,11 +128,11 @@
         },
         "alerts": {
             "invalidMasterKeysFile": "Geçersiz anahtar dosyası",
-            "invalidMasterKeysFileWrongUserId": "Bu anahtarlar farklı bir hesaba ait",
-            "masterKeysImported": "Anahtarlar içe aktarıldı",
+            "invalidMasterKeysFileWrongUserId": "Bu anahtar farklı bir hesaba ait",
+            "masterKeysImported": "Anahtar içe aktarıldı",
             "passwordWeak": "Seçtiğiniz şifre çok zayıf",
             "passwordsNotMatching": "Şifreler aynı değil",
-            "invalidMasterKeys": "Geçersiz anahtarlar",
+            "invalidMasterKeys": "Geçersiz anahtar",
             "passwordChanged": "Şifre başarıyla değiştirildi"
         }
     },
@@ -175,7 +175,7 @@
             "sharedWithMe": "Benimle paylaşılan",
             "sharedWithOthers": "Başkalarıyla paylaşılan",
             "favorites": "Favoriler",
-            "trash": "Çöp",
+            "trash": "Çöp kutusu",
             "directory": "Dizin"
         },
         "listView": "Liste görünümü",
@@ -188,7 +188,7 @@
             "chats": "Sohbetler",
             "contacts": "Kişiler",
             "syncs": "Senkranizasyonlar",
-            "mounts": "Bağlantılar"
+            "mounts": "Bağlama noktaları"
         },
         "bottom": {
             "settings": "Ayarlar"
@@ -219,7 +219,7 @@
         "sharedWithMe": "Benimle paylaşılan",
         "sharedWithOthers": "Başkalarıyla paylaşılan",
         "favorites": "Favoriler",
-        "trash": "Çöp",
+        "trash": "Çöp kutusu",
         "settings": {
             "general": "Genel",
             "invoices": "Faturalar",
@@ -260,7 +260,7 @@
         "contacts": "Kişiler",
         "settings": "Ayarlar",
         "syncs": "Senkranizasyonlar",
-        "mounts": "Bağlantılar",
+        "mounts": "Bağlama noktaları",
         "terminal": "Terminal"
     },
     "dialogs": {
@@ -268,8 +268,8 @@
         "selectDriveItem": {
             "title": "Seç",
             "submit": "Seç",
-            "newFolder": "Yeni dizin",
-            "empty": "Henüz yüklenmiş dosya veya dizin yok",
+            "newFolder": "Yeni dosya",
+            "empty": "Henüz yüklenmiş dosya veya klasör yok",
             "selectRoot": "Bulut Sürücüsünü seç"
         },
         "selectContacts": {
@@ -286,20 +286,20 @@
             "downloadButton": "İndir butonu",
             "link": "Bağlantı",
             "copyLink": "Kopyala",
-            "expiresAfter": "Son kullanım tarihi",
+            "expiresAfter": "Sona erme süresi",
             "password": "Şifre (devre dışı bırakmak için boş bırakın)",
             "passwordPlaceholder": "Şifre",
             "progress": "{{done}} / {{total}} öğe herkese açık bağlantıya eklendi",
             "expireNever": "Asla"
         },
         "sharedWith": {
-            "title": "Paylaşılan",
+            "title": "Bu kişilerle paylaşıldı",
             "add": "Ekle",
             "close": "Kapat",
             "remove": "Kaldır",
             "stopSharing": {
                 "title": "Paylaşımı durdur",
-                "description": "{{item}}'yi {{name}} ile paylaşmayı durdurmak istediğinizden emin misiniz?",
+                "description": "{{item}} adlı öğenin {{name}} adresi ile paylaşımını durdurmak istediğinizden emin misiniz?",
                 "continue": "Paylaşımı durdur"
             }
         },
@@ -308,7 +308,7 @@
             "newEmail": "Yeni e-posta adresi",
             "newEmailPlaceholder": "Yeni e-posta",
             "confirmNewEmail": "Yeni e-posta adresini onaylayın",
-            "confirmNewEmailPlaceholder": "Yeni e-posta onayı",
+            "confirmNewEmailPlaceholder": "Yeni e-postayı onayla",
             "password": "Şifreniz",
             "passwordPlaceholder": "Şifre",
             "close": "Kapat",
@@ -320,7 +320,7 @@
             "newPassword": "Yeni şifre",
             "newPasswordPlaceholder": "Yeni şifre",
             "confirmNewPassword": "Yeni şifreyi onaylayın",
-            "confirmNewPasswordPlaceholder": "Yeni şifre onayı",
+            "confirmNewPasswordPlaceholder": "Yeni şifreyi onayla",
             "currentPassword": "Mevcut şifreniz",
             "currentPasswordPlaceholder": "Mevcut şifre",
             "close": "Kapat",
@@ -342,7 +342,7 @@
             "country": "Ülke"
         },
         "twoFactorCode": {
-            "useRecoveryKey": "Yerine kurtarma anahtarını kullan",
+            "useRecoveryKey": "Bunun yerine kurtarma anahtarını kullan",
             "recoveryKeyPlaceholder": "Kurtarma anahtarı",
             "title": "İki Faktörlü Kimlik Doğrulama",
             "continue": "Devam et",
@@ -350,8 +350,8 @@
         },
         "noteParticipants": {
             "remove": "Kaldır",
-            "toggleReadPermissions": "Okuma izinlerini değiştir",
-            "toggleWritePermissions": "Yazma izinlerini değiştir",
+            "toggleReadPermissions": "Okuma izni ver",
+            "toggleWritePermissions": "Yazma izni ver",
             "title": "Katılımcılar",
             "close": "Kapat"
         },
@@ -359,22 +359,22 @@
             "title": "Dosya sürümleri",
             "delete": {
                 "title": "Dosya sürümünü sil",
-                "description": "{{name}}'yi kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "description": "{{name}} adlı sürümü kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             }
         },
         "noteHistory": {
-            "empty": "Henüz önceki not sürümü yok"
+            "empty": "Henüz not sürümü yok"
         },
         "previewDialog": {
             "save": "Kaydet",
             "readOnly": "Sadece okunur"
         },
         "transparentFullScreenImage": {
-            "openOriginal": "Orijinali aç"
+            "openOriginal": "Orjinali aç"
         },
         "report": {
-            "title": "İhlali bildirin",
+            "title": "Kötüye kullanımı bildirin",
             "email": "E-posta adresi",
             "emailPlaceholder": "E-posta adresi",
             "comment": "Yorum",
@@ -382,7 +382,7 @@
             "reason": "Sebep",
             "close": "Kapat",
             "send": "Gönder",
-            "successToast": "İhlal raporu gönderildi",
+            "successToast": "Kötüye kullanım raporu gönderildi",
             "reasons": {
                 "cp": "Çocuk cinsel istismarı materyali",
                 "dmca": "Telif hakkı ihlali",
@@ -393,8 +393,8 @@
             }
         },
         "profile": {
-            "memberSince": "{{since}}'den beri üye",
-            "add": "Kişi talebi gönder",
+            "memberSince": "{{since}} tarihinden beri üye",
+            "add": "İletişim talebi gönder",
             "block": "Engelle",
             "remove": "Kişilerden kaldır",
             "unblock": "Engeli kaldır"
@@ -417,7 +417,7 @@
                 "localBackup": "Yerel yedekleme",
                 "cloudToLocal": "Buluttan yerel",
                 "cloudBackup": "Bulut yedeklemesi",
-                "twoWayInfo": "Her iki yönde her eylemi yansıt",
+                "twoWayInfo": "Her eylemi her iki yönde de yansıtın",
                 "localToCloudInfo": "Yerel olarak yapılan her eylemi buluta yansıt, ancak bulut değişikliklerine asla müdahale etme",
                 "localBackupInfo": "Yalnızca verileri buluta yükle, hiçbir şeyi silme veya bulut değişikliklerine müdahale etme",
                 "cloudToLocalInfo": "Bulutta yapılan her eylemi yerelde yansıt, ancak yerel değişikliklere asla müdahale etme",
@@ -459,7 +459,7 @@
         },
         "desktopUpdate": {
             "title": "Güncelleme mevcut",
-            "info": "Yeni bir sürüm ({{version}}) indirildi ve kurulmaya hazır. Güncellemek ister misiniz?",
+            "info": "Yeni sürüm ({{version}}) indirildi ve kurulmaya hazır. Güncellemek ister misiniz?",
             "dismiss": "Kapat",
             "update": "Güncelle",
             "installing": "Güncelleme kuruluyor, lütfen bu süreci kesmeyin!"
@@ -474,8 +474,8 @@
             "title": "Etkinlik"
         },
         "exportReminder": {
-            "title": "Anahtarları dışa aktar",
-            "description": "Lütfen anahtarlarınızı dışa aktarın ve ayrı bir güvenli konumda saklayın. Şifrenizi sıfırladığınızda veri kaybını önlemek için anahtarlarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor.",
+            "title": "Ana anahtarı dışa aktar",
+            "description": "Lütfen ana anahtarınızı dışa aktarın ve güvenli bir yerde saklayın. Şifrenizi sıfırlarken veri kaybını önlemek için ana anahtarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde ana anahtarınızı dışa aktarmanız gerekir.",
             "continue": "Dışa aktar",
             "dismiss": "Kapat"
         }
@@ -491,7 +491,7 @@
             "unfavorite": "Favorilerden çıkar",
             "rename": "Yeniden adlandır",
             "move": "Taşı",
-            "trash": "Çöp",
+            "trash": "Sil",
             "restore": "Geri yükle",
             "preview": "Önizleme",
             "edit": "Düzenle",
@@ -503,21 +503,21 @@
             "color": "Renk",
             "deletePermanently": "Kalıcı olarak sil",
             "copyId": "ID'yi kopyala",
-            "info": "Bilgi",
+            "info": "Ayrıntılar",
             "dialogs": {
                 "trash": {
-                    "title": "Çöp",
-                    "description": "{{name}}'yi çöpe göndermek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
-                    "continue": "Çöp"
+                    "title": "Sil",
+                    "description": "{{name}} adlı öğeyi silmek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
+                    "continue": "Sil"
                 },
                 "trashMultiple": {
-                    "title": "Çöp",
-                    "description": "{{count}} öğeyi çöpe göndermek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
-                    "continue": "Çöp"
+                    "title": "Sil",
+                    "description": "{{count}} öğeyi silmek istediğinizden emin misiniz? Daha sonra her zaman geri alabilirsiniz.",
+                    "continue": "Sil"
                 },
                 "deletePermanently": {
                     "title": "Kalıcı olarak sil",
-                    "description": "{{name}}'yi kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                    "description": "{{name}} adlı öğeyi kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                     "continue": "Sil"
                 },
                 "deletePermanentlyMultiple": {
@@ -528,25 +528,25 @@
             }
         },
         "drive": {
-            "uploadFiles": "Dosyaları yükle",
-            "uploadFolders": "Dizinleri yükle",
+            "uploadFiles": "Dosya yükle",
+            "uploadFolders": "Klasör yükle",
             "newTextFile": "Yeni metin dosyası",
-            "newFolder": "Yeni dizin"
+            "newFolder": "Yeni klasör"
         },
         "notes": {
-            "history": "Geçmiş",
+            "history": "Not geçmişi",
             "participants": "Katılımcılar",
             "type": "Tür",
-            "pin": "Sabit",
-            "unpin": "Sabitlikten çıkar",
+            "pin": "Sabitle",
+            "unpin": "Sabitlemeyi kaldır",
             "favorite": "Favori",
             "unfavorite": "Favorilerden çıkar",
             "duplicate": "Çoğalt",
             "export": "Dışa aktar",
             "exportAll": "Hepsini dışa aktar",
             "archive": "Arşivle",
-            "restore": "Geri yükle",
-            "trash": "Çöp",
+            "restore": "Arşivden geri yükle",
+            "trash": "Sil",
             "delete": "Sil",
             "rename": "Yeniden adlandır",
             "tags": "Etiketler",
@@ -557,7 +557,7 @@
                 "md": "Markdown",
                 "rich": "Zengin metin",
                 "text": "Metin",
-                "checklist": "Kontrol listesi",
+                "checklist": "Liste",
                 "code": "Kod"
             }
         },
@@ -568,8 +568,8 @@
         },
         "chat": {
             "input": {
-                "selectFromDrive": "Sürücüyü seç",
-                "attachFiles": "Dosyaları ekle"
+                "selectFromDrive": "Sürücüden seç",
+                "attachFiles": "Masaüstünden dosya ekle"
             }
         },
         "chats": {
@@ -590,22 +590,22 @@
         "noActiveTransfers": "Henüz transfer yok",
         "state": {
             "finished": "Tamamlandı",
-            "queued": "Sıralı",
+            "queued": "Sıraya alındı",
             "started": "Başlatıldı",
             "error": "Hata",
             "stopped": "Durduruldu",
             "paused": "Duraklatıldı",
-            "creatingDirectories": "Dizinler oluşturuluyor"
+            "creatingDirectories": "Klasör oluşturuluyor"
         },
         "pause": "Duraklat",
         "resume": "Devam ettir",
         "stop": "Durdur"
     },
     "chats": {
-        "newMessagesSince": "{{count}} yeni mesaj {{since}}'den beri",
+        "newMessagesSince": "{{since}} tarihinden beri {{count}} yeni mesaj",
         "markAsRead": "Okundu olarak işaretle",
         "maxSizeReached": "Maksimum mesaj boyutu {{chars}} karakter ile sınırlıdır",
-        "newMessageSince": "{{count}} yeni mesaj {{since}}'den beri",
+        "newMessageSince": "{{since}} tarihinden beri {{count}} yeni mesaj",
         "showParticipants": "Katılımcıları göster",
         "hideParticipants": "Katılımcıları gizle",
         "addParticipants": "Katılımcı ekle",
@@ -630,8 +630,8 @@
                 "minutesAgo": "{{minutes}} dakika önce",
                 "hourAgo": "{{hours}} saat önce",
                 "hoursAgo": "{{hours}} saat önce",
-                "todayAt": "Bugün {{date}}'de",
-                "yesterdayAt": "Dün {{date}}'de"
+                "todayAt": "Bugün {{date}} tarihinde",
+                "yesterdayAt": "Dün {{date}} tarihinde"
             },
             "edited": "Düzenlendi",
             "reply": "Yanıtla",
@@ -656,7 +656,7 @@
             },
             "removeParticipant": {
                 "title": "Katılımcıyı kaldır",
-                "description": "{{name}}'yi bu sohbetten kaldırmak istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişiyi bu sohbetten kaldırmak istediğinizden emin misiniz?",
                 "continue": "Kaldır"
             },
             "deleteConversation": {
@@ -697,21 +697,21 @@
         "dialogs": {
             "unblock": {
                 "title": "Kullanıcının engelini kaldır",
-                "description": "{{name}}'nin engelini kaldırmak istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişinin engelini kaldırmak istediğinizden emin misiniz?",
                 "continue": "Engeli kaldır"
             },
             "remove": {
                 "title": "Kişiyi kaldır",
-                "description": "{{name}}'yi kişilerinizden kaldırmak istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişiyi kişilerinizden kaldırmak istediğinizden emin misiniz?",
                 "continue": "Kaldır"
             },
             "block": {
                 "title": "Kullanıcıyı engelle",
-                "description": "{{name}}'yi engellemek istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişiyi engellemek istediğinizden emin misiniz?",
                 "continue": "Engelle"
             },
             "sendRequest": {
-                "title": "Kişi talebi gönder",
+                "title": "İletişim talebi gönder",
                 "placeholder": "Filen kullanıcısının e-posta adresi",
                 "continue": "Gönder"
             }
@@ -725,22 +725,22 @@
                 "continue": "Sil"
             },
             "deleteAll": {
-                "title": "Tüm dosyaları ve dizinleri sil",
-                "description": "Tüm dosyaları ve dizinleri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "title": "Tüm dosyaları ve klasörleri sil",
+                "description": "Tüm dosyaları ve klasörleri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
             "deleteAll2": {
-                "title": "Tüm dosyaları ve dizinleri sil",
+                "title": "Tüm dosyaları ve klasörleri sil",
                 "description": "Gerçekten emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
             "deleteAll3": {
-                "title": "Tüm dosyaları ve dizinleri sil",
+                "title": "Tüm dosyaları ve klasörleri sil",
                 "description": "Yüzde 100 emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
             "requestAccountDeletion": {
-                "title": "Hesap silme",
+                "title": "Hesabı sil",
                 "description": "Hesabınızı ve ona bağlı tüm verileri silmek istediğinizden emin misiniz? Size bir onay e-postası göndereceğiz. Bu işlem geri alınamaz!",
                 "continue": "Silme talebi"
             },
@@ -776,8 +776,8 @@
             "storageUsed": "Kullanılan depolama",
             "files": "Dosyalar {{size}}",
             "versionedFiles": "Sürümlü dosyalar {{size}}",
-            "free": "Ücretsiz {{size}}",
-            "used": "{{used}} / {{max}} kullanıldı",
+            "free": "Kalan depolama {{size}}",
+            "used": "{{used}} kullanılan / Toplam {{max}}",
             "dark": "Karanlık",
             "light": "Aydınlık",
             "system": "Sistem",
@@ -785,7 +785,7 @@
                 "md": "Markdown",
                 "rich": "Zengin metin",
                 "text": "Metin",
-                "checklist": "Kontrol listesi",
+                "checklist": "Liste",
                 "code": "Kod"
             },
             "sections": {
@@ -802,8 +802,8 @@
                     "info": "Bildirim sesini etkinleştir veya devre dışı bırak"
                 },
                 "contactNotifications": {
-                    "name": "Kişi bildirimleri",
-                    "info": "Kişi bildirimlerini etkinleştir veya devre dışı bırak"
+                    "name": "İletişim bildirimleri",
+                    "info": "İletişim bildirimlerini etkinleştir veya devre dışı bırak"
                 },
                 "theme": {
                     "name": "Tema",
@@ -825,7 +825,7 @@
                 },
                 "minimizeToTray": {
                     "name": "Sistem tepsisine küçült",
-                    "info": "Filen'i pencereleri küçültmek yerine sistem tepsisine gizle"
+                    "info": "Filen'i simge durumuna küçültmek yerine sistem tepsisine gizle"
                 },
                 "autoLaunch": {
                     "name": "Otomatik başlat",
@@ -841,7 +841,7 @@
         "invite": {
             "copy": "Kopyala",
             "title": "Başkalarını davet ederek 30 GB'a kadar depolama alanı kazanın",
-            "description": "Filen'e davet ettiğiniz her arkadaş için {{yourEarnings}} kazanıyorsunuz - ve arkadaşınız da {{otherEarnings}} kazanıyor. Bu kadar kolay.",
+            "description": "Filen'e davet ettiğiniz her arkadaş için {{yourEarnings}} kazanırsınız - ve arkadaşınız da {{otherEarnings}} kazanır. Bu kadar kolay.",
             "earned": "{{earned}} / {{max}}",
             "storageEarned": "Kazanılan depolama"
         },
@@ -855,36 +855,36 @@
             "fileTrash": "{{name}} çöp kutusuna taşındı",
             "fileRm": "{{name}} silindi",
             "fileRestored": "{{name}} çöp kutusundan geri yüklendi",
-            "fileShared": "{{name}} {{email}} ile paylaşıldı",
-            "fileLinkEdited": "{{name}}'nin herkese açık bağlantısı düzenlendi",
+            "fileShared": "{{name}} {{email}} adresi ile paylaşıldı",
+            "fileLinkEdited": "{{name}} adlı öğenin herkese açık bağlantısı düzenlendi",
             "folderTrash": "{{name}} çöp kutusuna taşındı",
-            "folderShared": "{{name}} {{email}} ile paylaşıldı",
+            "folderShared": "{{name}} {{email}} adresi ile paylaşıldı",
             "folderMoved": "{{name}} taşındı",
             "folderRenamed": "{{name}} {{newName}} olarak yeniden adlandırıldı",
             "subFolderCreated": "{{name}} oluşturuldu",
             "baseFolderCreated": "{{name}} oluşturuldu",
             "folderRestored": "{{name}} çöp kutusundan geri yüklendi",
-            "folderColorChanged": "{{name}}'nin rengi değiştirildi",
+            "folderColorChanged": "{{name}} adlı öğenin rengi değiştirildi",
             "login": "Giriş yapıldı",
             "deleteVersioned": "Sürümlü dosyalar silindi",
-            "deleteAll": "Tüm dosyalar ve dizinler silindi",
+            "deleteAll": "Tüm dosyalar ve klasörler silindi",
             "deleteUnfinished": "Tamamlanmamış yüklemeler silindi",
             "trashEmptied": "Çöp kutusu boşaltıldı",
             "requestAccountDeletion": "Hesap silme talep edildi",
             "2faEnabled": "İki Faktörlü Kimlik Doğrulama etkinleştirildi",
             "2faDisabled": "İki Faktörlü Kimlik Doğrulama devre dışı bırakıldı",
-            "codeRedeemed": "Kod {{code}} kullanıldı",
+            "codeRedeemed": "{{code}} kodu kullanıldı",
             "emailChanged": "E-posta adresi {{email}} olarak değiştirildi",
             "passwordChanged": "Şifre değiştirildi",
-            "removedSharedInItems": "{{count}} paylaşılan öğe {{email}}'den kaldırıldı",
-            "removedSharedOutItems": "{{count}} paylaşılan öğe {{email}} ile kaldırıldı",
-            "folderLinkEdited": "Dizin bağlantısı düzenlendi",
+            "removedSharedInItems": "{{email}} adresinin sizinle paylaştığı {{count}} öğenin paylaşımı kaldırıldı",
+            "removedSharedOutItems": "{{email}} adresi ile paylaştığınız {{count}} öğenin paylaşımı kaldırıldı",
+            "folderLinkEdited": "Klasör bağlantısı düzenlendi",
             "itemFavoriteAdded": "{{name}} favorilere eklendi",
             "itemFavoriteRemoved": "{{name}} favorilerden çıkarıldı",
             "failedLogin": "Giriş başarısız",
             "deleteFolderPermanently": "{{name}} kalıcı olarak silindi",
             "deleteFilePermanently": "{{name}} kalıcı olarak silindi",
-            "emailChangeAttempt": "Bir e-posta değişikliği girişimi kaydedildi"
+            "emailChangeAttempt": "E-posta değişikliği girişimi kaydedildi"
         },
         "invoices": {
             "plan": "Plan",
@@ -908,7 +908,7 @@
             "storage": "Depolama",
             "moreInfo": "Aboneliğiniz hakkında daha fazla bilgi",
             "paymentMethod": "Ödeme yöntemi",
-            "info": "{{storage}} depolama ile sınırsız yükleme, indirme, not ve sohbet. Filen'in tam potansiyelini açma.",
+            "info": "{{storage}} depolama ile sınırsız yükleme, indirme, not ve sohbet. Filen'in tüm potansiyelini ortaya çıkar.",
             "statuses": {
                 "cancelled": "İptal edildi",
                 "active": "Aktif",
@@ -926,7 +926,7 @@
             "limited": "Sınırlı stok",
             "creditCard": "Kredi Kartı",
             "crypto": "Kripto para",
-            "legal1": "Bir plan satın alarak, iptal etmediğiniz sürece Filen'in her faturalandırma döneminde otomatik olarak ücretlendirilmesini yetkilendirmiş olursunuz. Hesabınız sayfanızdan istediğiniz zaman iptal edebilirsiniz. Kısmi iadeler yapılmaz.",
+            "legal1": "Bir plan satın alarak, siz iptal edene kadar Filen'in her fatura döneminde sizden otomatik olarak ücret almasına izin vermiş olursunuz. Hesabınız sayfanızdan istediğiniz zaman iptal edebilirsiniz. Kısmi iadeler yapılmaz.",
             "legal2": "Ayrıca otomatik olarak kabul edersiniz",
             "tos": "Hizmet Şartları",
             "and": "ve",
@@ -968,10 +968,10 @@
                     "info": "İki Faktörlü Kimlik Doğrulamayı etkinleştir veya devre dışı bırak"
                 },
                 "exportMasterKeys": {
-                    "name": "Anahtarları dışa aktar",
-                    "info": "Şifrenizi sıfırlamanız gerektiğinde hesabınızı geri yükleyebilmek için anahtarlarınızı dışa aktarın. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor.",
+                    "name": "Ana anahtarı dışa aktar",
+                    "info": "Şifrenizi sıfırlamanız gerektiğinde hesabınızdaki verileri geri yükleyebilmeniz için ana anahtarınızı dışa aktarın. Şifrenizi her değiştirdiğinizde ana anahtarınızı dışa aktarmanız gerekir.",
                     "action": "Dışa aktar",
-                    "subInfo": "Lütfen anahtarlarınızı dışa aktarın ve ayrı bir güvenli konumda saklayın. Şifrenizi sıfırladığınızda veri kaybını önlemek için anahtarlarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde anahtarlarınızı dışa aktarmanız gerekiyor."
+                    "subInfo": "Lütfen ana anahtarınızı dışa aktarın ve güvenli bir yerde saklayın. Şifrenizi sıfırlarken veri kaybını önlemek için ana anahtarınıza ihtiyacınız olacak. Şifrenizi her değiştirdiğinizde ana anahtarınızı dışa aktarmanız gerekir."
                 },
                 "lockTimeout": {
                     "name": "Uygulamayı kilitle",
@@ -993,7 +993,7 @@
                     }
                 },
                 "lockPin": {
-                    "name": "Kilit PIN'i",
+                    "name": "PIN ile kilitle",
                     "info": "Uygulamayı kilitlemek için bir PIN ayarlayın",
                     "action": "Değiştir"
                 }
@@ -1023,7 +1023,7 @@
                     "action": "Sil"
                 },
                 "all": {
-                    "name": "Tüm dosyalar ve dizinler",
+                    "name": "Tüm dosyalar ve klasörler",
                     "info": "Tüm dosyaları ve klasörleri sil",
                     "action": "Sil"
                 },
@@ -1086,21 +1086,21 @@
                 "invalidFileName": "Geçersiz dosya adı."
             },
             "createDirectory": {
-                "title": "Dizin oluştur",
+                "title": "Klasör oluştur",
                 "placeholder": "İsim",
                 "continue": "Oluştur",
-                "invalidDirectoryName": "Geçersiz dizin adı."
+                "invalidDirectoryName": "Geçersiz klasör adı."
             },
             "rename": {
                 "title": "Yeniden adlandır",
                 "placeholder": "Yeni isim",
                 "continue": "Yeniden adlandır",
                 "invalidFileName": "Geçersiz dosya adı.",
-                "invalidDirectoryName": "Geçersiz dizin adı."
+                "invalidDirectoryName": "Geçersiz klasör adı."
             },
             "share": {
                 "title": "Paylaş",
-                "placeholder": "Bir Filen kullanıcısının e-posta adresi",
+                "placeholder": "Filen kullanıcısının e-posta adresi",
                 "continue": "Paylaş"
             }
         },
@@ -1111,16 +1111,16 @@
                 "info": "\"{{search}}\" için hiçbir şey bulunamadı"
             },
             "publicLink": {
-                "title": "Boş dizin",
-                "info": "Bu dizinin sahibi henüz içerisine dosya yüklemedi"
+                "title": "Boş klasör",
+                "info": "Bu klasörün sahibi henüz içerisine dosya yüklemedi"
             },
             "drive": {
-                "title": "Henüz yüklenmiş dosya veya dizin yok",
-                "info": "Dosyaları veya dizinleri buraya sürükleyip bırakın veya aşağıdaki düğmeye basın"
+                "title": "Henüz yüklenmiş dosya veya klasör yok",
+                "info": "Dosyaları veya klasörleri buraya sürükleyip bırakın veya aşağıdaki düğmeye basın"
             },
             "trash": {
                 "title": "Henüz çöp kutusunda bir şey yok",
-                "info": "Çöp kutusuna gönderilen dosyalar ve dizinler burada görünecektir"
+                "info": "Çöp kutusuna gönderilen dosyalar ve klasörler burada görünecektir"
             },
             "recents": {
                 "title": "Henüz yüklenmiş dosya yok",
@@ -1128,19 +1128,19 @@
             },
             "links": {
                 "title": "Henüz oluşturulmuş herkese açık bağlantı yok",
-                "info": "Dosya ve dizinlerin herkese açık bağlantıları burada görünecektir"
+                "info": "Dosya ve klasörlerin herkese açık bağlantıları burada görünecektir"
             },
             "favorites": {
                 "title": "Henüz favorilere eklenmiş bir şey yok",
-                "info": "Favori dosyalar ve dizinler burada görünecektir"
+                "info": "Favori dosyalar ve klasörler burada görünecektir"
             },
             "sharedIn": {
                 "title": "Henüz sizinle paylaşılan bir şey yok",
-                "info": "Paylaşılan dosyalar ve dizinler burada görünecektir"
+                "info": "Paylaşılan dosyalar ve klasörler burada görünecektir"
             },
             "sharedOut": {
                 "title": "Henüz başkalarıyla paylaşılan bir şey yok",
-                "info": "Paylaşılan dosyalar ve dizinler burada görünecektir"
+                "info": "Paylaşılan dosyalar ve klasörler burada görünecektir"
             }
         }
     },
@@ -1149,24 +1149,24 @@
         "invalidInfo": "Bu herkese açık bağlantı ya süresi dolmuş ya da mevcut değil",
         "back": "Geri dön",
         "directory": {
-            "downloadWholeDirectory": "Tüm dizini indir",
-            "downloadDirectory": "Dizini indir"
+            "downloadWholeDirectory": "Tüm klasörü indir",
+            "downloadDirectory": "Klasörü indir"
         },
         "sideBar": {
             "ad": {
                 "header": "Biz Filen'iz",
                 "title": "Özel ve güvenli bulut depolama",
-                "info1": "Tasarım gereği gizlilik",
+                "info1": "Gizlilik odaklı tasarım",
                 "info2": "Uçtan uca şifreleme",
                 "info3": "Sıfır bilgi teknolojisi",
-                "cta": "10 GB depolama ücretsiz"
+                "cta": "Ücretsiz 10 GB depolama"
             },
-            "reportAbuse": "İhlali bildirin"
+            "reportAbuse": "Kötüye kullanımı bildir"
         },
         "auth": {
             "wrongPassword": "Yanlış şifre",
             "title": "Bu bağlantı şifre ile korunmaktadır",
-            "subTitle": "Erişim kazanmak için lütfen gönderen tarafından sağlanan şifreyi girin.",
+            "subTitle": "Erişim için lütfen gönderen tarafından sağlanan şifreyi girin.",
             "password": "Şifre",
             "passwordPlaceholder": "Şifre",
             "access": "Erişim"
@@ -1183,17 +1183,17 @@
         "dialogs": {
             "removeParticipant": {
                 "title": "Katılımcıyı kaldır",
-                "description": "{{name}}'yi bu nottan kaldırmak istediğinizden emin misiniz?",
+                "description": "{{name}} adlı kişiyi bu nottan kaldırmak istediğinizden emin misiniz?",
                 "continue": "Kaldır"
             },
             "deleteNote": {
                 "title": "Notu sil",
-                "description": "{{name}}'yi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "description": "{{name}} adlı notu silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
             "deleteTag": {
                 "title": "Etiketi sil",
-                "description": "{{name}}'yi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
+                "description": "{{name}} adlı etiketi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!",
                 "continue": "Sil"
             },
             "renameTag": {
@@ -1212,8 +1212,8 @@
                 "continue": "Yeniden adlandır"
             },
             "leaveNote": {
-                "title": "Notu terk et",
-                "description": "{{name}}'den ayrılmak istediğinizden emin misiniz? Artık bu nota erişiminiz olmayacak.",
+                "title": "Nottan ayrıl",
+                "description": "{{name}} adlı nottan ayrılmak istediğinizden emin misiniz? Artık bu nota erişiminiz olmayacak.",
                 "continue": "Ayrıl"
             }
         }
@@ -1229,7 +1229,7 @@
         "dialogs": {
             "remove": {
                 "title": "Kaldır",
-                "description": "{{item}}'yi paylaşımlarınızdan kaldırmak istediğinizden emin misiniz? Artık buna erişiminiz olmayacak!",
+                "description": "Sizinle paylaşılan {{item}} adlı öğeyi kaldırmak istediğinizden emin misiniz? Artık buna erişiminiz olmayacak!",
                 "continue": "Kaldır"
             }
         }
@@ -1254,18 +1254,18 @@
     },
     "notifications": {
         "chat": "Sohbet",
-        "contactRequest": "Kişi talebi",
-        "contactRequestInfo": "{{name}} size bir kişi talebi gönderdi"
+        "contactRequest": "İletişim talebi",
+        "contactRequestInfo": "{{name}} size bir iletişim talebi gönderdi"
     },
     "cookieConsent": {
         "description": "Bu site deneyiminizi ölçmek ve geliştirmek için çerezler kullanır.",
         "optOut": "Reddet",
-        "onlyNeeded": "Sadece gerekli",
+        "onlyNeeded": "Sadece gerekli çerezler",
         "accept": "Kabul et"
     },
     "mounts": {
         "networkDrive": {
-            "mountedAt": "{{letter}}'de monte edildi",
+            "mountedAt": "{{letter}} konumuna bağlandı",
             "browse": "Gözat",
             "clear": "Temizle",
             "missingDeps": "Eksik bağımlılıklar",
@@ -1273,9 +1273,9 @@
             "missingDepsLinux": "Ağ sürücüsünü kullanmak için sisteminizde FUSE3'ün yüklü olması gerekiyor.",
             "missingDepsInstructions": "Kurulum talimatları",
             "cacheUsed": "{{size}} kullanıldı",
-            "description": "Bulut sürücünüzü ağ sürücüsü olarak monte edin, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
-            "unixDescription": "Bulut sürücünüzü yerel bir dizin içine monte edin, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
-            "sudo": "Bulut sürücünüzü monte etmek ve kaldırmak için istemcinin yönetici haklarına ihtiyacı olabilir. Lütfen istendiğinde erişime izin verin.",
+            "description": "Bulut sürücünüzü bir ağ sürücüsü olarak bağlayarak dosyalarınıza doğrudan bilgisayarınızdan erişmeyi ve yönetmeyi kolaylaştırın. Sorunsuz entegrasyonun, gerçek zamanlı senkronizasyonun ve verilerinize güvenli erişimin keyfini çıkarın, üstelik tüm bunları dosya gezgininizden yapın.",
+            "unixDescription": "Bulut sürücünüzü yerel bir dizin içine bağlayın, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
+            "sudo": "Bulut sürücünüzü bağlamak ve kaldırmak için istemcinin yönetici haklarına ihtiyacı olabilir. Lütfen istendiğinde erişime izin verin.",
             "limitations": "Ağ sürücüsünde programların ve arşivlerin kurulumu, çalıştırılması veya açılması desteklenmez.",
             "sections": {
                 "active": {
@@ -1283,11 +1283,11 @@
                 },
                 "enabled": {
                     "name": "Etkin",
-                    "info": "Ağ sürücüsünü etkinleştir veya devre dışı bırak. Bu seçeneği değiştirirken gezgininizi yenileyin."
+                    "info": "Ağ sürücüsünü etkinleştir veya devre dışı bırak. Bu seçeneği değiştirirken dosya gezgininizi yenileyin."
                 },
                 "mountPoint": {
-                    "name": "Monte noktası",
-                    "info": "Monte noktasını yerel bir dizine ayarlayın. Yerel dizin boş, okunabilir ve yazılabilir olmalıdır.",
+                    "name": "Bağlama noktası",
+                    "info": "Bağlama noktasını yerel bir dizine ayarlayın. Yerel dizin boş, okunabilir ve yazılabilir olmalıdır.",
                     "change": "Değiştir"
                 },
                 "driveLetter": {
@@ -1296,11 +1296,11 @@
                 },
                 "browse": {
                     "name": "Gözat",
-                    "info": "Ağ sürücüsünü varsayılan gezgininizle gözatın."
+                    "info": "Varsayılan dosya gezgininizi kullanarak ağ sürücüsüne göz atın."
                 },
                 "cache": {
                     "name": "Önbellek",
-                    "info": "Önbellekleme, ağ sürücünüzde göz atmayı önemli ölçüde hızlandırır."
+                    "info": "Önbelleğe alma, ağ sürücünüzde gezinmeyi önemli ölçüde hızlandırır."
                 },
                 "cacheSize": {
                     "name": "Önbellek boyutu",
@@ -1311,8 +1311,8 @@
                     "info": "Ağ sürücüsünün önbellek konumunu değiştirin. Yerel bir diskte olmalıdır. Değiştirilmezse varsayılan olarak uygulama kurulum dizinini kullanacaktır."
                 },
                 "readOnly": {
-                    "name": "Sadece okunur",
-                    "info": "Ağ sürücüsünü sadece okunur olarak monte et"
+                    "name": "Salt okunur",
+                    "info": "Ağ sürücüsünü salt okunur olarak bağlayın"
                 }
             },
             "dialogs": {
@@ -1328,10 +1328,10 @@
                 }
             },
             "errors": {
-                "invalidMountPoint": "Geçersiz monte noktası.",
-                "mountPointNotEmpty": "Monte noktası boş bir dizin olmalıdır.",
-                "pathNotInHomeDir": "Monte noktası, ev dizininiz içinde olmalıdır (/home/<kullanıcıAdınız>).",
-                "pathNotInUserDir": "Monte noktası, kullanıcı dizininiz içinde olmalıdır (/Users/<kullanıcıAdınız>).",
+                "invalidMountPoint": "Geçersiz bağlama noktası.",
+                "mountPointNotEmpty": "Bağlama noktası boş bir dizin olmalıdır.",
+                "pathNotInHomeDir": "Bağlama noktası, ev dizininiz içinde olmalıdır (/home/<kullanıcıAdınız>).",
+                "pathNotInUserDir": "Bağlama noktası, kullanıcı dizininiz içinde olmalıdır (/Users/<kullanıcıAdınız>).",
                 "invalidCachePath": "Önbellek konumu, en az 10 GB boş alana sahip bir dahili diskte olmalıdır.",
                 "cachePathNotReadableWritable": "Önbellek konumu okunabilir veya yazılabilir değildir.",
                 "invalidCachePathLength": "Önbellek konumu yolu çok uzundur."
@@ -1511,9 +1511,9 @@
                     "info": "Senkronizasyon modunu değiştir"
                 },
                 "forceSync": {
-                    "name": "Zorla senkronizasyon",
-                    "info": "İçsel önbelleği sıfırlayın ve yerel ve bulut dizinini yeniden taramayı zorlayın",
-                    "forceSync": "Zorla senkronizasyon"
+                    "name": "Senkronizasyona zorla",
+                    "info": "Dahili önbelleği sıfırlayın ve yerel ve bulut dizinini yeniden taramayı zorlayın",
+                    "forceSync": "Senkronizasyona zorla"
                 },
                 "excludeDotFiles": {
                     "name": "Nokta dosyalarını hariç tut",
@@ -1609,8 +1609,8 @@
         }
     },
     "isOnline": {
-        "title": "Birisi kabloyu çıkar mıydı?",
-        "info": "Platformumuza bağlanmada sorun yaşıyoruz, lütfen internet bağlantınızı kontrol edin.",
+        "title": "Biri kablonun fişini mi çekti?",
+        "info": "Sizi platformumuza bağlamakta sorun yaşıyoruz, lütfen internet bağlantınızı kontrol edin.",
         "infoSub": "Eğer internetiniz çalışıyorsa lütfen bizimle iletişime geçin."
     },
     "404": {
@@ -1622,7 +1622,7 @@
     },
     "maintenance": {
         "title": "Filen şu anda bakımda",
-        "info": "Deneyiminizi daha da geliştirmek için şu anda bazı bakım çalışmaları yapıyoruz. Platformumuz yakında, taze ve geliştirilmiş bir şekilde geri dönecek.",
+        "info": "Deneyiminizi daha da geliştirmek için şu anda bazı bakım çalışmaları yapıyoruz. Platformumuz yakında, yenilenmiş ve geliştirilmiş bir şekilde geri dönecek.",
         "infoSub": "Sabır gösterdiğiniz için teşekkür ederiz! Size yeni özellikler sunmak için yoğun bir şekilde çalışıyoruz. Bizi takipte kalın!"
     }
 }
