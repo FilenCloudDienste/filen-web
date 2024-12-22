@@ -1,16 +1,24 @@
-import { memo, useMemo, useCallback, useEffect, useRef } from "react"
+import { memo, useMemo, useCallback, useEffect, useRef, type ClassAttributes, type HTMLAttributes } from "react"
 import * as themes from "./theme"
 import { useTheme } from "@/providers/themeProvider"
 import { loadLanguage } from "./langs"
 import { hyperLink } from "@uiw/codemirror-extensions-hyper-link"
 import { color } from "@uiw/codemirror-extensions-color"
-import { type Root, type Element, type RootContent } from "hast"
 import { ResizablePanelGroup, ResizableHandle, ResizablePanel } from "../ui/resizable"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import CodeMirror, { EditorView, type ReactCodeMirrorRef } from "@uiw/react-codemirror"
-import MarkdownPreview from "@uiw/react-markdown-preview"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import useLocation from "@/hooks/useLocation"
+import Markdown, { type ExtraProps } from "react-markdown"
+import { type Element, type Root } from "hast"
+import gfm from "remark-gfm"
+import { remarkAlert } from "remark-github-blockquote-alert"
+import { cn } from "@/lib/utils"
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
+import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism"
+import rehypeExternalLinks from "rehype-external-links"
+import { visit } from "unist-util-visit"
+import "./markdownStyle.less"
 
 export const TextEditor = memo(
 	({
@@ -46,7 +54,7 @@ export const TextEditor = memo(
 	}) => {
 		const codeMirrorRef = useRef<ReactCodeMirrorRef>(null)
 		const publicLinkURLState = usePublicLinkURLState()
-		const theme = useTheme()
+		const { dark } = useTheme()
 		const location = useLocation()
 		const [resizablePanelSizes, setResizablePanelSizes] = useLocalStorage<number[]>(
 			location.includes("notes")
@@ -73,8 +81,8 @@ export const TextEditor = memo(
 		)
 
 		const editorTheme = useMemo(() => {
-			return theme.dark ? themes.dark : themes.light
-		}, [theme.dark])
+			return dark ? themes.dark : themes.light
+		}, [dark])
 
 		const langExtension = useMemo(() => {
 			const lang = loadLanguage(fileName)
@@ -85,29 +93,6 @@ export const TextEditor = memo(
 
 			return [lang]
 		}, [fileName])
-
-		const rehypeRewrite = useCallback((node: Root | RootContent, _?: number, parent?: Root | Element) => {
-			try {
-				// @ts-expect-error Not typed
-				if (node.tagName === "a" && parent && /^h(1|2|3|4|5|6)/.test(parent.tagName)) {
-					parent.children = parent.children.slice(1)
-				}
-
-				// @ts-expect-error Not typed
-				if (node.tagName === "a" && node.properties && node.properties.href) {
-					// @ts-expect-error Not typed
-					if (node.properties.href.indexOf("#") !== -1) {
-						// @ts-expect-error Not typed
-						node.properties.href = window.location.hash
-					} else {
-						// @ts-expect-error Not typed
-						node.properties.target = "_blank"
-					}
-				}
-			} catch (e) {
-				console.error(e)
-			}
-		}, [])
 
 		const extensions = useMemo(() => {
 			return type === "code"
@@ -140,6 +125,64 @@ export const TextEditor = memo(
 			view.dispatch({
 				scrollIntoView: true
 			})
+		}, [])
+
+		const markdownComponents = useMemo(() => {
+			return {
+				code(props: ClassAttributes<HTMLElement> & HTMLAttributes<HTMLElement> & ExtraProps) {
+					try {
+						// eslint-disable-next-line @typescript-eslint/no-unused-vars
+						const { children, className, node, ...rest } = props
+						const match = /language-(\w+)/.exec(className || "")
+
+						return match ? (
+							// @ts-expect-error Not typed
+							<SyntaxHighlighter
+								{...rest}
+								PreTag="div"
+								children={String(children).replace(/\n$/, "")}
+								language={match?.[1] ?? "bash"}
+								style={dark ? oneDark : oneLight}
+							/>
+						) : (
+							<code
+								{...rest}
+								className={className}
+							>
+								{children}
+							</code>
+						)
+					} catch (e) {
+						console.error(e)
+					}
+				}
+			}
+		}, [dark])
+
+		const markdownAllowElement = useCallback((element: Element) => {
+			if (!element.tagName) {
+				return
+			}
+
+			return /^[A-Za-z0-9]+$/.test(element.tagName)
+		}, [])
+
+		const markdownRehypeRewriteLinks = useCallback(() => {
+			return (tree: Root) => {
+				visit(tree, "element", node => {
+					if (node.tagName === "a") {
+						if (!node.properties) {
+							node.properties = {}
+						}
+
+						if (typeof node.properties.href === "string" && node.properties.href.startsWith("http")) {
+							return
+						}
+
+						node.properties.href = window.location.href
+					}
+				})
+			}
 		}, [])
 
 		useEffect(() => {
@@ -213,26 +256,17 @@ export const TextEditor = memo(
 								order={2}
 								className="border-l"
 							>
-								<MarkdownPreview
-									source={value}
-									className="markdown-content"
-									style={{
-										width: "100%",
-										height: height + "px",
-										paddingLeft: "15px",
-										paddingRight: "15px",
-										paddingTop: "10px",
-										paddingBottom: "15px",
-										color: theme.dark ? "white" : "black",
-										userSelect: "text",
-										backgroundColor: "transparent",
-										overflowY: "auto",
-										overflowX: "auto"
-									}}
-									rehypeRewrite={rehypeRewrite}
-									wrapperElement={{
-										"data-color-mode": theme.dark ? "dark" : "light"
-									}}
+								<Markdown
+									children={value}
+									className={cn(
+										"markdown-content wmde-markdown wmde-markdown-color w-full h-full bg-transparent overflow-auto pb-12 px-4 pt-4",
+										dark ? "text-white" : "text-black"
+									)}
+									skipHtml={true}
+									remarkPlugins={[remarkAlert, gfm]}
+									rehypePlugins={[[rehypeExternalLinks, { target: "_blank" }], markdownRehypeRewriteLinks]}
+									allowElement={markdownAllowElement}
+									components={markdownComponents}
 								/>
 							</ResizablePanel>
 						</>

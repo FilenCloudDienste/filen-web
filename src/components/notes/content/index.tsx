@@ -18,6 +18,7 @@ import { DESKTOP_TOPBAR_HEIGHT } from "@/constants"
 import { useTranslation } from "react-i18next"
 import useErrorToast from "@/hooks/useErrorToast"
 import eventEmitter from "@/lib/eventEmitter"
+import { Loader } from "lucide-react"
 
 export const Content = memo(({ note }: { note: Note }) => {
 	const { setSelectedNote, setNotes, setSynced, setMaxSizeReached } = useNotesStore(
@@ -207,7 +208,18 @@ export const Content = memo(({ note }: { note: Note }) => {
 	}, [socketEventListener, keyDownListener])
 
 	if (!query.isSuccess) {
-		return null
+		return (
+			<div
+				style={{
+					height: windowSize.height - 48 - DESKTOP_TOPBAR_HEIGHT,
+					width: "100%"
+				}}
+			>
+				<div className="flex flex-row items-center justify-center w-full h-full">
+					<Loader className="animate-spin-medium" />
+				</div>
+			</div>
+		)
 	}
 
 	if (note.type === "checklist" || note.type === "rich") {

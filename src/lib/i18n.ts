@@ -55,6 +55,9 @@ i18n.use(LanguageDetector)
 			},
 			zh: {
 				translation: locales.zh
+			},
+			sv: {
+				translation: locales.sv
 			}
 		},
 		lng: storedLang ? storedLang : navigatorLang ? navigatorLang : undefined,
