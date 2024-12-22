@@ -1,0 +1,1697 @@
+{
+	"cloudDrive": "Moln Enhet",
+	"new": "Ny",
+	"image": "Bild",
+	"empty": "Tom",
+	"copiedToClipboard": "Kopierad till utklipp",
+	"everyone": "Allihopa",
+	"unknownUser": "Okänd användare",
+	"login": {
+		"header": "Logga in",
+		"description": "Ange din mail adress och ditt lösenord för att logga in på ditt konto",
+		"useTwoFactorRecoveryKey": "Använd återställnings nyckel istället",
+		"buttons": {
+			"login": "Logga in",
+			"createAccount": "Skapa ett konto",
+			"forgotPassword": "Glömt ditt lösenord?"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "Mail adress",
+				"password": "Lösenord",
+				"2faCode": "2FA kod",
+				"2faRecoveryKey": "Återställnings nyckel"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"2faCode": "381740",
+				"2faRecoveryKey": "Återställnings nyckel"
+			}
+		},
+		"dialogs": {
+			"forgotPassword": {
+				"title": "Glömt lösenord",
+				"continue": "Skicka instruktioner",
+				"placeholder": "Mail adress"
+			}
+		},
+		"alerts": {
+			"emailOrPasswordWrong": "Mail adress eller lösenord felaktigt",
+			"enter2FA": "Ange din Två Faktors Autentiserings kod",
+			"enter2FARecoveryKey": "Ange din Två Faktors Autentisering återställnings nyckel",
+			"forgotPasswordSent": "Instruktioner för lösenords återställning har skickats till {{email}}"
+		}
+	},
+	"register": {
+		"header": "Skapa ett konto",
+		"description": "Ange din mail adress och ett lösenord nedan för att skapa ett konto",
+		"buttons": {
+			"register": "Skapa konto",
+			"resendConfirmation": "Skicka verifierings mail igen",
+			"login": "Logga in"
+		},
+		"passwordStrength": {
+			"length": "Längd",
+			"uppercase": "Versala tecken",
+			"lowercase": "Gemena tecken",
+			"specialChars": "Special tecken"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "Mail adress",
+				"password": "Lösenord",
+				"confirmPassword": "Bekräfta lösenord"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"dialogs": {
+			"confirmationSend": {
+				"title": "Skicka verifierings mail igen",
+				"continue": "Skicka",
+				"placeholder": "Mail adress"
+			}
+		},
+		"alerts": {
+			"passwordWeak": "Ditt valda lösenord är för svagt",
+			"confirmationSent": "Verifierings mail har skickats till {{email}}",
+			"passwordsNotMatching": "Lösenorden är inte likadana",
+			"success": {
+				"title": "Konto skapat",
+				"continue": "Fortsätt",
+				"description": "Vi har skickat ett verifierings mail till {{email}}. Öppna länken i mailet för att bekräfta registreringen av ditt konto. Kolla även mappen för skräp post."
+			}
+		}
+	},
+	"reset": {
+		"header": "Återställ lösenord",
+		"description": "Ange din mail adress, ditt nya lösenord och ladda upp filen med dina huvud nycklar för att återställa ditt lösenord",
+		"importMasterKeys": "Importera nycklar",
+		"masterKeysImported": "Nycklar importerade",
+		"masterKeysNotImported": "Inga nycklar importerade",
+		"placeholders": {
+			"normal": {
+				"email": "Mail adress",
+				"password": "Lösenord",
+				"confirmPassword": "Bekräfta lösenord"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"buttons": {
+			"reset": "Återställ",
+			"back": "Tillbaka"
+		},
+		"dialogs": {
+			"noMasterKeysImported": {
+				"title": "Återställ lösenord",
+				"continue": "Jag förstår",
+				"description": "Jag förstår att genom att återställa lösenordet utan mina huvud nycklar kommer göra så att alla mina data som är lagrade på mitt konto blir otillgängliga. Detta beror på hur zero-knowledge end-to-end kryptering fungerar."
+			},
+			"noMasterKeysImported2": {
+				"title": "Återställ lösenord",
+				"continue": "Jag är säker",
+				"description": "Är du säker? Du kommer att radera alla data lagrade på ditt konto om du inte importerar dina huvud nycklar. Du kan ignorera denna varning om du inte har filen med dina huvud nycklar och ändå vill återställa ditt konto."
+			},
+			"noMasterKeysImported3": {
+				"title": "Återställ lösenord",
+				"continue": "Ja",
+				"description": "Är du verkligen säker?"
+			}
+		},
+		"alerts": {
+			"invalidMasterKeysFile": "Ogiltig fil med huvud nycklar",
+			"invalidMasterKeysFileWrongUserId": "Dessa nycklar tillhör ett annat konto",
+			"masterKeysImported": "Huvud nycklar importerade",
+			"passwordWeak": "Ditt valda lösenord är för svagt",
+			"passwordsNotMatching": "Lösenorden är inte likadana",
+			"invalidMasterKeys": "Ogiltiga huvud nycklar",
+			"passwordChanged": "Lösenordet är återställt"
+		}
+	},
+	"auth": {
+		"footer": {
+			"tos": "Service Villkor",
+			"privacy": "Integritets Policy"
+		}
+	},
+	"api": {
+		"errors": {
+			"invalid_params": "Ogiltiga parametrar",
+			"internal_error": "Internt fel",
+			"rate_limited": "Hastighet begränsad"
+		}
+	},
+	"topbar": {
+		"placeholders": {
+			"normal": {
+				"search": "Sök i denna mapp..."
+			},
+			"example": {
+				"search": "Sök i denna mapp..."
+			}
+		}
+	},
+	"dropZone": {
+		"cta": "Ladda upp här",
+		"chatsCta": "Lägg till i konversation"
+	},
+	"topBar": {
+		"breadcrumb": {
+			"cloudDrive": "Moln Enhet"
+		},
+		"searchInThisFolder": "Sök i denna mapp...",
+		"breadcrumbs": {
+			"recents": "Senaste",
+			"cloudDrive": "Moln Enhet",
+			"links": "Länkar",
+			"sharedWithMe": "Delat med mig",
+			"sharedWithOthers": "Delat till andra",
+			"favorites": "Favoriter",
+			"trash": "Papperskorg",
+			"directory": "Mapp"
+		},
+		"listView": "List vy",
+		"gridView": "Rutnät vy"
+	},
+	"innerSideBar": {
+		"top": {
+			"settings": "Inställningar",
+			"notes": "Anteckningar",
+			"chats": "Konversationer",
+			"contacts": "Kontakter",
+			"syncs": "Synkningar",
+			"mounts": "Monteringspunkter"
+		},
+		"bottom": {
+			"settings": "Inställningar"
+		},
+		"notes": {
+			"search": "Sök...",
+			"tags": {
+				"all": "Allt",
+				"favorites": "Favoriter",
+				"pinned": "Nålade"
+			},
+			"createNote": "Skapa anteckning",
+			"createTag": "Skapa tagg",
+			"empty": "Inga anteckningar än",
+			"emptyCreate": "Skapa",
+			"emptySearch": "Ingenting hittades för \"{{search}}\""
+		},
+		"chats": {
+			"empty": "Inga konversationer än",
+			"emptyCreate": "Skapa",
+			"search": "Sök...",
+			"createChat": "Skapa konversation",
+			"emptySearch": "Ingenting hittades för \"{{search}}\""
+		},
+		"recents": "Senaste",
+		"cloudDrive": "Moln Enhet",
+		"links": "Länkar",
+		"sharedWithMe": "Delat med mig",
+		"sharedWithOthers": "Delat med andra",
+		"favorites": "Favoriter",
+		"trash": "Papperskorg",
+		"settings": {
+			"general": "Allmänt",
+			"invoices": "Fakturor",
+			"subscriptions": "Prenumerationer",
+			"account": "Konto",
+			"events": "Händelser",
+			"security": "Säkerhet",
+			"invite": "Inbjudan",
+			"plans": "Prisplan"
+		},
+		"contacts": {
+			"online": "Online",
+			"offline": "Offline",
+			"all": "Alla",
+			"blocked": "Blockerade",
+			"in": "Förfrågningar",
+			"out": "Väntande"
+		},
+		"mounts": {
+			"networkDrive": "Nätverks Enhet",
+			"s3": "S3",
+			"webdav": "WebDAV"
+		},
+		"syncs": {
+			"empty": "Inga synkningar än",
+			"emptyCreate": "Skapa",
+			"nothingFound": "Ingenting hittades för \"{{search}}\"",
+			"createSync": "Skapa synkning",
+			"search": "Sök...",
+			"emptySearch": "Ingenting hittades för \"{{search}}\""
+		}
+	},
+	"sideBar": {
+		"cloudDrive": "Moln Enhet",
+		"transfers": "Överföringar",
+		"notes": "Anteckningar",
+		"chats": "Konversationer",
+		"contacts": "Kontakter",
+		"settings": "Inställningar",
+		"syncs": "Synkningar",
+		"mounts": "Monteringspunkter",
+		"terminal": "Terminal"
+	},
+	"dialogs": {
+		"cancel": "Avbryt",
+		"selectDriveItem": {
+			"title": "Välj",
+			"submit": "Välj",
+			"newFolder": "Ny mapp",
+			"empty": "Inga filer eller mappar uppladdade än",
+			"selectRoot": "Välj Moln Enhet"
+		},
+		"selectContacts": {
+			"title": "Välj kontakter",
+			"submit": "Välj",
+			"empty": "Inga kontakter än"
+		},
+		"publicLink": {
+			"title": "Publik länk",
+			"description": "Skapa en publik länk",
+			"close": "Stäng",
+			"save": "Spara",
+			"enabled": "Aktiverad",
+			"downloadButton": "Knapp för nedladdning",
+			"link": "Länk",
+			"copyLink": "Kopiera",
+			"expiresAfter": "Löper ut efter",
+			"password": "Lösenord (lämna tomt för att inaktivera)",
+			"passwordPlaceholder": "Lösenord",
+			"progress": "{{done}} av {{total}} objekt tillagda till den publika länken",
+			"expireNever": "Aldrig",
+			"subscriptionNeeded": "Du behöver en aktiv prenumeration för att skapa publika länkar.",
+			"upgradeNow": "Uppgradera nu"
+		},
+		"sharedWith": {
+			"title": "Delad med",
+			"add": "Lägg till",
+			"close": "Stäng",
+			"remove": "Ta bort",
+			"stopSharing": {
+				"title": "Sluta dela",
+				"description": "Är du säker på att du vill sluta dela {{item}} med {{name}}?",
+				"continue": "Sluta dela"
+			}
+		},
+		"changeEmail": {
+			"title": "Ändra din mail adress",
+			"newEmail": "Ny mail adress",
+			"newEmailPlaceholder": "Ny mail adress",
+			"confirmNewEmail": "Bekräfta ny mail adress",
+			"confirmNewEmailPlaceholder": "Bekräfta ny mail adress",
+			"password": "Ditt lösenord",
+			"passwordPlaceholder": "Lösenord",
+			"close": "Stäng",
+			"save": "Spara",
+			"successToast": "Mail adressen har ändrats",
+			"alerts": {
+				"success": {
+					"title": "Mail adressen ändrad",
+					"continue": "Fortsätt",
+					"description": "Vi har skickat ett verifierings mail till {{email}}. Öppna länken i mailet för att bekräfta registreringen av ditt konto. Kolla även mappen för skräp post.",
+					"dismiss": "Avfärda"
+				}
+			}
+		},
+		"changePassword": {
+			"title": "Ändra ditt lösenord",
+			"newPassword": "Nytt lösenord",
+			"newPasswordPlaceholder": "Nytt lösenord",
+			"confirmNewPassword": "Bekräfta nytt lösenord",
+			"confirmNewPasswordPlaceholder": "Bekräfta nytt lösenord",
+			"currentPassword": "Ditt nuvarande lösenord",
+			"currentPasswordPlaceholder": "Nuvarande lösenord",
+			"close": "Stäng",
+			"save": "Spara",
+			"successToast": "Lösenordet är ändrat"
+		},
+		"personalInformation": {
+			"title": "Ändra personlig information",
+			"firstName": "Förnamn",
+			"lastName": "Efternamn",
+			"close": "Stäng",
+			"save": "Spara",
+			"companyName": "Förtagsnamn",
+			"vatId": "VAT ID",
+			"street": "Gata",
+			"streetNumber": "Gatnummer",
+			"city": "Ort",
+			"postalCode": "Postnummer",
+			"country": "Land"
+		},
+		"twoFactorCode": {
+			"useRecoveryKey": "Använd återställnings nyckel istället",
+			"recoveryKeyPlaceholder": "Återställnings nyckel",
+			"title": "Två Faktors Autentisering",
+			"continue": "Fortsätt",
+			"info": "Ange din Två Faktors Autentiserings kod"
+		},
+		"noteParticipants": {
+			"remove": "Ta bort",
+			"toggleReadPermissions": "Ändra till läs rättigheter",
+			"toggleWritePermissions": "Ändra till skriv rättigheter",
+			"title": "Deltagare",
+			"close": "Stäng"
+		},
+		"fileVersions": {
+			"title": "Fil versioner",
+			"delete": {
+				"title": "Radera fil version",
+				"description": "Är du säker att du vill radera {{name}} permanent? Denna åtgärd kan ej ångras!",
+				"continue": "Radera"
+			}
+		},
+		"noteHistory": {
+			"empty": "Inga föregående antecknings versioner än"
+		},
+		"previewDialog": {
+			"save": "Spara",
+			"readOnly": "Skriv skyddad"
+		},
+		"transparentFullScreenImage": {
+			"openOriginal": "Öppna original"
+		},
+		"report": {
+			"title": "Rapportera missbruk",
+			"email": "Mail adress",
+			"emailPlaceholder": "Mail adress",
+			"comment": "Kommentar",
+			"commentPlaceholder": "Vänligen uppge alla detaljer vi kan behöva för att vidta lämpliga åtgärder så snart som möjligt (frivilligt)",
+			"reason": "Anledning",
+			"close": "Stäng",
+			"send": "Skicka",
+			"successToast": "Missbruks rapport skickad",
+			"reasons": {
+				"cp": "Barn pornografiskt material",
+				"dmca": "Intrång i upphovsrätt",
+				"stolen": "Stulen data",
+				"other": "Annat",
+				"spam": "Skräp post",
+				"malware": "Skadlig programvara"
+			}
+		},
+		"profile": {
+			"memberSince": "Medlem sedan {{since}}",
+			"add": "Skicka kontakt förfrågan",
+			"block": "Blockera",
+			"remove": "Ta bort från kontakter",
+			"unblock": "Ta bort blockering"
+		},
+		"createSync": {
+			"cancel": "Avbryt",
+			"create": "Skapa",
+			"name": "Synknings namn",
+			"localPath": "Lokal sökväg",
+			"remotePath": "Moln sökväg",
+			"select": "Välj",
+			"syncMode": "Synknings läge",
+			"title": "Skapa synkning",
+			"paused": "Pausad",
+			"excludeDotFiles": "Exkludera dot filer (rekommenderas)",
+			"disableLocalTrash": "Inaktivera lokal papperskorg och radera objekt permanent istället",
+			"mode": {
+				"twoWay": "Två vägs",
+				"localToCloud": "Lokal till moln",
+				"localBackup": "Lokal backup",
+				"cloudToLocal": "Moln till lokal",
+				"cloudBackup": "Moln backup",
+				"twoWayInfo": "Spegla alla åtgärder i båda riktningar",
+				"localToCloudInfo": "Spegla alla lokala åtgärder till molnet och spegla inga moln åtgärder lokalt",
+				"localBackupInfo": "Ladda bara upp data till molnet, radera aldrig någonting och spegla inga moln åtgärder lokalt",
+				"cloudToLocalInfo": "Spegla alla moln åtgärder lokalt och spegla inga lokala åtgärder i molnet",
+				"cloudBackupInfo": "Ladda bara ned data från molnet, radera aldrig någonting och spegla inga lokala åtgärder i molnet"
+			},
+			"errors": {
+				"localPathNotWritable": "Det går inte skriva till den lokala sökvägen. Se till att klienten har nödvändliga rättigheter.",
+				"invalidLocalPath": "Den lokala sökvägen du valt är ogiltig och kan inte synkas. Välj en annan sökväg.",
+				"remotePathAlreadyConfigured": "Moln sökvägen du valt används redan i en annan synkning. Detta kan leda till oändliga synknings loopar.",
+				"localPathAlreadyConfigured": "Den lokala sökvägen du valt används redan i en annan synkning. Detta kan leda till oändliga synknings loopar.",
+				"syncNameAlreadyExists": "En synkning med namnet \"{{name}}\" finns redan.",
+				"localPathSyncedByICloud": "Du kan inte synka en sökväg som redan är synkad med iCloud."
+			},
+			"warnings": {
+				"localDirectoryBig": {
+					"title": "Varning",
+					"continue": "Fortsätt",
+					"description": "Vid synkning av fler än {{count}} objekt kan ditt system bli långsamt, speciellt på enheter av lägre klass. Om du använder en enhet av högre klass kan du fortsätta, men vi rekommenderar att synka färre objekt för att undvika eventuella problem."
+				},
+				"localDirectoryNotPhysical": {
+					"title": "Varning",
+					"continue": "Fortsätt",
+					"description": "Den lokala mappen du har valt verkar inte vara på en fysisk enhet. Detta kan innebära problem med synkning och oförutsägbart uppträdande. Vill du fortsätta?"
+				}
+			}
+		},
+		"info": {
+			"title": "Info",
+			"close": "Stäng",
+			"directoryType": "Mapp",
+			"size": "Storlek",
+			"type": "Typ",
+			"name": "Namn",
+			"location": "Plats",
+			"modified": "Ändrad",
+			"uploaded": "Uppladdad",
+			"files": "Filer",
+			"directories": "Mappar"
+		},
+		"desktopUpdate": {
+			"title": "Uppdatering tillgänglig",
+			"info": "En ny version ({{version}}) har laddats ned och är redo att bli installerad. Vill du uppdatera nu?",
+			"dismiss": "Inte nu",
+			"update": "Uppdatera",
+			"installing": "Installerar uppdatering, vänligen avbryt inte denna åtgärd!"
+		},
+		"storage": {
+			"title": "Inte tillräckligt utrymma",
+			"info": "Du har inte tillräckligt med utrymme tillgängligt. För att ladda upp fler filer behöver du köpa en prenumeration av en prisplan. Alla prisplaner kan läggas på varandra vad gäller utrymme. Du kan prenumerera på flera prisplaner om du vill.",
+			"dismiss": "Inte nu",
+			"upgrade": "Uppgradera"
+		},
+		"event": {
+			"title": "Händelse"
+		},
+		"exportReminder": {
+			"title": "Exportera huvud nycklar",
+			"description": "Vänligen exportera dina huvud nycklar och spara dem på ett separat och säkert ställe. Du behöver dina huvud nycklar när du återställer ditt lösenord för att dina data inte ska gå förlorade. Varje gång du byter lösenord behöver du exportera dina huvud nycklar.",
+			"continue": "Exportera",
+			"dismiss": "Inte nu"
+		}
+	},
+	"contextMenus": {
+		"item": {
+			"download": "Ladda ned",
+			"publicLink": "Publik länk",
+			"share": "Dela",
+			"shareProgress": "{{done}} objekt delade",
+			"versions": "Versioner",
+			"favorite": "Favorit",
+			"unfavorite": "Ta bort favorit",
+			"rename": "Byt namn",
+			"move": "Flytta",
+			"trash": "Papperskorg",
+			"restore": "Återställ",
+			"preview": "Förhandsvisa",
+			"edit": "Redigera",
+			"remove": "Ta bort",
+			"stopSharing": "Sluta dela",
+			"selectDestination": "Välj destination",
+			"cloudDrive": "Moln Enhet",
+			"open": "Öppna",
+			"color": "Färg",
+			"deletePermanently": "Radera permanent",
+			"copyId": "Kopiera ID",
+			"info": "Info",
+			"manageShareOut": "Hantera delning",
+			"manageShareIn": "Ta bort delning",
+			"dialogs": {
+				"trash": {
+					"title": "Papperskorg",
+					"description": "Är du säker att du vill flytta {{name}} till papperskorgen? Du kan alltid återställa objektet senare.",
+					"continue": "Flytta"
+				},
+				"trashMultiple": {
+					"title": "Papperskorg",
+					"description": "Är du säker att du vill flytta {{count}} objekt till papperskorgen? Du kan alltid återställa objekten senare.",
+					"continue": "Flytta"
+				},
+				"deletePermanently": {
+					"title": "Radera permanent",
+					"description": "Är du säker att du vill radera {{name}} permanent? Denna åtgärd går inte att ångra!",
+					"continue": "Radera"
+				},
+				"deletePermanentlyMultiple": {
+					"title": "Radera permanent",
+					"description": "Är du säker att du vill radera {{count}} objekt permanent? Denna åtgärd går inte att ångra!",
+					"continue": "Radera"
+				}
+			}
+		},
+		"drive": {
+			"uploadFiles": "Ladda upp filer",
+			"uploadFolders": "Ladda upp mappar",
+			"newTextFile": "Ny textfil",
+			"newFolder": "Ny mapp"
+		},
+		"notes": {
+			"history": "Historik",
+			"participants": "Deltagare",
+			"type": "Typ",
+			"pin": "Nåla",
+			"unpin": "Ta bort nål",
+			"favorite": "Favorit",
+			"unfavorite": "Ta bort favorit",
+			"duplicate": "Kopiera",
+			"export": "Exportera",
+			"exportAll": "Exportera allt",
+			"archive": "Arkivera",
+			"restore": "Återställ",
+			"trash": "Flytta till papperskorg",
+			"delete": "Radera",
+			"rename": "Byt namn",
+			"tags": "Taggar",
+			"leave": "Lämna",
+			"copyId": "Kopiera ID",
+			"createTag": "Skapa tagg",
+			"types": {
+				"md": "Markdown",
+				"rich": "Richtext",
+				"text": "Text",
+				"checklist": "Checklista",
+				"code": "Kod"
+			}
+		},
+		"contacts": {
+			"profile": "Profil",
+			"remove": "Ta bort",
+			"block": "Blockera"
+		},
+		"chat": {
+			"input": {
+				"selectFromDrive": "Välj från enhet",
+				"attachFiles": "Lägg till filer"
+			}
+		},
+		"chats": {
+			"editName": "Redigera namn",
+			"leave": "Lämna",
+			"delete": "Radera",
+			"copyId": "Kopiera ID"
+		},
+		"syncs": {
+			"delete": "Radera",
+			"pause": "Pausa",
+			"resume": "Återuppta"
+		}
+	},
+	"transfers": {
+		"title": "Överföringar",
+		"remaining": "Ungefär {{time}} kvar",
+		"noActiveTransfers": "Inga överföringar än",
+		"state": {
+			"finished": "Slutförd",
+			"queued": "Köad",
+			"started": "Startad",
+			"error": "Fel",
+			"stopped": "Stoppad",
+			"paused": "Pausad",
+			"creatingDirectories": "Skapar mappar",
+			"finishing": "Slutför"
+		},
+		"pause": "Pausa",
+		"resume": "Återuppta",
+		"stop": "Stoppa"
+	},
+	"chats": {
+		"newMessagesSince": "{{count}} nya meddelanden sedan {{since}}",
+		"markAsRead": "Markera som läst",
+		"maxSizeReached": "Maximal storlek på meddelande är begränsat till {{chars}} tecken",
+		"newMessageSince": "{{count}} nya meddelanden sedan {{since}}",
+		"showParticipants": "Visa deltagare",
+		"hideParticipants": "Göm deltagare",
+		"addParticipants": "Lägg till deltagare",
+		"emojisMatching": "Emoji matchar {{text}}",
+		"empty": {
+			"title": "Inga konversationer än",
+			"description": "Konversationer som du har skapat eller som du är deltagare i visas här",
+			"create": "Skapa"
+		},
+		"header": {
+			"title": "End-to-end krypterad konversation",
+			"description": "Filen säkrar alla konversationer med zero-knowledge end-to-end kryptering som standard",
+			"feature1": "Bara deltagarna i konversationen kan dekryptera och läsa innehållet",
+			"feature2": "Systemet ser till att data som mottagits verkligen kommer från den angivna användaren och inte har förändrats"
+		},
+		"message": {
+			"time": {
+				"now": "Nu",
+				"secondAgo": "{{seconds}} sekund sedan",
+				"secondsAgo": "{{seconds}} sekunder sedan",
+				"minuteAgo": "{{minutes}} minut sedan",
+				"minutesAgo": "{{minutes}} minuter sedan",
+				"hourAgo": "{{hours}} timme sedan",
+				"hoursAgo": "{{hours}} timmar sedan",
+				"todayAt": "Idag vid {{date}}",
+				"yesterdayAt": "Igår vid {{date}}"
+			},
+			"edited": "Redigerad",
+			"reply": "Svara",
+			"delete": "Radera",
+			"edit": "Redigera",
+			"copyId": "Kopiera ID",
+			"copyText": "Kopiera text",
+			"leave": "Lämna"
+		},
+		"input": {
+			"placeholder": "Skicka ett meddelande...",
+			"typing": "skriver...",
+			"typingMultiple": "skriver...",
+			"replyingTo": "Svarar till",
+			"placeholderMobile": "Meddelande..."
+		},
+		"dialogs": {
+			"deleteMessage": {
+				"title": "Radera meddelande",
+				"description": "Är du säker att du vill radera detta meddelande? Denna åtgärd går inte att ångra!",
+				"continue": "Radera"
+			},
+			"removeParticipant": {
+				"title": "Ta bort deltagare",
+				"description": "Är du säker att du vill ta bort {{name}} från denna konversation?",
+				"continue": "Ta bort"
+			},
+			"deleteConversation": {
+				"title": "Radera konversation",
+				"description": "Är du säker att du vill radera denna konversation? Denna åtgärd går inte att ångra!",
+				"continue": "Radera"
+			},
+			"leaveConversation": {
+				"title": "Lämna konversation",
+				"description": "Är du säker att du vill lämna denna konversation?",
+				"continue": "Lämna"
+			},
+			"editName": {
+				"title": "Redigera namn",
+				"placeholder": "Nytt namn",
+				"continue": "Spara"
+			}
+		},
+		"embeds": {
+			"og": {
+				"noTitleAvailable": "Ingen titel tillgänglig",
+				"noDescriptionAvailable": "Ingen beskrivning tillgänglig",
+				"noImageAvailable": "Ingen bild tillgänglig"
+			}
+		},
+		"participants": {
+			"profile": "Profil",
+			"remove": "Ta bort"
+		}
+	},
+	"contacts": {
+		"addContact": "Lägg till kontakt",
+		"search": "Sök...",
+		"empty": "Inga kontakter än",
+		"emptySearch": "Inget hittades för \"{{search}}\"",
+		"openChat": "Öppna konversation",
+		"more": "Mer",
+		"dialogs": {
+			"unblock": {
+				"title": "Ta bort blockering av användare",
+				"description": "Är du säker att du vill ta bort blockeringen av {{name}}?",
+				"continue": "Ta bort"
+			},
+			"remove": {
+				"title": "Ta bort kontakt",
+				"description": "Är du säker att du vill ta bort {{name}} från dina kontakter?",
+				"continue": "Ta bort"
+			},
+			"block": {
+				"title": "Blockera användare",
+				"description": "Är du säker att du vill blockera {{name}}?",
+				"continue": "Blockera"
+			},
+			"sendRequest": {
+				"title": "Skicka kontakt förfrågan",
+				"placeholder": "Mail adress till en Filen användare",
+				"continue": "Skicka"
+			}
+		}
+	},
+	"settings": {
+		"dialogs": {
+			"deleteVersions": {
+				"title": "Radera fil versioner",
+				"description": "Är du säker på att du vill radera alla fil versioner? Denna åtgärd går inte att ångra!",
+				"continue": "Radera"
+			},
+			"deleteAll": {
+				"title": "Radera alla filer och mappar",
+				"description": "Är du säker på att du vill radera alla filer och mappar? Denna åtgärd går inte att ångra!",
+				"continue": "Radera"
+			},
+			"deleteAll2": {
+				"title": "Radera alla filer och mappar",
+				"description": "Är du verkligen säker? Denna åtgärd går inte att ångra!",
+				"continue": "Radera"
+			},
+			"deleteAll3": {
+				"title": "Radera alla filer och mappar",
+				"description": "Är du verkligen 100% säker? Denna åtgärd går inte att ångra!",
+				"continue": "Radera"
+			},
+			"requestAccountDeletion": {
+				"title": "Radera konto",
+				"description": "Är du säker att du vill radera ditt konto och alla dina data som är associerade med ditt konto? Vi kommer skicka ett bekräftelse mail. Denna åtgärd går inte att ångra!",
+				"continue": "Begär radering"
+			},
+			"logout": {
+				"title": "Logga ut",
+				"description": "Är du säker på att du vill logga ut?",
+				"continue": "Logga ut"
+			},
+			"clearThumbnailCache": {
+				"title": "Rensa thumbnail cachen",
+				"description": "Är du säker på att du vill rensa den lokala thumbnail cachen? Detta kommer frigöra lokalt utrymme, men bilder för förhandsgranskingar kommer att genereras igen vid behov.",
+				"continue": "Rensa"
+			},
+			"cancelSubscription": {
+				"title": "Avbryt prenumeration",
+				"description": "Är du säker att du vill avbryta din prenumeration?",
+				"continue": "Avbryt prenumeration",
+				"close": "Stäng"
+			},
+			"nickName": {
+				"title": "Redigera smeknamn",
+				"placeholder": "Nytt smeknamn",
+				"continue": "Spara",
+				"invalid": "Smeknamnet måste bestå av 3 till 32 alfanumeriska tecken."
+			},
+			"twoFactorAuthenticationRecoveryKey": {
+				"title": "Återställnings nyckel",
+				"description": "Vänligen spara din Två Faktors Autentiserings återställnings nyckel på en säker plats. Det är det enda sättet att återfå tillgång till ditt konto om du förlorar din Två Faktors Autentiserings enhet!",
+				"continue": "Klar"
+			}
+		},
+		"general": {
+			"storageUsed": "Utrymme använt",
+			"files": "Filer {{size}}",
+			"versionedFiles": "Versionerade filer {{size}}",
+			"free": "Fritt {{size}}",
+			"used": "{{used}} av {{max}} använt",
+			"dark": "Mörkt",
+			"light": "Ljust",
+			"system": "System",
+			"noteType": {
+				"md": "Markdown",
+				"rich": "Richtext",
+				"text": "Text",
+				"checklist": "Checklista",
+				"code": "Kod"
+			},
+			"sections": {
+				"defaultNoteType": {
+					"name": "Standard antecknings typ",
+					"info": "Ändra standard antecknings typ"
+				},
+				"chatNotifications": {
+					"name": "Konversations notiser",
+					"info": "Aktivera eller inaktivera konversations notiser"
+				},
+				"notificationSound": {
+					"name": "Notis ljud",
+					"info": "Aktivera eller inaktivera notis ljud"
+				},
+				"contactNotifications": {
+					"name": "Kontakt notiser",
+					"info": "Aktivera eller inaktivera kontakt notiser"
+				},
+				"theme": {
+					"name": "Tema",
+					"info": "Ändra appens utseende"
+				},
+				"language": {
+					"name": "Språk",
+					"info": "Ändra appens språk"
+				},
+				"clearThumbnailCache": {
+					"name": "Thumbnail cache",
+					"info": "Rensa thumbnail cachen",
+					"action": "Rensa"
+				},
+				"logout": {
+					"name": "Logga ut",
+					"info": "Logga ut",
+					"action": "Logga ut"
+				},
+				"minimizeToTray": {
+					"name": "Minimera till systemfältet",
+					"info": "Dölj Filen till systemfältet istället för att minimera fönstret"
+				},
+				"startMinimized": {
+					"name": "Starta minimerad",
+					"info": "Aktivera eller inaktivera minimerad uppstart"
+				},
+				"autoLaunch": {
+					"name": "Autostart",
+					"info": "Starta Filen automatiskt vid uppstart av systemet."
+				},
+				"exportDesktopLogs": {
+					"name": "Exportera loggar",
+					"info": "Exportera alla loggar från skrivbords klienten",
+					"action": "Exportera"
+				}
+			}
+		},
+		"invite": {
+			"copy": "Kopia",
+			"title": "Få upp till 30 GB utrymme genom att bjuda in andra",
+			"description": "För varje vän du bjuder in till Filen får du {{yourEarnings}} och din vän får {{otherEarnings}}. Så enkelt är det.",
+			"earned": "{{earned}} av {{max}}",
+			"storageEarned": "Utrymme intjänat"
+		},
+		"events": {
+			"empty": "Inga händelser än",
+			"fileUploaded": "{{name}} uppladdad",
+			"fileVersioned": "{{name}} versionerad",
+			"versionedFileRestored": "{{name}} återställd från fil versioner",
+			"fileMoved": "{{name}} flyttad",
+			"fileRenamed": "{{name}} bytte namn till {{newName}}",
+			"fileTrash": "{{name}} flyttad till papperskorg",
+			"fileRm": "{{name}} raderad",
+			"fileRestored": "{{name}} återställd från papperskorg",
+			"fileShared": "{{name}} delad med {{email}}",
+			"fileLinkEdited": "Publik länk för {{name}} redigerad",
+			"folderTrash": "{{name}} flyttad till papperskorg",
+			"folderShared": "{{name}} delad med {{email}}",
+			"folderMoved": "{{name}} flyttad",
+			"folderRenamed": "{{name}} bytte namn till {{newName}}",
+			"subFolderCreated": "{{name}} skapad",
+			"baseFolderCreated": "{{name}} skapad",
+			"folderRestored": "{{name}} återställd från papperskorg",
+			"folderColorChanged": "Färgen på {{name}} ändrades",
+			"login": "Loggade in",
+			"deleteVersioned": "Versionerade filer raderade",
+			"deleteAll": "Alla filer och mappar raderade",
+			"deleteUnfinished": "Ej fullständiga uppladdningar raderade",
+			"trashEmptied": "Papperskorg tömd",
+			"requestAccountDeletion": "Begärde radering av konto",
+			"2faEnabled": "Två Faktors Autentisering aktiverad",
+			"2faDisabled": "Två Faktors Autentisering inaktiverad",
+			"codeRedeemed": "Kod {{code}} inlöst",
+			"emailChanged": "Mail adress ändrad till {{email}}",
+			"passwordChanged": "Lösenord ändrades",
+			"removedSharedInItems": "{{count}} objekt delade från {{email}} borttagna",
+			"removedSharedOutItems": "{{count}} objekt delade med {{email}} borttagna",
+			"folderLinkEdited": "Ändrade en mapp länk",
+			"itemFavoriteAdded": "{{name}} tillagd i favoriter",
+			"itemFavoriteRemoved": "{{name}} borttagen från favoriter",
+			"failedLogin": "Misslyckad inloggning",
+			"deleteFolderPermanently": "{{name}} raderad permanent",
+			"deleteFilePermanently": "{{name}} raderad permanent",
+			"emailChangeAttempt": "Noterade ett försök att ändra mail adress"
+		},
+		"invoices": {
+			"plan": "Prisplan",
+			"method": "Metod",
+			"date": "Datum",
+			"download": "Nedladdning",
+			"amount": "Belopp",
+			"paid": "Betald",
+			"noInvoices": "Inga fakturor än",
+			"paymentMethod": "Betalnings metod"
+		},
+		"subscriptions": {
+			"plan": "Prisplan",
+			"method": "Metod",
+			"date": "Datum",
+			"download": "Nedladdning",
+			"amount": "Belopp",
+			"status": "Status",
+			"noSubscriptions": "Inga prenumerationer än",
+			"cancel": "Avbryt",
+			"storage": "Lagring",
+			"moreInfo": "Mer information om din prenumeration",
+			"paymentMethod": "Betalnings metod",
+			"info": "{{storage}} utrymme med obegränsade uppladdningar, nedladdningar, anteckningar och konversationer. Låser upp Filens fulla potential.",
+			"statuses": {
+				"cancelled": "Avbruten",
+				"active": "Aktiv",
+				"waiting": "Väntar"
+			},
+			"cannotCancelTooEarly": "Prenumerationer kan bara avbrytas tidigast 24 timmar efter köp.",
+			"billingDetails": "Betalnings detaljer"
+		},
+		"plans": {
+			"starter": "Kom igång",
+			"monthly": "Månadsvis",
+			"annually": "Årsvis",
+			"lifetime": "Livstid",
+			"buyNow": "Köp nu",
+			"payInvoice": "Betala faktura",
+			"sale": "Utförsäljning",
+			"limited": "Begränsad tillgång",
+			"creditCard": "Kredit kort",
+			"crypto": "Krypto valuta",
+			"legal1": "Vid köp av en prisplan godkänner du att Filen automatiskt belastar ditt kort vid varje betalnings period tills du avslutar prenumerationen. Du kan avsluta närsomhelst via din Konto sida. Inga delvisa återbetalningar.",
+			"legal2": "Du godkänner också automatiskt våra",
+			"tos": "Service Villkor",
+			"and": "och",
+			"privacyPolicy": "Integritets Policy",
+			"features": {
+				"free": {
+					"1": "Obegränsad bandbredd",
+					"2": "Obegränsad uppladdning",
+					"3": "Kryptering hos klienten",
+					"4": "Zero knowledge teknologi",
+					"5": "Synkningar",
+					"6": "Nätverks enhet",
+					"7": "Begränsad fil delning",
+					"8": "Begränsade anteckningar",
+					"9": "Begränsade konversationer"
+				},
+				"pro": {
+					"1": "Obegränsad bandbredd",
+					"2": "Obegränsad uppladdning",
+					"3": "Kryptering hos klienten",
+					"4": "Zero knowledge teknologi",
+					"5": "Synkningar",
+					"6": "Nätverks enhet",
+					"7": "Fil delning",
+					"8": "Obegränsade anteckningar",
+					"9": "Obegränsade konversationer"
+				}
+			}
+		},
+		"security": {
+			"sections": {
+				"password": {
+					"name": "Lösenord",
+					"info": "Ändra ditt lösenord",
+					"action": "Ändra"
+				},
+				"twoFactorAuthentication": {
+					"name": "Två Faktors Autentisering",
+					"info": "Aktivera eller inaktivera Två Faktors Autentisering"
+				},
+				"exportMasterKeys": {
+					"name": "Exportera huvud nycklar",
+					"info": "Exportera dina huvud nycklar så att du kan återställa ditt konto om du behöver återställa ditt lösenord. Du behöver exportera dina huvud nycklar varje gång du byter lösenord.",
+					"action": "Exportera",
+					"subInfo": "Vänligen exportera dina huvud nycklar och spara dem på ett separat och säkert ställe. Du behöver dina huvudnycklar när du återställer ditt lösenord för att undvika att dina data går förlorade. Du behöver exportera dina huvud nycklar varje gång du byter lösenord."
+				},
+				"lockTimeout": {
+					"name": "Lås appen",
+					"info": "Lås appen när du varit inaktiv en bestämd tid. Du måste skapa en PIN kod för att lås skärmen ska fungera",
+					"values": {
+						"never": "Aldrig",
+						"immediately": "Direkt",
+						"oneMinute": "1 minut",
+						"threeMinutes": "3 minuter",
+						"fiveMinutes": "5 minuter",
+						"tenMinutes": "10 minuter",
+						"fifteenMinutes": "15 minuter",
+						"thirtyMinutes": "30 minuter",
+						"oneHour": "1 timme",
+						"threeHours": "3 timmar",
+						"sixHours": "6 timmar",
+						"twelveHours": "12 timmar",
+						"twentyFourHours": "24 timmar"
+					}
+				},
+				"lockPin": {
+					"name": "Lås PIN",
+					"info": "Skapa en PIN kod för att låsa upp appen",
+					"action": "Ändra"
+				}
+			},
+			"dialogs": {
+				"lockPin": {
+					"notMatching": "PIN koderna du angav är inte likadana",
+					"enterPin": "Ange en PIN kod",
+					"confirmPin": "Bekräfta PIN koden"
+				},
+				"lock": {
+					"wrongPin": "Fel PIN kod",
+					"tooManyAttempts": "För många försök att låsa upp appen, försök igen senare."
+				}
+			}
+		},
+		"account": {
+			"sections": {
+				"avatar": {
+					"name": "Avatar",
+					"info": "Din avatar kommer att synas publikt",
+					"action": "Redigera",
+					"invalid": "Ogiltig bild. Tillåtna fil typer är PNG och JPG, högst 2MB storlek."
+				},
+				"versionedFiles": {
+					"name": "Versionerade filer",
+					"info": "Radera alla versionerade filer",
+					"action": "Radera"
+				},
+				"all": {
+					"name": "Alla filer och mappar",
+					"info": "Radera alla filer och mappar",
+					"action": "Radera"
+				},
+				"email": {
+					"name": "Mail adress",
+					"info": "Ändra din mail adress",
+					"action": "Ändra"
+				},
+				"nickName": {
+					"name": "Smeknamn",
+					"info": "Ändra ditt smeknamn",
+					"action": "Ändra"
+				},
+				"personalInformation": {
+					"name": "Personlig information",
+					"info": "Redigera din personliga information. Bara för företags kunder. Kommer att användas vid fakturering och är inte publikt.",
+					"action": "Redigera"
+				},
+				"fileVersioning": {
+					"name": "Fil versionering",
+					"info": "Aktivera eller inaktivera fil versionering"
+				},
+				"loginAlerts": {
+					"name": "Inloggnings varning",
+					"info": "Aktivera eller inaktivera inloggnings varning"
+				},
+				"appearOffline": {
+					"name": "Visa som offline",
+					"info": "Visa som offline i konversationer"
+				},
+				"requestAccountData": {
+					"name": "Begär konto data",
+					"info": "Begär all personlig data vi lagrar om dig i enlighet med GDPR",
+					"action": "Begär"
+				},
+				"requestAccountDeletion": {
+					"name": "Begär radering av konto",
+					"info": "Begär radering av ditt konto. Vi kommer skicka dig ett bekräftelse mail",
+					"action": "Begär"
+				}
+			}
+		}
+	},
+	"drive": {
+		"header": {
+			"name": "Namn",
+			"size": "Storlek",
+			"modified": "Ändrad"
+		},
+		"list": {
+			"item": {
+				"sharedWith": "Delad med {{count}}"
+			}
+		},
+		"dialogs": {
+			"createTextFile": {
+				"title": "Skapa textfil",
+				"placeholder": "Namn",
+				"continue": "Skapa",
+				"invalidFileName": "Ogiltigt fil namn."
+			},
+			"createDirectory": {
+				"title": "Skapa mapp",
+				"placeholder": "Namn",
+				"continue": "Skapa",
+				"invalidDirectoryName": "Ogiltigt mapp namn."
+			},
+			"rename": {
+				"title": "Byt namn",
+				"placeholder": "Nytt namn",
+				"continue": "Byt namn",
+				"invalidFileName": "Ogiltigt fil namn.",
+				"invalidDirectoryName": "Ogiltigt mapp namn."
+			},
+			"share": {
+				"title": "Dela",
+				"placeholder": "Mail adress till en Filen användare",
+				"continue": "Dela"
+			}
+		},
+		"linksNoSub": {
+			"subscriptionNeeded": "Prenumeration behövs",
+			"description": "Uppgradering till en Pro-prisplan låser upp ditt konto så att du kan dela genom publika länkar",
+			"upgradeNow": "Uppgradera nu"
+		},
+		"emptyPlaceholder": {
+			"uploadFiles": "Ladda upp filer",
+			"search": {
+				"title": "Sök",
+				"info": "Ingenting hittades för \"{{search}}\""
+			},
+			"publicLink": {
+				"title": "Tom mapp",
+				"info": "Ägaren av denna mapp har inte laddat upp någon fil till mappen än"
+			},
+			"drive": {
+				"title": "Inga filer eller mappar har laddats upp än",
+				"info": "Dra och släpp filer eller mappar här eller klicka på knappen nedan"
+			},
+			"trash": {
+				"title": "Ingenting i papperskorgen än",
+				"info": "Filer och mappar som flyttats till papperskorgen visas här"
+			},
+			"recents": {
+				"title": "Inga filer har laddats upp än",
+				"info": "Nyligen uppladdade filer visas här"
+			},
+			"links": {
+				"title": "Inga publika länkar är skapade än",
+				"info": "Publika länkar till filer och mappar visas här"
+			},
+			"favorites": {
+				"title": "Inga favoriter än",
+				"info": "Favorit filer och mappar visas här"
+			},
+			"sharedIn": {
+				"title": "Ingenting har delats med dig än",
+				"info": "Delade filer och mappar visas här"
+			},
+			"sharedOut": {
+				"title": "Ingenting har delats med andra än",
+				"info": "Delade filer och mappar visas här"
+			}
+		}
+	},
+	"publicLink": {
+		"invalid": "Ogiltig publik länk",
+		"invalidInfo": "Denna publika länk har antingen upphört eller finns inte.",
+		"back": "Tillbaka",
+		"directory": {
+			"downloadWholeDirectory": "Ladda ned hel mapp",
+			"downloadDirectory": "Ladda ned mapp"
+		},
+		"sideBar": {
+			"ad": {
+				"header": "Vi är Filen",
+				"title": "Privat och säker moln lagring",
+				"info1": "Skapad för integritet",
+				"info2": "End-to-end kryptering",
+				"info3": "Zero knowledge tekonologi",
+				"cta": "10 GB utrymme gratis"
+			},
+			"reportAbuse": "Rapportera missbruk"
+		},
+		"auth": {
+			"wrongPassword": "Felaktigt lösenord",
+			"title": "Denna länk är skyddad med lösenord",
+			"subTitle": "Ange lösenordet du fått från avsändaren för att få åtkomst.",
+			"password": "Lösenord",
+			"passwordPlaceholder": "Lösenord",
+			"access": "Åtkomst"
+		}
+	},
+	"notes": {
+		"contentPlaceholder": "Anteckning innehåll...",
+		"maxSizeReached": "Maximal storlek på anteckning är begränsat till {{chars}} tecken",
+		"empty": {
+			"title": "Inga anteckningar än",
+			"description": "Anteckningar som du skapat eller som du är deltagare i visas här",
+			"create": "Skapa"
+		},
+		"dialogs": {
+			"removeParticipant": {
+				"title": "Ta bort deltagare",
+				"description": "Är du säker att du vill ta bort {{name}} från denna anteckning?",
+				"continue": "Ta bort"
+			},
+			"deleteNote": {
+				"title": "Radera anteckning",
+				"description": "Är du säker att du vill radera {{name}}? Denna åtgärd går inte att ångra!",
+				"continue": "Radera"
+			},
+			"deleteTag": {
+				"title": "Radera tagg",
+				"description": "Är du säker att du vill radera {{name}}? Denna åtgärd går inte att ångra!",
+				"continue": "Radera"
+			},
+			"renameTag": {
+				"title": "Byt namn",
+				"placeholder": "Nytt namn",
+				"continue": "Byt namn"
+			},
+			"createTag": {
+				"title": "Skapa tagg",
+				"placeholder": "Namn",
+				"continue": "Skapa"
+			},
+			"renameNote": {
+				"title": "Byt namn",
+				"placeholder": "Nytt namn",
+				"continue": "Byt namn"
+			},
+			"leaveNote": {
+				"title": "Lämna anteckning",
+				"description": "Är du säker att du vill lämna {{name}}? Du kommer inte ha åtkomst till anteckningen längre.",
+				"continue": "Lämna"
+			}
+		}
+	},
+	"previewDialog": {
+		"unsavedChanges": {
+			"title": "Ej sparade ändringar",
+			"description": "Är du säker att du vill stänga utan att spara? Alla ändringar går förlorade.",
+			"continue": "Stäng"
+		}
+	},
+	"sharedIn": {
+		"dialogs": {
+			"remove": {
+				"title": "Ta bort",
+				"description": "Är du säker att du vill ta bort {{item}} från dina delningar? Du kommer inte ha åtkomst till den längre!",
+				"continue": "Ta bort"
+			}
+		}
+	},
+	"desktop": {
+		"dialogs": {
+			"close": {
+				"title": "Stäng",
+				"description": "Är du säker att du vill avsluta Filen?",
+				"continue": "Avsluta"
+			}
+		}
+	},
+	"trash": {
+		"dialogs": {
+			"empty": {
+				"title": "Töm papperskorg",
+				"description": "Är du säker att du vill tömma din papperskorg? Denna åtgärd går inte att ångra!",
+				"continue": "Töm"
+			}
+		}
+	},
+	"notifications": {
+		"chat": "Konversation",
+		"contactRequest": "Kontakt begäran",
+		"contactRequestInfo": "{{name}} har skickat en kontakt begäran till dig"
+	},
+	"cookieConsent": {
+		"description": "Denna webbplats använder kakor för att mäta och förbättra din upplevelse.",
+		"optOut": "Välj bort",
+		"onlyNeeded": "Bara nödvändiga",
+		"accept": "Acceptera"
+	},
+	"mounts": {
+		"networkDrive": {
+			"mountedAt": "Monterad på {{letter}}",
+			"browse": "Bläddra",
+			"clear": "Rensa",
+			"missingDeps": "Beroenden saknas",
+			"missingDepsWindows": "För att använda nätverks enhet behöver du ha WinFSP installerad på ditt system.",
+			"missingDepsLinux": "För att använda nätverks enhet behöver du ha FUSE3 installerad på ditt system.",
+			"missingDepsInstructions": "Installations instruktioner",
+			"cacheUsed": "{{size}} used",
+			"description": "Montering av din moln enhet som en nätverks enhet gör det enkelt att komma åt och hantera dina filer direkt från din dator. Njut av sömlös integration, real-tids synkronisering och säker tillgång till dina data. Allt med fil hanteraren som du är van med.",
+			"unixDescription": "Montering av din moln enhet inuti en lokal mapp gör det enkelt att komma åt och hantera dina filer direkt från din dator. Njut av sömlös integration, real-tids synkronisering och säker tillgång till dina data. Allt med fil hanteraren som du är van med.",
+			"sudo": "För att kunna montera eller avmontera din moln enhet kan klienten behöva administratörs rättigheter. Vänligen ge rättigheter om du blir tillfrågad.",
+			"limitations": "Att installera, köra eller packa upp program och arkiv på nätverks enheten stöds inte.",
+			"sections": {
+				"active": {
+					"name": "Aktiv"
+				},
+				"enabled": {
+					"name": "Aktiverad",
+					"info": "Aktivera eller inaktivera nätverks enheten. Uppdatera innehållet i din fil hanterare när du ändrat denna inställning"
+				},
+				"mountPoint": {
+					"name": "Monterings punkt",
+					"info": "Ställ in monterings punkten till en lokal mapp. Mappen måste vara tom, vara läsbar och skrivbar.",
+					"change": "Ändra"
+				},
+				"driveLetter": {
+					"name": "Enhets bokstav",
+					"info": "Ställ in enhets bokstaven för nätverks enheten. Bara tillgängliga enhets bokstäver visas"
+				},
+				"browse": {
+					"name": "Bläddra",
+					"info": "Bläddra nätverks enheten med din fil hanterare"
+				},
+				"cache": {
+					"name": "Cache",
+					"info": "Cachen gör att det går betydligt snabbare att bläddra din nätverks enhet"
+				},
+				"cacheSize": {
+					"name": "Cache storlek",
+					"info": "Vi rekommenderar att ha cachen så stor som möjligt. Klienten kommer använda din lokala disk för att snabba upp nätverks enheten"
+				},
+				"cachePath": {
+					"name": "Cache mapp",
+					"info": "Ändra mappen för cachen. Måste vara på en intern disk. Använder appens installations mapp som standard."
+				},
+				"readOnly": {
+					"name": "Skriv skydd",
+					"info": "Montera nätverks enheten som skriv skyddad"
+				}
+			},
+			"dialogs": {
+				"cleanupCache": {
+					"title": "Rensa cache",
+					"description": "Är du säker att du vill rensa en lokala cachen? Initialt kan laddnings tiderna förlängas betydligt om cachen rensas.",
+					"continue": "Rensa"
+				},
+				"disable": {
+					"title": "Inaktivera",
+					"description": "Är du säker att du vill inaktivera nätverks enheten? Alla pågående åtgärder på enheten kommer att avbrytas. Var säker på att du inte längre använder enheten aktivt.",
+					"continue": "Inaktivera"
+				}
+			},
+			"errors": {
+				"invalidMountPoint": "Ogiltig monterings punkt.",
+				"mountPointNotEmpty": "Monterings punkten måste vara en tom mapp.",
+				"pathNotInHomeDir": "Monterings punkten måste vara inuti din hemma mapp (/home/<yourUsername>).",
+				"pathNotInUserDir": "Monterings punkten måste vara inuti din användar mapp (/Users/<yourUsername>).",
+				"invalidCachePath": "Cache platsen måste vara på en intern enhet med minst 10 GB ledigt utrymme.",
+				"cachePathNotReadableWritable": "Cache platsen är inte läsbar eller skrivbar.",
+				"invalidCachePathLength": "Cache platsens sökväg är för lång."
+			},
+			"transfers": {
+				"uploading": "Laddar upp {{total}} fil i bakgrunden",
+				"uploadingPlural": "Laddar upp {{total}} filer i bakgrunden",
+				"uploadingSpeed": "Laddar upp {{total}} fil i bakgrunden i {{speed}}",
+				"uploadingPluralSpeed": "Laddar upp {{total}} filer i bakgrunden i {{speed}}",
+				"everythingUploaded": "Allting synkat"
+			}
+		},
+		"webdav": {
+			"copyConnect": "Kopiera",
+			"description": "Starta en lokal WebDAV server, vilket ger ett standardiserad protokoll för att få tillgång till och hantera din moln enhet. Detta ger kompatibilitet med en mängd appar och enheter som har stöd för WebDAV och förbättrar hanteringen av dina filer.",
+			"sections": {
+				"active": {
+					"name": "Aktiv"
+				},
+				"enabled": {
+					"name": "Aktiverad",
+					"info": "Aktivera eller inaktivera WebDAV server"
+				},
+				"protocol": {
+					"name": "HTTP Protokoll",
+					"info": "Ändra HTTP Protokoll"
+				},
+				"hostname": {
+					"name": "Värd namn",
+					"info": "Ändra värd namnet som servern skall lyssna på"
+				},
+				"port": {
+					"name": "Port",
+					"info": "Ändra porten som servern skall lyssna på"
+				},
+				"authMode": {
+					"name": "Autentiserings läge",
+					"info": "Ändra autentiserings läge"
+				},
+				"username": {
+					"name": "Användar namn",
+					"info": "Ändra användarnamnet för HTTP autentisering. Detta bör inte vara din Filen mail eller ditt smeknamn."
+				},
+				"password": {
+					"name": "Lösenord",
+					"info": "Ändra lösenordet för HTTP autentisering. Detta bör inte vara ditt Filen lösenord."
+				},
+				"proxyMode": {
+					"name": "Proxy läge",
+					"info": "Aktivera proxy läge"
+				},
+				"connect": {
+					"name": "Anslut",
+					"info": "Kopiera WebDAV URL"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "Inaktivera",
+					"description": "Är du säker att du vill inaktivera WebDAV servern? Alla pågående åtgärder på servern kommer att avbrytas. Var säker på att du inte längre använder servern aktivt.",
+					"continue": "Inaktivera"
+				}
+			},
+			"errors": {
+				"invalidPort": "Ogiltig port. Giltigt område: {{range}}.",
+				"invalidHostname": "Ogiltigt värd namn."
+			}
+		},
+		"s3": {
+			"copyConnect": "Kopiera",
+			"description": "Starta en lokal S3 server, vilket ger ett standardiserad protokoll för att få tillgång till och hantera din moln enhet. Detta ger kompatibilitet med en mängd appar och enheter som har stöd för S3 och förbättrar hanteringen av dina filer.",
+			"info": "Vid anslutning till S3 servern måste du sätta regionen till \"filen\" och aktivera \"s3ForcePathStyle\".",
+			"sections": {
+				"active": {
+					"name": "Aktiv"
+				},
+				"enabled": {
+					"name": "Aktiverad",
+					"info": "Aktivera eller inaktivera S3 servern"
+				},
+				"protocol": {
+					"name": "HTTP Protokoll",
+					"info": "Ändra HTTP Protokoll"
+				},
+				"hostname": {
+					"name": "Värd namn",
+					"info": "Ändra värd namnet som servern ska lyssna på"
+				},
+				"port": {
+					"name": "Port",
+					"info": "Ändra porten som servern ska lyssna på"
+				},
+				"accessKeyId": {
+					"name": "AccessKeyId",
+					"info": "Ändra AccessKeyId. Detta bör inte vara din Filen mail eller ditt smeknamn"
+				},
+				"secretKeyId": {
+					"name": "SecretKeyId",
+					"info": "Ändra SecretKeyId. Detta bör inte vara ditt Filen lösenord"
+				},
+				"connect": {
+					"name": "Anslut",
+					"info": "Kopiera WebDAV URL"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "Inaktivera",
+					"description": "Är du säker att du vill inaktivera S3 servern? Alla pågående åtgärder på servern kommer att avbrytas. Var säker på att du inte längre använder servern aktivt.",
+					"continue": "Inaktivera"
+				}
+			},
+			"errors": {
+				"invalidPort": "Ogiltig port. Giltigt område: {{range}}.",
+				"invalidHostname": "Ogiltigt värd namn."
+			}
+		}
+	},
+	"syncs": {
+		"eventsTitle": "Händelser",
+		"ignoredTitle": "Ignorerade",
+		"issuesTitle": "Problem",
+		"settingsTitle": "Inställningar",
+		"transfersTitle": "Överföringar",
+		"noTransfers": "Inga aktiva överföringar",
+		"noEventsYet": "Inga händelser än",
+		"nothingIgnored": "Inga filer eller mappar ignorerade",
+		"noIssues": "Inga problem",
+		"info": {
+			"progress": "Synkroniserar {{items}} objekt ({{total}}) i {{speed}}, ungefär {{remaining}} kvar",
+			"progressNoEstimate": "Synkroniserar {{items}} objekt ({{total}})",
+			"upToDate": "Allting synkat",
+			"errors": "{{count}} synkroniserings fel",
+			"errorsResolve": "Lös fel",
+			"paused": "Synking är pausad",
+			"processingDeltas": "Processerar deltas",
+			"syncingChanges": "Synkroniserar ändringar",
+			"savingState": "Sparar tillstånd",
+			"waitingForLocalDirectoryChanges": "Väntar på lokala ändringar",
+			"acquiringLock": "Skaffar synk låsning",
+			"gettingTrees": "Läser lokal och moln mapp",
+			"remoteSmokeTestFailed": "Kan inte läsa moln mapp, antingen finns den inte eller så är du inte ansluten till internet",
+			"localSmokeTestFailed": "Kan inte läse lokal mapp, antingen finns den inte eller så har du inte läs och skriv rättigheter",
+			"confirmDeletionBoth": "Bekräfta radering av {{previous}} filer och mappar",
+			"confirmDeletionLocal": "Bekräfta radering av {{previous}} lokala filer och mappar",
+			"confirmDeletionRemote": "Bekräfta radering av {{previous}} moln filer och mappar",
+			"confirm": "Bekräfta",
+			"restart": "Omstart"
+		},
+		"empty": {
+			"title": "Inga synkningar har ställs in än",
+			"description": "Du kan synka dina lokala mappar till molnet eller moln mappar till din enhet",
+			"create": "Skapa"
+		},
+		"events": {
+			"createLocalDirectory": "{{name}} skapades lokalt",
+			"renameLocalDirectory": "{{name}} bytte namn lokalt",
+			"deleteLocalDirectory": "{{name}} raderades lokalt",
+			"createRemoteDirectory": "{{name}} skapades i molnet",
+			"renameRemoteDirectory": "{{name}} bytte namn i molnet",
+			"deleteRemoteDirectory": "{{name}} raderades i molnet",
+			"deleteLocalFile": "{{name}} raderades lokalt",
+			"deleteRemoteFile": "{{name}} raderades i molnet",
+			"download": "{{name}} laddades ned från molnet",
+			"upload": "{{name}} laddades upp till molnet",
+			"renameLocalFile": "{{name}} bytte namn lokalt",
+			"renameRemoteFile": "{{name}} bytte namn i molnet"
+		},
+		"settings": {
+			"sections": {
+				"delete": {
+					"name": "Radera",
+					"info": "Radera synkningen",
+					"delete": "Radera"
+				},
+				"pause": {
+					"name": "Pausa",
+					"info": "Pausa synkningen"
+				},
+				"mode": {
+					"name": "Synknings läge",
+					"info": "Ändra synknings läge"
+				},
+				"forceSync": {
+					"name": "Forcera synkning",
+					"info": "Återställ den interna cachen och forcera omskanning av mappen både lokalt och i molnet",
+					"forceSync": "Forcera synkning"
+				},
+				"excludeDotFiles": {
+					"name": "Exkludera dot filer",
+					"info": "Välj om dot filer och sökvägar ska exkluderas (rekommenderas)"
+				},
+				"filenIgnore": {
+					"name": ".filenignore",
+					"info": "Redigera en ignorerings fil för lokala och moln exkluderingar. Fungerar som en .gitignore fil",
+					"edit": "Redigera"
+				},
+				"disableLocalTrash": {
+					"name": "Inaktivera lokal papperskorg",
+					"info": "Aktivera eller inaktivera lokal papperskorg. Vid inaktivering kommer klienten att permanent radera filer eller mappar istället för att flytta dem till den lokala mappen för papperkorg, som finns i den lokala synknings sökvägen"
+				},
+				"clearTransferEvents": {
+					"name": "Rensa händelser",
+					"info": "Rensa händelser som sparats lokalt",
+					"clear": "Rensa"
+				},
+				"name": {
+					"name": "Namn",
+					"info": "Redigera synkningens namn"
+				}
+			}
+		},
+		"dialogs": {
+			"delete": {
+				"title": "Radera synkning",
+				"description": "Är du säker att du vill radera denna synkning?",
+				"continue": "Radera"
+			},
+			"resetErrors": {
+				"title": "Lös fel",
+				"description": "Är du säker att du vill markera alla fel som lösta och fortsätta synkningen? Var säker på att alla fel är lösta.",
+				"continue": "Lös fel"
+			},
+			"filenIgnore": {
+				"title": ".filenignore",
+				"save": "Spara"
+			},
+			"deleteIssue": {
+				"title": "Radera problem",
+				"description": "Är du säker att du vill radera detta problem? Var säker på att du löst det eller att det var temporärt, annars kan det komma tillbaka.",
+				"continue": "Radera"
+			},
+			"clearTransferEvents": {
+				"title": "Rensa händelser",
+				"description": "Är du säker på att du vill rensa de lokalt sparade händelserna? Denna åtgärd går inte att ångra.",
+				"continue": "Rensa"
+			},
+			"name": {
+				"title": "Ändra namn",
+				"placeholder": "Namn",
+				"continue": "Spara"
+			},
+			"confirmDeletionLocal": {
+				"title": "Bekräfta radering",
+				"description": "Är du säker på att du vill flytta alla {{count}} filer och mappar till papperskorgen i molnet? Denna åtgärd går inte att ångra.",
+				"continue": "Bekräfta"
+			},
+			"confirmDeletionRemote": {
+				"title": "Bekräfta radering",
+				"description": "Är du säker på att du vill flytta alla {{count}} filer och mappar till den lokala papperskorgen? Denna åtgärd går inte att ångra.",
+				"continue": "Bekräfta"
+			},
+			"confirmDeletionBoth": {
+				"title": "Bekräfta radering",
+				"description": "Är du säker på att du vill flytta alla {{count}} filer och mappar till papperskorgen både lokalt och i molnet? Denna åtgärd går inte att ångra.",
+				"continue": "Bekräfta"
+			},
+			"confirmDeletionRestart": {
+				"title": "Starta om synkning",
+				"description": "Du kan starta om synkningen om du har återställt alla filer och mappar manuellt.",
+				"continue": "Starta om"
+			}
+		},
+		"ignored": {
+			"types": {
+				"dotFile": "Dot fil",
+				"defaultIgnore": "Ignorerad som standard",
+				"empty": "Tom"
+			},
+			"reasons": {
+				"dotFile": "Filen eller mappen är inuti en dot sökväg",
+				"defaultIgnore": "Filen eller mappen är inuti en sökväg som är ignorerad som standard",
+				"empty": "Filen är tom",
+				"invalidPath": "Filen eller mappen är inuti en felaktig sökväg",
+				"symlink": "Filen eller mappen är en symbolisk länk. Klienten följer inte symboliska länkar för att förhindra oändliga synknings loopar.",
+				"duplicate": "Filens eller mappens sökväg existerar dubbelt",
+				"filenIgnore": "Filen eller mappen är ignorerad av .filenignore",
+				"invalidType": "Objektet är varken en fil eller en mapp",
+				"nameLength": "Filens eller mappens namn är för lång",
+				"pathLength": "Filens or mappens sökväg är för lång",
+				"permissions": "Otillräckliga rättigheter"
+			}
+		},
+		"issues": {
+			"types": {
+				"title": {
+					"permission": "Rättigheter",
+					"io": "I/O",
+					"noSpace": "Inte tillräckligt utrymme eller tillräckligt antal fil övervakare finns",
+					"openFiles": "Öppna filer begränsat",
+					"fileOrDirExists": "Filen eller mappen finns",
+					"fileOrDirNotFound": "Filen eller mappen finns inte",
+					"isFile": "Fil",
+					"isDir": "Mapp",
+					"notDir": "Inte en mapp",
+					"badConnection": "Anslutning",
+					"fileOrDirTemporarilyUnavailable": "Filen eller mappen är temorärt otillgänglig",
+					"unknown": "Okänt fel",
+					"dirNotEmpty": "Mappen är inte tom",
+					"fileOrDirNameTooLong": "Filens eller mappens namn eller sökväg är för lång"
+				},
+				"info": {
+					"permission": "Säkerställ att klienten har alla rättigheter som behövs för att komma åt mappen för den lokala synkningen.",
+					"io": "Säkerställ att mappen och det underliggande lagrings mediumet för den lokala synkningen fungerar. Klienten kan inte komma åt den ordentligt.",
+					"noSpace": "Du har inte tillräckligt med lokalt utrymme kvar, eller så har systemet slut på tillgängliga fil övervakare.",
+					"openFiles": "Klienten har uppnått begränsningen för antal öppna filer. Utöka begränsningen.",
+					"fileOrDirExists": "Filen eller mappen finns redan. Detta är förmodligen ett temporärt problem, försök att starta om klienten.",
+					"fileOrDirNotFound": "Filen eller mappen finns inte. Detta är förmodligen ett temporärt problem, försök att starta om klienten.",
+					"isFile": "Detta är förmodligen ett temporärt problem, försök att starta om klienten.",
+					"isDir": "Detta är förmodligen ett temporärt problem, försök att starta om klienten.",
+					"notDir": "Detta är förmodligen ett temporärt problem, försök att starta om klienten.",
+					"badConnection": "Säkerställ att du är ansluten till internet och kan komma åt Filen utan problem.",
+					"fileOrDirTemporarilyUnavailable": "Detta är förmodligen ett temporärt problem, försök att starta om klienten.",
+					"unknown": "Okänt fel, försök starta om klienten.",
+					"dirNotEmpty": "Mappen är inte tom. Detta är förmodligen ett temporärt problem, försök att starta om klienten.",
+					"fileOrDirNameTooLong": "Filens eller mappens namn eller sökväg är för lång för ditt lokala filsystem."
+				}
+			}
+		}
+	},
+	"isOnline": {
+		"title": "Kopplade någon ur kabeln?",
+		"info": "Vi har problem att ansluta dig till våran plattform, kontrollera din internet anslutning.",
+		"infoSub": "Kontakta oss om ditt internet fungerar som det ska."
+	},
+	"404": {
+		"info": "Hoppsan, sidan du letar efter finns inte.",
+		"btn": "Gå till Startsidan"
+	},
+	"announcements": {
+		"gotIt": "Jag förstår"
+	},
+	"maintenance": {
+		"title": "Filen underhålls för närvarande",
+		"info": "Vi arbetar för närvarance med underhåll för att göra din upplevelse ännu bättre. Vår plattform kommer strax att vara tillbaka, uppfräschad och förbättrad.",
+		"infoSub": "Tack för ditt tålamod! Vi arbetar hårt bakom kulisserna för att ge dig nya funktioner. Håll ögonen öppna!"
+	}
+}
