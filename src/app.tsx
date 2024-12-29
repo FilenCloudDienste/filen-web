@@ -3,7 +3,6 @@
 import "./index.css"
 import "react-quill/dist/quill.snow.css"
 import "./lib/i18n"
-import "web-streams-polyfill/dist/polyfill.min"
 //import "@xterm/xterm/css/xterm.css"
 import { StrictMode, memo } from "react"
 import ReactDOM from "react-dom/client"
@@ -15,6 +14,7 @@ import { setThemeOnPageLoad, useTheme } from "./providers/themeProvider"
 import { type CookieConsentValues } from "./components/cookieConsent"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { IS_DESKTOP } from "./constants"
+import { isMobileDevice } from "./utils"
 
 setThemeOnPageLoad()
 
@@ -58,6 +58,7 @@ export const HelmetComponent = memo(() => {
 					src="https://analytics.filen.io/js/script.js"
 				></script>
 			)}
+			{isMobileDevice() && <script src="/wsp.js"></script>}
 		</Helmet>
 	)
 })
