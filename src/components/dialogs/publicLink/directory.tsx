@@ -145,7 +145,7 @@ export const Directory = memo(
 
 			try {
 				await navigator.clipboard.writeText(
-					PUBLIC_LINK_BASE_URL.split("/#/d/").join("/#/f/") + status.uuid + "#" + decryptedLinkKey
+					PUBLIC_LINK_BASE_URL.split("/#/d/").join("/#/f/") + status.uuid + encodeURIComponent("#") + decryptedLinkKey
 				)
 
 				successToast(t("copiedToClipboard"))
@@ -252,7 +252,12 @@ export const Directory = memo(
 							<p className="text-sm text-muted-foreground">{t("dialogs.publicLink.link")}</p>
 							<div className="flex flex-row gap-2 justify-between items-center">
 								<Input
-									value={PUBLIC_LINK_BASE_URL.split("/#/d/").join("/#/f/") + status.uuid + "#" + decryptedLinkKey}
+									value={
+										PUBLIC_LINK_BASE_URL.split("/#/d/").join("/#/f/") +
+										status.uuid +
+										encodeURIComponent("#") +
+										decryptedLinkKey
+									}
 									onChange={preventDefault}
 								/>
 								<Button onClick={copyLink}>{t("dialogs.publicLink.copyLink")}</Button>

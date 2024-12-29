@@ -139,7 +139,9 @@ export const File = memo(
 			}
 
 			try {
-				await navigator.clipboard.writeText(PUBLIC_LINK_BASE_URL + status.uuid + "#" + (item.type === "file" ? item.key : ""))
+				await navigator.clipboard.writeText(
+					PUBLIC_LINK_BASE_URL + status.uuid + encodeURIComponent("#") + (item.type === "file" ? item.key : "")
+				)
 
 				successToast(t("copiedToClipboard"))
 			} catch (e) {
@@ -208,7 +210,12 @@ export const File = memo(
 							<p className="text-sm text-muted-foreground">{t("dialogs.publicLink.link")}</p>
 							<div className="flex flex-row gap-2 justify-between items-center">
 								<Input
-									value={PUBLIC_LINK_BASE_URL + status.uuid + "#" + (item.type === "file" ? item.key : "")}
+									value={
+										PUBLIC_LINK_BASE_URL +
+										status.uuid +
+										encodeURIComponent("#") +
+										(item.type === "file" ? item.key : "")
+									}
 									onChange={preventDefault}
 								/>
 								<Button onClick={copyLink}>{t("dialogs.publicLink.copyLink")}</Button>
