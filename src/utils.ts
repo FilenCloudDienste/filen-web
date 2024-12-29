@@ -1,5 +1,4 @@
 import { type showSaveFilePicker } from "native-file-system-adapter"
-import { UAParserResult, IS_DESKTOP, IS_MOBILE_DEVICE } from "./constants"
 
 export function convertTimestampToMs(timestamp: number): number {
 	const now = Date.now()
@@ -83,19 +82,47 @@ export function getShowSaveFilePickerOptions({
 	types?: { accept: Record<string, string[]> }[]
 	excludeAcceptAllOption?: boolean
 }): Parameters<typeof showSaveFilePicker>[0] {
-	const osName = UAParserResult.os.name?.trim().toLowerCase() ?? ""
-	const preferPolyfill =
-		IS_MOBILE_DEVICE && !IS_DESKTOP
-			? true
-			: osName.length === 0 || IS_DESKTOP
-				? false
-				: osName === "android" || osName === "ios" || osName === "blackberry"
-
 	return {
 		//_name: name,
 		suggestedName: name,
 		types: types && types.length > 0 ? types : undefined,
 		excludeAcceptAllOption,
-		_preferPolyfill: preferPolyfill
+		_preferPolyfill: isMobileDevice()
 	}
+}
+
+export function isMobileDevice() {
+	const userAgent = navigator.userAgent.toLowerCase()
+	const mobileKeywords = [
+		"mobile",
+		"android",
+		"iphone",
+		"ipad",
+		"ipod",
+		"windows phone",
+		"webos",
+		"blackberry",
+		"opera mini",
+		"opera mobi",
+		"kindle",
+		"silk",
+		"samsung",
+		"nokia",
+		"huawei",
+		"xiaomi",
+		"vivo",
+		"oppo",
+		"tablet",
+		"phone",
+		"touch",
+		"webmate",
+		"palm",
+		"symbian",
+		"iemobile",
+		"blazer"
+	]
+	const isMobileUserAgent = mobileKeywords.some(keyword => userAgent.includes(keyword))
+	const isMobileScreenSize = window.innerWidth <= 768
+
+	return isMobileUserAgent || isMobileScreenSize
 }

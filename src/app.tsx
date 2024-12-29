@@ -3,6 +3,7 @@
 import "./index.css"
 import "react-quill/dist/quill.snow.css"
 import "./lib/i18n"
+import "web-streams-polyfill/dist/polyfill.min"
 //import "@xterm/xterm/css/xterm.css"
 import { StrictMode, memo } from "react"
 import ReactDOM from "react-dom/client"
@@ -52,7 +53,7 @@ export const HelmetComponent = memo(() => {
 			)}
 			{cookieConsent === "full" && !IS_DESKTOP && (
 				<script
-					defer
+					defer={true}
 					data-domain="app.filen.io"
 					src="https://analytics.filen.io/js/script.js"
 				></script>
