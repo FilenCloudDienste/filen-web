@@ -1,4 +1,5 @@
 import { type showSaveFilePicker } from "native-file-system-adapter"
+import { IS_DESKTOP } from "./constants"
 
 export function convertTimestampToMs(timestamp: number): number {
 	const now = Date.now()
@@ -92,6 +93,10 @@ export function getShowSaveFilePickerOptions({
 }
 
 export function isMobileDevice() {
+	if (IS_DESKTOP) {
+		return false
+	}
+
 	const userAgent = navigator.userAgent.toLowerCase()
 	const mobileKeywords = [
 		"mobile",
