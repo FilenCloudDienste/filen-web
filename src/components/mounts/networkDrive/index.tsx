@@ -447,7 +447,10 @@ export const NetworkDrive = memo(() => {
 			<div
 				className="overflow-x-hidden overflow-y-auto"
 				style={{
-					height: "calc(100dvh - " + (DESKTOP_TOPBAR_HEIGHT + 40 + 17) + "px)"
+					height:
+						"calc(100dvh - " +
+						(DESKTOP_TOPBAR_HEIGHT + (isMountedQuery.isSuccess && isMountedQuery.data.mounted ? 40 + 17 : 0)) +
+						"px)"
 				}}
 			>
 				<div
@@ -605,7 +608,7 @@ export const NetworkDrive = memo(() => {
 					</div>
 				</div>
 			</div>
-			<Transfers />
+			{isMountedQuery.isSuccess && isMountedQuery.data.mounted && <Transfers />}
 		</div>
 	)
 })
