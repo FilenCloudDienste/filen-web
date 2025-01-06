@@ -486,9 +486,7 @@ export const ContextMenu = memo(
 				}
 
 				const writer = await fileHandle.createWritable()
-				const zipWriter = new ZipWriter(writer, {
-					level: 0
-				})
+				const zipWriter = new ZipWriter(writer)
 
 				toast = loadingToast()
 
@@ -533,7 +531,8 @@ export const ContextMenu = memo(
 											.add(`${sanitizeFileName(n.title)}.txt`, new Response(content).body!, {
 												lastModDate: new Date(),
 												lastAccessDate: new Date(),
-												creationDate: new Date()
+												creationDate: new Date(),
+												useWebWorkers: false
 											})
 											.then(() => resolve())
 											.catch(reject)
