@@ -1,6 +1,26 @@
 <!doctype html>
 <html lang="en">
 	<head>
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="
+				default-src 'self';
+				script-src 'self' https://analytics.filen.io 'sha256-/AO8vAagk08SqUGxY96ci/dGyTDsuoetPOJYMn7sc+E=';
+				style-src 'self' 'unsafe-inline';
+				img-src 'self' data: blob: http://localhost:* https://egest.filen.io https://down.filen.io https://egest.filen.net https://egest.filen-1.net https://egest.filen-2.net https://egest.filen-3.net https://egest.filen-4.net https://egest.filen-5.net https://egest.filen-6.net;
+				font-src 'self';
+				object-src 'self' blob:;
+				media-src 'self' blob: http://localhost:*;
+				connect-src 'self' blob: wss://socket.filen.io https://*.filen.io https://*.filen.net https://*.filen-1.net https://*.filen-2.net https://*.filen-3.net https://*.filen-4.net https://*.filen-5.net https://*.filen-6.net http://localhost:*;
+				frame-src 'self' blob: https://*.filen.io https://filen.io https://app.filen.io http://localhost:*;
+				worker-src 'self' blob:;
+				manifest-src 'self';
+				base-uri 'self';
+				form-action 'self';
+				upgrade-insecure-requests;
+				block-all-mixed-content;
+			"
+		/>
 		<meta charset="UTF-8" />
 		<link
 			rel="icon"

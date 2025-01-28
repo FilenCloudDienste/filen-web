@@ -1,4 +1,4 @@
-import { defineConfig } from "vite"
+import { defineConfig, normalizePath } from "vite"
 import react from "@vitejs/plugin-react"
 import path from "path"
 import { nodePolyfills } from "vite-plugin-node-polyfills"
@@ -9,12 +9,34 @@ import svgr from "vite-plugin-svgr"
 import topLevelAwait from "vite-plugin-top-level-await"
 import checker from "vite-plugin-checker"
 import { VitePWA } from "vite-plugin-pwa"
+import { createRequire } from "node:module"
+import { viteStaticCopy } from "vite-plugin-static-copy"
 
 const now = Date.now()
+const require = createRequire(import.meta.url)
+const pdfjsDistPath = path.dirname(require.resolve("pdfjs-dist/package.json"))
+const pdfjsCMapsDir = normalizePath(path.join(pdfjsDistPath, "cmaps"))
+const pdfjsStandardFontsDir = normalizePath(path.join(path.dirname(require.resolve("pdfjs-dist/package.json")), "standard_fonts"))
 
 export default defineConfig({
 	base: "/",
 	plugins: [
+		viteStaticCopy({
+			targets: [
+				{
+					src: pdfjsCMapsDir,
+					dest: "pdfjs/"
+				}
+			]
+		}),
+		viteStaticCopy({
+			targets: [
+				{
+					src: pdfjsStandardFontsDir,
+					dest: "pdfjs/"
+				}
+			]
+		}),
 		nodePolyfills({
 			include: [],
 			overrides: {

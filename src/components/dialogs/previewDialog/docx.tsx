@@ -3,10 +3,12 @@ import useMountedEffect from "@/hooks/useMountedEffect"
 import { cn } from "@/lib/utils"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import * as docx from "docx-preview"
+import useIsMobile from "@/hooks/useIsMobile"
 
 export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
 	const container = useRef<HTMLDivElement>(null)
 	const publicLinkURLState = usePublicLinkURLState()
+	const isMobile = useIsMobile()
 
 	const loadDocX = useCallback(async () => {
 		if (!container.current) {
@@ -49,7 +51,7 @@ export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
 						: "h-[calc(100dvh-48px)]"
 				)}
 			>
-				<div className="flex flex-row w-[800px] h-full justify-center overflow-y-auto bg-white">
+				<div className={cn("flex flex-row h-full justify-center overflow-y-auto bg-white", isMobile ? "w-full" : "w-[800px]")}>
 					<div
 						className="docx-viewer w-full h-full bg-white text-black p-6 pb-12"
 						ref={container}
