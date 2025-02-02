@@ -488,6 +488,11 @@
 			"description": "Please export your master keys and store them in a separate safe location. You need your master keys when you reset your password to avoid data loss. You need to export your master keys everytime you change your password.",
 			"continue": "Export",
 			"dismiss": "Dismiss"
+		},
+		"pdfPassword": {
+			"title": "Password",
+			"continue": "Unlock",
+			"placeholder": "Password"
 		}
 	},
 	"contextMenus": {
@@ -1248,7 +1253,9 @@
 			"title": "Unsaved changes",
 			"description": "Are you sure you want to exit without saving? All changes will be lost.",
 			"continue": "Close"
-		}
+		},
+		"pdfNoPassword": "Password protected PDF.",
+		"unlock": "Unlock"
 	},
 	"sharedIn": {
 		"dialogs": {
