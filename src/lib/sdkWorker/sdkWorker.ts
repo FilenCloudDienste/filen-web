@@ -10,6 +10,7 @@ export type SDKWorkerToMainWorkerMessage =
 				uuid: string
 				bytes: number
 				name: string
+				fileType: "file" | "directory"
 			}
 	  }
 	| {
@@ -18,6 +19,7 @@ export type SDKWorkerToMainWorkerMessage =
 				uuid: string
 				bytes: number
 				name: string
+				fileType: "file" | "directory"
 			}
 	  }
 
@@ -338,7 +340,8 @@ export const sdkWorker: SDKWorker = {
 										data: {
 											uuid: params.onProgressId ? params.onProgressId : params.uuid,
 											bytes,
-											name: ""
+											name: "",
+											fileType: "file"
 										}
 									})
 								}

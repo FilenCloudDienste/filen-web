@@ -15,6 +15,7 @@ export type Transfer = {
 	errorTimestamp: number
 	progressTimestamp: number
 	createdDirectories: number
+	fileType: "file" | "directory"
 }
 
 export type TransfersStore = {

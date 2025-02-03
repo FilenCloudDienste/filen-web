@@ -26,71 +26,7 @@ const sdk = new FilenSDK(
 	})
 )
 
-const map = new Map<
-	string,
-	{
-		url: string
-		rs: ReadableStream
-		headers: Record<string, string>
-	}
->()
-
-const WRITE = 0
-const PULL = 0
-const ERROR = 1
-const ABORT = 1
-const CLOSE = 2
-
-class MessagePortSource implements UnderlyingSource {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public controller: ReadableStreamController<any> | null = null
-	public port: MessagePort
-
-	public constructor(port: MessagePort) {
-		this.port = port
-		this.port.onmessage = evt => this.onMessage(evt.data)
-	}
-
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public start(controller: ReadableStreamController<any>): void {
-		this.controller = controller
-	}
-
-	public pull(): void {
-		this.port.postMessage({
-			type: PULL
-		})
-	}
-
-	public cancel(reason?: Error): void {
-		this.port.postMessage({
-			type: ERROR,
-			reason: reason?.message
-		})
-
-		this.port.close()
-	}
-
-	public onMessage(message?: { type: number; chunk: Uint8Array; reason?: Error }): void {
-		if (!this.controller) {
-			return
-		}
-
-		if (message?.type === WRITE) {
-			this.controller.enqueue(message?.chunk)
-		}
-
-		if (message?.type === ABORT) {
-			this.controller.error(message?.reason)
-			this.port.close()
-		}
-
-		if (message?.type === CLOSE) {
-			this.controller.close()
-			this.port.close()
-		}
-	}
-}
+const map = new Map()
 
 /**
  * Parse the requested byte range from the header.
@@ -215,6 +151,30 @@ function getStream(request: Request): Response {
 	})
 }
 
+function createStream(port: MessagePort) {
+	return new ReadableStream({
+		start(controller) {
+			port.onmessage = ({ data }) => {
+				if (data === "end") {
+					return controller.close()
+				}
+
+				if (data === "abort") {
+					controller.error("Aborted the download")
+					return
+				}
+
+				controller.enqueue(data)
+			}
+		},
+		cancel() {
+			port.postMessage({
+				abort: true
+			})
+		}
+	})
+}
+
 self.addEventListener("install", () => {
 	self.skipWaiting()
 })
@@ -226,16 +186,37 @@ self.addEventListener("activate", event => {
 self.addEventListener("message", e => {
 	const data = e.data
 
-	if (data.url && data.readablePort) {
-		data.rs = new ReadableStream(
-			new MessagePortSource(e.data.readablePort),
-			new CountQueuingStrategy({
-				highWaterMark: 4
-			})
-		)
-
-		map.set(data.url, data)
+	if (data === "ping") {
+		return
 	}
+
+	const downloadUrl = data.url || self.registration.scope + Math.random() + "/" + (typeof data === "string" ? data : data.filename)
+	const port = e.ports[0]
+	const metadata = new Array(3)
+
+	metadata[1] = data
+	metadata[2] = port
+
+	if (!port) {
+		return
+	}
+
+	if (e.data.readableStream) {
+		metadata[0] = e.data.readableStream
+	} else if (e.data.transferringReadable) {
+		port.onmessage = evt => {
+			port.onmessage = null
+			metadata[0] = evt.data.readableStream
+		}
+	} else {
+		metadata[0] = createStream(port)
+	}
+
+	map.set(downloadUrl, metadata)
+
+	port.postMessage({
+		download: downloadUrl
+	})
 })
 
 self.addEventListener("fetch", e => {
@@ -243,7 +224,9 @@ self.addEventListener("fetch", e => {
 		const url = e.request.url
 		const builtURL = new URL(url)
 
-		if (builtURL.pathname === "/sw/ping") {
+		if (builtURL.pathname === "/ping") {
+			e.respondWith(new Response("pong"))
+		} else if (builtURL.pathname === "/sw/ping") {
 			e.respondWith(
 				new Response("OK", {
 					status: 200,
@@ -255,19 +238,54 @@ self.addEventListener("fetch", e => {
 		} else if (builtURL.pathname === "/sw/stream") {
 			e.respondWith(getStream(e.request))
 		} else {
-			const data = map.get(url)
+			const mapData = map.get(url)
 
-			if (!data) {
+			if (!mapData) {
 				return null
 			}
 
+			const [stream, data, port] = mapData
+
 			map.delete(url)
 
+			const responseHeaders = new Headers({
+				"Content-Type": "application/octet-stream; charset=utf-8",
+				"Content-Security-Policy": "default-src 'none'",
+				"X-Content-Security-Policy": "default-src 'none'",
+				"X-WebKit-CSP": "default-src 'none'",
+				"X-XSS-Protection": "1; mode=block",
+				"Cross-Origin-Embedder-Policy": "require-corp"
+			})
+
+			const headers = new Headers(data.headers || {})
+
+			if (headers.has("Content-Length")) {
+				responseHeaders.set("Content-Length", headers.get("Content-Length") ?? "0")
+			}
+
+			if (headers.has("Content-Disposition")) {
+				responseHeaders.set("Content-Disposition", headers.get("Content-Disposition") ?? "")
+			}
+
+			if (data.size) {
+				responseHeaders.set("Content-Length", data.size)
+			}
+
+			let fileName = typeof data === "string" ? data : data.filename
+
+			if (fileName) {
+				fileName = encodeURIComponent(fileName).replace(/['()]/g, escape).replace(/\*/g, "%2A")
+
+				responseHeaders.set("Content-Disposition", "attachment; filename*=UTF-8''" + fileName)
+			}
+
 			e.respondWith(
-				new Response(data.rs, {
-					headers: data.headers
+				new Response(stream, {
+					headers: responseHeaders
 				})
 			)
+
+			port.postMessage({ debug: "Download started" })
 		}
 	} catch (e) {
 		console.error(e)

@@ -1,5 +1,6 @@
 //import "./wdyr"
 //import "hacktimer/HackTimer.silent.min"
+import "web-streams-polyfill/dist/ponyfill"
 import "./index.css"
 import "react-quill/dist/quill.snow.css"
 import "./lib/i18n"
@@ -14,7 +15,9 @@ import { setThemeOnPageLoad, useTheme } from "./providers/themeProvider"
 import { type CookieConsentValues } from "./components/cookieConsent"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { IS_DESKTOP } from "./constants"
-import { isMobileDevice } from "./utils"
+import streamSaver from "streamsaver"
+
+streamSaver.mitm = "/mitm.html"
 
 setThemeOnPageLoad()
 
@@ -58,7 +61,6 @@ export const HelmetComponent = memo(() => {
 					src="https://analytics.filen.io/js/script.js"
 				></script>
 			)}
-			{isMobileDevice() && <script src="/wsp.js"></script>}
 		</Helmet>
 	)
 })

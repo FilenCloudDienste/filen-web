@@ -160,7 +160,8 @@ export const Transfers = memo(() => {
 							errorTimestamp: 0,
 							finishedTimestamp: 0,
 							progressTimestamp: 0,
-							createdDirectories: 0
+							createdDirectories: 0,
+							fileType: message.data.fileType
 						}
 					])
 
@@ -235,7 +236,8 @@ export const Transfers = memo(() => {
 							errorTimestamp: 0,
 							finishedTimestamp: now,
 							progressTimestamp: 0,
-							createdDirectories: 0
+							createdDirectories: 0,
+							fileType: message.data.fileType
 						}
 					])
 

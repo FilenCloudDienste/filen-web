@@ -219,7 +219,10 @@ export const TransferInfo = memo(({ name, size, isDirectory }: { name: string; s
 })
 
 export const Transfer = memo(({ transfer }: { transfer: TransferType }) => {
-	const isDirectory = useMemo(() => transfer.uuid.startsWith("directory:"), [transfer.uuid])
+	const isDirectory = useMemo(
+		() => !transfer.name.endsWith(".zip") && (transfer.fileType === "directory" || transfer.uuid.startsWith("directory:")),
+		[transfer.uuid, transfer.fileType, transfer.name]
+	)
 
 	return (
 		<div className="flex flex-col w-full gap-4 pb-4">

@@ -4,9 +4,8 @@ import Section from "../section"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import worker from "@/lib/worker"
-import { showSaveFilePicker } from "native-file-system-adapter"
 import { Switch } from "@/components/ui/switch"
-import { formatBytes, getShowSaveFilePickerOptions } from "@/utils"
+import { formatBytes } from "@/utils"
 import { showConfirmDialog } from "@/components/dialogs/confirm"
 import { showTwoFactorCodeDialog } from "@/components/dialogs/twoFactorCode"
 import { transfer } from "comlink"
@@ -19,6 +18,7 @@ import Skeletons from "../skeletons"
 import { useTranslation } from "react-i18next"
 import useSettingsContainerSize from "@/hooks/useSettingsContainerSize"
 import { sanitizeFileName } from "@/lib/utils"
+import { getStreamWriter } from "@/lib/streamSaver"
 
 export const nickNameRegex: RegExp = /^(?! )[A-Za-z0-9 _-]{3,32}(?<! )$/
 
@@ -47,24 +47,16 @@ export const Account = memo(() => {
 		}
 
 		try {
-			const fileHandle = await showSaveFilePicker(
-				getShowSaveFilePickerOptions({
-					name: `${sanitizeFileName(account.account.email)}.data.json`
-				})
-			)
-
-			if (typeof fileHandle.createWritable !== "function") {
-				throw new Error("Your browser does not support streaming downloads.")
-			}
-
-			const writer = await fileHandle.createWritable()
+			const writer = await getStreamWriter({
+				name: `${sanitizeFileName(account.account.email)}.data.json`
+			})
 
 			const toast = loadingToast()
 
 			try {
 				const gdpr = await worker.requestAccountData()
 
-				await writer.write(JSON.stringify(gdpr, null, 4))
+				await writer.write(Buffer.from(JSON.stringify(gdpr, null, 4), "utf-8"))
 				await writer.close()
 			} catch (e) {
 				console.error(e)

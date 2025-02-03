@@ -6,7 +6,7 @@ export type DriveCloudItemWithPath = Prettify<DriveCloudItem & { path: string }>
 export type WorkerToMainMessage =
 	| {
 			type: "download" | "upload"
-			data: { uuid: string; name: string } & (
+			data: { uuid: string; name: string; fileType: "file" | "directory" } & (
 				| {
 						type: "started"
 						size: number

@@ -4,13 +4,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DESKTOP_TOPBAR_HEIGHT, IS_DESKTOP } from "@/constants"
 import { cn, sanitizeFileName } from "@/lib/utils"
 import { useTranslation } from "react-i18next"
-import { simpleDate, convertTimestampToMs, getShowSaveFilePickerOptions } from "@/utils"
+import { simpleDate, convertTimestampToMs } from "@/utils"
 import useErrorToast from "@/hooks/useErrorToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
-import { showSaveFilePicker } from "native-file-system-adapter"
 import worker from "@/lib/worker"
 import { CheckCircle, Wallet } from "lucide-react"
 import Skeletons from "../skeletons"
+import { getStreamWriter } from "@/lib/streamSaver"
 
 export const Invoices = memo(() => {
 	const account = useAccount()
@@ -33,17 +33,9 @@ export const Invoices = memo(() => {
 			}
 
 			try {
-				const fileHandle = await showSaveFilePicker(
-					getShowSaveFilePickerOptions({
-						name: `${sanitizeFileName(`Invoice_${uuid}`)}.pdf`
-					})
-				)
-
-				if (typeof fileHandle.createWritable !== "function") {
-					throw new Error("Your browser does not support streaming downloads.")
-				}
-
-				const writer = await fileHandle.createWritable()
+				const writer = await getStreamWriter({
+					name: `${sanitizeFileName(`Invoice_${uuid}`)}.pdf`
+				})
 
 				const toast = loadingToast()
 
@@ -51,7 +43,6 @@ export const Invoices = memo(() => {
 					const generatedInvoice = await worker.generateInvoice({ uuid })
 
 					await writer.write(Buffer.from(generatedInvoice, "base64"))
-
 					await writer.close()
 				} catch (e) {
 					console.error(e)

@@ -2,7 +2,6 @@ import { memo, useCallback, useMemo } from "react"
 import useAccount from "@/hooks/useAccount"
 import Section from "../section"
 import { Switch } from "@/components/ui/switch"
-import { showSaveFilePicker } from "native-file-system-adapter"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import useSDKConfig from "@/hooks/useSDKConfig"
@@ -20,7 +19,7 @@ import { Select, SelectItem, SelectValue, SelectTrigger, SelectContent } from "@
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { IS_DESKTOP } from "@/constants"
 import LockPinDialog from "./dialogs/lockPin"
-import { getShowSaveFilePickerOptions } from "@/utils"
+import { getStreamWriter } from "@/lib/streamSaver"
 
 export const Security = memo(() => {
 	const account = useAccount()
@@ -185,21 +184,13 @@ export const Security = memo(() => {
 		let didWrite = false
 
 		try {
-			const fileHandle = await showSaveFilePicker(
-				getShowSaveFilePickerOptions({
-					name: fileName
-				})
-			)
-
-			if (typeof fileHandle.createWritable !== "function") {
-				throw new Error("Your browser does not support streaming downloads.")
-			}
-
-			const writer = await fileHandle.createWritable()
+			const writer = await getStreamWriter({
+				name: fileName
+			})
 			const toast = loadingToast()
 
 			try {
-				await writer.write(base64)
+				await writer.write(Buffer.from(base64, "utf-8"))
 				await writer.close()
 
 				didWrite = true

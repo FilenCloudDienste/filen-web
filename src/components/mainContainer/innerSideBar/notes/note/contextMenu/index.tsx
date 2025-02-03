@@ -17,7 +17,7 @@ import { useNotesStore } from "@/stores/notes.store"
 import { useNavigate } from "@tanstack/react-router"
 import { cn, sanitizeFileName } from "@/lib/utils"
 import { useQuery } from "@tanstack/react-query"
-import { showSaveFilePicker } from "native-file-system-adapter"
+import { getStreamWriter } from "@/lib/streamSaver"
 import striptags from "striptags"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
@@ -45,7 +45,6 @@ import {
 } from "lucide-react"
 import useSDKConfig from "@/hooks/useSDKConfig"
 import useSuccessToast from "@/hooks/useSuccessToast"
-import { getShowSaveFilePickerOptions } from "@/utils"
 
 const iconSize = 16
 
@@ -441,19 +440,12 @@ export const ContextMenu = memo(
 					content = list.join("\n")
 				}
 
-				const fileHandle = await showSaveFilePicker(
-					getShowSaveFilePickerOptions({
-						name: `${sanitizeFileName(note.title)}.txt`
-					})
-				)
+				const writer = await getStreamWriter({
+					name: `${sanitizeFileName(note.title)}.txt`,
+					size: content.length
+				})
 
-				if (typeof fileHandle.createWritable !== "function") {
-					throw new Error("Your browser does not support streaming downloads.")
-				}
-
-				const writer = await fileHandle.createWritable()
-
-				await writer.write(content)
+				await writer.write(Buffer.from(content, "utf-8"))
 
 				try {
 					await writer.close()
@@ -475,17 +467,10 @@ export const ContextMenu = memo(
 			let toast: ReturnType<typeof loadingToast> | null = null
 
 			try {
-				const fileHandle = await showSaveFilePicker(
-					getShowSaveFilePickerOptions({
-						name: "Notes.zip"
-					})
-				)
-
-				if (typeof fileHandle.createWritable !== "function") {
-					throw new Error("Your browser does not support streaming downloads.")
-				}
-
-				const writer = await fileHandle.createWritable()
+				const writer = await getStreamWriter({
+					name: "Notes.zip",
+					pipe: true
+				})
 				const zipWriter = new ZipWriter(writer)
 
 				toast = loadingToast()

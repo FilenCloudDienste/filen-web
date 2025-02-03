@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import worker from "."
 import { showSaveFilePicker } from "native-file-system-adapter"
 import { type DriveCloudItem } from "@/components/drive"
@@ -5,17 +6,19 @@ import { proxy } from "comlink"
 import eventEmitter from "../eventEmitter"
 import * as workerLib from "./worker"
 import { type DirDownloadType } from "@filen/sdk/dist/types/api/v3/dir/download"
-import { UAParserResult, THUMBNAIL_VERSION } from "@/constants"
+import { UAParserResult, THUMBNAIL_VERSION, IS_DESKTOP } from "@/constants"
 import { fileNameToThumbnailType } from "@/components/dialogs/previewDialog/utils"
 import { thumbnailURLObjectCache } from "@/cache"
 import { Semaphore, ISemaphore } from "../semaphore"
 import { getItem } from "@/lib/localForage"
 import { sanitizeFileName } from "../utils"
-import { getShowSaveFilePickerOptions } from "@/utils"
+import { getShowSaveFilePickerOptions, isMobileDevice } from "@/utils"
+import streamSaver from "streamsaver"
 
 export const generateThumbnailMutexes: Record<string, ISemaphore> = {}
 export const generateThumbnailSemaphore = new Semaphore(3)
-export const useWorkerForDownloads = ["chrome"].includes(UAParserResult?.browser?.name?.toLowerCase().trim() ?? "gecko")
+export const useWorkerForDownloads =
+	IS_DESKTOP || (!isMobileDevice() && ["chrome", "chromium"].includes(UAParserResult?.browser?.name?.toLowerCase().trim() ?? "gecko"))
 
 // Setup message handler. The worker sends messages to the main thread.
 worker.setMessageHandler(proxy(event => eventEmitter.emit("workerMessage", event)))
@@ -36,18 +39,23 @@ export async function downloadFile({ item }: { item: DriveCloudItem }): Promise<
 		return
 	}
 
+	if (!useWorkerForDownloads) {
+		const streamHandle = streamSaver.createWriteStream(sanitizeFileName(item.name), {
+			size: item.size,
+			pathname: `/download/${encodeURIComponent(sanitizeFileName(item.name))}`
+		})
+
+		return await workerLib.downloadFile({
+			item,
+			fileHandle: streamHandle
+		})
+	}
+
 	const fileHandle = await showSaveFilePicker(
 		getShowSaveFilePickerOptions({
 			name: sanitizeFileName(item.name)
 		})
 	)
-
-	if (!useWorkerForDownloads) {
-		return await workerLib.downloadFile({
-			item,
-			fileHandle
-		})
-	}
 
 	await worker.downloadFile({
 		item,
@@ -97,13 +105,13 @@ export async function downloadDirectory({
 	linkSalt?: string
 	linkKey?: string
 }): Promise<void> {
-	const fileHandle = await showSaveFilePicker(
-		getShowSaveFilePickerOptions({
-			name: `${sanitizeFileName(name)}.zip`
-		})
-	)
+	name = `${sanitizeFileName(name)}.zip`
 
 	if (!useWorkerForDownloads) {
+		const streamHandle = streamSaver.createWriteStream(name, {
+			pathname: `/download/${encodeURIComponent(name)}`
+		})
+
 		return await workerLib.downloadDirectory({
 			uuid,
 			type,
@@ -112,9 +120,16 @@ export async function downloadDirectory({
 			linkPassword,
 			linkSalt,
 			linkKey,
-			fileHandle
+			fileHandle: streamHandle,
+			name
 		})
 	}
+
+	const fileHandle = await showSaveFilePicker(
+		getShowSaveFilePickerOptions({
+			name
+		})
+	)
 
 	await worker.downloadDirectory({
 		uuid,
@@ -124,7 +139,8 @@ export async function downloadDirectory({
 		linkPassword,
 		linkSalt,
 		linkKey,
-		fileHandle
+		fileHandle,
+		name
 	})
 }
 
@@ -167,11 +183,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkSalt?: string
 	linkKey?: string
 }): Promise<void> {
-	const fileHandle = await showSaveFilePicker(
-		getShowSaveFilePickerOptions({
-			name: name ? sanitizeFileName(name) : `Download_${Date.now()}.zip`
-		})
-	)
+	name = name ? sanitizeFileName(name) : `Download_${Date.now()}.zip`
 
 	const itemsWithPath = items.map(item => ({
 		...item,
@@ -179,17 +191,28 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	}))
 
 	if (!useWorkerForDownloads) {
+		const streamHandle = streamSaver.createWriteStream(sanitizeFileName(name), {
+			pathname: `/download/${encodeURIComponent(sanitizeFileName(name))}`
+		})
+
 		return workerLib.downloadMultipleFilesAndDirectoriesAsZip({
 			items: itemsWithPath,
-			fileHandle,
+			fileHandle: streamHandle,
 			type,
 			linkHasPassword,
 			linkPassword,
 			linkSalt,
 			linkKey,
-			linkUUID
+			linkUUID,
+			name
 		})
 	}
+
+	const fileHandle = await showSaveFilePicker(
+		getShowSaveFilePickerOptions({
+			name
+		})
+	)
 
 	await worker.downloadMultipleFilesAndDirectoriesAsZip({
 		items: itemsWithPath,
@@ -199,7 +222,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 		linkPassword,
 		linkSalt,
 		linkKey,
-		linkUUID
+		linkUUID,
+		name
 	})
 }
 

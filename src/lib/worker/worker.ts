@@ -77,7 +77,8 @@ eventEmitter.on("sdkWorkerMessage", (event: SDKWorkerToMainWorkerMessage) => {
 				type: "progress",
 				uuid: event.data.uuid,
 				bytes: event.data.bytes,
-				name: event.data.name
+				name: event.data.name,
+				fileType: event.data.fileType
 			}
 		})
 	}
@@ -89,7 +90,8 @@ eventEmitter.on("sdkWorkerMessage", (event: SDKWorkerToMainWorkerMessage) => {
 				type: "progress",
 				uuid: event.data.uuid,
 				bytes: event.data.bytes,
-				name: event.data.name
+				name: event.data.name,
+				fileType: event.data.fileType
 			}
 		})
 	}
@@ -524,7 +526,13 @@ export async function listTrash(): Promise<DriveCloudItem[]> {
 	return driveItems
 }
 
-export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem; fileHandle: FileSystemFileHandle }): Promise<void> {
+export async function downloadFile({
+	item,
+	fileHandle
+}: {
+	item: DriveCloudItem
+	fileHandle: FileSystemFileHandle | WritableStream<Buffer>
+}): Promise<void> {
 	await waitForInitialization()
 
 	if (item.type !== "file") {
@@ -539,11 +547,13 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 		abortControllers[item.uuid] = new AbortController()
 	}
 
-	if (typeof fileHandle.createWritable !== "function") {
-		throw new Error("Your browser does not support streaming downloads.")
-	}
+	const writer =
+		fileHandle instanceof WritableStream
+			? fileHandle
+			: await fileHandle.createWritable({
+					keepExistingData: false
+				})
 
-	const writer = await fileHandle.createWritable()
 	const stream = getSDK()
 		.cloud()
 		.downloadFileToReadableStream({
@@ -563,7 +573,8 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 					data: {
 						type: "queued",
 						uuid: item.uuid,
-						name: item.name
+						name: item.name,
+						fileType: "file"
 					}
 				})
 			},
@@ -574,7 +585,8 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 						type: "started",
 						uuid: item.uuid,
 						name: item.name,
-						size: item.size
+						size: item.size,
+						fileType: "file"
 					}
 				})
 			},
@@ -585,7 +597,8 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 						type: "progress",
 						uuid: item.uuid,
 						bytes: transferred,
-						name: item.name
+						name: item.name,
+						fileType: "file"
 					}
 				})
 			},
@@ -596,7 +609,8 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 						type: "finished",
 						uuid: item.uuid,
 						name: item.name,
-						size: item.size
+						size: item.size,
+						fileType: "file"
 					}
 				})
 
@@ -617,7 +631,8 @@ export async function downloadFile({ item, fileHandle }: { item: DriveCloudItem;
 						uuid: item.uuid,
 						err,
 						name: item.name,
-						size: item.size
+						size: item.size,
+						fileType: "file"
 					}
 				})
 
@@ -683,7 +698,8 @@ export async function uploadFile({
 					data: {
 						type: "queued",
 						uuid: fileUUID,
-						name: fileName
+						name: fileName,
+						fileType: "file"
 					}
 				})
 			},
@@ -698,7 +714,8 @@ export async function uploadFile({
 						type: "started",
 						uuid: fileUUID,
 						name: fileName,
-						size: file.size
+						size: file.size,
+						fileType: "file"
 					}
 				})
 			},
@@ -713,7 +730,8 @@ export async function uploadFile({
 						type: "progress",
 						uuid: fileUUID,
 						bytes: transferred,
-						name: fileName
+						name: fileName,
+						fileType: "file"
 					}
 				})
 			},
@@ -728,7 +746,8 @@ export async function uploadFile({
 						type: "finished",
 						uuid: fileUUID,
 						name: fileName,
-						size: file.size
+						size: file.size,
+						fileType: "file"
 					}
 				})
 
@@ -751,7 +770,8 @@ export async function uploadFile({
 						uuid: fileUUID,
 						err,
 						name: fileName,
-						size: file.size
+						size: file.size,
+						fileType: "file"
 					}
 				})
 
@@ -872,7 +892,8 @@ export async function uploadDirectory({
 						data: {
 							type: "queued",
 							uuid: directoryId,
-							name: name!
+							name: name!,
+							fileType: "directory"
 						}
 					})
 				},
@@ -889,7 +910,8 @@ export async function uploadDirectory({
 							type: "started",
 							uuid: directoryId,
 							name: name!,
-							size
+							size,
+							fileType: "directory"
 						}
 					})
 				},
@@ -904,7 +926,8 @@ export async function uploadDirectory({
 							type: "progress",
 							uuid: directoryId,
 							bytes: transferred,
-							name: name!
+							name: name!,
+							fileType: "directory"
 						}
 					})
 				},
@@ -926,7 +949,8 @@ export async function uploadDirectory({
 							uuid: directoryId,
 							err,
 							name: name!,
-							size
+							size,
+							fileType: "directory"
 						}
 					})
 
@@ -952,7 +976,8 @@ export async function uploadDirectory({
 							type: "directoryProgress",
 							uuid: directoryId,
 							name: name!,
-							created: 1
+							created: 1,
+							fileType: "directory"
 						}
 					})
 				},
@@ -991,7 +1016,8 @@ export async function uploadDirectory({
 					type: "finished",
 					uuid: directoryId,
 					name: name!,
-					size
+					size,
+					fileType: "directory"
 				}
 			})
 		}
@@ -1017,7 +1043,8 @@ export async function uploadDirectory({
 					uuid: directoryId,
 					err,
 					name: name!,
-					size
+					size,
+					fileType: "directory"
 				}
 			})
 		}
@@ -1089,10 +1116,11 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	linkSalt,
 	linkKey,
 	dontEmitQueuedEvent,
-	id
+	id,
+	name
 }: {
 	items: DriveCloudItemWithPath[]
-	fileHandle: FileSystemFileHandle
+	fileHandle: FileSystemFileHandle | WritableStream<Buffer>
 	type?: DirDownloadType
 	linkUUID?: string
 	linkHasPassword?: boolean
@@ -1101,18 +1129,21 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 	dontEmitQueuedEvent?: boolean
 	linkKey?: string
 	id?: string
+	name: string
 }): Promise<void> {
-	if (typeof fileHandle.createWritable !== "function") {
-		throw new Error("Your browser does not support streaming downloads.")
-	}
-
 	await waitForInitialization()
 
+	const writer =
+		fileHandle instanceof WritableStream
+			? fileHandle
+			: await fileHandle.createWritable({
+					keepExistingData: false
+				})
+
 	const itemsWithPath: DriveCloudItemWithPath[] = []
-	const writer = await fileHandle.createWritable()
 	const zipWriter = new ZipWriter(writer)
 	const treePromises: Promise<void>[] = []
-	const directoryName = fileHandle.name
+	const directoryName = name
 	let directorySize = 0
 	const directoryId = id ? id : uuidv4()
 	let didQueue = typeof dontEmitQueuedEvent === "boolean" ? dontEmitQueuedEvent : false
@@ -1178,7 +1209,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 					type: "finished",
 					uuid: directoryId,
 					name: directoryName,
-					size: directorySize
+					size: directorySize,
+					fileType: "directory"
 				}
 			})
 
@@ -1232,7 +1264,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 												data: {
 													type: "queued",
 													uuid: directoryId,
-													name: directoryName
+													name: directoryName,
+													fileType: "directory"
 												}
 											})
 										},
@@ -1249,7 +1282,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 													type: "started",
 													uuid: directoryId,
 													name: directoryName,
-													size: directorySize
+													size: directorySize,
+													fileType: "directory"
 												}
 											})
 										},
@@ -1260,7 +1294,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 													type: "progress",
 													uuid: directoryId,
 													name: directoryName,
-													bytes: transferred
+													bytes: transferred,
+													fileType: "directory"
 												}
 											})
 										},
@@ -1276,7 +1311,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 													uuid: directoryId,
 													name: directoryName,
 													size: directorySize,
-													err
+													err,
+													fileType: "directory"
 												}
 											})
 
@@ -1307,7 +1343,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 				type: "finished",
 				uuid: directoryId,
 				name: directoryName,
-				size: directorySize
+				size: directorySize,
+				fileType: "directory"
 			}
 		})
 
@@ -1333,7 +1370,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 					uuid: directoryId,
 					name: directoryName,
 					size: directorySize,
-					err
+					err,
+					fileType: "directory"
 				}
 			})
 		}
@@ -1383,7 +1421,8 @@ export async function downloadDirectory({
 	linkPassword,
 	linkSalt,
 	linkKey,
-	fileHandle
+	fileHandle,
+	name
 }: {
 	uuid: string
 	type?: DirDownloadType
@@ -1392,12 +1431,13 @@ export async function downloadDirectory({
 	linkPassword?: string
 	linkKey?: string
 	linkSalt?: string
-	fileHandle: FileSystemFileHandle
+	fileHandle: FileSystemFileHandle | WritableStream<Buffer>
+	name: string
 }): Promise<void> {
 	await waitForInitialization()
 
 	const directoryId = uuidv4()
-	const directoryName = fileHandle.name
+	const directoryName = name
 	const items: DriveCloudItemWithPath[] = []
 
 	postMessageToMain({
@@ -1405,7 +1445,8 @@ export async function downloadDirectory({
 		data: {
 			type: "queued",
 			uuid: directoryId,
-			name: directoryName
+			name: directoryName,
+			fileType: "directory"
 		}
 	})
 
@@ -1431,7 +1472,8 @@ export async function downloadDirectory({
 				uuid: directoryId,
 				err,
 				name: directoryName,
-				size: 0
+				size: 0,
+				fileType: "directory"
 			}
 		})
 
@@ -1445,7 +1487,8 @@ export async function downloadDirectory({
 				type: "finished",
 				uuid: directoryId,
 				name: directoryName,
-				size: 0
+				size: 0,
+				fileType: "directory"
 			}
 		})
 
@@ -1488,7 +1531,8 @@ export async function downloadDirectory({
 		linkSalt,
 		linkKey,
 		dontEmitQueuedEvent: true,
-		id: directoryId
+		id: directoryId,
+		name
 	})
 }
 
@@ -1652,7 +1696,8 @@ export async function readFile({
 					data: {
 						type: "queued",
 						uuid: item.uuid,
-						name: item.name
+						name: item.name,
+						fileType: "file"
 					}
 				})
 			},
@@ -1667,7 +1712,8 @@ export async function readFile({
 						type: "started",
 						uuid: item.uuid,
 						name: item.name,
-						size: item.size
+						size: item.size,
+						fileType: "file"
 					}
 				})
 			},
@@ -1682,7 +1728,8 @@ export async function readFile({
 						type: "progress",
 						uuid: item.uuid,
 						bytes: transferred,
-						name: item.name
+						name: item.name,
+						fileType: "file"
 					}
 				})
 			},
@@ -1697,7 +1744,8 @@ export async function readFile({
 						type: "finished",
 						uuid: item.uuid,
 						name: item.name,
-						size: item.size
+						size: item.size,
+						fileType: "file"
 					}
 				})
 
@@ -1720,7 +1768,8 @@ export async function readFile({
 						uuid: item.uuid,
 						err,
 						name: item.name,
-						size: item.size
+						size: item.size,
+						fileType: "file"
 					}
 				})
 
