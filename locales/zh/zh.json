@@ -488,6 +488,11 @@
 			"description": "请导出您的主密钥并将其存储在单独的安全位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码后都需要导出主密钥。",
 			"continue": "导出",
 			"dismiss": "忽略"
+		},
+		"pdfPassword": {
+			"title": "密码",
+			"continue": "解锁",
+			"placeholder": "密码"
 		}
 	},
 	"contextMenus": {
@@ -1249,6 +1254,8 @@
 			"description": "您确定要退出而不保存吗？所有更改都将丢失。",
 			"continue": "关闭"
 		}
+		"pdfNoPassword": "PDF 文档受密码保护。",
+		"unlock": "解锁"
 	},
 	"sharedIn": {
 		"dialogs": {
