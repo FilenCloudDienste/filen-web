@@ -153,22 +153,22 @@
     "topbar": {
         "placeholders": {
             "normal": {
-                "search": "Rechercher dans ce répertoire..."
+                "search": "Rechercher dans ce dossier..."
             },
             "example": {
-                "search": "Rechercher dans ce répertoire..."
+                "search": "Rechercher dans ce dossier..."
             }
         }
     },
     "dropZone": {
         "cta": "Déposez ici",
-        "chatsCta": "Attacher au chat"
+        "chatsCta": "Attacher au tchat"
     },
     "topBar": {
         "breadcrumb": {
             "cloudDrive": "Stockage Cloud"
         },
-        "searchInThisFolder": "Rechercher dans ce répertoire...",
+        "searchInThisFolder": "Rechercher dans ce dossier...",
         "breadcrumbs": {
             "recents": "Récents",
             "cloudDrive": "Stockage Cloud",
@@ -177,7 +177,7 @@
             "sharedWithOthers": "Partagé avec d'autres",
             "favorites": "Favoris",
             "trash": "Corbeille",
-            "directory": "Répertoire"
+            "directory": "Dossier"
         },
         "listView": "Vue en mode liste",
         "gridView": "Vue en mode grille"
@@ -186,7 +186,7 @@
         "top": {
             "settings": "Paramètres",
             "notes": "Notes",
-            "chats": "Discussions",
+            "chats": "Conversations",
             "contacts": "Contacts",
             "syncs": "Synchronisations",
             "mounts": "Montages"
@@ -204,14 +204,14 @@
             "createNote": "Créer une note",
             "createTag": "Créer un tag",
             "empty": "Aucune note pour le moment",
-            "emptyCreate": "Créer une",
+            "emptyCreate": "Créer une note",
             "emptySearch": "Aucun résultat pour \"{{search}}\""
         },
         "chats": {
-            "empty": "Aucune discussion pour le moment",
-            "emptyCreate": "Créer une",
+            "empty": "Aucune conversations pour le moment",
+            "emptyCreate": "Créer une conversation",
             "search": "Rechercher...",
-            "createChat": "Créer une discussion",
+            "createChat": "Créer une conversation",
             "emptySearch": "Aucun résultat pour \"{{search}}\""
         },
         "recents": "Récents",
@@ -226,7 +226,7 @@
             "invoices": "Factures",
             "subscriptions": "Abonnements",
             "account": "Compte",
-            "events": "Événements",
+            "events": "Évènements",
             "security": "Sécurité",
             "invite": "Inviter",
             "plans": "Tarifs"
@@ -246,7 +246,7 @@
         },
         "syncs": {
             "empty": "Aucune synchronisation pour le moment",
-            "emptyCreate": "Créer une",
+            "emptyCreate": "Créer une synchronisation",
             "nothingFound": "Aucun résultat pour \"{{search}}\"",
             "createSync": "Créer une synchronisation",
             "search": "Rechercher...",
@@ -257,7 +257,7 @@
         "cloudDrive": "Stockage Cloud",
         "transfers": "Transferts",
         "notes": "Notes",
-        "chats": "Discussions",
+        "chats": "Conversations",
         "contacts": "Contacts",
         "settings": "Paramètres",
         "syncs": "Synchronisations",
@@ -269,8 +269,8 @@
         "selectDriveItem": {
             "title": "Sélectionner",
             "submit": "Sélectionner",
-            "newFolder": "Nouveau répertoire",
-            "empty": "Aucun fichier ou répertoire téléchargé pour le moment",
+            "newFolder": "Nouveau dossier",
+            "empty": "Aucun fichier ou dossier téléchargé pour le moment",
             "selectRoot": "Sélectionner Cloud Drive"
         },
         "selectContacts": {
@@ -291,7 +291,8 @@
             "password": "Mot de passe (laisser vide pour désactiver)",
             "passwordPlaceholder": "Mot de passe",
             "progress": "{{done}} sur {{total}} éléments ajoutés au lien public",
-            "expireNever": "Jamais"
+            "expireNever": "Jamais",
+			"subscriptionNeeded": "Vous avez besoin d'un abonnement actif pour créer des liens public.",
         },
         "sharedWith": {
             "title": "Partagé avec",
@@ -441,14 +442,14 @@
                 "localDirectoryNotPhysical": {
                     "title": "Avertissement",
                     "continue": "Continuer",
-                    "description": "Le répertoire local sélectionné ne semble pas être sur un disque physique. Cela peut entraîner des problèmes de synchronisation et un comportement imprévisible. Voulez-vous continuer ?"
+                    "description": "Le dossier local sélectionné ne semble pas être sur un disque physique. Cela peut entraîner des problèmes de synchronisation et un comportement imprévisible. Voulez-vous continuer ?"
                 }
             }
         },
         "info": {
             "title": "Infos",
             "close": "Fermer",
-            "directoryType": "Répertoire",
+            "directoryType": "Dossier",
             "size": "Taille",
             "type": "Type",
             "name": "Nom",
@@ -456,7 +457,7 @@
             "modified": "Modifié",
             "uploaded": "Téléchargé",
             "files": "Fichiers",
-            "directories": "Répertoires"
+            "directories": "Dossiers"
         },
         "desktopUpdate": {
             "title": "Mise à jour disponible",
@@ -530,9 +531,9 @@
         },
         "drive": {
             "uploadFiles": "Charger des fichiers",
-            "uploadFolders": "Charger des répertoires",
+            "uploadFolders": "Charger des dossiers",
             "newTextFile": "Nouveau fichier texte",
-            "newFolder": "Nouveau répertoire"
+            "newFolder": "Nouveau dossier"
         },
         "notes": {
             "history": "Historique",
@@ -596,7 +597,7 @@
             "error": "Erreur",
             "stopped": "Arrêté",
             "paused": "En pause",
-            "creatingDirectories": "Création des répertoires"
+            "creatingDirectories": "Création des dossiers"
         },
         "pause": "Mettre en pause",
         "resume": "Reprendre",
@@ -612,14 +613,14 @@
         "addParticipants": "Ajouter des participants",
         "emojisMatching": "Émojis correspondant à {{text}}",
         "empty": {
-            "title": "Aucune discussion pour le moment",
-            "description": "Les discussions que vous avez créées ou auxquelles vous avez été ajouté apparaîtront ici",
+            "title": "Aucune conversation pour le moment",
+            "description": "Les conversations que vous avez créé ou auxquelles vous avez été ajouté apparaîtront ici",
             "create": "Créer"
         },
         "header": {
             "title": "Tchat chiffré de bout en bout",
-            "description": "Filen sécurise chaque discussion avec un chiffrement de bout en bout à connaissance zéro par défaut.",
-            "feature1": "Seuls les membres de la discussion peuvent déchiffrer et lire le contenu",
+            "description": "Filen sécurise chaque conversation avec un chiffrement de bout en bout à connaissance zéro par défaut.",
+            "feature1": "Seuls les membres de la conversation peuvent déchiffrer et lire le contenu",
             "feature2": "Le système garantit que les données reçues proviennent bien de l'utilisateur affiché et n'ont pas été modifiées"
         },
         "message": {
@@ -657,17 +658,17 @@
             },
             "removeParticipant": {
                 "title": "Retirer un participant",
-                "description": "Êtes-vous sûr de vouloir retirer {{name}} de cette discussion ?",
+                "description": "Êtes-vous sûr de vouloir retirer {{name}} de cette conversation ?",
                 "continue": "Retirer"
             },
             "deleteConversation": {
-                "title": "Supprimer la discussion",
-                "description": "Êtes-vous sûr de vouloir supprimer cette discussion ? Cette action est irréversible !",
+                "title": "Supprimer la conversation",
+                "description": "Êtes-vous sûr de vouloir supprimer cette conversation ? Cette action est irréversible !",
                 "continue": "Supprimer"
             },
             "leaveConversation": {
-                "title": "Quitter la discussion",
-                "description": "Êtes-vous sûr de vouloir quitter cette discussion ?",
+                "title": "Quitter la conversation",
+                "description": "Êtes-vous sûr de vouloir quitter cette conversation ?",
                 "continue": "Quitter"
             },
             "editName": {
@@ -693,7 +694,7 @@
         "search": "Rechercher...",
         "empty": "Aucun contact pour le moment",
         "emptySearch": "Aucun résultat pour \"{{search}}\"",
-        "openChat": "Ouvrir la discussion",
+        "openChat": "Ouvrir la conversation",
         "more": "Plus",
         "dialogs": {
             "unblock": {
@@ -726,17 +727,17 @@
                 "continue": "Supprimer"
             },
             "deleteAll": {
-                "title": "Supprimer tous les fichiers et répertoires",
-                "description": "Êtes-vous sûr de vouloir supprimer tous les fichiers et répertoires ? Cette action est irréversible !",
+                "title": "Supprimer tous les fichiers et dossiers",
+                "description": "Êtes-vous sûr de vouloir supprimer tous les fichiers et dossiers ? Cette action est irréversible !",
                 "continue": "Supprimer"
             },
             "deleteAll2": {
-                "title": "Supprimer tous les fichiers et répertoires",
+                "title": "Supprimer tous les fichiers et dossiers",
                 "description": "Êtes-vous vraiment sûr ? Cette action est irréversible !",
                 "continue": "Supprimer"
             },
             "deleteAll3": {
-                "title": "Supprimer tous les fichiers et répertoires",
+                "title": "Supprimer tous les fichiers et dossiers",
                 "description": "Êtes-vous certain à 100 % ? Cette action est irréversible !",
                 "continue": "Supprimer"
             },
@@ -795,8 +796,8 @@
                     "info": "Modifier le type de note par défaut"
                 },
                 "chatNotifications": {
-                    "name": "Notifications de chat",
-                    "info": "Activer ou désactiver les notifications de chat"
+                    "name": "Notifications de tchat",
+                    "info": "Activer ou désactiver les notifications de tchat"
                 },
                 "notificationSound": {
                     "name": "Son des notifications",
@@ -828,6 +829,10 @@
                     "name": "Réduire dans la barre d'état",
                     "info": "Cacher Filen dans la barre d'état au lieu de réduire la fenêtre"
                 },
+				"startMinimized": {
+					"name": "Démarrage réduit",
+					"info": "Activer ou désactiver le démarrage réduit"
+				},
                 "autoLaunch": {
                     "name": "Démarrage automatique",
                     "info": "Démarrer Filen automatiquement au lancement du système"
@@ -868,7 +873,7 @@
             "folderColorChanged": "Couleur de {{name}} modifiée",
             "login": "Connexion",
             "deleteVersioned": "Fichiers versionnés supprimés",
-            "deleteAll": "Tous les fichiers et répertoires supprimés",
+            "deleteAll": "Tous les fichiers et dossiers supprimés",
             "deleteUnfinished": "Chargements inachevés supprimés",
             "trashEmptied": "Corbeille vidée",
             "requestAccountDeletion": "Demande de suppression de compte",
@@ -879,7 +884,7 @@
             "passwordChanged": "Mot de passe changé",
             "removedSharedInItems": "{{count}} éléments partagés de {{email}} retirés",
             "removedSharedOutItems": "{{count}} éléments partagés avec {{email}} retirés",
-            "folderLinkEdited": "Lien du répertoire modifié",
+            "folderLinkEdited": "Lien du dossier modifié",
             "itemFavoriteAdded": "{{name}} ajouté aux favoris",
             "itemFavoriteRemoved": "{{name}} retiré des favoris",
             "failedLogin": "Échec de la connexion",
@@ -909,7 +914,7 @@
             "storage": "Stockage",
             "moreInfo": "Plus d'informations sur votre abonnement",
             "paymentMethod": "Méthode de paiement",
-            "info": "{{storage}} de stockage avec chargements, téléchargements, notes et discussions illimités. Débloquez le plein potentiel de Filen.",
+            "info": "{{storage}} de stockage avec chargements, téléchargements, notes et conversations illimités. Débloquez le plein potentiel de Filen.",
             "statuses": {
                 "cancelled": "Annulé",
                 "active": "Actif",
@@ -942,7 +947,7 @@
                     "6": "Lecteur réseau",
                     "7": "Partage de fichiers limité",
                     "8": "Notes limitées",
-                    "9": "Discussions limitées"
+                    "9": "Conversations limitées"
                 },
                 "pro": {
                     "1": "Bande passante illimitée",
@@ -953,7 +958,7 @@
                     "6": "Lecteur réseau",
                     "7": "Partage de fichiers",
                     "8": "Notes illimitées",
-                    "9": "Discussions illimitées"
+                    "9": "Conversations illimitées"
                 }
             }
         },
@@ -1024,8 +1029,8 @@
                     "action": "Supprimer"
                 },
                 "all": {
-                    "name": "Tous les fichiers et répertoires",
-                    "info": "Supprimer tous les fichiers et répertoires",
+                    "name": "Tous les fichiers et dossiers",
+                    "info": "Supprimer tous les fichiers et dossiers",
                     "action": "Supprimer"
                 },
                 "email": {
@@ -1053,7 +1058,7 @@
                 },
                 "appearOffline": {
                     "name": "Apparaître hors ligne",
-                    "info": "Apparaître hors ligne dans les discussions"
+                    "info": "Apparaître hors ligne dans les conversations"
                 },
                 "requestAccountData": {
                     "name": "Demander les données du compte",
@@ -1087,17 +1092,17 @@
                 "invalidFileName": "Nom de fichier invalide."
             },
             "createDirectory": {
-                "title": "Créer un répertoire",
+                "title": "Créer un dossier",
                 "placeholder": "Nom",
                 "continue": "Créer",
-                "invalidDirectoryName": "Nom de répertoire invalide."
+                "invalidDirectoryName": "Nom de dossier invalide."
             },
             "rename": {
                 "title": "Renommer",
                 "placeholder": "Nouveau nom",
                 "continue": "Renommer",
                 "invalidFileName": "Nom de fichier invalide.",
-                "invalidDirectoryName": "Nom de répertoire invalide."
+                "invalidDirectoryName": "Nom de dossier invalide."
             },
             "share": {
                 "title": "Partager",
@@ -1105,6 +1110,11 @@
                 "continue": "Partager"
             }
         },
+		"linksNoSub": {
+			"subscriptionNeeded": "Abonnement nécessaire",
+			"description": "Mettre à niveau vers un abonnement pro permet de déverouiller les liens publics pour votre compte",
+			"upgradeNow": "Acheter maintenant"
+		},
         "emptyPlaceholder": {
             "uploadFiles": "Charger des fichiers",
             "search": {
@@ -1112,16 +1122,16 @@
                 "info": "Aucun résultat pour \"{{search}}\""
             },
             "publicLink": {
-                "title": "Répertoire vide",
-                "info": "Le propriétaire de ce répertoire n'a pas encore chargé de fichiers"
+                "title": "Dossier vide",
+                "info": "Le propriétaire de ce dossier n'a pas encore chargé de fichiers"
             },
             "drive": {
-                "title": "Aucun fichier ou répertoire chargé pour le moment",
-                "info": "Glissez-déposez des fichiers ou répertoires ici ou appuyez sur le bouton ci-dessous"
+                "title": "Aucun fichier ou dossier chargé pour le moment",
+                "info": "Glissez-déposez des fichiers ou dossiers ici ou appuyez sur le bouton ci-dessous"
             },
             "trash": {
                 "title": "Rien dans la corbeille pour le moment",
-                "info": "Les fichiers et répertoires envoyés à la corbeille apparaîtront ici"
+                "info": "Les fichiers et dossiers envoyés à la corbeille apparaîtront ici"
             },
             "recents": {
                 "title": "Aucun fichier chargé pour le moment",
@@ -1129,19 +1139,19 @@
             },
             "links": {
                 "title": "Aucun lien public créé pour le moment",
-                "info": "Les liens publics des fichiers et répertoires apparaîtront ici"
+                "info": "Les liens publics des fichiers et dossiers apparaîtront ici"
             },
             "favorites": {
                 "title": "Aucun favori pour le moment",
-                "info": "Les fichiers et répertoires favoris apparaîtront ici"
+                "info": "Les fichiers et dossiers favoris apparaîtront ici"
             },
             "sharedIn": {
                 "title": "Aucun partage reçu pour le moment",
-                "info": "Les fichiers et répertoires partagés apparaîtront ici"
+                "info": "Les fichiers et dossiers partagés apparaîtront ici"
             },
             "sharedOut": {
                 "title": "Aucun partage effectué pour le moment",
-                "info": "Les fichiers et répertoires partagés apparaîtront ici"
+                "info": "Les fichiers et dossiers partagés apparaîtront ici"
             }
         }
     },
@@ -1150,8 +1160,8 @@
         "invalidInfo": "Ce lien public a expiré ou n'existe pas",
         "back": "Retour",
         "directory": {
-            "downloadWholeDirectory": "Télécharger tout le répertoire",
-            "downloadDirectory": "Télécharger le répertoire"
+            "downloadWholeDirectory": "Télécharger tout le dossier",
+            "downloadDirectory": "Télécharger le dossier"
         },
         "sideBar": {
             "ad": {
@@ -1178,7 +1188,7 @@
         "maxSizeReached": "La taille maximale de la note est limitée à {{chars}} caractères",
         "empty": {
             "title": "Aucune note pour le moment",
-            "description": "Les notes que vous avez créées ou auxquelles vous avez été ajouté apparaîtront ici",
+            "description": "Les notes que vous avez créé ou auxquelles vous avez été ajouté apparaîtront ici",
             "create": "Créer"
         },
         "dialogs": {
@@ -1254,7 +1264,7 @@
         }
     },
     "notifications": {
-        "chat": "Discussion",
+        "chat": "Conversation",
         "contactRequest": "Demande de contact",
         "contactRequestInfo": "{{name}} vous a envoyé une demande de contact"
     },
@@ -1275,7 +1285,7 @@
             "missingDepsInstructions": "Instructions d'installation",
             "cacheUsed": "{{size}} utilisé",
             "description": "Montez votre espace de stockage cloud comme un lecteur réseau, ce qui facilite l'accès et la gestion de vos fichiers directement depuis votre ordinateur. Profitez d'une intégration fluide, d'une synchronisation en temps réel et d'un accès sécurisé à vos données, le tout dans votre explorateur de fichiers habituel.",
-            "unixDescription": "Montez votre espace de stockage cloud dans un répertoire local, ce qui facilite l'accès et la gestion de vos fichiers directement depuis votre ordinateur. Profitez d'une intégration fluide, d'une synchronisation en temps réel et d'un accès sécurisé à vos données, le tout dans votre explorateur de fichiers habituel.",
+            "unixDescription": "Montez votre espace de stockage cloud dans un dossier local, ce qui facilite l'accès et la gestion de vos fichiers directement depuis votre ordinateur. Profitez d'une intégration fluide, d'une synchronisation en temps réel et d'un accès sécurisé à vos données, le tout dans votre explorateur de fichiers habituel.",
             "sudo": "Pour monter et démonter votre espace de stockage cloud, le client peut avoir besoin de droits administrateur. Veuillez autoriser l'accès lorsque vous y êtes invité.",
             "limitations": "L'installation, l'exécution ou l'extraction de programmes et d'archives sur le lecteur réseau n'est pas prise en charge.",
             "sections": {
@@ -1283,12 +1293,12 @@
                     "name": "Actif"
                 },
                 "enabled": {
-                    "name": "Activé",
+                    "name": "Activer",
                     "info": "Activer ou désactiver le lecteur réseau. Rafraîchissez votre explorateur lorsque vous activez ou désactivez cette option"
                 },
                 "mountPoint": {
                     "name": "Point de montage",
-                    "info": "Définir le point de montage vers un répertoire local. Le répertoire local doit être vide, lisible et accessible en écriture",
+                    "info": "Définir le point de montage vers un dossier local. Le dossier local doit être vide, lisible et accessible en écriture",
                     "change": "Modifier"
                 },
                 "driveLetter": {
@@ -1309,7 +1319,7 @@
                 },
                 "cachePath": {
                     "name": "Emplacement du cache",
-                    "info": "Modifier l'emplacement du cache du lecteur réseau. Doit être sur un disque interne. Utilisera par défaut le répertoire d'installation de l'application si non modifié"
+                    "info": "Modifier l'emplacement du cache du lecteur réseau. Doit être sur un disque interne. Utilisera par défaut le dossier d'installation de l'application si non modifié"
                 },
                 "readOnly": {
                     "name": "Lecture seule",
@@ -1330,9 +1340,9 @@
             },
             "errors": {
                 "invalidMountPoint": "Point de montage invalide.",
-                "mountPointNotEmpty": "Le point de montage doit être un répertoire vide.",
-                "pathNotInHomeDir": "Le point de montage doit être dans votre répertoire personnel (/home/<votreNomUtilisateur>).",
-                "pathNotInUserDir": "Le point de montage doit être dans votre répertoire utilisateur (/Users/<votreNomUtilisateur>).",
+                "mountPointNotEmpty": "Le point de montage doit être un dossier vide.",
+                "pathNotInHomeDir": "Le point de montage doit être dans votre dossier personnel (/home/<votreNomUtilisateur>).",
+                "pathNotInUserDir": "Le point de montage doit être dans votre dossier utilisateur (/Users/<votreNomUtilisateur>).",
                 "invalidCachePath": "L'emplacement du cache doit être sur un disque interne avec au moins 10 Go d'espace libre.",
                 "cachePathNotReadableWritable": "L'emplacement du cache n'est pas lisible ou accessible en écriture.",
                 "invalidCachePathLength": "Le chemin d'emplacement du cache est trop long."
@@ -1353,7 +1363,7 @@
                     "name": "Actif"
                 },
                 "enabled": {
-                    "name": "Activé",
+                    "name": "Activer",
                     "info": "Activer ou désactiver le serveur WebDAV"
                 },
                 "protocol": {
@@ -1410,7 +1420,7 @@
                     "name": "Actif"
                 },
                 "enabled": {
-                    "name": "Activé",
+                    "name": "Activer",
                     "info": "Activer ou désactiver le serveur S3"
                 },
                 "protocol": {
@@ -1459,7 +1469,7 @@
         "transfersTitle": "Transferts",
         "noTransfers": "Aucun transfert actif",
         "noEventsYet": "Aucun événement pour le moment",
-        "nothingIgnored": "Aucun fichier ou répertoire ignoré",
+        "nothingIgnored": "Aucun fichier ou dossier ignoré",
         "noIssues": "Aucun problème",
         "info": {
             "progress": "Synchronisation de {{items}} éléments ({{total}}) à {{speed}}, environ {{remaining}} restants",
@@ -1473,13 +1483,13 @@
             "savingState": "Enregistrement de l'état",
             "waitingForLocalDirectoryChanges": "En attente de modifications locales",
             "acquiringLock": "Obtention du verrou de synchronisation",
-            "gettingTrees": "Lecture du répertoire local et cloud",
-            "remoteSmokeTestFailed": "Impossible de lire le répertoire cloud, il n'existe peut-être pas ou vous n'êtes pas connecté à Internet",
-            "localSmokeTestFailed": "Impossible de lire le répertoire local, il n'existe peut-être pas ou vous n'avez pas les droits de lecture ou d'écriture"
+            "gettingTrees": "Lecture du dossier local et cloud",
+            "remoteSmokeTestFailed": "Impossible de lire le dossier cloud, il n'existe peut-être pas ou vous n'êtes pas connecté à Internet",
+            "localSmokeTestFailed": "Impossible de lire le dossier local, il n'existe peut-être pas ou vous n'avez pas les droits de lecture ou d'écriture"
         },
         "empty": {
             "title": "Aucune synchronisation configurée pour le moment",
-            "description": "Vous pouvez synchroniser vos répertoires locaux avec le cloud ou les répertoires cloud avec votre appareil",
+            "description": "Vous pouvez synchroniser vos dossiers locaux avec le cloud ou les dossiers cloud avec votre appareil",
             "create": "Créer"
         },
         "events": {
@@ -1513,12 +1523,12 @@
                 },
                 "forceSync": {
                     "name": "Forcer la synchronisation",
-                    "info": "Réinitialiser le cache interne et forcer un nouvel examen du répertoire local et cloud",
+                    "info": "Réinitialiser le cache interne et forcer un nouvel examen du dossier local et cloud",
                     "forceSync": "Forcer la synchronisation"
                 },
                 "excludeDotFiles": {
                     "name": "Exclure les fichiers point",
-                    "info": "Activer ou désactiver l'exclusion des fichiers/répertoires point (recommandé)"
+                    "info": "Activer ou désactiver l'exclusion des fichiers/dossiers point (recommandé)"
                 },
                 "filenIgnore": {
                     "name": ".filenignore",
@@ -1527,7 +1537,7 @@
                 },
                 "disableLocalTrash": {
                     "name": "Désactiver la corbeille locale",
-                    "info": "Activer ou désactiver la corbeille locale. Lorsque désactivée, le client supprimera définitivement les fichiers ou répertoires au lieu de les déplacer dans le répertoire de corbeille locale"
+                    "info": "Activer ou désactiver la corbeille locale. Lorsqu'elle est désactivée, le client supprimera définitivement les fichiers ou dossiers au lieu de les déplacer dans le dossier de corbeille locale"
                 }
             }
         },
@@ -1559,16 +1569,16 @@
                 "empty": "Vide"
             },
             "reasons": {
-                "dotFile": "Le fichier ou répertoire est dans un chemin point",
-                "defaultIgnore": "Le fichier ou répertoire est dans un chemin ignoré par défaut",
+                "dotFile": "Le fichier ou dossier est dans un chemin point",
+                "defaultIgnore": "Le fichier ou dossier est dans un chemin ignoré par défaut",
                 "empty": "Le fichier est vide",
-                "invalidPath": "Le fichier ou répertoire est dans un chemin invalide",
-                "symlink": "Le fichier ou répertoire est un lien symbolique. Le client ne suit pas les liens symboliques pour éviter les boucles de synchronisation infinies.",
-                "duplicate": "Le fichier ou répertoire existe deux fois",
-                "filenIgnore": "Fichier ou répertoire ignoré par .filenignore",
-                "invalidType": "L'élément n'est ni un fichier ni un répertoire",
-                "nameLength": "Nom du fichier ou répertoire trop long",
-                "pathLength": "Chemin du fichier ou répertoire trop long",
+                "invalidPath": "Le fichier ou dossier est dans un chemin invalide",
+                "symlink": "Le fichier ou dossier est un lien symbolique. Le client ne suit pas les liens symboliques pour éviter les boucles de synchronisation infinies.",
+                "duplicate": "Le fichier ou dossier existe deux fois",
+                "filenIgnore": "Fichier ou dossier ignoré par .filenignore",
+                "invalidType": "L'élément n'est ni un fichier ni un dossier",
+                "nameLength": "Nom du fichier ou dossier trop long",
+                "pathLength": "Chemin du fichier ou dossier trop long",
                 "permissions": "Permissions insuffisantes"
             }
         },
@@ -1579,32 +1589,32 @@
                     "io": "Entrée/Sortie",
                     "noSpace": "Pas assez d'espace ou de surveillants de fichiers disponibles",
                     "openFiles": "Limite de fichiers ouverts",
-                    "fileOrDirExists": "Fichier ou répertoire existe",
-                    "fileOrDirNotFound": "Fichier ou répertoire introuvable",
+                    "fileOrDirExists": "Fichier ou dossier existe",
+                    "fileOrDirNotFound": "Fichier ou dossier introuvable",
                     "isFile": "Fichier",
-                    "isDir": "Répertoire",
-                    "notDir": "Pas un répertoire",
+                    "isDir": "Dossier",
+                    "notDir": "Pas un dossier",
                     "badConnection": "Connexion",
-                    "fileOrDirTemporarilyUnavailable": "Fichier ou répertoire temporairement indisponible",
+                    "fileOrDirTemporarilyUnavailable": "Fichier ou dossier temporairement indisponible",
                     "unknown": "Erreur inconnue",
-                    "dirNotEmpty": "Répertoire non vide",
-                    "fileOrDirNameTooLong": "Nom du fichier ou répertoire trop long"
+                    "dirNotEmpty": "Dossier non vide",
+                    "fileOrDirNameTooLong": "Nom du fichier ou dossier trop long"
                 },
                 "info": {
-                    "permission": "Veuillez vous assurer que le client dispose de toutes les permissions nécessaires pour accéder au répertoire local de synchronisation.",
-                    "io": "Veuillez vous assurer que votre répertoire de synchronisation local et votre support de stockage fonctionnent. Le client n'est pas en mesure d'y accéder correctement.",
+                    "permission": "Veuillez vous assurer que le client dispose de toutes les permissions nécessaires pour accéder au dossier local de synchronisation.",
+                    "io": "Veuillez vous assurer que votre dossier de synchronisation local et votre support de stockage fonctionnent. Le client n'est pas en mesure d'y accéder correctement.",
                     "noSpace": "Vous n'avez pas assez d'espace de stockage local ou le système n'a plus de surveillants de fichiers disponibles.",
                     "openFiles": "Le client a atteint la limite de fichiers ouverts. Veuillez augmenter la limite.",
-                    "fileOrDirExists": "Le fichier ou répertoire existe déjà. Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
-                    "fileOrDirNotFound": "Fichier ou répertoire introuvable. Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
+                    "fileOrDirExists": "Le fichier ou dossier existe déjà. Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
+                    "fileOrDirNotFound": "Fichier ou dossier introuvable. Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
                     "isFile": "Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
                     "isDir": "Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
                     "notDir": "Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
                     "badConnection": "Veuillez vous assurer que vous êtes connecté à Internet et que vous pouvez accéder à Filen sans problème.",
                     "fileOrDirTemporarilyUnavailable": "Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
                     "unknown": "Erreur inconnue, essayez de redémarrer le client.",
-                    "dirNotEmpty": "Le répertoire n'est pas vide. Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
-                    "fileOrDirNameTooLong": "Nom du fichier ou répertoire trop long pour votre système de fichiers local."
+                    "dirNotEmpty": "Le dossier n'est pas vide. Il s'agit probablement d'un problème temporaire, essayez de redémarrer le client.",
+                    "fileOrDirNameTooLong": "Nom du fichier ou dossier trop long pour votre système de fichiers local."
                 }
             }
         }
