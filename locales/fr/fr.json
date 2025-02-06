@@ -292,7 +292,7 @@
             "passwordPlaceholder": "Mot de passe",
             "progress": "{{done}} sur {{total}} éléments ajoutés au lien public",
             "expireNever": "Jamais",
-			"subscriptionNeeded": "Vous avez besoin d'un abonnement actif pour créer des liens public.",
+			"subscriptionNeeded": "Vous avez besoin d'un abonnement actif pour créer des liens public."
         },
         "sharedWith": {
             "title": "Partagé avec",
