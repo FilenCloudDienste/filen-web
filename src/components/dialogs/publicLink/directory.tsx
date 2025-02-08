@@ -100,9 +100,11 @@ export const Directory = memo(
 			[loadingToast, errorToast, query, item.uuid, status, location, setItems, setOpen, saving, setSaving]
 		)
 
+		/* 
 		const toggleDownloadButton = useCallback(async (checked: boolean) => {
 			setDownloadBtn(checked)
-		}, [])
+		}, []) 
+		*/
 
 		const save = useCallback(async () => {
 			if (!status || !status.exists || saving) {
@@ -295,6 +297,7 @@ export const Directory = memo(
 								autoCorrect="none"
 							/>
 						</div>
+						{/*
 						<div className="flex flex-row gap-10 items-center justify-between">
 							<p className="line-clamp-1 text-ellipsis break-all">{t("dialogs.publicLink.downloadButton")}</p>
 							<Switch
@@ -302,6 +305,7 @@ export const Directory = memo(
 								onCheckedChange={toggleDownloadButton}
 							/>
 						</div>
+						*/}
 					</>
 				)}
 			</div>
