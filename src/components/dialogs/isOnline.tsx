@@ -55,7 +55,7 @@ export const IsOnlineDialog = memo(() => {
 	useEffect(() => {
 		ping()
 
-		const interval = setInterval(ping, 60000)
+		const interval = setInterval(ping, 180000)
 
 		const navigatorListener = () => {
 			ping(false)

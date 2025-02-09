@@ -9,6 +9,7 @@ export type DirectoryPublicLinkStore = {
 		uuid: string
 		password: string
 	}
+	downloadBtn: boolean
 	setItems: (fn: DriveCloudItem[] | ((prev: DriveCloudItem[]) => DriveCloudItem[])) => void
 	setSearchTerm: (fn: string | ((prev: string) => string)) => void
 	setVirtualURL: (fn: string | ((prev: string) => string)) => void
@@ -23,6 +24,7 @@ export type DirectoryPublicLinkStore = {
 					password: string
 			  })
 	) => void
+	setDownloadBtn: (fn: boolean | ((prev: boolean) => boolean)) => void
 }
 
 export const useDirectoryPublicLinkStore = create<DirectoryPublicLinkStore>(set => ({
@@ -33,6 +35,7 @@ export const useDirectoryPublicLinkStore = create<DirectoryPublicLinkStore>(set 
 		uuid: "",
 		password: ""
 	},
+	downloadBtn: false,
 	setItems(fn) {
 		set(state => ({ items: typeof fn === "function" ? fn(state.items) : fn }))
 	},
@@ -44,6 +47,9 @@ export const useDirectoryPublicLinkStore = create<DirectoryPublicLinkStore>(set 
 	},
 	setPasswordState(fn) {
 		set(state => ({ passwordState: typeof fn === "function" ? fn(state.passwordState) : fn }))
+	},
+	setDownloadBtn(fn) {
+		set(state => ({ downloadBtn: typeof fn === "function" ? fn(state.downloadBtn) : fn }))
 	}
 }))
 

@@ -61,7 +61,14 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	const errorToast = useErrorToast()
 	const loadingToast = useLoadingToast()
 	const { setDriveItems, driveItems, setDriveSearch } = useDriveItemsStore(
-		useCallback(state => ({ setDriveItems: state.setItems, driveItems: state.items, setDriveSearch: state.setSearchTerm }), [])
+		useCallback(
+			state => ({
+				setDriveItems: state.setItems,
+				driveItems: state.items,
+				setDriveSearch: state.setSearchTerm
+			}),
+			[]
+		)
 	)
 	const { setPublicLinkItems, publicLinkItems, setVirtualURL, setPublicLinkSearch } = useDirectoryPublicLinkStore(
 		useCallback(

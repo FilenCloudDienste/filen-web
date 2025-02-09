@@ -121,7 +121,7 @@ export const TransferActions = memo(
 					<Badge variant={state === "error" ? "destructive" : "secondary"}>{t("transfers.state." + state)}</Badge>
 				) : progressNormalized <= 0 ? (
 					<>
-						{isDirectory ? (
+						{isDirectory && type === "upload" ? (
 							<Badge
 								variant="secondary"
 								className="items-center gap-2"

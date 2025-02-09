@@ -1573,6 +1573,10 @@
 				"name": {
 					"name": "Name",
 					"info": "Edit the sync name"
+				},
+				"requireConfirmationOnLargeDeletion": {
+					"name": "Deletion confirmation",
+					"info": "Manually confirm large deletions in the sync directory"
 				}
 			}
 		},

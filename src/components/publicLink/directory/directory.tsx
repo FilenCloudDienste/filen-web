@@ -25,7 +25,7 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 	const [driveSortBy] = useLocalStorage<DriveSortBy>("driveSortBy", {})
 	const queryUpdatedAtRef = useRef<number>(-1)
 	const [listType, setListType] = useLocalStorage<Record<string, "grid" | "list">>("listType", {})
-	const { searchTerm, setItems, setSearchTerm, items, virtualURL, setVirtualURL } = useDirectoryPublicLinkStore(
+	const { searchTerm, setItems, setSearchTerm, items, virtualURL, setVirtualURL, setDownloadBtn } = useDirectoryPublicLinkStore(
 		useCallback(
 			state => ({
 				searchTerm: state.searchTerm,
@@ -33,7 +33,8 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 				setSearchTerm: state.setSearchTerm,
 				items: state.items,
 				virtualURL: state.virtualURL,
-				setVirtualURL: state.setVirtualURL
+				setVirtualURL: state.setVirtualURL,
+				setDownloadBtn: state.setDownloadBtn
 			}),
 			[]
 		)
@@ -116,6 +117,10 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 	}, [query.data, query.isSuccess])
 
 	useEffect(() => {
+		setDownloadBtn(info.downloadBtn)
+	}, [info.downloadBtn, setDownloadBtn])
+
+	useEffect(() => {
 		if (virtualURL.length === 0) {
 			setVirtualURL(info.parent)
 		}
@@ -134,23 +139,25 @@ export const Directory = memo(({ info, password }: { info: DirLinkInfoDecryptedR
 					<Breadcrumbs info={info} />
 				</div>
 				<div className={cn("flex flex-row gap-2 px-4 h-full items-center", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
-					<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
-						<Tooltip>
-							<TooltipTrigger asChild={true}>
-								<Button
-									size="sm"
-									className="items-center gap-2 shrink-0"
-									onClick={download}
-									disabled={items.length === 0}
-								>
-									<Download size={16} />
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="bottom">
-								<p>{t("publicLink.directory.downloadDirectory")}</p>
-							</TooltipContent>
-						</Tooltip>
-					</TooltipProvider>
+					{info.downloadBtn && (
+						<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
+							<Tooltip>
+								<TooltipTrigger asChild={true}>
+									<Button
+										size="sm"
+										className="items-center gap-2 shrink-0"
+										onClick={download}
+										disabled={items.length === 0}
+									>
+										<Download size={16} />
+									</Button>
+								</TooltipTrigger>
+								<TooltipContent side="bottom">
+									<p>{t("publicLink.directory.downloadDirectory")}</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
+					)}
 					<div className="flex flex-row items-center">
 						<div className="absolute h-full pl-2">
 							<div className="h-full flex flex-row items-center">

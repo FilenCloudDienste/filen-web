@@ -1,5 +1,5 @@
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { FilenDesktopConfig } from "@filen/desktop/dist/types"
+import { type FilenDesktopConfig } from "@filen/desktop/dist/types"
 import { DEFAULT_DESKTOP_CONFIG } from "@/lib/setup"
 import { DESKTOP_CONFIG_VERSION, SDK_CONFIG_VERSION } from "@/constants"
 import { getSDK } from "@/lib/sdk"

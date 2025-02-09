@@ -207,6 +207,58 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 		[setDesktopConfig, sync.uuid, setChanging, errorToast, loadingToast, setSelectedSync, isSyncActive]
 	)
 
+	const toggleRequireConfirmationOnLargeDeletion = useCallback(
+		async (requireConfirmationOnLargeDeletion: boolean) => {
+			if (isSyncActive) {
+				return
+			}
+
+			setChanging(true)
+
+			const toast = loadingToast()
+
+			try {
+				await window.desktopAPI.syncUpdateRequireConfirmationOnLargeDeletions({
+					uuid: sync.uuid,
+					requireConfirmationOnLargeDeletions: requireConfirmationOnLargeDeletion
+				})
+
+				setSelectedSync(prev =>
+					prev && prev.uuid === sync.uuid
+						? {
+								...prev,
+								requireConfirmationOnLargeDeletion
+							}
+						: prev
+				)
+
+				setDesktopConfig(prev => ({
+					...prev,
+					syncConfig: {
+						...prev.syncConfig,
+						syncPairs: prev.syncConfig.syncPairs.map(pair =>
+							pair.uuid === sync.uuid
+								? {
+										...pair,
+										requireConfirmationOnLargeDeletion
+									}
+								: pair
+						)
+					}
+				}))
+			} catch (e) {
+				console.error(e)
+
+				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+			} finally {
+				setChanging(false)
+
+				toast.dismiss()
+			}
+		},
+		[setDesktopConfig, sync.uuid, setChanging, errorToast, loadingToast, setSelectedSync, isSyncActive]
+	)
+
 	const toggleExcludeDotFiles = useCallback(
 		async (excludeDotFiles: boolean) => {
 			if (isSyncActive) {
@@ -530,6 +582,20 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 								/>
 							</Section>
 						)}
+						<Section
+							name={t("syncs.settings.sections.requireConfirmationOnLargeDeletion.name")}
+							info={t("syncs.settings.sections.requireConfirmationOnLargeDeletion.info")}
+						>
+							<Switch
+								checked={
+									typeof sync.requireConfirmationOnLargeDeletion === "boolean"
+										? sync.requireConfirmationOnLargeDeletion
+										: false
+								}
+								onCheckedChange={toggleRequireConfirmationOnLargeDeletion}
+								disabled={changing || isSyncActive}
+							/>
+						</Section>
 						<Section
 							name={t("syncs.settings.sections.name.name")}
 							info={t("syncs.settings.sections.name.info")}

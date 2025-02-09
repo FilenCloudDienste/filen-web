@@ -85,11 +85,12 @@ export const ContextMenu = memo(
 		const [directoryColor, setDirectoryColor] = useState<string>(directoryColorToHex(item.type === "directory" ? item.color : null))
 		const loadingToast = useLoadingToast()
 		const errorToast = useErrorToast()
-		const { setPublicLinkItems, setVirtualURL } = useDirectoryPublicLinkStore(
+		const { setPublicLinkItems, setVirtualURL, directoryPublicLinkDownloadBtn } = useDirectoryPublicLinkStore(
 			useCallback(
 				state => ({
 					setPublicLinkItems: state.setItems,
-					setVirtualURL: state.setVirtualURL
+					setVirtualURL: state.setVirtualURL,
+					directoryPublicLinkDownloadBtn: state.downloadBtn
 				}),
 				[]
 			)
@@ -736,7 +737,7 @@ export const ContextMenu = memo(
 				)
 			}
 
-			if (!selectedItemsContainUndecryptableItems) {
+			if (!selectedItemsContainUndecryptableItems && (isInsidePublicLink ? directoryPublicLinkDownloadBtn : true)) {
 				if (!groups["download"]) {
 					groups["download"] = []
 				}
@@ -1094,7 +1095,9 @@ export const ContextMenu = memo(
 			item,
 			manageShareOut,
 			removeShared,
-			isDesktopHTTPServerOnline
+			isDesktopHTTPServerOnline,
+			directoryPublicLinkDownloadBtn,
+			isInsidePublicLink
 		])
 
 		useEffect(() => {
