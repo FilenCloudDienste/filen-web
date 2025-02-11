@@ -1573,6 +1573,10 @@
 				"name": {
 					"name": "名称",
 					"info": "编辑同步名称"
+				},
+				"requireConfirmationOnLargeDeletion": {
+					"name": "删除确认",
+					"info": "手动确认同步目录中的大量删除"
 				}
 			}
 		},
