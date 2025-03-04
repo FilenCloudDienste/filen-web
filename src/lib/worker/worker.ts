@@ -2662,6 +2662,10 @@ export async function corsHead(url: string): Promise<Record<string, string>> {
 				timeout: 15000
 			})
 
+			if (response.status !== 200) {
+				throw new Error("Invalid response status code.")
+			}
+
 			if (!response.headers || typeof response.headers["content-type"] !== "string") {
 				throw new Error("Response type is not string: " + url)
 			}
@@ -2676,6 +2680,10 @@ export async function corsHead(url: string): Promise<Record<string, string>> {
 		const response = await axios.get("https://corsproxy.io/?" + encodeURIComponent(url), {
 			timeout: 15000
 		})
+
+		if (response.status !== 200) {
+			throw new Error("Invalid response status code.")
+		}
 
 		if (!response.headers || typeof response.headers["content-type"] !== "string") {
 			throw new Error("Response type is not string: " + url)
@@ -2697,6 +2705,10 @@ export async function corsGet(url: string): Promise<AxiosResponse> {
 			timeout: 15000
 		})
 
+		if (response.status !== 200) {
+			throw new Error("Invalid response status code.")
+		}
+
 		if (!response.headers || typeof response.headers["content-type"] !== "string") {
 			throw new Error("Response content-type is not string: " + url)
 		}
@@ -2709,6 +2721,10 @@ export async function corsGet(url: string): Promise<AxiosResponse> {
 	const response = await axios.get("https://corsproxy.io/?" + encodeURIComponent(url), {
 		timeout: 15000
 	})
+
+	if (response.status !== 200) {
+		throw new Error("Invalid response status code.")
+	}
 
 	if (!response.headers || typeof response.headers["content-type"] !== "string") {
 		throw new Error("Response content-type is not string: " + url)
@@ -3171,15 +3187,17 @@ export async function workerClearThumbnailCache(): Promise<void> {
 export async function cdnConfig(): Promise<RemoteConfig> {
 	await waitForInitialization()
 
-	const response = (
-		await axios.get("https://cdn.filen.io/" + REMOTE_CFG_NAME + "?" + Date.now(), {
-			timeout: 60000,
-			responseType: "json",
-			method: "GET"
-		})
-	).data as RemoteConfig
+	const response = await axios.get("https://cdn.filen.io/" + REMOTE_CFG_NAME + "?" + Date.now(), {
+		timeout: 60000,
+		responseType: "json",
+		method: "GET"
+	})
 
-	return response
+	if (response.status !== 200) {
+		throw new Error("Failed to fetch remote config")
+	}
+
+	return response.data as RemoteConfig
 }
 
 export async function createSubscription({ planId, paymentMethod }: { planId: number; paymentMethod: PaymentMethods }): Promise<string> {

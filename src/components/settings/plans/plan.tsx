@@ -12,8 +12,10 @@ import { type PaymentMethods } from "@filen/sdk/dist/types/api/v3/user/sub/creat
 import { RemoteConfigPlan } from "@/types"
 import { Loader } from "lucide-react"
 import { useRemoteConfigStore } from "@/stores/remoteConfig.store"
+import { type UserAccountResponse } from "@filen/sdk/dist/types/api/v3/user/account"
+import eventEmitter from "@/lib/eventEmitter"
 
-export const Plan = memo(({ plan }: { plan: RemoteConfigPlan }) => {
+export const Plan = memo(({ plan, account }: { plan: RemoteConfigPlan; account: UserAccountResponse }) => {
 	const { t } = useTranslation()
 	const errorToast = useErrorToast()
 	const [isCreatingSubURL, setIsCreatingSubURL] = useState<boolean>(false)
@@ -24,9 +26,21 @@ export const Plan = memo(({ plan }: { plan: RemoteConfigPlan }) => {
 		return plan.name.toLowerCase().includes("lifetime") || plan.term === "lifetime"
 	}, [plan.name, plan.term])
 
+	const hasCountrySet = useMemo(() => {
+		return typeof account.personal.country === "string" && account.personal.country.length > 0
+	}, [account.personal.country])
+
 	const buyPlan = useCallback(
 		async ({ planId, paymentMethod }: { planId: number; paymentMethod: PaymentMethods }) => {
 			if (isCreatingSubURL || subURL.length > 0 || (paymentMethod === "crypto" && !cryptoAvailable)) {
+				return
+			}
+
+			if (!hasCountrySet) {
+				eventEmitter.emit("openChangePersonalInformationDialog", {
+					needsCountrySetup: true
+				})
+
 				return
 			}
 
@@ -47,7 +61,7 @@ export const Plan = memo(({ plan }: { plan: RemoteConfigPlan }) => {
 				setIsCreatingSubURL(false)
 			}
 		},
-		[errorToast, isCreatingSubURL, subURL, cryptoAvailable]
+		[errorToast, isCreatingSubURL, subURL, cryptoAvailable, hasCountrySet]
 	)
 
 	if (!config) {

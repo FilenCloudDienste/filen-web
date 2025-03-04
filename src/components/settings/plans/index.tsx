@@ -4,10 +4,13 @@ import { useTranslation } from "react-i18next"
 import Plan from "./plan"
 import Skeletons from "../skeletons"
 import { useRemoteConfigStore } from "@/stores/remoteConfig.store"
+import useAccount from "@/hooks/useAccount"
+import ChangePersonalInformationDialog from "../account/dialogs/personalInformation"
 
 export const Plans = memo(() => {
 	const { t } = useTranslation()
 	const config = useRemoteConfigStore(useCallback(state => state.config, []))
+	const account = useAccount()
 
 	const plans = useMemo(() => {
 		if (!config) {
@@ -35,7 +38,7 @@ export const Plans = memo(() => {
 		}
 	}, [config])
 
-	if (!config) {
+	if (!config || !account) {
 		return <Skeletons />
 	}
 
@@ -70,6 +73,7 @@ export const Plans = memo(() => {
 										<Plan
 											key={plan.id}
 											plan={plan}
+											account={account.account}
 										/>
 									)
 								})}
@@ -100,6 +104,7 @@ export const Plans = memo(() => {
 					)
 				})}
 			</Tabs>
+			<ChangePersonalInformationDialog account={account.account} />
 		</div>
 	)
 })

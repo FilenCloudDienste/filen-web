@@ -339,7 +339,8 @@
 			"streetNumber": "Hausnummer",
 			"city": "Stadt",
 			"postalCode": "Postleitzahl",
-			"country": "Land"
+			"country": "Land",
+			"needsCountrySetup": "Bitte wähle dein Land aus um fortzufahren."
 		},
 		"twoFactorCode": {
 			"useRecoveryKey": "Stattdessen Wiederherstellungsschlüssel verwenden",

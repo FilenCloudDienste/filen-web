@@ -349,7 +349,8 @@
 			"streetNumber": "Street number",
 			"city": "City",
 			"postalCode": "Postal code",
-			"country": "Country"
+			"country": "Country",
+			"needsCountrySetup": "Please select your country to continue."
 		},
 		"twoFactorCode": {
 			"useRecoveryKey": "Use recovery key instead",

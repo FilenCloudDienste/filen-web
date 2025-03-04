@@ -226,8 +226,10 @@ export const ChangePersonalInformationDialog = memo(({ account }: { account: Use
 	})
 	const loadingToast = useLoadingToast()
 	const errorToast = useErrorToast()
+	const [needsCountrySetup, setNeedsCountrySetup] = useState<boolean>(false)
 
 	const close = useCallback(() => {
+		setNeedsCountrySetup(false)
 		setOpen(false)
 	}, [])
 
@@ -288,6 +290,7 @@ export const ChangePersonalInformationDialog = memo(({ account }: { account: Use
 	}, [])
 
 	const onCountryChange = useCallback((country: string) => {
+		setNeedsCountrySetup(false)
 		setInputs(prev => ({
 			...prev,
 			country
@@ -313,7 +316,7 @@ export const ChangePersonalInformationDialog = memo(({ account }: { account: Use
 	}, [loadingToast, errorToast, inputs])
 
 	useEffect(() => {
-		const listener = eventEmitter.on("openChangePersonalInformationDialog", () => {
+		const listener = eventEmitter.on("openChangePersonalInformationDialog", (data?: { needsCountrySetup: boolean }) => {
 			setInputs({
 				city: account.personal.city ? account.personal.city : "",
 				postalCode: account.personal.postalCode ? account.personal.postalCode : "",
@@ -325,6 +328,10 @@ export const ChangePersonalInformationDialog = memo(({ account }: { account: Use
 				firstName: account.personal.firstName ? account.personal.firstName : "",
 				lastName: account.personal.lastName ? account.personal.lastName : ""
 			})
+
+			if (data && data.needsCountrySetup) {
+				setNeedsCountrySetup(true)
+			}
 
 			setOpen(true)
 		})
@@ -340,7 +347,7 @@ export const ChangePersonalInformationDialog = memo(({ account }: { account: Use
 			onOpenChange={setOpen}
 		>
 			<DialogContent className="outline-none focus:outline-none active:outline-none hover:outline-none">
-				<DialogHeader>{t("dialogs.personalInformation.title")}</DialogHeader>
+				<DialogHeader autoFocus={needsCountrySetup ? false : undefined}>{t("dialogs.personalInformation.title")}</DialogHeader>
 				<div className="flex flex-col gap-3 mb-3">
 					<div className="flex flex-row gap-4 justify-between items-center">
 						<div className="flex flex-col gap-1">
@@ -425,8 +432,11 @@ export const ChangePersonalInformationDialog = memo(({ account }: { account: Use
 					<div className="flex flex-row gap-4 justify-between items-center">
 						<div className="flex flex-col gap-1 w-full">
 							<p className="text-sm text-muted-foreground">{t("dialogs.personalInformation.country")}</p>
-							<Select onValueChange={onCountryChange}>
-								<SelectTrigger>
+							<Select
+								onValueChange={onCountryChange}
+								required={needsCountrySetup ? true : undefined}
+							>
+								<SelectTrigger className={needsCountrySetup ? "border-red-500" : undefined}>
 									<SelectValue
 										placeholder={inputs.country.length > 0 ? inputs.country : t("dialogs.personalInformation.country")}
 									/>
@@ -444,6 +454,9 @@ export const ChangePersonalInformationDialog = memo(({ account }: { account: Use
 									})}
 								</SelectContent>
 							</Select>
+							{needsCountrySetup && (
+								<p className="text-sm text-red-500 mt-2">{t("dialogs.personalInformation.needsCountrySetup")}</p>
+							)}
 						</div>
 					</div>
 				</div>

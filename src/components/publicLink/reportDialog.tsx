@@ -120,6 +120,10 @@ export const ReportDialog = memo(() => {
 				text
 			})
 
+			if (res.status !== 200) {
+				throw new Error("Invalid response status code.")
+			}
+
 			if (!res.data.status) {
 				throw new Error(res.data.message)
 			}
