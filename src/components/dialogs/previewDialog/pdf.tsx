@@ -3,12 +3,12 @@ import { Document, Page, pdfjs } from "react-pdf"
 import { ChevronRight, ChevronLeft, LoaderIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import useWindowSize from "@/hooks/useWindowSize"
-import useIsMobile from "@/hooks/useIsMobile"
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker?url"
 import { showInputDialog } from "../input"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { type OnItemClickArgs } from "react-pdf/dist/esm/shared/types.js"
+import useIsMobile from "@/hooks/useIsMobile"
 import "react-pdf/dist/Page/AnnotationLayer.css"
 import "react-pdf/dist/Page/TextLayer.css"
 
@@ -17,18 +17,18 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 export const PDF = memo(({ urlObject }: { urlObject: string }) => {
 	const [numPages, setNumPages] = useState<number>(0)
 	const [pageNumber, setPageNumber] = useState<number>(1)
-	const [hovering, setHovering] = useState<boolean>(true)
-	const isMobile = useIsMobile()
 	const windowSize = useWindowSize()
 	const { t } = useTranslation()
 	const [didEnterNoPassword, setDidEnterNoPassword] = useState<boolean>(false)
+	const isMobile = useIsMobile()
 
 	const onLoadSuccess = useCallback(({ numPages }: { numPages: number }) => {
+		setDidEnterNoPassword(false)
 		setNumPages(numPages)
 	}, [])
 
 	const prevPage = useCallback(() => {
-		if (!(hovering || isMobile) || numPages <= 1) {
+		if (numPages <= 1) {
 			return
 		}
 
@@ -47,10 +47,10 @@ export const PDF = memo(({ urlObject }: { urlObject: string }) => {
 		}
 
 		setPageNumber(prev)
-	}, [numPages, pageNumber, hovering, isMobile])
+	}, [numPages, pageNumber])
 
 	const nextPage = useCallback(() => {
-		if (!(hovering || isMobile) || numPages <= 1) {
+		if (numPages <= 1) {
 			return
 		}
 
@@ -69,23 +69,7 @@ export const PDF = memo(({ urlObject }: { urlObject: string }) => {
 		}
 
 		setPageNumber(next)
-	}, [numPages, pageNumber, hovering, isMobile])
-
-	const onMouseEnter = useCallback(() => {
-		if (numPages <= 1) {
-			return
-		}
-
-		setHovering(true)
-	}, [numPages])
-
-	const onMouseLeave = useCallback(() => {
-		if (numPages <= 1) {
-			return
-		}
-
-		setHovering(false)
-	}, [numPages])
+	}, [numPages, pageNumber])
 
 	const components = useMemo(() => {
 		return {
@@ -150,17 +134,15 @@ export const PDF = memo(({ urlObject }: { urlObject: string }) => {
 						</Button>
 					</div>
 				) : (
-					<>
+					<div className="flex flex-col w-full h-full items-center">
 						<Document
 							file={urlObject}
 							onLoadSuccess={onLoadSuccess}
 							className={cn(
-								"flex flex-row h-full justify-center overflow-x-hidden overflow-y-auto select-text",
+								"flex flex-1 flex-row h-full justify-center overflow-x-hidden overflow-y-auto select-text",
 								`w-[${width}px]`
 							)}
 							externalLinkTarget="_blank"
-							onMouseEnter={onMouseEnter}
-							onMouseLeave={onMouseLeave}
 							loading={components.loading}
 							error={components.error}
 							noData={components.noData}
@@ -186,31 +168,28 @@ export const PDF = memo(({ urlObject }: { urlObject: string }) => {
 								canvasBackground="white"
 							/>
 						</Document>
-						<div
-							className={cn(
-								(isMobile || hovering) && numPages > 1 ? "opacity-100" : "opacity-0",
-								"flex flex-row items-center absolute bottom-4 left-1/2 -translate-x-1/2 bg-muted border rounded-md animate-in animate-out transition-all z-50 p-2 text-muted-foreground"
-							)}
-							onMouseEnter={onMouseEnter}
-							onMouseLeave={onMouseLeave}
-						>
-							<div
-								className="flex flex-row items-center hover:bg-muted/40 cursor-pointer hover:text-primary"
-								onClick={prevPage}
-							>
-								<ChevronLeft size={20} />
+						{numPages > 1 && (
+							<div className="flex flex-row items-center justify-center w-full h-10 bg-muted p-2 text-muted-foreground">
+								<div className="flex flex-row items-center">
+									<div
+										className="flex flex-row items-center hover:bg-muted/40 cursor-pointer hover:text-primary"
+										onClick={prevPage}
+									>
+										<ChevronLeft size={20} />
+									</div>
+									<p className="flex flex-row items-center justify-center w-14">
+										{pageNumber} / {numPages}
+									</p>
+									<div
+										className="flex flex-row items-center hover:bg-muted/40 cursor-pointer hover:text-primary"
+										onClick={nextPage}
+									>
+										<ChevronRight size={20} />
+									</div>
+								</div>
 							</div>
-							<p className="flex flex-row items-center justify-center w-14">
-								{pageNumber} / {numPages}
-							</p>
-							<div
-								className="flex flex-row items-center hover:bg-muted/40 cursor-pointer hover:text-primary"
-								onClick={nextPage}
-							>
-								<ChevronRight size={20} />
-							</div>
-						</div>
-					</>
+						)}
+					</div>
 				)}
 			</div>
 		</div>
