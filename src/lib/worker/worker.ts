@@ -1227,6 +1227,8 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 			abortControllers[directoryId] = new AbortController()
 		}
 
+		const zipParentDirectoryName = directoryName.endsWith(".zip") ? directoryName.substring(0, directoryName.length - 4) : directoryName
+
 		await promiseAllChunked(
 			itemsWithPath
 				.sort((a, b) => a.path.split("/").length - b.path.split("/").length)
@@ -1238,7 +1240,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 					await new Promise<void>((resolve, reject) => {
 						zipWriter
 							.add(
-								item.path,
+								`${zipParentDirectoryName}/${item.path}`,
 								getSDK()
 									.cloud()
 									.downloadFileToReadableStream({

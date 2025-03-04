@@ -513,7 +513,7 @@ export const ContextMenu = memo(
 										}
 
 										zipWriter
-											.add(`${sanitizeFileName(n.title)}.txt`, new Response(content).body!, {
+											.add(`Notes/${sanitizeFileName(n.title)}.txt`, new Response(content).body!, {
 												lastModDate: new Date(),
 												lastAccessDate: new Date(),
 												creationDate: new Date(),
