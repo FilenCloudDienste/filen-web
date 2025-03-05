@@ -349,7 +349,8 @@
 			"streetNumber": "街道编号",
 			"city": "城市",
 			"postalCode": "邮政编码",
-			"country": "国家"
+			"country": "国家",
+			"needsCountrySetup": "请选择您的国家/地区以继续。"
 		},
 		"twoFactorCode": {
 			"useRecoveryKey": "改用恢复密钥",
