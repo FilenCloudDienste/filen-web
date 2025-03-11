@@ -117,7 +117,7 @@ export const Security = memo(() => {
 							encodeURIComponent(account.settings.twoFactorKey) +
 							"&issuer=" +
 							encodeURIComponent("Filen") +
-							"&digits=6&period=30",
+							"&digits=6&period=30&algorithm=SHA1",
 						keyToDisplayRaw: account.settings.twoFactorKey
 					})
 
