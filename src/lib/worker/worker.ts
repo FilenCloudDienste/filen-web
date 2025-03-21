@@ -132,8 +132,6 @@ export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
 
 	console.log("Worker SDK initialized")
 
-	console.log(config)
-
 	isInitialized = true
 }
 
