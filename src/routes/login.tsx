@@ -4,7 +4,7 @@ import Input from "@/components/input"
 import { Button } from "@/components/ui/button"
 import { useCallback, useState } from "react"
 import { getSDK } from "@/lib/sdk"
-import { APIError, type FilenSDKConfig } from "@filen/sdk"
+import { APIError, type FilenSDKConfig, ANONYMOUS_SDK_CONFIG } from "@filen/sdk"
 import { useTranslation } from "react-i18next"
 import RequireUnauthed from "@/components/requireUnauthed"
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp"
@@ -54,9 +54,15 @@ export function Login() {
 		const toast = loadingToast()
 
 		try {
-			await getSDK().api(3).user().password().forgot({ email: inputResponse.value.trim() })
+			await getSDK().api(3).user().password().forgot({
+				email: inputResponse.value.trim()
+			})
 
-			successToast(t("login.alerts.forgotPasswordSent", { email: inputResponse.value.trim() }))
+			successToast(
+				t("login.alerts.forgotPasswordSent", {
+					email: inputResponse.value.trim()
+				})
+			)
 		} catch (e) {
 			console.error(e)
 
@@ -74,22 +80,18 @@ export function Login() {
 		setLoading(true)
 
 		try {
-			const authInfo = await worker.authInfo({ email: email.trim() })
+			const authInfo = await worker.authInfo({
+				email: email.trim()
+			})
 
 			await setup(
 				{
+					...ANONYMOUS_SDK_CONFIG,
 					email: email.trim(),
-					password: "anonymous",
-					masterKeys: ["anonymous"],
 					connectToSocket: true,
 					metadataCache: true,
-					twoFactorCode: undefined,
-					publicKey: "anonymous",
-					privateKey: "anonymous",
-					apiKey: "anonymous",
 					authVersion: authInfo.authVersion,
-					baseFolderUUID: "anonymous",
-					userId: 1
+					userId: authInfo.id
 				},
 				false
 			)
@@ -114,6 +116,7 @@ export function Login() {
 			setDesktopConfig(
 				{
 					...DEFAULT_DESKTOP_CONFIG,
+					// @ts-expect-error TODO: Fixed when desktop repo uses latest sdk
 					sdkConfig: {
 						...getSDK().config,
 						password: "redacted",

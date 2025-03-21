@@ -29,7 +29,7 @@ export const Filen = memo(
 					<iframe
 						width="100%"
 						height="210px"
-						src={`${PUBLIC_LINK_BASE_URL}${parsed.uuid}#${parsed.key}?embed=true&theme=${dark ? "dark" : "light"}&chatEmbed=true`}
+						src={`${PUBLIC_LINK_BASE_URL}${parsed.uuid}${encodeURIComponent("#")}${Buffer.from(parsed.key, "utf-8").toString("hex")}?embed=true&theme=${dark ? "dark" : "light"}&chatEmbed=true`}
 						title="Filen"
 						style={{
 							borderRadius: "10px",

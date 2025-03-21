@@ -15,6 +15,7 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import { ratePassword } from "./register"
 import useRouteParent from "@/hooks/useRouteParent"
 import worker from "@/lib/worker"
+import { ANONYMOUS_SDK_CONFIG } from "@filen/sdk"
 
 export const Route = createFileRoute("/reset/$token")({
 	component: Reset
@@ -198,29 +199,28 @@ export function Reset() {
 		setLoading(true)
 
 		try {
+			const authInfo = await worker.authInfo({
+				email: email.trim()
+			})
+
 			await setup(
 				{
-					email: "anonymous",
-					password: "anonymous",
-					masterKeys: ["anonymous"],
+					...ANONYMOUS_SDK_CONFIG,
+					email: email.trim(),
 					connectToSocket: true,
 					metadataCache: true,
-					twoFactorCode: undefined,
-					publicKey: "anonymous",
-					privateKey: "anonymous",
-					apiKey: "anonymous",
-					authVersion: 2,
+					authVersion: authInfo.authVersion,
 					baseFolderUUID: "anonymous",
-					userId: 1
+					userId: authInfo.id
 				},
 				false
 			)
 
-			const salt = await getSDK().crypto().utils.generateRandomString({ length: 256 })
+			const salt = await getSDK().crypto().utils.generateRandomHexString(128)
 			const derived = await getSDK().crypto().utils.generatePasswordAndMasterKeyBasedOnAuthVersion({
 				rawPassword: password,
 				salt,
-				authVersion: 2
+				authVersion: authInfo.authVersion
 			})
 			const hasRecoveryKeys = importedMasterKeys.length > 0
 			const newMasterKeys =
@@ -246,7 +246,7 @@ export function Reset() {
 				token,
 				password: derived.derivedPassword,
 				salt,
-				authVersion: 2,
+				authVersion: authInfo.authVersion,
 				hasRecoveryKeys,
 				newMasterKeys: newMasterKeysEncrypted
 			})
@@ -269,7 +269,19 @@ export function Reset() {
 			setShowPassword(false)
 			setLoading(false)
 		}
-	}, [errorToast, passwordStrength.strength, t, password, confirmPassword, token, loading, importedMasterKeys, successToast, navigate])
+	}, [
+		errorToast,
+		passwordStrength.strength,
+		t,
+		password,
+		confirmPassword,
+		token,
+		loading,
+		importedMasterKeys,
+		successToast,
+		navigate,
+		email
+	])
 
 	const onKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLInputElement>) => {

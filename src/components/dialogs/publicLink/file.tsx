@@ -140,7 +140,10 @@ export const File = memo(
 
 			try {
 				await navigator.clipboard.writeText(
-					PUBLIC_LINK_BASE_URL + status.uuid + encodeURIComponent("#") + (item.type === "file" ? item.key : "")
+					PUBLIC_LINK_BASE_URL +
+						status.uuid +
+						encodeURIComponent("#") +
+						Buffer.from(item.type === "file" ? item.key : "", "utf-8").toString("hex")
 				)
 
 				successToast(t("copiedToClipboard"))

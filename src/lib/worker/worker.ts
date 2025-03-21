@@ -5,6 +5,7 @@ import {
 	type FolderMetadata,
 	type PublicLinkExpiration,
 	type CloudItemTree,
+	type MetadataEncryptionVersion,
 	PauseSignal
 } from "@filen/sdk"
 import { type FileSystemFileHandle } from "native-file-system-adapter"
@@ -115,6 +116,12 @@ export async function waitForInitialization(): Promise<void> {
 }
 
 export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
+	config = {
+		...config,
+		connectToSocket: false,
+		metadataCache: true
+	}
+
 	getSDK().init(config)
 
 	const sdkWorkers = await initializeSDKWorkers(config)
@@ -125,6 +132,8 @@ export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
 
 	console.log("Worker SDK initialized")
 
+	console.log(config)
+
 	isInitialized = true
 }
 
@@ -134,13 +143,21 @@ export async function setMessageHandler(callback: (message: WorkerToMainMessage)
 	return
 }
 
-export async function encryptMetadata({ metadata, key, derive }: { metadata: string; key?: string; derive?: boolean }): Promise<string> {
+export async function encryptMetadata({
+	metadata,
+	key,
+	version
+}: {
+	metadata: string
+	key?: string
+	version?: MetadataEncryptionVersion
+}): Promise<string> {
 	await waitForInitialization()
 
 	return await getSDK().crypto().encrypt().metadata({
 		metadata,
 		key,
-		derive
+		version
 	})
 }
 

@@ -344,7 +344,10 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			setReplyMessage(null)
 
 			await Promise.all([
-				worker.sendChatTyping({ conversation: conversation.uuid, type: "up" }),
+				worker.sendChatTyping({
+					conversation: conversation.uuid,
+					type: "up"
+				}),
 				worker.sendChatMessage({
 					conversation: conversation.uuid,
 					message: content,
@@ -954,7 +957,13 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 
 		const attachFilesToChatListener = eventEmitter.on("attachFilesToChat", (files: { file: DriveCloudItem; linkUUID: string }[]) => {
 			insertPublicLinks(
-				files.map(file => PUBLIC_LINK_BASE_URL + file.linkUUID + "#" + (file.file.type === "file" ? file.file.key : ""))
+				files.map(
+					file =>
+						PUBLIC_LINK_BASE_URL +
+						file.linkUUID +
+						encodeURIComponent("#") +
+						Buffer.from(file.file.type === "file" ? file.file.key : "", "utf-8").toString("hex")
+				)
 			)
 		})
 

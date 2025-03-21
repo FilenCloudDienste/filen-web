@@ -57,6 +57,8 @@ export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
 
 	console.log("SDKWorker SDK initialized")
 
+	console.log(config)
+
 	isInitialized = true
 }
 
@@ -115,6 +117,46 @@ export const sdkWorker: SDKWorker = {
 				await waitForInitialization()
 
 				return await getSDK().crypto().utils.generateRandomString(params)
+			},
+			async generateEncryptionKey(params) {
+				await waitForInitialization()
+
+				return await getSDK().crypto().utils.generateEncryptionKey(params)
+			},
+			async generateRandomBytes(params) {
+				await waitForInitialization()
+
+				return await getSDK().crypto().utils.generateRandomBytes(params)
+			},
+			async hashFileName(params) {
+				await waitForInitialization()
+
+				return await getSDK().crypto().utils.hashFileName(params)
+			},
+			async generatePrivateKeyHMAC(params) {
+				await waitForInitialization()
+
+				return await getSDK().crypto().utils.generatePrivateKeyHMAC(params)
+			},
+			async generateRandomURLSafeString(params) {
+				await waitForInitialization()
+
+				return await getSDK().crypto().utils.generateRandomURLSafeString(params)
+			},
+			async generateSearchIndexHashes(params) {
+				await waitForInitialization()
+
+				return await getSDK().crypto().utils.generateSearchIndexHashes(params)
+			},
+			async hashSearchIndex(params) {
+				await waitForInitialization()
+
+				return await getSDK().crypto().utils.hashSearchIndex(params)
+			},
+			async generateRandomHexString(params) {
+				await waitForInitialization()
+
+				return await getSDK().crypto().utils.generateRandomHexString(params)
 			},
 			async derKeyToPem(params) {
 				await waitForInitialization()
@@ -572,4 +614,44 @@ export async function api_v3_file_download_chunk_buffer(...params: Parameters<ty
 
 export async function terminate(): Promise<void> {
 	self.close()
+}
+
+export async function crypto_utils_generateEncryptionKey(...params: Parameters<typeof sdkWorker.crypto.utils.generateEncryptionKey>) {
+	return await sdkWorker.crypto.utils.generateEncryptionKey(...params)
+}
+
+export async function crypto_utils_generateRandomBytes(...params: Parameters<typeof sdkWorker.crypto.utils.generateRandomBytes>) {
+	const result = await sdkWorker.crypto.utils.generateRandomBytes(...params)
+
+	return transfer(result, [result.buffer])
+}
+
+export async function crypto_utils_hashFileName(...params: Parameters<typeof sdkWorker.crypto.utils.hashFileName>) {
+	return await sdkWorker.crypto.utils.hashFileName(...params)
+}
+
+export async function crypto_utils_generatePrivateKeyHMAC(...params: Parameters<typeof sdkWorker.crypto.utils.generatePrivateKeyHMAC>) {
+	const result = await sdkWorker.crypto.utils.generatePrivateKeyHMAC(...params)
+
+	return transfer(result, [result.buffer])
+}
+
+export async function crypto_utils_generateRandomURLSafeString(
+	...params: Parameters<typeof sdkWorker.crypto.utils.generateRandomURLSafeString>
+) {
+	return await sdkWorker.crypto.utils.generateRandomURLSafeString(...params)
+}
+
+export async function crypto_utils_generateSearchIndexHashes(
+	...params: Parameters<typeof sdkWorker.crypto.utils.generateSearchIndexHashes>
+) {
+	return await sdkWorker.crypto.utils.generateSearchIndexHashes(...params)
+}
+
+export async function crypto_utils_hashSearchIndex(...params: Parameters<typeof sdkWorker.crypto.utils.hashSearchIndex>) {
+	return await sdkWorker.crypto.utils.hashSearchIndex(...params)
+}
+
+export async function crypto_utils_generateRandomHexString(...params: Parameters<typeof sdkWorker.crypto.utils.generateRandomHexString>) {
+	return await sdkWorker.crypto.utils.generateRandomHexString(...params)
 }

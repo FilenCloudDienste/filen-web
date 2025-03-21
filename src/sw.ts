@@ -1,4 +1,4 @@
-import FilenSDK, { type FileEncryptionVersion } from "@filen/sdk"
+import FilenSDK, { type FileEncryptionVersion, ANONYMOUS_SDK_CONFIG } from "@filen/sdk"
 import mimeTypes from "mime-types"
 import fetchAdapter from "@vespaiach/axios-fetch-adapter"
 import axios from "axios"
@@ -7,18 +7,9 @@ declare let self: ServiceWorkerGlobalScope
 
 const sdk = new FilenSDK(
 	{
-		email: "anonymous",
-		password: "anonymous",
-		masterKeys: ["anonymous"],
+		...ANONYMOUS_SDK_CONFIG,
 		connectToSocket: false,
-		metadataCache: true,
-		twoFactorCode: "anonymous",
-		publicKey: "anonymous",
-		privateKey: "anonymous",
-		apiKey: "anonymous",
-		authVersion: 2,
-		baseFolderUUID: "anonymous",
-		userId: 1
+		metadataCache: true
 	},
 	undefined,
 	axios.create({

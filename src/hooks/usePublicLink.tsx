@@ -11,6 +11,7 @@ import { type FileEncryptionVersion } from "@filen/sdk"
 import { directoryUUIDToNameCache } from "@/cache"
 import { useTheme } from "@/providers/themeProvider"
 import useLocation from "./useLocation"
+import { isValidHexString } from "@/utils"
 
 export function usePublicLinkURLState() {
 	const locationHash = useLocationHash()
@@ -30,7 +31,7 @@ export function usePublicLinkURLState() {
 
 		return {
 			isPublicLink: location.includes("/f/") || location.includes("/d/"),
-			key: ex[0] ? ex[0] : "",
+			key: ex[0] ? (isValidHexString(ex[0]) ? Buffer.from(ex[0], "hex").toString("utf-8") : ex[0]) : "",
 			uuid: routeParentNormalized,
 			embed: parsedSearchParams && parsedSearchParams["embed"] === "true" ? true : false,
 			color: parsedSearchParams && typeof parsedSearchParams["color"] === "string" ? parsedSearchParams["color"] : null,

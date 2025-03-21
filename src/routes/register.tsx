@@ -14,6 +14,7 @@ import { showInputDialog } from "@/components/dialogs/input"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import Cookies from "js-cookie"
+import { ANONYMOUS_SDK_CONFIG } from "@filen/sdk"
 
 export const Route = createFileRoute("/register")({
 	component: Register
@@ -116,27 +117,11 @@ export function Register() {
 		setLoading(true)
 
 		try {
-			await setup(
-				{
-					email: email.trim(),
-					password: "anonymous",
-					masterKeys: ["anonymous"],
-					connectToSocket: true,
-					metadataCache: true,
-					twoFactorCode: undefined,
-					publicKey: "anonymous",
-					privateKey: "anonymous",
-					apiKey: "anonymous",
-					authVersion: 2,
-					baseFolderUUID: "anonymous",
-					userId: 1
-				},
-				false
-			)
+			await setup(ANONYMOUS_SDK_CONFIG, false)
 
 			const refId = Cookies.get("refId")
 			const affId = Cookies.get("affId")
-			const salt = await getSDK().crypto().utils.generateRandomString({ length: 256 })
+			const salt = await getSDK().crypto().utils.generateRandomHexString(128)
 			const derived = await getSDK().crypto().utils.generatePasswordAndMasterKeyBasedOnAuthVersion({
 				rawPassword: password,
 				salt,

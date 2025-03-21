@@ -1,18 +1,9 @@
-import FilenSDK, { type FilenSDKConfig } from "@filen/sdk"
+import FilenSDK, { type FilenSDKConfig, ANONYMOUS_SDK_CONFIG } from "@filen/sdk"
 
 let sdk = new FilenSDK({
-	email: "anonymous",
-	password: "anonymous",
-	masterKeys: ["anonymous"],
+	...ANONYMOUS_SDK_CONFIG,
 	connectToSocket: true,
-	metadataCache: true,
-	twoFactorCode: "anonymous",
-	publicKey: "anonymous",
-	privateKey: "anonymous",
-	apiKey: "anonymous",
-	authVersion: 2,
-	baseFolderUUID: "anonymous",
-	userId: 1
+	metadataCache: true
 })
 
 export function getSDK(): FilenSDK {
@@ -28,18 +19,9 @@ export function reinitSDK(config?: FilenSDKConfig): void {
 		config
 			? config
 			: {
-					email: "anonymous",
-					password: "anonymous",
-					masterKeys: ["anonymous"],
+					...ANONYMOUS_SDK_CONFIG,
 					connectToSocket: true,
-					metadataCache: true,
-					twoFactorCode: "anonymous",
-					publicKey: "anonymous",
-					privateKey: "anonymous",
-					apiKey: "anonymous",
-					authVersion: 2,
-					baseFolderUUID: "anonymous",
-					userId: 1
+					metadataCache: true
 				}
 	)
 }

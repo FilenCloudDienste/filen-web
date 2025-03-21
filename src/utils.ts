@@ -131,3 +131,11 @@ export function isMobileDevice() {
 
 	return isMobileUserAgent || isMobileScreenSize
 }
+
+export function isValidHexString(str: string): boolean {
+	if (!/^[0-9a-fA-F]+$/.test(str)) {
+		return false
+	}
+
+	return str.length % 2 === 0
+}

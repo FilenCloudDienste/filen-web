@@ -1,6 +1,5 @@
-import { type FilenSDKConfig } from "@filen/sdk"
+import { type FilenSDKConfig, ANONYMOUS_SDK_CONFIG } from "@filen/sdk"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { DEFAULT_SDK_CONFIG } from "@/lib/setup"
 import { SDK_CONFIG_VERSION, DESKTOP_CONFIG_VERSION } from "@/constants"
 
 export type UseSDKConfig = Required<FilenSDKConfig>
@@ -11,14 +10,22 @@ export function getSDKConfig(): FilenSDKConfig {
 	const sdkConfig = window.localStorage.getItem(localStorageKey)
 
 	if (!sdkConfig) {
-		return DEFAULT_SDK_CONFIG
+		return {
+			...ANONYMOUS_SDK_CONFIG,
+			connectToSocket: true,
+			metadataCache: true
+		}
 	}
 
 	return JSON.parse(sdkConfig)
 }
 
 export default function useSDKConfig(): UseSDKConfig {
-	const [sdkConfig] = useLocalStorage<Required<FilenSDKConfig>>(localStorageKey, DEFAULT_SDK_CONFIG as Required<FilenSDKConfig>)
+	const [sdkConfig] = useLocalStorage<Required<FilenSDKConfig>>(localStorageKey, {
+		...ANONYMOUS_SDK_CONFIG,
+		connectToSocket: true,
+		metadataCache: true
+	} as Required<FilenSDKConfig>)
 
 	return {
 		...sdkConfig,

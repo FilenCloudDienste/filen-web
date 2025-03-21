@@ -57,6 +57,30 @@ export async function initializeSDKWorker(config: FilenSDKConfig): Promise<void>
 				},
 				async importRawKey(params) {
 					return await sdkWorker.crypto_utils_importRawKey(params)
+				},
+				async generateEncryptionKey(params) {
+					return await sdkWorker.crypto_utils_generateEncryptionKey(params)
+				},
+				async generateRandomBytes(params) {
+					return await sdkWorker.crypto_utils_generateRandomBytes(params)
+				},
+				async hashFileName(params) {
+					return await sdkWorker.crypto_utils_hashFileName(params)
+				},
+				async generatePrivateKeyHMAC(params) {
+					return await sdkWorker.crypto_utils_generatePrivateKeyHMAC(params)
+				},
+				async generateRandomURLSafeString(params) {
+					return await sdkWorker.crypto_utils_generateRandomURLSafeString(params)
+				},
+				async generateSearchIndexHashes(params) {
+					return await sdkWorker.crypto_utils_generateSearchIndexHashes(params)
+				},
+				async hashSearchIndex(params) {
+					return await sdkWorker.crypto_utils_hashSearchIndex(params)
+				},
+				async generateRandomHexString(params) {
+					return await sdkWorker.crypto_utils_generateRandomHexString(params)
 				}
 			},
 			encrypt: {
@@ -204,7 +228,7 @@ export async function initializeSDKWorkers(config: FilenSDKConfig): Promise<SDKW
 
 	sdkWorkers = []
 
-	if (config.apiKey && config.apiKey.length >= 16 && config.masterKeys && config.masterKeys.length > 0) {
+	if (config.apiKey && config.apiKey.length >= 16 && config.masterKeys && config.masterKeys.length > 0 && config.apiKey !== "anonymous") {
 		await Promise.all(
 			new Array(SDK_WORKER_THREADS).fill(0).map(
 				async () =>

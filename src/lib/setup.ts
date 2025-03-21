@@ -1,7 +1,7 @@
 import { setItem } from "./localForage"
 import { reinitSDK, getSDK } from "./sdk"
 import worker from "./worker"
-import { type FilenSDKConfig } from "@filen/sdk"
+import { type FilenSDKConfig, ANONYMOUS_SDK_CONFIG } from "@filen/sdk"
 import { IS_DESKTOP } from "@/constants"
 import { registerServiceWorker } from "./serviceWorker"
 import { type FilenDesktopConfig } from "@filen/desktop/dist/types"
@@ -20,23 +20,13 @@ import {
 } from "@/hooks/useDesktopConfig"
 import { STORAGE_KEY as themeStorageKey } from "@/providers/themeProvider"
 
-export const DEFAULT_SDK_CONFIG: FilenSDKConfig = {
-	email: "anonymous",
-	password: "anonymous",
-	masterKeys: ["anonymous"],
-	connectToSocket: true,
-	metadataCache: true,
-	twoFactorCode: "anonymous",
-	publicKey: "anonymous",
-	privateKey: "anonymous",
-	apiKey: "anonymous",
-	authVersion: 2,
-	baseFolderUUID: "anonymous",
-	userId: 1
-}
-
 export const DEFAULT_DESKTOP_CONFIG: FilenDesktopConfig = {
-	sdkConfig: DEFAULT_SDK_CONFIG,
+	// @ts-expect-error TODO: Remove when desktop sdk is updated
+	sdkConfig: {
+		...ANONYMOUS_SDK_CONFIG,
+		connectToSocket: true,
+		metadataCache: true
+	},
 	webdavConfig: {
 		enabled: false,
 		username: "admin",
@@ -208,8 +198,26 @@ export async function setup(config?: FilenSDKConfig, connectToSocket: boolean = 
 	const authed = window.localStorage.getItem(authedLocalStorageKey)
 		? window.localStorage.getItem(authedLocalStorageKey) === "true"
 		: false
-	const sdkConfig = JSON.parse(window.localStorage.getItem(sdkConfigLocalStorageKey) ?? JSON.stringify(DEFAULT_SDK_CONFIG))
-	const initConfig = config ? config : authed ? sdkConfig : DEFAULT_SDK_CONFIG
+
+	const sdkConfig: FilenSDKConfig = JSON.parse(
+		window.localStorage.getItem(sdkConfigLocalStorageKey) ??
+			JSON.stringify({
+				...ANONYMOUS_SDK_CONFIG,
+				connectToSocket: true,
+				metadataCache: true
+			})
+	)
+
+	const initConfig = config
+		? config
+		: authed
+			? sdkConfig
+			: {
+					...ANONYMOUS_SDK_CONFIG,
+					connectToSocket: true,
+					metadataCache: true
+				}
+
 	const desktopConfig = JSON.parse(
 		window.localStorage.getItem(desktopConfigLocalStorageKey) ??
 			JSON.stringify({

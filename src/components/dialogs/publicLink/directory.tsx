@@ -144,7 +144,10 @@ export const Directory = memo(
 
 			try {
 				await navigator.clipboard.writeText(
-					PUBLIC_LINK_BASE_URL.split("/#/d/").join("/#/f/") + status.uuid + encodeURIComponent("#") + decryptedLinkKey
+					PUBLIC_LINK_BASE_URL.split("/#/d/").join("/#/f/") +
+						status.uuid +
+						encodeURIComponent("#") +
+						Buffer.from(decryptedLinkKey, "utf-8").toString("hex")
 				)
 
 				successToast(t("copiedToClipboard"))
@@ -255,7 +258,7 @@ export const Directory = memo(
 										PUBLIC_LINK_BASE_URL.split("/#/d/").join("/#/f/") +
 										status.uuid +
 										encodeURIComponent("#") +
-										decryptedLinkKey
+										Buffer.from(decryptedLinkKey, "utf-8").toString("hex")
 									}
 									onChange={preventDefault}
 								/>
