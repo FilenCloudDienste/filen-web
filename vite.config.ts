@@ -53,6 +53,7 @@ export default defineConfig({
 			promiseExportName: "__tla",
 			promiseImportName: i => `__tla_${i}`
 		}),
+		TanStackRouterVite(),
 		react({
 			babel: {
 				plugins: [
@@ -66,7 +67,6 @@ export default defineConfig({
 			},
 			jsxImportSource: "@welldone-software/why-did-you-render"
 		}),
-		TanStackRouterVite(),
 		comlink(),
 		i18nextLoader({
 			paths: ["./locales"]

@@ -21,7 +21,6 @@ import {
 import { STORAGE_KEY as themeStorageKey } from "@/providers/themeProvider"
 
 export const DEFAULT_DESKTOP_CONFIG: FilenDesktopConfig = {
-	// @ts-expect-error TODO: Remove when desktop sdk is updated
 	sdkConfig: {
 		...ANONYMOUS_SDK_CONFIG,
 		connectToSocket: true,

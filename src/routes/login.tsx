@@ -116,7 +116,6 @@ export function Login() {
 			setDesktopConfig(
 				{
 					...DEFAULT_DESKTOP_CONFIG,
-					// @ts-expect-error TODO: Fixed when desktop repo uses latest sdk
 					sdkConfig: {
 						...getSDK().config,
 						password: "redacted",
