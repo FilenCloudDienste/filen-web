@@ -25,7 +25,7 @@
 		"@emoji-mart/react": "^1.1.1",
 		"@filen/desktop": "^3.0.48",
 		"@filen/network-drive": "^0.9.43",
-		"@filen/sdk": "^0.2.2",
+		"@filen/sdk": "^0.2.3",
 		"@filen/sync": "^0.1.102",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
 		"@radix-ui/react-avatar": "^1.0.4",
