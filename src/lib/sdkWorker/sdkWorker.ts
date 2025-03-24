@@ -136,11 +136,6 @@ export const sdkWorker: SDKWorker = {
 
 				return await getSDK().crypto().utils.generatePrivateKeyHMAC(params)
 			},
-			async generateRandomURLSafeString(params) {
-				await waitForInitialization()
-
-				return await getSDK().crypto().utils.generateRandomURLSafeString(params)
-			},
 			async generateSearchIndexHashes(params) {
 				await waitForInitialization()
 
@@ -632,12 +627,6 @@ export async function crypto_utils_generatePrivateKeyHMAC(...params: Parameters<
 	const result = await sdkWorker.crypto.utils.generatePrivateKeyHMAC(...params)
 
 	return transfer(result, [result.buffer])
-}
-
-export async function crypto_utils_generateRandomURLSafeString(
-	...params: Parameters<typeof sdkWorker.crypto.utils.generateRandomURLSafeString>
-) {
-	return await sdkWorker.crypto.utils.generateRandomURLSafeString(...params)
 }
 
 export async function crypto_utils_generateSearchIndexHashes(

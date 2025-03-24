@@ -70,9 +70,6 @@ export async function initializeSDKWorker(config: FilenSDKConfig): Promise<void>
 				async generatePrivateKeyHMAC(params) {
 					return await sdkWorker.crypto_utils_generatePrivateKeyHMAC(params)
 				},
-				async generateRandomURLSafeString(params) {
-					return await sdkWorker.crypto_utils_generateRandomURLSafeString(params)
-				},
 				async generateSearchIndexHashes(params) {
 					return await sdkWorker.crypto_utils_generateSearchIndexHashes(params)
 				},
