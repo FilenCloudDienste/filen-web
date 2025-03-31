@@ -34,7 +34,7 @@ export const ListItem = memo(
 	}) => {
 		const { baseFolderUUID } = useSDKConfig()
 		const [size, setSize] = useState<number>(
-			item.type === "directory" && directorySizeCache.has(item.uuid) ? directorySizeCache.get(item.uuid)!.size : item.size
+			item.type === "directory" && directorySizeCache.has(item.uuid) ? (directorySizeCache.get(item.uuid)?.size ?? 0) : item.size
 		)
 		const thumbnailURL = useMemo(
 			() => (thumbnailURLObjectCache.has(item.uuid) ? thumbnailURLObjectCache.get(item.uuid)! : null),
@@ -86,7 +86,7 @@ export const ListItem = memo(
 				}
 
 				if (directoryUUIDToNameCache.has(part)) {
-					built = pathModule.posix.join(built, directoryUUIDToNameCache.get(part)!)
+					built = pathModule.posix.join(built, directoryUUIDToNameCache.get(part) ?? "")
 				}
 			}
 

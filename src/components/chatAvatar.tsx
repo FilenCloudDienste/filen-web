@@ -36,7 +36,7 @@ export function getColorFromHash(str: string): string {
 	const color = bgColors[index]
 
 	if (!color) {
-		return bgColors[0]!
+		return bgColors[0] ?? ""
 	}
 
 	return color

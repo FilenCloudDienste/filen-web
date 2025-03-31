@@ -23,15 +23,15 @@ export default function useSyncIgnoredCount(uuid?: string): number {
 
 			return (
 				localKeys
-					.map(syncUUID => (localIgnored[syncUUID] ? localIgnored[syncUUID]!.length : 0))
+					.map(syncUUID => (localIgnored[syncUUID] ? localIgnored[syncUUID].length : 0))
 					.reduce((prev, curr) => prev + curr, 0) +
 				remoteKeys
-					.map(syncUUID => (remoteIgnored[syncUUID] ? remoteIgnored[syncUUID]!.length : 0))
+					.map(syncUUID => (remoteIgnored[syncUUID] ? remoteIgnored[syncUUID].length : 0))
 					.reduce((prev, curr) => prev + curr, 0)
 			)
 		}
 
-		return (localIgnored[uuid] ? localIgnored[uuid]!.length : 0) + (remoteIgnored[uuid] ? remoteIgnored[uuid]!.length : 0)
+		return (localIgnored[uuid] ? localIgnored[uuid].length : 0) + (remoteIgnored[uuid] ? remoteIgnored[uuid].length : 0)
 	}, [localIgnored, remoteIgnored, uuid])
 
 	return state

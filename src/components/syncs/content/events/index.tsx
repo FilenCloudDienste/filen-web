@@ -16,7 +16,7 @@ export const Events = memo(({ sync }: { sync: SyncPair }) => {
 	const { events, setTransferEvents } = useSyncsStore(
 		useCallback(
 			state => ({
-				events: state.transferEvents[sync.uuid] ? state.transferEvents[sync.uuid]! : [],
+				events: state.transferEvents[sync.uuid] ?? [],
 				setTransferEvents: state.setTransferEvents
 			}),
 			[sync.uuid]

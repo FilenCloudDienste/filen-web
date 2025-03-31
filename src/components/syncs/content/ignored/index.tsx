@@ -23,8 +23,8 @@ export const Ignored = memo(({ sync }: { sync: SyncPair }) => {
 		useCallback(
 			state => {
 				const filtered = {
-					localIgnored: state.localIgnored[sync.uuid] ? state.localIgnored[sync.uuid]! : [],
-					remoteIgnored: state.remoteIgnored[sync.uuid] ? state.remoteIgnored[sync.uuid]! : []
+					localIgnored: state.localIgnored[sync.uuid] ?? [],
+					remoteIgnored: state.remoteIgnored[sync.uuid] ?? []
 				}
 				const ignored: IgnoreType[] = []
 

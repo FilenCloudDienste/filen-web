@@ -685,7 +685,7 @@ export const PreviewDialog = memo(() => {
 								<>
 									{buffers[item.uuid] ? (
 										<Text
-											buffer={buffers[item.uuid]!}
+											buffer={buffers[item.uuid] ?? Buffer.from([])}
 											item={item}
 											onValueChange={onValueChange}
 											readOnly={readOnly}
@@ -695,9 +695,11 @@ export const PreviewDialog = memo(() => {
 									)}
 								</>
 							)}
-							{previewType === "docx" && <>{buffers[item.uuid] ? <DocX buffer={buffers[item.uuid]!} /> : <Loader />}</>}
+							{previewType === "docx" && (
+								<>{buffers[item.uuid] ? <DocX buffer={buffers[item.uuid] ?? Buffer.from([])} /> : <Loader />}</>
+							)}
 							{previewType === "pdf" && (
-								<>{urlObjects[item.uuid] ? <PDF urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
+								<>{urlObjects[item.uuid] ? <PDF urlObject={urlObjects[item.uuid] ?? ""} /> : <Loader />}</>
 							)}
 							{previewType === "image" && (
 								<Image
@@ -706,10 +708,10 @@ export const PreviewDialog = memo(() => {
 								/>
 							)}
 							{previewType === "video" && (
-								<>{urlObjects[item.uuid] ? <Video urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
+								<>{urlObjects[item.uuid] ? <Video urlObject={urlObjects[item.uuid] ?? ""} /> : <Loader />}</>
 							)}
 							{previewType === "audio" && (
-								<>{urlObjects[item.uuid] ? <Audio urlObject={urlObjects[item.uuid]!} /> : <Loader />}</>
+								<>{urlObjects[item.uuid] ? <Audio urlObject={urlObjects[item.uuid] ?? ""} /> : <Loader />}</>
 							)}
 						</div>
 					</div>

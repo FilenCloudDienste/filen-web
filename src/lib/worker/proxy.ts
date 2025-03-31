@@ -253,7 +253,7 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 			generateThumbnailMutexes[item.uuid] = new Semaphore(1)
 		}
 
-		await generateThumbnailMutexes[item.uuid]!.acquire()
+		await generateThumbnailMutexes[item.uuid]?.acquire()
 
 		try {
 			const thumbnailType = fileNameToThumbnailType(item.name)
@@ -314,7 +314,7 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 
 			throw new Error(`generateThumbnail not implemented for preview type ${thumbnailType}.`)
 		} finally {
-			generateThumbnailMutexes[item.uuid]!.release()
+			generateThumbnailMutexes[item.uuid]?.release()
 		}
 	} finally {
 		generateThumbnailSemaphore.release()

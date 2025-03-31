@@ -466,7 +466,15 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			return
 		}
 
-		const selected = editor.children[selection.anchor.path[0]!] as CustomElement
+		const path = selection.anchor.path[0]
+
+		if (!path) {
+			hideSuggestions()
+
+			return
+		}
+
+		const selected = editor.children[path] as CustomElement
 
 		if (!selected || !selected.children || !Array.isArray(selected.children) || selected.children.length === 0) {
 			hideSuggestions()
@@ -474,7 +482,13 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 			return
 		}
 
-		const text = selected.children[0]!.text
+		const text = selected.children[0]?.text
+
+		if (!text) {
+			hideSuggestions()
+
+			return
+		}
 
 		if (text.length === 0 || !(text.includes("@") || text.includes(":"))) {
 			hideSuggestions()
@@ -567,7 +581,12 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				return
 			}
 
-			const message = selected.children[0]!.text
+			const message = selected.children[0]?.text
+
+			if (!message) {
+				return
+			}
+
 			const closestIndex = findClosestIndex(message, component, selection.anchor.offset)
 
 			if (closestIndex === -1) {
@@ -620,7 +639,15 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				return
 			}
 
-			const message = selected.children[0]!.text
+			const message = selected.children[0]?.text
+
+			if (!message) {
+				hideSuggestions()
+				focusEditor()
+
+				return
+			}
+
 			const closestIndex = findClosestIndex(message, "@", selection.anchor.offset)
 
 			if (closestIndex === -1) {
@@ -630,7 +657,7 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				return
 			}
 
-			const replacedMessage = message.slice(0, closestIndex) + "@" + foundParticipant[0]!.email + " "
+			const replacedMessage = message.slice(0, closestIndex) + "@" + foundParticipant[0]?.email + " "
 
 			if (replacedMessage.trim().length === 0) {
 				hideSuggestions()

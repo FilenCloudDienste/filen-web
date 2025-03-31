@@ -284,14 +284,20 @@ export const CreateSyncDialog = memo(() => {
 				multiple: false
 			})
 
-			if (response.cancelled || !response.items[0]) {
+			if (response.cancelled) {
+				return
+			}
+
+			const item = response.items[0]
+
+			if (!item) {
 				return
 			}
 
 			setCreateState(prev => ({
 				...prev,
-				remotePath: response.items[0]!.path,
-				remoteUUID: response.items[0]!.uuid
+				remotePath: item.path,
+				remoteUUID: item.uuid
 			}))
 		} catch (e) {
 			console.error(e)
@@ -308,13 +314,19 @@ export const CreateSyncDialog = memo(() => {
 
 			const response = await window.desktopAPI.selectDirectory(false)
 
-			if (response.cancelled || !response.paths[0]) {
+			if (response.cancelled) {
+				return
+			}
+
+			const path = response.paths[0]
+
+			if (!path) {
 				return
 			}
 
 			setCreateState(prev => ({
 				...prev,
-				localPath: response.paths[0]!
+				localPath: path
 			}))
 		} catch (e) {
 			console.error(e)

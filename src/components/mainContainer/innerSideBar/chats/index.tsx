@@ -204,7 +204,7 @@ export const Chats = memo(() => {
 					if (event.data.senderId !== userId) {
 						setConversationsUnread(prev => ({
 							...prev,
-							[event.data.conversation]: prev[event.data.conversation] ? prev[event.data.conversation]! + 1 : 1
+							[event.data.conversation]: (prev[event.data.conversation] ?? 0) + 1
 						}))
 					}
 				} else if (event.type === "chatConversationParticipantLeft") {

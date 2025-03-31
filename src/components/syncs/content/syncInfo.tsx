@@ -16,8 +16,8 @@ export const SyncInfoProgress = memo(({ syncUUID }: { syncUUID: string }) => {
 	const { tasksSize, tasksBytes } = useSyncsStore(
 		useCallback(
 			state => ({
-				tasksSize: state.tasksSize[syncUUID] ? state.tasksSize[syncUUID]! : 0,
-				tasksBytes: state.tasksBytes[syncUUID] ? state.tasksBytes[syncUUID]! : 0
+				tasksSize: state.tasksSize[syncUUID] ?? 0,
+				tasksBytes: state.tasksBytes[syncUUID] ?? 0
 			}),
 			[syncUUID]
 		)
@@ -55,20 +55,18 @@ export const SyncInfo = memo(({ syncUUID, paused }: { syncUUID: string; paused: 
 	} = useSyncsStore(
 		useCallback(
 			state => ({
-				speed: state.speed[syncUUID] ? state.speed[syncUUID]! : 0,
-				remainingReadable: state.remainingReadable[syncUUID] ? state.remainingReadable[syncUUID]! : 0,
-				tasksCount: state.tasksCount[syncUUID] ? state.tasksCount[syncUUID]! : 0,
-				tasksSize: state.tasksSize[syncUUID] ? state.tasksSize[syncUUID]! : 0,
-				cycleState: state.cycleState[syncUUID]
-					? state.cycleState[syncUUID]!
-					: {
-							state: "cycleRestarting" as CycleState,
-							timestamp: Date.now()
-						},
-				taskErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "task").length : 0,
+				speed: state.speed[syncUUID] ?? 0,
+				remainingReadable: state.remainingReadable[syncUUID] ?? 0,
+				tasksCount: state.tasksCount[syncUUID] ?? 0,
+				tasksSize: state.tasksSize[syncUUID] ?? 0,
+				cycleState: state.cycleState[syncUUID] ?? {
+					state: "cycleRestarting" as CycleState,
+					timestamp: Date.now()
+				},
+				taskErrors: state.errors[syncUUID] ? (state.errors[syncUUID] ?? []).filter(err => err.type === "task").length : 0,
 				setErrors: state.setErrors,
-				localTreeErrors: state.errors[syncUUID] ? state.errors[syncUUID]!.filter(err => err.type === "localTree").length : 0,
-				confirmDeletion: state.confirmDeletion[syncUUID] ? state.confirmDeletion[syncUUID]! : null,
+				localTreeErrors: state.errors[syncUUID] ? (state.errors[syncUUID] ?? []).filter(err => err.type === "localTree").length : 0,
+				confirmDeletion: state.confirmDeletion[syncUUID] ?? null,
 				setConfirmDeletion: state.setConfirmDeletion
 			}),
 			[syncUUID]

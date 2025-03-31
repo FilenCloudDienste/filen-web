@@ -63,31 +63,31 @@ export async function initializeSDK(config: FilenSDKConfig): Promise<void> {
 export async function pausePauseSignal({ id }: { id: string }): Promise<void> {
 	await waitForInitialization()
 
-	if (!pauseSignals[id] || pauseSignals[id]!.isPaused()) {
+	if (!pauseSignals[id] || pauseSignals[id].isPaused()) {
 		return
 	}
 
-	pauseSignals[id]!.pause()
+	pauseSignals[id].pause()
 }
 
 export async function resumePauseSignal({ id }: { id: string }): Promise<void> {
 	await waitForInitialization()
 
-	if (!pauseSignals[id] || !pauseSignals[id]!.isPaused()) {
+	if (!pauseSignals[id] || !pauseSignals[id].isPaused()) {
 		return
 	}
 
-	pauseSignals[id]!.resume()
+	pauseSignals[id].resume()
 }
 
 export async function abortAbortSignal({ id }: { id: string }): Promise<void> {
 	await waitForInitialization()
 
-	if (!abortControllers[id] || abortControllers[id]!.signal.aborted) {
+	if (!abortControllers[id] || abortControllers[id].signal.aborted) {
 		return
 	}
 
-	abortControllers[id]!.abort()
+	abortControllers[id].abort()
 
 	delete abortControllers[id]
 	delete pauseSignals[id]

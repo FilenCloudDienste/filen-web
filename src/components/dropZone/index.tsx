@@ -133,7 +133,7 @@ export const DropZone = memo(({ children }: { children: React.ReactNode }) => {
 								directoryGroups[dirname] = []
 							}
 
-							directoryGroups[dirname]!.push({
+							;(directoryGroups[dirname] ?? []).push({
 								file,
 								path: file.webkitRelativePath
 							})

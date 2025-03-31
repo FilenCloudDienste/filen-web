@@ -62,7 +62,7 @@ function getStream(request: Request): Response {
 	}
 
 	const isDownload = searchParams.has("download")
-	const fileBase64 = decodeURIComponent(searchParams.get("file")!)
+	const fileBase64 = decodeURIComponent(searchParams.get("file") ?? "")
 	const file = JSON.parse(Buffer.from(fileBase64, "base64").toString("utf-8")) as {
 		name: string
 		mime: string

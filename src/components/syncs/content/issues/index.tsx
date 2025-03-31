@@ -18,7 +18,7 @@ export type IgnoreType = {
 }
 
 export const Issues = memo(({ sync }: { sync: SyncPair }) => {
-	const errors = useSyncsStore(useCallback(state => (state.errors[sync.uuid] ? state.errors[sync.uuid]! : []), [sync.uuid]))
+	const errors = useSyncsStore(useCallback(state => state.errors[sync.uuid] ?? [], [sync.uuid]))
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const windowSize = useWindowSize()
 	const { t } = useTranslation()

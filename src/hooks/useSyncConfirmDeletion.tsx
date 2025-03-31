@@ -19,14 +19,12 @@ export default function useSyncConfirmDeletion(uuid?: string): ConfirmDeletion[]
 				return []
 			}
 
-			const found = keys
-				.filter(syncUUID => confirmDeletion[syncUUID] && confirmDeletion[syncUUID] !== null)
-				.map(syncUUID => confirmDeletion[syncUUID]!)
+			const found = keys.map(syncUUID => confirmDeletion[syncUUID] ?? null).filter(item => item !== null)
 
 			return found
 		}
 
-		return confirmDeletion[uuid] && confirmDeletion[uuid] !== null ? [confirmDeletion[uuid]!] : []
+		return confirmDeletion[uuid] && confirmDeletion[uuid] !== null ? [confirmDeletion[uuid]] : []
 	}, [confirmDeletion, uuid])
 
 	return state

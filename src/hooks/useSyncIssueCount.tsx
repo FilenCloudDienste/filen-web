@@ -12,10 +12,10 @@ export default function useSyncIssueCount(uuid?: string): number {
 				return 0
 			}
 
-			return keys.map(syncUUID => (issues[syncUUID] ? issues[syncUUID]!.length : 0)).reduce((prev, curr) => prev + curr, 0)
+			return keys.map(syncUUID => (issues[syncUUID] ? issues[syncUUID].length : 0)).reduce((prev, curr) => prev + curr, 0)
 		}
 
-		return issues[uuid] ? issues[uuid]!.length : 0
+		return issues[uuid] ? issues[uuid].length : 0
 	}, [issues, uuid])
 
 	return state

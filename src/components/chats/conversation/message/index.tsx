@@ -240,7 +240,7 @@ export const Message = memo(
 						return false
 					}
 
-					return userEmail[0]!.email === email
+					return userEmail[0]?.email === email
 				}).length > 0
 			)
 		}, [message, userId, conversation.participants])

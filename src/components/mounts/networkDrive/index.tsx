@@ -111,11 +111,17 @@ export const NetworkDrive = memo(() => {
 		try {
 			const selectDirectoryResult = await window.desktopAPI.selectDirectory(false)
 
-			if (selectDirectoryResult.cancelled || !selectDirectoryResult.paths[0]) {
+			if (selectDirectoryResult.cancelled) {
 				return
 			}
 
-			mountPoint = selectDirectoryResult.paths[0]!
+			const path = selectDirectoryResult.paths[0]
+
+			if (!path) {
+				return
+			}
+
+			mountPoint = path
 		} catch (e) {
 			console.error(e)
 

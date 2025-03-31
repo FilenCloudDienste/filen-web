@@ -710,7 +710,7 @@ export const ContextMenu = memo(
 					groups["download"] = []
 				}
 
-				groups["download"]!.push(
+				groups["download"].push(
 					<ContextMenuItem
 						onClick={preview}
 						className="cursor-pointer gap-3"
@@ -726,7 +726,7 @@ export const ContextMenu = memo(
 					groups["open"] = []
 				}
 
-				groups["open"]!.push(
+				groups["open"].push(
 					<ContextMenuItem
 						onClick={openDirectory}
 						className="cursor-pointer gap-3"
@@ -742,7 +742,7 @@ export const ContextMenu = memo(
 					groups["download"] = []
 				}
 
-				groups["download"]!.push(
+				groups["download"].push(
 					<ContextMenuItem
 						onClick={download}
 						className="cursor-pointer gap-3"
@@ -764,7 +764,7 @@ export const ContextMenu = memo(
 					groups["share"] = []
 				}
 
-				groups["share"]!.push(
+				groups["share"].push(
 					<ContextMenuItem
 						onClick={publicLink}
 						className="cursor-pointer gap-3"
@@ -780,7 +780,7 @@ export const ContextMenu = memo(
 					groups["share"] = []
 				}
 
-				groups["share"]!.push(
+				groups["share"].push(
 					<ContextMenuItem
 						onClick={share}
 						className="cursor-pointer gap-3"
@@ -796,7 +796,7 @@ export const ContextMenu = memo(
 					groups["share"] = []
 				}
 
-				groups["share"]!.push(
+				groups["share"].push(
 					<ContextMenuItem
 						onClick={manageShareOut}
 						className="cursor-pointer gap-3"
@@ -812,7 +812,7 @@ export const ContextMenu = memo(
 					groups["share"] = []
 				}
 
-				groups["share"]!.push(
+				groups["share"].push(
 					<ContextMenuItem
 						onClick={removeShared}
 						className="cursor-pointer gap-3"
@@ -834,7 +834,7 @@ export const ContextMenu = memo(
 					groups["versions"] = []
 				}
 
-				groups["versions"]!.push(
+				groups["versions"].push(
 					<ContextMenuItem
 						onClick={versions}
 						className="cursor-pointer gap-3"
@@ -850,7 +850,7 @@ export const ContextMenu = memo(
 					groups["favoriteInfoColor"] = []
 				}
 
-				groups["favoriteInfoColor"]!.push(
+				groups["favoriteInfoColor"].push(
 					<ContextMenuItem
 						onClick={() => toggleFavorite(!item.favorited)}
 						className="cursor-pointer gap-3"
@@ -871,7 +871,7 @@ export const ContextMenu = memo(
 					groups["favoriteInfoColor"] = []
 				}
 
-				groups["favoriteInfoColor"]!.push(
+				groups["favoriteInfoColor"].push(
 					<ContextMenuItem
 						onClick={info}
 						className="cursor-pointer gap-3"
@@ -893,7 +893,7 @@ export const ContextMenu = memo(
 					groups["favoriteInfoColor"] = []
 				}
 
-				groups["favoriteInfoColor"]!.push(
+				groups["favoriteInfoColor"].push(
 					<ContextMenuSub>
 						<ContextMenuSubTrigger
 							className="cursor-pointer gap-3"
@@ -938,7 +938,7 @@ export const ContextMenu = memo(
 					groups["renameMove"] = []
 				}
 
-				groups["renameMove"]!.push(
+				groups["renameMove"].push(
 					<ContextMenuItem
 						onClick={rename}
 						className="cursor-pointer gap-3"
@@ -961,7 +961,7 @@ export const ContextMenu = memo(
 					groups["renameMove"] = []
 				}
 
-				groups["renameMove"]!.push(
+				groups["renameMove"].push(
 					<ContextMenuSub>
 						<ContextMenuSubTrigger
 							className="cursor-pointer gap-3"
@@ -992,7 +992,7 @@ export const ContextMenu = memo(
 					groups["copyId"] = []
 				}
 
-				groups["copyId"]!.push(
+				groups["copyId"].push(
 					<ContextMenuItem
 						onClick={copyId}
 						className="cursor-pointer gap-3"
@@ -1008,7 +1008,7 @@ export const ContextMenu = memo(
 					groups["trash"] = []
 				}
 
-				groups["trash"]!.push(
+				groups["trash"].push(
 					<ContextMenuItem
 						onClick={restore}
 						className="cursor-pointer gap-3"
@@ -1024,7 +1024,7 @@ export const ContextMenu = memo(
 					groups["trash"] = []
 				}
 
-				groups["trash"]!.push(
+				groups["trash"].push(
 					<ContextMenuItem
 						onClick={trash}
 						className="cursor-pointer text-red-500 gap-3"
@@ -1040,7 +1040,7 @@ export const ContextMenu = memo(
 					groups["trash"] = []
 				}
 
-				groups["trash"]!.push(
+				groups["trash"].push(
 					<ContextMenuItem
 						onClick={deletePermanently}
 						className="cursor-pointer text-red-500 gap-3"
@@ -1056,7 +1056,7 @@ export const ContextMenu = memo(
 			return Object.keys(groups).map((groupKey, groupIndex) => {
 				return (
 					<Fragment key={groupKey}>
-						{groups[groupKey]!.map((node, nodeIndex) => {
+						{(groups[groupKey] ?? []).map((node, nodeIndex) => {
 							return <Fragment key={nodeIndex}>{node}</Fragment>
 						})}
 						{groupIndex + 1 < groupLength && <ContextMenuSeparator />}

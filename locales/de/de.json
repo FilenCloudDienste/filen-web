@@ -340,7 +340,7 @@
 			"city": "Stadt",
 			"postalCode": "Postleitzahl",
 			"country": "Land",
-			"needsCountrySetup": "Bitte wähle dein Land aus um fortzufahren."
+			"needsCountrySetup": "Bitte wähle ein Land aus damit wir die Richtige Mehrwertsteuer berechnen können."
 		},
 		"twoFactorCode": {
 			"useRecoveryKey": "Stattdessen Wiederherstellungsschlüssel verwenden",

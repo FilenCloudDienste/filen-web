@@ -85,10 +85,14 @@ export const Events = memo(() => {
 
 	const itemContent = useCallback(
 		(_: number, event: UserEvent) => {
+			if (!account) {
+				return null
+			}
+
 			return (
 				<Event
 					event={event}
-					account={account!.account}
+					account={account.account}
 				/>
 			)
 		},

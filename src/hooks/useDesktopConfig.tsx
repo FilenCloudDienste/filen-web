@@ -41,14 +41,10 @@ export function getDesktopConfig(): FilenDesktopConfig {
 
 			return {
 				...desktopConfigParsed,
-				syncConfig: syncConfig && syncConfig[sdk.config.userId] ? syncConfig[sdk.config.userId]! : desktopConfigParsed.syncConfig,
-				networkDriveConfig:
-					networkDriveConfig && networkDriveConfig[sdk.config.userId]
-						? networkDriveConfig[sdk.config.userId]!
-						: desktopConfigParsed.networkDriveConfig,
-				webdavConfig:
-					webdavConfig && webdavConfig[sdk.config.userId] ? webdavConfig[sdk.config.userId]! : desktopConfigParsed.webdavConfig,
-				s3Config: s3Config && s3Config[sdk.config.userId] ? s3Config[sdk.config.userId]! : desktopConfigParsed.s3Config
+				syncConfig: syncConfig && (syncConfig[sdk.config.userId] ?? desktopConfigParsed.syncConfig),
+				networkDriveConfig: networkDriveConfig && (networkDriveConfig[sdk.config.userId] ?? desktopConfigParsed.networkDriveConfig),
+				webdavConfig: webdavConfig && (webdavConfig[sdk.config.userId] ?? desktopConfigParsed.webdavConfig),
+				s3Config: s3Config && (s3Config[sdk.config.userId] ?? desktopConfigParsed.s3Config)
 			}
 		}
 
@@ -136,12 +132,10 @@ export default function useDesktopConfig() {
 		if (sdk.config.userId && sdk.config.userId !== 1 && sdk.config.userId > 0) {
 			return {
 				...desktopConfig,
-				syncConfig: syncConfig[sdk.config.userId] ? syncConfig[sdk.config.userId]! : desktopConfig.syncConfig,
-				networkDriveConfig: networkDriveConfig[sdk.config.userId]
-					? networkDriveConfig[sdk.config.userId]!
-					: desktopConfig.networkDriveConfig,
-				webdavConfig: webdavConfig[sdk.config.userId] ? webdavConfig[sdk.config.userId]! : desktopConfig.webdavConfig,
-				s3Config: s3Config[sdk.config.userId] ? s3Config[sdk.config.userId]! : desktopConfig.s3Config
+				syncConfig: syncConfig[sdk.config.userId] ?? desktopConfig.syncConfig,
+				networkDriveConfig: networkDriveConfig[sdk.config.userId] ?? desktopConfig.networkDriveConfig,
+				webdavConfig: webdavConfig[sdk.config.userId] ?? desktopConfig.webdavConfig,
+				s3Config: s3Config[sdk.config.userId] ?? desktopConfig.s3Config
 			} satisfies FilenDesktopConfig
 		}
 

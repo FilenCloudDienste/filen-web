@@ -74,7 +74,7 @@ export const Issue = memo(({ error, syncUUID }: { error: GeneralError; syncUUID:
 
 		for (const err of ERRORS_ARRAY) {
 			if (concatted.includes(err.toLowerCase())) {
-				return ERRORS[err] ? ERRORS[err]! : "unknown"
+				return ERRORS[err] ?? "unknown"
 			}
 		}
 
@@ -95,7 +95,7 @@ export const Issue = memo(({ error, syncUUID }: { error: GeneralError; syncUUID:
 
 		setErrors(prev => ({
 			...prev,
-			[syncUUID]: prev[syncUUID] ? prev[syncUUID]!.filter(err => err.uuid !== error.uuid) : []
+			[syncUUID]: prev[syncUUID] ? (prev[syncUUID] ?? []).filter(err => err.uuid !== error.uuid) : []
 		}))
 	}, [setErrors, syncUUID, t, error.uuid])
 

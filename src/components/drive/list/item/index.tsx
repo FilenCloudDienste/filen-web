@@ -83,7 +83,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 	)
 	const [hovering, setHovering] = useState<boolean>(false)
 	const [size, setSize] = useState<number>(
-		item.type === "directory" && directorySizeCache.has(item.uuid) ? directorySizeCache.get(item.uuid)!.size : item.size
+		item.type === "directory" && directorySizeCache.has(item.uuid) ? (directorySizeCache.get(item.uuid)?.size ?? 0) : item.size
 	)
 	const [thumbnailURL, setThumbnailURL] = useState<string | null>(
 		thumbnailURLObjectCache.has(item.uuid) ? thumbnailURLObjectCache.get(item.uuid)! : null

@@ -66,20 +66,16 @@ export const DesktopListener = memo(() => {
 			}
 
 			const now = Date.now()
-			let transferRemaining = calcTimeLeft(
-				bytesSent.current[syncUUID]!,
-				allBytes.current[syncUUID]!,
-				progressStarted.current[syncUUID]!
-			)
-			const syncTasksCount = tasksCount.current[syncUUID] ? tasksCount.current[syncUUID]! : 0
+			let transferRemaining = calcTimeLeft(bytesSent.current[syncUUID], allBytes.current[syncUUID], progressStarted.current[syncUUID])
+			const syncTasksCount = tasksCount.current[syncUUID] ? tasksCount.current[syncUUID] : 0
 
 			if (syncTasksCount > 0) {
 				// Quick "hack" to better calculate remaining time when a lot of small files are being transferred (not really accurate, needs better solution)
 				transferRemaining = transferRemaining + Math.floor(syncTasksCount / 2)
 			}
 
-			const transferPercent = (bytesSent.current[syncUUID]! / allBytes.current[syncUUID]!) * 100
-			const transferSpeed = calcSpeed(now, progressStarted.current[syncUUID]!, bytesSent.current[syncUUID]!)
+			const transferPercent = (bytesSent.current[syncUUID] / allBytes.current[syncUUID]) * 100
+			const transferSpeed = calcSpeed(now, progressStarted.current[syncUUID], bytesSent.current[syncUUID])
 
 			setRemaining(prev => ({
 				...prev,
@@ -173,7 +169,7 @@ export const DesktopListener = memo(() => {
 										error: message.data.error,
 										uuid: message.data.uuid
 									},
-									...prev[message.syncPair.uuid]!.filter(err => err.uuid !== message.data.uuid)
+									...(prev[message.syncPair.uuid] ?? []).filter(err => err.uuid !== message.data.uuid)
 								]
 							: [
 									{
@@ -251,7 +247,7 @@ export const DesktopListener = memo(() => {
 						if (progressStarted.current[message.syncPair.uuid] === -1) {
 							progressStarted.current[message.syncPair.uuid] = now
 						} else {
-							if (now < progressStarted.current[message.syncPair.uuid]!) {
+							if (now < (progressStarted.current[message.syncPair.uuid] ?? -1)) {
 								progressStarted.current[message.syncPair.uuid] = now
 							}
 						}
@@ -325,7 +321,7 @@ export const DesktopListener = memo(() => {
 											error,
 											uuid
 										},
-										...prev[message.syncPair.uuid]!.filter(err => err.uuid !== uuid)
+										...(prev[message.syncPair.uuid] ?? []).filter(err => err.uuid !== uuid)
 									]
 								: [
 										{
@@ -344,9 +340,9 @@ export const DesktopListener = memo(() => {
 											...message.data,
 											timestamp: Date.now()
 										},
-										...(prev[message.syncPair.uuid]!.length >= 1000
-											? prev[message.syncPair.uuid]!.slice(0, 999)
-											: prev[message.syncPair.uuid]!)
+										...((prev[message.syncPair.uuid] ?? []).length >= 1000
+											? (prev[message.syncPair.uuid] ?? []).slice(0, 999)
+											: (prev[message.syncPair.uuid] ?? []))
 									]
 								: [
 										{
@@ -384,7 +380,7 @@ export const DesktopListener = memo(() => {
 					setErrors(prev => ({
 						...prev,
 						[message.syncPair.uuid]: prev[message.syncPair.uuid]
-							? [...errors, ...prev[message.syncPair.uuid]!.filter(err => !uuids.includes(err.uuid))]
+							? [...errors, ...(prev[message.syncPair.uuid] ?? []).filter(err => !uuids.includes(err.uuid))]
 							: errors
 					}))
 				}
@@ -398,7 +394,7 @@ export const DesktopListener = memo(() => {
 									error: message.data.error,
 									uuid: message.data.uuid
 								},
-								...prev["general"]!.filter(err => err.uuid !== message.data.uuid)
+								...(prev["general"] ?? []).filter(err => err.uuid !== message.data.uuid)
 							]
 						: [
 								{
@@ -423,7 +419,7 @@ export const DesktopListener = memo(() => {
 				setErrors(prev => ({
 					...prev,
 					[message.syncPair.uuid]: prev[message.syncPair.uuid]
-						? [...errors, ...prev[message.syncPair.uuid]!.filter(err => !uuids.includes(err.uuid))]
+						? [...errors, ...(prev[message.syncPair.uuid] ?? []).filter(err => !uuids.includes(err.uuid))]
 						: errors
 				}))
 			} else if (message.type === "remoteTreeIgnored") {
@@ -480,7 +476,7 @@ export const DesktopListener = memo(() => {
 
 				setErrors(prev => ({
 					...prev,
-					[message.syncPair.uuid]: prev[message.syncPair.uuid] ? [...[error], ...prev[message.syncPair.uuid]!] : [error]
+					[message.syncPair.uuid]: prev[message.syncPair.uuid] ? [...[error], ...(prev[message.syncPair.uuid] ?? [])] : [error]
 				}))
 			}
 		},

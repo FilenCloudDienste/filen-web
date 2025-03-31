@@ -62,7 +62,7 @@ export const Content = memo(({ item }: { item: DriveCloudItem }) => {
 			}
 
 			if (directoryUUIDToNameCache.has(part)) {
-				built = pathModule.posix.join(built, directoryUUIDToNameCache.get(part)!)
+				built = pathModule.posix.join(built, directoryUUIDToNameCache.get(part) ?? "")
 			}
 		}
 

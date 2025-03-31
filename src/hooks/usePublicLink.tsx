@@ -25,7 +25,7 @@ export function usePublicLinkURLState() {
 
 	const state = useMemo(() => {
 		const locationHashNormalized =
-			locationHash.length <= 0 ? decodeURIComponent(location).split("#")[1] ?? "" : decodeURIComponent(locationHash)
+			locationHash.length <= 0 ? (decodeURIComponent(location).split("#")[1] ?? "") : decodeURIComponent(locationHash)
 		const ex = locationHashNormalized.split("?")
 		const parsedSearchParams = ex.length >= 2 ? parseURLSearchParams(`https://filen.io/?${ex[1]}`) : null
 
@@ -223,7 +223,7 @@ export function useDirectoryLinkContent({
 						receivers: [],
 						sharerEmail: "",
 						sharerId: 0,
-						size: query.data.directorySize[folder.uuid] ? query.data.directorySize[folder.uuid]! : 0,
+						size: query.data.directorySize[folder.uuid] ?? 0,
 						favorited: false,
 						lastModified: folder.timestamp,
 						parent: folder.parent

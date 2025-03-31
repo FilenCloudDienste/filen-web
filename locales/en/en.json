@@ -350,7 +350,7 @@
 			"city": "City",
 			"postalCode": "Postal code",
 			"country": "Country",
-			"needsCountrySetup": "Please select your country to continue."
+			"needsCountrySetup": "Please select a country so we can calculate the correct VAT."
 		},
 		"twoFactorCode": {
 			"useRecoveryKey": "Use recovery key instead",

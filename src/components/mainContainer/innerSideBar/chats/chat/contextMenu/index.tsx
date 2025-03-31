@@ -43,7 +43,7 @@ export const ContextMenu = memo(({ conversation, children }: { conversation: Cha
 	const routeParent = useRouteParent()
 
 	const unreadCount = useMemo(() => {
-		return conversationsUnread[conversation.uuid] ? conversationsUnread[conversation.uuid]! : 0
+		return conversationsUnread[conversation.uuid] ?? 0
 	}, [conversationsUnread, conversation.uuid])
 
 	const hasWritePermissions = useMemo((): boolean => {

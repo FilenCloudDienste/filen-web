@@ -580,7 +580,7 @@ export async function downloadFile({
 			chunks: item.chunks,
 			key: item.key,
 			pauseSignal: pauseSignals[item.uuid],
-			abortSignal: abortControllers[item.uuid]!.signal,
+			abortSignal: abortControllers[item.uuid]?.signal,
 			onProgressId: item.uuid,
 			onQueued: () => {
 				postMessageToMain({
@@ -701,7 +701,7 @@ export async function uploadFile({
 			uuid: fileUUID,
 			name: fileName,
 			pauseSignal: pauseSignals[fileUUID],
-			abortSignal: abortControllers[fileUUID]!.signal,
+			abortSignal: abortControllers[fileUUID]?.signal,
 			onProgressId: fileUUID,
 			onQueued: () => {
 				if (!emitEvents) {
@@ -864,8 +864,15 @@ export async function uploadDirectory({
 	let didError = false
 
 	for (let i = 0; i < files.length; i++) {
-		size += files[i]!.file.size
-		const ex = files[i]!.path.split("/")
+		const file = files[i]
+
+		if (!file) {
+			continue
+		}
+
+		size += file.file.size
+
+		const ex = file.path.split("/")
 
 		if (!name && ex[0] && ex[0].length > 0) {
 			name = ex[0].trim()
@@ -892,7 +899,7 @@ export async function uploadDirectory({
 				parent,
 				name,
 				pauseSignal: pauseSignals[directoryId],
-				abortSignal: abortControllers[directoryId]!.signal,
+				abortSignal: abortControllers[directoryId]?.signal,
 				onProgressId: directoryId,
 				throwOnSingleFileUploadError: false,
 				onQueued: () => {
@@ -1094,7 +1101,7 @@ export async function directorySize({
 	const rateLimitKey = `${uuid}:${sharerId ?? 0}:${receiverId ?? 0}:${trash ?? false}:${linkUUID ?? ""}`
 	const now = Date.now()
 
-	if (directorySizeRateLimit[rateLimitKey] && now < directorySizeRateLimit[rateLimitKey]!) {
+	if (directorySizeRateLimit[rateLimitKey] && now < directorySizeRateLimit[rateLimitKey]) {
 		const cache = await getItem<DirectorySizeResult | null>("directorySize:" + uuid)
 
 		if (cache) {
@@ -1267,7 +1274,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 										size: item.size,
 										key: item.key,
 										pauseSignal: pauseSignals[directoryId],
-										abortSignal: abortControllers[directoryId]!.signal,
+										abortSignal: abortControllers[directoryId]?.signal,
 										onProgressId: directoryId,
 										onQueued: () => {
 											if (didQueue) {
@@ -1701,7 +1708,7 @@ export async function readFile({
 			start,
 			end,
 			pauseSignal: pauseSignals[item.uuid],
-			abortSignal: abortControllers[item.uuid]!.signal,
+			abortSignal: abortControllers[item.uuid]?.signal,
 			onProgressId: item.uuid,
 			onQueued: () => {
 				if (!emitEvents) {
@@ -2764,7 +2771,7 @@ export async function parseOGFromURL(url: string): Promise<Record<string, string
 
 		if (
 			typeof response.headers["content-type"] !== "string" ||
-			response.headers["content-type"].split(";")[0]!.trim() !== "text/html"
+			response.headers["content-type"].split(";")[0]?.trim() !== "text/html"
 		) {
 			throw new Error("Response content-type is not text/html: " + url)
 		}
@@ -3321,31 +3328,31 @@ export async function noteParticipantPermissions({
 export async function pausePauseSignal({ id }: { id: string }): Promise<void> {
 	await waitForInitialization()
 
-	if (!pauseSignals[id] || pauseSignals[id]!.isPaused()) {
+	if (!pauseSignals[id] || pauseSignals[id].isPaused()) {
 		return
 	}
 
-	pauseSignals[id]!.pause()
+	pauseSignals[id].pause()
 }
 
 export async function resumePauseSignal({ id }: { id: string }): Promise<void> {
 	await waitForInitialization()
 
-	if (!pauseSignals[id] || !pauseSignals[id]!.isPaused()) {
+	if (!pauseSignals[id] || !pauseSignals[id].isPaused()) {
 		return
 	}
 
-	pauseSignals[id]!.resume()
+	pauseSignals[id].resume()
 }
 
 export async function abortAbortSignal({ id }: { id: string }): Promise<void> {
 	await waitForInitialization()
 
-	if (!abortControllers[id] || abortControllers[id]!.signal.aborted) {
+	if (!abortControllers[id] || abortControllers[id].signal.aborted) {
 		return
 	}
 
-	abortControllers[id]!.abort()
+	abortControllers[id].abort()
 
 	delete abortControllers[id]
 	delete pauseSignals[id]

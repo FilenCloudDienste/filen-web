@@ -9,9 +9,9 @@ export const TabsTriggers = memo(({ sync }: { sync: SyncPair }) => {
 	const { localIgnored, remoteIgnored, errors } = useSyncsStore(
 		useCallback(
 			state => ({
-				localIgnored: state.localIgnored[sync.uuid] ? state.localIgnored[sync.uuid]!.length > 0 : false,
-				remoteIgnored: state.remoteIgnored[sync.uuid] ? state.remoteIgnored[sync.uuid]!.length > 0 : false,
-				errors: state.errors[sync.uuid] ? state.errors[sync.uuid]!.length > 0 : false
+				localIgnored: state.localIgnored[sync.uuid] ? (state.localIgnored[sync.uuid] ?? []).length > 0 : false,
+				remoteIgnored: state.remoteIgnored[sync.uuid] ? (state.remoteIgnored[sync.uuid] ?? []).length > 0 : false,
+				errors: state.errors[sync.uuid] ? (state.errors[sync.uuid] ?? []).length > 0 : false
 			}),
 			[sync.uuid]
 		)
