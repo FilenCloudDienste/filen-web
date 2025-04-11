@@ -83,7 +83,14 @@ function getStream(request: Request): Response {
 		request.headers.get("Content-Range")
 	let start = 0
 	let end = totalLength - 1
-	const responseHeaders = new Headers()
+	const responseHeaders = new Headers({
+		"Content-Security-Policy": "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:",
+		"X-Content-Security-Policy": "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:",
+		"X-WebKit-CSP": "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:",
+		"X-XSS-Protection": "1; mode=block",
+		"Cross-Origin-Embedder-Policy": "require-corp",
+		"X-Content-Type-Options": "nosniff"
+	})
 	let responseStatus = 200
 
 	responseHeaders.set("Content-Type", mimeType)
@@ -241,11 +248,12 @@ self.addEventListener("fetch", e => {
 
 			const responseHeaders = new Headers({
 				"Content-Type": "application/octet-stream; charset=utf-8",
-				"Content-Security-Policy": "default-src 'none'",
-				"X-Content-Security-Policy": "default-src 'none'",
-				"X-WebKit-CSP": "default-src 'none'",
+				"Content-Security-Policy": "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:",
+				"X-Content-Security-Policy": "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:",
+				"X-WebKit-CSP": "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:",
 				"X-XSS-Protection": "1; mode=block",
-				"Cross-Origin-Embedder-Policy": "require-corp"
+				"Cross-Origin-Embedder-Policy": "require-corp",
+				"X-Content-Type-Options": "nosniff"
 			})
 
 			const headers = new Headers(data.headers || {})
@@ -276,7 +284,9 @@ self.addEventListener("fetch", e => {
 				})
 			)
 
-			port.postMessage({ debug: "Download started" })
+			port.postMessage({
+				debug: "Download started"
+			})
 		}
 	} catch (e) {
 		console.error(e)
