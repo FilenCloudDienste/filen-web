@@ -530,7 +530,7 @@
         "drive": {
             "uploadFiles": "Dosya yükle",
             "uploadFolders": "Klasör yükle",
-            "newTextFile": "Yeni metin dosyası",
+            "newTextFile": "Yeni metin belgesi",
             "newFolder": "Yeni klasör"
         },
         "notes": {
@@ -764,7 +764,7 @@
                 "title": "Takma adı düzenle",
                 "placeholder": "Yeni takma ad",
                 "continue": "Kaydet",
-                "invalid": "Takma ad 3 ile 32 karakter uzunluğunda ve alfanümerik olmalıdır."
+                "invalid": "Takma ad 3 ile 32 karakter uzunluğunda olmalı harf ve rakam içermelidir."
             },
             "twoFactorAuthenticationRecoveryKey": {
                 "title": "Kurtarma anahtarı",
@@ -841,7 +841,7 @@
         "invite": {
             "copy": "Kopyala",
             "title": "Başkalarını davet ederek 30 GB'a kadar depolama alanı kazanın",
-            "description": "Filen'e davet ettiğiniz her arkadaş için {{yourEarnings}} kazanırsınız - ve arkadaşınız da {{otherEarnings}} kazanır. Bu kadar kolay.",
+            "description": "Filen'e davet ettiğiniz her arkadaş için {{yourEarnings}} kazanırsınız ve arkadaşınız da {{otherEarnings}} kazanır. Bu kadar kolay.",
             "earned": "{{earned}} / {{max}}",
             "storageEarned": "Kazanılan depolama"
         },
@@ -1080,10 +1080,10 @@
         },
         "dialogs": {
             "createTextFile": {
-                "title": "Metin dosyası oluştur",
+                "title": "Metin belgesi oluştur",
                 "placeholder": "İsim",
                 "continue": "Oluştur",
-                "invalidFileName": "Geçersiz dosya adı."
+                "invalidFileName": "Geçersiz belge adı."
             },
             "createDirectory": {
                 "title": "Klasör oluştur",
@@ -1145,8 +1145,8 @@
         }
     },
     "publicLink": {
-        "invalid": "Geçersiz herkese açık bağlantı",
-        "invalidInfo": "Bu herkese açık bağlantı ya süresi dolmuş ya da mevcut değil",
+        "invalid": "Geçersiz bağlantı",
+        "invalidInfo": "Bu bağlantının süresi doldu veya mevcut değil",
         "back": "Geri dön",
         "directory": {
             "downloadWholeDirectory": "Tüm klasörü indir",
