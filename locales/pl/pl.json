@@ -776,7 +776,7 @@
             "storageUsed": "Zużyta przestrzeń",
             "files": "Pliki {{size}}",
             "versionedFiles": "Pliki wersjonowane {{size}}",
-            "free": "Darmowe {{size}}",
+            "free": "Dostępne {{size}}",
             "used": "{{used}} z {{max}} wykorzystane",
             "dark": "Ciemny",
             "light": "Jasny",
