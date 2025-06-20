@@ -290,7 +290,9 @@
             "password": "Hasło (pozostaw puste, aby wyłączyć)",
             "passwordPlaceholder": "Hasło",
             "progress": "{{done}} z {{total}} pozycji dodanych do linku publicznego",
-            "expireNever": "Nigdy"
+            "expireNever": "Nigdy",
+            "subscriptionNeeded": "Potrzebujesz aktywnej subskrypcji, aby tworzyć linki publiczne.",
+			"upgradeNow": "Ulepsz teraz"
         },
         "sharedWith": {
             "title": "Udostępnione z",
@@ -313,7 +315,15 @@
             "passwordPlaceholder": "Hasło",
             "close": "Zamknij",
             "save": "Zapisz",
-            "successToast": "Pomyślnie zmieniono adres e-mail"
+            "successToast": "Pomyślnie zmieniono adres e-mail",
+            "alerts": {
+				"success": {
+					"title": "Zmieniono adres e-mail",
+					"continue": "Kontynuuj",
+					"description": "Wysłaliśmy e-mail z potwierdzeniem na {{email}}. Proszę kliknąć link w e-mailu, aby potwierdzić nowy adres e-mail. Upewnij się, że sprawdziłeś również folder spam.",
+					"dismiss": "Odrzuć" 
+				}
+			}
         },
         "changePassword": {
             "title": "Zmień swoje hasło",
@@ -339,7 +349,8 @@
             "streetNumber": "Numer ulicy",
             "city": "Miasto",
             "postalCode": "Kod pocztowy",
-            "country": "Kraj"
+            "country": "Kraj",
+            "needsCountrySetup": "Proszę wybrać kraj, abyśmy mogli obliczyć prawidłową stawkę VAT."
         },
         "twoFactorCode": {
             "useRecoveryKey": "Użyj klucza odzyskiwania zamiast",
@@ -478,7 +489,12 @@
             "description": "Proszę wyeksportować swoje klucze główne i przechować je w osobnym bezpiecznym miejscu. Potrzebujesz swoich kluczy głównych, gdy resetujesz hasło, aby uniknąć utraty danych. Musisz eksportować swoje klucze główne za każdym razem, gdy zmieniasz hasło.",
             "continue": "Eksportuj",
             "dismiss": "Odrzuć"
-        }
+        },
+        "pdfPassword": {
+			"title": "Hasło",
+			"continue": "Odblokuj",
+			"placeholder": "Hasło"
+		}
     },
     "contextMenus": {
         "item": {
@@ -504,6 +520,8 @@
             "deletePermanently": "Usuń na stałe",
             "copyId": "Kopiuj ID",
             "info": "Informacje",
+            "manageShareOut": "Zarządzaj udostępnieniem",
+			"manageShareIn": "Usuń udostępnienie",
             "dialogs": {
                 "trash": {
                     "title": "Kosz",
@@ -595,7 +613,8 @@
             "error": "Błąd",
             "stopped": "Zatrzymano",
             "paused": "Wstrzymano",
-            "creatingDirectories": "Tworzenie katalogów"
+            "creatingDirectories": "Tworzenie katalogów",
+            "finishing": "Kończenie"
         },
         "pause": "Wstrzymaj",
         "resume": "Wznów",
@@ -827,6 +846,10 @@
                     "name": "Minimalizuj do zasobnika",
                     "info": "Ukryj Filen w zasobniku zamiast minimalizować okno"
                 },
+                "startMinimized": {
+					"name": "Uruchom zminimalizowany",
+					"info": "Włącz lub wyłącz zminimalizowane uruchomienie"
+				},
                 "autoLaunch": {
                     "name": "Autostart",
                     "info": "Uruchom Filen automatycznie przy starcie systemu"
@@ -913,7 +936,9 @@
                 "cancelled": "Anulowane",
                 "active": "Aktywne",
                 "waiting": "Oczekujące"
-            }
+            },
+			"cannotCancelTooEarly": "Subskrypcje mogą zostać anulowane dopiero po 24 godzinach od dokonania zakupu.",
+			"billingDetails": "Szczegóły dotyczące płatności"
         },
         "plans": {
             "starter": "Starter",
@@ -1005,7 +1030,8 @@
                     "confirmPin": "Potwierdź PIN"
                 },
                 "lock": {
-                    "wrongPin": "Błędny PIN"
+                    "wrongPin": "Błędny PIN",
+                    "tooManyAttempts": "Zbyt wiele prób odblokowania, spróbuj ponownie później."
                 }
             }
         },
@@ -1103,6 +1129,11 @@
                 "placeholder": "Adres e-mail użytkownika Filen",
                 "continue": "Udostępnij"
             }
+		},
+		"linksNoSub": {
+			"subscriptionNeeded": "Wymagana subskrypcja",
+			"description": "Ulepszenie do dowolnego planu pro odblokuje linki publiczne dla Twojego konta",
+			"upgradeNow": "Ulepsz teraz"
         },
         "emptyPlaceholder": {
             "uploadFiles": "Prześlij pliki",
@@ -1223,7 +1254,9 @@
             "title": "Nie zapisane zmiany",
             "description": "Czy na pewno chcesz wyjść bez zapisywania? Wszystkie zmiany zostaną utracone.",
             "continue": "Zamknij"
-        }
+        },
+		"pdfNoPassword": "Plik PDF chroniony hasłem.",
+		"unlock": "Odblokuj"
     },
     "sharedIn": {
         "dialogs": {
@@ -1474,7 +1507,12 @@
             "acquiringLock": "Nabywanie blokady synchronizacji",
             "gettingTrees": "Odczytywanie lokalnego i chmurowego katalogu",
             "remoteSmokeTestFailed": "Nie można odczytać chmurowego katalogu, albo nie istnieje, albo nie jesteś podłączony do internetu",
-            "localSmokeTestFailed": "Nie można odczytać lokalnego katalogu, albo nie istnieje, albo nie masz dostępu do odczytu lub zapisu"
+            "localSmokeTestFailed": "Nie można odczytać lokalnego katalogu, albo nie istnieje, albo nie masz dostępu do odczytu lub zapisu",
+            "confirmDeletionBoth": "Potwierdź usunięcie {{previous}} plików i katalogów",
+			"confirmDeletionLocal": "Potwierdź usunięcie {{previous}} lokalnych plików i katalogów",
+			"confirmDeletionRemote": "Potwierdź usunięcie {{previous}} chmurowych plików i katalogów",
+			"confirm": "Potwierdź",
+			"restart": "Zrestartuj"
         },
         "empty": {
             "title": "Brak ustawionych synchronizacji",
@@ -1527,7 +1565,20 @@
                 "disableLocalTrash": {
                     "name": "Wyłącz lokalny kosz",
                     "info": "Włącz lub wyłącz lokalny kosz. Po wyłączeniu, klient trwale usunie pliki lub katalogi zamiast przenosić je do lokalnego katalogu kosza w ścieżce synchronizacji lokalnej"
-                }
+                },
+                "clearTransferEvents": {
+					"name": "Wyczyść wydarzenia",
+					"info": "Wyczyść lokalnie przechowywane wydarzenia.",
+					"clear": "Wyczyść"
+				},
+				"name": {
+					"name": "Nazwa",
+					"info": "Zmień nazwę synchronizacji"
+				},
+				"requireConfirmationOnLargeDeletion": {
+					"name": "Potwierdzenie usunięcia",
+					"info": "Ręcznie potwierdzaj większe usunięcia w katalogu synchronizacji"
+				}
             }
         },
         "dialogs": {
@@ -1547,9 +1598,39 @@
             },
             "deleteIssue": {
                 "title": "Usuń problem",
-                "description": "Czy na pewno chcesz usunąć ten problem? Proszę upewnić się, że go rozwiązałeś lub był tymczasowy, w przeciwnym razie powróci w końcu.",
+                "description": "Czy na pewno chcesz usunąć ten problem? Proszę upewnić się, że go rozwiązałeś lub był tymczasowy, w przeciwnym razie w końcu powróci.",
                 "continue": "Usuń"
-            }
+            },
+            "clearTransferEvents": {
+				"title": "Wyczyść wydarzenia",
+				"description": "Czy na pewno chcesz wyczyścić lokalnie zapisane wydarzenia? Ta operacja nie może być cofnięta.",
+				"continue": "Clear"
+			},
+			"name": {
+				"title": "Zmień nazwę",
+				"placeholder": "Nazwa",
+				"continue": "Zapisz"
+			},
+			"confirmDeletionLocal": {
+				"title": "Potwierdź usunięcie",
+				"description": "Czy na pewno? Spowoduje to przeniesienie wszystkich {{count}} plików i katalogów do kosza w chmurze. Ta operacja nie może być cofnięta.",
+				"continue": "Potwierdź"
+			},
+			"confirmDeletionRemote": {
+				"title": "Potwierdź usunięcie",
+				"description": "Czy na pewno? Spowoduje to przeniesienie wszystkich {{count}} plików i katalogów do lokalnego kosza. Ta operacja nie może być cofnięta.",
+				"continue": "Potwierdź"
+			},
+			"confirmDeletionBoth": {
+				"title": "Potwierdź usunięcie",
+				"description": "Czy na pewno? Spowoduje to przeniesienie wszystkich {{count}} plików i katalogów do lokalnego kosza i w chmurze. Ta operacja nie może być cofnięta.",
+				"continue": "Potwierdź"
+			},
+			"confirmDeletionRestart": {
+				"title": "Zrestartuj synchronizację",
+				"description": "Możesz zrestartować synchronizację, jeżeli przywróciłeś wszystkie pliki i foldery ręcznie.",
+				"continue": "Zrestartuj"
+			}
         },
         "ignored": {
             "types": {
