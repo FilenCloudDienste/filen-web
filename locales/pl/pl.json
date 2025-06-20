@@ -1604,7 +1604,7 @@
             "clearTransferEvents": {
 				"title": "Wyczyść wydarzenia",
 				"description": "Czy na pewno chcesz wyczyścić lokalnie zapisane wydarzenia? Ta operacja nie może być cofnięta.",
-				"continue": "Clear"
+				"continue": "Wyczyść"
 			},
 			"name": {
 				"title": "Zmień nazwę",
