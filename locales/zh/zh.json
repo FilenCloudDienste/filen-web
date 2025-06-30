@@ -464,7 +464,7 @@
 			"name": "名称",
 			"location": "位置",
 			"modified": "修改日期",
-			"uploaded": "已上传",
+			"uploaded": "上传日期",
 			"files": "文件",
 			"directories": "文件夹"
 		},
