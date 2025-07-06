@@ -193,6 +193,18 @@ export const sdkWorker: SDKWorker = {
 				await waitForInitialization()
 
 				return await getSDK().crypto().utils.importRawKey(params)
+			},
+			async argon2id(...params) {
+				await waitForInitialization()
+
+				return await getSDK()
+					.crypto()
+					.utils.argon2id(...params)
+			},
+			async hashPublicLinkPassword(params) {
+				await waitForInitialization()
+
+				return await getSDK().crypto().utils.hashPublicLinkPassword(params)
 			}
 		},
 		encrypt: {
@@ -641,4 +653,12 @@ export async function crypto_utils_hashSearchIndex(...params: Parameters<typeof 
 
 export async function crypto_utils_generateRandomHexString(...params: Parameters<typeof sdkWorker.crypto.utils.generateRandomHexString>) {
 	return await sdkWorker.crypto.utils.generateRandomHexString(...params)
+}
+
+export async function crypto_utils_argon2id(...params: Parameters<typeof sdkWorker.crypto.utils.argon2id>) {
+	return await sdkWorker.crypto.utils.argon2id(...params)
+}
+
+export async function crypto_utils_hashPublicLinkPassword(...params: Parameters<typeof sdkWorker.crypto.utils.hashPublicLinkPassword>) {
+	return await sdkWorker.crypto.utils.hashPublicLinkPassword(...params)
 }

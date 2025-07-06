@@ -113,6 +113,7 @@ export const Contact = memo(
 					ownerId: userId,
 					name: null,
 					ownerMetadata: null,
+					muted: false,
 					participants: [
 						{
 							userId,
