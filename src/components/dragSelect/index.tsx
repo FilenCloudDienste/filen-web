@@ -194,7 +194,7 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 			onMouseUp={handleMouseUp}
 			className="w-full h-full flex flex-col relative"
 		>
-			{show && (
+			{show && items.length > 0 && (
 				<div
 					ref={dragAreaRef}
 					style={selectionBoxStyle}

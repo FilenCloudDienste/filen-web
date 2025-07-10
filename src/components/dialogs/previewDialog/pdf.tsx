@@ -121,7 +121,7 @@ export const PDF = memo(({ urlObject }: { urlObject: string }) => {
 	}, [isMobile, windowSize.width])
 
 	return (
-		<div className="w-full h-full bg-primary-foreground">
+		<div className="w-full h-full bg-primary-foreground max-h-[calc(100dvh-56px)] overflow-hidden select-text">
 			<div className="flex flex-row w-full h-full justify-center">
 				{didEnterNoPassword ? (
 					<div className="flex flex-col items-center justify-center w-full h-full">
@@ -134,7 +134,7 @@ export const PDF = memo(({ urlObject }: { urlObject: string }) => {
 						</Button>
 					</div>
 				) : (
-					<div className="flex flex-col w-full h-full items-center">
+					<div className="flex flex-col w-full h-full items-center select-text">
 						<Document
 							file={urlObject}
 							onLoadSuccess={onLoadSuccess}
