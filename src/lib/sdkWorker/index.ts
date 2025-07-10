@@ -78,6 +78,12 @@ export async function initializeSDKWorker(config: FilenSDKConfig): Promise<void>
 				},
 				async generateRandomHexString(params) {
 					return await sdkWorker.crypto_utils_generateRandomHexString(params)
+				},
+				async argon2id(...params) {
+					return await sdkWorker.crypto_utils_argon2id(...params)
+				},
+				async hashPublicLinkPassword(params) {
+					return await sdkWorker.crypto_utils_hashPublicLinkPassword(params)
 				}
 			},
 			encrypt: {
