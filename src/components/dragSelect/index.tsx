@@ -29,10 +29,6 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 		return location.includes("/f/") || location.includes("/d/")
 	}, [location])
 
-	const canDisplay = useMemo(() => {
-		return location.includes("/drive") || isInsidePublicLink
-	}, [location, isInsidePublicLink])
-
 	const setItems = useMemo(() => {
 		return isInsidePublicLink ? setPublicLinkItems : setDriveItems
 	}, [isInsidePublicLink, setPublicLinkItems, setDriveItems])
@@ -40,6 +36,10 @@ export const DragSelect = memo(({ children }: { children: React.ReactNode }) => 
 	const items = useMemo(() => {
 		return isInsidePublicLink ? publicLinkItems : driveItems
 	}, [isInsidePublicLink, publicLinkItems, driveItems])
+
+	const canDisplay = useMemo(() => {
+		return location.includes("/drive") || (isInsidePublicLink && items.length > 0)
+	}, [location, isInsidePublicLink, items.length])
 
 	const targetRects = useMemo((): Record<string, { element: HTMLDivElement; rect: DOMRect }> => {
 		if (!canDisplay) {
