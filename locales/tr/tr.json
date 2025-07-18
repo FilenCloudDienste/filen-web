@@ -750,8 +750,8 @@
                 "continue": "Çıkış yap"
             },
             "clearThumbnailCache": {
-                "title": "Önizleme önbelleğini temizle",
-                "description": "Yerel önizleme önbelleğini temizlemek istediğinizden emin misiniz? Bu, yerel depolama alanını boşaltır, ancak görüntü önizlemeleri gerektiğinde yeniden oluşturulacaktır.",
+                "title": "Küçük resim önbelleğini temizle",
+                "description": "Küçük resim önbelleğini temizlemek istediğinizden emin misiniz? Bu, yerel depolama alanını boşaltacaktır, ancak görsel önizlemeler gerektiğinde yeniden oluşturulacaktır.",
                 "continue": "Temizle"
             },
             "cancelSubscription": {
@@ -814,8 +814,8 @@
                     "info": "Uygulama dilini değiştir"
                 },
                 "clearThumbnailCache": {
-                    "name": "Önizleme önbelleği",
-                    "info": "Önizleme önbelleğini temizle",
+                    "name": "Küçük resim önbelleği",
+                    "info": "Küçük resim önbelleğini temizle",
                     "action": "Temizle"
                 },
                 "logout": {
