@@ -19,7 +19,7 @@
 			"normal": {
 				"email": "邮件地址",
 				"password": "密码",
-				"2faCode": "双重认证代码",
+				"2faCode": "双重验证代码",
 				"2faRecoveryKey": "恢复密钥"
 			},
 			"example": {
@@ -38,8 +38,8 @@
 		},
 		"alerts": {
 			"emailOrPasswordWrong": "邮件地址或密码错误",
-			"enter2FA": "请输入您的双重认证代码",
-			"enter2FARecoveryKey": "请输入您的双重认证恢复密钥",
+			"enter2FA": "请输入您的双重验证代码",
+			"enter2FARecoveryKey": "请输入您的双重验证恢复密钥",
 			"forgotPasswordSent": "密码重置说明已发送至 {{email}}"
 		}
 	},
@@ -77,7 +77,7 @@
 			}
 		},
 		"alerts": {
-			"passwordWeak": "您选择的密码太弱",
+			"passwordWeak": "您输入的密码太弱",
 			"confirmationSent": "验证邮件已发送至 {{email}}",
 			"passwordsNotMatching": "密码不一致",
 			"success": {
@@ -291,7 +291,7 @@
 			"passwordPlaceholder": "密码",
 			"progress": "已将 {{done}} / {{total}} 个项目添加到公开链接",
 			"expireNever": "永不",
-			"subscriptionNeeded": "您需要一个有效订阅才能创建公开链接。",
+			"subscriptionNeeded": "您需要一个付费订阅才能创建公开链接。",
 			"upgradeNow": "立即升级"
 		},
 		"sharedWith": {
@@ -354,14 +354,14 @@
 		"twoFactorCode": {
 			"useRecoveryKey": "改用恢复密钥",
 			"recoveryKeyPlaceholder": "恢复密钥",
-			"title": "双重认证",
+			"title": "双重验证",
 			"continue": "继续",
-			"info": "请输入您的双重认证代码"
+			"info": "请输入您的双重验证代码"
 		},
 		"noteParticipants": {
 			"remove": "移除",
-			"toggleReadPermissions": "更改权限为仅可读取",
-			"toggleWritePermissions": "更改权限为仅可写入",
+			"toggleReadPermissions": "更改为读取权限",
+			"toggleWritePermissions": "更改为写入权限",
 			"title": "参与者",
 			"close": "关闭"
 		},
@@ -394,7 +394,7 @@
 			"send": "发送",
 			"successToast": "已发送滥用报告",
 			"reasons": {
-				"cp": "幼儿色情",
+				"cp": "儿童色情",
 				"dmca": "侵权",
 				"stolen": "窃取数据",
 				"other": "其他",
@@ -445,7 +445,7 @@
 				"localDirectoryBig": {
 					"title": "警告",
 					"continue": "继续",
-					"description": "同步超过 {{count}} 个项目可能会降低系统速度，尤其是在低端设备上。如果您使用的是高端机器，您可以继续，但我们建议同步较少的文件以避免潜在问题。"
+					"description": "同步超过 {{count}} 个项目可能会降低系统速度，尤其是在低端设备上。如果您使用的是高端设备，您可以继续，但我们建议同步较少的文件以避免潜在问题。"
 				},
 				"localDirectoryNotPhysical": {
 					"title": "警告",
@@ -485,7 +485,7 @@
 		},
 		"exportReminder": {
 			"title": "导出主密钥",
-			"description": "请导出您的主密钥并将其存储在单独的安全位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码后都需要导出主密钥。",
+			"description": "请导出您的主密钥并将其存储在足够安全的位置。重置密码时需要使用主密钥以避免数据丢失。每次更改密码后都需要导出主密钥。",
 			"continue": "导出",
 			"dismiss": "忽略"
 		}
@@ -604,11 +604,11 @@
 			"finished": "已完成",
 			"queued": "已入列",
 			"started": "已开始",
-			"error": "出错啦",
+			"error": "出错了",
 			"stopped": "已停止",
 			"paused": "已暂停",
 			"creatingDirectories": "正在创建文件夹",
-			"finishing": "整理中"
+			"finishing": "即将完成"
 		},
 		"pause": "暂停",
 		"resume": "开始",
@@ -616,7 +616,7 @@
 	},
 	"chats": {
 		"newMessagesSince": "自 {{since}} 以来有 {{count}} 条新消息",
-		"markAsRead": "标为已读",
+		"markAsRead": "标为为已读",
 		"maxSizeReached": "最大消息长度限制为 {{chars}} 个字符",
 		"newMessageSince": "自 {{since}} 以来有 {{count}} 条新消息",
 		"showParticipants": "显示参与者",
@@ -630,8 +630,8 @@
 		},
 		"header": {
 			"title": "端到端加密",
-			"description": "Filen 默认使用零知识端到端加密来保护每次聊天。",
-			"feature1": "只有聊天成员可以解密并阅读内容",
+			"description": "Filen 默认使用零知识端到端加密来保护您的聊天。",
+			"feature1": "只有聊天成员可以解密并阅读聊天内容",
 			"feature2": "系统确保收到的数据确实来自显示的用户，并且没有被更改"
 		},
 		"message": {
@@ -655,7 +655,7 @@
 			"leave": "离开"
 		},
 		"input": {
-			"placeholder": "发送一条消息...",
+			"placeholder": "发送消息...",
 			"typing": "正在输入...",
 			"typingMultiple": "正在输入...",
 			"replyingTo": "正在回复给",
@@ -888,8 +888,8 @@
 			"deleteUnfinished": "未完成的上传已删除",
 			"trashEmptied": "回收站已清空",
 			"requestAccountDeletion": "已请求删除账户",
-			"2faEnabled": "双重认证已启用",
-			"2faDisabled": "双重认证已禁用",
+			"2faEnabled": "双重验证已启用",
+			"2faDisabled": "双重验证已禁用",
 			"codeRedeemed": "代码 {{code}} 已兑换",
 			"emailChanged": "邮件地址已更改为 {{email}}",
 			"passwordChanged": "密码已更改",
@@ -1145,7 +1145,7 @@
 			},
 			"trash": {
 				"title": "回收站里空空如也",
-				"info": "发送到回收站的文件和文件夹将显示在此处"
+				"info": "移动到回收站的文件和文件夹将显示在此处"
 			},
 			"recents": {
 				"title": "尚未上传任何文件",
@@ -1181,7 +1181,7 @@
 			"ad": {
 				"header": "我们是 Filen",
 				"title": "私密且安全的云储存",
-				"info1": "隐私设计",
+				"info1": "设计隐私",
 				"info2": "端到端加密",
 				"info3": "零知识技术",
 				"cta": "10 GB 免费存储空间"
@@ -1237,9 +1237,9 @@
 				"continue": "重命名"
 			},
 			"leaveNote": {
-				"title": "离开笔记",
-				"description": "您确定要离开 {{name}} 吗？您将无法再访问该笔记。",
-				"continue": "离开"
+				"title": "退出笔记",
+				"description": "您确定要退出 {{name}} 吗？您将无法再访问该笔记。",
+				"continue": "退出"
 			}
 		}
 	},
@@ -1254,7 +1254,7 @@
 		"dialogs": {
 			"remove": {
 				"title": "移除",
-				"description": "您确定要从您的共享中删除 {{item}} 吗？您将无法再访问它！",
+				"description": "您确定要从您的共享中移除 {{item}} 吗？您将无法再访问它！",
 				"continue": "移除"
 			}
 		}
@@ -1283,9 +1283,9 @@
 		"contactRequestInfo": "{{name}} 已向您发送联系人请求"
 	},
 	"cookieConsent": {
-		"description": "本网站使用 cookie 来衡量和改善您的体验。",
-		"optOut": "选择退出",
-		"onlyNeeded": "仅需的",
+		"description": "本网站使用 cookie 来评估和改善您的体验。",
+		"optOut": "拒绝",
+		"onlyNeeded": "仅使用必要项",
 		"accept": "接受"
 	},
 	"mounts": {
@@ -1678,12 +1678,12 @@
 		}
 	},
 	"isOnline": {
-		"title": "有人拔掉了网线吗？",
-		"info": "我们在将您连接到我们的平台时遇到问题，请检查您的互联网连接。",
-		"infoSub": "如果您的互联网可以正常使用，请联系我们。"
+		"title": "网络连接异常",
+		"info": "我们无法将您连接至平台，请检查您的网络连接状态。",
+		"infoSub": "如果您的网络连接正常，请联系我们以获取帮助。"
 	},
 	"404": {
-		"info": "哎呀，您要查找的页面不存在。",
+		"info": "您要查找的页面不存在。",
 		"btn": "转到首页"
 	},
 	"announcements": {
@@ -1692,6 +1692,6 @@
 	"maintenance": {
 		"title": "Filen 目前正在维护中",
 		"info": "我们目前正在进行一些维护，以便为您提供更好的体验。我们的平台将很快恢复，全新且经过改进。",
-		"infoSub": "感谢您的耐心等待！我们正在幕后努力为您带来新功能。敬请期待！"
+		"infoSub": "感谢您的耐心等待！我们正在背后努力为您带来新功能。敬请期待！"
 	}
 }
