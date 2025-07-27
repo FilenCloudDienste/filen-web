@@ -150,7 +150,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			{/* This will make the sidebar appear as icons. */}
 			<Sidebar
 				collapsible="none"
-				className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r rounded-md"
+				className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r rounded-md overflow-hidden"
 			>
 				<SidebarHeader>
 					<SidebarMenu>
