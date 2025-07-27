@@ -1,12 +1,15 @@
 import { Outlet, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
-import { Fragment } from "react"
+import { ThemeProvider } from "@/providers/theme.provider"
 
 export const Route = createRootRoute({
 	component: () => (
-		<Fragment>
+		<ThemeProvider
+			defaultTheme="dark"
+			storageKey="filen-ui-theme"
+		>
 			<Outlet />
 			<TanStackRouterDevtools />
-		</Fragment>
+		</ThemeProvider>
 	)
 })
