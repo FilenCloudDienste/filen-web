@@ -9,7 +9,7 @@ export const Route = createRootRoute({
 			storageKey="filen-ui-theme"
 		>
 			<Outlet />
-			<TanStackRouterDevtools />
+			<TanStackRouterDevtools position="bottom-right" />
 		</ThemeProvider>
 	)
 })

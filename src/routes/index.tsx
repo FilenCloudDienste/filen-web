@@ -13,13 +13,13 @@ function App() {
 		<SidebarProvider
 			style={
 				{
-					"--sidebar-width": "350px"
+					"--sidebar-width": "400px"
 				} as React.CSSProperties
 			}
 		>
 			<AppSidebar />
 			<SidebarInset>
-				<header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 border-b p-4">
+				<header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 p-4">
 					<SidebarTrigger className="-ml-1" />
 					<Separator
 						orientation="vertical"
@@ -37,7 +37,7 @@ function App() {
 						</BreadcrumbList>
 					</Breadcrumb>
 				</header>
-				<div className="flex flex-1 flex-col gap-4 p-4">
+				<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
 					{Array.from({ length: 24 }).map((_, index) => (
 						<div
 							key={index}
