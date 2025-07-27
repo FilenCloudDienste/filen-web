@@ -13,13 +13,28 @@ export default [
 		"plugin:react-hooks/recommended",
 		"plugin:@typescript-eslint/eslint-recommended",
 		"plugin:@tanstack/eslint-plugin-query/recommended",
-		"plugin:react/recommended"
+		"plugin:react/recommended",
+		"plugin:@tanstack/eslint-plugin-router/recommended"
 	),
 	{
-		ignores: ["node_modules/**/*", "patches/**/*", ".vscode/**/*", ".github/**/*", ".git/**/*"]
+		ignores: [
+			"node_modules/**/*",
+			"patches/**/*",
+			".vscode/**/*",
+			".github/**/*",
+			".git/**/*",
+			"**/*.css",
+			"**/*.scss",
+			"**/*.svg",
+			"**/*.png",
+			"**/*.jpg",
+			"**/*.jpeg",
+			"**/*.gif",
+			"**/*.webp"
+		]
 	},
 	{
-		files: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+		files: ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
 		languageOptions: {
 			parser: typescriptParser
 		},
