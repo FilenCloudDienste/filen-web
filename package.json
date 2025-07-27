@@ -1,38 +1,44 @@
 {
-  "name": "my-app",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite --port 3000",
-    "start": "vite --port 3000",
-    "build": "vite build && tsc",
-    "serve": "vite preview",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.0.6",
-    "@tanstack/react-router": "^1.121.2",
-    "@tanstack/react-router-devtools": "^1.121.2",
-    "@tanstack/router-plugin": "^1.121.2",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.476.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwind-merge": "^3.0.2",
-    "tailwindcss": "^4.0.6",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "devDependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.2.0",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "@vitejs/plugin-react": "^4.3.4",
-    "jsdom": "^26.0.0",
-    "typescript": "^5.7.2",
-    "vite": "^6.1.0",
-    "vitest": "^3.0.5",
-    "web-vitals": "^4.2.4"
-  }
+	"name": "my-app",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite --port 3000",
+		"start": "vite --port 3000",
+		"build": "vite build && tsc",
+		"serve": "vite preview",
+		"test": "vitest run",
+		"ncu": "npm-check-updates --interactive --format group"
+	},
+	"dependencies": {
+		"@tailwindcss/vite": "^4.1.11",
+		"@tanstack/react-router": "^1.130.1",
+		"@tanstack/react-router-devtools": "^1.130.1",
+		"@tanstack/router-plugin": "^1.130.1",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"lucide-react": "^0.526.0",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0",
+		"tailwind-merge": "^3.3.1",
+		"tailwindcss": "^4.1.11",
+		"tailwindcss-animate": "^1.0.7"
+	},
+	"devDependencies": {
+		"@testing-library/dom": "^10.4.1",
+		"@testing-library/react": "^16.3.0",
+		"@types/bun": "^1.2.19",
+		"@types/react": "^19.1.8",
+		"@types/react-dom": "^19.1.6",
+		"@vitejs/plugin-react": "^4.7.0",
+		"babel-plugin-react-compiler": "^19.1.0-rc.2",
+		"jsdom": "^26.1.0",
+		"memfs": "^4.22.1",
+		"npm-check-updates": "^18.0.2",
+		"typescript": "^5.8.3",
+		"vite": "^7.0.6",
+		"vite-plugin-node-polyfills": "^0.24.0",
+		"vitest": "^3.2.4",
+		"web-vitals": "^5.0.3"
+	}
 }
