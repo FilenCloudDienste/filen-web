@@ -30,7 +30,9 @@ export default [
 			"**/*.jpg",
 			"**/*.jpeg",
 			"**/*.gif",
-			"**/*.webp"
+			"**/*.webp",
+			"**/locales/**/*",
+			"**/dist/**/*"
 		]
 	},
 	{
