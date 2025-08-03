@@ -1,25 +1,41 @@
 import { defineConfig, normalizePath } from "vite"
-import react from "@vitejs/plugin-react"
-import path from "path"
+import viteReact from "@vitejs/plugin-react"
+import tailwindcss from "@tailwindcss/vite"
 import { nodePolyfills } from "vite-plugin-node-polyfills"
-import { TanStackRouterVite } from "@tanstack/router-vite-plugin"
+import { tanstackRouter } from "@tanstack/router-plugin/vite"
+import { resolve, join, dirname } from "node:path"
 import { comlink } from "vite-plugin-comlink"
-import i18nextLoader from "vite-plugin-i18next-loader"
-import svgr from "vite-plugin-svgr"
-import topLevelAwait from "vite-plugin-top-level-await"
 import checker from "vite-plugin-checker"
-import { VitePWA } from "vite-plugin-pwa"
+import topLevelAwait from "vite-plugin-top-level-await"
 import { createRequire } from "node:module"
 import { viteStaticCopy } from "vite-plugin-static-copy"
+import { VitePWA } from "vite-plugin-pwa"
 
-const now = Date.now()
-const require = createRequire(import.meta.url)
-const pdfjsDistPath = path.dirname(require.resolve("pdfjs-dist/package.json"))
-const pdfjsCMapsDir = normalizePath(path.join(pdfjsDistPath, "cmaps"))
-const pdfjsStandardFontsDir = normalizePath(path.join(path.dirname(require.resolve("pdfjs-dist/package.json")), "standard_fonts"))
+export const now = Date.now()
+export const require = createRequire(import.meta.url)
+export const pdfjsDistPath = dirname(require.resolve("pdfjs-dist/package.json"))
+export const pdfjsCMapsDir = normalizePath(join(pdfjsDistPath, "cmaps"))
+export const pdfjsStandardFontsDir = normalizePath(join(dirname(require.resolve("pdfjs-dist/package.json")), "standard_fonts"))
+
+export const nodePoly = nodePolyfills({
+	include: [],
+	overrides: {
+		fs: "memfs"
+	},
+	globals: {
+		Buffer: true,
+		global: true,
+		process: true
+	},
+	protocolImports: true
+})
+
+export const tla = topLevelAwait({
+	promiseExportName: "__tla",
+	promiseImportName: i => `__tla_${i}`
+})
 
 export default defineConfig({
-	base: "/",
 	plugins: [
 		viteStaticCopy({
 			targets: [
@@ -37,43 +53,22 @@ export default defineConfig({
 				}
 			]
 		}),
-		nodePolyfills({
-			include: [],
-			overrides: {
-				fs: "memfs"
-			},
-			globals: {
-				Buffer: true,
-				global: true,
-				process: true
-			},
-			protocolImports: true
+		nodePoly,
+		tla,
+		tanstackRouter({
+			autoCodeSplitting: true,
+			target: "react",
+			semicolons: false
 		}),
-		topLevelAwait({
-			promiseExportName: "__tla",
-			promiseImportName: i => `__tla_${i}`
-		}),
-		TanStackRouterVite(),
-		react({
+		viteReact({
 			babel: {
-				plugins: [
-					[
-						"babel-plugin-react-compiler",
-						{
-							target: "18"
-						}
-					]
-				]
-			},
-			jsxImportSource: "@welldone-software/why-did-you-render"
+				plugins: ["babel-plugin-react-compiler"]
+			}
 		}),
+		tailwindcss(),
 		comlink(),
-		i18nextLoader({
-			paths: ["./locales"]
-		}),
-		svgr(),
 		VitePWA({
-			srcDir: "src",
+			srcDir: "src/lib",
 			filename: "sw.ts",
 			strategies: "injectManifest",
 			workbox: {
@@ -87,60 +82,25 @@ export default defineConfig({
 				minify: true,
 				sourcemap: true,
 				buildPlugins: {
-					vite: [
-						nodePolyfills({
-							include: [],
-							overrides: {
-								fs: "memfs"
-							},
-							globals: {
-								Buffer: true,
-								global: true,
-								process: true
-							},
-							protocolImports: true
-						}),
-						topLevelAwait({
-							promiseExportName: "__tla",
-							promiseImportName: i => `__tla_${i}`
-						})
-					]
+					vite: [nodePoly]
 				}
 			},
 			devOptions: {
-				enabled: true
+				enabled: false
 			}
 		}),
 		checker({
 			typescript: true
 		})
 	],
+	worker: {
+		format: "iife",
+		plugins: () => [nodePoly, tla, comlink()]
+	},
 	resolve: {
 		alias: {
-			"@": path.resolve(__dirname, "./src")
+			"@": resolve(__dirname, "./src")
 		}
-	},
-	worker: {
-		format: "es",
-		plugins: () => [
-			nodePolyfills({
-				include: [],
-				overrides: {
-					fs: "memfs"
-				},
-				globals: {
-					Buffer: true,
-					global: true,
-					process: true
-				},
-				protocolImports: true
-			}),
-			topLevelAwait({
-				promiseExportName: "__tla",
-				promiseImportName: i => `__tla_${i}`
-			}),
-			comlink()
-		]
 	},
 	build: {
 		sourcemap: true,

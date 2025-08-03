@@ -1,113 +1,20 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta
-			http-equiv="Content-Security-Policy"
-			content="
-				default-src 'self';
-				script-src 'self' https://analytics.filen.io 'sha256-/AO8vAagk08SqUGxY96ci/dGyTDsuoetPOJYMn7sc+E=';
-				style-src 'self' 'unsafe-inline';
-				img-src 'self' data: blob: http://localhost:* https://egest.filen.io https://down.filen.io https://egest.filen.net https://egest.filen-1.net https://egest.filen-2.net https://egest.filen-3.net https://egest.filen-4.net https://egest.filen-5.net https://egest.filen-6.net;
-				font-src 'self';
-				object-src 'self' blob:;
-				media-src 'self' blob: http://localhost:*;
-				connect-src 'self' blob: wss://socket.filen.io https://*.filen.io https://*.filen.net https://*.filen-1.net https://*.filen-2.net https://*.filen-3.net https://*.filen-4.net https://*.filen-5.net https://*.filen-6.net http://localhost:*;
-				frame-src 'self' blob: https://*.filen.io https://filen.io https://app.filen.io http://localhost:*;
-				worker-src 'self' blob:;
-				manifest-src 'self';
-				base-uri 'self';
-				form-action 'self';
-				upgrade-insecure-requests;
-				block-all-mixed-content;
-			"
-		/>
-		<meta charset="UTF-8" />
-		<link
-			rel="icon"
-			href="/favicon.ico"
-		/>
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0"
-		/>
-		<meta
-			name="keywords"
-			content="cloud,storage,aes,download,upload,free,host,storage,share,big,file,video,image,audio,encrypted,encryption,end to end,anonymous,notes,chat,chats,private"
-		/>
-		<meta
-			name="description"
-			content="Filen – Next Generation End-To-End Encrypted Cloud Platform. Get started with 10 GB of free storage space."
-		/>
-		<meta
-			name="charset"
-			content="utf-8"
-		/>
-		<meta
-			name="viewport"
-			content="initial-scale=1.0, width=device-width"
-		/>
-		<meta
-			property="og:title"
-			content="Filen"
-		/>
-		<meta
-			property="og:url"
-			content="https://app.filen.io"
-		/>
-		<meta
-			property="og:description"
-			content="Filen – Next Generation End-To-End Encrypted Cloud Platform. Get started with 10 GB of free storage space."
-		/>
-		<meta
-			property="og:type"
-			content="website"
-		/>
-		<meta
-			name="google"
-			content="notranslate"
-		/>
-		<link
-			rel="apple-touch-icon"
-			sizes="180x180"
-			href="/apple-touch-icon.png"
-		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="32x32"
-			href="/favicon-32x32.png"
-		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="16x16"
-			href="/favicon-16x16.png"
-		/>
-		<link
-			rel="manifest"
-			href="/site.webmanifest"
-		/>
-		<link
-			rel="mask-icon"
-			href="/safari-pinned-tab.svg"
-			color="#5bbad5"
-		/>
-		<meta
-			name="msapplication-TileColor"
-			content="#9f00a7"
-		/>
-		<meta
-			name="msapplication-TileImage"
-			content="/mstile-144x144.png"
-		/>
-		<title>Filen</title>
-	</head>
-	<body style="overflow: hidden">
-		<noscript>You need to enable JavaScript to run this app.</noscript>
-		<div id="app"></div>
-		<script
-			type="module"
-			src="/src/app.tsx"
-		></script>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-tsrouter-app"
+    />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Create TanStack App - my-app</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

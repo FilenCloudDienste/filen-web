@@ -1,71 +1,52 @@
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
-import LanguageDetector from "i18next-browser-languagedetector"
-import locales from "virtual:i18next-loader"
+import en from "@/locales/en.json"
 
-export const storedLang = localStorage.getItem("i18nextLng")
-export const navigatorLang = window.navigator.language
-	? window.navigator.language.includes("-")
-		? window.navigator.language.split("-")[0]?.toLowerCase()
-		: window.navigator.language.toLowerCase()
-	: null
+let initalized: boolean = false
+let locales: string[] = ["en"]
 
-i18n.use(LanguageDetector)
-	.use(initReactI18next)
+try {
+	const browserLanguages = globalThis?.navigator?.languages
+		?.map(lang => lang.trim().toLowerCase().split("-").at(0) ?? "")
+		.filter(lang => lang.length > 0)
+
+	locales = browserLanguages.length > 0 ? browserLanguages : ["en"]
+} catch (e) {
+	console.error(e)
+}
+
+i18n.use(initReactI18next)
 	.init({
 		resources: {
 			en: {
-				translation: locales.en
-			},
-			de: {
-				translation: locales.de
-			},
-			cs: {
-				translation: locales.cs
-			},
-			es: {
-				translation: locales.es
-			},
-			fr: {
-				translation: locales.fr
-			},
-			it: {
-				translation: locales.it
-			},
-			ja: {
-				translation: locales.ja
-			},
-			ko: {
-				translation: locales.ko
-			},
-			pl: {
-				translation: locales.pl
-			},
-			pt: {
-				translation: locales.pt
-			},
-			ru: {
-				translation: locales.ru
-			},
-			tr: {
-				translation: locales.tr
-			},
-			uk: {
-				translation: locales.ua
-			},
-			zh: {
-				translation: locales.zh
-			},
-			sv: {
-				translation: locales.sv
+				translation: en
 			}
 		},
-		lng: storedLang ? storedLang : navigatorLang ? navigatorLang : undefined,
+		ns: ["translation"],
+		defaultNS: "translation",
+		lng: locales.at(0) ?? "en",
 		debug: true,
 		fallbackLng: "en",
+		supportedLngs: ["en"],
 		interpolation: {
 			escapeValue: false
 		}
 	})
+	.then(() => {
+		initalized = true
+	})
+	.catch(console.error)
+
+export function isInitialized(): boolean {
+	return initalized
+}
+
+export async function waitForInitialization(): Promise<void> {
+	while (!initalized) {
+		await new Promise(resolve => setTimeout(resolve, 100))
+	}
+}
+
+export const t = i18n.t
 
 export default i18n

@@ -1,32 +1,31 @@
-let isRegistered = false
+export class ServiceWorker {
+	private isRegistered: boolean = false
 
-/**
- * Register service worker.
- *
- * @export
- * @async
- * @returns {Promise<void>}
- */
-export async function registerServiceWorker(): Promise<void> {
-	if (isRegistered || !window || !window.navigator || !("serviceWorker" in window.navigator)) {
-		return
-	}
+	public async register(): Promise<void> {
+		if (this.isRegistered || !window || !window.navigator || !("serviceWorker" in window.navigator)) {
+			return
+		}
 
-	try {
-		const registration = await window.navigator.serviceWorker.register(
-			import.meta.env.MODE === "production" ? "/sw.js" : "/dev-sw.js?dev-sw",
-			{
-				scope: "/",
-				type: import.meta.env.MODE === "production" ? "classic" : "module"
-			}
-		)
+		try {
+			const registration = await window.navigator.serviceWorker.register(
+				import.meta.env.MODE === "production" ? "/sw.js" : "/dev-sw.js?dev-sw",
+				{
+					scope: "/",
+					type: import.meta.env.MODE === "production" ? "classic" : "module"
+				}
+			)
 
-		await registration.update()
+			await registration.update()
 
-		isRegistered = true
+			this.isRegistered = true
 
-		console.log("Service worker registered")
-	} catch (e) {
-		console.error(e)
+			console.log("Service worker registered")
+		} catch (e) {
+			console.error(e)
+		}
 	}
 }
+
+export const serviceWorker = new ServiceWorker()
+
+export default serviceWorker
