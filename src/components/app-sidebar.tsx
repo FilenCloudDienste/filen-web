@@ -1,6 +1,5 @@
 import * as React from "react"
 import { ArchiveX, Command, File, Inbox, Send, Trash2, Folder, ChevronRight } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { NavUser } from "@/components/nav-user"
 import { Label } from "@/components/ui/label"
 import {
@@ -95,14 +94,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	// Note: I'm using state to show active item.
 	// IRL you should use the url/router.
 	const [activeItem, setActiveItem] = React.useState(data.navMain[0])
-	const { setOpen, state } = useSidebar()
+	const { setOpen } = useSidebar()
 	const { t } = useTranslation()
 
 	return (
 		<Sidebar
-			collapsible="icon"
-			className="overflow-x-hidden *:data-[sidebar=sidebar]:flex-row"
-			variant="floating"
+			collapsible="offcanvas"
+			className="overflow-x-hidden *:data-[sidebar=sidebar]:flex-row p-0"
+			variant="inset"
 			{...props}
 		>
 			{/* This is the first sidebar */}
@@ -110,10 +109,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			{/* This will make the sidebar appear as icons. */}
 			<Sidebar
 				collapsible="none"
-				className={cn(
-					"w-[calc(var(--sidebar-width-icon)+1px)]! overflow-x-hidden",
-					state === "collapsed" ? "border-r-0 rounded-md" : "border-r rounded-md rounded-r-none"
-				)}
+				className="w-[calc(var(--sidebar-width-icon)+1px)]! overflow-x-hidden p-2 border-r"
 			>
 				<SidebarHeader>
 					<SidebarMenu>
@@ -168,13 +164,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarFooter>
 			</Sidebar>
 
-			{/* This is the second sidebar */}
-			{/* We disable collapsible and let it fill remaining space */}
 			<Sidebar
 				collapsible="none"
-				className="hidden flex-1 md:flex overflow-x-hidden rounded-md rounded-l-none"
+				className="hidden flex-1 md:flex overflow-x-hidden"
 			>
-				<SidebarHeader className="gap-3.5 border-b p-4">
+				<SidebarHeader className="gap-3.5 p-4">
 					<div className="flex w-full items-center justify-between">
 						<div className="text-foreground text-base font-medium">{activeItem?.title}</div>
 						<Label className="flex items-center gap-2 text-sm">
