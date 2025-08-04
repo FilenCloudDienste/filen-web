@@ -9,8 +9,7 @@ import useLoadingToast from "@/hooks/useLoadingToast"
 import useErrorToast from "@/hooks/useErrorToast"
 import useSuccessToast from "@/hooks/useSuccessToast"
 import { cn } from "@/lib/utils"
-import { setup } from "@/lib/setup"
-import { getSDK } from "@/lib/sdk"
+import { logout } from "@/lib/setup"
 
 export const ChangePasswordDialog = memo(() => {
 	const [open, setOpen] = useState<boolean>(false)
@@ -75,32 +74,24 @@ export const ChangePasswordDialog = memo(() => {
 		window.disableInvalidAPIKeyLogout = true
 
 		try {
-			const newAPIKey = await worker.changePassword({
+			await worker.changePassword({
 				newPassword: inputs.new,
 				currentPassword: inputs.password
 			})
 
-			await setup(
-				{
-					...getSDK().config,
-					apiKey: newAPIKey,
-					password: "redacted",
-					twoFactorCode: "redacted"
-				},
-				true
-			)
-
-			setTimeout(() => setOpen(false), 100)
-
 			successToast(t("dialogs.changePassword.successToast"))
+
+			await new Promise(resolve => setTimeout(resolve, 1000))
+
+			await logout()
 		} catch (e) {
 			console.error(e)
 
 			errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
 		} finally {
-			toast.dismiss()
-
 			window.disableInvalidAPIKeyLogout = false
+
+			toast.dismiss()
 		}
 	}, [loadingToast, errorToast, inputs, successToast, t])
 

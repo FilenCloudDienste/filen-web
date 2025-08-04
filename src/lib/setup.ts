@@ -283,6 +283,8 @@ export async function logout(): Promise<void> {
 	if (IS_DESKTOP) {
 		await window.desktopAPI.restart()
 	} else {
+		window.location.href = "/"
+
 		window.location.reload()
 	}
 }
