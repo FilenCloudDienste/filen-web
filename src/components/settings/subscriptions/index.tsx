@@ -52,7 +52,7 @@ export const Subscriptions = memo(() => {
 			}
 
 			if (convertTimestampToMs(startTimestamp) + 24 * 3600 * 1000 > Date.now()) {
-				errorToast(t("settings.subscriptions.statuses.cancelled"))
+				errorToast(t("settings.subscriptions.cannotCancelTooEarly"))
 
 				return
 			}
