@@ -340,6 +340,7 @@
             "city": "Şehir",
             "postalCode": "Posta kodu",
             "country": "Ülke"
+            "needsCountrySetup": "Doğru KDV'yi hesaplayabilmemiz için lütfen bir ülke seçin."
         },
         "twoFactorCode": {
             "useRecoveryKey": "Bunun yerine kurtarma anahtarını kullan",
