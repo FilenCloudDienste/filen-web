@@ -179,7 +179,7 @@ export const TopBar = memo(() => {
 						ref={emptyTrashBtnRef}
 						onClick={emptyTrash}
 					>
-						{t("empty")}
+						{t("emptyTrash")}
 					</Button>
 				) : (
 					<DropdownMenu>
