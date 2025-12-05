@@ -56,6 +56,9 @@ i18n.use(LanguageDetector)
 			zh: {
 				translation: locales.zh
 			},
+			"zh-TW": {
+				translation: locales["zh-TW"]
+			},
 			sv: {
 				translation: locales.sv
 			}
