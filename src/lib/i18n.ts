@@ -5,9 +5,7 @@ import locales from "virtual:i18next-loader"
 
 export const storedLang = localStorage.getItem("i18nextLng")
 export const navigatorLang = window.navigator.language
-	? window.navigator.language.includes("-")
-		? window.navigator.language.split("-")[0]?.toLowerCase()
-		: window.navigator.language.toLowerCase()
+	? window.navigator.language.toLowerCase()
 	: null
 
 i18n.use(LanguageDetector)
