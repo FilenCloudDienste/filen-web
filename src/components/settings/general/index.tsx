@@ -107,6 +107,10 @@ export const General = memo(() => {
 				return "简体中文"
 			}
 
+			case "zh-TW": {
+				return "繁體中文（臺灣）"
+			}
+
 			case "sv": {
 				return "Svenska"
 			}
@@ -481,6 +485,7 @@ export const General = memo(() => {
 								<SelectItem value="tr">Türkçe</SelectItem>
 								<SelectItem value="uk">Українська</SelectItem>
 								<SelectItem value="zh">简体中文</SelectItem>
+								<SelectItem value="zh-TW">繁體中文（臺灣）</SelectItem>
 								<SelectItem value="sv">Svenska</SelectItem>
 							</SelectContent>
 						</Select>
