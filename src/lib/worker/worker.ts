@@ -1979,12 +1979,10 @@ export async function generateVideoThumbnail({ item }: { item: DriveCloudItem })
 					return
 				}
 
-				setTimeout(() => {
-					video.currentTime = video.duration >= 3 ? 3 : 1
-				}, 100)
+				video.currentTime = video.duration >= 3 ? 3 : 1
 			}
 
-			video.onseeked = () => {
+			video.requestVideoFrameCallback(() => {
 				const originalWidth = video.videoWidth
 				const originalHeight = video.videoHeight
 				const thumbnailWidth = THUMBNAIL_MAX_SIZE
@@ -2017,7 +2015,6 @@ export async function generateVideoThumbnail({ item }: { item: DriveCloudItem })
 					return
 				}
 
-				ctx.clearRect(0, 0, thumbnailWidth, thumbnailHeight)
 				ctx.fillStyle = "black"
 				ctx.fillRect(0, 0, thumbnailWidth, thumbnailHeight)
 				ctx.drawImage(video, offsetX, offsetY, drawWidth, drawHeight, 0, 0, thumbnailWidth, thumbnailHeight)
@@ -2034,7 +2031,7 @@ export async function generateVideoThumbnail({ item }: { item: DriveCloudItem })
 					"image/jpeg",
 					THUMBNAIL_QUALITY
 				)
-			}
+			})
 
 			video.load()
 		})
