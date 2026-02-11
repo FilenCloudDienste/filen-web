@@ -311,6 +311,7 @@ export const General = memo(() => {
 								used: formatBytes(account.account.storage),
 								max: formatBytes(account.account.maxStorage)
 							})}
+							{account.account.maxStorage <= 0 && " *"}
 						</p>
 					</div>
 					<Progress
@@ -359,6 +360,12 @@ export const General = memo(() => {
 							</p>
 						</div>
 					</div>
+					{account.account.maxStorage <= 0 && (
+						<p className="text-xs text-muted-foreground italic">
+							* Our free tier and free storage work best on standard residential internet connections. Registration via VPNs,
+							Tor, proxies, relays, or hosting networks may be excluded from free storage.
+						</p>
+					)}
 				</div>
 				<div className="flex flex-col gap-4 mt-10">
 					<Section
