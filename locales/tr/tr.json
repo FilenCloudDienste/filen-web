@@ -340,6 +340,7 @@
             "city": "Şehir",
             "postalCode": "Posta kodu",
             "country": "Ülke"
+            "needsCountrySetup": "Doğru KDV'yi hesaplayabilmemiz için lütfen bir ülke seçin."
         },
         "twoFactorCode": {
             "useRecoveryKey": "Bunun yerine kurtarma anahtarını kullan",
@@ -530,7 +531,7 @@
         "drive": {
             "uploadFiles": "Dosya yükle",
             "uploadFolders": "Klasör yükle",
-            "newTextFile": "Yeni metin dosyası",
+            "newTextFile": "Yeni metin belgesi",
             "newFolder": "Yeni klasör"
         },
         "notes": {
@@ -750,8 +751,8 @@
                 "continue": "Çıkış yap"
             },
             "clearThumbnailCache": {
-                "title": "Önizleme önbelleğini temizle",
-                "description": "Yerel önizleme önbelleğini temizlemek istediğinizden emin misiniz? Bu, yerel depolama alanını boşaltır, ancak görüntü önizlemeleri gerektiğinde yeniden oluşturulacaktır.",
+                "title": "Küçük resim önbelleğini temizle",
+                "description": "Küçük resim önbelleğini temizlemek istediğinizden emin misiniz? Bu, yerel depolama alanını boşaltacaktır, ancak görsel önizlemeler gerektiğinde yeniden oluşturulacaktır.",
                 "continue": "Temizle"
             },
             "cancelSubscription": {
@@ -764,7 +765,7 @@
                 "title": "Takma adı düzenle",
                 "placeholder": "Yeni takma ad",
                 "continue": "Kaydet",
-                "invalid": "Takma ad 3 ile 32 karakter uzunluğunda ve alfanümerik olmalıdır."
+                "invalid": "Takma ad 3 ile 32 karakter uzunluğunda olmalı harf ve rakam içermelidir."
             },
             "twoFactorAuthenticationRecoveryKey": {
                 "title": "Kurtarma anahtarı",
@@ -814,8 +815,8 @@
                     "info": "Uygulama dilini değiştir"
                 },
                 "clearThumbnailCache": {
-                    "name": "Önizleme önbelleği",
-                    "info": "Önizleme önbelleğini temizle",
+                    "name": "Küçük resim önbelleği",
+                    "info": "Küçük resim önbelleğini temizle",
                     "action": "Temizle"
                 },
                 "logout": {
@@ -841,7 +842,7 @@
         "invite": {
             "copy": "Kopyala",
             "title": "Başkalarını davet ederek 30 GB'a kadar depolama alanı kazanın",
-            "description": "Filen'e davet ettiğiniz her arkadaş için {{yourEarnings}} kazanırsınız - ve arkadaşınız da {{otherEarnings}} kazanır. Bu kadar kolay.",
+            "description": "Filen'e davet ettiğiniz her arkadaş için {{yourEarnings}} kazanırsınız ve arkadaşınız da {{otherEarnings}} kazanır. Bu kadar kolay.",
             "earned": "{{earned}} / {{max}}",
             "storageEarned": "Kazanılan depolama"
         },
@@ -927,7 +928,7 @@
             "creditCard": "Kredi Kartı",
             "crypto": "Kripto para",
             "legal1": "Bir plan satın alarak, siz iptal edene kadar Filen'in her fatura döneminde sizden otomatik olarak ücret almasına izin vermiş olursunuz. Hesabınız sayfanızdan istediğiniz zaman iptal edebilirsiniz. Kısmi iadeler yapılmaz.",
-            "legal2": "Ayrıca otomatik olarak kabul edersiniz",
+            "legal2": "Ayrıca otomatik olarak şartlarımızı ve politikamızı kabul etmiş olursunuz.",
             "tos": "Hizmet Şartları",
             "and": "ve",
             "privacyPolicy": "Gizlilik Politikası",
@@ -1080,10 +1081,10 @@
         },
         "dialogs": {
             "createTextFile": {
-                "title": "Metin dosyası oluştur",
+                "title": "Metin belgesi oluştur",
                 "placeholder": "İsim",
                 "continue": "Oluştur",
-                "invalidFileName": "Geçersiz dosya adı."
+                "invalidFileName": "Geçersiz belge adı."
             },
             "createDirectory": {
                 "title": "Klasör oluştur",
@@ -1145,8 +1146,8 @@
         }
     },
     "publicLink": {
-        "invalid": "Geçersiz herkese açık bağlantı",
-        "invalidInfo": "Bu herkese açık bağlantı ya süresi dolmuş ya da mevcut değil",
+        "invalid": "Geçersiz bağlantı",
+        "invalidInfo": "Bu bağlantının süresi doldu veya mevcut değil",
         "back": "Geri dön",
         "directory": {
             "downloadWholeDirectory": "Tüm klasörü indir",
