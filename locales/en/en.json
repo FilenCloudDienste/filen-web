@@ -46,6 +46,11 @@
 	"register": {
 		"header": "Create an account",
 		"description": "Enter your email and password below to create an account",
+		"freeStorage": {
+			"eligible": "You are eligible for 10 GiB of free storage!",
+			"notEligible": "You are not eligible for 10 GiB of free storage.",
+			"learnMore": "Learn more"
+		},
 		"buttons": {
 			"register": "Create account",
 			"resendConfirmation": "Resend confirmation email",

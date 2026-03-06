@@ -15,6 +15,7 @@ import useSuccessToast from "@/hooks/useSuccessToast"
 import useLoadingToast from "@/hooks/useLoadingToast"
 import Cookies from "js-cookie"
 import { ANONYMOUS_SDK_CONFIG } from "@filen/sdk"
+import { useQuery } from "@tanstack/react-query"
 
 export const Route = createFileRoute("/register")({
 	component: Register
@@ -64,6 +65,33 @@ export function Register() {
 	const loadingToast = useLoadingToast()
 	const successToast = useSuccessToast()
 	const navigate = useNavigate()
+
+	const checkQuery = useQuery({
+		queryKey: ["registerCheckQuery"],
+		queryFn: async () => {
+			try {
+				const response = await fetch("https://gateway.filen.io/v3/registerCheck", {
+					method: "GET"
+				})
+
+				if (!response.ok) {
+					throw new Error("Failed to check registration eligibility")
+				}
+
+				const json = await response.json()
+
+				if (!json.status || typeof json.data !== "object" || json.data.ok === undefined) {
+					throw new Error("Invalid response from registration eligibility check")
+				}
+
+				return json.data as { ok: boolean }
+			} catch (e) {
+				console.error(e)
+
+				return { ok: false }
+			}
+		}
+	})
 
 	const passwordStrength = useMemo(() => {
 		return ratePassword(password)
@@ -361,6 +389,35 @@ export function Register() {
 						>
 							{t("register.buttons.resendConfirmation")}
 						</Link>
+						{checkQuery.status === "success" && (
+							<div className="flex flex-col mt-8 items-center justify-center">
+								{checkQuery.data.ok ? (
+									<>
+										<CheckCircle
+											size={30}
+											className="text-green-500"
+										/>
+										<p className="text-sm text-muted-foreground mt-2">{t("register.freeStorage.eligible")}</p>
+									</>
+								) : (
+									<>
+										<XCircle
+											size={30}
+											className="text-red-500"
+										/>
+										<p className="text-sm text-muted-foreground mt-2">{t("register.freeStorage.notEligible")}</p>
+									</>
+								)}
+								<a
+									href="https://filen.io/hub/free-10-gb-at-signup-eligibility-check-before-creating-an-account/"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-sm text-muted-foreground underline"
+								>
+									{t("register.freeStorage.learnMore")}
+								</a>
+							</div>
+						)}
 					</div>
 				</div>
 			</AuthContainer>
