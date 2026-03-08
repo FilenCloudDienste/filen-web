@@ -45,7 +45,11 @@
     },
     "register": {
         "header": "Hesap oluştur",
-        "description": "Aşağıya e-posta adresinizi ve şifrenizi girerek bir hesap oluşturun",
+        "description": "E-posta adresinizi ve şifrenizi aşağıya girerek bir hesap oluşturun",
+        "freeStorage": {
+            "eligible": "10 GB ücretsiz depolama alanına hak kazandınız!",
+            "notEligible": "Ücretsiz 10 GB için uygun değilsin.",
+            "learnMore": "Daha fazla bilgi edinin"
         "buttons": {
             "register": "Hesap oluştur",
             "resendConfirmation": "Onay e-postasını yeniden gönder",
