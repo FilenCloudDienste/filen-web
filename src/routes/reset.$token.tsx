@@ -67,8 +67,21 @@ export function Reset() {
 					const reader = new FileReader()
 
 					reader.onloadend = () => {
+						if (typeof reader.result !== "string" || reader.result.length === 0) {
+							reject(new Error(t("reset.alerts.invalidMasterKeysFile")))
+
+							return
+						}
+
+						// keys not encoded in base64
+						if (reader.result.includes("_VALID_FILEN_MASTERKEY_")) {
+							resolve(reader.result)
+
+							return
+						}
+
 						try {
-							resolve(Buffer.from(reader.result as string, "base64").toString("utf-8"))
+							resolve(Buffer.from(reader.result, "base64").toString("utf-8"))
 						} catch (e) {
 							reject(e)
 						}
