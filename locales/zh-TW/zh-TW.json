@@ -1,0 +1,1709 @@
+{
+	"cloudDrive": "雲端硬碟",
+	"new": "新增",
+	"image": "影像",
+	"empty": "清空",
+	"copiedToClipboard": "已複製到剪貼簿",
+	"everyone": "所有人",
+	"unknownUser": "未知使用者",
+	"login": {
+		"header": "登入",
+		"description": "輸入您的電子郵件與密碼以登入帳戶",
+		"useTwoFactorRecoveryKey": "改用復原金鑰",
+		"buttons": {
+			"login": "登入",
+			"createAccount": "建立帳戶",
+			"forgotPassword": "忘記密碼？"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "電子郵件地址",
+				"password": "密碼",
+				"2faCode": "兩步驟驗證碼",
+				"2faRecoveryKey": "復原金鑰"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"2faCode": "381740",
+				"2faRecoveryKey": "復原金鑰"
+			}
+		},
+		"dialogs": {
+			"forgotPassword": {
+				"title": "忘記密碼",
+				"continue": "傳送說明",
+				"placeholder": "電子郵件地址"
+			}
+		},
+		"alerts": {
+			"emailOrPasswordWrong": "電子郵件地址或密碼錯誤",
+			"enter2FA": "請輸入您的兩步驟驗證碼",
+			"enter2FARecoveryKey": "請輸入您的兩步驟驗證復原金鑰",
+			"forgotPasswordSent": "密碼重設說明已傳送至 {{email}}"
+		}
+	},
+	"register": {
+		"header": "建立帳戶",
+		"description": "輸入您的電子郵件與密碼以建立帳戶",
+		"buttons": {
+			"register": "建立帳戶",
+			"resendConfirmation": "重新傳送驗證郵件",
+			"login": "登入"
+		},
+		"passwordStrength": {
+			"length": "長度",
+			"uppercase": "大寫字元",
+			"lowercase": "小寫字元",
+			"specialChars": "特殊字元"
+		},
+		"placeholders": {
+			"normal": {
+				"email": "電子郵件地址",
+				"password": "密碼",
+				"confirmPassword": "確認密碼"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"dialogs": {
+			"confirmationSend": {
+				"title": "重新傳送驗證郵件",
+				"continue": "傳送",
+				"placeholder": "電子郵件地址"
+			}
+		},
+		"alerts": {
+			"passwordWeak": "密碼太弱",
+			"confirmationSent": "驗證郵件已傳送至 {{email}}",
+			"passwordsNotMatching": "密碼不一致",
+			"success": {
+				"title": "已建立帳戶",
+				"continue": "繼續",
+				"description": "我們已向 {{email}} 傳送了一封驗證郵件。請點擊郵件中的連結以確認註冊。請確保檢查您的垃圾郵件資料夾。"
+			}
+		}
+	},
+	"reset": {
+		"header": "重設密碼",
+		"description": "輸入您的電子郵件地址與新密碼並匯入主金鑰以重設密碼",
+		"importMasterKeys": "匯入主金鑰",
+		"masterKeysImported": "已匯入主金鑰",
+		"masterKeysNotImported": "未匯入任何主金鑰",
+		"placeholders": {
+			"normal": {
+				"email": "電子郵件地址",
+				"password": "密碼",
+				"confirmPassword": "確認密碼"
+			},
+			"example": {
+				"email": "me@example.com",
+				"password": "****************",
+				"confirmPassword": "****************"
+			}
+		},
+		"buttons": {
+			"reset": "重設",
+			"back": "返回"
+		},
+		"dialogs": {
+			"noMasterKeysImported": {
+				"title": "重設密碼",
+				"continue": "我了解",
+				"description": "我了解，由於零知識端對端加密的原理，如果不使用匯出的主金鑰重設密碼，我將無法存取儲存在我帳戶中的所有資料。"
+			},
+			"noMasterKeysImported2": {
+				"title": "重設密碼",
+				"continue": "我確定",
+				"description": "您確定嗎？如果不匯入主金鑰，您將刪除帳戶中儲存的所有資料。如果您沒有主金鑰檔案並且想要重設帳戶，您可以忽略此警告。"
+			},
+			"noMasterKeysImported3": {
+				"title": "重設密碼",
+				"continue": "是的",
+				"description": "您真的確定嗎？"
+			}
+		},
+		"alerts": {
+			"invalidMasterKeysFile": "主金鑰檔案無效",
+			"invalidMasterKeysFileWrongUserId": "這些金鑰屬於不同的帳戶",
+			"masterKeysImported": "已匯入主金鑰",
+			"passwordWeak": "密碼太弱",
+			"passwordsNotMatching": "密碼不一致",
+			"invalidMasterKeys": "主金鑰無效",
+			"passwordChanged": "密碼變更成功"
+		}
+	},
+	"auth": {
+		"footer": {
+			"tos": "服務條款",
+			"privacy": "隱私"
+		}
+	},
+	"api": {
+		"errors": {
+			"invalid_params": "無效參數",
+			"internal_error": "內部錯誤",
+			"rate_limited": "已達速率限制"
+		}
+	},
+	"topbar": {
+		"placeholders": {
+			"normal": {
+				"search": "在此資料夾中搜尋..."
+			},
+			"example": {
+				"search": "在此資料夾中搜尋..."
+			}
+		}
+	},
+	"dropZone": {
+		"cta": "上傳到這裡",
+		"chatsCta": "附加到對話"
+	},
+	"topBar": {
+		"breadcrumb": {
+			"cloudDrive": "雲端硬碟"
+		},
+		"searchInThisFolder": "在此資料夾中搜尋...",
+		"breadcrumbs": {
+			"recents": "近期存取",
+			"cloudDrive": "雲端硬碟",
+			"links": "連結",
+			"sharedWithMe": "與我共用",
+			"sharedWithOthers": "與他人共用",
+			"favorites": "喜好項目",
+			"trash": "垃圾桶",
+			"directory": "資料夾"
+		},
+		"listView": "清單檢視",
+		"gridView": "格狀檢視"
+	},
+	"innerSideBar": {
+		"top": {
+			"settings": "設定",
+			"notes": "筆記",
+			"chats": "對話",
+			"contacts": "聯絡人",
+			"syncs": "同步",
+			"mounts": "掛載"
+		},
+		"bottom": {
+			"settings": "設定"
+		},
+		"notes": {
+			"search": "搜尋...",
+			"tags": {
+				"all": "所有",
+				"favorites": "喜好項目",
+				"pinned": "已釘選"
+			},
+			"createNote": "建立筆記",
+			"createTag": "建立標籤",
+			"empty": "暫無筆記",
+			"emptyCreate": "建立",
+			"emptySearch": "找不到與 \"{{search}}\" 相符的內容"
+		},
+		"chats": {
+			"empty": "暫無對話",
+			"emptyCreate": "建立",
+			"search": "搜尋...",
+			"createChat": "建立對話",
+			"emptySearch": "找不到與 \"{{search}}\" 相符的內容"
+		},
+		"recents": "近期存取",
+		"cloudDrive": "雲端硬碟",
+		"links": "連結",
+		"sharedWithMe": "與我共用",
+		"sharedWithOthers": "與他人共用",
+		"favorites": "喜好項目",
+		"trash": "垃圾桶",
+		"settings": {
+			"general": "一般",
+			"invoices": "明細",
+			"subscriptions": "訂閱",
+			"account": "帳戶",
+			"events": "事件",
+			"security": "安全",
+			"invite": "邀請",
+			"plans": "方案"
+		},
+		"contacts": {
+			"online": "線上",
+			"offline": "離線",
+			"all": "所有",
+			"blocked": "已封鎖",
+			"in": "收到的請求",
+			"out": "發出的請求"
+		},
+		"mounts": {
+			"networkDrive": "網路硬碟",
+			"s3": "S3",
+			"webdav": "WebDAV"
+		},
+		"syncs": {
+			"empty": "暫無同步",
+			"emptyCreate": "建立",
+			"nothingFound": "找不到與 \"{{search}}\" 相符的內容",
+			"createSync": "建立同步",
+			"search": "搜尋...",
+			"emptySearch": "找不到與 \"{{search}}\" 相符的內容"
+		}
+	},
+	"sideBar": {
+		"cloudDrive": "雲端硬碟",
+		"transfers": "傳輸作業",
+		"notes": "筆記",
+		"chats": "對話",
+		"contacts": "聯絡人",
+		"settings": "設定",
+		"syncs": "同步",
+		"mounts": "掛載",
+		"terminal": "終端"
+	},
+	"dialogs": {
+		"cancel": "取消",
+		"selectDriveItem": {
+			"title": "選擇",
+			"submit": "選擇",
+			"newFolder": "新增資料夾",
+			"empty": "尚未上傳檔案或資料夾",
+			"selectRoot": "從雲端硬碟中選擇"
+		},
+		"selectContacts": {
+			"title": "選擇聯絡人",
+			"submit": "選擇",
+			"empty": "未選擇任何聯絡人"
+		},
+		"publicLink": {
+			"title": "公開連結",
+			"description": "建立公開連結",
+			"close": "關閉",
+			"save": "儲存",
+			"enabled": "已啟用",
+			"downloadButton": "下載按鈕",
+			"link": "連結",
+			"copyLink": "複製",
+			"expiresAfter": "過期於",
+			"password": "密碼（留空表示停用）",
+			"passwordPlaceholder": "密碼",
+			"progress": "已將 {{done}} / {{total}} 個項目加入到公開連結",
+			"expireNever": "永不",
+			"subscriptionNeeded": "您需要一個有效的訂閱方案才能建立公開連結",
+			"upgradeNow": "現在升級"
+		},
+		"sharedWith": {
+			"title": "共用給",
+			"add": "加入",
+			"close": "關閉",
+			"remove": "移除",
+			"stopSharing": {
+				"title": "停止共用",
+				"description": "您確定要停止與 {{name}} 共用 {{item}} 嗎？",
+				"continue": "停止共用"
+			}
+		},
+		"changeEmail": {
+			"title": "變更您的電子郵件地址",
+			"newEmail": "新電子郵件地址",
+			"newEmailPlaceholder": "新電子郵件地址",
+			"confirmNewEmail": "確認新電子郵件地址",
+			"confirmNewEmailPlaceholder": "確認新電子郵件地址",
+			"password": "您的密碼",
+			"passwordPlaceholder": "密碼",
+			"close": "關閉",
+			"save": "儲存",
+			"successToast": "已成功變更您的電子郵件地址",
+			"alerts": {
+				"success": {
+					"title": "電子郵件地址已變更",
+					"continue": "繼續",
+					"description": "我們已向 {{email}} 傳送了一封確認郵件。請點擊郵件中的連結確認您的新電子郵件地址。請確保檢查您的垃圾郵件資料夾。",
+					"dismiss": "關閉"
+				}
+			}
+		},
+		"changePassword": {
+			"title": "變更您的密碼",
+			"newPassword": "新密碼",
+			"newPasswordPlaceholder": "新密碼",
+			"confirmNewPassword": "確認新密碼",
+			"confirmNewPasswordPlaceholder": "確認新密碼",
+			"currentPassword": "目前密碼",
+			"currentPasswordPlaceholder": "目前密碼",
+			"close": "關閉",
+			"save": "儲存",
+			"successToast": "已成功變更密碼"
+		},
+		"personalInformation": {
+			"title": "修改個人資料",
+			"firstName": "名",
+			"lastName": "姓",
+			"close": "關閉",
+			"save": "儲存",
+			"companyName": "公司名稱",
+			"vatId": "加值營業稅號",
+			"street": "街道",
+			"streetNumber": "街道號碼",
+			"city": "城市",
+			"postalCode": "郵遞區號",
+			"country": "國家",
+			"needsCountrySetup": "請選擇國家以計算正確的加值營業稅。"
+		},
+		"twoFactorCode": {
+			"useRecoveryKey": "改用復原金鑰",
+			"recoveryKeyPlaceholder": "復原金鑰",
+			"title": "兩步驟驗證",
+			"continue": "繼續",
+			"info": "請輸入您的兩步驟驗證碼"
+		},
+		"noteParticipants": {
+			"remove": "移除",
+			"toggleReadPermissions": "變更為僅檢視",
+			"toggleWritePermissions": "變更為可編輯",
+			"title": "參與者",
+			"close": "關閉"
+		},
+		"fileVersions": {
+			"title": "檔案版本紀錄",
+			"delete": {
+				"title": "刪除檔案版本紀錄",
+				"description": "您確定要永久刪除 {{name}} 嗎？此動作無法復原！",
+				"continue": "刪除"
+			}
+		},
+		"noteHistory": {
+			"empty": "暫無筆記版本記錄"
+		},
+		"previewDialog": {
+			"save": "儲存",
+			"readOnly": "唯讀"
+		},
+		"transparentFullScreenImage": {
+			"openOriginal": "開啟原圖"
+		},
+		"report": {
+			"title": "檢舉濫用行為",
+			"email": "電子郵件地址",
+			"emailPlaceholder": "電子郵件地址",
+			"comment": "評論",
+			"commentPlaceholder": "請提供所有必要的詳細資訊，以便我們盡快採取適當行動（選填）",
+			"reason": "原因",
+			"close": "關閉",
+			"send": "送出",
+			"successToast": "已送出濫用行為檢舉",
+			"reasons": {
+				"cp": "兒童色情",
+				"dmca": "侵犯著作權",
+				"stolen": "竊取的資料",
+				"other": "其他",
+				"spam": "濫發訊息",
+				"malware": "惡意軟體"
+			}
+		},
+		"profile": {
+			"memberSince": "成為成員於 {{since}}",
+			"add": "傳送聯絡人請求",
+			"block": "封鎖",
+			"remove": "從聯絡人中移除",
+			"unblock": "解除封鎖"
+		},
+		"createSync": {
+			"cancel": "取消",
+			"create": "建立",
+			"name": "同步名稱",
+			"localPath": "本機路徑",
+			"remotePath": "雲端路徑",
+			"select": "選擇",
+			"syncMode": "同步模式",
+			"title": "建立同步",
+			"paused": "已暫停",
+			"excludeDotFiles": "排除以點開頭的檔案（建議）",
+			"disableLocalTrash": "停用本機垃圾桶並永久刪除項目",
+			"mode": {
+				"twoWay": "雙向",
+				"localToCloud": "本機到雲端",
+				"localBackup": "本機備份",
+				"cloudToLocal": "雲端到本機",
+				"cloudBackup": "雲端備份",
+				"twoWayInfo": "雙向同步每個動作",
+				"localToCloudInfo": "將本機的動作同步到雲端，但不將雲端的動作同步到本機",
+				"localBackupInfo": "僅將本機資料上傳到雲端，不刪除雲端資料，也不將雲端的動作同步到本機",
+				"cloudToLocalInfo": "將雲端的動作同步到本機，但不將本機的動作同步到雲端",
+				"cloudBackupInfo": "僅將雲端資料下載到本機，不刪除本機資料，也不將本機的動作同步到雲端"
+			},
+			"errors": {
+				"localPathNotWritable": "無法寫入您選擇的本機路徑。請確保用戶端可以存取該路徑。",
+				"invalidLocalPath": "您選擇的本機路徑無效，無法同步。請選擇其他路徑。",
+				"remotePathAlreadyConfigured": "您選擇的雲端路徑已被其他同步設定使用。這可能會導致無限同步循環。",
+				"localPathAlreadyConfigured": "您選擇的本機路徑已被其他同步設定使用。這可能會導致無限同步循環。",
+				"syncNameAlreadyExists": "已存在名為 \"{{name}}\" 的同步設定。",
+				"localPathSyncedByICloud": "您無法同步已被 iCloud 同步的路徑。"
+			},
+			"warnings": {
+				"localDirectoryBig": {
+					"title": "警告",
+					"continue": "繼續",
+					"description": "同步超過 {{count}} 個項目可能會降低系統速度，尤其是在低階裝置上。如果您使用的是高階裝置，您可以繼續，但我們建議同步較少的檔案以避免潛在問題。"
+				},
+				"localDirectoryNotPhysical": {
+					"title": "警告",
+					"continue": "繼續",
+					"description": "您選擇的本機資料夾似乎不在實體磁碟上。這可能導致同步問題和不可預期的行為。要繼續嗎？"
+				}
+			}
+		},
+		"info": {
+			"title": "資訊",
+			"close": "關閉",
+			"directoryType": "資料夾",
+			"size": "大小",
+			"type": "類型",
+			"name": "名稱",
+			"location": "位置",
+			"modified": "修改日期",
+			"uploaded": "上傳日期",
+			"files": "檔案",
+			"directories": "資料夾"
+		},
+		"desktopUpdate": {
+			"title": "有可用更新",
+			"info": "已下載新版本 ({{version}}) 並可安裝。是否更新？",
+			"dismiss": "忽略",
+			"update": "更新",
+			"installing": "正在安裝更新，請不要中斷此處理程序！"
+		},
+		"storage": {
+			"title": "儲存空間不足",
+			"info": "您的儲存空間不足。訂閱方案以上傳更多檔案。所有方案的儲存空間都可以疊加。您可以訂閱任意數量方案。",
+			"dismiss": "忽略",
+			"upgrade": "升級"
+		},
+		"event": {
+			"title": "事件"
+		},
+		"exportReminder": {
+			"title": "匯出主金鑰",
+			"description": "請匯出您的主金鑰並將存放在分開且安全的位置。重設密碼時需要主金鑰以防止資料遺失。每次變更密碼後都需要匯出主金鑰。",
+			"continue": "匯出",
+			"dismiss": "忽略"
+		},
+		"pdfPassword": {
+			"title": "密碼",
+			"continue": "解鎖",
+			"placeholder": "密碼"
+		}
+	},
+	"contextMenus": {
+		"item": {
+			"download": "下載",
+			"publicLink": "公開連結",
+			"share": "共用",
+			"shareProgress": "已共用 {{done}} 個項目",
+			"versions": "版本紀錄",
+			"favorite": "加入喜好項目",
+			"unfavorite": "移除喜好項目",
+			"rename": "重新命名",
+			"move": "移動",
+			"trash": "移至垃圾桶",
+			"restore": "復原",
+			"preview": "預覽",
+			"edit": "編輯",
+			"remove": "移除",
+			"stopSharing": "停止共用",
+			"selectDestination": "選擇目標位置",
+			"cloudDrive": "雲端硬碟",
+			"open": "開啟",
+			"color": "顏色",
+			"deletePermanently": "永久刪除",
+			"copyId": "複製 ID",
+			"info": "資訊",
+			"manageShareOut": "管理共用",
+			"manageShareIn": "移除共用",
+			"dialogs": {
+				"trash": {
+					"title": "移至垃圾桶",
+					"description": "您確定要將 {{name}} 移到垃圾桶嗎？您之後可以隨時復原它。",
+					"continue": "確定"
+				},
+				"trashMultiple": {
+					"title": "移至垃圾桶",
+					"description": "您確定要將 {{count}} 個項目移到垃圾桶嗎？您之後可以隨時復原它們。",
+					"continue": "確定"
+				},
+				"deletePermanently": {
+					"title": "永久刪除",
+					"description": "您確定要永久刪除 {{name}} 嗎？此動作無法復原！",
+					"continue": "刪除"
+				},
+				"deletePermanentlyMultiple": {
+					"title": "永久刪除",
+					"description": "您確定要永久刪除 {{count}} 個項目嗎？此動作無法復原！",
+					"continue": "刪除"
+				}
+			}
+		},
+		"drive": {
+			"uploadFiles": "上傳檔案",
+			"uploadFolders": "上傳資料夾",
+			"newTextFile": "新建文字檔案",
+			"newFolder": "新增資料夾"
+		},
+		"notes": {
+			"history": "歷史紀錄",
+			"participants": "參與者",
+			"type": "筆記類型",
+			"pin": "釘選",
+			"unpin": "取消釘選",
+			"favorite": "加入喜好項目",
+			"unfavorite": "移除喜好項目",
+			"duplicate": "建立副本",
+			"export": "匯出",
+			"exportAll": "匯出所有",
+			"archive": "封存",
+			"restore": "復原",
+			"trash": "移至垃圾桶",
+			"delete": "刪除",
+			"rename": "重新命名",
+			"tags": "標籤",
+			"leave": "離開",
+			"copyId": "複製 ID",
+			"createTag": "建立標籤",
+			"types": {
+				"md": "Markdown",
+				"rich": "富文字",
+				"text": "純文字",
+				"checklist": "清單",
+				"code": "程式碼"
+			}
+		},
+		"contacts": {
+			"profile": "個人資料",
+			"remove": "移除",
+			"block": "封鎖"
+		},
+		"chat": {
+			"input": {
+				"selectFromDrive": "從雲端硬碟中選擇",
+				"attachFiles": "新增附件"
+			}
+		},
+		"chats": {
+			"editName": "編輯名稱",
+			"leave": "離開",
+			"delete": "刪除",
+			"copyId": "複製 ID"
+		},
+		"syncs": {
+			"delete": "刪除",
+			"pause": "暫停",
+			"resume": "繼續"
+		}
+	},
+	"transfers": {
+		"title": "傳輸作業",
+		"remaining": "剩餘約 {{time}}",
+		"noActiveTransfers": "暫無傳輸作業",
+		"state": {
+			"finished": "已完成",
+			"queued": "已加入佇列",
+			"started": "已開始",
+			"error": "發生錯誤",
+			"stopped": "已停止",
+			"paused": "已暫停",
+			"creatingDirectories": "正在建立資料夾",
+			"finishing": "整理中"
+		},
+		"pause": "暫停",
+		"resume": "繼續",
+		"stop": "停止"
+	},
+	"chats": {
+		"newMessagesSince": "自 {{since}} 以來有 {{count}} 條新訊息",
+		"markAsRead": "標記為已讀",
+		"maxSizeReached": "最大訊息長度限制為 {{chars}} 個字元",
+		"newMessageSince": "自 {{since}} 以來有 {{count}} 條新訊息",
+		"showParticipants": "顯示參與者",
+		"hideParticipants": "隱藏參與者",
+		"addParticipants": "新增參與者",
+		"emojisMatching": "與 {{text}} 相符的表情符號",
+		"empty": {
+			"title": "暫無對話",
+			"description": "您建立或被加入的對話會顯示在這裡",
+			"create": "建立"
+		},
+		"header": {
+			"title": "端對端加密",
+			"description": "Filen 預設使用零知識端對端加密保護所有對話。",
+			"feature1": "只有對話成員可以解密並閱讀內容",
+			"feature2": "系統會確保收到的資料的確來自其所顯示的使用者且沒有被竄改"
+		},
+		"message": {
+			"time": {
+				"now": "現在",
+				"secondAgo": "{{seconds}} 秒前",
+				"secondsAgo": "{{seconds}} 秒前",
+				"minuteAgo": "{{minutes}} 分鐘前",
+				"minutesAgo": "{{minutes}} 分鐘前",
+				"hourAgo": "{{hours}} 小時前",
+				"hoursAgo": "{{hours}} 小時前",
+				"todayAt": "今天 {{date}}",
+				"yesterdayAt": "昨天 {{date}}"
+			},
+			"edited": "已編輯",
+			"reply": "回覆",
+			"delete": "刪除",
+			"edit": "編輯",
+			"copyId": "複製 ID",
+			"copyText": "複製文字",
+			"leave": "離開"
+		},
+		"input": {
+			"placeholder": "傳送一條訊息...",
+			"typing": "正在輸入...",
+			"typingMultiple": "正在輸入...",
+			"replyingTo": "正在回覆",
+			"placeholderMobile": "訊息..."
+		},
+		"dialogs": {
+			"deleteMessage": {
+				"title": "刪除訊息",
+				"description": "您確定要刪除此訊息嗎？此動作無法復原！",
+				"continue": "刪除"
+			},
+			"removeParticipant": {
+				"title": "移除參與者",
+				"description": "您確定要從此對話中移除 {{name}} 嗎？",
+				"continue": "移除"
+			},
+			"deleteConversation": {
+				"title": "刪除對話",
+				"description": "您確定要刪除此對話嗎？此動作無法復原！",
+				"continue": "刪除"
+			},
+			"leaveConversation": {
+				"title": "離開對話",
+				"description": "您確定要離開此對話嗎？",
+				"continue": "離開"
+			},
+			"editName": {
+				"title": "編輯名稱",
+				"placeholder": "新名稱",
+				"continue": "儲存"
+			}
+		},
+		"embeds": {
+			"og": {
+				"noTitleAvailable": "無可用標題",
+				"noDescriptionAvailable": "無可用描述",
+				"noImageAvailable": "無可用圖像"
+			}
+		},
+		"participants": {
+			"profile": "個人資料",
+			"remove": "移除"
+		}
+	},
+	"contacts": {
+		"addContact": "新增聯絡人",
+		"search": "搜尋...",
+		"empty": "暫無聯絡人",
+		"emptySearch": "找不到與 \"{{search}}\" 相符的內容",
+		"openChat": "開啟對話",
+		"more": "更多",
+		"dialogs": {
+			"unblock": {
+				"title": "解除封鎖用戶",
+				"description": "您確定要解除封鎖 {{name}} 嗎？",
+				"continue": "解除封鎖"
+			},
+			"remove": {
+				"title": "移除聯絡人",
+				"description": "您確定要從聯絡人中移除 {{name}} 嗎？",
+				"continue": "移除"
+			},
+			"block": {
+				"title": "封鎖用戶",
+				"description": "您確定要封鎖 {{name}} 嗎？",
+				"continue": "封鎖"
+			},
+			"sendRequest": {
+				"title": "傳送聯絡人請求",
+				"placeholder": "Filen 用戶的電子郵件地址",
+				"continue": "傳送"
+			}
+		}
+	},
+	"settings": {
+		"dialogs": {
+			"deleteVersions": {
+				"title": "刪除檔案版本",
+				"description": "您確定要刪除所有檔案版本嗎？此動作無法復原！",
+				"continue": "刪除"
+			},
+			"deleteAll": {
+				"title": "刪除所有檔案和資料夾",
+				"description": "您確定要刪除所有檔案和資料夾嗎？此動作無法復原！",
+				"continue": "刪除"
+			},
+			"deleteAll2": {
+				"title": "刪除所有檔案和資料夾",
+				"description": "您真的確定嗎？此動作無法復原！",
+				"continue": "刪除"
+			},
+			"deleteAll3": {
+				"title": "刪除所有檔案和資料夾",
+				"description": "您 100% 確定嗎？此動作無法復原！",
+				"continue": "刪除"
+			},
+			"requestAccountDeletion": {
+				"title": "刪除帳戶",
+				"description": "您確定要刪除您的帳戶與所有相關資料嗎？我們會向您傳送確認電子郵件。此動作無法復原！",
+				"continue": "請求刪除"
+			},
+			"logout": {
+				"title": "登出",
+				"description": "您確定要登出嗎？",
+				"continue": "登出"
+			},
+			"clearThumbnailCache": {
+				"title": "清除縮圖快取",
+				"description": "您確定要清除本機縮圖快取嗎？這會釋出本機儲存空間，但當再度需要使用時需要重新產生。",
+				"continue": "清除"
+			},
+			"cancelSubscription": {
+				"title": "取消訂閱",
+				"description": "您確定要取消訂閱嗎？",
+				"continue": "取消訂閱",
+				"close": "關閉"
+			},
+			"nickName": {
+				"title": "編輯暱稱",
+				"placeholder": "新暱稱",
+				"continue": "儲存",
+				"invalid": "暱稱須為長度介於 3 到 32 個字元之間的英數字元、連字號或底線。"
+			},
+			"twoFactorAuthenticationRecoveryKey": {
+				"title": "復原金鑰",
+				"description": "請將您的兩步驟驗證復原金鑰儲存在安全的地方。如果您遺失了兩步驟驗證裝置，這是重新取得帳戶存取權限的唯一方法！",
+				"continue": "完成"
+			}
+		},
+		"general": {
+			"storageUsed": "儲存空間使用量",
+			"files": "檔案 {{size}}",
+			"versionedFiles": "版本檔案 {{size}}",
+			"free": "可用 {{size}}",
+			"used": "{{used}} / {{max}}",
+			"dark": "深色",
+			"light": "淺色",
+			"system": "系統",
+			"noteType": {
+				"md": "Markdown",
+				"rich": "富文字",
+				"text": "純文字",
+				"checklist": "清單",
+				"code": "程式碼"
+			},
+			"sections": {
+				"defaultNoteType": {
+					"name": "預設筆記類型",
+					"info": "變更預設筆記類型"
+				},
+				"chatNotifications": {
+					"name": "對話通知",
+					"info": "開啟或關閉對話通知"
+				},
+				"notificationSound": {
+					"name": "通知音效",
+					"info": "開啟或關閉通知音效"
+				},
+				"contactNotifications": {
+					"name": "聯絡人通知",
+					"info": "開啟或關閉聯絡人通知"
+				},
+				"theme": {
+					"name": "佈景主題",
+					"info": "變更應用程式外觀"
+				},
+				"language": {
+					"name": "語言",
+					"info": "變更應用程式語言"
+				},
+				"clearThumbnailCache": {
+					"name": "縮圖快取",
+					"info": "清除縮圖快取",
+					"action": "清除"
+				},
+				"logout": {
+					"name": "登出",
+					"info": "登出",
+					"action": "登出"
+				},
+				"minimizeToTray": {
+					"name": "最小化到系統列",
+					"info": "將 Filen 隱藏到系統列中，而不是將視窗最小化"
+				},
+				"startMinimized": {
+					"name": "以最小化啟動",
+					"info": "開啟或關閉以最小化啟動"
+				},
+				"autoLaunch": {
+					"name": "自動啟動",
+					"info": "開機時自動啟動 Filen"
+				},
+				"exportDesktopLogs": {
+					"name": "匯出記錄檔",
+					"info": "匯出所有桌面用戶端記錄檔",
+					"action": "匯出"
+				}
+			}
+		},
+		"invite": {
+			"copy": "複製",
+			"title": "邀請他人即可獲得最多 30 GB 的儲存空間",
+			"description": "每邀請一位朋友，您都會收到 {{yourEarnings}} ── 您的朋友也會收到 {{otherEarnings}}。就是這麼簡單。",
+			"earned": "{{earned}} / {{max}}",
+			"storageEarned": "已獲得的儲存空間"
+		},
+		"events": {
+			"empty": "暫無事件",
+			"fileUploaded": "{{name}} 已上傳",
+			"fileVersioned": "{{name}} 已加入版本紀錄",
+			"versionedFileRestored": "{{name}} 已從版本檔案中復原",
+			"fileMoved": "{{name}} 已移動",
+			"fileRenamed": "{{name}} 已重新命名為 {{newName}}",
+			"fileTrash": "{{name}} 已移到垃圾桶",
+			"fileRm": "{{name}} 已刪除",
+			"fileRestored": "{{name}} 已從垃圾桶中復原",
+			"fileShared": "{{name}} 已共用給 {{email}}",
+			"fileLinkEdited": "已編輯 {{name}} 的公開連結",
+			"folderTrash": "{{name}} 已移動到垃圾桶",
+			"folderShared": "{{name}} 已共用給 {{email}}",
+			"folderMoved": "{{name}} 已移動",
+			"folderRenamed": "{{name}} 已重新命名為 {{newName}}",
+			"subFolderCreated": "{{name}} 已建立",
+			"baseFolderCreated": "{{name}} 已建立",
+			"folderRestored": "{{name}} 已從垃圾桶中復原",
+			"folderColorChanged": "已變更 {{name}} 的顏色",
+			"login": "已登入",
+			"deleteVersioned": "已刪除版本檔案",
+			"deleteAll": "已刪除所有檔案和資料夾",
+			"deleteUnfinished": "已刪除未完成的上傳",
+			"trashEmptied": "已清空垃圾桶",
+			"requestAccountDeletion": "已請求刪除帳戶",
+			"2faEnabled": "已啟用兩步驟驗證",
+			"2faDisabled": "已停用兩步驟驗證",
+			"codeRedeemed": "已兌換代碼 {{code}}",
+			"emailChanged": "電子郵件地址已變更為 {{email}}",
+			"passwordChanged": "密碼已變更",
+			"removedSharedInItems": "已刪除來自 {{email}} 的 {{count}} 個共用項目",
+			"removedSharedOutItems": "已刪除 {{count}} 個與 {{email}} 共用的項目",
+			"folderLinkEdited": "已編輯資料夾連結",
+			"itemFavoriteAdded": "{{name}} 已被加入到喜好項目",
+			"itemFavoriteRemoved": "{{name}} 已從喜好項目中移除",
+			"failedLogin": "登入失敗",
+			"deleteFolderPermanently": "{{name}} 已永久刪除",
+			"deleteFilePermanently": "{{name}} 已永久刪除",
+			"emailChangeAttempt": "已記錄電子郵件變更嘗試"
+		},
+		"invoices": {
+			"plan": "方案",
+			"method": "方式",
+			"date": "日期",
+			"download": "下載",
+			"amount": "數量",
+			"paid": "已支付",
+			"noInvoices": "暫無明細",
+			"paymentMethod": "付款方式"
+		},
+		"subscriptions": {
+			"plan": "方案",
+			"method": "方式",
+			"date": "日期",
+			"download": "下載",
+			"amount": "數量",
+			"status": "狀態",
+			"noSubscriptions": "尚無訂閱",
+			"cancel": "取消",
+			"storage": "儲存空間",
+			"moreInfo": "關於您的訂閱的更多資訊",
+			"paymentMethod": "付款方式",
+			"info": "{{storage}} 儲存空間，無限上傳、下載、筆記和對話。解鎖 Filen 的全部潛力。",
+			"statuses": {
+				"cancelled": "已取消",
+				"active": "已啟用",
+				"waiting": "等待中"
+			},
+			"cannotCancelTooEarly": "訂閱只能在初次購買後的 24 小時內取消。",
+			"billingDetails": "帳單詳情"
+		},
+		"plans": {
+			"starter": "入門",
+			"monthly": "按月",
+			"annually": "按年",
+			"lifetime": "終身",
+			"buyNow": "立即購買",
+			"payInvoice": "支付明細",
+			"sale": "销售",
+			"limited": "限量供應",
+			"creditCard": "信用卡",
+			"crypto": "加密貨幣",
+			"legal1": "購買方案即表示您授權 Filen 在每個帳單週期自動向您收費，直到您取消。您可以隨時在帳戶頁面取消。不接受部分退款。",
+			"legal2": "您也自動同意我們的",
+			"tos": "服務條款",
+			"and": "和",
+			"privacyPolicy": "隱私權政策",
+			"features": {
+				"free": {
+					"1": "無限頻寬",
+					"2": "無限上傳",
+					"3": "用戶端加密",
+					"4": "零知識技術",
+					"5": "同步",
+					"6": "網路磁碟",
+					"7": "有限檔案共用",
+					"8": "有限筆記",
+					"9": "有限對話"
+				},
+				"pro": {
+					"1": "無限頻寬",
+					"2": "無限上傳",
+					"3": "用戶端加密",
+					"4": "零知識技術",
+					"5": "同步",
+					"6": "網路磁碟",
+					"7": "無限檔案共用",
+					"8": "無限筆記",
+					"9": "無限對話"
+				}
+			}
+		},
+		"security": {
+			"sections": {
+				"password": {
+					"name": "密碼",
+					"info": "變更您的密碼",
+					"action": "變更"
+				},
+				"twoFactorAuthentication": {
+					"name": "兩步驟驗證",
+					"info": "啟用或停用兩步驟驗證"
+				},
+				"exportMasterKeys": {
+					"name": "匯出主金鑰",
+					"info": "匯出主金鑰，以便在需要重設密碼時可以復原帳戶。每次變更密碼時都需要匯出主金鑰。",
+					"action": "匯出",
+					"subInfo": "請匯出您的主金鑰並將存放在分開且安全的位置。重設密碼時需要主金鑰以防止資料遺失。每次變更密碼後都需要匯出主金鑰。"
+				},
+				"lockTimeout": {
+					"name": "鎖定應用程式",
+					"info": "當您處於不活動狀態一段時間後鎖定應用程式。您需要設定 PIN 才能使螢幕鎖定正常工作",
+					"values": {
+						"never": "永不",
+						"immediately": "立即",
+						"oneMinute": "1 分鐘",
+						"threeMinutes": "3 分鐘",
+						"fiveMinutes": "5 分鐘",
+						"tenMinutes": "10 分鐘",
+						"fifteenMinutes": "15 分鐘",
+						"thirtyMinutes": "30 分鐘",
+						"oneHour": "1 小時",
+						"threeHours": "3 小時",
+						"sixHours": "6 小時",
+						"twelveHours": "12 小時",
+						"twentyFourHours": "24 小時"
+					}
+				},
+				"lockPin": {
+					"name": "鎖定 PIN",
+					"info": "設定 PIN 碼以解鎖應用程式",
+					"action": "變更"
+				}
+			},
+			"dialogs": {
+				"lockPin": {
+					"notMatching": "您輸入的 PIN 碼不符合",
+					"enterPin": "輸入 PIN 碼",
+					"confirmPin": "確認 PIN 碼"
+				},
+				"lock": {
+					"wrongPin": "錯誤的 PIN 碼",
+					"tooManyAttempts": "嘗試解鎖太多次，請稍後再試。"
+				}
+			}
+		},
+		"account": {
+			"sections": {
+				"avatar": {
+					"name": "頭像",
+					"info": "您的頭像會公開顯示",
+					"action": "編輯",
+					"invalid": "圖像無效。允許的檔案類型為 PNG 和 JPG，最大大小為 2MB。"
+				},
+				"versionedFiles": {
+					"name": "版本檔案",
+					"info": "刪除所有版本檔案",
+					"action": "刪除"
+				},
+				"all": {
+					"name": "所有檔案和資料夾",
+					"info": "刪除所有檔案和資料夾",
+					"action": "刪除"
+				},
+				"email": {
+					"name": "電子郵件地址",
+					"info": "變更您的電子郵件地址",
+					"action": "變更"
+				},
+				"nickName": {
+					"name": "暱稱",
+					"info": "變更您的暱稱",
+					"action": "變更"
+				},
+				"personalInformation": {
+					"name": "個人資料",
+					"info": "編輯您的個人資料。僅供企業客戶使用。將用於開立明細且不公開",
+					"action": "編輯"
+				},
+				"fileVersioning": {
+					"name": "檔案版本",
+					"info": "啟用或停用檔案版本"
+				},
+				"loginAlerts": {
+					"name": "登入警報",
+					"info": "啟用或停用登入警報"
+				},
+				"appearOffline": {
+					"name": "顯示為離線",
+					"info": "在對話中顯示為離線"
+				},
+				"requestAccountData": {
+					"name": "請求帳戶資料",
+					"info": "根據 GDPR 請求我們儲存的所有個人資料",
+					"action": "請求"
+				},
+				"requestAccountDeletion": {
+					"name": "請求刪除帳戶",
+					"info": "請求刪除您的帳戶。我們會向您傳送確認郵件",
+					"action": "請求"
+				}
+			}
+		}
+	},
+	"drive": {
+		"header": {
+			"name": "名稱",
+			"size": "大小",
+			"modified": "修改日期"
+		},
+		"list": {
+			"item": {
+				"sharedWith": "已與 {{count}} 個人共用"
+			}
+		},
+		"dialogs": {
+			"createTextFile": {
+				"title": "建立文字檔案",
+				"placeholder": "名稱",
+				"continue": "建立",
+				"invalidFileName": "檔案名無效。"
+			},
+			"createDirectory": {
+				"title": "建立目錄",
+				"placeholder": "名稱",
+				"continue": "建立",
+				"invalidDirectoryName": "目錄名無效。"
+			},
+			"rename": {
+				"title": "重新命名",
+				"placeholder": "新名稱",
+				"continue": "重新命名",
+				"invalidFileName": "檔案名稱無效。",
+				"invalidDirectoryName": "資料夾名稱無效。"
+			},
+			"share": {
+				"title": "共用",
+				"placeholder": "Filen 用戶的電子郵件地址",
+				"continue": "共用"
+			}
+		},
+		"linksNoSub": {
+			"subscriptionNeeded": "需要訂閱",
+			"description": "升級到任何 pro 方案都會為您的帳戶解鎖公開連結的功能",
+			"upgradeNow": "立即升級"
+		},
+		"emptyPlaceholder": {
+			"uploadFiles": "上傳檔案",
+			"search": {
+				"title": "搜尋",
+				"info": "找不到與 \"{{search}}\" 相符的內容"
+			},
+			"publicLink": {
+				"title": "此資料夾為空",
+				"info": "此資料夾的所有者尚未上傳任何檔案"
+			},
+			"drive": {
+				"title": "尚未上傳任何檔案或資料夾",
+				"info": "將檔案或資料夾拖放到此處或點擊下方按鈕"
+			},
+			"trash": {
+				"title": "垃圾桶是空的",
+				"info": "移動到垃圾桶的檔案和資料夾會顯示在這裡"
+			},
+			"recents": {
+				"title": "尚未上傳任何檔案",
+				"info": "最近上傳的檔案會顯示在這裡"
+			},
+			"links": {
+				"title": "暫無公開連結",
+				"info": "檔案和資料夾的公開連結會顯示在這裡"
+			},
+			"favorites": {
+				"title": "暫無喜好項目",
+				"info": "加入喜好項目的檔案和資料夾會顯示在這裡"
+			},
+			"sharedIn": {
+				"title": "暫無與您共用的內容",
+				"info": "共用的檔案和資料夾會顯示在這裡"
+			},
+			"sharedOut": {
+				"title": "暫無與他人共用的內容",
+				"info": "共用的檔案和資料夾會顯示在這裡"
+			}
+		}
+	},
+	"publicLink": {
+		"invalid": "無效的公開連結",
+		"invalidInfo": "此公開連結已過期或不存在",
+		"back": "返回",
+		"directory": {
+			"downloadWholeDirectory": "下載整個資料夾",
+			"downloadDirectory": "下載資料夾"
+		},
+		"sideBar": {
+			"ad": {
+				"header": "我們是 Filen",
+				"title": "私密且安全的雲端儲存",
+				"info1": "隱私設計",
+				"info2": "端對端加密",
+				"info3": "零知識技術",
+				"cta": "10 GB 免費儲存空間"
+			},
+			"reportAbuse": "檢舉濫用行為"
+		},
+		"auth": {
+			"wrongPassword": "密碼錯誤",
+			"title": "此連結受密碼保護",
+			"subTitle": "請輸入傳送人提供的密碼以取得存取權限。",
+			"password": "密碼",
+			"passwordPlaceholder": "密碼",
+			"access": "存取"
+		}
+	},
+	"notes": {
+		"contentPlaceholder": "筆記內容...",
+		"maxSizeReached": "最大筆記大小限制為 {{chars}} 個字元",
+		"empty": {
+			"title": "暫無筆記",
+			"description": "您建立或被加入的筆記會顯示在這裡",
+			"create": "建立"
+		},
+		"dialogs": {
+			"removeParticipant": {
+				"title": "移除參與者",
+				"description": "您確定要從此筆記中移除 {{name}} 嗎？",
+				"continue": "移除"
+			},
+			"deleteNote": {
+				"title": "刪除筆記",
+				"description": "您確定要刪除 {{name}} 嗎？此動作無法復原！",
+				"continue": "刪除"
+			},
+			"deleteTag": {
+				"title": "刪除標籤",
+				"description": "您確定要刪除 {{name}} 嗎？此動作無法復原！",
+				"continue": "刪除"
+			},
+			"renameTag": {
+				"title": "重新命名",
+				"placeholder": "新名稱",
+				"continue": "重新命名"
+			},
+			"createTag": {
+				"title": "建立標籤",
+				"placeholder": "名稱",
+				"continue": "建立"
+			},
+			"renameNote": {
+				"title": "重新命名",
+				"placeholder": "新名稱",
+				"continue": "重新命名"
+			},
+			"leaveNote": {
+				"title": "離開筆記",
+				"description": "您確定要離開 {{name}} 嗎？您將無法再存取該筆記。",
+				"continue": "離開"
+			}
+		}
+	},
+	"previewDialog": {
+		"unsavedChanges": {
+			"title": "尚未儲存變更",
+			"description": "您確定不儲存就離開嗎？所有變更都會遺失。",
+			"continue": "關閉"
+		},
+		"pdfNoPassword": "受密碼保護的 PDF.",
+		"unlock": "解鎖"
+	},
+	"sharedIn": {
+		"dialogs": {
+			"remove": {
+				"title": "移除",
+				"description": "您確定要從您的共用中移除 {{item}} 嗎？您將無法再存取它！",
+				"continue": "移除"
+			}
+		}
+	},
+	"desktop": {
+		"dialogs": {
+			"close": {
+				"title": "關閉",
+				"description": "您確定要離開 Filen 嗎？",
+				"continue": "退出"
+			}
+		}
+	},
+	"trash": {
+		"dialogs": {
+			"empty": {
+				"title": "清空垃圾桶",
+				"description": "您確定要清空垃圾桶嗎？此動作無法復原！",
+				"continue": "清空"
+			}
+		}
+	},
+	"notifications": {
+		"chat": "對話",
+		"contactRequest": "聯絡人請求",
+		"contactRequestInfo": "{{name}} 已向您傳送聯絡人請求"
+	},
+	"cookieConsent": {
+		"description": "本網站使用 cookies 來衡量並改善您的體驗。",
+		"optOut": "拒絕",
+		"onlyNeeded": "僅必要的",
+		"accept": "接受"
+	},
+	"mounts": {
+		"networkDrive": {
+			"mountedAt": "掛載於 {{letter}}",
+			"browse": "瀏覽",
+			"clear": "清空",
+			"missingDeps": "缺少相依套件",
+			"missingDepsWindows": "您需要在系統上安裝 WinFSP 才能使用網路磁碟。",
+			"missingDepsLinux": "您需要在系統上安裝 FUSE3 才能使用網路磁碟。",
+			"missingDepsInstructions": "安裝說明",
+			"cacheUsed": "已使用 {{size}}",
+			"description": "將您的雲端硬碟掛載為網路磁碟，以便您直接在電腦上存取與管理您的檔案。享受無縫整合、即時同步並安全地存取資料，這些都在您熟悉的檔案總管中完成。",
+			"unixDescription": "將您的雲端硬碟掛載到本機目錄，以便您直接在電腦上存取與管理您的檔案。享受無縫整合、即時同步並安全地存取資料，這些都在您熟悉的檔案總管中完成。",
+			"sudo": "為了掛載或卸載雲端硬碟，用戶端可能需要管理員權限。請在系統彈出提示時允許。",
+			"limitations": "不支援在網路磁碟上安裝、執行或解壓縮應用程式和壓縮檔。",
+			"sections": {
+				"active": {
+					"name": "啟用"
+				},
+				"enabled": {
+					"name": "已啟用",
+					"info": "啟用或停用網路磁碟。切換此選項時請重新整理您的檔案總管"
+				},
+				"mountPoint": {
+					"name": "掛載點",
+					"info": "將掛載點設定為本機目錄。本機目錄需要為空且可讀寫",
+					"change": "變更"
+				},
+				"driveLetter": {
+					"name": "磁碟機代號",
+					"info": "設定網路磁碟的磁碟機代號。僅會顯示可用的代號"
+				},
+				"browse": {
+					"name": "瀏覽",
+					"info": "使用預設檔案總管瀏覽網路磁碟"
+				},
+				"cache": {
+					"name": "快取",
+					"info": "快取顯著提高了瀏覽網路磁碟的速度"
+				},
+				"cacheSize": {
+					"name": "快取大小",
+					"info": "我們建議將快取大小設定得越大越好。用戶端將使用您的本機磁碟來顯著提高虛擬磁碟的速度"
+				},
+				"cachePath": {
+					"name": "快取位置",
+					"info": "變更網路磁碟的快取位置。必須在內部磁碟上。如果未變更，預設會使用應用程式的安裝目錄"
+				},
+				"readOnly": {
+					"name": "唯讀",
+					"info": "將網路磁碟掛載為唯讀"
+				}
+			},
+			"dialogs": {
+				"cleanupCache": {
+					"title": "清除快取",
+					"description": "您確定要清除本機快取嗎？清除快取會顯著降低初次載入檔案的速度。",
+					"continue": "清除"
+				},
+				"disable": {
+					"title": "停用",
+					"description": "您確定要停用網路磁碟嗎？該磁碟上所有正在進行的動作都會被取消或引發錯誤，請確保您已不再使用。",
+					"continue": "停用"
+				}
+			},
+			"errors": {
+				"invalidMountPoint": "無效的掛載點",
+				"mountPointNotEmpty": "掛載點需要是一個空目錄。",
+				"pathNotInHomeDir": "掛載點需要在您的家目錄 (/home/<yourUsername>) 內。",
+				"pathNotInUserDir": "掛載點需要在您的使用者目錄 (/Users/<yourUsername>) 內。",
+				"invalidCachePath": "快取位置必須在有至少 10 GB 可用空間的內部磁碟上。",
+				"cachePathNotReadableWritable": "快取位置不可讀取或不可寫入。",
+				"invalidCachePathLength": "快取位置路徑太長。"
+			},
+			"transfers": {
+				"uploading": "正在背景上傳 {{total}} 個檔案",
+				"uploadingPlural": "正在背景上傳 {{total}} 個檔案",
+				"uploadingSpeed": "正在背景以 {{speed}} 的速度上傳 {{total}} 個檔案",
+				"uploadingPluralSpeed": "正在背景以 {{speed}} 的速度上傳 {{total}} 個檔案",
+				"everythingUploaded": "全部同步完成"
+			}
+		},
+		"webdav": {
+			"copyConnect": "複製",
+			"description": "啟動本機 WebDAV 伺服器，提供標準化協定以存取和管理您的雲端硬碟。這相容支援 WebDAV 的各種應用程式與裝置，提升檔案的可及性與管理性。",
+			"sections": {
+				"active": {
+					"name": "啟用"
+				},
+				"enabled": {
+					"name": "已啟用",
+					"info": "啟用或停用 WebDAV 伺服器"
+				},
+				"protocol": {
+					"name": "HTTP 協定",
+					"info": "變更 HTTP 協定"
+				},
+				"hostname": {
+					"name": "主機名稱",
+					"info": "變更伺服器應監聽的主機名稱"
+				},
+				"port": {
+					"name": "通訊埠",
+					"info": "變更伺服器應監聽的通訊埠"
+				},
+				"authMode": {
+					"name": "驗證模式",
+					"info": "變更驗證方式"
+				},
+				"username": {
+					"name": "使用者名稱",
+					"info": "變更 HTTP 身份驗證使用者名稱。這不應是您的 Filen 電子郵件或暱稱"
+				},
+				"password": {
+					"name": "密碼",
+					"info": "變更 HTTP 身份驗證密碼。這不應是您的 Filen 密碼"
+				},
+				"proxyMode": {
+					"name": "代理模式",
+					"info": "啟用代理模式。"
+				},
+				"connect": {
+					"name": "連接",
+					"info": "複製 WebDAV URL"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "停用",
+					"description": "您確定要停用 WebDAV 伺服器嗎？該伺服器上所有正在進行的動作都會被取消或引發錯誤。請確保您已不再使用。",
+					"continue": "停用"
+				}
+			},
+			"errors": {
+				"invalidPort": "通訊埠無效。接受的範圍：{{range}}。",
+				"invalidHostname": "主機名稱無效。"
+			}
+		},
+		"s3": {
+			"copyConnect": "複製",
+			"description": "啟動本機 S3 伺服器，提供標準化協定以存取和管理您的雲端硬碟。這相容支援 S3 的應用程式或裝置，提升檔案的可及性與管理性。",
+			"info": "連接到 S3 伺服器時，您需要將區域設定為 \"filen\" 並啟用 \"s3ForcePathStyle\".",
+			"sections": {
+				"active": {
+					"name": "啟用"
+				},
+				"enabled": {
+					"name": "已啟用",
+					"info": "啟用或停用 S3 伺服器"
+				},
+				"protocol": {
+					"name": "HTTP 協定",
+					"info": "變更 HTTP 協定"
+				},
+				"hostname": {
+					"name": "主機名稱",
+					"info": "變更伺服器應監聽的主機名稱"
+				},
+				"port": {
+					"name": "通訊埠",
+					"info": "變更伺服器應監聽的通訊埠"
+				},
+				"accessKeyId": {
+					"name": "AccessKeyId",
+					"info": "變更 AccessKeyId。這不應是您的 Filen 電子郵件或暱稱"
+				},
+				"secretKeyId": {
+					"name": "SecretKeyId",
+					"info": "變更 SecretKeyId。這不應是您的 Filen 密碼"
+				},
+				"connect": {
+					"name": "連接",
+					"info": "複製 WebDAV URL"
+				}
+			},
+			"dialogs": {
+				"disable": {
+					"title": "停用",
+					"description": "您確定要停用 S3 伺服器嗎？該伺服器上所有正在進行的動作都會被取消或引發錯誤。請確保您已不再使用。",
+					"continue": "停用"
+				}
+			},
+			"errors": {
+				"invalidPort": "通訊埠無效。接受的範圍：{{range}}。",
+				"invalidHostname": "主機名稱無效。"
+			}
+		}
+	},
+	"syncs": {
+		"eventsTitle": "事件",
+		"ignoredTitle": "已忽略",
+		"issuesTitle": "問題",
+		"settingsTitle": "設定",
+		"transfersTitle": "傳輸作業",
+		"noTransfers": "暫無傳輸作業",
+		"noEventsYet": "暫無事件",
+		"nothingIgnored": "無被忽略的檔案或資料夾",
+		"noIssues": "暫無問題",
+		"info": {
+			"progress": "正在以 {{speed}} 同步 {{items}} / {{total}} 個項目，剩餘約 {{remaining}}",
+			"progressNoEstimate": "正在同步 {{items}} / {{total}} 個項目 ",
+			"upToDate": "全部同步完成",
+			"errors": "{{count}} 個同步錯誤",
+			"errorsResolve": "解決",
+			"paused": "同步已暫停",
+			"processingDeltas": "正在處理差異",
+			"syncingChanges": "正在同步變更",
+			"savingState": "正在儲存狀態",
+			"waitingForLocalDirectoryChanges": "正在等待本機變更",
+			"acquiringLock": "正在取得同步鎖",
+			"gettingTrees": "正在讀取本機和雲端資料夾",
+			"remoteSmokeTestFailed": "無法讀取雲端資料夾，因為它不存在或您未連接到網際網路",
+			"localSmokeTestFailed": "無法讀取本機資料夾，因為它不存在或您沒有讀取與寫入權限",
+			"confirmDeletionBoth": "確認刪除 {{previous}} 個檔案和資料夾",
+			"confirmDeletionLocal": "確認刪除 {{previous}} 個本機檔案和資料夾",
+			"confirmDeletionRemote": "確認刪除 {{previous}} 個遠端檔案和資料夾",
+			"confirm": "確認",
+			"restart": "重新啟動"
+		},
+		"empty": {
+			"title": "尚未設定同步",
+			"description": "您可以將本機目錄與雲端同步，或將雲端資料夾與您的裝置同步",
+			"create": "建立"
+		},
+		"events": {
+			"createLocalDirectory": "{{name}} 已在本機建立",
+			"renameLocalDirectory": "{{name}} 已在本機重新命名",
+			"deleteLocalDirectory": "{{name}} 已從本機刪除",
+			"createRemoteDirectory": "{{name}} 已在雲端建立",
+			"renameRemoteDirectory": "{{name}} 已在雲端重新命名",
+			"deleteRemoteDirectory": "{{name}} 已從雲端刪除",
+			"deleteLocalFile": "{{name}} 已從本機刪除",
+			"deleteRemoteFile": "{{name}} 已從雲端刪除",
+			"download": "{{name}} 已從雲端下載",
+			"upload": "{{name}} 已上傳至雲端",
+			"renameLocalFile": "{{name}} 已在本機重新命名",
+			"renameRemoteFile": "{{name}} 已在雲端重新命名"
+		},
+		"settings": {
+			"sections": {
+				"delete": {
+					"name": "刪除",
+					"info": "刪除同步",
+					"delete": "刪除"
+				},
+				"pause": {
+					"name": "暫停",
+					"info": "暫停同步"
+				},
+				"mode": {
+					"name": "同步模式",
+					"info": "變更同步模式"
+				},
+				"forceSync": {
+					"name": "強制同步",
+					"info": "重設內部快取並強制重新掃描本機與雲端資料夾",
+					"forceSync": "強制同步"
+				},
+				"excludeDotFiles": {
+					"name": "以點開頭的檔案",
+					"info": "切換點檔案/路徑排除（建議）"
+				},
+				"filenIgnore": {
+					"name": ".filenignore",
+					"info": "編輯忽略檔案以排除本機或雲端項目。工作原理與 .gitignore 檔案相同",
+					"edit": "編輯"
+				},
+				"disableLocalTrash": {
+					"name": "停用本機垃圾桶",
+					"info": "啟用或停用本機垃圾桶。停用后，用戶端將永久刪除檔案或目錄，而不是將其移動到本機同步路徑內的本機垃圾桶目錄中"
+				},
+				"clearTransferEvents": {
+					"name": "清除事件",
+					"info": "清除本機儲存的事件",
+					"clear": "清除"
+				},
+				"name": {
+					"name": "名稱",
+					"info": "編輯同步名稱"
+				},
+				"requireConfirmationOnLargeDeletion": {
+					"name": "刪除前確認",
+					"info": "在同步目錄中大量刪除時手動確認"
+				}
+			}
+		},
+		"dialogs": {
+			"delete": {
+				"title": "刪除同步",
+				"description": "您確定要刪除此同步嗎？",
+				"continue": "刪除"
+			},
+			"resetErrors": {
+				"title": "解決錯誤",
+				"description": "您確定要將所有錯誤標記為已解決並繼續同步嗎？請確保所有錯誤都已被解決。",
+				"continue": "解決"
+			},
+			"filenIgnore": {
+				"title": ".filenignore",
+				"save": "儲存"
+			},
+			"deleteIssue": {
+				"title": "刪除問題",
+				"description": "您確定要刪除此問題嗎？請確保您已解決該問題或該問題只是暫時的，否則該問題終究會再次發生。",
+				"continue": "刪除"
+			},
+			"clearTransferEvents": {
+				"title": "清除事件",
+				"description": "您確定要清除本機儲存的事件嗎？此動作無法復原。",
+				"continue": "清除"
+			},
+			"name": {
+				"title": "編輯名稱",
+				"placeholder": "名稱",
+				"continue": "儲存"
+			},
+			"confirmDeletionLocal": {
+				"title": "確認刪除",
+				"description": "您確定嗎？這會將所有 {{count}} 個檔案和資料夾移到雲端的垃圾桶。此動作無法復原",
+				"continue": "確認"
+			},
+			"confirmDeletionRemote": {
+				"title": "確認刪除",
+				"description": "您確定嗎？這會將所有 {{count}} 個檔案和資料夾移到本機垃圾桶。此動作無法復原",
+				"continue": "確認"
+			},
+			"confirmDeletionBoth": {
+				"title": "確認刪除",
+				"description": "您確定嗎？這會將所有 {{count}} 個檔案和資料夾移到本機和雲端垃圾桶。此動作無法復原",
+				"continue": "確認"
+			},
+			"confirmDeletionRestart": {
+				"title": "重啟同步",
+				"description": "如果您已手動復原所有檔案和資料夾，則可以重啟同步。",
+				"continue": "重啟"
+			}
+		},
+		"ignored": {
+			"types": {
+				"dotFile": "以點開頭的檔案",
+				"defaultIgnore": "預設忽略",
+				"empty": "清空"
+			},
+			"reasons": {
+				"dotFile": "檔案或目錄位於點路徑內",
+				"defaultIgnore": "檔案或目錄位於預設為忽略的路徑內",
+				"empty": "檔案為空",
+				"invalidPath": "檔案或目錄位於無效路徑內",
+				"symlink": "檔案或目錄是符號連結。為了防止無限同步循環，用戶端不會追蹤符號連結。",
+				"duplicate": "檔案或目錄路徑出現兩次",
+				"filenIgnore": "被 .filenignore 忽略的檔案或目錄",
+				"invalidType": "項目不是檔案或目錄",
+				"nameLength": "檔案或目錄名稱太長",
+				"pathLength": "檔案或目錄路徑太長",
+				"permissions": "權限不足"
+			}
+		},
+		"issues": {
+			"types": {
+				"title": {
+					"permission": "權限",
+					"io": "輸入/輸出",
+					"noSpace": "可用空間或檔案監控資源不足",
+					"openFiles": "開啟檔案限制",
+					"fileOrDirExists": "檔案或目錄存在",
+					"fileOrDirNotFound": "找不到檔案或目錄",
+					"isFile": "檔案",
+					"isDir": "目錄",
+					"notDir": "不是目錄",
+					"badConnection": "連接",
+					"fileOrDirTemporarilyUnavailable": "檔案或目錄暫時無法使用",
+					"unknown": "未知錯誤",
+					"dirNotEmpty": "目錄不為空",
+					"fileOrDirNameTooLong": "檔案或目錄名稱/路徑太長"
+				},
+				"info": {
+					"permission": "請確保用戶端有存取本機同步目錄所需的全部權限。",
+					"io": "請確保您的本機同步目錄與底層儲存媒體正常工作。用戶端目前無法正常存取它。",
+					"noSpace": "您的本機儲存空間不足，或系統檔案監控資源已耗盡。",
+					"openFiles": "用戶端已達開啟檔案數量上限。請提高系統限制。",
+					"fileOrDirExists": "該檔案或目錄已存在。這很可能是暫時的問題，請試著重啟用戶端。",
+					"fileOrDirNotFound": "找不到檔案或目錄。這很可能是暫時問題，請試著重啟用戶端。",
+					"isFile": "這很可能是一個暫時的問題，請試著重啟用戶端。",
+					"isDir": "這很可能是一個暫時的問題，請試著重啟用戶端。",
+					"notDir": "這很可能是一個暫時的問題，請試著重啟用戶端。",
+					"badConnection": "請確保您已連接到網際網路且可以順利存取 Filen。",
+					"fileOrDirTemporarilyUnavailable": "這很可能是一個暫時的問題，請試著重啟用戶端。",
+					"unknown": "未知錯誤，請試著重啟用戶端。",
+					"dirNotEmpty": "目錄不為空。這很可能是暫時的問題，請試著重啟用戶端。",
+					"fileOrDirNameTooLong": "檔案或目錄名稱/路徑對您的本機檔案系統來說太長。"
+				}
+			}
+		}
+	},
+	"isOnline": {
+		"title": "有人拔掉網路線了嗎？",
+		"info": "我們在將您連接到我們的平台時遇到問題，請檢查您的網際網路連線。",
+		"infoSub": "如果您的網路正常，請聯絡我們。"
+	},
+	"404": {
+		"info": "哎呀，您要找的頁面不存在。",
+		"btn": "回到首頁"
+	},
+	"announcements": {
+		"gotIt": "了解"
+	},
+	"maintenance": {
+		"title": "Filen 正在維護中",
+		"info": "我們正在進行系統維護，以提供您更好的體驗。我們的平台很快會回來，並帶來更新與改進",
+		"infoSub": "感謝您的耐心等候！我們正在幕後努力為您帶來新功能，敬請期待！"
+	}
+}
