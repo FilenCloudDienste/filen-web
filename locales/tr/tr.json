@@ -47,12 +47,12 @@
         "header": "Hesap oluştur",
         "description": "E-posta adresinizi ve şifrenizi aşağıya girerek bir hesap oluşturun",
         "freeStorage": {
-            "eligible": "10 GB ücretsiz depolama alanına hak kazandınız!",
-            "notEligible": "Ücretsiz 10 GB için uygun değilsin.",
+            "eligible": "10 GB ücretsiz depolama alanı almaya uygunsunuz!",
+            "notEligible": "10 GB ücretsiz depolama alanı almaya uygun değilsiniz.",
             "learnMore": "Daha fazla bilgi edinin"
         "buttons": {
             "register": "Hesap oluştur",
-            "resendConfirmation": "Onay e-postasını yeniden gönder",
+            "resendConfirmation": "Doğrulama e-postasını yeniden gönder",
             "login": "Giriş yap"
         },
         "passwordStrength": {
@@ -75,19 +75,19 @@
         },
         "dialogs": {
             "confirmationSend": {
-                "title": "Onay e-postasını yeniden gönder",
+                "title": "Doğrulama e-postasını yeniden gönder",
                 "continue": "Gönder",
                 "placeholder": "E-posta adresi"
             }
         },
         "alerts": {
             "passwordWeak": "Seçtiğiniz şifre çok zayıf",
-            "confirmationSent": "Onay e-postası {{email}} adresine gönderildi",
+            "confirmationSent": "Doğrulama e-postası {{email}} adresine gönderildi",
             "passwordsNotMatching": "Şifreler aynı değil",
             "success": {
                 "title": "Hesap oluşturuldu",
                 "continue": "Devam et",
-                "description": "{{email}} adresine bir onay e-postası gönderdik. Lütfen kaydınızı tamamlamak için e-postadaki bağlantıya tıklayın. Spam klasörünüzü de kontrol etmeyi unutmayın."
+                "description": "{{email}} adresine bir doğrulama e-postası gönderdik. Lütfen kaydınızı tamamlamak için e-postadaki bağlantıya tıklayın. Spam klasörünüzü de kontrol etmeyi unutmayın."
             }
         }
     },
@@ -746,7 +746,7 @@
             },
             "requestAccountDeletion": {
                 "title": "Hesabı sil",
-                "description": "Hesabınızı ve ona bağlı tüm verileri silmek istediğinizden emin misiniz? Size bir onay e-postası göndereceğiz. Bu işlem geri alınamaz!",
+                "description": "Hesabınızı ve ona bağlı tüm verileri silmek istediğinizden emin misiniz? Size bir doğrulama e-postası göndereceğiz. Bu işlem geri alınamaz!",
                 "continue": "Silme talebi"
             },
             "logout": {
@@ -931,8 +931,8 @@
             "limited": "Sınırlı stok",
             "creditCard": "Kredi Kartı",
             "crypto": "Kripto para",
-            "legal1": "Bir plan satın alarak, siz iptal edene kadar Filen'in her fatura döneminde sizden otomatik olarak ücret almasına izin vermiş olursunuz. Hesabınız sayfanızdan istediğiniz zaman iptal edebilirsiniz. Kısmi iadeler yapılmaz.",
-            "legal2": "Ayrıca otomatik olarak şartlarımızı ve politikamızı kabul etmiş olursunuz.",
+            "legal1": "Bir plan satın aldığınızda, iptal edene kadar her fatura döneminde ücret otomatik olarak tahsil edilir. Aboneliğinizi istediğiniz zaman Hesap sayfanızdan iptal edebilirsiniz. Kullanılmayan süre için iade yapılmaz.",
+            "legal2": "Ayrıca şu politikaları da otomatik olarak kabul etmiş olursunuz:",
             "tos": "Hizmet Şartları",
             "and": "ve",
             "privacyPolicy": "Gizlilik Politikası",
@@ -1066,7 +1066,7 @@
                 },
                 "requestAccountDeletion": {
                     "name": "Hesap silme talebi",
-                    "info": "Hesabınızın silinmesini talep edin. Size bir onay e-postası göndereceğiz.",
+                    "info": "Hesabınızın silinmesini talep edin. Size bir doğrulama e-postası göndereceğiz.",
                     "action": "Talep et"
                 }
             }
