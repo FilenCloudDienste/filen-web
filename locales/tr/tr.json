@@ -50,6 +50,7 @@
             "eligible": "10 GB ücretsiz depolama alanı almaya uygunsunuz!",
             "notEligible": "10 GB ücretsiz depolama alanı almaya uygun değilsiniz.",
             "learnMore": "Daha fazla bilgi edinin"
+        },
         "buttons": {
             "register": "Hesap oluştur",
             "resendConfirmation": "Doğrulama e-postasını yeniden gönder",
@@ -93,10 +94,10 @@
     },
     "reset": {
         "header": "Şifre sıfırlama",
-        "description": "E-posta adresinizi, yeni şifrenizi girin ve ana anahtarınızı içe aktararak şifrenizi sıfırlayın",
-        "importMasterKeys": "Anahtarı içe aktar",
-        "masterKeysImported": "Anahtar içe aktarıldı",
-        "masterKeysNotImported": "Hiç anahtar içe aktarılmadı",
+        "description": "Şifrenizi sıfırlamak için e-posta adresinizi ve yeni şifrenizi girin, ardından ana anahtarınızı içe aktarın",
+        "importMasterKeys": "Ana anahtarı içe aktar",
+        "masterKeysImported": "Ana anahtar içe aktarıldı",
+        "masterKeysNotImported": "Hiçbir ana anahtar içe aktarılmadı",
         "placeholders": {
             "normal": {
                 "email": "E-posta adresi",
@@ -117,7 +118,7 @@
             "noMasterKeysImported": {
                 "title": "Şifreyi sıfırla",
                 "continue": "Anladım",
-                "description": "Ana anahtarım olmadan şifremi sıfırladığım takdirde, sıfır bilgi uçtan uca şifrelemenin çalışma şekli nedeniyle hesabımda saklanan tüm verilerin erişilemez hale geleceğini anlıyorum."
+                "description": "Ana anahtar içe aktarılmadan şifre sıfırlanırsa, sıfır bilgi uçtan uca şifrelemenin çalışma şekli nedeniyle hesabımda saklanan tüm verilerin erişilemez hale geleceğini anlıyorum."
             },
             "noMasterKeysImported2": {
                 "title": "Şifreyi sıfırla",
@@ -131,12 +132,12 @@
             }
         },
         "alerts": {
-            "invalidMasterKeysFile": "Geçersiz anahtar dosyası",
-            "invalidMasterKeysFileWrongUserId": "Bu anahtar farklı bir hesaba ait",
-            "masterKeysImported": "Anahtar içe aktarıldı",
+            "invalidMasterKeysFile": "Geçersiz ana anahtar dosyası",
+            "invalidMasterKeysFileWrongUserId": "Bu ana anahtar farklı bir hesaba ait",
+            "masterKeysImported": "Ana anahhtar içe aktarıldı",
             "passwordWeak": "Seçtiğiniz şifre çok zayıf",
             "passwordsNotMatching": "Şifreler aynı değil",
-            "invalidMasterKeys": "Geçersiz anahtar",
+            "invalidMasterKeys": "Geçersiz ana anahtar",
             "passwordChanged": "Şifre başarıyla değiştirildi"
         }
     },
@@ -173,7 +174,7 @@
         },
         "searchInThisFolder": "Bu dizinde ara...",
         "breadcrumbs": {
-            "recents": "Son İşlemler",
+            "recents": "Son işlemler",
             "cloudDrive": "Bulut Sürücüsü",
             "links": "Bağlantılar",
             "sharedWithMe": "Benimle paylaşılan",
@@ -192,7 +193,7 @@
             "chats": "Sohbetler",
             "contacts": "Kişiler",
             "syncs": "Senkronizasyonlar",
-            "mounts": "Bağlama noktaları"
+            "mounts": "Sürücü bağlantıları"
         },
         "bottom": {
             "settings": "Ayarlar"
@@ -217,7 +218,7 @@
             "createChat": "Sohbet oluştur",
             "emptySearch": "\"{{search}}\" için hiçbir şey bulunamadı"
         },
-        "recents": "Son İşlemler",
+        "recents": "Son işlemler",
         "cloudDrive": "Bulut Sürücüsü",
         "links": "Bağlantılar",
         "sharedWithMe": "Benimle paylaşılan",
@@ -264,7 +265,7 @@
         "contacts": "Kişiler",
         "settings": "Ayarlar",
         "syncs": "Senkronizasyonlar",
-        "mounts": "Bağlama noktaları",
+        "mounts": "Sürücü bağlantıları",
         "terminal": "Terminal"
     },
     "dialogs": {
@@ -274,7 +275,7 @@
             "submit": "Seç",
             "newFolder": "Yeni klasör",
             "empty": "Henüz yüklenmiş dosya veya klasör yok",
-            "selectRoot": "Bulut Sürücüsünü seç"
+            "selectRoot": "Bulut sürücüsünü seç"
         },
         "selectContacts": {
             "title": "Kişileri seç",
@@ -769,11 +770,11 @@
                 "title": "Takma adı düzenle",
                 "placeholder": "Yeni takma ad",
                 "continue": "Kaydet",
-                "invalid": "Takma ad 3 ile 32 karakter uzunluğunda olmalı harf ve rakam içermelidir."
+                "invalid": "Takma ad 3 ile 32 karakter uzunluğunda olmalı ve yalnızca harf ile rakam içermelidir."
             },
             "twoFactorAuthenticationRecoveryKey": {
                 "title": "Kurtarma anahtarı",
-                "description": "Lütfen İki Faktörlü Kimlik Doğrulama kurtarma anahtarınızı güvenli bir yerde saklayın. İki Faktörlü Kimlik Doğrulama cihazınızı kaybettiğinizde hesabınıza erişiminizi geri kazanmanın tek yolu budur!",
+                "description": "Lütfen İki Faktörlü Kimlik Doğrulama kurtarma anahtarınızı güvenli bir yerde saklayın. İki Faktörlü Kimlik Doğrulama cihazınızı kaybetmeniz durumunda hesabınıza yeniden erişebilmenin tek yolu budur!",
                 "continue": "Tamam"
             }
         },
@@ -783,8 +784,8 @@
             "versionedFiles": "Sürümlü dosyalar {{size}}",
             "free": "Kalan depolama {{size}}",
             "used": "{{used}} kullanılan / Toplam {{max}}",
-            "dark": "Karanlık",
-            "light": "Aydınlık",
+            "dark": "Koyu tema",
+            "light": "Açık tema",
             "system": "Sistem",
             "noteType": {
                 "md": "Markdown",
@@ -853,7 +854,7 @@
         "events": {
             "empty": "Henüz etkinlik yok",
             "fileUploaded": "{{name}} yüklendi",
-            "fileVersioned": "{{name}} sürümlendi",
+            "fileVersioned": "{{name}} için yeni sürüm oluşturuldu",
             "versionedFileRestored": "{{name}} dosya sürümlerinden geri yüklendi",
             "fileMoved": "{{name}} taşındı",
             "fileRenamed": "{{name}} {{newName}} olarak yeniden adlandırıldı",
@@ -881,7 +882,7 @@
             "codeRedeemed": "{{code}} kodu kullanıldı",
             "emailChanged": "E-posta adresi {{email}} olarak değiştirildi",
             "passwordChanged": "Şifre değiştirildi",
-            "removedSharedInItems": "{{email}} adresinin sizinle paylaştığı {{count}} öğenin paylaşımı kaldırıldı",
+            "removedSharedInItems": "{{email}} tarafından sizinle paylaşılan {{count}} öğenin paylaşımı kaldırıldı",
             "removedSharedOutItems": "{{email}} adresi ile paylaştığınız {{count}} öğenin paylaşımı kaldırıldı",
             "folderLinkEdited": "Klasör bağlantısı düzenlendi",
             "itemFavoriteAdded": "{{name}} favorilere eklendi",
@@ -1291,8 +1292,8 @@
                     "info": "Ağ sürücüsünü etkinleştir veya devre dışı bırak. Bu seçeneği değiştirirken dosya gezgininizi yenileyin."
                 },
                 "mountPoint": {
-                    "name": "Bağlama noktası",
-                    "info": "Bağlama noktasını yerel bir dizine ayarlayın. Yerel dizin boş, okunabilir ve yazılabilir olmalıdır.",
+                    "name": "Bağlantı noktası",
+                    "info": "Bağlantı noktasını yerel bir dizine ayarlayın. Yerel dizin boş, okunabilir ve yazılabilir olmalıdır.",
                     "change": "Değiştir"
                 },
                 "driveLetter": {
@@ -1333,10 +1334,10 @@
                 }
             },
             "errors": {
-                "invalidMountPoint": "Geçersiz bağlama noktası.",
-                "mountPointNotEmpty": "Bağlama noktası boş bir dizin olmalıdır.",
-                "pathNotInHomeDir": "Bağlama noktası, ev dizininiz içinde olmalıdır (/home/<kullanıcıAdınız>).",
-                "pathNotInUserDir": "Bağlama noktası, kullanıcı dizininiz içinde olmalıdır (/Users/<kullanıcıAdınız>).",
+                "invalidMountPoint": "Geçersiz bağlantı noktası.",
+                "mountPointNotEmpty": "Bağlantı noktası boş bir dizin olmalıdır.",
+                "pathNotInHomeDir": "Bağlantı noktası, ev dizininiz içinde olmalıdır (/home/<kullanıcıAdınız>).",
+                "pathNotInUserDir": "Bağlantı noktası, kullanıcı dizininiz içinde olmalıdır (/Users/<kullanıcıAdınız>).",
                 "invalidCachePath": "Önbellek konumu, en az 10 GB boş alana sahip bir dahili diskte olmalıdır.",
                 "cachePathNotReadableWritable": "Önbellek konumu okunabilir veya yazılabilir değildir.",
                 "invalidCachePathLength": "Önbellek konumu yolu çok uzundur."
@@ -1476,7 +1477,7 @@
             "syncingChanges": "Değişiklikler senkronize ediliyor",
             "savingState": "Durum kaydediliyor",
             "waitingForLocalDirectoryChanges": "Yerel değişiklikler bekleniyor",
-            "acquiringLock": "Senkronizasyon kilidi alınıyor",
+            "acquiringLock": "Senkronizasyon kilidi oluşturuluyor",
             "gettingTrees": "Yerel ve bulut dizini okunuyor",
             "remoteSmokeTestFailed": "Bulut dizini okunamadı, ya mevcut değil ya da internete bağlı değilsiniz",
             "localSmokeTestFailed": "Yerel dizin okunamadı, ya mevcut değil ya da okuma veya yazma erişiminiz yok"
@@ -1516,9 +1517,9 @@
                     "info": "Senkronizasyon modunu değiştir"
                 },
                 "forceSync": {
-                    "name": "Senkronizasyona zorla",
+                    "name": "Senkronizasyonu zorla",
                     "info": "Dahili önbelleği sıfırlayın, yerel ve bulut dizininin yeniden taranmasını zorlayın",
-                    "forceSync": "Senkronizasyona zorla"
+                    "forceSync": "Senkronizasyonu zorla"
                 },
                 "excludeDotFiles": {
                     "name": "Nokta dosyalarını hariç tut",
@@ -1627,7 +1628,7 @@
     },
     "maintenance": {
         "title": "Filen şu anda bakımda",
-        "info": "Deneyiminizi daha da geliştirmek için şu anda bazı bakım çalışmaları yapıyoruz. Platformumuz yakında, yenilenmiş ve geliştirilmiş bir şekilde geri dönecek.",
+        "info": "Deneyiminizi daha da geliştirmek için şu anda bazı bakım çalışmaları yapıyoruz. Platformumuz kısa süre içinde yeniden hizmete açılacaktır.",
         "infoSub": "Sabır gösterdiğiniz için teşekkür ederiz! Size yeni özellikler sunmak için yoğun bir şekilde çalışıyoruz. Bizi takipte kalın!"
     }
 }
