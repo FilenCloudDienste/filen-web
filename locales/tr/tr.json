@@ -1517,7 +1517,7 @@
                 },
                 "forceSync": {
                     "name": "Senkronizasyona zorla",
-                    "info": "Dahili önbelleği sıfırlayın ve yerel ve bulut dizinini yeniden taramayı zorlayın",
+                    "info": "Dahili önbelleği sıfırlayın, yerel ve bulut dizininin yeniden taranmasını zorlayın",
                     "forceSync": "Senkronizasyona zorla"
                 },
                 "excludeDotFiles": {
