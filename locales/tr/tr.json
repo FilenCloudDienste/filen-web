@@ -9,7 +9,7 @@
     "login": {
         "header": "Giriş",
         "description": "Hesabınıza giriş yapmak için e-posta adresinizi ve şifrenizi aşağıya girin",
-        "useTwoFactorRecoveryKey": "Yerine kurtarma anahtarını kullan",
+        "useTwoFactorRecoveryKey": "Bunun yerine kurtarma anahtarı kullan",
         "buttons": {
             "login": "Giriş yap",
             "createAccount": "Hesap oluştur",
@@ -183,7 +183,7 @@
             "directory": "Dizin"
         },
         "listView": "Liste görünümü",
-        "gridView": "Kare görünümü"
+        "gridView": "Izgara görünümü"
     },
     "innerSideBar": {
         "top": {
@@ -191,7 +191,7 @@
             "notes": "Notlar",
             "chats": "Sohbetler",
             "contacts": "Kişiler",
-            "syncs": "Senkranizasyonlar",
+            "syncs": "Senkronizasyonlar",
             "mounts": "Bağlama noktaları"
         },
         "bottom": {
@@ -263,7 +263,7 @@
         "chats": "Sohbetler",
         "contacts": "Kişiler",
         "settings": "Ayarlar",
-        "syncs": "Senkranizasyonlar",
+        "syncs": "Senkronizasyonlar",
         "mounts": "Bağlama noktaları",
         "terminal": "Terminal"
     },
@@ -272,7 +272,7 @@
         "selectDriveItem": {
             "title": "Seç",
             "submit": "Seç",
-            "newFolder": "Yeni dosya",
+            "newFolder": "Yeni klasör",
             "empty": "Henüz yüklenmiş dosya veya klasör yok",
             "selectRoot": "Bulut Sürücüsünü seç"
         },
@@ -343,7 +343,7 @@
             "streetNumber": "Sokak numarası",
             "city": "Şehir",
             "postalCode": "Posta kodu",
-            "country": "Ülke"
+            "country": "Ülke",
             "needsCountrySetup": "Doğru KDV'yi hesaplayabilmemiz için lütfen bir ülke seçin."
         },
         "twoFactorCode": {
@@ -376,7 +376,7 @@
             "readOnly": "Sadece okunur"
         },
         "transparentFullScreenImage": {
-            "openOriginal": "Orjinali aç"
+            "openOriginal": "Orijinali aç"
         },
         "report": {
             "title": "Kötüye kullanımı bildirin",
@@ -508,7 +508,7 @@
             "color": "Renk",
             "deletePermanently": "Kalıcı olarak sil",
             "copyId": "ID'yi kopyala",
-            "info": "Ayrıntılar",
+            "info": "Bilgi",
             "dialogs": {
                 "trash": {
                     "title": "Sil",
@@ -574,7 +574,7 @@
         "chat": {
             "input": {
                 "selectFromDrive": "Sürücüden seç",
-                "attachFiles": "Masaüstünden dosya ekle"
+                "attachFiles": "Dosya ekle"
             }
         },
         "chats": {
@@ -623,7 +623,7 @@
         "header": {
             "title": "Uçtan uca şifreli sohbet",
             "description": "Filen, her sohbeti varsayılan olarak sıfır bilgi uçtan uca şifreleme ile güvence altına alır.",
-            "feature1": "Sadece sohbetin üyeleri içeriği şifreleyip okuyabilir",
+            "feature1": "Sadece sohbetin üyeleri içeriğin şifresini çözüp okuyabilir",
             "feature2": "Sistem, alınan verilerin gerçekten görüntülenen kullanıcıdan geldiğini ve değiştirilmediğini garanti eder"
         },
         "message": {
