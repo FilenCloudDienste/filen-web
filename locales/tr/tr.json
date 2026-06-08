@@ -38,8 +38,8 @@
         },
         "alerts": {
             "emailOrPasswordWrong": "E-posta veya şifre hatalı",
-            "enter2FA": "Lütfen İki Faktörlü Kimlik Doğrulama kodunuzu girin",
-            "enter2FARecoveryKey": "Lütfen İki Faktörlü Kimlik Doğrulama kurtarma anahtarınızı girin",
+            "enter2FA": "Lütfen İki faktörlü kimlik doğrulama kodunuzu girin",
+            "enter2FARecoveryKey": "Lütfen İki faktörlü kimlik doğrulama kurtarma anahtarınızı girin",
             "forgotPasswordSent": "Şifre sıfırlama talimatları {{email}} adresine gönderildi"
         }
     },
@@ -134,7 +134,7 @@
         "alerts": {
             "invalidMasterKeysFile": "Geçersiz ana anahtar dosyası",
             "invalidMasterKeysFileWrongUserId": "Bu ana anahtar farklı bir hesaba ait",
-            "masterKeysImported": "Ana anahhtar içe aktarıldı",
+            "masterKeysImported": "Ana anahtar içe aktarıldı",
             "passwordWeak": "Seçtiğiniz şifre çok zayıf",
             "passwordsNotMatching": "Şifreler aynı değil",
             "invalidMasterKeys": "Geçersiz ana anahtar",
@@ -350,7 +350,7 @@
         "twoFactorCode": {
             "useRecoveryKey": "Bunun yerine kurtarma anahtarını kullan",
             "recoveryKeyPlaceholder": "Kurtarma anahtarı",
-            "title": "İki Faktörlü Kimlik Doğrulama",
+            "title": "İki faktörlü kimlik doğrulama",
             "continue": "Devam et",
             "info": "Lütfen iki faktörlü kimlik doğrulama kodunuzu girin"
         },
@@ -774,7 +774,7 @@
             },
             "twoFactorAuthenticationRecoveryKey": {
                 "title": "Kurtarma anahtarı",
-                "description": "Lütfen İki Faktörlü Kimlik Doğrulama kurtarma anahtarınızı güvenli bir yerde saklayın. İki Faktörlü Kimlik Doğrulama cihazınızı kaybetmeniz durumunda hesabınıza yeniden erişebilmenin tek yolu budur!",
+                "description": "Lütfen iki faktörlü kimlik doğrulama kurtarma anahtarınızı güvenli bir yerde saklayın. İki faktörlü kimlik doğrulama cihazınızı kaybetmeniz durumunda hesabınıza yeniden erişebilmenin tek yolu budur!",
                 "continue": "Tamam"
             }
         },
@@ -877,8 +877,8 @@
             "deleteUnfinished": "Tamamlanmamış yüklemeler silindi",
             "trashEmptied": "Çöp kutusu boşaltıldı",
             "requestAccountDeletion": "Hesap silme talep edildi",
-            "2faEnabled": "İki Faktörlü Kimlik Doğrulama etkinleştirildi",
-            "2faDisabled": "İki Faktörlü Kimlik Doğrulama devre dışı bırakıldı",
+            "2faEnabled": "İki faktörlü kimlik doğrulama etkinleştirildi",
+            "2faDisabled": "İki faktörlü kimlik doğrulama devre dışı bırakıldı",
             "codeRedeemed": "{{code}} kodu kullanıldı",
             "emailChanged": "E-posta adresi {{email}} olarak değiştirildi",
             "passwordChanged": "Şifre değiştirildi",
@@ -970,8 +970,8 @@
                     "action": "Değiştir"
                 },
                 "twoFactorAuthentication": {
-                    "name": "İki Faktörlü Kimlik Doğrulama",
-                    "info": "İki Faktörlü Kimlik Doğrulamayı etkinleştir veya devre dışı bırak"
+                    "name": "İki faktörlü kimlik doğrulama",
+                    "info": "İki faktörlü kimlik doğrulamayı etkinleştir veya devre dışı bırak"
                 },
                 "exportMasterKeys": {
                     "name": "Ana anahtarı dışa aktar",
@@ -1479,8 +1479,8 @@
             "waitingForLocalDirectoryChanges": "Yerel değişiklikler bekleniyor",
             "acquiringLock": "Senkronizasyon kilidi oluşturuluyor",
             "gettingTrees": "Yerel ve bulut dizini okunuyor",
-            "remoteSmokeTestFailed": "Bulut dizini okunamadı, ya mevcut değil ya da internete bağlı değilsiniz",
-            "localSmokeTestFailed": "Yerel dizin okunamadı, ya mevcut değil ya da okuma veya yazma erişiminiz yok"
+            "remoteSmokeTestFailed": "Bulut dizini okunamadı. Dizin mevcut olmayabilir veya internete bağlı değilsiniz",
+            "localSmokeTestFailed": "Yerel dizin okunamadı. Dizin mevcut olmayabilir veya okuma/yazma izniniz yok"
         },
         "empty": {
             "title": "Henüz senkronizasyon ayarlanmamış",
@@ -1493,9 +1493,9 @@
             "deleteLocalDirectory": "{{name}} yerel olarak silindi",
             "createRemoteDirectory": "{{name}} bulutta oluşturuldu",
             "renameRemoteDirectory": "{{name}} bulutta yeniden adlandırıldı",
-            "deleteRemoteDirectory": "{{name}} bulutta silindi",
+            "deleteRemoteDirectory": "{{name}} buluttan silindi",
             "deleteLocalFile": "{{name}} yerel olarak silindi",
-            "deleteRemoteFile": "{{name}} bulutta silindi",
+            "deleteRemoteFile": "{{name}} buluttan silindi",
             "download": "{{name}} buluttan indirildi",
             "upload": "{{name}} buluta yüklendi",
             "renameLocalFile": "{{name}} yerel olarak yeniden adlandırıldı",
