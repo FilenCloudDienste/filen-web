@@ -192,7 +192,7 @@
             "notes": "Notlar",
             "chats": "Sohbetler",
             "contacts": "Kişiler",
-            "syncs": "Senkronizasyonlar",
+            "syncs": "Eşitlemeler",
             "mounts": "Sürücü bağlantıları"
         },
         "bottom": {
@@ -249,10 +249,10 @@
             "webdav": "WebDAV"
         },
         "syncs": {
-            "empty": "Henüz senkronizasyon yok",
+            "empty": "Henüz eşitleme yok",
             "emptyCreate": "Bir tane oluştur",
             "nothingFound": "\"{{search}}\" için hiçbir şey bulunamadı",
-            "createSync": "Senkronizasyon oluştur",
+            "createSync": "Eşitleme oluştur",
             "search": "Ara...",
             "emptySearch": "\"{{search}}\" için hiçbir şey bulunamadı"
         }
@@ -264,7 +264,7 @@
         "chats": "Sohbetler",
         "contacts": "Kişiler",
         "settings": "Ayarlar",
-        "syncs": "Senkronizasyonlar",
+        "syncs": "Eşitlemeler",
         "mounts": "Sürücü bağlantıları",
         "terminal": "Terminal"
     },
@@ -408,12 +408,12 @@
         "createSync": {
             "cancel": "İptal",
             "create": "Oluştur",
-            "name": "Senkronizasyon adı",
+            "name": "Eşitleme adı",
             "localPath": "Yerel yol",
             "remotePath": "Bulut yolu",
             "select": "Seç",
-            "syncMode": "Senkronizasyon modu",
-            "title": "Senkronizasyon oluştur",
+            "syncMode": "Eşitleme modu",
+            "title": "Eşitleme oluştur",
             "paused": "Duraklatıldı",
             "excludeDotFiles": "Nokta dosyalarını hariç tut (önerilir)",
             "disableLocalTrash": "Yerel çöp kutusunu devre dışı bırak ve öğeleri kalıcı olarak sil",
@@ -431,22 +431,22 @@
             },
             "errors": {
                 "localPathNotWritable": "Seçtiğiniz yerel yol yazılabilir değil. Lütfen istemcinin buna düzgün erişim sağlayabildiğinden emin olun.",
-                "invalidLocalPath": "Seçtiğiniz yerel yol geçersiz ve senkronize edilemez. Lütfen farklı bir yol seçin.",
-                "remotePathAlreadyConfigured": "Seçtiğiniz bulut yolu zaten başka bir senkronizasyonda yapılandırılmış. Bu, sonsuz senkronizasyon döngülerine yol açabilir.",
-                "localPathAlreadyConfigured": "Seçtiğiniz yerel yol zaten başka bir senkronizasyonda yapılandırılmış. Bu, sonsuz senkronizasyon döngülerine yol açabilir.",
-                "syncNameAlreadyExists": " \"{{name}}\" adında bir senkronizasyon zaten var.",
-                "localPathSyncedByICloud": "Zaten iCloud tarafından senkronize edilen bir yolu senkronize edemezsiniz."
+                "invalidLocalPath": "Seçtiğiniz yerel yol geçersiz ve eşitlenemiyor. Lütfen farklı bir yol seçin.",
+                "remotePathAlreadyConfigured": "Seçtiğiniz bulut yolu zaten başka bir eşitlemede yapılandırılmış. Bu, sonsuz eşitleme döngülerine yol açabilir.",
+                "localPathAlreadyConfigured": "Seçtiğiniz yerel yol zaten başka bir eşitlemede yapılandırılmış. Bu, sonsuz eşitleme döngülerine yol açabilir.",
+                "syncNameAlreadyExists": " \"{{name}}\" adında bir eşitleme zaten var.",
+                "localPathSyncedByICloud": "Zaten iCloud tarafından eşitlenen bir yolu eşitleyemezsiniz."
             },
             "warnings": {
                 "localDirectoryBig": {
                     "title": "Uyarı",
                     "continue": "Devam et",
-                    "description": "{{count}} öğeden fazlasını senkronize etmek sisteminizi yavaşlatabilir, özellikle düşük performanslı cihazlarda. Yüksek performanslı bir makinedeyseniz devam edebilirsiniz, ancak potansiyel sorunlardan kaçınmak için daha az dosya senkronize etmenizi öneririz."
+                    "description": "{{count}} öğeden fazlasını eşitlemek sisteminizi yavaşlatabilir, özellikle düşük performanslı cihazlarda. Yüksek performanslı bir makinedeyseniz devam edebilirsiniz, ancak potansiyel sorunlardan kaçınmak için daha az dosya eşitlemenizi öneririz."
                 },
                 "localDirectoryNotPhysical": {
                     "title": "Uyarı",
                     "continue": "Devam et",
-                    "description": "Seçtiğiniz yerel dizin fiziksel bir diskte görünmüyor. Bu, senkronizasyon sorunlarına ve öngörülemeyen davranışlara yol açabilir. Devam etmek istiyor musunuz?"
+                    "description": "Seçtiğiniz yerel dizin fiziksel bir diskte görünmüyor. Bu, eşitleme sorunlarına ve öngörülemeyen davranışlara yol açabilir. Devam etmek istiyor musunuz?"
                 }
             }
         },
@@ -784,8 +784,8 @@
             "versionedFiles": "Sürümlü dosyalar {{size}}",
             "free": "Kalan depolama {{size}}",
             "used": "{{used}} kullanılan / Toplam {{max}}",
-            "dark": "Koyu tema",
-            "light": "Açık tema",
+            "dark": "Koyu",
+            "light": "Açık",
             "system": "Sistem",
             "noteType": {
                 "md": "Markdown",
@@ -943,7 +943,7 @@
                     "2": "Sınırsız yükleme",
                     "3": "İstemci tarafı şifreleme",
                     "4": "Sıfır bilgi teknolojisi",
-                    "5": "Senkronizasyon",
+                    "5": "Eşitleme",
                     "6": "Ağ sürücüsü",
                     "7": "Sınırlı dosya paylaşımı",
                     "8": "Sınırlı notlar",
@@ -954,7 +954,7 @@
                     "2": "Sınırsız yükleme",
                     "3": "İstemci tarafı şifreleme",
                     "4": "Sıfır bilgi teknolojisi",
-                    "5": "Senkronizasyon",
+                    "5": "Eşitleme",
                     "6": "Ağ sürücüsü",
                     "7": "Dosya paylaşımı",
                     "8": "Sınırsız notlar",
@@ -1279,8 +1279,8 @@
             "missingDepsLinux": "Ağ sürücüsünü kullanmak için sisteminizde FUSE3'ün yüklü olması gerekiyor.",
             "missingDepsInstructions": "Kurulum talimatları",
             "cacheUsed": "{{size}} kullanıldı",
-            "description": "Bulut sürücünüzü bir ağ sürücüsü olarak bağlayarak dosyalarınıza doğrudan bilgisayarınızdan erişmeyi ve yönetmeyi kolaylaştırın. Sorunsuz entegrasyonun, gerçek zamanlı senkronizasyonun ve verilerinize güvenli erişimin keyfini çıkarın, üstelik tüm bunları dosya gezgininizden yapın.",
-            "unixDescription": "Bulut sürücünüzü yerel bir dizin içine bağlayın, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı senkronizasyon ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
+            "description": "Bulut sürücünüzü bir ağ sürücüsü olarak bağlayarak dosyalarınıza doğrudan bilgisayarınızdan erişmeyi ve yönetmeyi kolaylaştırın. Sorunsuz entegrasyonun, gerçek zamanlı eşitlemenin ve verilerinize güvenli erişimin keyfini çıkarın, üstelik tüm bunları dosya gezgininizden yapın.",
+            "unixDescription": "Bulut sürücünüzü yerel bir dizin içine bağlayın, böylece dosyalarınıza doğrudan bilgisayarınızdan kolayca erişebilir ve yönetebilirsiniz. Sorunsuz entegrasyon, gerçek zamanlı eşitleme ve verilerinize güvenli erişim sunar, hepsi tanıdık dosya gezgininiz içinde.",
             "sudo": "Bulut sürücünüzü bağlamak ve kaldırmak için istemcinin yönetici haklarına ihtiyacı olabilir. Lütfen istendiğinde erişime izin verin.",
             "limitations": "Ağ sürücüsünde programların ve arşivlerin kurulumu, çalıştırılması veya açılması desteklenmez.",
             "sections": {
@@ -1347,7 +1347,7 @@
                 "uploadingPlural": "Arka planda {{total}} dosya yükleniyor",
                 "uploadingSpeed": "Arka planda {{total}} dosya yükleniyor {{speed}} hızında",
                 "uploadingPluralSpeed": "Arka planda {{total}} dosya yükleniyor {{speed}} hızında",
-                "everythingUploaded": "Her şey senkronize edildi"
+                "everythingUploaded": "Her şey eşitlendi"
             }
         },
         "webdav": {
@@ -1467,24 +1467,24 @@
         "nothingIgnored": "Yoksayılan dosya veya dizin yok",
         "noIssues": "Sorun yok",
         "info": {
-            "progress": "{{items}} öğe ({{total}}) senkronize ediliyor, {{speed}} hızında, yaklaşık {{remaining}} kaldı",
-            "progressNoEstimate": "{{items}} öğe ({{total}}) senkronize ediliyor",
-            "upToDate": "Her şey senkronize edildi",
-            "errors": "{{count}} senkronizasyon hatası",
+            "progress": "{{items}} öğe (toplam {{total}}) {{speed}} hızında eşitleniyor, yaklaşık {{remaining}} kaldı",
+            "progressNoEstimate": "{{items}} öğe ({{total}}) eşitleniyor",
+            "upToDate": "Her şey eşitlendi",
+            "errors": "{{count}} eşitleme hatası",
             "errorsResolve": "Çöz",
-            "paused": "Senkronizasyon duraklatıldı",
+            "paused": "Eşitleme duraklatıldı",
             "processingDeltas": "Delta işleniyor",
-            "syncingChanges": "Değişiklikler senkronize ediliyor",
+            "syncingChanges": "Değişiklikler eşitleniyor",
             "savingState": "Durum kaydediliyor",
             "waitingForLocalDirectoryChanges": "Yerel değişiklikler bekleniyor",
-            "acquiringLock": "Senkronizasyon kilidi oluşturuluyor",
+            "acquiringLock": "Eşitleme kilidi oluşturuluyor",
             "gettingTrees": "Yerel ve bulut dizini okunuyor",
             "remoteSmokeTestFailed": "Bulut dizini okunamadı. Dizin mevcut olmayabilir veya internete bağlı değilsiniz",
             "localSmokeTestFailed": "Yerel dizin okunamadı. Dizin mevcut olmayabilir veya okuma/yazma izniniz yok"
         },
         "empty": {
-            "title": "Henüz senkronizasyon ayarlanmamış",
-            "description": "Yerel dizinlerinizi bulutla veya bulut dizinlerini cihazınızla senkronize edebilirsiniz",
+            "title": "Henüz eşitleme ayarlanmamış",
+            "description": "Yerel dizinlerinizi bulutla veya bulut dizinlerini cihazınızla eşitleyebilirsiniz",
             "create": "Oluştur"
         },
         "events": {
@@ -1505,21 +1505,21 @@
             "sections": {
                 "delete": {
                     "name": "Sil",
-                    "info": "Senkronizasyonu sil",
+                    "info": "Eşitlemeyi sil",
                     "delete": "Sil"
                 },
                 "pause": {
                     "name": "Duraklat",
-                    "info": "Senkronizasyonu duraklat"
+                    "info": "Eşitlemeyi duraklat"
                 },
                 "mode": {
-                    "name": "Senkronizasyon modu",
-                    "info": "Senkronizasyon modunu değiştir"
+                    "name": "Eşitleme modu",
+                    "info": "Eşitleme modunu değiştir"
                 },
                 "forceSync": {
-                    "name": "Senkronizasyonu zorla",
+                    "name": "Eşitlemeyi zorla",
                     "info": "Dahili önbelleği sıfırlayın, yerel ve bulut dizininin yeniden taranmasını zorlayın",
-                    "forceSync": "Senkronizasyonu zorla"
+                    "forceSync": "Eşitlemeyi zorla"
                 },
                 "excludeDotFiles": {
                     "name": "Nokta dosyalarını hariç tut",
@@ -1532,19 +1532,19 @@
                 },
                 "disableLocalTrash": {
                     "name": "Yerel çöp kutusunu devre dışı bırak",
-                    "info": "Yerel çöp kutusunu etkinleştir veya devre dışı bırak. Devre dışı bırakıldığında, istemci dosyaları veya dizinleri yerel senkronizasyon yolunun içindeki yerel çöp kutusu dizinine taşımak yerine kalıcı olarak silecektir."
+                    "info": "Yerel çöp kutusunu etkinleştir veya devre dışı bırak. Devre dışı bırakıldığında, istemci dosyaları veya dizinleri yerel eşitleme yolunun içindeki yerel çöp kutusu dizinine taşımak yerine kalıcı olarak silecektir."
                 }
             }
         },
         "dialogs": {
             "delete": {
-                "title": "Senkronizasyonu sil",
-                "description": "Bu senkronizasyonu silmek istediğinizden emin misiniz?",
+                "title": "Eşitlemeyi sil",
+                "description": "Bu eşitlemeyi silmek istediğinizden emin misiniz?",
                 "continue": "Sil"
             },
             "resetErrors": {
                 "title": "Hataları çöz",
-                "description": "Tüm hataları çözülmüş olarak işaretlemek ve senkronizasyona devam etmek istediğinizden emin misiniz? Lütfen tüm hataların çözüldüğünden emin olun.",
+                "description": "Tüm hataları çözülmüş olarak işaretlemek ve eşitlemeye devam etmek istediğinizden emin misiniz? Lütfen tüm hataların çözüldüğünden emin olun.",
                 "continue": "Çöz"
             },
             "filenIgnore": {
@@ -1568,7 +1568,7 @@
                 "defaultIgnore": "Dosya veya dizin varsayılan olarak yoksayılan bir yolun içindedir",
                 "empty": "Dosya boş",
                 "invalidPath": "Dosya veya dizin geçersiz bir yolun içindedir",
-                "symlink": "Dosya veya dizin bir sembolik bağlantıdır. İstemci sonsuz senkronizasyon döngülerini önlemek için sembolik bağlantıları takip etmez.",
+                "symlink": "Dosya veya dizin bir sembolik bağlantıdır. İstemci sonsuz eşitleme döngülerini önlemek için sembolik bağlantıları takip etmez.",
                 "duplicate": "Dosya veya dizin yolu iki kez mevcut",
                 "filenIgnore": ".filenignore tarafından yoksayıldı",
                 "invalidType": "Öğe dosya veya dizin değildir",
@@ -1596,8 +1596,8 @@
                     "fileOrDirNameTooLong": "Dosya veya dizin adı/yolu çok uzun"
                 },
                 "info": {
-                    "permission": "Lütfen istemcinin yerel senkronizasyon dizinine erişmek için gerekli tüm izinlere sahip olduğundan emin olun.",
-                    "io": "Lütfen yerel senkronizasyon dizininizin ve altındaki depolama ortamının çalıştığından emin olun. İstemci buna düzgün bir şekilde erişemiyor.",
+                    "permission": "Lütfen istemcinin yerel eşitleme dizinine erişmek için gerekli tüm izinlere sahip olduğundan emin olun.",
+                    "io": "Lütfen yerel eşitleme dizininizin ve altındaki depolama ortamının çalıştığından emin olun. İstemci buna düzgün bir şekilde erişemiyor.",
                     "noSpace": "Yeterli yerel depolama alanınız kalmadı veya sistem mevcut dosya izleyicilerinin sınırına ulaştı.",
                     "openFiles": "İstemci açık dosya limitine ulaştı. Lütfen limiti artırın.",
                     "fileOrDirExists": "Dosya veya dizin zaten mevcut. Bu muhtemelen geçici bir sorun, istemciyi yeniden başlatmayı deneyin.",
