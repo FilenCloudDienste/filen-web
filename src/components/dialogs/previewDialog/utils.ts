@@ -21,7 +21,9 @@ export function fileNameToPreviewType(name: string) {
 		case ".jpg":
 		case ".jpeg":
 		case ".webp":
-		case ".svg": {
+		case ".svg":
+		case ".heic":
+		case ".heif": {
 			return "image"
 		}
 
@@ -124,7 +126,9 @@ export function fileNameToThumbnailType(name: string) {
 		case ".png":
 		case ".jpg":
 		case ".webp":
-		case ".jpeg": {
+		case ".jpeg":
+		case ".heic":
+		case ".heif": {
 			return "image"
 		}
 

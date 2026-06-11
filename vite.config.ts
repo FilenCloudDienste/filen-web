@@ -142,6 +142,9 @@ export default defineConfig({
 			comlink()
 		]
 	},
+	optimizeDeps: {
+		exclude: ["libheif-js"]
+	},
 	build: {
 		sourcemap: true,
 		rollupOptions: {

@@ -3,6 +3,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import eventEmitter from "@/lib/eventEmitter"
 import { type DriveCloudItem } from "@/components/drive"
 import { fileNameToPreviewType, ensureTextFileExtension, isFileStreamable } from "./utils"
+import { isHEIC } from "@/lib/heic"
 import Text from "./text"
 import PDF from "./pdf"
 import Image from "./image"
@@ -343,7 +344,7 @@ export const PreviewDialog = memo(() => {
 					return
 				}
 
-				const buffer = await readFileAndSanitize({
+				let buffer = await readFileAndSanitize({
 					item: itm,
 					emitEvents: false
 				})
@@ -354,9 +355,18 @@ export const PreviewDialog = memo(() => {
 						[itm.uuid]: buffer
 					}))
 				} else {
+					let mimeType = itm.mime
+
+					if (isHEIC(itm.name)) {
+						const { convertHEICToJPEG } = await import("@/lib/heic")
+
+						buffer = await convertHEICToJPEG(buffer)
+						mimeType = "image/jpeg"
+					}
+
 					setURLObjects(prev => ({
 						...prev,
-						[itm.uuid]: globalThis.URL.createObjectURL(new Blob([buffer], { type: itm.mime }))
+						[itm.uuid]: globalThis.URL.createObjectURL(new Blob([buffer], { type: mimeType }))
 					}))
 				}
 			} catch (e) {

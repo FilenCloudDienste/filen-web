@@ -1847,7 +1847,16 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 	}
 
 	const buffer = await readFile({ item, emitEvents: false })
-	const imageBitmap = await createImageBitmap(new Blob([buffer], { type: item.mime }))
+	let imageBlob = new Blob([buffer], { type: item.mime })
+
+	if (item.name.toLowerCase().endsWith(".heic") || item.name.toLowerCase().endsWith(".heif")) {
+		const { convertHEICToJPEG } = await import("../heic")
+		const converted = await convertHEICToJPEG(buffer)
+
+		imageBlob = new Blob([converted], { type: "image/jpeg" })
+	}
+
+	const imageBitmap = await createImageBitmap(imageBlob)
 	const originalWidth = imageBitmap.width
 	const originalHeight = imageBitmap.height
 	let thumbnailWidth = originalWidth
