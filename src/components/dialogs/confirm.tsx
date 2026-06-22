@@ -191,11 +191,13 @@ export const ConfirmDialog = memo(() => {
 						</div>
 					)}
 					{props.requireInputText && (
-						<div className="flex flex-row items-center gap-1 py-4 justify-center">
+						<div className="flex flex-col gap-2 py-4">
+							<div className="bg-secondary rounded-md px-3 py-2">
+								<p className="text-sm text-center font-medium break-all">{props.requireInputText}</p>
+							</div>
 							<Input
 								value={inputValue}
 								onChange={e => setInputValue(e.target.value)}
-								placeholder={props.requireInputText}
 								type="text"
 								className="w-full"
 								autoCapitalize="none"
