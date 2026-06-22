@@ -6,15 +6,18 @@ export type UserStore = {
 	account: UserAccountResponse | null
 	settings: UserSettingsResponse | null
 	cancelledSubs: string[]
+	withdrawnSubs: string[]
 	setAccount: (fn: UserAccountResponse | null | ((prev: UserAccountResponse | null) => UserAccountResponse | null)) => void
 	setSettings: (fn: UserSettingsResponse | null | ((prev: UserSettingsResponse | null) => UserSettingsResponse | null)) => void
 	setCancelledSubs: (fn: string[] | ((prev: string[]) => string[])) => void
+	setWithdrawnSubs: (fn: string[] | ((prev: string[]) => string[])) => void
 }
 
 export const useUserStore = create<UserStore>(set => ({
 	account: null,
 	settings: null,
 	cancelledSubs: [],
+	withdrawnSubs: [],
 	setAccount(fn) {
 		set(state => ({
 			account: typeof fn === "function" ? fn(state.account) : fn
@@ -28,6 +31,11 @@ export const useUserStore = create<UserStore>(set => ({
 	setCancelledSubs(fn) {
 		set(state => ({
 			cancelledSubs: typeof fn === "function" ? fn(state.cancelledSubs) : fn
+		}))
+	},
+	setWithdrawnSubs(fn) {
+		set(state => ({
+			withdrawnSubs: typeof fn === "function" ? fn(state.withdrawnSubs) : fn
 		}))
 	}
 }))

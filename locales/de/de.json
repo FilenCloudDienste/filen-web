@@ -925,6 +925,20 @@
 			"cannotCancelTooEarly": "Abonnements können nur 24 Stunden nach dem Erstkauf gekündigt werden.",
 			"billingDetails": "Zahlungsdetails"
 		},
+		"withdrawal": {
+			"button": "Vertrag widerrufen",
+			"dialogTitle": "Vertrag widerrufen",
+			"dialogDescription": "Du kannst diesen Vertrag innerhalb von 14 Tagen ohne Angabe von Gründen widerrufen.",
+			"fieldName": "Name",
+			"fieldContract": "Vertrag",
+			"fieldEmail": "E-Mail für die Eingangsbestätigung",
+			"confirm": "Widerruf bestätigen",
+			"cancel": "Abbrechen",
+			"invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein.",
+			"nameRequired": "Bitte gib deinen Namen ein.",
+			"successToast": "Dein Widerruf ist eingegangen. Du erhältst eine Bestätigung per E-Mail.",
+			"statusWithdrawn": "Widerrufen am {{date}}"
+		},
 		"plans": {
 			"starter": "Starter",
 			"monthly": "Monatlich",

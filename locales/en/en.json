@@ -945,6 +945,20 @@
 			"cannotCancelTooEarly": "Subscriptions can only be cancelled 24 hours after the initial purchase.",
 			"billingDetails": "Billing details"
 		},
+		"withdrawal": {
+			"button": "Withdraw from contract",
+			"dialogTitle": "Withdraw from contract",
+			"dialogDescription": "You can withdraw from this contract within 14 days without giving any reason.",
+			"fieldName": "Name",
+			"fieldContract": "Contract",
+			"fieldEmail": "Email for the confirmation of receipt",
+			"confirm": "Confirm withdrawal",
+			"cancel": "Cancel",
+			"invalidEmail": "Please enter a valid email address.",
+			"nameRequired": "Please enter your name.",
+			"successToast": "Your withdrawal has been received. You will receive a confirmation by email.",
+			"statusWithdrawn": "Withdrawn on {{date}}"
+		},
 		"plans": {
 			"starter": "Starter",
 			"monthly": "Monthly",
