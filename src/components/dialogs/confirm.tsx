@@ -22,6 +22,7 @@ export type ConfirmDialogProps = {
 	continueButtonVariant?: "destructive" | "default" | "link" | "outline" | "secondary" | "ghost" | null
 	description: string
 	withInputField?: string
+	requireInputText?: string
 	cancelButtonText?: string
 }
 
@@ -31,6 +32,7 @@ export async function showConfirmDialog({
 	description,
 	continueButtonVariant,
 	withInputField,
+	requireInputText,
 	cancelButtonText
 }: ConfirmDialogProps): Promise<boolean> {
 	return await new Promise<boolean>(resolve => {
@@ -53,6 +55,7 @@ export async function showConfirmDialog({
 			continueButtonVariant,
 			description,
 			withInputField,
+			requireInputText,
 			cancelButtonText
 		})
 	})
@@ -66,12 +69,20 @@ export const ConfirmDialog = memo(() => {
 		continueButtonText: "",
 		description: "",
 		continueButtonVariant: "default",
-		withInputField: undefined
+		withInputField: undefined,
+		requireInputText: undefined
 	})
+	const [inputValue, setInputValue] = useState<string>("")
 	const requestId = useRef<string>("")
 	const didSubmit = useRef<boolean>(false)
 	const successToast = useSuccessToast()
 	const errorToast = useErrorToast()
+
+	// Type-to-confirm: when a required phrase is set, the continue action stays disabled until the typed
+	// text matches it (case-insensitive, trimmed). When it is not set, inputMatches is always true, so
+	// every existing dialog (plain confirm or the read-only withInputField copy field) behaves unchanged.
+	const inputMatches =
+		!props.requireInputText || inputValue.trim().toLowerCase() === props.requireInputText.trim().toLowerCase()
 
 	const submit = useCallback(() => {
 		if (didSubmit.current) {
@@ -126,7 +137,7 @@ export const ConfirmDialog = memo(() => {
 
 	useEffect(() => {
 		const keyDownListener = (e: KeyboardEvent) => {
-			if (e.key === "Enter" && open) {
+			if (e.key === "Enter" && open && inputMatches) {
 				submit()
 			}
 		}
@@ -136,7 +147,7 @@ export const ConfirmDialog = memo(() => {
 		return () => {
 			window.removeEventListener("keydown", keyDownListener)
 		}
-	}, [open, submit])
+	}, [open, submit, inputMatches])
 
 	useEffect(() => {
 		const listener = eventEmitter.on("openConfirmDialog", (p: ConfirmDialogProps & { requestId: string }) => {
@@ -144,6 +155,7 @@ export const ConfirmDialog = memo(() => {
 			didSubmit.current = false
 
 			setProps(p)
+			setInputValue("")
 			setOpen(true)
 		})
 
@@ -178,6 +190,20 @@ export const ConfirmDialog = memo(() => {
 							</Button>
 						</div>
 					)}
+					{props.requireInputText && (
+						<div className="flex flex-row items-center gap-1 py-4 justify-center">
+							<Input
+								value={inputValue}
+								onChange={e => setInputValue(e.target.value)}
+								placeholder={props.requireInputText}
+								type="text"
+								className="w-full"
+								autoCapitalize="none"
+								autoComplete="none"
+								autoCorrect="none"
+							/>
+						</div>
+					)}
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel onClick={cancel}>
@@ -186,6 +212,7 @@ export const ConfirmDialog = memo(() => {
 					<Button
 						onClick={submit}
 						variant={props.continueButtonVariant}
+						disabled={!inputMatches}
 					>
 						{props.continueButtonText}
 					</Button>

@@ -124,6 +124,12 @@
                 "title": "Obnovit heslo",
                 "continue": "Ano",
                 "description": "Jste si opravdu jisti?"
+            },
+            "confirmDeleteData": {
+                "title": "Trvale smazat všechna data?",
+                "description": "Poslední varování. Nebyly importovány žádné hlavní klíče, takže resetováním hesla trvale smažete všechna data ve svém účtu – soubory, poznámky a chaty – a nebude možné je obnovit. Pro potvrzení napište {{phrase}}.",
+                "phrase": "TRVALE SMAZAT MOJE DATA",
+                "continue": "Trvale smazat všechna data"
             }
         },
         "alerts": {

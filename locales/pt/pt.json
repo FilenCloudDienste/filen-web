@@ -124,6 +124,12 @@
 				"title": "Redefinir senha",
 				"continue": "Sim",
 				"description": "Você realmente tem certeza?"
+			},
+			"confirmDeleteData": {
+				"title": "Excluir permanentemente todos os dados?",
+				"description": "Último aviso. Nenhuma chave mestra foi importada, portanto, redefinir sua senha excluirá permanentemente todos os dados da sua conta — arquivos, notas e conversas — sem possibilidade de recuperação. Digite {{phrase}} para confirmar.",
+				"phrase": "EXCLUIR PERMANENTEMENTE MEUS DADOS",
+				"continue": "Excluir permanentemente todos os dados"
 			}
 		},
 		"alerts": {

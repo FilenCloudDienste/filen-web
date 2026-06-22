@@ -124,6 +124,12 @@
 				"title": "Restablecer contraseña",
 				"continue": "Sí",
 				"description": "¿Estás realmente seguro?"
+			},
+			"confirmDeleteData": {
+				"title": "¿Eliminar permanentemente todos los datos?",
+				"description": "Última advertencia. No se importaron claves maestras, por lo que al restablecer tu contraseña se eliminarán permanentemente todos los datos de tu cuenta —archivos, notas y chats— y no se podrán recuperar. Escribe {{phrase}} para confirmar.",
+				"phrase": "ELIMINAR PERMANENTEMENTE MIS DATOS",
+				"continue": "Eliminar permanentemente todos los datos"
 			}
 		},
 		"alerts": {

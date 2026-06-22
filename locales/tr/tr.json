@@ -124,6 +124,12 @@
                 "title": "Şifreyi sıfırla",
                 "continue": "Evet",
                 "description": "Gerçekten emin misiniz?"
+            },
+            "confirmDeleteData": {
+                "title": "Tüm veriler kalıcı olarak silinsin mi?",
+                "description": "Son uyarı. Ana anahtarlar içe aktarılmadı; bu nedenle şifrenizi sıfırlamak hesabınızdaki tüm verileri — dosyalar, notlar ve sohbetler — kalıcı olarak siler ve bunlar kurtarılamaz. Onaylamak için {{phrase}} yazın.",
+                "phrase": "TÜM VERİLERİMİ SİL",
+                "continue": "Tüm verileri kalıcı olarak sil"
             }
         },
         "alerts": {

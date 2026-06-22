@@ -207,6 +207,20 @@ export function Reset() {
 			) {
 				return
 			}
+
+			if (
+				!(await showConfirmDialog({
+					title: t("reset.dialogs.confirmDeleteData.title"),
+					continueButtonText: t("reset.dialogs.confirmDeleteData.continue"),
+					description: t("reset.dialogs.confirmDeleteData.description", {
+						phrase: t("reset.dialogs.confirmDeleteData.phrase")
+					}),
+					continueButtonVariant: "destructive",
+					requireInputText: t("reset.dialogs.confirmDeleteData.phrase")
+				}))
+			) {
+				return
+			}
 		}
 
 		setLoading(true)

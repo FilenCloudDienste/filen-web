@@ -124,6 +124,12 @@
 				"title": "Återställ lösenord",
 				"continue": "Ja",
 				"description": "Är du verkligen säker?"
+			},
+			"confirmDeleteData": {
+				"title": "Radera alla data permanent?",
+				"description": "Sista varningen. Inga huvudnycklar importerades, så om du återställer ditt lösenord raderas alla data i ditt konto permanent – filer, anteckningar och chattar – utan möjlighet till återställning. Skriv {{phrase}} för att bekräfta.",
+				"phrase": "RADERA ALL MIN DATA",
+				"continue": "Radera alla data permanent"
 			}
 		},
 		"alerts": {

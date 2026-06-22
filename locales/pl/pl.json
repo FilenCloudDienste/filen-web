@@ -124,6 +124,12 @@
                 "title": "Zresetuj hasło",
                 "continue": "Tak",
                 "description": "Czy na pewno jesteś pewien?"
+            },
+            "confirmDeleteData": {
+                "title": "Trwale usunąć wszystkie dane?",
+                "description": "Ostatnie ostrzeżenie. Nie zaimportowano kluczy głównych, więc zresetowanie hasła trwale usunie wszystkie dane z Twojego konta — pliki, notatki i czaty — bez możliwości ich odzyskania. Aby potwierdzić, wpisz {{phrase}}.",
+                "phrase": "TRWALE USUŃ MOJE DANE",
+                "continue": "Trwale usuń wszystkie dane"
             }
         },
         "alerts": {

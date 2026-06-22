@@ -124,6 +124,12 @@
 				"title": "重置密码",
 				"continue": "是的",
 				"description": "您真的确定吗？"
+			},
+			"confirmDeleteData": {
+				"title": "永久删除所有数据？",
+				"description": "最后警告。未导入主密钥，因此重置密码将永久删除您账户中的所有数据（文件、笔记和聊天），且无法恢复。请输入 {{phrase}} 以确认。",
+				"phrase": "永久删除我的所有数据",
+				"continue": "永久删除所有数据"
 			}
 		},
 		"alerts": {

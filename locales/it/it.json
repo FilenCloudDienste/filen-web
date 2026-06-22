@@ -124,6 +124,12 @@
                 "title": "Reimposta password",
                 "continue": "Sì",
                 "description": "Sei davvero sicuro?"
+            },
+            "confirmDeleteData": {
+                "title": "Eliminare definitivamente tutti i dati?",
+                "description": "Ultimo avviso. Non è stata importata alcuna chiave master, quindi reimpostando la password tutti i dati del tuo account — file, note e chat — verranno eliminati definitivamente e non potranno essere recuperati. Digita {{phrase}} per confermare.",
+                "phrase": "ELIMINA DEFINITIVAMENTE I MIEI DATI",
+                "continue": "Elimina definitivamente tutti i dati"
             }
         },
         "alerts": {

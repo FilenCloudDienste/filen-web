@@ -124,6 +124,12 @@
 				"title": "Passwort zurücksetzen",
 				"continue": "Ja",
 				"description": "Bist du wirklich sicher?"
+			},
+			"confirmDeleteData": {
+				"title": "Alle Daten unwiderruflich löschen?",
+				"description": "Letzte Warnung. Es wurden keine Hauptschlüssel importiert – beim Zurücksetzen deines Passworts werden daher alle Daten in deinem Konto unwiderruflich gelöscht (Dateien, Notizen und Chats) und können nicht wiederhergestellt werden. Gib zur Bestätigung {{phrase}} ein.",
+				"phrase": "MEINE DATEN UNWIDERRUFLICH LÖSCHEN",
+				"continue": "Alle Daten unwiderruflich löschen"
 			}
 		},
 		"alerts": {

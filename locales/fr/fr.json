@@ -124,6 +124,12 @@
 				"title": "Réinitialiser le mot de passe",
 				"continue": "Oui",
 				"description": "Êtes-vous vraiment sûr ?"
+			},
+			"confirmDeleteData": {
+				"title": "Supprimer définitivement toutes les données ?",
+				"description": "Dernier avertissement. Aucune clé maîtresse n'a été importée : réinitialiser votre mot de passe supprimera définitivement toutes les données de votre compte — fichiers, notes et discussions — sans possibilité de récupération. Saisissez {{phrase}} pour confirmer.",
+				"phrase": "SUPPRIMER DÉFINITIVEMENT MES DONNÉES",
+				"continue": "Supprimer définitivement toutes les données"
 			}
 		},
 		"alerts": {

@@ -129,6 +129,12 @@
 				"title": "Reset password",
 				"continue": "Yes",
 				"description": "Are you really sure?"
+			},
+			"confirmDeleteData": {
+				"title": "Permanently delete all data?",
+				"description": "Last warning. No master keys were imported, so resetting your password will permanently delete all data on your account — files, notes and chats — and it can never be recovered. Type {{phrase}} to confirm.",
+				"phrase": "PERMANENTLY DELETE MY DATA",
+				"continue": "Permanently delete all data"
 			}
 		},
 		"alerts": {
