@@ -37,7 +37,10 @@ export const S3 = memo(() => {
 
 	const isOnlineQuery = useQuery({
 		queryKey: ["isS3Online"],
-		queryFn: () => isS3Online()
+		queryFn: () => isS3Online(),
+		// Poll while this tab is open so the indicator flips to offline if rclone dies at runtime (react-query pauses the
+		// interval when the window is unfocused).
+		refetchInterval: 5000
 	})
 
 	const onCheckedChange = useCallback(

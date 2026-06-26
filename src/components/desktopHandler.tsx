@@ -18,7 +18,7 @@ const updateDesktopConfigMutex = new Semaphore(1)
 
 export const DesktopHandler = memo(() => {
 	const [authed] = useIsAuthed()
-	const [desktopConfig, setDesktopConfig] = useDesktopConfig()
+	const [desktopConfig] = useDesktopConfig()
 	const lastDesktopConfigRef = useRef<string>("")
 	const { setEnablingS3, setEnablingNetworkDrive, setEnablingWebDAV } = useMountsStore(
 		useCallback(
@@ -41,6 +41,10 @@ export const DesktopHandler = memo(() => {
 		return JSON.stringify(desktopConfig)
 	}, [desktopConfig])
 
+	// Auto-start helpers. On failure they intentionally do NOT flip `enabled` to false: that flag is the persisted
+	// "user wants this on" intent that drives auto-start, so a transient boot failure (port busy, binary still warming,
+	// etc.) must not silently erase it. The status query (refetched in `finally`) reflects that the role is not running,
+	// and the role is retried on the next config change or app launch.
 	const startNetworkDrive = useCallback(async () => {
 		if (!authed) {
 			return
@@ -50,22 +54,14 @@ export const DesktopHandler = memo(() => {
 
 		try {
 			await window.desktopAPI.restartNetworkDrive()
-
-			eventEmitter.emit("refetchNetworkDrive")
 		} catch (e) {
 			console.error(e)
-
-			setDesktopConfig(prev => ({
-				...prev,
-				networkDriveConfig: {
-					...prev.networkDriveConfig,
-					enabled: false
-				}
-			}))
 		} finally {
+			eventEmitter.emit("refetchNetworkDrive")
+
 			setEnablingNetworkDrive(false)
 		}
-	}, [setDesktopConfig, authed, setEnablingNetworkDrive])
+	}, [authed, setEnablingNetworkDrive])
 
 	const startWebDAV = useCallback(async () => {
 		if (!authed) {
@@ -76,22 +72,14 @@ export const DesktopHandler = memo(() => {
 
 		try {
 			await window.desktopAPI.restartWebDAVServer()
-
-			eventEmitter.emit("refetchWebDAV")
 		} catch (e) {
 			console.error(e)
-
-			setDesktopConfig(prev => ({
-				...prev,
-				webdavConfig: {
-					...prev.webdavConfig,
-					enabled: false
-				}
-			}))
 		} finally {
+			eventEmitter.emit("refetchWebDAV")
+
 			setEnablingWebDAV(false)
 		}
-	}, [setDesktopConfig, authed, setEnablingWebDAV])
+	}, [authed, setEnablingWebDAV])
 
 	const startS3 = useCallback(async () => {
 		if (!authed) {
@@ -102,22 +90,14 @@ export const DesktopHandler = memo(() => {
 
 		try {
 			await window.desktopAPI.restartS3Server()
-
-			eventEmitter.emit("refetchS3")
 		} catch (e) {
 			console.error(e)
-
-			setDesktopConfig(prev => ({
-				...prev,
-				s3Config: {
-					...prev.s3Config,
-					enabled: false
-				}
-			}))
 		} finally {
+			eventEmitter.emit("refetchS3")
+
 			setEnablingS3(false)
 		}
-	}, [setDesktopConfig, authed, setEnablingS3])
+	}, [authed, setEnablingS3])
 
 	useEffect(() => {
 		if (!authed) {

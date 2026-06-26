@@ -17,9 +17,9 @@ export const useMountsStore = create<MountsStore>(set => ({
 		set(state => ({ enablingNetworkDrive: typeof fn === "function" ? fn(state.enablingNetworkDrive) : fn }))
 	},
 	setEnablingS3(fn) {
-		set(state => ({ enablingNetworkDrive: typeof fn === "function" ? fn(state.enablingNetworkDrive) : fn }))
+		set(state => ({ enablingS3: typeof fn === "function" ? fn(state.enablingS3) : fn }))
 	},
 	setEnablingWebDAV(fn) {
-		set(state => ({ enablingNetworkDrive: typeof fn === "function" ? fn(state.enablingNetworkDrive) : fn }))
+		set(state => ({ enablingWebDAV: typeof fn === "function" ? fn(state.enablingWebDAV) : fn }))
 	}
 }))

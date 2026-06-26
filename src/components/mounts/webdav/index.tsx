@@ -43,7 +43,10 @@ export const WebDAV = memo(() => {
 
 	const isOnlineQuery = useQuery({
 		queryKey: ["isWebDAVOnline"],
-		queryFn: () => isWebDAVOnline()
+		queryFn: () => isWebDAVOnline(),
+		// Poll while this tab is open so the indicator flips to offline if rclone dies at runtime (react-query pauses the
+		// interval when the window is unfocused).
+		refetchInterval: 5000
 	})
 
 	const onCheckedChange = useCallback(
