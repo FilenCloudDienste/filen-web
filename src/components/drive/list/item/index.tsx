@@ -470,13 +470,8 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 						onMouseEnter={onMouseEnter}
 						onMouseLeave={onMouseLeave}
 					>
-						<div
-							className="flex flex-row items-center dragselect-start-disallowed gap-2"
-							style={{
-								width: driveListColumnSize.name
-							}}
-						>
-							<div className="flex flex-row items-center grow gap-2">
+						<div className="flex flex-row items-center dragselect-start-disallowed gap-2 flex-1 min-w-0">
+							<div className="flex flex-row items-center grow gap-2 min-w-0">
 								<div className="flex flex-row dragselect-start-disallowed shrink-0">
 									{item.type === "directory" ? (
 										<ColoredFolderSVGIcon
@@ -495,14 +490,14 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 										/>
 									)}
 								</div>
-								<div className="flex flex-row dragselect-start-disallowed items-center gap-2 line-clamp-1 text-ellipsis break-all">
+								<div className="flex flex-row dragselect-start-disallowed items-center gap-2 min-w-0">
 									{item.favorited && (
 										<Heart
 											size={18}
 											className="dragselect-start-disallowed shrink-0"
 										/>
 									)}
-									<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
+									<p className="dragselect-start-disallowed truncate min-w-0">{item.name}</p>
 								</div>
 							</div>
 							{item.sharerId > 0 && item.sharerEmail.length > 0 && !driveURLState.insideParent && (
@@ -531,7 +526,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 							)}
 						</div>
 						<div
-							className="flex flex-row dragselect-start-disallowed line-clamp-1 break-all text-ellipsis"
+							className="flex flex-row dragselect-start-disallowed line-clamp-1 break-all text-ellipsis shrink-0"
 							style={{
 								width: driveListColumnSize.size
 							}}
@@ -539,7 +534,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 							<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{formatBytes(size)}</p>
 						</div>
 						<div
-							className="flex flex-row dragselect-start-disallowed line-clamp-1 break-all text-ellipsis"
+							className="flex flex-row dragselect-start-disallowed line-clamp-1 break-all text-ellipsis shrink-0"
 							style={{
 								width: driveListColumnSize.modified
 							}}
@@ -549,7 +544,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 							</p>
 						</div>
 						<div
-							className="flex flex-row dragselect-start-disallowed text-muted-foreground hover:text-primary"
+							className="flex flex-row dragselect-start-disallowed text-muted-foreground hover:text-primary shrink-0"
 							onClick={triggerMoreIconContextMenu}
 							style={{
 								width: driveListColumnSize.more

@@ -17,15 +17,23 @@ export default function useElementDimensions(elementId: string): Dimensions {
 			return
 		}
 
-		cache.set(elementId, {
-			width: element.offsetWidth,
-			height: element.offsetHeight
-		})
+		const width = element.offsetWidth
+		const height = element.offsetHeight
 
-		setDimensions({
-			width: element.offsetWidth,
-			height: element.offsetHeight
-		})
+		// Ignore transient all-zero reads (element not laid out yet, or momentarily hidden) and keep the last good value: a
+		// single stray 0 must never collapse dependent layout. The initial state stays {0,0} until the first real measurement,
+		// so consumers that treat 0 as "not measured yet" (e.g. chat height/width fallbacks) keep working.
+		if (width === 0 && height === 0) {
+			return
+		}
+
+		const next = {
+			width,
+			height
+		}
+
+		cache.set(elementId, next)
+		setDimensions(next)
 	}, [elementId])
 
 	useEffect(() => {

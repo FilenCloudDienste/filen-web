@@ -43,11 +43,8 @@ export const Header = memo(({ parent, items }: { parent: string; items: DriveClo
 		<div className="flex flex-row px-3 text-sm">
 			<div className="flex flex-row w-full h-10 items-center select-none gap-3">
 				<div
-					className="flex flex-row items-center cursor-pointer"
+					className="flex flex-row flex-1 min-w-0 items-center cursor-pointer"
 					onClick={name}
-					style={{
-						width: driveListColumnSize.name
-					}}
 				>
 					<div
 						className={cn(
@@ -63,7 +60,7 @@ export const Header = memo(({ parent, items }: { parent: string; items: DriveClo
 					</div>
 				</div>
 				<div
-					className="flex flex-row items-center cursor-pointer"
+					className="flex flex-row items-center cursor-pointer shrink-0"
 					onClick={size}
 					style={{
 						width: driveListColumnSize.size
@@ -83,7 +80,7 @@ export const Header = memo(({ parent, items }: { parent: string; items: DriveClo
 					</div>
 				</div>
 				<div
-					className="flex flex-row items-center cursor-pointer"
+					className="flex flex-row items-center cursor-pointer shrink-0"
 					onClick={modified}
 					style={{
 						width: driveListColumnSize.modified
@@ -103,7 +100,7 @@ export const Header = memo(({ parent, items }: { parent: string; items: DriveClo
 					</div>
 				</div>
 				<div
-					className="flex flex-row"
+					className="flex flex-row shrink-0"
 					style={{
 						width: driveListColumnSize.more
 					}}
