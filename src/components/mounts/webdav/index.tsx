@@ -133,51 +133,6 @@ export const WebDAV = memo(() => {
 		]
 	)
 
-	const onAuthModeChange = useCallback(
-		async (mode: "basic" | "digest") => {
-			if (enablingWebDAV) {
-				return
-			}
-
-			setEnablingWebDAV(true)
-
-			try {
-				if ((await isWebDAVOnline()).online) {
-					await window.desktopAPI.restartWebDAVServer()
-
-					if (!(await isWebDAVOnline()).online) {
-						throw new Error("Could not start WebDAV server.")
-					}
-				}
-
-				await isOnlineQuery.refetch()
-
-				setDesktopConfig(prev => ({
-					...prev,
-					webdavConfig: {
-						...prev.webdavConfig,
-						authMode: mode
-					}
-				}))
-			} catch (e) {
-				console.error(e)
-
-				errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
-
-				setDesktopConfig(prev => ({
-					...prev,
-					webdavConfig: {
-						...prev.webdavConfig,
-						enabled: false
-					}
-				}))
-			} finally {
-				setEnablingWebDAV(false)
-			}
-		},
-		[errorToast, enablingWebDAV, setEnablingWebDAV, isOnlineQuery, setDesktopConfig]
-	)
-
 	const onProtocolChange = useCallback(
 		async (protocol: "http" | "https") => {
 			if (enablingWebDAV) {
@@ -395,24 +350,6 @@ export const WebDAV = memo(() => {
 						/>
 					</Section>
 					<Section
-						name={t("mounts.webdav.sections.authMode.name")}
-						info={t("mounts.webdav.sections.authMode.info")}
-					>
-						<Select
-							onValueChange={onAuthModeChange}
-							value={desktopConfig.webdavConfig.authMode}
-							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
-						>
-							<SelectTrigger className="min-w-[90px]">
-								<SelectValue placeholder={desktopConfig.webdavConfig.authMode} />
-							</SelectTrigger>
-							<SelectContent className="max-h-[200px]">
-								<SelectItem value="basic">Basic</SelectItem>
-								<SelectItem value="digest">Digest</SelectItem>
-							</SelectContent>
-						</Select>
-					</Section>
-					<Section
 						name={t("mounts.webdav.sections.username.name")}
 						info={t("mounts.webdav.sections.username.info")}
 					>
@@ -446,16 +383,6 @@ export const WebDAV = memo(() => {
 							maxLength={32}
 						/>
 					</Section>
-					{/*<Section
-						name={t("mounts.webdav.sections.proxyMode.name")}
-						info={t("mounts.webdav.sections.proxyMode.info")}
-					>
-						<Switch
-							disabled={enablingWebDAV || (isOnlineQuery.isSuccess && isOnlineQuery.data.online)}
-							checked={desktopConfig.webdavConfig.proxyMode}
-							onCheckedChange={onProxyModeChange}
-						/>
-					</Section>*/}
 					{!enablingWebDAV && isOnlineQuery.isSuccess && isOnlineQuery.data.online && (
 						<Section
 							name={t("mounts.webdav.sections.connect.name")}

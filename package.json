@@ -14,7 +14,7 @@
 		"preview": "cross-env NODE_OPTIONS=--max_old_space_size=16834 vite preview",
 		"serve": "cross-env NODE_OPTIONS=--max_old_space_size=16834 serve -s dist/",
 		"i18n:scan": "tsx ./i18nScanner.ts",
-		"install:filen": "npm install @filen/desktop@latest @filen/sdk@latest @filen/sync@latest @filen/network-drive@latest"
+		"install:filen": "npm install @filen/desktop@latest @filen/sdk@latest @filen/sync@latest"
 	},
 	"engines": {
 		"node": ">=20"
@@ -24,7 +24,6 @@
 		"@emoji-mart/data": "^1.1.2",
 		"@emoji-mart/react": "^1.1.1",
 		"@filen/desktop": "^3.0.48",
-		"@filen/network-drive": "^0.9.44",
 		"@filen/sdk": "^0.3.10",
 		"@filen/sync": "^0.2.1",
 		"@radix-ui/react-alert-dialog": "^1.0.5",
