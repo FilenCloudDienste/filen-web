@@ -27,7 +27,8 @@ export async function getStreamWriter({
 	const streamHandle = streamSaver.createWriteStream(sanitizeFileName(name), {
 		size,
 		pathname: `/download/${encodeURIComponent(sanitizeFileName(name))}`
-	})
+		// streamsaver types its streams as Uint8Array; the app uses Buffer-typed byte streams.
+	}) as unknown as WritableStream<Buffer>
 
 	return !pipe ? streamHandle.getWriter() : streamHandle
 }

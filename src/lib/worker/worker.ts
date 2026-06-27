@@ -1816,7 +1816,8 @@ export async function readFile({
 		}
 
 		if (value instanceof Uint8Array && value.byteLength > 0) {
-			buffer = Buffer.concat([buffer, value])
+			// TS 5.9 types Buffer/Uint8Array generics invariantly here; runtime is plain bytes.
+			buffer = Buffer.concat([buffer, value] as unknown as Uint8Array[])
 		}
 	}
 
@@ -1847,7 +1848,7 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 	}
 
 	const buffer = await readFile({ item, emitEvents: false })
-	const imageBitmap = await createImageBitmap(new Blob([buffer], { type: item.mime }))
+	const imageBitmap = await createImageBitmap(new Blob([new Uint8Array(buffer)], { type: item.mime }))
 	const originalWidth = imageBitmap.width
 	const originalHeight = imageBitmap.height
 	let thumbnailWidth = originalWidth
@@ -3596,7 +3597,7 @@ export async function httpHealthCheck({
 		}
 
 		return response.status === expectedStatusCode && typeof response.data === "string" && expectedBodyText === response.data
-	} catch (e) {
+	} catch {
 		clearTimeout(timeouter)
 
 		return false

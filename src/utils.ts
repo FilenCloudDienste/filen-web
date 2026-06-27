@@ -14,7 +14,7 @@ export function convertTimestampToMs(timestamp: number): number {
 export function simpleDate(timestamp: number): string {
 	try {
 		return new Date(convertTimestampToMs(timestamp)).toString().split(" ").slice(0, 5).join(" ")
-	} catch (e) {
+	} catch {
 		return new Date().toString().split(" ").slice(0, 5).join(" ")
 	}
 }

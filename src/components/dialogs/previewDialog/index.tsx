@@ -356,7 +356,7 @@ export const PreviewDialog = memo(() => {
 				} else {
 					setURLObjects(prev => ({
 						...prev,
-						[itm.uuid]: globalThis.URL.createObjectURL(new Blob([buffer], { type: itm.mime }))
+						[itm.uuid]: globalThis.URL.createObjectURL(new Blob([new Uint8Array(buffer)], { type: itm.mime }))
 					}))
 				}
 			} catch (e) {
@@ -378,7 +378,7 @@ export const PreviewDialog = memo(() => {
 		try {
 			const buffer = Buffer.from(textRef.current, "utf-8")
 			const itm = await uploadFile({
-				file: new File([buffer], item.name, {
+				file: new File([new Uint8Array(buffer)], item.name, {
 					type: item.mime
 				}),
 				parent: item.parent,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import worker from "."
 import { showSaveFilePicker } from "native-file-system-adapter"
 import { type DriveCloudItem } from "@/components/drive"
@@ -47,7 +46,7 @@ export async function downloadFile({ item }: { item: DriveCloudItem }): Promise<
 
 		return await workerLib.downloadFile({
 			item,
-			fileHandle: streamHandle
+			fileHandle: streamHandle as unknown as WritableStream<Buffer>
 		})
 	}
 
@@ -120,7 +119,7 @@ export async function downloadDirectory({
 			linkPassword,
 			linkSalt,
 			linkKey,
-			fileHandle: streamHandle,
+			fileHandle: streamHandle as unknown as WritableStream<Buffer>,
 			name
 		})
 	}
@@ -197,7 +196,7 @@ export async function downloadMultipleFilesAndDirectoriesAsZip({
 
 		return workerLib.downloadMultipleFilesAndDirectoriesAsZip({
 			items: itemsWithPath,
-			fileHandle: streamHandle,
+			fileHandle: streamHandle as unknown as WritableStream<Buffer>,
 			type,
 			linkHasPassword,
 			linkPassword,
@@ -369,7 +368,7 @@ export async function readFileAndSanitize({
 
 	if (item.name.endsWith(".svg") || item.mime === "image/svg+xml") {
 		const sanitizedSVG = await sanitizeSVG(
-			new File([buffer], item.name, {
+			new File([new Uint8Array(buffer)], item.name, {
 				type: item.mime,
 				lastModified: item.lastModified
 			})

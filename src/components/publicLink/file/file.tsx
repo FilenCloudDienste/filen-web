@@ -284,7 +284,7 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 			} else {
 				setURLObject(
 					globalThis.URL.createObjectURL(
-						new Blob([buffer], {
+						new Blob([new Uint8Array(buffer)], {
 							type: item.mime
 						})
 					)
