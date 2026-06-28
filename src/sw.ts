@@ -93,12 +93,18 @@ function getStream(request: Request): Response {
 	})
 	let responseStatus = 200
 
-	responseHeaders.set("Content-Type", mimeType)
+	// Security: file.mime is attacker-controlled, so allowlist only the inline-renderable
+	// categories the app actually streams (audio/video/image) and serve everything else as a non-executable download.
+	// With the nosniff + default-src 'none' CSP above, attacker bytes can never be served as a same-origin script/HTML
+	// document. SVG stays viewable as an <img>; if ever loaded as a document the CSP blocks its scripts.
+	const inlineSafe = /^(?:audio|video|image)\//i.test(mimeType)
 
-	if (!isDownload) {
+	responseHeaders.set("Content-Type", inlineSafe ? mimeType : "application/octet-stream")
+
+	if (inlineSafe && !isDownload) {
 		responseHeaders.set("Accept-Ranges", "bytes")
 	} else {
-		responseHeaders.set("Content-Disposition", `attachment; filename=${file.name}`)
+		responseHeaders.set("Content-Disposition", `attachment; filename*=UTF-8''${encodeURIComponent(file.name)}`)
 	}
 
 	// responseHeaders.set("Cache-Control", "no-store")

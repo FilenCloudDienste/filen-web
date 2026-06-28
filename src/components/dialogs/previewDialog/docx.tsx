@@ -28,7 +28,10 @@ export const DocX = memo(({ buffer }: { buffer: Buffer }) => {
 				ignoreLastRenderedPageBreak: true,
 				renderHeaders: true,
 				renderFooters: true,
-				renderFootnotes: true
+				renderFootnotes: true,
+				// Security: never render embedded altChunks - docx-preview puts an altChunk's
+				// HTML into an UNSANDBOXED, same-origin <iframe srcdoc>, letting a crafted .docx inject same-origin markup.
+				renderAltChunks: false
 			})
 		} catch (e) {
 			console.error(e)
