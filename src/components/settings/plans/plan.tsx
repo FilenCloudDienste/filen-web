@@ -100,10 +100,10 @@ export const Plan = memo(({ plan, account }: { plan: RemoteConfigPlan; account: 
 						return (
 							<div
 								key={index}
-								className="flex flex-row items-center gap-2 line-clamp-1 text-ellipsis break-all"
+								className="flex flex-row items-center gap-2 min-w-0"
 							>
-								<IoCheckmark />
-								<p className="text-sm text-muted-foreground">{t(`settings.plans.features.pro.${index + 1}`)}</p>
+								<IoCheckmark className="shrink-0" />
+								<p className="truncate min-w-0 text-sm text-muted-foreground">{t(`settings.plans.features.pro.${index + 1}`)}</p>
 							</div>
 						)
 					})}

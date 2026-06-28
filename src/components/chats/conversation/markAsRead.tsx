@@ -138,7 +138,7 @@ export const MarkAsRead = memo(
 				}}
 				onClick={markAsRead}
 			>
-				<p className="line-clamp-1 text-ellipsis break-all flex flex-row items-center">
+				<p className="truncate min-w-0">
 					{t(count <= 1 ? "chats.newMessageSince" : "chats.newMessagesSince", {
 						count: count,
 						since

@@ -142,15 +142,15 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 					dark ? "bg-[#151518]" : "bg-[#FFFFFF]"
 				)}
 			>
-				<div className="flex flex-row gap-2 items-center">
+				<div className="flex flex-row gap-2 items-center min-w-0">
 					<img
 						src={fileNameToSVGIcon(item.name)}
 						className="w-5 h-5 shrink-0 object-cover"
 						draggable={false}
 					/>
-					<p className="line-clamp-1 text-ellipsis break-all">{item.name}</p>
+					<p className="truncate min-w-0">{item.name}</p>
 					{!isMobile && (
-						<p className="text-muted-foreground line-clamp-1 text-ellipsis break-all text-sm">{formatBytes(item.size)}</p>
+						<p className="text-muted-foreground text-sm shrink-0">{formatBytes(item.size)}</p>
 					)}
 				</div>
 				<div className="flex flex-row gap-2 items-center shrink-0">

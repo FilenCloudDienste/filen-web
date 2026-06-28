@@ -121,7 +121,7 @@ export const Notes = memo(() => {
 		>
 			<div className={cn("flex flex-row px-4 items-center gap-3 w-full h-12 z-50", dark ? "bg-[#151518]" : "bg-[#FFFFFF]")}>
 				<div
-					className="flex flex-row"
+					className="flex flex-row shrink-0"
 					style={{
 						// @ts-expect-error not typed
 						WebkitAppRegion: "no-drag"
@@ -157,9 +157,9 @@ export const Notes = memo(() => {
 						</>
 					)}
 				</div>
-				<div className="flex flex-row grow">
+				<div className="flex flex-row grow min-w-0">
 					<p
-						className="line-clamp-1 text-ellipsis break-all cursor-pointer"
+						className="truncate cursor-pointer min-w-0"
 						onClick={rename}
 						style={{
 							// @ts-expect-error not typed
@@ -169,7 +169,7 @@ export const Notes = memo(() => {
 						{selectedNote.title}
 					</p>
 				</div>
-				<div className="flex flex-row">
+				<div className="flex flex-row shrink-0">
 					<ContextMenu
 						note={selectedNote}
 						setHovering={noop}

@@ -71,13 +71,14 @@ export const Request = memo(({ request, refetch, type }: { request: ContactReque
 			<Avatar
 				size={44}
 				src={request.avatar}
+				className="shrink-0"
 			/>
-			<div className="flex flex-row gap-4 items-center justify-between grow">
-				<div className="flex flex-col">
-					<p className="line-clamp-1 text-ellipsis break-all">{request.nickName.length > 0 ? request.nickName : request.email}</p>
-					<p className="line-clamp-1 text-ellipsis break-all text-sm text-muted-foreground">{request.email}</p>
+			<div className="flex flex-row gap-4 items-center justify-between grow min-w-0">
+				<div className="flex flex-col min-w-0">
+					<p className="truncate min-w-0">{request.nickName.length > 0 ? request.nickName : request.email}</p>
+					<p className="truncate min-w-0 text-sm text-muted-foreground">{request.email}</p>
 				</div>
-				<div className="flex flex-row gap-3">
+				<div className="flex flex-row gap-3 shrink-0">
 					{type === "in" && (
 						<div
 							className="bg-green-500 w-8 h-8 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"

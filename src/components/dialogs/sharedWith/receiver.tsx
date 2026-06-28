@@ -83,12 +83,12 @@ export const Receiver = memo(
 
 		return (
 			<div className="flex flex-row gap-2 items-center p-2 rounded-md justify-between hover:bg-secondary mb-1">
-				<p className="line-clamp-1 text-ellipsis break-all">{receiver.email}</p>
+				<p className="truncate min-w-0">{receiver.email}</p>
 				<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 					<Tooltip>
 						<TooltipTrigger asChild={true}>
 							<div
-								className="bg-red-500 w-6 h-6 rounded-full flex flex-row justify-center items-center text-white cursor-pointer"
+								className="bg-red-500 w-6 h-6 rounded-full flex flex-row justify-center items-center text-white cursor-pointer shrink-0"
 								onClick={remove}
 							>
 								<X size={14} />

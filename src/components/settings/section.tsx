@@ -34,18 +34,18 @@ export const Section = memo(
 			>
 				<div className={cn("flex flex-row justify-between items-center gap-14", info || subInfo ? "min-h-10" : "min-h-6")}>
 					<div
-						className="flex flex-col"
+						className="flex flex-col min-w-0"
 						style={{
 							// @ts-expect-error not typed
 							WebkitAppRegion: "no-drag"
 						}}
 					>
-						<p className={cn("line-clamp-1 text-ellipsis break-all", nameClassName)}>{name}</p>
+						<p className={cn("truncate min-w-0", nameClassName)}>{name}</p>
 						{info && <p className={cn("text-sm text-muted-foreground", infoClassName)}>{info}</p>}
 						{subInfo && <p className={cn("text-sm text-muted-foreground", subInfoClassName)}>{subInfo}</p>}
 					</div>
 					<div
-						className={cn("flex flex-row items-center gap-4", childrenClassName)}
+						className={cn("flex flex-row items-center gap-4 shrink-0", childrenClassName)}
 						style={{
 							// @ts-expect-error not typed
 							WebkitAppRegion: "no-drag"

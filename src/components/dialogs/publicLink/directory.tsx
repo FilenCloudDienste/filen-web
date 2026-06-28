@@ -298,7 +298,7 @@ export const Directory = memo(
 							/>
 						</div>
 						<div className="flex flex-row gap-10 items-center justify-between">
-							<p className="line-clamp-1 text-ellipsis break-all">{t("dialogs.publicLink.downloadButton")}</p>
+							<p className="truncate min-w-0">{t("dialogs.publicLink.downloadButton")}</p>
 							<Switch
 								checked={downloadBtn}
 								onCheckedChange={toggleDownloadButton}

@@ -85,7 +85,7 @@ export const Chat = memo(
 					}}
 					onClick={select}
 				>
-					<div className="flex flex-row h-full">
+					<div className="flex flex-row h-full shrink-0">
 						<ChatAvatar
 							size={36}
 							className="shrink-0"
@@ -97,10 +97,10 @@ export const Chat = memo(
 							</div>
 						)}
 					</div>
-					<div className="flex flex-col grow h-full">
-						<p className="line-clamp-1 text-ellipsis break-all">{getConversationName(conversation, userId)}</p>
+					<div className="flex flex-col grow h-full min-w-0">
+						<p className="truncate min-w-0">{getConversationName(conversation, userId)}</p>
 						{conversation.lastMessage && conversation.lastMessage.length > 0 && (
-							<div className="text-muted-foreground line-clamp-1 text-ellipsis break-all text-sm flex flex-row overflow-hidden gap-1">
+							<div className="text-muted-foreground text-sm flex flex-row overflow-hidden gap-1 min-w-0">
 								<p className="shrink-0">{lastMessageSenderName}:</p>
 								<ReplaceMessageWithComponentsInline
 									content={conversation.lastMessage}

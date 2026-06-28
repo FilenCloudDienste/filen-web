@@ -193,8 +193,8 @@ export const TransferInfo = memo(({ name, size, isDirectory }: { name: string; s
 	}, [size])
 
 	return (
-		<div className="flex flex-row items-center gap-4">
-			<div className="flex flex-row items-center">
+		<div className="flex flex-row items-center gap-4 min-w-0">
+			<div className="flex flex-row items-center shrink-0">
 				<div className="bg-secondary rounded-md flex items-center justify-center aspect-square w-10">
 					{isDirectory ? (
 						<ColoredFolderSVGIcon
@@ -210,9 +210,9 @@ export const TransferInfo = memo(({ name, size, isDirectory }: { name: string; s
 					)}
 				</div>
 			</div>
-			<div className="flex flex-col">
-				<p className="line-clamp-1 text-ellipsis break-all">{name}</p>
-				{size > 0 && <p className="line-clamp-1 text-ellipsis break-all text-xs text-muted-foreground">{formattedSize}</p>}
+			<div className="flex flex-col min-w-0">
+				<p className="truncate min-w-0">{name}</p>
+				{size > 0 && <p className="truncate min-w-0 text-xs text-muted-foreground">{formattedSize}</p>}
 			</div>
 		</div>
 	)

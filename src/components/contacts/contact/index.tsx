@@ -178,18 +178,19 @@ export const Contact = memo(
 					<Avatar
 						size={44}
 						src={contact.avatar}
+						className="shrink-0"
 						status={
 							contact.lastActive > 0 ? (contact.lastActive > Date.now() - ONLINE_TIMEOUT ? "online" : "offline") : "offline"
 						}
 					/>
-					<div className="flex flex-row gap-4 items-center justify-between grow">
-						<div className="flex flex-col">
-							<p className="line-clamp-1 text-ellipsis break-all">
+					<div className="flex flex-row gap-4 items-center justify-between grow min-w-0">
+						<div className="flex flex-col min-w-0">
+							<p className="truncate min-w-0">
 								{contact.nickName.length > 0 ? contact.nickName : contact.email}
 							</p>
-							<p className="line-clamp-1 text-ellipsis break-all text-sm text-muted-foreground">{contact.email}</p>
+							<p className="truncate min-w-0 text-sm text-muted-foreground">{contact.email}</p>
 						</div>
-						<div className="flex flex-row gap-4">
+						<div className="flex flex-row gap-4 shrink-0">
 							<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 								<Tooltip>
 									<TooltipTrigger asChild={true}>

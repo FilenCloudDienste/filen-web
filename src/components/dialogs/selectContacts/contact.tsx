@@ -45,14 +45,14 @@ export const Contact = memo(
 				onClick={onClick}
 				aria-disabled={isExcluded}
 			>
-				<div className="flex flex-row gap-2 items-center">
+				<div className="flex flex-row gap-2 items-center min-w-0">
 					<Avatar
 						src={contact.avatar}
 						size={32}
 					/>
-					<p className="line-clamp-1 text-ellipsis break-all">{contact.nickName.length > 0 ? contact.nickName : contact.email}</p>
+					<p className="truncate min-w-0">{contact.nickName.length > 0 ? contact.nickName : contact.email}</p>
 				</div>
-				<p className="line-clamp-1 text-ellipsis break-all text-sm text-muted-foreground">{contact.email}</p>
+				<p className="truncate min-w-0 text-sm text-muted-foreground">{contact.email}</p>
 			</div>
 		)
 	}

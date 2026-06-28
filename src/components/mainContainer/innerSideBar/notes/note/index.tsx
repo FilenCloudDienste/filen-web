@@ -70,7 +70,7 @@ export const Note = memo(
 					}}
 					onClick={select}
 				>
-					<div className="flex flex-col gap-2 h-full items-center">
+					<div className="flex flex-col gap-2 h-full items-center shrink-0">
 						{note.archive ? (
 							<Archive className="text-yellow-500 shrink-0" />
 						) : note.trash ? (
@@ -91,20 +91,20 @@ export const Note = memo(
 							/>
 						)}
 					</div>
-					<div className="flex flex-col grow h-full">
-						<div className="flex flex-row items-center gap-2">
+					<div className="flex flex-col grow h-full min-w-0">
+						<div className="flex flex-row items-center gap-2 min-w-0">
 							{note.favorite && (
 								<Heart
 									size={16}
 									className="shrink-0"
 								/>
 							)}
-							<p className="line-clamp-1 text-ellipsis break-all">{note.title}</p>
+							<p className="truncate min-w-0">{note.title}</p>
 						</div>
-						<p className="line-clamp-1 text-ellipsis text-muted-foreground text-sm mt-1 break-all">
+						<p className="truncate text-muted-foreground text-sm mt-1 min-w-0">
 							{note.preview.length > 0 ? note.preview : note.title.length > 0 ? note.title : ""}
 						</p>
-						<p className="line-clamp-1 text-ellipsis text-muted-foreground text-sm mt-1 break-all">
+						<p className="truncate text-muted-foreground text-sm mt-1 min-w-0">
 							{simpleDate(note.editedTimestamp)}
 						</p>
 						<div className="flex flex-row gap-2 flex-wrap w-full h-auto mt-2">
@@ -124,7 +124,7 @@ export const Note = memo(
 						</div>
 					</div>
 					{participantsWithoutUser.length > 0 && (
-						<div className="flex flex-row min-h-full justify-center items-center">
+						<div className="flex flex-row min-h-full justify-center items-center shrink-0">
 							<ChatAvatar
 								className="shrink-0"
 								size={28}

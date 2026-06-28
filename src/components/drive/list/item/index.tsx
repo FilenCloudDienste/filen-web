@@ -501,9 +501,9 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 								</div>
 							</div>
 							{item.sharerId > 0 && item.sharerEmail.length > 0 && !driveURLState.insideParent && (
-								<div className="flex flex-row items-center pr-2">
+								<div className="flex flex-row items-center pr-2 min-w-0">
 									<Badge
-										className="line-clamp-1 text-ellipsis break-all cursor-pointer"
+										className="cursor-pointer truncate min-w-0"
 										variant="default"
 										onClick={removeShared}
 									>
@@ -512,9 +512,9 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 								</div>
 							)}
 							{item.receivers.length > 0 && (
-								<div className="flex flex-row items-center pr-2">
+								<div className="flex flex-row items-center pr-2 min-w-0">
 									<Badge
-										className="line-clamp-1 text-ellipsis break-all cursor-pointer"
+										className="cursor-pointer truncate min-w-0"
 										onClick={onReceiversClick}
 										variant="default"
 									>
@@ -526,20 +526,20 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 							)}
 						</div>
 						<div
-							className="flex flex-row dragselect-start-disallowed line-clamp-1 break-all text-ellipsis shrink-0"
+							className="flex flex-row dragselect-start-disallowed shrink-0"
 							style={{
 								width: driveListColumnSize.size
 							}}
 						>
-							<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{formatBytes(size)}</p>
+							<p className="dragselect-start-disallowed truncate min-w-0">{formatBytes(size)}</p>
 						</div>
 						<div
-							className="flex flex-row dragselect-start-disallowed line-clamp-1 break-all text-ellipsis shrink-0"
+							className="flex flex-row dragselect-start-disallowed shrink-0"
 							style={{
 								width: driveListColumnSize.modified
 							}}
 						>
-							<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">
+							<p className="dragselect-start-disallowed truncate min-w-0">
 								{simpleDate(item.lastModified)}
 							</p>
 						</div>
@@ -570,7 +570,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 						<div className="dragselect-start-disallowed absolute flex flex-row justify-center items-center mt-[140px] w-[176px]">
 							<div
 								className={cn(
-									"flex flex-row max-w-[150px] h-full items-center rounded-full px-[8px] py-[3px] justify-center gap-2",
+									"flex flex-row max-w-[150px] h-full items-center rounded-full px-[8px] py-[3px] justify-center gap-2 min-w-0",
 									thumbnailURL ? (item.selected || hovering ? "bg-secondary" : "bg-primary-foreground") : "",
 									navigating && "bg-secondary"
 								)}
@@ -581,7 +581,7 @@ export const ListItem = memo(({ item, index, type }: { item: DriveCloudItem; ind
 										className="dragselect-start-disallowed shrink-0"
 									/>
 								)}
-								<p className="dragselect-start-disallowed line-clamp-1 text-ellipsis break-all">{item.name}</p>
+								<p className="dragselect-start-disallowed truncate min-w-0">{item.name}</p>
 							</div>
 						</div>
 						<div

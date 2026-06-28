@@ -135,12 +135,12 @@ export const Chats = memo(() => {
 					WebkitAppRegion: "drag"
 				}}
 			>
-				<p className="line-clamp-1 text-ellipsis break-all">{t("innerSideBar.top.chats")}</p>
+				<p className="truncate min-w-0">{t("innerSideBar.top.chats")}</p>
 				<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 					<Tooltip>
 						<TooltipTrigger asChild={true}>
 							<div
-								className="hover:bg-secondary rounded-md p-1 cursor-pointer"
+								className="hover:bg-secondary rounded-md p-1 cursor-pointer shrink-0"
 								onClick={createChat}
 								style={{
 									// @ts-expect-error not typed

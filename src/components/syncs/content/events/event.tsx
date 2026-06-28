@@ -20,8 +20,8 @@ export const Event = memo(({ event }: { event: TransferDataWithTimestamp }) => {
 				<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 					<Tooltip>
 						<TooltipTrigger asChild={true}>
-							<div className="flex flex-row items-center gap-2.5">
-								<div className="flex flex-row items-center">
+							<div className="flex flex-row items-center gap-2.5 min-w-0">
+								<div className="flex flex-row items-center shrink-0">
 									<div className="bg-secondary rounded-md flex items-center justify-center aspect-square w-10">
 										{event.of === "createLocalDirectory" ||
 										event.of === "renameLocalDirectory" ||
@@ -42,8 +42,8 @@ export const Event = memo(({ event }: { event: TransferDataWithTimestamp }) => {
 										)}
 									</div>
 								</div>
-								<div className="flex flex-col">
-									<p className="line-clamp-1 text-ellipsis break-all">
+								<div className="flex flex-col min-w-0">
+									<p className="truncate min-w-0">
 										{event.of === "createLocalDirectory"
 											? t("syncs.events.createLocalDirectory", { name: itemName })
 											: event.of === "createRemoteDirectory"
@@ -82,7 +82,7 @@ export const Event = memo(({ event }: { event: TransferDataWithTimestamp }) => {
 																									})
 																								: ""}
 									</p>
-									<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground text-xs">
+									<p className="truncate min-w-0 text-muted-foreground text-xs">
 										{simpleDate(event.timestamp)}
 									</p>
 								</div>

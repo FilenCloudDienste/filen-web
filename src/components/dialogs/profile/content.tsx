@@ -299,11 +299,11 @@ export const Content = memo(({ userId }: { userId: number }) => {
 							src={profileQuery.data.avatar}
 							size={50}
 						/>
-						<div className="flex flex-col">
-							<p className="text-xl line-clamp-1 text-ellipsis break-all">
+						<div className="flex flex-col min-w-0">
+							<p className="text-xl truncate min-w-0">
 								{profileQuery.data.nickName.length > 0 ? profileQuery.data.nickName : profileQuery.data.email}
 							</p>
-							<p className="text-muted-foreground line-clamp-1 text-ellipsis break-all">
+							<p className="text-muted-foreground truncate min-w-0">
 								{profileQuery.data.nickName.length > 0 ? profileQuery.data.nickName : profileQuery.data.email}
 							</p>
 						</div>

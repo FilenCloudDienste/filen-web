@@ -46,17 +46,21 @@ export const Sync = memo(({ sync }: { sync: SyncPair }) => {
 					onClick={select}
 				>
 					{isPaused ? (
-						<PauseCircle size={20} />
+						<PauseCircle
+							size={20}
+							className="shrink-0"
+						/>
 					) : (
 						<RefreshCw
 							size={20}
 							className={cn(
+								"shrink-0",
 								isSyncActive && syncIssueCount + syncConfirmDeletion.length === 0 && "animate-spin-medium",
 								syncIssueCount + syncConfirmDeletion.length > 0 && "text-orange-500"
 							)}
 						/>
 					)}
-					<p className="line-clamp-1 text-ellipsis break-all">{sync.name}</p>
+					<p className="truncate min-w-0">{sync.name}</p>
 				</Link>
 			</ContextMenu>
 		</div>

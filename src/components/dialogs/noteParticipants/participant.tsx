@@ -110,7 +110,7 @@ export const Participant = memo(
 		return (
 			<div className="flex flex-row gap-4 items-center p-2 rounded-md justify-between hover:bg-secondary mb-1">
 				<div
-					className="flex flex-row gap-2 items-center cursor-pointer"
+					className="flex flex-row gap-2 items-center cursor-pointer min-w-0"
 					onClick={profile}
 				>
 					<Avatar
@@ -119,11 +119,11 @@ export const Participant = memo(
 					/>
 					{participant.userId === note.ownerId && (
 						<Crown
-							className="text-yellow-500"
+							className="text-yellow-500 shrink-0"
 							size={18}
 						/>
 					)}
-					<p className="line-clamp-1 text-ellipsis break-all">{participant.email}</p>
+					<p className="truncate min-w-0">{participant.email}</p>
 				</div>
 				{userId !== participant.userId && userId === note.ownerId && (
 					<div className="flex flex-row gap-2 items-center">

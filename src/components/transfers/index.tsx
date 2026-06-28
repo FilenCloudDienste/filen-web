@@ -483,8 +483,8 @@ export const Transfers = memo(() => {
 				<div className="flex flex-row items-center gap-3 h-12 text-muted-foreground justify-end text-sm">
 					{remaining > 0 && remainingReadable.length > 0 && remaining < Infinity && (
 						<>
-							<p className="line-clamp-1 text-ellipsis break-all">{remainingReadable}</p>
-							<p className="line-clamp-1 text-ellipsis break-all">{bpsToReadable(speed)}</p>
+							<p className="truncate min-w-0">{remainingReadable}</p>
+							<p className="truncate min-w-0">{bpsToReadable(speed)}</p>
 							{ongoingTransfers.length > 0 && (
 								<div className="flex flex-row items-center">
 									{paused ? (

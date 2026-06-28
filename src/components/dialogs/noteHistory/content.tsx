@@ -84,7 +84,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 								size={20}
 							/>
 						)}
-						<p className="line-clamp-1 text-ellipsis break-all">{simpleDate(convertTimestampToMs(history.editedTimestamp))}</p>
+						<p className="truncate min-w-0">{simpleDate(convertTimestampToMs(history.editedTimestamp))}</p>
 					</div>
 				</div>
 			)

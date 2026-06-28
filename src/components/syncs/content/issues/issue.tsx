@@ -102,8 +102,8 @@ export const Issue = memo(({ error, syncUUID }: { error: GeneralError; syncUUID:
 	return (
 		<div className="flex flex-row px-4">
 			<div className="flex flex-row border-b w-full p-2.5 py-3 hover:bg-secondary hover:rounded-sm justify-between items-center">
-				<div className="flex flex-row gap-2.5">
-					<div className="flex flex-row">
+				<div className="flex flex-row gap-2.5 min-w-0">
+					<div className="flex flex-row shrink-0">
 						<div className="bg-secondary rounded-md flex items-center justify-center aspect-square w-10 h-10">
 							{error.type === "cycle" || error.type === "general" ? (
 								<XCircle
@@ -123,12 +123,12 @@ export const Issue = memo(({ error, syncUUID }: { error: GeneralError; syncUUID:
 							)}
 						</div>
 					</div>
-					<div className="flex flex-col">
-						<p className="line-clamp-1 text-ellipsis break-all">{t("syncs.issues.types.title." + parsedErrorType)}</p>
-						<p className="line-clamp-6 text-ellipsis break-all text-muted-foreground text-sm">
+					<div className="flex flex-col min-w-0">
+						<p className="truncate min-w-0">{t("syncs.issues.types.title." + parsedErrorType)}</p>
+						<p className="line-clamp-6 text-ellipsis break-all text-muted-foreground text-sm min-w-0">
 							{t("syncs.issues.types.info." + parsedErrorType)}
 						</p>
-						<p className="line-clamp-6 text-ellipsis break-all text-muted-foreground text-xs mt-1">
+						<p className="line-clamp-6 text-ellipsis break-all text-muted-foreground text-xs mt-1 min-w-0">
 							[{error.type}] {error.error.name}: {error.error.message}
 						</p>
 					</div>
@@ -136,7 +136,7 @@ export const Issue = memo(({ error, syncUUID }: { error: GeneralError; syncUUID:
 				<Button
 					size="icon"
 					variant="destructive"
-					className="w-5 h-5"
+					className="w-5 h-5 shrink-0"
 					onClick={deleteIssue}
 				>
 					<X size={14} />

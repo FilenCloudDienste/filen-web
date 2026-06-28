@@ -155,11 +155,16 @@ export const Tags = memo(() => {
 						refetch={query.refetch}
 					>
 						<div
-							className={cn(tagClassName, activeTag === tag.uuid && "bg-secondary text-primary")}
+							className={cn(tagClassName, "min-w-0 max-w-full", activeTag === tag.uuid && "bg-secondary text-primary")}
 							onClick={() => setActiveTag(tag.uuid)}
 						>
-							{tag.favorite && <Heart size={14} />}
-							<p className="line-clamp-1 break-all text-ellipsis">{tag.name}</p>
+							{tag.favorite && (
+								<Heart
+									size={14}
+									className="shrink-0"
+								/>
+							)}
+							<p className="truncate min-w-0">{tag.name}</p>
 						</div>
 					</ContextMenu>
 				)

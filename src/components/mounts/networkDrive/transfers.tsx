@@ -12,14 +12,14 @@ export const Transfers = memo(() => {
 		<div className="flex flex-row w-full px-4 pb-4">
 			<div className="flex flex-col h-10 bg-secondary rounded-sm w-full">
 				<div className="flex flex-row h-full w-full items-center px-4 justify-between gap-4">
-					<div className="flex flex-row h-full w-full items-center gap-3 text-sm text-ellipsis line-clamp-1 break-all">
+					<div className="flex flex-row h-full w-full items-center gap-3 text-sm min-w-0">
 						{uploadsInProgress > 0 && speed > 0 ? (
 							<>
 								<RefreshCw
 									className="animate-spin-medium text-primary"
 									size={16}
 								/>
-								<p>
+								<p className="truncate min-w-0">
 									{speed > 0
 										? t(
 												uploadsInProgress <= 1

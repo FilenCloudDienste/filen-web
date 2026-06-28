@@ -129,7 +129,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 			}}
 		>
 			<div
-				className={cn("flex flex-row gap-2 items-center", hasWritePermissions ? "cursor-pointer" : "cursor-default")}
+				className={cn("flex flex-row gap-2 items-center min-w-0", hasWritePermissions ? "cursor-pointer" : "cursor-default")}
 				onClick={editConversationName}
 				style={{
 					// @ts-expect-error not typed
@@ -141,7 +141,7 @@ export const TopBar = memo(({ conversation }: { conversation: ChatConversation }
 					participants={conversation.participants}
 					className="shrink-0"
 				/>
-				<p className="line-clamp-1 text-ellipsis break-all">{getConversationName(conversation, userId)}</p>
+				<p className="truncate min-w-0">{getConversationName(conversation, userId)}</p>
 			</div>
 			{conversation.participants.length > 2 ? (
 				<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>

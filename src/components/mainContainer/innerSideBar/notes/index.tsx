@@ -111,7 +111,7 @@ export const Notes = memo(() => {
 											className="text-muted-foreground"
 											size={32}
 										/>
-										<p className="text-muted-foreground max-w-[100%] line-clamp-2 text-ellipsis break-all mt-2 text-center">
+										<p className="text-muted-foreground max-w-[100%] line-clamp-2 text-ellipsis break-all mt-2 text-center min-w-0">
 											{t("innerSideBar.notes.emptySearch", { search })}
 										</p>
 										<p

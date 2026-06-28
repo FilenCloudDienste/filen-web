@@ -1074,15 +1074,15 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 					}}
 				>
 					<div className="flex flex-row bg-secondary p-1 px-2 pb-5 rounded-t-lg items-center gap-4 justify-between">
-						<div className="flex flex-row gap-1">
-							<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("chats.input.replyingTo")}</p>
-							<p className="line-clamp-1 text-ellipsis break-all">
+						<div className="flex flex-row gap-1 min-w-0">
+							<p className="truncate min-w-0 text-muted-foreground">{t("chats.input.replyingTo")}</p>
+							<p className="truncate min-w-0">
 								{replyMessage.senderNickName.length > 0 ? replyMessage.senderNickName : replyMessage.senderEmail}
 							</p>
 						</div>
 						<XCircle
 							size={16}
-							className="cursor-pointer text-muted-foreground hover:text-primary"
+							className="cursor-pointer text-muted-foreground hover:text-primary shrink-0"
 							onClick={() => setReplyMessage(null)}
 						/>
 					</div>
@@ -1097,10 +1097,10 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				>
 					<div className="flex flex-col bg-secondary p-1.5 px-2 pb-5 rounded-t-lg gap-2">
 						<div className="flex flex-row gap-1 items-center justify-between">
-							<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">{t("chats.input.replyingTo")}</p>
+							<p className="truncate min-w-0 text-muted-foreground">{t("chats.input.replyingTo")}</p>
 							<XCircle
 								size={18}
-								className="cursor-pointer text-muted-foreground hover:text-primary"
+								className="cursor-pointer text-muted-foreground hover:text-primary shrink-0"
 								onClick={hideSuggestions}
 							/>
 						</div>
@@ -1119,16 +1119,17 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 											focusEditor()
 										}}
 									>
-										<div className="flex flex-row gap-2">
+										<div className="flex flex-row gap-2 min-w-0">
 											<Avatar
 												src={participant.avatar}
 												size={24}
+												className="shrink-0"
 											/>
-											<p className="line-clamp-1 text-ellipsis break-all">
+											<p className="truncate min-w-0">
 												{participant.nickName.length > 0 ? participant.nickName : participant.email}
 											</p>
 										</div>
-										<p className="text-muted-foreground line-clamp-1 text-ellipsis break-all">{participant.email}</p>
+										<p className="text-muted-foreground truncate min-w-0">{participant.email}</p>
 									</div>
 								)
 							})}
@@ -1145,12 +1146,12 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 				>
 					<div className="flex flex-col bg-secondary p-1.5 px-2 pb-5 rounded-t-lg gap-2">
 						<div className="flex flex-row gap-1 items-center justify-between">
-							<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">
+							<p className="truncate min-w-0 text-muted-foreground">
 								{t("chats.emojisMatching", { text: emojisSuggestionsText })}
 							</p>
 							<XCircle
 								size={18}
-								className="cursor-pointer text-muted-foreground hover:text-primary"
+								className="cursor-pointer text-muted-foreground hover:text-primary shrink-0"
 								onClick={hideSuggestions}
 							/>
 						</div>
@@ -1169,13 +1170,13 @@ export const Input = memo(({ conversation }: { conversation: ChatConversation })
 											focusEditor()
 										}}
 									>
-										<div className="flex flex-row gap-2">
+										<div className="flex flex-row gap-2 min-w-0">
 											<EmojiElement
 												shortcodes={shortCode}
 												fallback={shortCode}
 												size="18px"
 											/>
-											<p className="line-clamp-1 text-ellipsis break-all">{shortCode}</p>
+											<p className="truncate min-w-0">{shortCode}</p>
 										</div>
 									</div>
 								)

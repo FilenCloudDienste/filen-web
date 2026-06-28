@@ -318,7 +318,7 @@ export const Contacts = memo(() => {
 						) : search.length > 0 ? (
 							<div className="flex flex-col items-center justify-center w-full h-full gap-2 -mt-6">
 								<SearchIcon size={32} />
-								<p className="text-muted-foreground line-clamp-2 text-ellipsis break-all max-w-96 text-center">
+								<p className="text-muted-foreground line-clamp-2 text-ellipsis break-all max-w-96 text-center min-w-0">
 									{t("contacts.emptySearch", { search })}
 								</p>
 							</div>
@@ -369,8 +369,8 @@ export const Contacts = memo(() => {
 					</Button>
 				</div>
 				<div className="flex flex-row px-4">
-					<div className="flex flex-row text-muted-foreground mt-2 pb-3 grow uppercase gap-3 line-clamp-1 text-ellipsis break-all">
-						<p>
+					<div className="flex flex-row text-muted-foreground mt-2 pb-3 grow uppercase gap-3 min-w-0">
+						<p className="truncate min-w-0">
 							{location.includes("contacts/all")
 								? t("innerSideBar.contacts.all")
 								: location.includes("contacts/online")

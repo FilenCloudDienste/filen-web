@@ -40,8 +40,8 @@ export const Ignore = memo(({ ignore }: { ignore: IgnoreType }) => {
 	return (
 		<div className="flex flex-row items-center px-4">
 			<div className="flex flex-row items-center border-b w-full p-2.5 py-3 hover:bg-secondary hover:rounded-sm">
-				<div className="flex flex-row items-center gap-2.5">
-					<div className="flex flex-row items-center">
+				<div className="flex flex-row items-center gap-2.5 min-w-0">
+					<div className="flex flex-row items-center shrink-0">
 						<div className="bg-secondary rounded-md flex items-center justify-center aspect-square w-10">
 							<img
 								src={fileNameToSVGIcon(itemName)}
@@ -50,13 +50,13 @@ export const Ignore = memo(({ ignore }: { ignore: IgnoreType }) => {
 							/>
 						</div>
 					</div>
-					<div className="flex flex-col">
-						<p className="line-clamp-1 text-ellipsis break-all">
+					<div className="flex flex-col min-w-0">
+						<p className="truncate min-w-0">
 							{ignore.reason === "permissions" || ignore.reason === "symlink" || ignore.reason === "empty"
 								? ignore.localPath
 								: ignore.relativePath}
 						</p>
-						<p className="line-clamp-6 text-ellipsis break-all text-muted-foreground text-xs">{reason}</p>
+						<p className="line-clamp-6 text-ellipsis break-all text-muted-foreground text-xs min-w-0">{reason}</p>
 					</div>
 				</div>
 			</div>

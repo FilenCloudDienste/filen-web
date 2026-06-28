@@ -67,7 +67,7 @@ export const OG = memo(
 						/>
 					) : (
 						<div className="flex flex-row items-center justify-center bg-primary-foreground w-full h-[130px] mt-2 rounded-md">
-							<p className="line-clamp-1 text-ellipsis break-all text-muted-foreground">
+							<p className="truncate min-w-0 text-muted-foreground">
 								{t("chats.embeds.og.noImageAvailable")}
 							</p>
 						</div>

@@ -218,13 +218,13 @@ export const Event = memo(({ event, account }: { event: UserEvent; account: User
 				  event.type === "deleteFilePermanently" ? (
 					<img
 						src={fileNameToSVGIcon(event.info.metadataDecrypted.name)}
-						className="w-[24px] h-[24px]"
+						className="w-[24px] h-[24px] shrink-0"
 					/>
 				) : event.type === "itemFavorite" ? (
 					event.info.metadataDecrypted ? (
 						<img
 							src={fileNameToSVGIcon(event.info.metadataDecrypted.name)}
-							className="w-[24px] h-[24px]"
+							className="w-[24px] h-[24px] shrink-0"
 						/>
 					) : (
 						<ColoredFolderSVGIcon
@@ -255,9 +255,9 @@ export const Event = memo(({ event, account }: { event: UserEvent; account: User
 			className="flex flex-row border-b items-center p-4 py-3 justify-between gap-10 hover:bg-secondary hover:rounded-md w-full cursor-pointer"
 			onClick={open}
 		>
-			<div className="flex flex-row gap-3 items-center">
+			<div className="flex flex-row gap-3 items-center min-w-0">
 				{eventIcon}
-				<p className="line-clamp-1 text-ellipsis break-all">{eventText}</p>
+				<p className="truncate min-w-0">{eventText}</p>
 			</div>
 			<p className="text-muted-foreground text-sm shrink-0">{simpleDate(event.timestamp)}</p>
 		</div>

@@ -194,7 +194,7 @@ export const Participants = memo(({ conversation }: { conversation: ChatConversa
 	return (
 		<div className="w-full h-full flex flex-col">
 			<div className="w-full h-12 flex flex-row items-center justify-between px-4">
-				<p className="line-clamp-1 text-ellipsis break-all">Participants</p>
+				<p className="truncate min-w-0">Participants</p>
 				{hasWritePermissions && (
 					<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 						<Tooltip>

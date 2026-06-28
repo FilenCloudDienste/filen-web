@@ -166,9 +166,9 @@ export const FilenIgnoreDialog = memo(() => {
 							WebkitAppRegion: "drag"
 						}}
 					>
-						<p className="line-clamp-1 text-ellipsis break-all">{t("syncs.dialogs.filenIgnore.title")}</p>
+						<p className="truncate min-w-0">{t("syncs.dialogs.filenIgnore.title")}</p>
 						<div
-							className="flex flex-row items-center gap-4"
+							className="flex flex-row items-center gap-4 shrink-0"
 							style={{
 								// @ts-expect-error not typed
 								WebkitAppRegion: "no-drag"

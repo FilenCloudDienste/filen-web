@@ -41,11 +41,11 @@ export const NoteHistoryDialog = memo(() => {
 								WebkitAppRegion: "drag"
 							}}
 						>
-							<p className={cn("line-clamp-1 text-ellipsis break-all", IS_APPLE_DEVICE && IS_DESKTOP && "pl-16")}>
+							<p className={cn("truncate min-w-0", IS_APPLE_DEVICE && IS_DESKTOP && "pl-16")}>
 								{note.title}
 							</p>
 							<div
-								className="flex flex-row items-center justify-end h-12 w-12 opacity-70 hover:opacity-100 cursor-pointer"
+								className="flex flex-row items-center justify-end h-12 w-12 opacity-70 hover:opacity-100 cursor-pointer shrink-0"
 								onClick={close}
 								style={{
 									// @ts-expect-error not typed

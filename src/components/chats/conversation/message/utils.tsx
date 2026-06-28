@@ -436,7 +436,7 @@ export const ReplaceMessageWithComponentsInline = memo(
 		}, [content, participants, t])
 
 		return (
-			<div className="flex flex-row overflow-hidden gap-1 line-clamp-1 text-ellipsis break-all">
+			<div className="flex flex-row overflow-hidden gap-1 min-w-0">
 				{replaced.map((r, index) => {
 					if (typeof r === "string") {
 						if (r.length <= 0) {

@@ -15,9 +15,9 @@ export default function useSuccessToast() {
 		(message: string, duration = 3000) => {
 			const t = toast({
 				description: (
-					<div className="flex flex-row items-center gap-4">
-						<CheckCircle size={18} />
-						<p className="line-clamp-1 text-ellipsis break-all">{message}</p>
+					<div className="flex flex-row items-center gap-4 min-w-0">
+						<CheckCircle size={18} className="shrink-0" />
+						<p className="truncate min-w-0">{message}</p>
 					</div>
 				),
 				variant: "default"

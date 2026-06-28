@@ -587,7 +587,7 @@ export const PreviewDialog = memo(() => {
 								WebkitAppRegion: "drag"
 							}}
 						>
-							<div className={cn("flex flex-row items-center gap-2 grow", IS_APPLE_DEVICE && IS_DESKTOP && "pl-16")}>
+							<div className={cn("flex flex-row items-center gap-2 grow min-w-0", IS_APPLE_DEVICE && IS_DESKTOP && "pl-16")}>
 								{didChange && (
 									<>
 										{saving ? (
@@ -637,10 +637,10 @@ export const PreviewDialog = memo(() => {
 										</Tooltip>
 									</TooltipProvider>
 								)}
-								<p className="line-clamp-1 text-ellipsis break-all">{item.name}</p>
+								<p className="truncate min-w-0">{item.name}</p>
 							</div>
 							<div
-								className="flex flex-row items-center justify-end h-12 w-12 opacity-70 hover:opacity-100 cursor-pointer"
+								className="flex flex-row items-center justify-end h-12 w-12 opacity-70 hover:opacity-100 cursor-pointer shrink-0"
 								onClick={close}
 								style={{
 									// @ts-expect-error not typed

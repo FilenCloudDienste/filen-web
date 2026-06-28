@@ -45,9 +45,10 @@ export const Participant = memo(
 						size={28}
 						src={participant.avatar}
 						status={status}
+						className="shrink-0"
 					/>
-					<div className="flex flex-row items-center gap-3">
-						<p className="line-clamp-1 text-ellipsis break-all">
+					<div className="flex flex-row items-center gap-3 min-w-0">
+						<p className="truncate min-w-0">
 							{participant.nickName.length > 0 ? participant.nickName : participant.email}
 						</p>
 						{participant.userId === conversation.ownerId && (

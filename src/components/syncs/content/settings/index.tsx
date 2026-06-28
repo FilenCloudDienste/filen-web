@@ -419,21 +419,21 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 					}}
 				>
 					<div className="flex flex-col gap-4">
-						<div className="flex flex-row items-center -mt-4">
+						<div className="flex flex-row items-center -mt-4 min-w-0">
 							<p
-								className="line-clamp-1 text-ellipsis break-all text-xl cursor-pointer"
+								className="truncate min-w-0 text-xl cursor-pointer"
 								onClick={editName}
 							>
 								{sync.name}
 							</p>
 						</div>
 						<div className="flex flex-row items-center justify-between border-b pb-3 gap-3 mt-2">
-							<div className="flex flex-row items-center w-[45%] justify-start">
+							<div className="flex flex-row items-center w-[45%] justify-start min-w-0">
 								<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 									<Tooltip>
 										<TooltipTrigger asChild={true}>
 											<p
-												className="line-clamp-1 text-ellipsis break-before-all cursor-pointer"
+												className="truncate min-w-0 cursor-pointer"
 												onClick={openLocalPath}
 											>
 												{sync.localPath}
@@ -483,11 +483,11 @@ export const Settings = memo(({ sync }: { sync: SyncPair }) => {
 									</Tooltip>
 								</TooltipProvider>
 							</div>
-							<div className="flex flex-row items-center w-[45%] justify-end">
+							<div className="flex flex-row items-center w-[45%] justify-end min-w-0">
 								<TooltipProvider delayDuration={TOOLTIP_POPUP_DELAY}>
 									<Tooltip>
 										<TooltipTrigger asChild={true}>
-											<p className="line-clamp-1 text-ellipsis break-before-all">{sync.remotePath}</p>
+											<p className="truncate min-w-0">{sync.remotePath}</p>
 										</TooltipTrigger>
 										<TooltipContent className="max-w-[calc(100vw/2)]">
 											<p>{sync.remotePath}</p>
