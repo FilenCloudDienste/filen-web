@@ -110,7 +110,7 @@ function getStream(request: Request): Response {
 	// responseHeaders.set("Cache-Control", "no-store")
 	// responseHeaders.delete("Connection")
 
-	if (range && !isDownload) {
+	if (range && !isDownload && totalLength > 0) {
 		const parsedRange = parseByteRange(range, totalLength)
 
 		if (!parsedRange) {

@@ -47,10 +47,6 @@ export async function download({
 			}
 
 			if (selectedItems.length === 1) {
-				if (selectedItems[0].size <= 0) {
-					return
-				}
-
 				if (selectedItems[0].type === "directory") {
 					await window.desktopAPI.downloadDirectory({
 						uuid: selectedItems[0].uuid,
@@ -88,10 +84,6 @@ export async function download({
 		}
 
 		if (selectedItems.length === 1) {
-			if (selectedItems[0].size <= 0) {
-				return
-			}
-
 			if (selectedItems[0].type === "directory") {
 				await workerProxy.downloadDirectory({
 					uuid: selectedItems[0].uuid,

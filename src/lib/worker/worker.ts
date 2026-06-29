@@ -3494,6 +3494,14 @@ export const sanitizeSVG = (file: File): Promise<File> => {
 			return
 		}
 
+		// A 0-byte SVG has nothing to sanitize; resolve it as-is so the image preview
+		// degrades to a broken-image icon instead of hanging on the loader forever.
+		if (file.size === 0) {
+			resolve(file)
+
+			return
+		}
+
 		const reader = new FileReader()
 
 		reader.onload = () => {

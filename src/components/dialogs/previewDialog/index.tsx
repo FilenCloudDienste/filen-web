@@ -369,7 +369,7 @@ export const PreviewDialog = memo(() => {
 	)
 
 	const saveFile = useCallback(async () => {
-		if (!item || item.type !== "file" || !didChange || textRef.current.length === 0 || saving) {
+		if (!item || item.type !== "file" || !didChange || saving) {
 			return
 		}
 
