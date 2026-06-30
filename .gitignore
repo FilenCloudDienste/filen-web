@@ -29,3 +29,6 @@ yalc.lock
 
 # Million
 .million
+
+# Local design docs / specs (not tracked)
+docs/
