@@ -321,6 +321,23 @@ export async function generateThumbnail({ item }: { item: DriveCloudItem }): Pro
 }
 
 /**
+ * Convert a HEIC/HEIF file to a displayable WebP object URL for full-size preview.
+ * The decode + re-encode runs in the worker; only the resulting blob crosses back to
+ * the main thread, which then wraps it in an object URL.
+ *
+ * @export
+ * @async
+ * @param {{ item: DriveCloudItem }} param0
+ * @param {DriveCloudItem} param0.item
+ * @returns {Promise<string>}
+ */
+export async function generateHEICPreviewObjectURL({ item }: { item: DriveCloudItem }): Promise<string> {
+	const blob = await worker.convertHEICToImageBlob({ item })
+
+	return globalThis.URL.createObjectURL(blob)
+}
+
+/**
  * Sanitize an SVG file. Needs to run in the main thread.
  *
  * @export

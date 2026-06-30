@@ -29,7 +29,8 @@ import useCanUpload from "@/hooks/useCanUpload"
 import Audio from "./audio"
 import { usePublicLinkURLState } from "@/hooks/usePublicLink"
 import useDriveURLState from "@/hooks/useDriveURLState"
-import { readFileAndSanitize } from "@/lib/worker/proxy"
+import { readFileAndSanitize, generateHEICPreviewObjectURL } from "@/lib/worker/proxy"
+import { isHEIC } from "@/lib/heic"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { type DriveSortBy } from "@/components/drive/list/header"
 import { orderItemsByType } from "@/components/drive/utils"
@@ -313,6 +314,27 @@ export const PreviewDialog = memo(() => {
 			}
 
 			try {
+				// HEIC/HEIF must be decoded + converted; it is never streamable, so handle it
+				// before the streaming branch (guards against a file with a mislabeled mime).
+				if (isHEIC(itm.name)) {
+					try {
+						const urlObject = await generateHEICPreviewObjectURL({ item: itm })
+
+						setURLObjects(prev => ({
+							...prev,
+							[itm.uuid]: urlObject
+						}))
+					} catch (e) {
+						console.error(e)
+
+						errorToast((e as unknown as Error).message ?? (e as unknown as Error).toString())
+
+						close()
+					}
+
+					return
+				}
+
 				if (
 					(isServiceWorkerOnline || isDesktopHTTPServerOnline) &&
 					(previewType === "audio" || previewType === "video" || previewType === "image") &&
@@ -365,7 +387,7 @@ export const PreviewDialog = memo(() => {
 				cleanup()
 			}
 		},
-		[cleanup, isServiceWorkerOnline, isDesktopHTTPServerOnline]
+		[cleanup, isServiceWorkerOnline, isDesktopHTTPServerOnline, errorToast, close]
 	)
 
 	const saveFile = useCallback(async () => {

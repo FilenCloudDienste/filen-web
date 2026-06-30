@@ -11,6 +11,7 @@ import {
 import { type FileSystemFileHandle } from "native-file-system-adapter"
 import { type DriveCloudItem } from "@/components/drive"
 import { setItem, getItem, removeItem } from "@/lib/localForage"
+import { isHEIC } from "@/lib/heic"
 import { type WorkerToMainMessage, type DriveCloudItemWithPath } from "./types"
 import { ZipWriter } from "@zip.js/zip.js"
 import { promiseAllChunked } from "../utils"
@@ -1848,7 +1849,16 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 	}
 
 	const buffer = await readFile({ item, emitEvents: false })
-	const imageBitmap = await createImageBitmap(new Blob([new Uint8Array(buffer)], { type: item.mime }))
+	let imageBitmap: ImageBitmap
+
+	if (isHEIC(item.name)) {
+		const { decodeHEIC } = await import("../heic/decode")
+
+		imageBitmap = await createImageBitmap(await decodeHEIC(new Uint8Array(buffer)))
+	} else {
+		imageBitmap = await createImageBitmap(new Blob([new Uint8Array(buffer)], { type: item.mime }))
+	}
+
 	const originalWidth = imageBitmap.width
 	const originalHeight = imageBitmap.height
 	let thumbnailWidth = originalWidth
@@ -1877,6 +1887,7 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 	ctx.fillStyle = "black"
 	ctx.fillRect(0, 0, thumbnailWidth, thumbnailHeight)
 	ctx.drawImage(imageBitmap, 0, 0, thumbnailWidth, thumbnailHeight)
+	imageBitmap.close()
 
 	const blob = await offscreenCanvas.convertToBlob({
 		type: "image/jpeg",
@@ -1886,6 +1897,75 @@ export async function generateImageThumbnail({ item }: { item: DriveCloudItem })
 	await setItem<Blob>(dbKey, blob)
 
 	return blob
+}
+
+let webpEncodeSupport: Promise<boolean> | null = null
+
+/**
+ * Whether OffscreenCanvas can actually encode WebP. Safari (incl. iOS) silently encodes
+ * `convertToBlob({ type: "image/webp" })` as PNG (which would balloon a full-size preview
+ * to tens of MB), so we detect real support once and fall back to JPEG when absent.
+ *
+ * @returns {Promise<boolean>}
+ */
+function supportsWebPEncode(): Promise<boolean> {
+	if (!webpEncodeSupport) {
+		webpEncodeSupport = (async () => {
+			try {
+				const canvas = new OffscreenCanvas(1, 1)
+				const ctx = canvas.getContext("2d")
+
+				if (!ctx) {
+					return false
+				}
+
+				const blob = await canvas.convertToBlob({ type: "image/webp" })
+
+				return blob.type === "image/webp"
+			} catch {
+				return false
+			}
+		})()
+	}
+
+	return webpEncodeSupport
+}
+
+/**
+ * Decode a HEIC/HEIF file and re-encode it for full-size preview. Encodes to WebP where
+ * supported, falling back to JPEG (e.g. on Safari, which can't encode WebP via canvas).
+ * Runs entirely in the worker so the large source bytes never reach the main thread;
+ * only the (much smaller) encoded blob is returned. The libheif decoder is loaded lazily
+ * via dynamic import so the WASM bundle stays out of the worker's entry chunk.
+ *
+ * @export
+ * @async
+ * @param {{ item: DriveCloudItem }} param0
+ * @param {DriveCloudItem} param0.item
+ * @returns {Promise<Blob>}
+ */
+export async function convertHEICToImageBlob({ item }: { item: DriveCloudItem }): Promise<Blob> {
+	await waitForInitialization()
+
+	if (item.type !== "file") {
+		throw new Error("Item not of type file.")
+	}
+
+	const buffer = await readFile({ item, emitEvents: false })
+	const { decodeHEIC } = await import("../heic/decode")
+	const imageData = await decodeHEIC(new Uint8Array(buffer))
+	const offscreenCanvas = new OffscreenCanvas(imageData.width, imageData.height)
+	const ctx = offscreenCanvas.getContext("2d")
+
+	if (!ctx) {
+		throw new Error("Could not create OffscreenCanvas")
+	}
+
+	ctx.putImageData(imageData, 0, 0)
+
+	return (await supportsWebPEncode())
+		? await offscreenCanvas.convertToBlob({ type: "image/webp", quality: 0.8 })
+		: await offscreenCanvas.convertToBlob({ type: "image/jpeg", quality: 0.85 })
 }
 
 /**

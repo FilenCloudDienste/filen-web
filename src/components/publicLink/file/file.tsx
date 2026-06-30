@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button"
 import { download as downloadAction } from "@/components/drive/list/item/contextMenu/actions"
 import useErrorToast from "@/hooks/useErrorToast"
 import worker from "@/lib/worker"
+import { generateHEICPreviewObjectURL } from "@/lib/worker/proxy"
+import { isHEIC } from "@/lib/heic"
 import ImagePreview from "@/components/dialogs/previewDialog/image"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/providers/themeProvider"
@@ -245,6 +247,20 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 		}
 
 		try {
+			// HEIC/HEIF must be decoded + converted; it is never streamable, so handle it
+			// before the streaming branch (guards against a file with a mislabeled mime).
+			if (isHEIC(item.name)) {
+				try {
+					setURLObject(await generateHEICPreviewObjectURL({ item }))
+				} catch (e) {
+					console.error(e)
+
+					setHidePreview(true)
+				}
+
+				return
+			}
+
 			if (
 				(isServiceWorkerOnline || isDesktopHTTPServerOnline) &&
 				(previewType === "audio" || previewType === "video" || previewType === "image") &&
@@ -300,6 +316,14 @@ export const File = memo(({ info }: { info?: Omit<FileLinkInfoResponse, "size"> 
 			loadFile()
 		}
 	}, [loadFile, canLoadItem, item])
+
+	useEffect(() => {
+		return () => {
+			if (urlObject && urlObject.startsWith("blob:")) {
+				globalThis.URL.revokeObjectURL(urlObject)
+			}
+		}
+	}, [urlObject])
 
 	return (
 		<div className="flex flex-col w-full h-full items-center justify-center">
