@@ -14,6 +14,29 @@ export const Event = memo(({ event }: { event: TransferDataWithTimestamp }) => {
 		return pathModule.posix.basename(event.relativePath)
 	}, [event.relativePath])
 
+	// The rename ops now carry from/to; a differing parent directory means the item was MOVED rather than renamed in place.
+	// Events produced by an older @filen/sync (e.g. a desktop worker that predates the from/to fields) lack them even
+	// though the current types require them, so verify at runtime instead of trusting the compile-time type.
+	const isMove = useMemo(() => {
+		if (
+			(event.of === "renameLocalFile" ||
+				event.of === "renameLocalDirectory" ||
+				event.of === "renameRemoteFile" ||
+				event.of === "renameRemoteDirectory") &&
+			event.type === "success"
+		) {
+			const { from, to } = event as { from?: string; to?: string }
+
+			if (typeof from !== "string" || typeof to !== "string") {
+				return false
+			}
+
+			return pathModule.posix.dirname(from) !== pathModule.posix.dirname(to)
+		}
+
+		return false
+	}, [event])
+
 	return (
 		<div className="flex flex-row items-center px-4">
 			<div className="flex flex-row items-center border-b w-full p-2.5 py-3 hover:bg-secondary hover:rounded-sm">
@@ -65,19 +88,19 @@ export const Event = memo(({ event }: { event: TransferDataWithTimestamp }) => {
 																			: event.of === "uploadFile"
 																				? t("syncs.events.upload", { name: itemName })
 																				: event.of === "renameLocalDirectory"
-																					? t("syncs.events.renameLocalDirectory", {
+																					? t(isMove ? "syncs.events.moveLocalDirectory" : "syncs.events.renameLocalDirectory", {
 																							name: itemName
 																						})
 																					: event.of === "renameLocalFile"
-																						? t("syncs.events.renameLocalFile", {
+																						? t(isMove ? "syncs.events.moveLocalFile" : "syncs.events.renameLocalFile", {
 																								name: itemName
 																							})
 																						: event.of === "renameRemoteDirectory"
-																							? t("syncs.events.renameRemoteDirectory", {
+																							? t(isMove ? "syncs.events.moveRemoteDirectory" : "syncs.events.renameRemoteDirectory", {
 																									name: itemName
 																								})
 																							: event.of === "renameRemoteFile"
-																								? t("syncs.events.renameRemoteFile", {
+																								? t(isMove ? "syncs.events.moveRemoteFile" : "syncs.events.renameRemoteFile", {
 																										name: itemName
 																									})
 																								: ""}

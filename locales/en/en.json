@@ -1556,7 +1556,11 @@
 			"download": "{{name}} downloaded from the cloud",
 			"upload": "{{name}} uploaded to the cloud",
 			"renameLocalFile": "{{name}} renamed locally",
-			"renameRemoteFile": "{{name}} renamed in the cloud"
+			"renameRemoteFile": "{{name}} renamed in the cloud",
+			"moveLocalDirectory": "{{name}} moved locally",
+			"moveRemoteDirectory": "{{name}} moved in the cloud",
+			"moveLocalFile": "{{name}} moved locally",
+			"moveRemoteFile": "{{name}} moved in the cloud"
 		},
 		"settings": {
 			"sections": {
