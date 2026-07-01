@@ -5,10 +5,6 @@ import { useSyncsStore, type GeneralError } from "@/stores/syncs.store"
 import throttle from "lodash/throttle"
 import { calcTimeLeft, calcSpeed, getTimeRemaining } from "./transfers/utils"
 import { type MainToWindowMessage } from "@filen/desktop/dist/ipc"
-// @filen/desktop bundles an older @filen/sync, so MainToWindowMessage types the transfer `data` with the pre-rename-types
-// TransferData (missing from/to). The desktop actually runs the current @filen/sync, so cast to its TransferData where we
-// store the events below - that is the real runtime shape.
-import { type TransferData } from "@filen/sync/dist/types"
 import useDesktopConfig from "@/hooks/useDesktopConfig"
 import { v4 as uuidv4 } from "uuid"
 
@@ -341,7 +337,7 @@ export const DesktopListener = memo(() => {
 							[message.syncPair.uuid]: prev[message.syncPair.uuid]
 								? [
 										{
-											...(message.data as TransferData),
+											...message.data,
 											timestamp: Date.now()
 										},
 										...((prev[message.syncPair.uuid] ?? []).length >= 1000
@@ -350,7 +346,7 @@ export const DesktopListener = memo(() => {
 									]
 								: [
 										{
-											...(message.data as TransferData),
+											...message.data,
 											timestamp: Date.now()
 										}
 									]
