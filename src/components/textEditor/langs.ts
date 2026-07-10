@@ -149,6 +149,10 @@ export function loadLanguage(name: string) {
 			return langs.ruby()
 		}
 
+		case ".jl": {
+			return langs.julia()
+		}
+
 		case ".ps1":
 		case ".bat":
 		case ".ps": {
