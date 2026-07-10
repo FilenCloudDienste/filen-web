@@ -2752,12 +2752,86 @@ export async function chatConversationAddParticipant({ conversation, contact }: 
 	})
 }
 
+// SSRF guard for link-preview / OG fetches: message links are attacker-controlled, so refuse anything that is not a public
+// http(s) URL - no other schemes, and no loopback / private / link-local / CGNAT / metadata hosts. Public link previews are
+// unaffected; this only blocks requests aimed at the local machine or the internal network.
+function isPublicHttpUrl(url: string): boolean {
+	let parsed: URL
+
+	try {
+		parsed = new URL(url)
+	} catch {
+		return false
+	}
+
+	if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+		return false
+	}
+
+	const host = parsed.hostname.toLowerCase().replace(/^\[/, "").replace(/\]$/, "")
+
+	if (host.length === 0 || host === "localhost" || host.endsWith(".localhost")) {
+		return false
+	}
+
+	const ipv4 = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
+
+	if (ipv4) {
+		const a = Number(ipv4[1])
+		const b = Number(ipv4[2])
+		const c = Number(ipv4[3])
+		const d = Number(ipv4[4])
+
+		if (a > 255 || b > 255 || c > 255 || d > 255) {
+			return false
+		}
+
+		if (
+			a === 0 ||
+			a === 127 ||
+			a === 10 ||
+			(a === 172 && b >= 16 && b <= 31) ||
+			(a === 192 && b === 168) ||
+			(a === 169 && b === 254) ||
+			(a === 100 && b >= 64 && b <= 127)
+		) {
+			return false
+		}
+
+		return true
+	}
+
+	if (host.includes(":")) {
+		// IPv6 literal: block loopback (::1), unspecified (::), ULA (fc00::/7 -> fc/fd) and link-local (fe80::/10 -> fe8-feb).
+		if (
+			host === "::1" ||
+			host === "::" ||
+			host.startsWith("fc") ||
+			host.startsWith("fd") ||
+			host.startsWith("fe8") ||
+			host.startsWith("fe9") ||
+			host.startsWith("fea") ||
+			host.startsWith("feb")
+		) {
+			return false
+		}
+
+		return true
+	}
+
+	return true
+}
+
 export async function corsHead(url: string): Promise<Record<string, string>> {
 	await waitForInitialization()
 
 	await corsHeadMutex.acquire()
 
 	try {
+		if (!isPublicHttpUrl(url)) {
+			throw new Error("Refusing to fetch a non-public URL.")
+		}
+
 		if (workerCorsHeadCache.has(url)) {
 			return workerCorsHeadCache.get(url)!
 		}
@@ -2804,6 +2878,10 @@ export async function corsHead(url: string): Promise<Record<string, string>> {
 
 export async function corsGet(url: string): Promise<AxiosResponse> {
 	await waitForInitialization()
+
+	if (!isPublicHttpUrl(url)) {
+		throw new Error("Refusing to fetch a non-public URL.")
+	}
 
 	try {
 		const response = await axios.get(url, {
