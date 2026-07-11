@@ -4,6 +4,7 @@ import worker from "@/lib/worker"
 import { type Note } from "@filen/sdk/dist/types/api/v3/notes"
 import RichTextEditor from "@/components/textEditor/rich"
 import TextEditor from "@/components/textEditor"
+import { sanitizeRichTextHtml } from "@/lib/sanitizeRichText"
 import useWindowSize from "@/hooks/useWindowSize"
 import { Virtuoso } from "react-virtuoso"
 import { type NoteHistory } from "@filen/sdk/dist/types/api/v3/notes/history"
@@ -177,7 +178,7 @@ export const Content = memo(({ note, setOpen }: { note: Note; setOpen: React.Dis
 								{selectedHistory.type === "rich" || selectedHistory.type === "checklist" ? (
 									<RichTextEditor
 										key={selectedHistory.id + ":" + selectedHistory.type}
-										value={selectedHistory.content}
+										value={sanitizeRichTextHtml(selectedHistory.content)}
 										setValue={noop}
 										onValueChange={noop}
 										width={windowSize.width - 300}

@@ -1,6 +1,5 @@
 import { memo, useState, useCallback, useEffect, useMemo } from "react"
 import Quill from "react-quill"
-import DOMPurify from "dompurify"
 import { useTheme } from "@/providers/themeProvider"
 import { normalizeChecklistValue } from "../notes/utils"
 
@@ -65,7 +64,6 @@ export const RichTextEditor = memo(
 							["code-block", "link", "blockquote"],
 							[{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
 							[{ indent: "-1" }, { indent: "+1" }],
-							[{ script: "sub" }, { script: "super" }],
 							[{ direction: "rtl" }]
 						]
 					}
@@ -82,8 +80,6 @@ export const RichTextEditor = memo(
 						"italic",
 						"link",
 						"size",
-						"strike",
-						"script",
 						"underline",
 						"blockquote",
 						"header",
@@ -112,19 +108,10 @@ export const RichTextEditor = memo(
 			quillRef?.getEditor()?.root?.setAttribute("spellcheck", "false")
 		}, [quillRef])
 
-		// Notes can be shared / collaboratively edited, so decrypted note HTML is untrusted. On the READ-ONLY display path
-		// (viewing a note without write access, or note history) sanitize before handing it to Quill - defense in depth
-		// against react-quill / Quill 1.3.7 HTML-parsing quirks. Only the read-only path is sanitized so the value round-
-		// tripped during live editing is never altered (that would disrupt the editor); there Quill's own HTML->Delta
-		// conversion already restricts formats. The html profile preserves Quill's formatting, so notes render identically.
-		const sanitizedValue = useMemo(() => {
-			return readOnly ? DOMPurify.sanitize(value, { USE_PROFILES: { html: true } }) : value
-		}, [value, readOnly])
-
 		return (
 			<Quill
 				theme="snow"
-				value={sanitizedValue}
+				value={value}
 				placeholder={placeholder}
 				ref={setRef}
 				onBlur={onBlur}

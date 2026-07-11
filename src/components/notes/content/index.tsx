@@ -10,6 +10,7 @@ import { fileNameToPreviewType } from "@/components/dialogs/previewDialog/utils"
 import RichTextEditor from "@/components/textEditor/rich"
 import useRouteParent from "@/hooks/useRouteParent"
 import { normalizeChecklistValue } from "../utils"
+import { sanitizeRichTextHtml } from "@/lib/sanitizeRichText"
 import { type SocketEvent, MAX_NOTE_SIZE } from "@filen/sdk"
 import { getSocket } from "@/lib/socket"
 import { useNavigate } from "@tanstack/react-router"
@@ -163,7 +164,15 @@ export const Content = memo(({ note }: { note: Note }) => {
 			const content = note.type === "checklist" ? normalizeChecklistValue(query.data.content) : query.data.content
 
 			if (JSON.stringify(initialValueRef.current) !== JSON.stringify(content)) {
-				setValue(content)
+				// Decrypted note HTML is untrusted (notes can be shared / collaboratively edited). This effect is the
+				// single funnel for every external update (initial load, note switch, collaborator sync via socket
+				// refetch, history restore), so sanitize rich/checklist content here - before it reaches Quill's
+				// clipboard.convert(), which writes it into a live DOM node and would run inline handlers like
+				// <img onerror>. Only the value handed to the editor is sanitized; initialValueRef keeps the RAW server
+				// content so dirty-tracking compares the editor's output against exactly what the server holds. For
+				// clean notes this is Delta- and HTML-identical to the unsanitized seed, so nothing is marked dirty or
+				// re-saved on open. md/code/text are plain-text editors (CodeMirror / react-markdown) - passed through.
+				setValue(note.type === "rich" || note.type === "checklist" ? sanitizeRichTextHtml(content) : content)
 
 				initialValueRef.current = content
 
