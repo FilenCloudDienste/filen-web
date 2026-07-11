@@ -32,3 +32,6 @@ yalc.lock
 
 # Local design docs / specs (not tracked)
 docs/
+
+# Playwright MCP scratch output
+.playwright-mcp/
