@@ -140,6 +140,16 @@ export const NetworkDrive = memo(() => {
 		setEnablingNetworkDrive(true)
 
 		try {
+			if (window.desktopAPI.osPlatform() !== "win32" && !(await window.desktopAPI.doesPathStartWithHomeDir(mountPoint))) {
+				errorToast(
+					window.desktopAPI.osPlatform() === "linux"
+						? t("mounts.networkDrive.errors.pathNotInHomeDir")
+						: t("mounts.networkDrive.errors.pathNotInUserDir")
+				)
+
+				return
+			}
+
 			if (window.desktopAPI.osPlatform() !== "win32" && !(await window.desktopAPI.isUnixMountPointValid(mountPoint))) {
 				errorToast(t("mounts.networkDrive.errors.invalidMountPoint"))
 
@@ -233,23 +243,28 @@ export const NetworkDrive = memo(() => {
 				return
 			}
 
+			// The default unix mount point (/tmp/filen) is outside the home directory and always fails this check,
+			// so instead of a dead-end error, let the user pick a valid mount point right away.
+			if (
+				enabled &&
+				window.desktopAPI.osPlatform() !== "win32" &&
+				!(await window.desktopAPI.doesPathStartWithHomeDir(desktopConfig.networkDriveConfig.mountPoint))
+			) {
+				errorToast(
+					window.desktopAPI.osPlatform() === "linux"
+						? t("mounts.networkDrive.errors.pathNotInHomeDir")
+						: t("mounts.networkDrive.errors.pathNotInUserDir")
+				)
+
+				await changeMountPoint()
+
+				return
+			}
+
 			setEnablingNetworkDrive(true)
 
 			try {
 				if (enabled) {
-					if (
-						window.desktopAPI.osPlatform() !== "win32" &&
-						!(await window.desktopAPI.doesPathStartWithHomeDir(desktopConfig.networkDriveConfig.mountPoint))
-					) {
-						errorToast(
-							window.desktopAPI.osPlatform() === "linux"
-								? t("mounts.networkDrive.errors.pathNotInHomeDir")
-								: t("mounts.networkDrive.errors.pathNotInUserDir")
-						)
-
-						return
-					}
-
 					if (
 						window.desktopAPI.osPlatform() !== "win32" &&
 						!(await window.desktopAPI.isUnixMountPointValid(desktopConfig.networkDriveConfig.mountPoint))
@@ -317,7 +332,8 @@ export const NetworkDrive = memo(() => {
 			t,
 			desktopConfig.networkDriveConfig.mountPoint,
 			cacheSizeQuery,
-			availableCacheSizeQuery
+			availableCacheSizeQuery,
+			changeMountPoint
 		]
 	)
 
