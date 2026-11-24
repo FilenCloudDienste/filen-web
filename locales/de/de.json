@@ -954,6 +954,8 @@
 			"payInvoice": "Rechnung bezahlen",
 			"sale": "Verkauf",
 			"limited": "Begrenzte Verfügbarkeit",
+			"introFirstMonth": "{{intro}}€ für den ersten Monat, danach {{cost}}€ pro Monat",
+			"introFirstYear": "{{intro}}€ für das erste Jahr, danach {{cost}}€ pro Jahr",
 			"creditCard": "Kreditkarte",
 			"crypto": "Kryptowährungen",
 			"legal1": "Durch den Kauf eines Plans ermächtigst du Filen, dich bei jeder Abrechnungsperiode automatisch zu belasten, bis du kündigst. Du kannst jederzeit über deine Kontoseite kündigen. Keine Teilrückerstattungen.",

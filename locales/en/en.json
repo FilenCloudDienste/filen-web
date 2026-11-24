@@ -974,6 +974,8 @@
 			"payInvoice": "Pay invoice",
 			"sale": "Sale",
 			"limited": "Limited availability",
+			"introFirstMonth": "{{intro}}€ for the first month, then {{cost}}€ per month",
+			"introFirstYear": "{{intro}}€ for the first year, then {{cost}}€ per year",
 			"creditCard": "Credit Card",
 			"crypto": "Cryptocurrencies",
 			"legal1": "By purchasing a plan you authorize Filen to automatically charge you each billing period until you cancel. You can cancel anytime via your Account page. No partial refunds.",

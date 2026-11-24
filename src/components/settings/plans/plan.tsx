@@ -26,6 +26,16 @@ export const Plan = memo(({ plan, account }: { plan: RemoteConfigPlan; account: 
 		return plan.name.toLowerCase().includes("lifetime") || plan.term === "lifetime"
 	}, [plan.name, plan.term])
 
+	// While a sale runs, cfg.json "sale" is an intro price: only the first month (monthly) or year (annually) is charged
+	// at it, every renewal at "cost". Plans without a lower sale price (lifetime, others) show their normal price.
+	const introPeriod = useMemo<"month" | "year" | null>(() => {
+		if (!config || !config.pricing.saleEnabled || !(plan.sale > 0 && plan.sale < plan.cost)) {
+			return null
+		}
+
+		return plan.term === "monthly" ? "month" : plan.term === "annually" ? "year" : null
+	}, [config, plan.sale, plan.cost, plan.term])
+
 	const hasCountrySet = useMemo(() => {
 		return typeof account.personal.country === "string" && account.personal.country.length > 0
 	}, [account.personal.country])
@@ -79,11 +89,17 @@ export const Plan = memo(({ plan, account }: { plan: RemoteConfigPlan; account: 
 					{!plan.name.toLowerCase().includes("starter") ? " " + plan.term : ""}
 				</CardTitle>
 				<div>
-					{config.pricing.saleEnabled ? (
+					{introPeriod ? (
 						<div className="flex flex-col">
 							<p className="line-through text-muted-foreground text-sm">{plan.cost}€</p>
 							<p className="text-lg text-primary">{plan.sale}€</p>
 							<p className="text-red-500">🎉 -{Math.round(100 - (plan.sale / plan.cost) * 100)}%</p>
+							<p className="text-xs text-muted-foreground">
+								{t(introPeriod === "year" ? "settings.plans.introFirstYear" : "settings.plans.introFirstMonth", {
+									intro: plan.sale,
+									cost: plan.cost
+								})}
+							</p>
 						</div>
 					) : (
 						<p className="text-lg text-muted-foreground">{plan.cost}€</p>
@@ -92,9 +108,7 @@ export const Plan = memo(({ plan, account }: { plan: RemoteConfigPlan; account: 
 			</CardHeader>
 			<CardContent>
 				<p>{formatBytes(plan.storage)}</p>
-				{(plan.term === "lifetime" || config.pricing.saleEnabled) && (
-					<p className="text-xs text-muted-foreground">{t("settings.plans.limited")}</p>
-				)}
+				{plan.term === "lifetime" && <p className="text-xs text-muted-foreground">{t("settings.plans.limited")}</p>}
 				<div className="flex flex-col mt-6 gap-2">
 					{new Array(9).fill(0).map((_, index) => {
 						return (
